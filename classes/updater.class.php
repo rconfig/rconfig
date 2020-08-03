@@ -140,7 +140,7 @@ class updater {
 //            echo($qr); // if query execut successfully, this will print 0 else 1
         } catch (PDOException $e) {
             echo 'Connection failed: ' . $e->getMessage();
-            $qr == 1; // set query result to fail and it returns false below
+            $qr = 1; // set query result to fail and it returns false below
         }
         if ($qr == 0) {
             return true;
