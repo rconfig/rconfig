@@ -22,10 +22,10 @@ class Process {
         if (isset($_POST['sublogin'])) {
             $this->procLogin();
         }
-        /* Admin submitted user add form */ else if (isset($_POST['add']) && isset($_POST['editid']) && empty($_POST['editid'])) {
+        /* Admin submitted user add form */ else if (isset($_POST['add']) && isset($_POST['editid']) && empty($_POST['editid']) && $session->isAdmin()) {
             $this->procRegister();
         }
-        /* Admin submitted user edit form */ else if (isset($_POST['add']) && isset($_POST['editid']) && !empty($_POST['editid'])) {
+        /* Admin submitted user edit form */ else if (isset($_POST['add']) && isset($_POST['editid']) && !empty($_POST['editid']) && $session->isAdmin()) {
             $this->procUpdateAccount();
         }
         /* User submitted forgot password form */ else if (isset($_POST['subforgot'])) {
