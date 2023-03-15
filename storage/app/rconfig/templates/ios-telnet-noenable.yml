@@ -1,0 +1,49 @@
+# rConfig connection template - DO NOT EDIT DIRECTLY
+## Notes:
+## Remember to update permissions for the templates folder after uploading new template files.
+## run 'chown -R apache /home/rconfig' on your rconfig server CLI
+## all items below that contain free text should be contained within quotation marks " "
+## For new community submitted templates visit: https://github.com/rconfig/rConfig-templates
+
+main:
+  name: 'Cisco IOS - TELNET - No Enable'
+  desc: 'Cisco IOS TELNET based connection without enable mode'
+connect:
+  # connection timeout in seconds
+  timeout: 5
+  # type either telnet or ssh - must be in lowercase
+  protocol: telnet
+  # type port number for connection protocol choose from 1 - 65535
+  port: 23
+auth:
+  # Set username name prompt. Must be in quotes. If left blank, username will not be sent.
+  username: 'Username:'
+  # Set password name prompt. Must be in quotessssssssss
+  password: 'Password:'
+  # Set enable mode on or off
+  enable: off
+  # set enable mode command. Must be in quotes
+  enableCmd: 'enable'
+  # set enable mode password prompt. Must be in quotes
+  enablePassPrmpt: 'Password:'
+  # set HP 'press any key' status. Is 'on' or 'off'
+  hpAnyKeyStatus: off
+  # set HP 'press any key' prompt.
+  hpAnyKeyPrmpt: 'Press any key to continue'
+config:
+  # Experimental: Some vendors use different linebreak settings. Choose 'n' (default) or 'r'
+  linebreak: 'n'
+  # Disable config scrolling/ paging command. on/off
+  paging: on
+  # Disable config scrolling/ paging command. Leave blank, or set as required. Must place command in quotations
+  pagingCmd: 'terminal length 0'
+  # re-enable config scrolling/ paging command. Leave blank, or set as required. Must place command in quotations
+  resetPagingCmd: 'terminal length 40'
+  # Set pager prompt. Must place command in quotation
+  pagerPrompt: '--More--'
+  # Set pager prompt key-stroke. Must place command in quotations
+  pagerPromptCmd: ' '
+  # Save configuration command. Leave blank, or set as required. Must be in quotes
+  saveConfig: 'wr mem'
+  # Set exit command. Must place command in quotations
+  exitCmd: 'quit'

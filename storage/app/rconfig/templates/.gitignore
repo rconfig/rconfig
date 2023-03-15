@@ -1,0 +1,10 @@
+# Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!default.yml
+!ios-ssh-enable.yml
+!ios-ssh-noenable.yml
+!ios-telnet-enable.yml
+!ios-telnet-noenable.yml

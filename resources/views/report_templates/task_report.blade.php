@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="{{ app()->getLocale() }}" class="layout-pf layout-pf-fixed">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ config('app.name', 'rConfig') }}</title>
+    <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
+    <style>
+        @font-face {
+            font-family: "Open Sans";
+            font-style: normal;
+            font-weight: 300;
+            src: url(../fonts/OpenSans-Light-webfont.eot);
+            src: local("Open Sans Light"), local("OpenSans-Light"), url(../fonts/OpenSans-Light-webfont.eot?#iefix) format("embedded-opentype"), url(../fonts/OpenSans-Light-webfont.woff2) format("woff2"), url(../fonts/OpenSans-Light-webfont.woff) format("woff"), url(../fonts/OpenSans-Light-webfont.ttf) format("truetype"), url(../fonts/OpenSans-Light-webfont.svg#OpenSans) format("svg")
+        }
+
+        @font-face {
+            font-family: "Open Sans";
+            font-style: normal;
+            font-weight: 400;
+            src: url(../fonts/OpenSans-Regular-webfont.eot);
+            src: local("Open Sans"), local("OpenSans"), url(../fonts/OpenSans-Regular-webfont.eot?#iefix) format("embedded-opentype"), url(../fonts/OpenSans-Regular-webfont.woff2) format("woff2"), url(../fonts/OpenSans-Regular-webfont.woff) format("woff"), url(../fonts/OpenSans-Regular-webfont.ttf) format("truetype"), url(../fonts/OpenSans-Regular-webfont.svg#OpenSans) format("svg")
+        }
+
+        @font-face {
+            font-family: "Open Sans";
+            font-style: italic;
+            font-weight: 300;
+            src: url(../fonts/OpenSans-LightItalic-webfont.eot);
+            src: local("Open Sans Light Italic"), local("OpenSansLight-Italic"), url(../fonts/OpenSans-LightItalic-webfont.eot?#iefix) format("embedded-opentype"), url(../fonts/OpenSans-LightItalic-webfont.woff2) format("woff2"), url(../fonts/OpenSans-LightItalic-webfont.woff) format("woff"), url(../fonts/OpenSans-LightItalic-webfont.ttf) format("truetype"), url(../fonts/OpenSans-LightItalic-webfont.svg#OpenSans) format("svg")
+        }
+
+        @font-face {
+            font-family: "Open Sans";
+            font-style: italic;
+            font-weight: 400;
+            src: url(../fonts/OpenSans-Italic-webfont.eot);
+            src: local("Open Sans Italic"), local("OpenSans-Italic"), url(../fonts/OpenSans-Italic-webfont.eot?#iefix) format("embedded-opentype"), url(../fonts/OpenSans-Italic-webfont.woff2) format("woff2"), url(../fonts/OpenSans-Italic-webfont.woff) format("woff"), url(../fonts/OpenSans-Italic-webfont.ttf) format("truetype"), url(../fonts/OpenSans-Italic-webfont.svg#OpenSans) format("svg")
+        }
+
+        @font-face {
+            font-family: "Open Sans";
+            font-style: normal;
+            font-weight: 600;
+            src: url(../fonts/OpenSans-Semibold-webfont.eot);
+            src: local("Open Sans Semibold"), local("OpenSans-Semibold-webfont"), url(../fonts/OpenSans-Semibold-webfont.eot?#iefix) format("embedded-opentype"), url(../fonts/OpenSans-Semibold-webfont.woff2) format("woff2"), url(../fonts/OpenSans-Semibold-webfont.woff) format("woff"), url(../fonts/OpenSans-Semibold-webfont.ttf) format("truetype"), url(../fonts/OpenSans-Semibold-webfont.svg#OpenSans) format("svg")
+        }
+
+        @font-face {
+            font-family: "Open Sans";
+            font-style: italic;
+            font-weight: 600;
+            src: url(../fonts/OpenSans-SemiboldItalic-webfont.eot);
+            src: local("Open Sans Semibold Italic"), local("OpenSans-SemiboldItalic-webfont"), url(../fonts/OpenSans-SemiboldItalic-webfont.eot?#iefix) format("embedded-opentype"), url(../fonts/OpenSans-SemiboldItalic-webfont.woff2) format("woff2"), url(../fonts/OpenSans-SemiboldItalic-webfont.woff) format("woff"), url(../fonts/OpenSans-SemiboldItalic-webfont.ttf) format("truetype"), url(../fonts/OpenSans-SemiboldItalic-webfont.svg#OpenSans) format("svg")
+        }
+
+        @font-face {
+            font-family: "Open Sans";
+            font-style: normal;
+            font-weight: 700;
+            src: url(../fonts/OpenSans-Bold-webfont.eot);
+            src: local("Open Sans Bold"), local("OpenSans-Bold"), url(../fonts/OpenSans-Bold-webfont.eot?#iefix) format("embedded-opentype"), url(../fonts/OpenSans-Bold-webfont.woff2) format("woff2"), url(../fonts/OpenSans-Bold-webfont.woff) format("woff"), url(../fonts/OpenSans-Bold-webfont.ttf) format("truetype"), url(../fonts/OpenSans-Bold-webfont.svg#OpenSans) format("svg")
+        }
+
+        @font-face {
+            font-family: "Open Sans";
+            font-style: italic;
+            font-weight: 700;
+            src: url(../fonts/OpenSans-BoldItalic-webfont.eot);
+            src: local("Open Sans Bold Italic"), local("OpenSans-BoldItalic"), url(../fonts/OpenSans-BoldItalic-webfont.eot?#iefix) format("embedded-opentype"), url(../fonts/OpenSans-BoldItalic-webfont.woff2) format("woff2"), url(../fonts/OpenSans-BoldItalic-webfont.woff) format("woff"), url(../fonts/OpenSans-BoldItalic-webfont.ttf) format("truetype"), url(../fonts/OpenSans-BoldItalic-webfont.svg#OpenSans) format("svg")
+        }
+
+        @font-face {
+            font-family: "Open Sans";
+            font-style: italic;
+            font-weight: 800;
+            src: url(../fonts/OpenSans-ExtraBoldItalic-webfont.eot);
+            src: local("Open Sans Extrabold Italic"), local("OpenSans-ExtraboldItalic"), url(../fonts/OpenSans-ExtraBoldItalic-webfont.eot?#iefix) format("embedded-opentype"), url(../fonts/OpenSans-ExtraBoldItalic-webfont.woff2) format("woff2"), url(../fonts/OpenSans-ExtraBoldItalic-webfont.woff) format("woff"), url(../fonts/OpenSans-ExtraBoldItalic-webfont.ttf) format("truetype"), url(../fonts/OpenSans-ExtraBoldItalic-webfont.svg#OpenSans) format("svg")
+        }
+
+        @font-face {
+            font-family: "Open Sans";
+            font-style: normal;
+            font-weight: 800;
+            src: url(../fonts/OpenSans-ExtraBold-webfont.eot);
+            src: local("Open Sans Extrabold"), local("OpenSans-Extrabold"), url(../fonts/OpenSans-ExtraBold-webfont.eot?#iefix) format("embedded-opentype"), url(../fonts/OpenSans-ExtraBold-webfont.woff2) format("woff2"), url(../fonts/OpenSans-ExtraBold-webfont.woff) format("woff"), url(../fonts/OpenSans-ExtraBold-webfont.ttf) format("truetype"), url(../fonts/OpenSans-ExtraBold-webfont.svg#OpenSans) format("svg")
+        }
+
+        /*!
+ * Bootstrap v3.4.1 (https://getbootstrap.com/)
+ * Copyright 2011-2019 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+        /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+        html {
+            font-family: sans-serif;
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%
+        }
+
+        body {
+            margin: 0
+        }
+
+        a {
+            background-color: transparent
+        }
+
+        a:active,
+        a:hover {
+            outline: 0
+        }
+
+        strong {
+            font-weight: 700
+        }
+
+        h1 {
+            font-size: 2em;
+            margin: .67em 0
+        }
+
+        img {
+            border: 0
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0
+        }
+
+        td,
+        th {
+            padding: 0
+        }
+
+        /*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src/css/main.css */
+        @media print {
+
+            *,
+            :after,
+            :before {
+                color: #000 !important;
+                text-shadow: none !important;
+                background: 0 0 !important;
+                box-shadow: none !important
+            }
+
+            a,
+            a:visited {
+                text-decoration: underline
+            }
+
+            a[href]:after {
+                content: " ("attr(href) ")"
+            }
+
+            thead {
+                display: table-header-group
+            }
+
+            img,
+            tr {
+                page-break-inside: avoid
+            }
+
+            img {
+                max-width: 100% !important
+            }
+
+            h2,
+            p {
+                orphans: 3;
+                widows: 3
+            }
+
+            h2 {
+                page-break-after: avoid
+            }
+        }
+
+        @font-face {
+            font-family: "Glyphicons Halflings";
+            src: url(../fonts/glyphicons-halflings-regular.eot);
+            src: url(../fonts/glyphicons-halflings-regular.eot?#iefix) format("embedded-opentype"), url(../fonts/glyphicons-halflings-regular.woff2) format("woff2"), url(../fonts/glyphicons-halflings-regular.woff) format("woff"), url(../fonts/glyphicons-halflings-regular.ttf) format("truetype"), url(../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular) format("svg")
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        :after,
+        :before {
+            box-sizing: border-box
+        }
+
+        html {
+            font-size: 10px;
+            -webkit-tap-highlight-color: transparent
+        }
+
+        body {
+            font-family: "Open Sans", Helvetica, Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.66666667;
+            color: #363636;
+            background-color: #fff
+        }
+
+        a {
+            color: #0088ce;
+            text-decoration: none
+        }
+
+        a:focus,
+        a:hover {
+            color: #00659c;
+            text-decoration: underline
+        }
+
+        a:focus {
+            outline: 5px auto -webkit-focus-ring-color;
+            outline-offset: -2px
+        }
+
+        img {
+            vertical-align: middle
+        }
+
+        h1,
+        h2,
+        h4 {
+            font-family: inherit;
+            font-weight: 500;
+            line-height: 1.1;
+            color: inherit
+        }
+
+        h1,
+        h2 {
+            margin-top: 20px;
+            margin-bottom: 10px
+        }
+
+        h4 {
+            margin-top: 10px;
+            margin-bottom: 10px
+        }
+
+        h1 {
+            font-size: 24px
+        }
+
+        h2 {
+            font-size: 22px
+        }
+
+        h4 {
+            font-size: 15px
+        }
+
+        p {
+            margin: 0 0 10px
+        }
+
+        .row {
+            margin-right: -20px;
+            margin-left: -20px
+        }
+
+        .col-md-4,
+        .col-md-6,
+        .col-sm-6,
+        .col-xs-12 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 20px;
+            padding-left: 20px
+        }
+
+        .col-xs-12 {
+            float: left
+        }
+
+        .col-xs-12 {
+            width: 100%
+        }
+
+        @media (min-width:768px) {
+            .col-sm-6 {
+                float: left
+            }
+
+            .col-sm-6 {
+                width: 50%
+            }
+        }
+
+        @media (min-width:992px) {
+
+            .col-md-4,
+            .col-md-6 {
+                float: left
+            }
+
+            .col-md-6 {
+                width: 50%
+            }
+
+            .col-md-4 {
+                width: 33.33333333%
+            }
+        }
+
+        table {
+            background-color: transparent
+        }
+
+        th {
+            text-align: left
+        }
+
+        .row:after,
+        .row:before {
+            display: table;
+            content: " "
+        }
+
+        .row:after {
+            clear: both
+        }
+
+        @-ms-viewport {
+            width: device-width
+        }
+
+        /*!
+ *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome
+ *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
+ */
+        @font-face {
+            font-family: FontAwesome;
+            src: url(../fonts/fontawesome-webfont.eot?v=4.7.0);
+            src: url(../fonts/fontawesome-webfont.eot?#iefix&v=4.7.0) format('embedded-opentype'), url(../fonts/fontawesome-webfont.woff2?v=4.7.0) format('woff2'), url(../fonts/fontawesome-webfont.woff?v=4.7.0) format('woff'), url(../fonts/fontawesome-webfont.ttf?v=4.7.0) format('truetype'), url(../fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular) format('svg');
+            font-weight: 400;
+            font-style: normal
+        }
+
+        @supports (display:flex) {}
+
+        @supports (display:flex) {}
+
+        @supports (display:flex) {}
+
+        h1,
+        h2 {
+            font-weight: 300
+        }
+
+        /*!
+ * Datetimepicker for Bootstrap 3
+ * version : 4.17.47
+ * https://github.com/Eonasdan/bootstrap-datetimepicker/
+ */
+        .card-pf {
+            background: #fff;
+            border-top: 2px solid transparent;
+            box-shadow: 0 1px 1px rgba(3, 3, 3, .175);
+            margin: 0 -10px 20px;
+            padding: 0 20px
+        }
+
+        .card-pf.card-pf-accented {
+            border-top-color: #39a5dc
+        }
+
+        .card-pf.card-pf-aggregate-status {
+            padding: 0 10px;
+            text-align: center
+        }
+
+        .card-pf-body {
+            margin: 20px 0 0;
+            padding: 0 0 20px
+        }
+
+        .card-pf-aggregate-status .card-pf-body {
+            margin-top: 10px;
+            padding-bottom: 10px
+        }
+
+        .card-pf-body>:last-child {
+            margin-bottom: 0
+        }
+
+        .card-pf-title {
+            font-size: 16px;
+            font-weight: 400;
+            margin: 20px 0;
+            padding: 0
+        }
+
+        .card-pf-aggregate-status .card-pf-title {
+            font-size: 14px;
+            margin: 10px 0 0
+        }
+
+        .card-pf-utilization-details {
+            border-bottom: 1px solid #d1d1d1;
+            display: table;
+            margin: 12px 0 15px;
+            padding: 0 0 15px;
+            width: 100%
+        }
+
+        .card-pf-utilization-details .card-pf-utilization-card-details-count,
+        .card-pf-utilization-details .card-pf-utilization-card-details-description {
+            float: left;
+            line-height: 1
+        }
+
+        .card-pf-utilization-details .card-pf-utilization-card-details-count {
+            font-size: 26px;
+            font-weight: 300;
+            margin-right: 10px
+        }
+
+        .card-pf-utilization-details .card-pf-utilization-card-details-line-1,
+        .card-pf-utilization-details .card-pf-utilization-card-details-line-2 {
+            display: block
+        }
+
+        .card-pf-utilization-details .card-pf-utilization-card-details-line-1 {
+            font-size: 10px;
+            margin-bottom: 2px
+        }
+
+        .cards-pf {
+            background: #f5f5f5
+        }
+
+        .cards-pf .row-cards-pf {
+            padding: 0 20px
+        }
+
+        .cards-pf .row-cards-pf:first-child {
+            padding-top: 20px
+        }
+
+        .row-cards-pf {
+            margin-left: -10px;
+            margin-right: -10px
+        }
+
+        @font-face {
+            font-family: PatternFlyIcons-webfont;
+            src: url(../fonts/PatternFlyIcons-webfont.eot);
+            src: url(../fonts/PatternFlyIcons-webfont.eot?#iefix) format("embedded-opentype"), url(../fonts/PatternFlyIcons-webfont.ttf) format("truetype"), url(../fonts/PatternFlyIcons-webfont.woff) format("woff"), url(../fonts/PatternFlyIcons-webfont.svg#PatternFlyIcons-webfont) format("svg");
+            font-weight: 400;
+            font-style: normal
+        }
+
+        .layout-pf,
+        .layout-pf body {
+            min-height: 100%
+        }
+
+        .layout-pf.layout-pf-fixed body {
+            padding-top: 60px
+        }
+
+        .login-pf-page .login-pf-header .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) .dropdown-toggle:not(:focus) {
+            box-shadow: none;
+            border: 1px solid transparent
+        }
+
+        @supports (display:flex) {}
+
+        @supports (display:flex) {}
+
+        @supports (display:flex) {}
+
+        @supports (display:flex) {}
+
+        @supports (display:flex) {}
+
+        .multiselect__content::webkit-scrollbar {
+            display: none
+        }
+
+        .versionChangeYes {
+            background: #ea4335;
+            padding-left: 2px;
+        }
+
+        .versionChangeNo {
+            background: #c4d6a4;
+            padding-left: 2px;
+        }
+
+        @media (max-width: 768px) {
+
+            tr th:nth-child(2),
+            tr td:nth-child(2) {
+                display: none;
+            }
+
+            tr th:nth-child(3),
+            tr td:nth-child(3) {
+                display: none;
+            }
+
+            tr th:nth-child(4),
+            tr td:nth-child(4) {
+                display: none;
+            }
+        }
+
+    </style>
+</head>
+
+<body class="cards-pf ">
+
+    <div class="row row-cards-pf" style="margin-bottom: 30px;">
+        <div class="col-xs-12 col-sm-6 col-md-6">
+            <img src="http://www.rconfig.com/images/new_logos/blue_logos/artwork_blue_horizontal_Artboard%201_72px.png" alt="rConfig Logo" />
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6">
+            <h1><strong>{{$report_data->task_type}}</strong></h1>
+        </div>
+    </div>
+
+    <div class="row row-cards-pf" style="margin-bottom: 30px;">
+        <div class="col-xs-12 col-sm-6 col-md-6">
+            <h4><strong>Exectution Date/Time:</strong> {{$report_data->start_time}}</h4>
+            <h4><strong>Task ID/ Name:</strong> {{$report_data->task->id}} / {{$report_data->task->task_name}} </h4>
+            <h4><strong>Task Description:</strong> {{$report_data->task->task_desc}}</h4>
+        </div>
+    </div>
+
+    <div class="row row-cards-pf">
+        <div class="col-xs-12 col-sm-6 col-md-4">
+            <div class="card-pf card-pf-accented card-pf-aggregate-status">
+                <h2 class="card-pf-title">
+                    Device Count
+                </h2>
+                <div class="card-pf-body" style="display: inline-block">
+                    <p class="card-pf-utilization-details" style="border: none; text-align: center">
+                        <span class="card-pf-utilization-card-details-count">{{ count($report_data->config_data_success) + count($report_data->config_data_failed)}}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4">
+            <div class="card-pf card-pf-accented card-pf-aggregate-status">
+                <h2 class="card-pf-title">
+                    Successes/ Failures
+                </h2>
+                <div class="card-pf-body" style="display: inline-block">
+                    <p class="card-pf-utilization-details" style="border: none; text-align: center">
+                        <span class="card-pf-utilization-card-details-count">
+                            {{ $report_data->config_data_success->count() }}
+                            / {{ $report_data->config_data_failed->count() }}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4">
+            <div class="card-pf card-pf-accented card-pf-aggregate-status">
+                <h2 class="card-pf-title">
+                    Execution Time
+                </h2>
+                <div class="card-pf-body" style="display: inline-block">
+                    <p class="card-pf-utilization-details" style="border: none; text-align: center">
+                        <span class="card-pf-utilization-card-details-count">{{$report_data->duration}}</span>
+                        <span class="card-pf-utilization-card-details-description">
+                            <span class="card-pf-utilization-card-details-line-1"></span>
+                            <span class="card-pf-utilization-card-details-line-2">seconds</span>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row row-cards-pf" style="margin:1px">
+
+        <table style="width: 100%;">
+            <tr style="background-color: #2196f3; color:white;">
+                <td style=""><strong>Configuration downloads for this task listed below</strong>
+                </td>
+            </tr>
+        </table>
+        <table style="width: 100%;">
+            <thead style="border-bottom-style: solid; border-bottom-color: #dddddd; border-bottom-width: 1px;">
+                <th>Device Name</th>
+                <th>Category</th>
+                <th>Command Count</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Execution Time</th>
+                <th>Status</th>
+            </thead>
+            <tbody>
+                @foreach ($report_data->config_data_failed as $fitem)
+
+                <tr>
+                    <td><a target="_blank" class="alink" href="{{url('/device/view/' . $fitem['device_id'])}}">{{$fitem['device_name']}}</a></td>
+                    <td><a target="_blank" class="alink" href="{{url('/categories')}}">{{$fitem['device_category']}}</a></td>
+                    <td><a target="_blank" class="alink" href="{{url('/device/view/' . $fitem['device_id'])}}">{{$fitem['command_count']}}</a></td>
+                    <td>{{$fitem['start_time']}}</td>
+                    <td>{{$fitem['end_time']}}</td>
+                    <td>{{$fitem['duration']}}</td>
+                    <td style="background: #ea4335; padding-left: 2px;">Failed</td>
+                </tr>
+
+                @endforeach
+                @if ($report_data->task->verbose_download_report_notify)
+
+                @foreach ($report_data->config_data_success as $sitem)
+
+                <tr>
+                    <td><a target="_blank" class="alink" href="{{url('/device/view/' . $sitem['device_id'])}}">{{$sitem['device_name']}}</a></td>
+                    <td><a target="_blank" class="alink" href="{{url('/categories')}}">{{$sitem['device_category']}}</a></td>
+                    <td><a target="_blank" class="alink" href="{{url('/device/view/' . $sitem['device_id'])}}">{{$sitem['command_count']}}</a></td>
+                    <td>{{$sitem['start_time']}}</td>
+                    <td>{{$sitem['end_time']}}</td>
+                    <td>{{$sitem['duration']}}</td>
+                    <td style="background: #6ec664; padding-left: 2px;">Success</td>
+                </tr>
+
+                @endforeach
+
+                @endif
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

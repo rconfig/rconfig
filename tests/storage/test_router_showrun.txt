@@ -1,0 +1,140 @@
+Building configuration...
+# Add Crytpo Key generate
+
+Current configuration : 1620 bytes
+!
+! Last configuration change at 13:340:43 UTC Fri Mar 20 2020 by cisco
+!
+version 16.12
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname router1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition GS
+ rd 100:100
+ !
+ address-family ipv4
+ exit-address-family
+!
+logging persistent size 1000000 filesize 8192 immediate
+enable secret 9 $9$5VF68FOcLWPDck$gbX4VS3Elj3NN/eWng8c8M0BeKBYdm3.dnbU19v4Mtc
+!
+aaa new-model
+!
+!
+aaa authentication login default local
+aaa authorization exec default local none
+!
+!
+!
+!
+!
+aaa session-id common
+!
+!
+!
+!
+!
+!
+!
+ip domain name rconfig.com
+!
+!
+login on-success log
+!
+no ip subnet-zero
+!
+!
+!
+!
+!
+subscriber templating
+!
+!
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+license udi pid CSR1000V sn 9VU1CC5NZQC
+no license smart enable
+diagnostic bootup level minimal
+memory free low-watermark processor 72406
+!
+!
+username cisco privilege 15 password 7 094F471A1A0A
+username cisco1 password 7 121A0C0411045D
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet1
+ ip address dhcp
+ negotiation auto
+!
+ip forward-protocol nd
+no ip http server
+ip http secure-server
+!
+ip ssh rsa keypair-name sshkeys
+!
+!
+!
+!
+snmp-server host 1.1.1.1 TESTCOMMUNITY
+snmp-server host 1.1.1.2 TESTCOMMUNITY10
+snmp-server host 1.1.1.3 TESTCOMMUNITY20
+snmp-server host 1.1.1.4 TESTCOMMUNITY30
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ logging synchronous
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ transport input telnet ssh
+!
+!
+!
+!
+!
+!
+end

@@ -1,0 +1,290 @@
+Building configuration...
+
+Current configuration : 6068 bytes
+!
+! Last configuration change at 20:21:09 UTC Mon Apr 18 2022 by cisco
+!
+version 16.6
+service timestamps debug datetime msec
+service timestamps log datetime msec
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+platform console virtual
+!
+hostname router1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$PYMP$ShFY8kvekfirjMFGsPnRZ0
+enable password cisco
+!
+no aaa new-model
+clock timezone UTC 6 0
+!
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip domain name rconfig.com
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+! 
+! 
+! 
+! 
+!
+ipv6 unicast-routing
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-3203581333
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-3203581333
+ revocation-check none
+ rsakeypair TP-self-signed-3203581333
+!
+!
+crypto pki certificate chain TP-self-signed-3203581333
+ certificate self-signed 01
+  30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 05050030 
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 33323033 35383133 3333301E 170D3138 30323139 31363138 
+  35335A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649 
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D33 32303335 
+  38313333 33308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201 
+  0A028201 0100B0EF E78AFC15 6EAC5477 CE419D4C 15860478 CE0AD4ED B68DA36C 
+  25970FF8 13EB3984 9072219E F0104C53 955AC0BA FE6C7CAA 3A5A77F7 829C0AA5 
+  58B0C1F1 597C3153 1A48D41C 0D62D690 D4407FD3 5C4F79B7 A7558069 EB6B3781 
+  15F6303C 48817F96 2DEB3138 1C546F07 AAB0AED0 BBFA856D 4F626389 BFBC9BFC 
+  1BFDA2A7 768E2DB4 A90A4473 0F064EC9 1213901F 0437E0EA A28A2573 5319F6F5 
+  2B698C41 3945BC82 5378F2FF 83889D99 C8DBA4F7 C0FC6706 78D43969 9CBCD667 
+  3B967105 F22B7069 C64E1C35 746BF7F5 5B3C6376 E7AAD884 E5FBF3DB 66B46A05 
+  FDAE94D6 3AB8BAC5 8B154962 8E62D631 19204B30 14A0967C B2DAB3A8 4E97FB42 
+  AE982089 B9030203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF 
+  301F0603 551D2304 18301680 145B2A1D F9BDAA8C E79CE831 8AE1EE1F E42B9F72 
+  16301D06 03551D0E 04160414 5B2A1DF9 BDAA8CE7 9CE8318A E1EE1FE4 2B9F7216 
+  300D0609 2A864886 F70D0101 05050003 82010100 52F30C26 AF408604 9D46ABF1 
+  44D2566A 046D8C95 990328A0 5FD4A770 384284BC 1229EFB5 5C95C134 050C0D23 
+  53E74557 C169D3BC 90DF1180 B683FDA1 0F550F26 87FB8584 81231A17 64552366 
+  B7754EF2 71025D62 8FF6846A 64747CEA 6CF14A2A C9EDD401 2EF9126A FD78A55D 
+  65663905 FE9BE0C2 BA96EB21 3454828E 56273331 A11C8CAE C3185448 79FAE7B7 
+  B9A5A699 0DD85919 11F43A27 A5AD9590 25074292 F4136514 299B986E 125776DA 
+  6F15275E 8636EFDC 4F50CF63 EB55A2F2 73FA14B9 CE25735E 913464B6 97E4DC98 
+  8F02F826 EB16D936 E7998AEB 860D93A7 FA6B5D18 1093E21C 975C153B 26ADDF6F 
+  696ABE1C 4F8BD80C 6B03F920 EBB602CF E1438D53
+  	quit
+!
+!
+!
+!
+!
+!
+!
+!
+!
+license udi pid CSR1000V sn 9FM4W37HHOV
+diagnostic bootup level minimal
+spanning-tree extend system-id
+!
+!
+!
+username cisco privilege 15 password 0 cisco
+username stephen password 0 stephen
+username steve password 0 steve
+username cisco1 password 0 cisco
+!
+redundancy
+!
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+!
+!
+interface Loopback10
+ ip address 192.168.50.10 255.255.255.255
+!
+interface Loopback20
+ ip address 192.168.50.20 255.255.255.255
+!
+interface Loopback30
+ ip address 192.168.50.30 255.255.255.255
+!
+interface Loopback40
+ ip address 192.168.50.40 255.255.255.255
+!
+interface Loopback50
+ ip address 192.168.50.50 255.255.255.255
+!
+interface Loopback60
+ ip address 192.168.50.60 255.255.255.255
+!
+interface Loopback70
+ ip address 192.168.50.70 255.255.255.255
+!
+interface Loopback80
+ ip address 192.168.50.80 255.255.255.255
+!
+interface Loopback90
+ ip address 192.168.50.90 255.255.255.255
+!
+interface Loopback100
+ ip address 192.168.50.100 255.255.255.255
+!
+interface Loopback110
+ ip address 192.168.50.110 255.255.255.255
+!
+interface Loopback120
+ ip address 192.168.50.120 255.255.255.255
+!
+interface Loopback130
+ ip address 192.168.50.130 255.255.255.255
+!
+interface Loopback140
+ ip address 192.168.50.140 255.255.255.255
+!
+interface Loopback150
+ ip address 192.168.50.150 255.255.255.255
+!
+interface Loopback160
+ ip address 192.168.50.160 255.255.255.255
+!
+interface Loopback170
+ ip address 192.168.50.170 255.255.255.255
+!
+interface Loopback180
+ ip address 192.168.50.180 255.255.255.255
+!
+interface Loopback190
+ ip address 192.168.50.190 255.255.255.255
+!
+interface Loopback200
+ ip address 192.168.50.200 255.255.255.255
+!
+interface Loopback210
+ ip address 192.168.50.210 255.255.255.255
+!
+interface Loopback220
+ ip address 192.168.50.220 255.255.255.255
+!
+interface Loopback230
+ ip address 192.168.50.230 255.255.255.255
+!
+interface Loopback240
+ ip address 192.168.50.240 255.255.255.255
+!
+interface Loopback250
+ ip address 192.168.50.250 255.255.255.255
+!
+interface GigabitEthernet1
+ description This is a test desc
+ ip address 192.168.1.170 255.255.255.0
+ negotiation auto
+ ipv6 address 2001:BB6:788A:8000::/64 eui-64
+ ipv6 address 2001:BB6:788A:8000:20C:29FF:FE6D:A267/64
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet3
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+router bgp 64000
+ bgp log-neighbor-changes
+ network 1.1.1.1
+ network 1.1.1.2
+ network 1.1.1.3
+ network 1.1.1.4
+ network 2.2.2.2
+ network 2.2.2.3
+ network 2.2.2.4
+ network 2.2.2.5
+!
+!
+virtual-service csr_mgmt
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+ip http client source-interface GigabitEthernet1
+ip route 0.0.0.0 0.0.0.0 192.168.1.254
+!
+!
+!
+!
+snmp-server host 1.1.1.1 TESTCOMMUNITY 
+snmp-server host 1.1.1.1 TESTCOMMUNITY10 
+snmp-server host 1.1.1.1 TESTCOMMUNITY30 
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+line con 0
+ exec-timeout 0 0
+ stopbits 1
+line vty 0 4
+ password cisco
+ login local
+ transport input telnet ssh
+!
+ntp server pool.ntp.org
+ntp server time-pnp.cisco.comi.
+wsma agent exec
+!
+wsma agent config
+!
+wsma agent filesys
+!
+wsma agent notify
+!
+!
+end

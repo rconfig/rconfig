@@ -1,0 +1,11 @@
+.pf-c-background-image {
+    --pf-c-background-image--BackgroundColor: var(--pf-global--BackgroundColor--dark-100);
+    --pf-c-background-image--BackgroundImage: url(/resources/images/login_background/rconfig_msp_576.png);
+    --pf-c-background-image--BackgroundImage-2x: url(/resources/images/login_background/rconfig_msp_576@2x.png);
+    --pf-c-background-image--BackgroundImage--sm: url(/resources/images/login_background/rconfig_msp_768.png);
+    --pf-c-background-image--BackgroundImage--sm-2x: url(/resources/images/login_background/rconfig_msp_768@2x.png);
+    --pf-c-background-image--BackgroundImage--md: url(/resources/images/login_background/rconfig_msp_992.png);
+    --pf-c-background-image--BackgroundImage--md-2x: url(/resources/images/login_background/rconfig_msp_992@2x.png);
+    --pf-c-background-image--BackgroundImage--lg: url(/resources/images/login_background/rconfig_msp_2000.png);
+    --pf-c-background-image--Filter: url(#image_overlay);
+}

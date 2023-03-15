@@ -1,0 +1,47 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-vue": "^3.2.0",
+        "@vue/compiler-sfc": "^3.2.23",
+        "axios": "^1.3.4",
+        "laravel-vite-plugin": "^0.6.1",
+        "postcss": "^8.4.21",
+        "resolve-url-loader": "^5.0.0",
+        "sass": "^1.54.0",
+        "sass-loader": "^13.2.0",
+        "vite": "^3.2.5",
+        "vue": "^3.2.23",
+        "vue-loader": "^17.0.0"
+    },
+    "name": "rconfig6",
+    "description": "<p align=\"center\"><a href=\"https://laravel.com\" target=\"_blank\"><img src=\"https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg\" width=\"400\"></a></p>",
+    "version": "1.0.0",
+    "main": "webpack.mix.js",
+    "directories": {
+        "test": "tests"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@highlightjs/vue-plugin": "^2.1.0",
+        "@patternfly/patternfly": "^4.176.3",
+        "@vueuse/core": "^9.0.2",
+        "autoprefixer": "^10.4.14",
+        "babel-loader": "^9.1.2",
+        "cronstrue": "^2.4.0",
+        "file-saver": "^2.0.5",
+        "highlight.js": "^11.6.0",
+        "monaco-editor": "^0.36.1",
+        "monaco-editor-webpack-plugin": "^7.0.1",
+        "vue-axios": "^3.4.0",
+        "vue-clipboard3": "^2.0.0",
+        "vue-columns-resizable": "^0.0.1",
+        "vue-router": "^4.0.12",
+        "vue3-highlightjs": "^1.0.5"
+    }
+}
