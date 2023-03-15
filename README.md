@@ -10,7 +10,7 @@ https://github.com/mohammadain/laravel-docker-cron/blob/master/Dockerfile -->
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/rconfig/rconfig6-core">
+  <a href="https://github.com/rconfig/rconfig">
     <img src="https://www.rconfig.com/images/new_logos/blue_logos/artwork_blue_horizontal_Artboard_1_96px.png" alt="Logo" >
   </a>
 
@@ -98,13 +98,13 @@ We have conveniently provided scripts to help you install the required software.
 2. Clone the repo
 
 ```sh
-git clone https://github.com/rconfig/rconfig6-core.git
+git clone https://github.com/rconfig/rconfig.git
 ```
 
 3. Change directory to the repo
 
 ```sh
-cd rConfig6CoreDev
+cd rconfig
 ```
 
 4. Create the .env file
@@ -117,7 +117,7 @@ cp .env.example .env
 
 ```sh
 APP_URL="https://SERVER.DOMAIN.LOCAL"
-APP_DIR_PATH=/var/www/html/DIRNAME
+APP_DIR_PATH=/var/www/html/rconfig
 DB_HOST=DBHOST
 DB_PORT=DBPORT
 DB_DATABASE=DBNAME
@@ -181,7 +181,7 @@ Generated optimized autoload files containing 6948 classes
   Add a cron entry for task scheduling? (yes/no) [no]
 ❯ yes
 
-   INFO  Entry was added [* * * * * cd /var/www/html/rConfig6CoreDev && php artisan schedule:run >> /dev/null 2>&1].
+   INFO  Entry was added [* * * * * cd /var/www/html/rconfig && php artisan schedule:run >> /dev/null 2>&1].
 
    INFO  Install done!
 
