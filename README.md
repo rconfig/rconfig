@@ -37,7 +37,7 @@ https://github.com/mohammadain/laravel-docker-cron/blob/master/Dockerfile -->
   </p>
 
 [![Tests](https://github.com/eliashaeussler/typo3-badges/actions/workflows/tests.yaml/badge.svg)](https://github.com/eliashaeussler/typo3-badges/actions/workflows/tests.yaml)
-[![License](https://img.shields.io/github/license/eliashaeussler/typo3-badges)](LICENSE) [![Made with Node](https://img.shields.io/badge/dynamic/json?label=node&query=%24.engines%5B%22node%22%5D&url=https%3A%2F%2Fraw.githubusercontent.com%2FMichaelCurrin%2Fbadge-generator%2Fmaster%2Fpackage.json)](https://nodejs.org 'Go to Node.js homepage')
+[![License](https://img.shields.io/github/license/eliashaeussler/typo3-badges)](LICENSE) [![Made with Node](https://img.shields.io/badge/dynamic/json?label=node&query=%24.engines%5B%22node%22%5D&url=https%3A%2F%2Fraw.githubusercontent.com%2FMichaelCurrin%2Fbadge-generator%2Fmaster%2Fpackage.json)](https://nodejs.org "Go to Node.js homepage")
 [![PHP Version Require](http://poser.pugx.org/pugx/badge-poser/require/php)](https://packagist.org/packages/pugx/badge-poser)
 
  <img src="https://img.shields.io/badge/-Vue3-4FC08D?logo=vue.js&logoColor=white&style=flat"/>
@@ -61,11 +61,11 @@ If you are looking for rConfig V6 professional, please visit `https://www.rconfi
 
 Supported OS
 
--   Rocky Linux 8/9+
--   RHEL Linux 8/9+
--   CentOS Linux 8/9+
--   Ubuntu 20.04+
--   Docker (Linux)
+- Rocky Linux 8/9+
+- RHEL Linux 8/9+
+- CentOS Linux 8/9+
+- Ubuntu 20.04+
+- Docker (Linux)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -90,9 +90,72 @@ MySQL 5.7+ or MariaDB 10.5+
 nodejs 14.17+
 Supervisor 4.2+
 
-We have conveniently provided scripts to help you install the required software. Head over to [https://www.rconfig.com/docs/6.9/getstarted/os-setup](https://www.rconfig.com/docs/6.9/getstarted/os-setup) to find the correct script for your OS.
+We have conveniently provided scripts to help you install the required software. Head over to [https://www.rconfig.com/docs/6.9/getstarted/os-setup](https://www.rconfig.com/docs/6.9/getstarted/os-setup) to find the correct script for your OS. If you are using a different OS, you will need to install the required software manually.
 
-### Setup Steps
+> **Note**
+> You will want to be logged in as root when running the scripts.
+
+### Database Setup
+
+1. Login to your database server as root
+2. Create a new database
+
+```sh
+mysql -u root -p
+CREATE DATABASE rconfig;
+```
+
+3. Create a new user if required (do not use the credentials below in production). This is likely required for Ubutnu 20.04+. If you are using a different OS, you may not need to create a new user, and you can use the root account, though this is not recommended.
+
+```sh
+
+CREATE USER 'user1'@'localhost' IDENTIFIED BY 'password1';
+GRANT ALL PRIVILEGES ON rconfig.* TO 'user1'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+4. Exit the database
+
+```sh
+exit
+```
+
+### Install Node & NPM
+
+The actual installation steps will vary depending on your OS. We have provided the steps for multiple OS's below by using Node Version Manager (NVM). If any of the steps below do not work for you, please refer to the official documentation for your OS.
+
+1. Install Node Version Manager (NVM)
+
+```sh
+# CentOS/RHEL/Rocky 8/9
+curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+source ~/.bashrc
+nvm ls-remote
+```
+
+```sh
+# Ubuntu 20.04+
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+source ~/.bashrc
+nvm ls-remote
+```
+
+2. Install NodeJs/NPM
+
+```sh
+## install latest stable version
+sudo nvm install node
+
+```
+
+3. Check the version of NodeJS
+
+```sh
+node -v
+npm -v
+```
+
+### rConfig Setup Steps
 
 1. Login as root
 2. Clone the repo
@@ -119,7 +182,7 @@ cp .env.example .env
 APP_URL="https://SERVER.DOMAIN.LOCAL"
 APP_DIR_PATH=/var/www/html/rconfig
 DB_HOST=DBHOST
-DB_PORT=DBPORT
+DB_PORT=3306
 DB_DATABASE=DBNAME
 DB_USERNAME=DBUSER
 DB_PASSWORD=DBPASS
@@ -133,7 +196,7 @@ composer self-update --2
 yes | composer install --no-dev
 ```
 
-7. Run the installation script
+7. Run the installation script. This will install the required packages, setup the database, and configure the web server. The script will take a few minutes to complete.
 
 ```sh
 php artisan install
@@ -153,28 +216,19 @@ The output form the above should look like this:
   Packages discovery ...................................................................................................................... 5ms DONE
 
   command key:generate .................................................................................................................... 2ms DONE
-  command migrate ......................................................................................................................... 2ms DONE
-  command passport:install ................................................................................................................ 7ms DONE
-  exec    sed -i -e s+PWD+$PWD+g $PWD/horizon_supervisor.ini .............................................................................. 9ms DONE
-  exec    if [ -f /etc/supervisord.d/horizon_supervisor.ini ]; then unlink /etc/supervisord.d/horizon_supervisor.ini; fi .................. 4ms DONE
-  exec    sudo ln -s $PWD/horizon_supervisor.ini /etc/supervisord.d/horizon_supervisor.ini ............................................... 14ms DONE
-  exec    systemctl restart supervisord ............................................................................................... 3,274ms DONE
-  exec    sed -i -e s+PWD+$PWD+g /etc/httpd/conf.d/rconfig-vhost.conf ..................................................................... 5ms DONE
-  exec    if [ -f /etc/httpd/conf.d/rconfig-vhost.conf ]; then unlink /etc/httpd/conf.d/rconfig-vhost.conf; fi ............................ 3ms DONE
-  exec    sudo ln -s $PWD/rconfig-vhost.conf /etc/httpd/conf.d/rconfig-vhost.conf ........................................................ 14ms DONE
-  exec    systemctl restart httpd ..................................................................................................... 1,139ms DONE
-  exec    chown -R apache:apache $PWD ................................................................................................... 118ms DONE
+  command migrate ......................................................................................................................... 3ms DONE
+  command passport:install ............................................................................................................... 12ms DONE
+  script  setup-supervisor ............................................................................................................ 3,412ms DONE
+  script  setup-apache ................................................................................................................ 1,758ms DONE
   command rconfig:clear-all
 No config updates to processes
 
 > Illuminate\Foundation\ComposerScripts::postAutoloadDump
-Generated optimized autoload files containing 6948 classes
-........................................................................................................... 5,187ms DONE
+Generated optimized autoload files containing 6914 classes
+........................................................................................................... 3,814ms DONE
   command rconfig:sync-tasks .............................................................................................................. 2ms DONE
-  script  cache .......................................................................................................................... 27ms DONE
-  script  build ...................................................................................................................... 21,478ms DONE
-  command clinotify ....................................................................................................................... 1ms DONE
-  command about .......................................................................................................................... 86ms DONE
+  script  cache .......................................................................................................................... 48ms DONE
+  script  build ..................................................................................................................... 106,055ms DONE
 
   No assets for publishing .........................................................................................................................
 
@@ -187,10 +241,16 @@ Generated optimized autoload files containing 6948 classes
 
 ```
 
-8. Update apache config file for correct server name
+8. Update apache config file for correct server name.
 
 ```sh
-sudo nano /etc/httpd/conf.d/rconfig-vhost.conf
+# CentOS/RHEL
+sudo vi /etc/httpd/conf.d/rconfig-vhost.conf
+```
+
+```sh
+# Ubuntu
+sudo vi /etc/apache2/sites-available/rconfig-vhost.conf
 ```
 
 Update the `ServerName` to match your server's domain name.
@@ -268,8 +328,8 @@ Although we provide this code free and open source, rConfig v6 core is based bes
 
 Inspiration, code snippets, etc.
 
--   [Laravel](https://www.laravel.com)
--   [vuejs](https://vuejs.org/)
--   [patternfly v4](https://www.patternfly.org/v4/)
+- [Laravel](https://www.laravel.com)
+- [vuejs](https://vuejs.org/)
+- [patternfly v4](https://www.patternfly.org/v4/)
 
 See composer.json and package.json for a full list of dependencies, and their licenses.

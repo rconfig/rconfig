@@ -9,19 +9,12 @@ App::install(
         ->command('key:generate', ['--force' => true])
         ->command('migrate', ['--force' => true])
         ->command('passport:install')
-        ->exec('if [ -f /etc/supervisord.d/horizon_supervisor.ini ]; then unlink /etc/supervisord.d/horizon_supervisor.ini; fi')
-        ->exec('sed -i -e s+PWD+$PWD+g $PWD/horizon_supervisor.ini')
-        ->exec('sudo ln -s $PWD/horizon_supervisor.ini /etc/supervisord.d/horizon_supervisor.ini')
-        ->exec('systemctl restart supervisord')
-        ->exec('sed -i -e s+PWD+$PWD+g $PWD/rconfig-vhost.conf')
-        ->exec('if [ -f /etc/httpd/conf.d/rconfig-vhost.conf ]; then unlink /etc/httpd/conf.d/rconfig-vhost.conf; fi')
-        ->exec('sudo ln -s $PWD/rconfig-vhost.conf /etc/httpd/conf.d/rconfig-vhost.conf')
-        ->exec('systemctl restart httpd')
-        ->exec('chown -R apache:apache $PWD')
+        ->script('setup-supervisor')
+        ->script('setup-apache')
         ->command('rconfig:clear-all')
         ->command('rconfig:sync-tasks')
         ->script('cache')
-        ->script('build')
+        ->script('build-assets')
 );
 
 // App::install(
