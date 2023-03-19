@@ -14,7 +14,7 @@ App::install(
         ->command('rconfig:clear-all')
         ->command('rconfig:sync-tasks')
         ->script('cache')
-        ->script('build')
+        ->script('build-assets')
 );
 
 // App::install(
