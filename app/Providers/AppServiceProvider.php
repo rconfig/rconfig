@@ -9,6 +9,7 @@ use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
+use Qruto\Flora\Run;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,6 +34,43 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+        Run::newScript(
+            'setup-supervisor',
+            fn (Run $run): Run => $run
+                ->exec('if [ -f /etc/redhat-release ]; then  SUPDIR=/etc/supervisord.d; fi;')
+                ->exec('if [ -f /etc/lsb-release ]; then  SUPDIR=/etc/supervisor; fi;')
+                ->exec('if [ -f $SUPDIR/horizon_supervisor.ini ]; then unlink $SUPDIR/horizon_supervisor.ini; fi')
+                ->exec('sed -i -e s+PWD+$PWD+g $PWD/horizon_supervisor.ini')
+                ->exec('sudo ln -s $PWD/horizon_supervisor.ini $SUPDIR/horizon_supervisor.ini')
+                ->exec('if [ -f /etc/redhat-release ]; then systemctl restart supervisord; fi;')
+                ->exec('if [ -f /etc/lsb-release ]; then service supervisor restart; fi;')
+        );
+        Run::newScript(
+            'setup-apache',
+            fn (Run $run): Run => $run
+                ->exec('if [ -f /etc/redhat-release ]; then  HTTPDDIR=/etc/httpd/conf.d/; fi;')
+                ->exec('if [ -f /etc/lsb-release ]; then  HTTPDDIR=/etc/apache2/sites-enabled; fi;')
+                ->exec('sed -i -e s+PWD+$PWD+g $PWD/rconfig-vhost.conf')
+                ->exec('if [ -f $HTTPDDIR/rconfig-vhost.conf ]; then unlink $HTTPDDIR/rconfig-vhost.conf; fi')
+                ->exec('sudo ln -s $PWD/rconfig-vhost.conf $HTTPDDIR/rconfig-vhost.conf')
+                ->exec('if [ -f $HTTPDDIR/000-default.conf ]; then unlink $HTTPDDIR/000-default.conf; fi;')
+                ->exec('if [ -f /etc/redhat-release ]; then chown -R apache:apache $PWD; fi;')
+                ->exec('if [ -f /etc/redhat-release ]; then systemctl restart httpd; fi;')
+                ->exec('if [ -f /etc/lsb-release ]; then sudo chown -R www-data:www-data /var/www/html/rconfig; fi;')
+                ->exec('if [ -f /etc/lsb-release ]; then sudo chown -R $USER:www-data /var/www/html/rconfig; fi;')
+                ->exec('if [ -f /etc/lsb-release ]; then service apache2 restart; fi;')
+        );
+
+        Run::newScript(
+            'build-assets',
+            fn (Run $run): Run => $run
+                ->exec('export NODE_OPTIONS="--dns-result-order=ipv4first"')
+                ->exec('npm install')
+                ->exec('npm run dev')
+        );
+
+
         //https: //github.com/laravel/horizon/issues/256
         // /**
         // * Log jobs
@@ -40,7 +78,7 @@ class AppServiceProvider extends ServiceProvider
         // * Job dispatched & processing
         // */
         Queue::before(function (JobProcessing $event) {
-            Log::info('Job ready: '.$event->job->resolveName());
+            Log::info('Job ready: ' . $event->job->resolveName());
 
             if (
                 $event->job->resolveName() === 'App\Jobs\DownloadConfigNow' ||
@@ -57,7 +95,7 @@ class AppServiceProvider extends ServiceProvider
                 $this->trackedJob->setPayload($event->job->payload());
             }
 
-            Log::info('Job started: '.$event->job->resolveName());
+            Log::info('Job started: ' . $event->job->resolveName());
         });
 
         // /**
@@ -72,10 +110,10 @@ class AppServiceProvider extends ServiceProvider
                 $event->job->resolveName() === 'App\Jobs\PurgeConfigsJob'
             ) {
                 $this->trackedJob = TrackedJob::where('trackable_id', $event->job->getJobId())->first();
-                $this->trackedJob->setOutput('Job done: '.$event->job->resolveName());
-                $this->trackedJob->markAsFinished('Job done: '.$event->job->resolveName());
+                $this->trackedJob->setOutput('Job done: ' . $event->job->resolveName());
+                $this->trackedJob->markAsFinished('Job done: ' . $event->job->resolveName());
             }
-            Log::notice('Job done: '.$event->job->resolveName());
+            Log::notice('Job done: ' . $event->job->resolveName());
         });
 
         // /**
@@ -90,10 +128,10 @@ class AppServiceProvider extends ServiceProvider
                 $event->job->resolveName() === 'App\Jobs\PurgeConfigsJob'
             ) {
                 $this->trackedJob = TrackedJob::where('trackable_id', $event->job->getJobId())->first();
-                $this->trackedJob->setOutput('Job failed: '.$event->job->resolveName().'('.$event->exception->getMessage().')');
+                $this->trackedJob->setOutput('Job failed: ' . $event->job->resolveName() . '(' . $event->exception->getMessage() . ')');
                 $this->trackedJob->markAsFailed($event->exception);
             }
-            Log::error('Job failed: '.$event->job->resolveName().'('.$event->exception->getMessage().')');
+            Log::error('Job failed: ' . $event->job->resolveName() . '(' . $event->exception->getMessage() . ')');
         });
     }
 }

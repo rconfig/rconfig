@@ -64,19 +64,11 @@ class rconfigClearAll extends Command
 
         echo exec('sudo supervisorctl update') . PHP_EOL;
         echo exec('sudo supervisorctl reread') . PHP_EOL;
-        echo exec('sudo systemctl restart supervisord') . PHP_EOL;
+        echo exec('if [ -f /etc/redhat-release ]; then systemctl restart supervisord; fi;') . PHP_EOL;
+        echo exec('if [ -f /etc/lsb-release ]; then systemctl restart supervisor; fi;') . PHP_EOL;
+        echo exec('if [ -f /etc/redhat-release ]; then chown -R apache:apache $PWD; fi;') . PHP_EOL;
+        echo exec('if [ -f /etc/lsb-release ]; then sudo chown -R www-data:www-data /var/www/html/rconfig; fi;') . PHP_EOL;
         echo exec('composer dump-autoload') . PHP_EOL;
-        custom_chown(base_path());
         $this->info(config('app.name') . ' application settings have been cleared!');
-
-        // if($this->option('npm') === true){
-        //     echo exec('echo ------  Begin rConfig NPM Clear Out!  ------').PHP_EOL;
-        //     echo exec('echo rm -fr node_modules').PHP_EOL;
-        //     echo exec('echo Downloading and installing all Node Modules. This will take a couple of minutes, please wait!').PHP_EOL;
-        //     sleep(3);
-        //     echo exec('echo npm install').PHP_EOL;
-        //     echo exec('echo npm run build').PHP_EOL;
-        //     echo exec('echo ------  End rConfig NPM Clear Out!  ------').PHP_EOL;
-        // }
     }
 }
