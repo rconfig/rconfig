@@ -62,6 +62,14 @@ class AppServiceProvider extends ServiceProvider
                 ->exec('if [ -f /etc/lsb-release ]; then service apache2 restart; fi;')
         );
 
+        Run::newScript(
+            'build-assets',
+            fn (Run $run): Run => $run
+                ->exec('export NODE_OPTIONS="--dns-result-order=ipv4first"')
+                ->exec('npm install')
+                ->exec('npm run dev')
+        );
+
 
         //https: //github.com/laravel/horizon/issues/256
         // /**

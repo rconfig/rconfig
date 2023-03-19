@@ -65,7 +65,7 @@ class rconfigClearAll extends Command
         echo exec('sudo supervisorctl update') . PHP_EOL;
         echo exec('sudo supervisorctl reread') . PHP_EOL;
         echo exec('if [ -f /etc/redhat-release ]; then systemctl restart supervisord; fi;') . PHP_EOL;
-        echo exec('if [ -f /etc/redhat-release ]; then systemctl restart supervisor; fi;') . PHP_EOL;
+        echo exec('if [ -f /etc/lsb-release ]; then systemctl restart supervisor; fi;') . PHP_EOL;
         echo exec('if [ -f /etc/redhat-release ]; then chown -R apache:apache $PWD; fi;') . PHP_EOL;
         echo exec('if [ -f /etc/lsb-release ]; then sudo chown -R www-data:www-data /var/www/html/rconfig; fi;') . PHP_EOL;
         echo exec('composer dump-autoload') . PHP_EOL;
