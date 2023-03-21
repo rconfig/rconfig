@@ -155,6 +155,7 @@ node -v
 npm -v
 ```
 
+
 ### rConfig Setup Steps
 
 1. Login as root
@@ -196,7 +197,22 @@ composer self-update --2
 yes | composer install --no-dev
 ```
 
-7. Run the installation script. This will install the required packages, setup the database, and configure the web server. The script will take a few minutes to complete.
+7. Install apache and supervisor
+
+```sh
+chmod +x setup-apache.sh
+./setup-apache.sh
+```
+
+8. Install supervisor
+
+```sh
+chmod +x setup-supervisor.sh
+./setup-supervisor.sh
+```
+
+
+9. Run the installation script. This will install the required packages, setup the database, and configure the web server. The script will take a few minutes to complete.
 
 ```sh
 php artisan install
