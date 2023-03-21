@@ -9,8 +9,6 @@ App::install(
         ->command('key:generate', ['--force' => true])
         ->command('migrate', ['--force' => true])
         ->command('passport:install')
-        ->script('setup-supervisor')
-        ->script('setup-apache')
         ->command('rconfig:clear-all')
         ->command('rconfig:sync-tasks')
         ->script('cache')

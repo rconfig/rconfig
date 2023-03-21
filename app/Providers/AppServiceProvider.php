@@ -36,33 +36,6 @@ class AppServiceProvider extends ServiceProvider
     {
 
         Run::newScript(
-            'setup-supervisor',
-            fn (Run $run): Run => $run
-                ->exec('if [ -f /etc/redhat-release ]; then  SUPDIR=/etc/supervisord.d; fi;')
-                ->exec('if [ -f /etc/lsb-release ]; then  SUPDIR=/etc/supervisor; fi;')
-                ->exec('if [ -f $SUPDIR/horizon_supervisor.ini ]; then unlink $SUPDIR/horizon_supervisor.ini; fi')
-                ->exec('sed -i -e s+PWD+$PWD+g $PWD/horizon_supervisor.ini')
-                ->exec('sudo ln -s $PWD/horizon_supervisor.ini $SUPDIR/horizon_supervisor.ini')
-                ->exec('if [ -f /etc/redhat-release ]; then systemctl restart supervisord; fi;')
-                ->exec('if [ -f /etc/lsb-release ]; then service supervisor restart; fi;')
-        );
-        Run::newScript(
-            'setup-apache',
-            fn (Run $run): Run => $run
-                ->exec('if [ -f /etc/redhat-release ]; then  HTTPDDIR=/etc/httpd/conf.d/; fi;')
-                ->exec('if [ -f /etc/lsb-release ]; then  HTTPDDIR=/etc/apache2/sites-enabled; fi;')
-                ->exec('sed -i -e s+PWD+$PWD+g $PWD/rconfig-vhost.conf')
-                ->exec('if [ -f $HTTPDDIR/rconfig-vhost.conf ]; then unlink $HTTPDDIR/rconfig-vhost.conf; fi')
-                ->exec('sudo ln -s $PWD/rconfig-vhost.conf $HTTPDDIR/rconfig-vhost.conf')
-                ->exec('if [ -f $HTTPDDIR/000-default.conf ]; then unlink $HTTPDDIR/000-default.conf; fi;')
-                ->exec('if [ -f /etc/redhat-release ]; then chown -R apache:apache $PWD; fi;')
-                ->exec('if [ -f /etc/redhat-release ]; then systemctl restart httpd; fi;')
-                ->exec('if [ -f /etc/lsb-release ]; then sudo chown -R www-data:www-data /var/www/html/rconfig; fi;')
-                ->exec('if [ -f /etc/lsb-release ]; then sudo chown -R $USER:www-data /var/www/html/rconfig; fi;')
-                ->exec('if [ -f /etc/lsb-release ]; then service apache2 restart; fi;')
-        );
-
-        Run::newScript(
             'build-assets',
             fn (Run $run): Run => $run
                 ->exec('export NODE_OPTIONS="--dns-result-order=ipv4first"')
