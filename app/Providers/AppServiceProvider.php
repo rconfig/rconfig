@@ -67,7 +67,7 @@ class AppServiceProvider extends ServiceProvider
             fn (Run $run): Run => $run
                 ->exec('export NODE_OPTIONS="--dns-result-order=ipv4first"')
                 ->exec('npm install')
-                ->exec('npm run dev')
+                ->exec('npm run build')
         );
 
 
