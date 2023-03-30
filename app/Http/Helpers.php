@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\File;
 
 /**
  * Return active class if current path begins with this path.
@@ -75,22 +76,7 @@ function report_path()
 
 function custom_chown($path)
 {
-    try {
-        chown($path, 'apache');
-
-        return;
-    } catch (\Exception $e) {
-        dump($e->getMessage());
-        activityLogIt(__CLASS__, __FUNCTION__, 'warn', $e->getMessage(), 'chown');
-    }
-    try {
-        chown($path, 'www-data');
-
-        return;
-    } catch (\Exception $e) {
-        dump($e->getMessage());
-        activityLogIt(__CLASS__, __FUNCTION__, 'warn', $e->getMessage(), 'chown');
-    }
+    File::exists('/etc/redhat-release') ? chown($path, 'apache') : chown($path, 'www-data');
 }
 
 function formatSize($bytes)
