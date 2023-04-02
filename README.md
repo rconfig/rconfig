@@ -131,7 +131,7 @@ The actual installation steps will vary depending on your OS. We have provided t
 curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
 source ~/.bashrc
 nvm ls-remote
-sudo nvm install node
+nvm install node
 ```
 
 ```sh
@@ -274,7 +274,10 @@ ServerAlias YourServerName.domain.local
 sudo systemctl restart httpd
 ```
 
-10. Open your browser and navigate to your server's domain name. You should see the rConfig login page.
+10. Open your browser and navigate to your server's domain name. You should see the rConfig login page. The default system credentials are below. Please change or remove these as soon as a new admin user is created. 
+
+Username: admin@domain.com
+Password: admin
 
 Check out our docs `www.rconfig.com/docs` to learn more.
 
