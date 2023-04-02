@@ -131,7 +131,7 @@ The actual installation steps will vary depending on your OS. We have provided t
 curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
 source ~/.bashrc
 nvm ls-remote
-sudo nvm install node
+nvm install node
 ```
 
 ```sh
@@ -278,7 +278,6 @@ sudo systemctl restart httpd
 
 Username: admin@domain.com
 Password: admin
-
 
 Check out our docs `www.rconfig.com/docs` to learn more.
 
