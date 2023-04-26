@@ -126,13 +126,14 @@ exit
 
 The actual installation steps will vary depending on your OS. We have provided the steps for multiple OS's below by using Node Version Manager (NVM). If any of the steps below do not work for you, please refer to the official documentation for your OS.
 
-1. Install Node Version Manager (NVM)
+1. Install Node Version Manager (NVM) & NodeJs/NPM
 
 ```sh
 # CentOS/RHEL/Rocky 8/9
 curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
 source ~/.bashrc
 nvm ls-remote
+nvm install node
 ```
 
 ```sh
@@ -140,17 +141,10 @@ nvm ls-remote
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 source ~/.bashrc
 nvm ls-remote
-```
-
-2. Install NodeJs/NPM
-
-```sh
-## install latest stable version
 sudo nvm install node
-
 ```
 
-3. Check the version of NodeJS
+2. Check the version of NodeJS
 
 ```sh
 node -v
@@ -201,15 +195,15 @@ yes | composer install --no-dev
 7. Install apache and supervisor
 
 ```sh
-chmod +x setup-apache.sh
-./setup-apache.sh
+chmod +x setup_apache.sh
+./setup_apache.sh
 ```
 
 8. Install supervisor
 
 ```sh
-chmod +x setup-supervisor.sh
-./setup-supervisor.sh
+chmod +x setup_supervisor.sh
+./setup_supervisor.sh
 ```
 
 9. Run the installation script. This will install the required packages, setup the database, and configure the web server. The script will take a few minutes to complete.
@@ -280,7 +274,10 @@ ServerAlias YourServerName.domain.local
 sudo systemctl restart httpd
 ```
 
-10. Open your browser and navigate to your server's domain name. You should see the rConfig login page.
+10. Open your browser and navigate to your server's domain name. You should see the rConfig login page. The default system credentials are below. Please change or remove these as soon as a new admin user is created. 
+
+Username: admin@domain.com
+Password: admin
 
 Check out our docs `www.rconfig.com/docs` to learn more.
 
