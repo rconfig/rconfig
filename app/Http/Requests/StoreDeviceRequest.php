@@ -42,7 +42,7 @@ class StoreDeviceRequest extends FormRequest
         // dd($this->request);
         if ($this->getMethod() == 'POST') {
             $rules = [
-                'device_name' => 'required|unique:devices|min:5|max:255|alpha_dash',
+                'device_name' => 'required|unique:devices|min:5|max:255|regex:/^\S*$/u',
                 'device_ip' => 'required|ip',
                 'device_vendor' => 'required',
                 'device_model' => 'required|max:255|min:2',
@@ -58,7 +58,7 @@ class StoreDeviceRequest extends FormRequest
 
         if ($this->getMethod() == 'PATCH') {
             $rules = [
-                'device_name' => 'required|min:5|max:255|alpha_dash',
+                'device_name' => 'required|min:5|max:255|regex:/^\S*$/u',
                 'device_ip' => 'required|ip',
                 'device_vendor' => 'required',
                 'device_model' => 'required|max:255|min:2',

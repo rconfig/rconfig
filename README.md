@@ -65,7 +65,9 @@ Supported OS
 - RHEL Linux 8/9+
 - CentOS Linux 8/9+
 - Ubuntu 20.04+
-- Docker (Linux)
+- Docker (Linux)(not yet ready)
+
+rConfig v6 core is completely free, you do not need an API key from rConfig to download and use this version. Please follow the instructions below to get started.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -149,7 +151,6 @@ node -v
 npm -v
 ```
 
-
 ### rConfig Setup Steps
 
 1. Login as root
@@ -204,7 +205,6 @@ chmod +x setup_apache.sh
 chmod +x setup_supervisor.sh
 ./setup_supervisor.sh
 ```
-
 
 9. Run the installation script. This will install the required packages, setup the database, and configure the web server. The script will take a few minutes to complete.
 
