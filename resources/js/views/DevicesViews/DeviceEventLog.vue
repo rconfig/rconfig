@@ -21,6 +21,7 @@
                 </div>
             </div>
         </section>
+        <delete-modal v-if="viewstate.showDeleteModal" :editid="viewstate.editid" @closeModal="viewstate.showDeleteModal = false" @confirmDelete="confirmDelete"></delete-modal>
     </main>
 </template>
 
@@ -32,6 +33,7 @@ import LoadingSpinner from '../../components/LoadingSpinner.vue';
 import PageHeader from '../../components/PageHeader.vue';
 import useViewFunctions from '../../composables/ViewFunctions';
 import { onMounted, ref, reactive, inject } from 'vue';
+import DeleteModal from '../../components/DeleteModal.vue';
 import { useRoute } from 'vue-router';
 
 export default {
@@ -41,7 +43,8 @@ export default {
         PageHeader,
         DevicesBreadcrumbs,
         LoadingSpinner,
-        DataTable
+        DataTable,
+        DeleteModal
     },
     setup() {
         const pagename = ref('Device Event Log');
@@ -72,8 +75,7 @@ export default {
             }
         });
 
-        const { models, isLoading, dataTablePageChanged } = useViewFunctions(viewstate, viewstate.modelName, viewstate.modelObject);
-
+        const { models, isLoading, dataTablePageChanged, deleteRow, confirmDelete, destroyModel } = useViewFunctions(viewstate, viewstate.modelName, viewstate.modelObject);
         onMounted(() => {
             dataTablePageChanged(viewstate.pageOptionsState);
         });
@@ -106,7 +108,10 @@ export default {
             deviceid,
             devicename,
             viewstate,
-            dataTablePageChanged
+            dataTablePageChanged,
+            deleteRow,
+            confirmDelete,
+            destroyModel
         };
     }
 };
