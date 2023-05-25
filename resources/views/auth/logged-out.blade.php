@@ -6,7 +6,7 @@
 <div class="pf-c-login">
     <div class="pf-c-login__container">
         <header class="pf-c-login__header">
-            <img class="pf-c-brand" src="/images/artwork_white_horizontalArtboard 1_64px.png" alt="rConfig Logo" />
+            <img class="pf-c-brand" src="/images/new/white/hex_logo_white_horizontal_96.png" alt="rConfig Logo" />
         </header>
         <main class="pf-c-login__main">
             <header class="pf-c-login__main-header">
