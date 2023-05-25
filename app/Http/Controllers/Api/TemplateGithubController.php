@@ -4,26 +4,23 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Traits\RespondsWithHttpStatus;
-use Github\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
 use Symfony\Component\Yaml\Yaml;
 
 class TemplateGithubController extends Controller
 {
     use RespondsWithHttpStatus;
 
-    private $client;
-
     private $username;
 
     private $repo;
 
-    public function __construct(Client $client)
+    public function __construct()
     {
-        $this->client = $client;
         $this->username = Config::get('github.git.rconfig-username');
         $this->repo = Config::get('github.git.rconfig-template-repo');
     }
@@ -35,7 +32,7 @@ class TemplateGithubController extends Controller
         $arr = explode("\n", $result);
 
         if (count($arr) > 0) {
-            $result = 'Successfully downloaded '.count(File::allFiles(templates_path().'rConfig-templates')).' templates from \'github.com/rconfig/rconfig-templates\' Github repo';
+            $result = 'Successfully downloaded ' . count(File::allFiles(templates_path() . 'rConfig-templates')) . ' templates from \'github.com/rconfig/rconfig-templates\' Github repo';
 
             return $this->successResponse('Success', $result);
         } else {
@@ -48,13 +45,16 @@ class TemplateGithubController extends Controller
     public function test_github_repo_connection()
     {
         try {
-            $result['data'] = $this->client->issues()->show($this->username, $this->repo, 1);
+            //  https://api.github.com/repos/OWNER/REPO/contents/PATH
+            $response  = Http::get('https://api.github.com/repos/' . $this->username . '/' . $this->repo . '/contents/')->throw();
+            // dd($response->json());
+            $result['data'] = $response->json();
             $result['msg'] = 'Successfully connected to rConfig Templates Github repo';
 
             return $this->successResponse('Success', $result);
         } catch (\Exception $e) {
             $result['data'] = '';
-            $result['msg'] = 'Exception thrown: Could not connect to repo - '.$e->getMessage();
+            $result['msg'] = 'Exception thrown: Could not connect to repo - ' . $e->getMessage();
 
             return $this->failureResponse($result);
         }
@@ -63,7 +63,7 @@ class TemplateGithubController extends Controller
     public function list_template_repo_folders()
     {
         $dirsArray = [];
-        $dstDir = templates_path().'rConfig-templates';
+        $dstDir = templates_path() . 'rConfig-templates';
 
         if (is_dir($dstDir)) {
             $origdirsArray = File::directories($dstDir);
