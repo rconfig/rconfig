@@ -27,7 +27,7 @@ https://github.com/mohammadain/laravel-docker-cron/blob/master/Dockerfile -->
     ·
     <a href="#setup">Installation</a>
     ·
-    <a href="#usage">Usage</a>
+    <a href="#update">Updating</a>
     ·
     <a href="#contributing">Contributing</a>
     ·
@@ -274,7 +274,7 @@ ServerAlias YourServerName.domain.local
 sudo systemctl restart httpd
 ```
 
-10. Open your browser and navigate to your server's domain name. You should see the rConfig login page. The default system credentials are below. Please change or remove these as soon as a new admin user is created. 
+10. Open your browser and navigate to your server's domain name. You should see the rConfig login page. The default system credentials are below. Please change or remove these as soon as a new admin user is created.
 
 Username: admin@domain.com
 Password: admin
@@ -282,6 +282,26 @@ Password: admin
 Check out our docs `www.rconfig.com/docs` to learn more.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- Updating -->
+
+<a name="update"></a>
+
+## Updating
+
+Instruction on how to update your installation of rConfig v6 Core, after it is installed, are below. You should run the commands below as root, and you may need to use sudo if installed on Ubuntu.
+
+```sh
+cd /var/www/html/rconfig
+git pull
+php artisan migrate
+php artisan rconfig:sync-tasks
+composer install
+npm install
+npm run build
+systemctl restart httpd
+php artisan rconfig:clear-all
+```
 
 <!-- CONTRIBUTING -->
 
