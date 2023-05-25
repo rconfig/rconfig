@@ -11,7 +11,7 @@ https://github.com/mohammadain/laravel-docker-cron/blob/master/Dockerfile -->
 <br />
 <div align="center">
   <a href="https://github.com/rconfig/rconfig">
-    <img src="https://www.rconfig.com/images/rConfig_logos/new/blue/hex_logo_blue_horizontal_96.png" alt="rConfig Logo" />
+            <img src="https://www.rconfig.com/images/rConfig_logos/new/blue/hex_logo_blue_horizontal_96.png" alt="rConfig Logo" />
   </a>
 
   <h3 align="center">rConfig v6 Core</h3>
