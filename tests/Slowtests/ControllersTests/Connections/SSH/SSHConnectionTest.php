@@ -182,6 +182,41 @@ class SSHConnectionTest extends TestCase
      * @test
      * @group slow-tests
      */
+    public function full_ssh_download_and_file_exists_check_from_command_no_enable_SSH_template_and_regex_prompt()
+    {
+        $start = microtime(true);
+        $this->device3['device_main_prompt'] = '.*router.*#';
+        $this->assertStringContainsString('.*router.*#', $this->device3['device_main_prompt']);
+
+        Artisan::call('rconfig:download-device 1003');
+        $result = Artisan::output();
+        $arr = explode("\n", $result);
+
+        foreach ($arr as $line) {
+            preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output
+            if (!empty($match)) {
+                $this->assertTrue($this->downloaded_file_exists_on_disk($this->device3, $match[0]));
+            }
+        }
+        $time = microtime(true) - $start;
+        $this->assertLessThan(5, $time);
+
+        $this->assertGreaterThan(0, count($arr));
+        $this->assertStringContainsString($arr[0], 'Start rconfig:download-device IDs:1003');
+        $this->assertStringContainsString($arr[1], 'Start device download for router3 ID:1003');
+        $this->assertDatabaseHas('devices', [
+            'id' => 1003,
+            'status' => 1,
+        ]);
+
+        $this->device3->device_main_prompt  = 'r1#';
+        $this->assertStringContainsString('r1#', $this->device3['device_main_prompt']);
+    }
+
+    /**
+     * @test
+     * @group slow-tests
+     */
     public function full_ssh_download_and_file_exists_check_from_command_no_enable_SSH_template()
     {
         $start = microtime(true);
