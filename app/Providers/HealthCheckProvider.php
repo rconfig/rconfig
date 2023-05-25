@@ -39,7 +39,7 @@ class HealthCheckProvider extends ServiceProvider
                 ->failWhenLoadIsHigherInTheLast5Minutes(2.0)
                 ->failWhenLoadIsHigherInTheLast15Minutes(1.5),
             HorizonCheck::new(),
-            PingCheck::new()->failureMessage('Pinging rconfig.com failed')->url('https://www.rconfig.com'),
+            PingCheck::new()->failureMessage('Pinging rconfig.com failed')->url('https://www.rconfig.com')->timeout(5),
             RedisCheck::new(),
             ScheduleCheck::new()->heartbeatMaxAgeInMinutes(10),
             UsedDiskSpaceCheck::new(),

@@ -13,6 +13,6 @@ class Send
 
     public function sendString($command)
     {
-        return $this->connectionObj->connection->write($command."\r");
+        return $this->connectionObj->connection->write($command . "\r");
     }
 }

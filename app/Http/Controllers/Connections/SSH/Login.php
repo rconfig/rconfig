@@ -35,7 +35,7 @@ class Login
     //     echo $this->connectionObj->connection->write($this->connectionObj->password . "\n");
     //     echo $this->connectionObj->connection->read();
     //     echo $this->connectionObj->connection->write($this->connectionObj->pagingCmd . "\n");
-    //     echo $this->connectionObj->connection->read($this->connectionObj->devicePrompt);
+    //     echo $this->connectionObj->connection->read('~'.$this->connectionObj->devicePrompt.'~');
     //     return true;
     // }
 
@@ -54,7 +54,6 @@ class Login
         if ($this->connectionObj->enable == 'on') {
             $this->enableModeLogin();
         } else {
-
             $this->sendPagingCommand();
 
             return true;
@@ -83,38 +82,27 @@ class Login
 
     private function sendPagingCommand()
     {
-        // valid prompt check
-        $res = $this->connectionObj->connection->read('/(' . $this->connectionObj->devicePrompt . ')/i', SSH2::READ_REGEX);
-        // dd($res);
-        if (!preg_match('/' . $this->connectionObj->devicePrompt . '/i', $res)) {
-            // $this->connectionObj->connection->read('/(' . $this->connectionObj->devicePrompt . ')/i', SSH2::READ_REGEX);
-            activityLogIt(__CLASS__, __FUNCTION__, 'error', 'Prompt not did not match for device within timeout - This can cause slower config downloads. Device ID: ' . $this->connectionObj->device_id, 'connection', $this->connectionObj->hostname, $this->connectionObj->device_id, 'device');
-        }
-
-        $this->connectionObj->connection->write("\n");
-
         if ($this->connectionObj->paging === 'on') {
-
-            $this->connectionObj->connection->read('/(' . $this->connectionObj->devicePrompt . ')/i', SSH2::READ_REGEX);
-
+            // dd('~' . $this->connectionObj->devicePrompt . '~');
+            $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
             $this->connectionObj->connection->write($this->connectionObj->pagingCmd . "\n");
             sleep(1);
-            $this->connectionObj->connection->read('/(' . $this->connectionObj->devicePrompt . ')/i', SSH2::READ_REGEX);
+            $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
         }
     }
 
     private function enableModeLogin()
     {
         $this->connectionObj->connection->write($this->connectionObj->enableCmd . "\n");
-        $this->connectionObj->connection->read('/(' . $this->connectionObj->enablePassPrmpt . ')/i', SSH2::READ_REGEX);
+        $this->connectionObj->connection->read('~' . $this->connectionObj->enablePassPrmpt . '~', SSH2::READ_REGEX);
         $this->connectionObj->connection->write($this->connectionObj->enableModePassword . "\n");
-        $this->connectionObj->connection->read('/(' . $this->connectionObj->devicePrompt . ')/i', SSH2::READ_REGEX);
+        $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
         if ($this->connectionObj->paging === 'on') {
             $this->connectionObj->connection->write($this->connectionObj->pagingCmd . "\n");
         }
-        $this->connectionObj->connection->read('/(' . $this->connectionObj->devicePrompt . ')/i', SSH2::READ_REGEX);
+        $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
         $this->connectionObj->connection->write("\n"); // to line break after command output
-        $this->connectionObj->connection->read('/(' . $this->connectionObj->devicePrompt . ')/i', SSH2::READ_REGEX);
+        $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
     }
 
     // private function HPChecks()
@@ -123,6 +111,6 @@ class Login
     //         $this->connectionObj->connection->read($this->_hpAnyKeyPrmpt, SSH2::READ_REGEX);
     //         $this->connectionObj->connection->write("\n");
     //     }
-    //     $this->connectionObj->connection->read($this->connectionObj->devicePrompt, SSH2::READ_REGEX);
+    //     $this->connectionObj->connection->read('~'.$this->connectionObj->devicePrompt.'~', SSH2::READ_REGEX);
     // }
 }
