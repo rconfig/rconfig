@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Connections\SSH;
 
-use Illuminate\Support\Str;
 use phpseclib3\File\ANSI;
 use phpseclib3\Net\SSH2;
 
@@ -11,6 +10,8 @@ class SendCommand
     protected $send;
 
     protected $read;
+
+    protected $sendSnippet;
 
     protected $connectionObj;
 
@@ -37,19 +38,13 @@ class SendCommand
 
     private function ansiShowCommand($command)
     {
-        // example proper ansi workflow here: https://stackoverflow.com/questions/36078846/phpseclib-read-takes-previous-command-output/36079336#36079336
         $ansi = new ANSI();
         if (isset($this->connectionObj->connection->setTerminalDimensions)) {
             $ansi->setDimensions($this->connectionObj->connection->setTerminalDimensions[0], $this->connectionObj->connection->setTerminalDimensions[1]);
         }
-        $ansi->setHistory(100000);
-
-        $output = $this->connectionObj->connection->read('/(' . $this->connectionObj->devicePrompt . ')/i', SSH2::READ_REGEX);
-        $command = $this->replaceVariables($command);
+        $ansi->appendString($this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX));
         $this->send->sendString($command);
-        $output = $this->connectionObj->connection->read('/(' . $this->connectionObj->devicePrompt . ')/i', SSH2::READ_REGEX);
-        $ansi->appendString($output);
-
+        $ansi->appendString($this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX));
         // echo $ansi->getScreen(); // outputs current screen HTML
         // echo $ansi->getHistory(); // outputs current history HTML
         // $this->data = htmlspecialchars_decode(strip_tags($ansi->getScreen())); //$ansi->getScreen() returns what'd be seen on the current screen. In the case of top this is desirable
@@ -65,9 +60,6 @@ class SendCommand
 
     private function standardShowCommand($command)
     {
-        // command contains var replace it
-        $command = $this->replaceVariables($command);
-
         $this->send->sendString($command);
         // check if this is a HP device
         if ($this->connectionObj->hpAnyKeyStatus === 'on') {
@@ -84,7 +76,8 @@ class SendCommand
             $this->data = preg_replace('/\[24;1H/', '', $this->data);
             $this->data = preg_replace('/\[2K/', '', $this->data);
         } else {
-            $this->data = $this->connectionObj->connection->read('/(' . $this->connectionObj->devicePrompt . ')/i', SSH2::READ_REGEX);
+            // dd($this->connectionObj->devicePrompt);
+            $this->data = $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
         }
         if ($this->data) {
             $this->data = $this->explodeTextToArray();
@@ -117,14 +110,5 @@ class SendCommand
         }
 
         return $result;
-    }
-
-    private function replaceVariables($command)
-    {
-        if (Str::contains($command, '{deviceid}')) {
-            $command = str_replace('{deviceid}', $this->connectionObj->device_id, $command);
-        }
-
-        return $command;
     }
 }

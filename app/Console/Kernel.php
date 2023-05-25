@@ -77,10 +77,12 @@ class Kernel extends ConsoleKernel
             }
         }
 
-        $schedule->command(RunHealthChecksCommand::class)->everyMinute();
-        $schedule->command(ScheduleCheckHeartbeatCommand::class)->everyMinute();
+        $schedule->command(RunHealthChecksCommand::class)->everyFiveMinutes();
+        $schedule->command(ScheduleCheckHeartbeatCommand::class)->everyFiveMinutes();
         $schedule->command('queue:prune-batches --hours=48 --unfinished=72')->daily();
         $schedule->command('model:prune', ['--model' => MonitoredScheduledTaskLogItem::class])->daily();
+        $schedule->command('model:prune', ['--model' => \Spatie\Health\Models\HealthCheckResultHistoryItem::class])->daily();
+
     }
 
     private function download_task($executionStartTime, $task)
