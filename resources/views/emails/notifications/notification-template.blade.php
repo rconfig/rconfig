@@ -52,7 +52,7 @@
                                 <!-- Body content -->
                                 <tr>
                                     <td class="content-cell" style="font-family: Avenir, Helvetica, sans-serif; box-sizing: border-box; padding: 35px;">
-                                        <img src="{!! url('/images/artwork_blue_horizontal_Artboard_1_72px.png'); !!}" alt="rConfig Logo" title="rConfig Logo" style="display: block;  margin-left: auto; margin-right: auto; padding-bottom: 15px;"/>
+                                        <img src="{!! url('/images/new/blue/hex_logo_blue_horizontal_72.png'); !!}" alt="rConfig Logo" title="rConfig Logo" style="display: block;  margin-left: auto; margin-right: auto; padding-bottom: 15px;"/>
 
                                         <h1
                                             style="font-family: Avenir, Helvetica, sans-serif; box-sizing: border-box; color: #2F3133; font-size: 19px; font-weight: bold; margin-top: 0; text-align: left;">
