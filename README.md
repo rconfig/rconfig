@@ -157,6 +157,7 @@ npm -v
 2. Clone the repo
 
 ```sh
+cd /var/www/html
 git clone https://github.com/rconfig/rconfig.git
 ```
 
