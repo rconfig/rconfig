@@ -13,14 +13,11 @@ RUN docker-php-ext-install pdo pdo_mysql
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
 # Configure cron
-# RUN crontab -l | { cat; echo "* * * * * cd /var/www/html/current && /usr/local/bin/php artisan schedule:run >> /var/log/cron.log 2>&1"; } | crontab -
 COPY crontab /etc/crontabs/root
 
-# RUN crontab -l
+RUN chmod 0644 /etc/crontabs/root
 
 # Configure supervisor
 COPY supervisord.conf /etc/supervisor/supervisord.conf
-
-# CMD  tail -f /var/log/cron.log  & /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
 
 ENTRYPOINT ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
