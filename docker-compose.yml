@@ -1,0 +1,73 @@
+version: '3.8'
+
+networks:
+  rconfigNetwork:
+    driver: bridge
+
+services:
+  mariadb:
+    image: mariadb:10.8
+    container_name: ${DB_HOST}
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+    volumes:
+      - .${DB_STORAGE_LOCATION}:/var/lib/mysql
+    ports:
+      - 3306
+    networks:
+      - rconfigNetwork
+
+  php-apache:
+    container_name: rconfig-php-apache
+    build:
+      context: ./.dockerfiles/php
+    ports:
+      - '${EXPOSED_APP_PORT}:80'
+    volumes:
+      - ./:/var/www/html/
+      - ./.dockerfiles/apache.conf:/etc/apache2/sites-enabled/000-default.conf
+    env_file: ./.env
+    depends_on:
+      - mariadb
+    networks:
+      - rconfigNetwork
+
+  cronjob:
+    container_name: rconfig-cronjob
+    build:
+      context: ./.dockerfiles/cron
+    volumes:
+      - ./:/var/www/html/
+    restart: always
+    networks:
+      - rconfigNetwork
+    depends_on:
+      - php-apache
+
+  horizon:
+    container_name: rconfig-horizon-supervisor
+    build:
+      context: ./.dockerfiles/horizon
+    ports:
+      - 80
+    volumes:
+      - ./:/var/www/html/
+    restart: always
+    env_file: ./.env
+    networks:
+      - rconfigNetwork
+    depends_on:
+      - php-apache
+
+  redis:
+    image: redis:alpine
+    container_name: rconfig-redis
+    restart: unless-stopped
+    ports:
+      - 6379
+    networks:
+      - rconfigNetwork
