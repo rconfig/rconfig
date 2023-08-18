@@ -14,66 +14,53 @@ class Connect
 
     /* MAIN */
     public $name;
-
     public $desc;
 
     /* CONNECT */
     public $timeout;
-
     public $protocol;
-
     public $port;
 
     /* AUTH */
     public $usernamePrompt;
-
     public $passwordPrompt;
-
     public $enable;
-
     public $enableCmd;
-
     public $enablePassPrmpt;
-
     public $hpAnyKeyStatus;
-
     public $hpAnyKeyPrmpt;
+    public $sshPrivKey;
+    public $ssh_key_id;
 
     /* CONFIG */
     public $linebreak;
-
     public $paging;
-
     public $pagingCmd;
-
     public $resetPagingCmd;
-
     public $pagerPrompt;
-
     public $pagerPromptCmd;
-
     public $saveConfig;
-
     public $exitCmd;
+    public $isMikrotik;
 
     /* DEVICEPARAMS */
     public $device_id;
-
     public $hostname;
-
     public $username;
-
     public $password;
-
     public $devicePrompt;
-
+    public $enablePrompt;
+    public $enableModePassword;
     public $cliDebugStatus;
-
     public $command;
-
+    public $commands;
+    public $snippet;
 
     /* OPTIONS */
     public $AnsiHost;
+    public $setWindowSize;
+    public $setTerminalDimensions;
+
 
     public function __construct(object $deviceParamsObject, $debug)
     {
@@ -117,6 +104,8 @@ class Connect
         $this->ssh_key_id = $deviceParamsObject->deviceparams['ssh_key_id'];
         $this->devicePrompt = $deviceParamsObject->deviceparams['device_main_prompt'];
         $this->enablePrompt = $deviceParamsObject->deviceparams['device_enable_prompt'];
+        $this->isMikrotik = isset($deviceParamsObject->config['isMikrotik']) ? $deviceParamsObject->config['isMikrotik'] : null;
+
         /* OPTIONS */
         $this->AnsiHost = isset($deviceParamsObject->options['AnsiHost']) ? $deviceParamsObject->options['AnsiHost'] : null;
         $this->setWindowSize = isset($deviceParamsObject->options['setWindowSize']) ? $deviceParamsObject->options['setWindowSize'] : null;
@@ -126,6 +115,9 @@ class Connect
         $cliDebugStatus = ($debug === true) ? 1 : 0; // convert debug to boolean
         $this->cliDebugStatus = $cliDebugStatus;
         $this->commands = $deviceParamsObject->deviceparams['commands'];
+        if (isset($deviceParamsObject->deviceparams['snippet'])) {
+            $this->snippet = $deviceParamsObject->deviceparams['snippet'];
+        }
     }
 
     public function connect()
@@ -165,7 +157,7 @@ class Connect
     {
         if (!$this->connection) {
             $logmsg = 'Unable to connect to ' . ($this->hostname . ' - ID:' . $this->device_id);
-            Notification::send(User::all(), new DBDeviceConnectionFailureNotification($logmsg, $this->device_id));
+            Notification::send(User::allUsersAndRecipients(), new DBDeviceConnectionFailureNotification($logmsg, $this->device_id));
             (new SetDeviceStatus($this->device_id, 0))->setDeviceStatus();
             activityLogIt(__CLASS__, __FUNCTION__, 'error', $logmsg, 'connection', $this->hostname, $this->device_id, 'device');
 

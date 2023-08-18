@@ -21,7 +21,7 @@ class MikrotikDeviceSeeder extends Seeder
         $cat_id = 20001;
         $command_id = 5189;
         $template_id = $faker->randomNumber(4);
-        $template_url = 'https://raw.githubusercontent.com/rconfig/rConfig-templates/master/Mikrotik/mikrotek-ssh-noenable.yml';
+        $template_url = 'https://raw.githubusercontent.com/rconfig/rConfig-templates/master/Mikrotik/mikrotik-ssh-noenable_v2.yml';
         $template_contents = file_get_contents($template_url);
         $filename = basename($template_url);
         File::put(templates_path() . $filename, $template_contents);
@@ -86,7 +86,7 @@ class MikrotikDeviceSeeder extends Seeder
             'device_username' => 'admin+cte',
             'device_password' => 'nokia5110',
             'device_enable_password' => 'cisco',
-            'device_main_prompt' => '[admin@routermikrotik] >',
+            'device_main_prompt' => '.*mikrotik.*', // this gets defaulted to blank once the correct template is used
             'device_enable_prompt' => '',
             'device_category_id' => $cat_id,
             'device_template' => $template_id,
