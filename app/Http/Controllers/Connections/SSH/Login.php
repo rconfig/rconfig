@@ -41,6 +41,9 @@ class Login
 
     public function login()
     {
+
+        $this->escapeTildeChars();
+
         if ($this->connectionObj->sshPrivKey) {
             // $privKeyRecord = PrivSshKeys::find($this->connectionObj->ssh_key_id);
             // $privateKey = file_get_contents($privKeyRecord->privSshKeyFile);
@@ -113,4 +116,17 @@ class Login
     //     }
     //     $this->connectionObj->connection->read('~'.$this->connectionObj->devicePrompt.'~', SSH2::READ_REGEX);
     // }
+
+    private function escapeTildeChars()
+    {
+
+        // if the devicePrompt or enablePassPrmpt contains a tilde (~) character, it must be escaped with a backslash character. i.e. (\~)
+        // zoho ticket #302 - devices with tilde in main prompt or enable prompt do not back up.
+        // this is because we use tilde as the regex delimiter in the ssh2 library
+        // so we need to escape the tilde character in the prompt with a backslash
+        $this->connectionObj->pagingCmd = str_replace('~', '\~', $this->connectionObj->pagingCmd);
+        $this->connectionObj->enableCmd = str_replace('~', '\~', $this->connectionObj->enableCmd);
+        $this->connectionObj->enablePassPrmpt = str_replace('~', '\~', $this->connectionObj->enablePassPrmpt);
+        $this->connectionObj->devicePrompt = str_replace('~', '\~', $this->connectionObj->devicePrompt);
+    }
 }

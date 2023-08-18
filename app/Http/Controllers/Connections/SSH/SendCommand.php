@@ -28,8 +28,15 @@ class SendCommand
         if ($this->connectionObj->sshPrivKey) {
             return $this->connectionObj->connection->exec($command);
         } else {
+
             if ($this->connectionObj->AnsiHost === 'yes') {
                 return $this->ansiShowCommand($command);
+            }
+
+            if ($this->connectionObj->isMikrotik === 'yes') {
+                // need to remove prompt. Mikrotik does not respond well to having a prompt configured. See the mikrotik function in the console rconfig:test command
+                $this->connectionObj->devicePrompt = '';
+                $this->data = $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
             }
 
             return $this->standardShowCommand($command);
@@ -61,6 +68,12 @@ class SendCommand
     private function standardShowCommand($command)
     {
         $this->send->sendString($command);
+
+        // if ($this->connectionObj->isMikrotik === 'yes') {
+        //     $this->data = preg_replace('/\[[K', '', $this->data);
+        //     $this->data = preg_replace('/\[K', '', $this->data);
+        // }
+
         // check if this is a HP device
         if ($this->connectionObj->hpAnyKeyStatus === 'on') {
             // hack to get around procurve VT100 special characters
@@ -79,6 +92,7 @@ class SendCommand
             // dd($this->connectionObj->devicePrompt);
             $this->data = $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
         }
+
         if ($this->data) {
             $this->data = $this->explodeTextToArray();
             $this->dropFirstAndLastLinesFromArray();
@@ -102,6 +116,7 @@ class SendCommand
     public function createArrayFromData()
     {
         $result = [];
+
         if (count($this->data) > 0) {
             foreach ($this->data as $line) {
                 $line = explode("\r\n", $line);

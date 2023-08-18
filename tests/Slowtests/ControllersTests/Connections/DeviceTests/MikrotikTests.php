@@ -3,12 +3,10 @@
 namespace Tests\Slowtests\ControllersTests\Connections\DeviceTests;
 
 use App\CustomClasses\DeviceRecordPrepare;
-use App\Models\Command;
 use App\Models\Config;
 use App\Models\Device;
 use Artisan;
 use File;
-use Predis\Configuration\Option\Commands;
 use Tests\TestCase;
 
 class MikrotikTests extends TestCase
@@ -67,7 +65,7 @@ class MikrotikTests extends TestCase
     /** @test */
     public function download_device_config()
     {
-        $this->log_message_during_test(substr(strrchr(__CLASS__, "\\"), 1) . '/' . __FUNCTION__, 'This test will take over 25 seconds to complete.');
+        $this->log_message_during_test(substr(strrchr(__CLASS__, '\\'), 1) . '/' . __FUNCTION__, 'This test will take over 25 seconds to complete.');
 
         $start = microtime(true);
         $devicerecord = (new DeviceRecordPrepare($this->device))->DeviceRecordToArray();
@@ -75,14 +73,22 @@ class MikrotikTests extends TestCase
         Artisan::call('rconfig:download-device ' . $this->device->id);
         $result = Artisan::output();
         $arr = explode("\n", $result);
+        // dd($arr);
 
         $time = microtime(true) - $start;
         $this->assertLessThan(60, $time);
 
-        $this->assertStringContainsString('interface bridge', $this->return_file_contents($devicerecord['commands'][5189]));
-        $this->assertStringContainsString('add action=accept chain=input', $this->return_file_contents($devicerecord['commands'][5189]));
+        // dd($devicPerecord['commands']);
+
+        $this->assertStringContainsString('/interface bridge', $this->return_file_contents($devicerecord['commands'][5189])); // top of the config
+        $this->assertStringContainsString('add fast-forward=no name=bridge8', $this->return_file_contents($devicerecord['commands'][5189]));
+        $this->assertStringContainsString('add action=dst-nat chain=dstnat dst-address=3.3.3.158 dst-port=80 protocol=', $this->return_file_contents($devicerecord['commands'][5189])); // mid config
+        $this->assertStringContainsString('set time-zone-name=America/Los_Angeles', $this->return_file_contents($devicerecord['commands'][5189])); // end of config
         $this->assertStringContainsString('set filter-interface=ether1 filter-ip-address=1.1.1.1/32', $this->return_file_contents($devicerecord['commands'][5189]));
-        $this->assertStringContainsString('11     pppoe-out1                          pppoe-out', $this->return_file_contents($devicerecord['commands'][5190]));
+
+        $this->assertStringContainsString('0  R  ether1                              ether            1500', $this->return_file_contents($devicerecord['commands'][5190])); // top of the config
+        $this->assertStringContainsString('11     pppoe-out1                          pppoe-out', $this->return_file_contents($devicerecord['commands'][5190])); // top of the config
+
 
         $this->assertGreaterThan(0, count($arr));
         $this->assertStringContainsString($arr[0], 'Start rconfig:download-device IDs:' . $this->device->id);
