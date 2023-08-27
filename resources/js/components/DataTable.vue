@@ -2,20 +2,20 @@
     <div class="pf-c-drawer__content pf-m-no-background">
         <div class="pf-c-drawer__body pf-m-padding">
             <div class="pf-c-card">
-                <data-table-toolbar :pagename="pagename" @searchInput="addFilters($event)" @openDrawer="openDrawer($event)" :newBtnEnabled="newBtnEnabled" :searchInputDisabled="searchInputDisabled">
-                    <template v-slot:customButtons> <slot name="customButtons"></slot> </template
-                ></data-table-toolbar>
+                <data-table-toolbar :pagename="pagename" @searchInput="addFilters($event)" @openDrawer="openDrawer($event)"
+                    :newBtnEnabled="newBtnEnabled" :searchInputDisabled="searchInputDisabled">
+                    <template v-slot:customButtons>
+                        <slot name="customButtons"></slot>
+                    </template></data-table-toolbar>
                 <table class="pf-c-table pf-m-compact pf-m-grid-lg" role="grid" id="resizeMe">
                     <thead>
                         <tr role="row" id="headerRow">
-                            <th
-                                v-for="(header, index) in tabledata.headers"
-                                :key="header.name"
+                            <th v-for="(header, index) in tabledata.headers" :key="header.name"
                                 class="pf-m-truncate pf-c-table__sort pf-c-table__icon"
-                                :class="isSorted === index ? 'pf-m-selected' : ''"
-                            >
+                                :class="isSorted === index ? 'pf-m-selected' : ''">
                                 <span v-if="!header.sortable">{{ header.label }} </span>
-                                <button class="pf-c-table__button" v-if="header.sortable" @click="sortBy(header.key, index)">
+                                <button class="pf-c-table__button" v-if="header.sortable"
+                                    @click="sortBy(header.key, index)">
                                     <div class="pf-c-table__button-content">
                                         <span class="pf-c-table__text"> {{ header.label }} </span>
                                         <span class="pf-c-table__sort-indicator">
@@ -31,7 +31,8 @@
 
                     <tbody role="rowgroup" v-if="tabledata.data.total > 0 || tabledata.isLoading">
                         <tr v-for="data in tabledata.data.data" role="row" :key="data.name">
-                            <td v-for="header in tabledata.headers" :key="header.label" role="cell" :data-label="header.label">
+                            <td v-for="header in tabledata.headers" :key="header.label" role="cell"
+                                :data-label="header.label">
                                 <!-- DISPLAY LAST_STARTED_AT FROM FINISHED RELATIONSHIP IN TASKS -->
                                 <div v-if="header.key === 'finished'">
                                     <div v-if="data[header.key]">
@@ -45,21 +46,27 @@
                                 </div>
                                 <div v-else>
                                     <!-- BEST V-IF IS AN ICON -->
-                                    <span v-if="header.hasActivityIcon" :class="activityLogIconTable[data[header.key]]">&nbsp;</span>
+                                    <span v-if="header.hasActivityIcon"
+                                        :class="activityLogIconTable[data[header.key]]">&nbsp;</span>
                                     <!-- BEST V-IF FOR LINKS DIRECT IN TABLE -->
 
-                                    <span v-if="header.isActionLink"
-                                        ><button class="pf-c-button pf-m-link pf-m-inline" type="button" @click="$emit('actionLink', data[header.key])">
+                                    <span v-if="header.isActionLink"><button class="pf-c-button pf-m-link pf-m-inline"
+                                            type="button" @click="$emit('actionLink', data[header.key])">
                                             {{ data[header.key] }}
                                         </button>
                                     </span>
-                                    <span v-if="header.isTasksActionLink"><button class="pf-c-button pf-m-link pf-m-inline" type="button" @click="$emit('actionLink', data.id)">view</button> </span>
+                                    <span v-if="header.isTasksActionLink"><button class="pf-c-button pf-m-link pf-m-inline"
+                                            type="button" @click="$emit('actionLink', data.id)">view</button> </span>
 
-                                    <span v-if="header.key === 'device_count'" title="View devices" alt="View devices"
-                                        ><router-link type="button" class="pf-c-chip pf-m-overflow" :to="'/devices/' + header.deviceCountType + '/' + data.id">
+                                    <span v-if="header.key === 'device_count'" title="View devices"
+                                        alt="View devices"><router-link type="button" class="pf-c-chip pf-m-overflow"
+                                            :to="'/devices/' + header.deviceCountType + '/' + data.id">
                                             <span class="pf-c-chip__text pf-u-font-size-md">{{ data[header.key] }} </span>
-                                        </router-link></span
-                                    >
+                                        </router-link></span>
+                                    <span class="pf-c-label pf-u-pr-md pf-u-pl-md pf-m-purple"
+                                        v-if="header.key === 'created_at' && data[header.key] > 0"><span
+                                            class="pf-c-label__content">{{ formatTime(data[header.key]) }}</span></span>
+
                                     <!-- <span v-if="header.isViewDevices">
                                         <td role="cell" data-label="Action">
                                             <span class="pf-u-mr-sm pf-c-badge pf-m-read">{{ data.device_count }}</span>
@@ -68,15 +75,14 @@
                                             >
                                         </td></span
                                     > -->
-                                    <span
-                                        v-else-if="
-                                            !header.hasEnabledIcon &&
-                                            !['valid_results_count', 'invalid_results_count', 'method_failures_count', 'report_id', 'device_count', 'finished', 'viewDevices'].includes(header.key)
-                                        "
-                                    >
+                                    <span v-else-if="!header.hasEnabledIcon &&
+                                        !['valid_results_count', 'invalid_results_count', 'method_failures_count', 'report_id', 'device_count', 'finished', 'viewDevices'].includes(header.key)
+                                        ">
                                         {{ data[header.key] }}
                                         <div v-if="header.key == 'categoryName'">
-                                            <p v-if="data.command && data.command.length <= 0 && header.error" class="pf-u-danger-color-100" id="form-help-textinfo-helper" aria-live="polite">
+                                            <p v-if="data.command && data.command.length <= 0 && header.error"
+                                                class="pf-u-danger-color-100" id="form-help-textinfo-helper"
+                                                aria-live="polite">
                                                 <!-- this is specifically to error on categories without commands attached -->
                                                 <span class="pf-u-danger-color-100">
                                                     <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
@@ -91,39 +97,38 @@
 
                             <td role="cell" data-label="Actions" class="pf-m-fit-content">
                                 <div>
-                                    <a v-if="backupDownloadBtnEnabled" class="pf-c-button pf-m-link pf-m-small" type="button" :href="data.url">
+                                    <a v-if="backupDownloadBtnEnabled" class="pf-c-button pf-m-link pf-m-small"
+                                        type="button" :href="data.url">
                                         <span class="pf-c-button__icon pf-m-start">
                                             <i class="fa fa-download" aria-hidden="true"></i>
                                         </span>
                                         Download
                                     </a>
-                                    <button
-                                        v-if="taskRunBtnEnabled"
-                                        class="pf-c-button pf-m-link pf-m-small"
-                                        type="button"
-                                        @click="emitShowTaskRunConfirmModal(data.id)"
-                                        alt="Start this task now!"
-                                        title="Start this task now!"
-                                    >
+                                    <button v-if="taskRunBtnEnabled" class="pf-c-button pf-m-link pf-m-small" type="button"
+                                        @click="emitShowTaskRunConfirmModal(data.id)" alt="Start this task now!"
+                                        title="Start this task now!">
                                         <span class="pf-c-button__icon pf-m-start">
                                             <i class="fa fa-play-circle" aria-hidden="true"></i>
                                         </span>
                                         Start
                                     </button>
-                                    <button v-if="editBtnEnabled" class="pf-c-button pf-m-link pf-m-small" type="button" @click="openDrawer(data.id)" alt="Edit" title="Edit">
+                                    <button v-if="editBtnEnabled" class="pf-c-button pf-m-link pf-m-small" type="button"
+                                        @click="openDrawer(data.id)" alt="Edit" title="Edit">
                                         <span class="pf-c-button__icon pf-m-start">
                                             <i class="fas fa-edit" aria-hidden="true"></i>
                                         </span>
                                         Edit
                                     </button>
-                                    <button v-if="rowViewBtnEnabled" class="pf-c-button pf-m-link pf-m-small" type="button" @click="viewAction(data.id)" alt="View Details" title="View Details">
+                                    <button v-if="rowViewBtnEnabled" class="pf-c-button pf-m-link pf-m-small" type="button"
+                                        @click="viewAction(data.id)" alt="View Details" title="View Details">
                                         <span class="pf-c-button__icon pf-m-start">
                                             <i class="fas fa-search" aria-hidden="true"></i>
                                         </span>
                                         View Details
                                     </button>
 
-                                    <button class="pf-c-button pf-m-link pf-m-danger pf-m-small" type="button" @click="deleteRow(data.id)" alt="Delete" title="Delete">
+                                    <button class="pf-c-button pf-m-link pf-m-danger pf-m-small" type="button"
+                                        @click="deleteRow(data.id)" alt="Delete" title="Delete">
                                         <span class="pf-c-button__icon pf-m-start">
                                             <i class="fas fa-trash" aria-hidden="true"></i>
                                         </span>
@@ -137,14 +142,9 @@
                     <data-table-empty-state v-else-if="!tabledata.isLoading" @clear="clearFilters"></data-table-empty-state>
                 </table>
 
-                <data-table-paginate
-                    :from="tabledata.data.from"
-                    :to="tabledata.data.to"
-                    :total="tabledata.data.total"
-                    :current_page="tabledata.data.current_page"
-                    :last_page="tabledata.data.last_page"
-                    @pagechanged="pageChanged($event)"
-                >
+                <data-table-paginate :from="tabledata.data.from" :to="tabledata.data.to" :total="tabledata.data.total"
+                    :current_page="tabledata.data.current_page" :last_page="tabledata.data.last_page"
+                    @pagechanged="pageChanged($event)">
                 </data-table-paginate>
             </div>
         </div>
@@ -232,6 +232,7 @@ export default {
         const isSorted = ref(0);
         const createNotification = inject('create-notification');
         const { setupResizableTable } = useCreateResizableColumn();
+        const formatTime = inject('formatTime');
 
         watchEffect(() => {
             if (!props.tabledata.isLoading) {
@@ -287,12 +288,13 @@ export default {
             data,
             deleteRow,
             emitShowTaskRunConfirmModal,
+            formatTime,
             isSorted,
             openDrawer,
             pageChanged,
             sortBy,
             sortIcon,
-            viewAction
+            viewAction,
         };
     }
 };
