@@ -78,3 +78,17 @@
 .resizing {
     border-right: 2px solid #cacbcd;
 }
+
+.pf-c-table .pf-c-table__check, .pf-c-table .pf-c-table__toggle, .pf-c-table .pf-c-table__action, .pf-c-table .pf-c-table__favorite, .pf-c-table th.pf-m-favorite, .pf-c-table .pf-c-table__inline-edit-action, .pf-c-table .pf-c-table__draggable {
+    --pf-c-table--cell--MinWidth: 0;
+    --pf-c-table--cell--Width: 1%;
+}
+.pf-c-table__check {
+    --pf-c-table--cell--FontSize: var(--pf-c-table__check--input--FontSize);
+}
+
+/* MultiSelect Overflow Fix */
+.multi-select-dropdown-overflow {
+    max-height: 300px;
+    overflow-y: auto;
+}

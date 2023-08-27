@@ -14,6 +14,7 @@ import ToastNotification from './components/ToastNotification.vue';
 import VueHighlightJS from 'vue3-highlightjs';
 import useNotifications from './composables/notifications';
 import { useNavState } from './composables/navstate';
+import useServerTimeZone from './composables/ServerTimezone.js';
 
 const app = createApp({
     data: () => ({
@@ -30,6 +31,7 @@ const app = createApp({
 
 const { notifications, createNotification, removeNotifications } = useNotifications(); // see example here https://github.com/zafaralam/vue-3-toast/
 const { darkmode } = useNavState();
+const { formatTime } = useServerTimeZone(app.config.globalProperties.$timezone);
 
 app.config.globalProperties.$userId = document.querySelector("meta[name='user-id']").getAttribute('content');
 app.config.globalProperties.$userName = document.querySelector("meta[name='user-name']").getAttribute('content');
@@ -46,6 +48,8 @@ app.provide('create-notification', createNotification);
 app.provide('darkmode', darkmode);
 app.provide('useremail', app.config.globalProperties.$userEmail);
 app.provide('userid', app.config.globalProperties.$userId);
+app.provide('timezone', app.config.globalProperties.$timezone);
+app.provide('formatTime', formatTime);
 
 // mount the app to the DOM
 app.use(router);

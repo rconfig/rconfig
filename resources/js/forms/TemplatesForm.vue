@@ -55,7 +55,7 @@
                             </span>
                         </button>
                         <div v-if="showVendorTemplateOptions ? 'hidden' : ''">
-                            <ul class="pf-c-select__menu" role="listbox">
+                            <ul class="pf-c-select__menu multi-select-dropdown-overflow" role="listbox">
                                 <li role="presentation" v-for="option in vendorTemplateOptions.data" :key="option.name">
                                     <button class="pf-c-select__menu-item" role="option" @click.prevent="getTemplatesList(option)">
                                         {{ option.name }}
@@ -68,6 +68,10 @@
                         </div>
                     </div>
                     <p class="pf-c-form__helper-text">Select a vendor first, then select a template below</p>
+                    <p class="pf-c-form__helper-text pf-u-mb-xl" v-if="hasReadmeFile">
+                        <a :href="'https://github.com/rconfig/rConfig-templates/tree/master/' + vendorTemplateOptionSelected" target="_blank">View readme documents</a>&nbsp;&nbsp;
+                        <i class="fas fa-external-link-alt pf-u-font-size-xs pf-u-color-400"></i>
+                    </p>
                 </div>
                 <div class="pf-c-form__group pf-u-mt-sm" v-if="showSelectTemplateFields && hasListedFiles">
                     <div class="pf-c-form__group-label">
@@ -86,9 +90,9 @@
                             </span>
                         </button>
                         <div v-if="showFileOptions ? 'hidden' : ''">
-                            <ul class="pf-c-select__menu" role="listbox">
+                            <ul class="pf-c-select__menu multi-select-dropdown-overflow" role="listbox">
                                 <li role="presentation" v-for="option in listedFiles.data" :key="option.name">
-                                    <button class="pf-c-select__menu-item" role="option" @click.prevent="getFileContents(option)">
+                                    <button class="pf-c-select__menu-item" role="option" @click.prevent="getTemplateFileContents(option)">
                                         {{ option.name }}
                                         <span class="pf-c-select__menu-item-icon" v-if="option.name === fileOptionSelected">
                                             <i class="fas fa-check" aria-hidden="true"></i>
@@ -178,7 +182,7 @@
                         </div>
                         <div class="pf-c-code-editor__main" id="pf-c-code-editor__main">
                             <code class="pf-c-code-editor__code">
-                                <div class="pf-c-code-editor__code-pre" id="pf-c-code-editor__code-pre" style="height: 100vh"></div>
+                                <div class="pf-c-code-editor__code-pre" id="pf-c-code-editor__code-pre" style="height: calc(100vh - 400px)"></div>
                             </code>
                         </div>
                         <p v-if="errors.code" class="pf-c-form__helper-text pf-m-error" id="form-help-text-address-helper" aria-live="polite">
@@ -227,6 +231,7 @@ export default {
         const showVendorTemplateOptions = ref(false);
         const vendorTemplateOptionSelected = ref([]);
         const vendorTemplateOptions = ref([]);
+        const hasReadmeFile = ref(false);
         const { errors, model, clearModel, updateModel, getModel, storeModel, isLoading } = useModels(props.viewstate.modelName, props.viewstate.modelObject);
         let meditor = null;
 
@@ -358,12 +363,16 @@ export default {
             showFileOptions.value = false;
             showVendorTemplateOptions.value = false;
             vendorTemplateOptionSelected.value = vendorOption.name;
+            hasReadmeFile.value = false;
             axios
                 .post('/api/list-repo-folders-contents', { directory: vendorOption.path })
                 .then((response) => {
                     console.log(response.data);
                     hasListedFiles.value = true;
                     listedFiles.value = response.data.data;
+                    if (typeof response.data.data.readme !== 'undefined') {
+                        hasReadmeFile.value = true;
+                    }
                 })
                 .catch((error) => {
                     createNotification({
@@ -374,14 +383,13 @@ export default {
                 });
         }
 
-        function getFileContents(fileOption) {
+        function getTemplateFileContents(fileOption) {
             showFileOptions.value = false;
             showVendorTemplateOptions.value = false;
             fileOptionSelected.value = fileOption.name;
             axios
                 .post('/api/get-template-file-contents', { filepath: fileOption.path })
                 .then((response) => {
-                    console.log(response.data);
                     meditor.getModel().setValue(response.data.data.data.code);
                     model.fileName = fileOption.path.split('/').reverse()[0];
                 })
@@ -399,13 +407,14 @@ export default {
             clickOutsidetarget1,
             clickOutsidetarget2,
             close,
+            hasReadmeFile,
             copied,
             copy,
             darkmode,
             download,
             errors,
             fileOptionSelected,
-            getFileContents,
+            getTemplateFileContents,
             getTemplatesList,
             hasListedFiles,
             hasVendorTemplateOptions,

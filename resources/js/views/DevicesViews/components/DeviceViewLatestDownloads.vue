@@ -27,34 +27,35 @@
                         {{ latestConfig.command }}
                     </th>
                     <td class="pf-m-break-word" role="cell" data-label="Filename">{{ latestConfig.config_filename }}</td>
-                    <td class="pf-m-break-word" role="cell" data-label="Downloaded">{{ formatTimeAgo(latestConfig.created_at) }}</td>
+                    <td class="pf-m-break-word" role="cell" data-label="Downloaded">{{
+                        formatTime(latestConfig.created_at) }}</td>
                     <td class="pf-c-table__icon" role="cell" data-label="Status">
-                        <i :class="latestConfig.download_status == '0' ? 'fa fa-exclamation-circle pf-u-danger-color-100' : ''"></i>
-                        <i :class="latestConfig.download_status == '1' ? 'fa fa-check-circle pf-u-success-color-100 ' : ''"></i>
-                        <i :class="latestConfig.download_status == '2' ? 'fa fa-exclamation-triangle pf-u-warning-color-100' : ''"></i>
-                        <i :class="latestConfig.download_status === null ? 'fa fa-exclamation-triangle pf-u-warning-color-100' : ''"></i>
+                        <i
+                            :class="latestConfig.download_status == '0' ? 'fa fa-exclamation-circle pf-u-danger-color-100' : ''"></i>
+                        <i
+                            :class="latestConfig.download_status == '1' ? 'fa fa-check-circle pf-u-success-color-100 ' : ''"></i>
+                        <i
+                            :class="latestConfig.download_status == '2' ? 'fa fa-exclamation-triangle pf-u-warning-color-100' : ''"></i>
+                        <i
+                            :class="latestConfig.download_status === null ? 'fa fa-exclamation-triangle pf-u-warning-color-100' : ''"></i>
                     </td>
                     <td role="cell" data-label="Action">
-                        <router-link type="button" class="pf-c-button pf-m-link" :to="'/device/view/configs/view-config/' + latestConfig.id">View</router-link>
+                        <router-link type="button" class="pf-c-button pf-m-link"
+                            :to="'/device/view/configs/view-config/' + latestConfig.id">View</router-link>
                     </td>
                 </tr>
             </tbody>
         </table>
         <div class="pf-c-card__footer" style="padding-top: 15px; padding-bottom: 15px; padding-left: 9px">
-            <router-link
-                type="button"
-                class="pf-c-button pf-m-link"
-                style="float: right"
-                :to="{ path: '/device/view/configs/' + model.id, query: { id: model.id, devicename: model.device_name, status: 'all' } }"
-                >View all</router-link
-            >
+            <router-link type="button" class="pf-c-button pf-m-link" style="float: right"
+                :to="{ path: '/device/view/configs/' + model.id, query: { id: model.id, devicename: model.device_name, status: 'all' } }">View
+                all</router-link>
         </div>
     </div>
 </template>
 
 <script>
-import { ref, reactive, onMounted, watchEffect } from 'vue';
-import { useTimeAgo } from '@vueuse/core';
+import { ref, reactive, onMounted, watchEffect, inject } from 'vue';
 
 export default {
     props: {
@@ -69,6 +70,7 @@ export default {
     setup(props) {
         const latestConfigs = reactive({});
         const isLoading = ref(true);
+        const formatTime = inject('formatTime');
 
         onMounted(() => {
             getlastConfigsForGivenDevice();
@@ -92,14 +94,9 @@ export default {
             }
         });
 
-        function formatTimeAgo(finished_at) {
-            var finished_atNew = finished_at.replace(/AM|PM/g, '');
-            var timeAgo = useTimeAgo(new Date(finished_atNew));
-            return timeAgo.value;
-        }
 
         return {
-            formatTimeAgo,
+            formatTime,
             isLoading,
             latestConfigs
         };

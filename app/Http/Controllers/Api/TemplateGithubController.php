@@ -46,7 +46,7 @@ class TemplateGithubController extends Controller
     {
         try {
             //  https://api.github.com/repos/OWNER/REPO/contents/PATH
-            $response  = Http::get('https://api.github.com/repos/' . $this->username . '/' . $this->repo . '/contents/')->throw();
+            $response = Http::get('https://api.github.com/repos/' . $this->username . '/' . $this->repo . '/contents/')->throw();
             // dd($response->json());
             $result['data'] = $response->json();
             $result['msg'] = 'Successfully connected to rConfig Templates Github repo';
@@ -87,14 +87,24 @@ class TemplateGithubController extends Controller
 
     public function list_repo_folders_contents(Request $request)
     {
-        $origListofFiles = File::glob("{$request->directory}/*.yml");
-        if (count($origListofFiles) > 0) {
-            foreach ($origListofFiles as $key => $file) {
+        $origListofTemplateFiles = File::glob("{$request->directory}/*.yml");
+
+        // get README.md file
+        File::exists("{$request->directory}/README.md") ? $readmeFile = File::glob("{$request->directory}/README.md") : $readmeFile = [];
+
+        if (count($origListofTemplateFiles) > 0) {
+            foreach ($origListofTemplateFiles as $key => $file) {
                 $listofFiles[$key]['path'] = $file;
                 $listofFiles[$key]['name'] = basename($file);
             }
             $result['data'] = $listofFiles;
             $result['msg'] = 'List of yml templates returned!';
+
+            if (count($readmeFile) > 0) {
+                $result['readme']['path'] = $readmeFile[0];
+                $result['readme']['name'] = basename($readmeFile[0]);
+            }
+
             activityLogIt(__CLASS__, __FUNCTION__, 'info', $result['msg'], 'templates');
 
             return $this->successResponse('Success', $result);
@@ -114,7 +124,7 @@ class TemplateGithubController extends Controller
         $template['description'] = $yamlContents['main']['desc'];
         if (count($template) > 0) {
             $result['data'] = $template;
-            $result['msg'] = 'Temmplate content returned!';
+            $result['msg'] = 'Template content returned!';
             activityLogIt(__CLASS__, __FUNCTION__, 'info', $result['msg'], 'templates');
 
             return $this->successResponse('Success', $result);

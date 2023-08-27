@@ -24,7 +24,8 @@
                                     <i class="fas fa-cubes pf-c-empty-state__icon" aria-hidden="true"></i>
 
                                     <h1 class="pf-c-title pf-m-lg">Task history empty</h1>
-                                    <div class="pf-c-empty-state__body">Task history not available, you may need to run the task to have some history!</div>
+                                    <div class="pf-c-empty-state__body">Task history not available, you may need to run the
+                                        task to have some history!</div>
                                     <button class="pf-c-button pf-m-primary" type="button" @click="close">Close</button>
                                 </div>
                             </div>
@@ -49,18 +50,13 @@
                                         <td role="cell" data-label="Position">{{ item.monitored_scheduled_task_id }}</td>
                                         <td role="cell" data-label="Position">{{ item.type }}</td>
                                         <td role="cell" data-label="Position">{{ item.meta }}</td>
-                                        <td role="cell" data-label="Position">{{ item.created_at }}</td>
+                                        <td role="cell" data-label="Position">{{ formatTime(item.created_at) }}</td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <data-table-paginate
-                                :from="task_history_items.data.from"
-                                :to="task_history_items.data.to"
-                                :total="task_history_items.data.total"
-                                :current_page="task_history_items.data.current_page"
-                                :last_page="task_history_items.data.last_page"
-                                @pagechanged="pageChanged($event)"
-                            >
+                            <data-table-paginate :from="task_history_items.data.from" :to="task_history_items.data.to"
+                                :total="task_history_items.data.total" :current_page="task_history_items.data.current_page"
+                                :last_page="task_history_items.data.last_page" @pagechanged="pageChanged($event)">
                             </data-table-paginate>
                         </div>
                     </div>
@@ -99,6 +95,7 @@ export default {
         const isLoading = ref(false);
 
         const currentPage = ref(1);
+        const formatTime = inject('formatTime');
 
         onClickOutside(clickOutsidetargetTaskHist, (event) => close());
 
@@ -138,6 +135,7 @@ export default {
         return {
             clickOutsidetargetTaskHist,
             close,
+            formatTime,
             isLoading,
             pageChanged,
             task_history_items
