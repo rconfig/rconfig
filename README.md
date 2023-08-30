@@ -37,7 +37,7 @@ https://github.com/mohammadain/laravel-docker-cron/blob/master/Dockerfile -->
   </p>
 
 [![Tests](https://github.com/eliashaeussler/typo3-badges/actions/workflows/tests.yaml/badge.svg)](https://github.com/eliashaeussler/typo3-badges/actions/workflows/tests.yaml)
-[![License](https://img.shields.io/github/license/eliashaeussler/typo3-badges)](LICENSE) [![Made with Node](https://img.shields.io/badge/dynamic/json?label=node&query=%24.engines%5B%22node%22%5D&url=https%3A%2F%2Fraw.githubusercontent.com%2FMichaelCurrin%2Fbadge-generator%2Fmaster%2Fpackage.json)](https://nodejs.org "Go to Node.js homepage")
+[![License](https://img.shields.io/github/license/eliashaeussler/typo3-badges)](LICENSE) [![Made with Node](https://img.shields.io/badge/dynamic/json?label=node&query=%24.engines%5B%22node%22%5D&url=https%3A%2F%2Fraw.githubusercontent.com%2FMichaelCurrin%2Fbadge-generator%2Fmaster%2Fpackage.json)](https://nodejs.org 'Go to Node.js homepage')
 [![PHP Version Require](http://poser.pugx.org/pugx/badge-poser/require/php)](https://packagist.org/packages/pugx/badge-poser)
 
  <img src="https://img.shields.io/badge/-Vue3-4FC08D?logo=vue.js&logoColor=white&style=flat"/>
@@ -61,11 +61,11 @@ If you are looking for rConfig V6 professional, please visit `https://www.rconfi
 
 Supported OS
 
-- Rocky Linux 8/9+
-- RHEL Linux 8/9+
-- CentOS Linux 8/9+
-- Ubuntu 20.04+
-- Docker (Linux)(not yet ready)
+-   Rocky Linux 8/9+
+-   RHEL Linux 8/9+
+-   CentOS Linux 8/9+
+-   Ubuntu 20.04+
+-   Docker (Linux)(not yet ready)
 
 rConfig v6 core is completely free, you do not need an API key from rConfig to download and use this version. Please follow the instructions below to get started.
 
@@ -92,10 +92,10 @@ MySQL 5.7+ or MariaDB 10.5+
 nodejs 14.17+
 Supervisor 4.2+
 
-We have conveniently provided scripts to help you install the required software. Head over to [https://www.rconfig.com/docs/6.9/getstarted/os-setup](https://www.rconfig.com/docs/6.9/getstarted/os-setup) to find the correct script for your OS. If you are using a different OS, you will need to install the required software manually.
+We have conveniently provided scripts to help you install the required software. Head over to [https://docs.rconfig.com/getstarted/os-setup](https://docs.rconfig.com/getstarted/os-setup) to find the correct script for your OS. If you are using a different OS, you will need to install the required software manually.
 
 > **Note**
-> You will want to be logged in as root when running the scripts.
+> You will need to be logged in as root when running the scripts.
 
 ### Database Setup
 
@@ -143,6 +143,8 @@ source ~/.bashrc
 nvm ls-remote
 sudo nvm install node
 ```
+
+If you get an error like `nvm: command not found`, try running `source ~/.bashrc` and then try the `nvm` command again. If you are still having issues, try `nvm install node` on its own.
 
 2. Check the version of NodeJS
 
@@ -272,7 +274,13 @@ ServerAlias YourServerName.domain.local
 9. Restart apache
 
 ```sh
+# CENTOS/RHEL
 sudo systemctl restart httpd
+```
+
+```sh
+# Ubuntu
+sudo systemctl restart apache2
 ```
 
 10. Open your browser and navigate to your server's domain name. You should see the rConfig login page. The default system credentials are below. Please change or remove these as soon as a new admin user is created.
@@ -360,8 +368,8 @@ Although we provide this code free and open source, rConfig v6 core is based bes
 
 Inspiration, code snippets, etc.
 
-- [Laravel](https://www.laravel.com)
-- [vuejs](https://vuejs.org/)
-- [patternfly v4](https://www.patternfly.org/v4/)
+-   [Laravel](https://www.laravel.com)
+-   [vuejs](https://vuejs.org/)
+-   [patternfly v4](https://www.patternfly.org/v4/)
 
 See composer.json and package.json for a full list of dependencies, and their licenses.
