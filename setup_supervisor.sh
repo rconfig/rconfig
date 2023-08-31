@@ -10,4 +10,3 @@ if [ -f /etc/lsb-release ]; then  ln -s $PWD/horizon_supervisor.ini $SUPDIR/hori
 if [ -f /etc/redhat-release ]; then systemctl restart supervisord; fi;
 if [ -f /etc/lsb-release ]; then sudo systemctl restart supervisor; fi;
 supervisorctl status
-
