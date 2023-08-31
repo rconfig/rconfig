@@ -67,7 +67,7 @@
                                         </router-link>
                                         <span v-if="header.key === 'config_filesize'"> {{ bytesToSize(data[header.key])
                                         }}</span>
-                                        <span v-if="header.key === 'created_at'"
+                                        <span v-else-if="header.key === 'created_at'"
                                             :class="data.config_downloaded === 0 ? 'pf-u-disabled-color-200' : ''"> {{
                                                 formatTime(data[header.key]) }}</span>
                                         <span v-else>{{ data[header.key] }}</span>
