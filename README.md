@@ -217,7 +217,7 @@ php artisan install
 
 If you area asked 'Add a cron entry for task scheduling?', type `yes` and press enter.
 
-The output form the above should look like this:
+The output from the above should look like this:
 
 ```sh
 
