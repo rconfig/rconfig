@@ -18,6 +18,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class rconfigTaskDownload extends Command
@@ -31,7 +32,9 @@ class rconfigTaskDownload extends Command
     protected $description = 'Download configurations for devices with one or multiple tasks';
 
     protected $report_data;
+
     protected $devicerecords;
+
     protected $debug;
 
     public function __construct()
@@ -41,7 +44,6 @@ class rconfigTaskDownload extends Command
 
     public function handle()
     {
-
         $this->error('This operation can take some time, depending on how many devices are configured for this task!!!');
 
         // get ids from command
@@ -63,6 +65,7 @@ class rconfigTaskDownload extends Command
         }
         $this->report_data = collect();
         foreach ($tasks as $task) {
+
             $this->report_data->report_id = (string) Str::uuid();
             $this->report_data->task_type = 'Task Download Report';
             $this->report_data->task = $task;
@@ -81,7 +84,7 @@ class rconfigTaskDownload extends Command
                     if ($this->debug) {
                         $this->runDeviceManualJobs();
                     } else {
-                        $this->runDeviceBatchJob($task->task_name);
+                        $this->runDeviceBatchJob($task->task_name, 'Category: ' . $categoryrecord->categoryName . ' [' . $categoryrecord->id . ']');
                     }
                 }
             }
@@ -98,7 +101,7 @@ class rconfigTaskDownload extends Command
                     if ($this->debug) {
                         $this->runDeviceManualJobs();
                     } else {
-                        $this->runDeviceBatchJob($task->task_name);
+                        $this->runDeviceBatchJob($task->task_name, 'Tag: ' . $tagrecord->tagname . ' [' . $tagrecord->id . ']');
                     }
                 }
             }
@@ -113,8 +116,13 @@ class rconfigTaskDownload extends Command
                 if ($this->debug) {
                     $this->runDeviceManualJobs();
                 } else {
-                    $this->runDeviceBatchJob($task->task_name);
+                    $this->runDeviceBatchJob($task->task_name, 'Devices [Count: ' . $task->device->count() . ']');
                 }
+            }
+
+            //SNIPPETs BELOW HERE
+            if ($task->snippet->count() > 0) {
+                $this->error('we are in snippet mode ID: ' . $task->snippet[0]->id);
             }
 
             if (app()->runningInConsole()) {
@@ -141,10 +149,12 @@ class rconfigTaskDownload extends Command
         }
     }
 
-    private function runDeviceBatchJob($taskname)
+    private function runDeviceBatchJob($taskname, $jobname = '')
     {
+
         $jobs = [];
         foreach ($this->devicerecords as $devicerecord) {
+
             $jobs[] = new DeviceDownloadJob($devicerecord, $this->eventtype, $this->debug, $this->report_data->report_id);
         }
 
@@ -168,7 +178,7 @@ class rconfigTaskDownload extends Command
         })->name('Process TestBatchJob')
             ->allowFailures()
             ->onQueue('downloadqueue')
-            ->name('download-task: ' . $taskname)
+            ->name('download-task: ' . $taskname . ' (' . $jobname . ')')
             ->dispatch();
 
         $progress = $this->output->createProgressBar(100);
@@ -190,6 +200,7 @@ class rconfigTaskDownload extends Command
 
     private function create_report()
     {
+
         activity('info')->log('Creating report for ' . $this->report_data->task->task_name);
         $this->report_data->end_time = Carbon::now();
         $this->report_data->file_name = $this->report_data->report_id . '.html';
@@ -201,13 +212,15 @@ class rconfigTaskDownload extends Command
             dispatch(new TaskReportJob($this->report_data));
         }
 
-        if ($this->report_data->task->task_email_notify === 1) {
+        if ($this->report_data->task->task_email_notify == 1) {
             dispatch(new TaskCompleteNotificationJob($this->report_data));
         }
 
-        if ($this->report_data->task->download_report_notify === 1) {
+        if ($this->report_data->task->download_report_notify == 1) {
+            \Log::info('Sending report notification: SendTaskReportNotificationJob');
             dispatch(new SendTaskReportNotificationJob($this->report_data));
         }
+
         activity('info')->log('Report completed for ' . $this->report_data->task->task_name);
     }
 
