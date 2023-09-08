@@ -77,7 +77,9 @@ rConfig v6 core is completely free, you do not need an API key from rConfig to d
 
 ## Installation
 
-We have made it super easy to get started with rConfig v6. Follow the steps below to get started.
+We have made it super easy to get started with rConfig v6. Follow the steps below to get started. Check out our youtube channel for a video walkthrough of the installation process.
+
+[https://www.youtube.com/channel/rconfigV6Core](https://www.youtube.com/playlist?list=PL8dpV2hQIDLR04p5RuJEVcdhQY1gXKOgU)
 
 ### Prerequisites
 
