@@ -122,37 +122,6 @@ FLUSH PRIVILEGES;
 exit
 ```
 
-### Install Node & NPM
-
-The actual installation steps will vary depending on your OS. We have provided the steps for multiple OS's below by using Node Version Manager (NVM). If any of the steps below do not work for you, please refer to the official documentation for your OS.
-
-1. Install Node Version Manager (NVM) & NodeJs/NPM
-
-```sh
-# CentOS/RHEL/Rocky 8/9
-curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-source ~/.bashrc
-nvm ls-remote
-nvm install node
-```
-
-```sh
-# Ubuntu 20.04+
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-source ~/.bashrc
-nvm ls-remote
-sudo nvm install node
-```
-
-If you get an error like `nvm: command not found`, try running `source ~/.bashrc` and then try the `nvm` command again. If you are still having issues, try `nvm install node` on its own.
-
-2. Check the version of NodeJS
-
-```sh
-node -v
-npm -v
-```
-
 ### rConfig Setup Steps
 
 1. Login as root
@@ -222,26 +191,26 @@ The output from the above should look like this:
 ```sh
 
 
+                                         APPLICATION INSTALL.
 
-                                                   APPLICATION INSTALL.
 
+  Packages discovery ...................................................................... 5ms DONE
 
-  Packages discovery ...................................................................................................................... 5ms DONE
-
-  command key:generate .................................................................................................................... 2ms DONE
-  command migrate ......................................................................................................................... 3ms DONE
-  command passport:install ............................................................................................................... 12ms DONE
+  command key:generate .................................................................... 2ms DONE
+  command migrate
+....................................................................... 387ms DONE
+  command passport:install ............................................................ 1,839ms DONE
   command rconfig:clear-all
 No config updates to processes
 
-> Illuminate\Foundation\ComposerScripts::postAutoloadDump
-Generated optimized autoload files containing 6914 classes
-........................................................................................................... 3,814ms DONE
-  command rconfig:sync-tasks .............................................................................................................. 2ms DONE
-  script  cache .......................................................................................................................... 48ms DONE
-  script  build ..................................................................................................................... 106,055ms DONE
 
-  No assets for publishing .........................................................................................................................
+> Illuminate\Foundation\ComposerScripts::postAutoloadDump
+Generated optimized autoload files containing 6960 classes
+........................................................... 7,036ms DONE
+  command rconfig:sync-tasks .............................................................. 5ms DONE
+  script  cache .......................................................................... 57ms DONE
+
+  Assets publishing ....................................................................... 7ms DONE
 
   Add a cron entry for task scheduling? (yes/no) [no]
 ❯ yes
@@ -322,8 +291,6 @@ git pull
 php artisan migrate
 php artisan rconfig:sync-tasks
 composer install
-npm install
-npm run build
 systemctl restart httpd
 php artisan rconfig:clear-all
 ```
