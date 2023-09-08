@@ -2,10 +2,10 @@
 
 namespace Tests\Slowtests\ControllersTests\Console\Commands;
 
-use App\CustomClasses\FileOperations;
 use App\CustomClasses\GetAndCheckTagIds;
 use App\Http\Controllers\Connections\Params\DeviceParams;
 use App\Models\Device;
+use App\Services\Config\FileOperations;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Tests\TestCase;
@@ -79,7 +79,7 @@ class rconfigTagDownloadTest extends TestCase
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output
-            if (! empty($match)) {
+            if (!empty($match)) {
                 $this->assertTrue($this->downloaded_file_exists_on_disk($this->device2, $match[0]));
             }
         }

@@ -3,11 +3,10 @@
 namespace Tests\Slowtests\ControllersTests\Connections\Telnet;
 
 use App\CustomClasses\DeviceRecordPrepare;
-use App\CustomClasses\FileOperations;
 use App\Http\Controllers\Connections\MainConnectionManager;
 use App\Http\Controllers\Connections\Params\DeviceParams;
 use App\Models\Device;
-use App\Models\Template;
+use App\Services\Config\FileOperations;
 use Crypt;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -75,6 +74,7 @@ class TelnetConnectTest extends TestCase
 
     /**
      * @test
+     *
      * @group slow-tests
      */
     public function full_telnet_download_from_device_direct_from_classes()
@@ -92,6 +92,7 @@ class TelnetConnectTest extends TestCase
 
     /**
      * @test
+     *
      * @group slow-tests
      */
     public function full_telnet_download_and_file_exists_check_from_device_from_command_no_enable_template()
@@ -128,6 +129,7 @@ class TelnetConnectTest extends TestCase
 
     /**
      * @test
+     *
      * @group slow-tests
      */
     public function V6_full_telnet_download_and_file_exists_check_from_device_from_command_no_enable_template()
@@ -164,6 +166,7 @@ class TelnetConnectTest extends TestCase
 
     /**
      * @test
+     *
      * @group slow-tests
      */
     public function telnet_log_error_if_prompt_is_not_matched_within_specified_time_which_implies_an_incorrect_prompt()
@@ -171,7 +174,7 @@ class TelnetConnectTest extends TestCase
         // setup extra devices for testing
         $this->setup_extra_devices();
 
-        $this->log_message_during_test(substr(strrchr(__CLASS__, "\\"), 1) . '/' . __FUNCTION__, 'This test will take over 25 seconds to complete.');
+        $this->log_message_during_test(substr(strrchr(__CLASS__, '\\'), 1) . '/' . __FUNCTION__, 'This test will take over 25 seconds to complete.');
 
         $this->add_5_sec_timeout_telnet_noenable_template();
 
@@ -219,6 +222,7 @@ class TelnetConnectTest extends TestCase
 
     /**
      * @test
+     *
      * @group slow-tests
      */
     public function full_telnet_download_and_file_exists_check_from_device_from_command_enable_template()
@@ -250,11 +254,12 @@ class TelnetConnectTest extends TestCase
 
     /**
      * @test
+     *
      * @group slow-tests
      */
     public function full_telnet_download_from_unreachable_device_direct_from_classes()
     {
-        $this->log_message_during_test(substr(strrchr(__CLASS__, "\\"), 1) . '/' . __FUNCTION__ . '/' . __FUNCTION__, 'This test will take over 10 seconds to complete.');
+        $this->log_message_during_test(substr(strrchr(__CLASS__, '\\'), 1) . '/' . __FUNCTION__ . '/' . __FUNCTION__, 'This test will take over 10 seconds to complete.');
 
         $this->add_5_sec_timeout_telnet_noenable_template();
 
@@ -281,12 +286,12 @@ class TelnetConnectTest extends TestCase
 
     /**
      * @group slow-tests
+     *
      * @test
      */
     public function full_telnet_download_from_unreachable_device_from_command()
     {
-
-        $this->log_message_during_test(substr(strrchr(__CLASS__, "\\"), 1) . '/' . __FUNCTION__ . '/' . __FUNCTION__, 'This test will take over 10 seconds to complete.');
+        $this->log_message_during_test(substr(strrchr(__CLASS__, '\\'), 1) . '/' . __FUNCTION__ . '/' . __FUNCTION__, 'This test will take over 10 seconds to complete.');
 
         $this->add_5_sec_timeout_telnet_noenable_template();
 
@@ -327,7 +332,6 @@ class TelnetConnectTest extends TestCase
 
         return File::exists($fullpath);
     }
-
 
     private function setup_extra_devices()
     {
