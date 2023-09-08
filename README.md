@@ -230,7 +230,7 @@ sudo vi /etc/httpd/conf.d/rconfig-vhost.conf
 
 ```sh
 # Ubuntu
-sudo vi /etc/apache2/sites-available/rconfig-vhost.conf
+sudo vi /etc/apache2/sites-enabled/rconfig-vhost.conf
 ```
 
 Update the `ServerName` to match your server's domain name.
