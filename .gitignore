@@ -1,6 +1,6 @@
 /node_modules
 /public/hot
-/public/build
+# /public/build
 /public/storage
 /storage/*.key
 /vendor
@@ -14,7 +14,6 @@
 *.todo
 
 report.xml
-phpunit.xml
 .phpunit.result.cache
 .phpunit.cache
 
