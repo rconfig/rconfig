@@ -286,12 +286,24 @@ Check out our docs `docs.rconfig.com` to learn more.
 Instruction on how to update your installation of rConfig v6 Core, after it is installed, are below. You should run the commands below as root, and you may need to use sudo if installed on Ubuntu.
 
 ```sh
+# Centos/Rocky/RHEL
 cd /var/www/html/rconfig
 git pull
 php artisan migrate
 php artisan rconfig:sync-tasks
 composer install
 systemctl restart httpd
+php artisan rconfig:clear-all
+```
+
+```sh
+# Ubuntu
+cd /var/www/html/rconfig
+git pull
+php artisan migrate
+php artisan rconfig:sync-tasks
+composer install
+systemctl restart apache2
 php artisan rconfig:clear-all
 ```
 
