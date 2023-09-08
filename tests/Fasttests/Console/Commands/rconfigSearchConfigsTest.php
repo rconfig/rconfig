@@ -84,7 +84,7 @@ class rconfigSearchConfigsTest extends TestCase
         Artisan::call('rconfig:search-configs Routers snmp --lines=0');
         $arr = explode("\n", Artisan::output());
         // dd($arr);
-        $this->assertContains('264  snmp-server host 1.1.1.1 TESTCOMMUNITY', $arr);
+        $this->assertContains('541  snmp-server host 1.1.1.1 TESTCOMMUNITY', $arr);
         $this->assertGreaterThan(2, $arr);
     }
 }

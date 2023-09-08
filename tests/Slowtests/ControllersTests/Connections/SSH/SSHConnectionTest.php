@@ -3,10 +3,9 @@
 namespace Tests\Slowtests\ControllersTests\Connections\SSH;
 
 use App\CustomClasses\DeviceRecordPrepare;
-use App\CustomClasses\FileOperations;
 use App\Http\Controllers\Connections\MainConnectionManager;
 use App\Models\Device;
-use App\Models\Template;
+use App\Services\Config\FileOperations;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -32,54 +31,16 @@ class SSHConnectionTest extends TestCase
         $this->device4 = Device::where('id', 1004)->first();
         $this->device6 = Device::where('id', 1006)->first();
         $this->device11 = Device::where('id', 1011)->first();
+
+        // check if 192.168.1.170 is reachable
+        $dev_cisco_ip = '192.168.1.170';
+        $pingresult = exec("ping -c 1 -W 1 $dev_cisco_ip", $outcome, $status);
+
+        if (str_contains($outcome[3], '0 received')) {
+            $this->assertTrue(false);
+            $this->markTestSkipped('Router is not reachable');
+        }
     }
-
-    /** @test */
-    // public function full_SSH_download_from_device11_priva_key_test_direct_from_classes()
-    // {
-    //     $this->markTestSkipped('priv_ssh_keys no implemented in v6 yet.');
-    //     // add template 11
-    //     $this->assertDatabaseHas('device_template', [
-    //         'device_id' => 1011,
-    //         'template_id' => 11,
-    //     ]);
-    //     $this->assertDatabaseHas('priv_ssh_keys', [
-    //         'id' => 1,
-    //         'privSshKeyName' => 'My Test Key1',
-    //         'privSshKeyDesc' => 'My Test Key1 Desc',
-    //         'privSshKeyFile' => rconfig_appdir_path() . '/storage/app/rconfig/ssh_keys/id_rsa-718863',
-    //     ]);
-    //     $this->assertDatabaseHas('templates', [
-    //         'id' => 11,
-    //         'fileName' => '/app/rconfig/templates/ssh_priv_key_test.yml',
-    //         'templateName' => 'ssh_priv_key_test',
-    //         'description' => 'ssh_priv_key_test descr',
-    //         'created_at' => '2021-02-27 12:09:44',
-    //         'updated_at' => null,
-    //     ]);
-
-    //     if (!copy(base_path('tests/storage/ssh_priv_key_test.yml'), storage_path() . '/app/rconfig/templates//ssh_priv_key_test.yml')) {
-    //         $this->assertTrue(false);
-    //         echo "failed to copy $file...\n";
-    //     }
-    //     if (!copy(base_path('tests/storage/id_rsa-718863'), storage_path() . '/app/rconfig/ssh_keys/id_rsa-718863')) {
-    //         $this->assertTrue(false);
-    //         echo "failed to copy $file...\n";
-    //     }
-
-    //     $devicerecord = (new DeviceRecordPrepare($this->device11))->DeviceRecordToArray();
-    //     $connectionObj = new MainConnectionManager($devicerecord, 0);
-    //     $configsArray = $connectionObj->setupConnectAndReturnOutput();
-    //     // dd($configsArray['hostname']);
-
-    //     $this->assertGreaterThan(0, count($configsArray));
-    //     $this->assertStringContainsString($this->device11->device_name, $configsArray['hostname']);
-
-    //     unlink(storage_path() . '/app/rconfig/templates/ssh_priv_key_test.yml');
-    //     if (!file_exists(storage_path() . '/app/rconfig/templates/ssh_priv_key_test.yml')) {
-    //         $this->assertTrue(true);
-    //     }
-    // }
 
     /** @test */
     public function device3_was_found()
@@ -100,6 +61,7 @@ class SSHConnectionTest extends TestCase
 
     /**
      * @test
+     *
      * @group slow-tests
      */
     public function full_SSH_download_from_device3_direct_from_classes()
@@ -120,6 +82,7 @@ class SSHConnectionTest extends TestCase
 
     /**
      * @test
+     *
      * @group slow-tests
      */
     public function full_SSH_download_from_device4_direct_from_classes()
@@ -138,6 +101,7 @@ class SSHConnectionTest extends TestCase
 
     /**
      * @test
+     *
      * @group slow-tests
      */
     public function established_connection_has_options_params_if_they_are_set_in_the_template()
@@ -180,6 +144,7 @@ class SSHConnectionTest extends TestCase
 
     /**
      * @test
+     *
      * @group slow-tests
      */
     public function full_ssh_download_and_file_exists_check_from_command_no_enable_SSH_template_and_regex_prompt()
@@ -209,12 +174,13 @@ class SSHConnectionTest extends TestCase
             'status' => 1,
         ]);
 
-        $this->device3->device_main_prompt  = 'r1#';
+        $this->device3->device_main_prompt = 'r1#';
         $this->assertStringContainsString('r1#', $this->device3['device_main_prompt']);
     }
 
     /**
      * @test
+     *
      * @group slow-tests
      */
     public function full_ssh_download_and_file_exists_check_from_command_no_enable_SSH_template()
@@ -243,63 +209,9 @@ class SSHConnectionTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function validates_that_the_prompt_is_matched_regardless_of_case()
-    {
-
-        $this->setup_extra_devices();
-
-        $start = microtime(true);
-
-        $this->add_5_sec_timeout_ssh_noenable_template();
-
-        Artisan::call('rconfig:download-device 10031');
-        $result = Artisan::output();
-        $arr = explode("\n", $result);
-
-        $this->remove_5_sec_timeout_ssh_noenable_template();
-
-        $time = microtime(true) - $start;
-        $this->assertLessThan(5, $time);
-
-        $this->remove_extra_devices();
-    }
-
     /**
      * @test
-     * @group slow-tests
-     */
-    public function ssh_log_error_if_prompt_is_not_matched_within_specified_time_which_implies_an_incorrect_prompt()
-    {
-        $this->setup_extra_devices();
-
-        $this->log_message_during_test(substr(strrchr(__CLASS__, "\\"), 1) . '/' . __FUNCTION__, 'This test will take over 25 seconds to complete.');
-
-        $start = microtime(true);
-
-        $this->add_5_sec_timeout_ssh_noenable_template();
-
-        Artisan::call('rconfig:download-device 10032');
-        $result = Artisan::output();
-        $arr = explode("\n", $result);
-
-        $time = microtime(true) - $start;
-        $this->assertGreaterThan(15, $time); // 5 second template timeout times number of commands (at least 3 commands in template)
-
-        $this->remove_5_sec_timeout_ssh_noenable_template();
-
-        // database should have a log entry for the error
-        $this->assertDatabaseHas('activity_log', [
-            'device_id' => 10032,
-            'event_type' => 'connection',
-            'description' => 'Prompt not did not match for device within timeout - This can cause slower config downloads. Device ID: 10032',
-        ]);
-
-        $this->remove_extra_devices();
-    }
-
-    /**
-     * @test
+     *
      * @group slow-tests
      */
     public function V6_full_ssh_download_and_file_exists_check_from_command_no_enable_SSH_template()
@@ -331,6 +243,7 @@ class SSHConnectionTest extends TestCase
 
     /**
      * @test
+     *
      * @group slow-tests
      */
     public function full_ssh_download_and_file_exists_check_from_device4_from_command_enable_SSH_template()

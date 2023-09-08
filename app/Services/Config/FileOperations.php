@@ -1,6 +1,6 @@
 <?php
 
-namespace App\CustomClasses;
+namespace App\Services\Config;
 
 class FileOperations
 {

@@ -48,22 +48,22 @@ class rConfigActivityLogArchive extends Command
             return 0;
         }
 
-        if (! empty($rows)) {
+        if (!empty($rows)) {
             $count = $rows;
             ActivityLog::all()->take($count[0])
                 ->each(function ($oldRecord) {
                     $newRecord = $oldRecord->replicate();
                     $newRecord['original_id'] = $oldRecord->id;
-                    $newRecord['original_created_at'] = \Carbon\Carbon::createFromFormat('M d, Y G:ia', $oldRecord->created_at); // convert to datetime object form mutated created_at
-                    $newRecord['original_updated_at'] = \Carbon\Carbon::createFromFormat('M d, Y G:ia', $oldRecord->updated_at);
+                    $newRecord['original_created_at'] = $oldRecord->created_at; // convert to datetime object form mutated created_at
+                    $newRecord['original_updated_at'] = $oldRecord->updated_at;
                     $newRecord->setTable('activity_log_archives');
                     $newRecord->save();
                     $oldRecord->delete();
                 });
-            $logmsg = $count[0].' logs entries sent to activity log archive table!';
+            $logmsg = $count[0] . ' logs entries sent to activity log archive table!';
         }
 
-        if (! empty($days)) {
+        if (!empty($days)) {
             $count = $days;
 
             ActivityLog::query()
@@ -71,13 +71,13 @@ class rConfigActivityLogArchive extends Command
                 ->each(function ($oldRecord) {
                     $newRecord = $oldRecord->replicate();
                     $newRecord['original_id'] = $oldRecord->id;
-                    $newRecord['original_created_at'] = \Carbon\Carbon::createFromFormat('M d, Y G:ia', $oldRecord->created_at); // convert to datetime object form mutated created_at
-                    $newRecord['original_updated_at'] = \Carbon\Carbon::createFromFormat('M d, Y G:ia', $oldRecord->updated_at);
+                    $newRecord['original_created_at'] = $oldRecord->created_at; // convert to datetime object form mutated created_at
+                    $newRecord['original_updated_at'] = $oldRecord->updated_at;
                     $newRecord->setTable('activity_log_archives');
                     $newRecord->save();
                     $oldRecord->delete();
                 });
-            $logmsg = 'logs older than '.$count[0].' days sent to activity log archive table';
+            $logmsg = 'logs older than ' . $count[0] . ' days sent to activity log archive table';
         }
 
         $this->info($logmsg);

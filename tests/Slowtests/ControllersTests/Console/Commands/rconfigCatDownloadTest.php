@@ -2,10 +2,10 @@
 
 namespace Tests\Slowtests\ControllersTests\Console\Commands;
 
-use App\CustomClasses\FileOperations;
 use App\CustomClasses\GetAndCheckCategoryIds;
 use App\Http\Controllers\Connections\Params\DeviceParams;
 use App\Models\Device;
+use App\Services\Config\FileOperations;
 use Artisan;
 use File;
 use Tests\TestCase;

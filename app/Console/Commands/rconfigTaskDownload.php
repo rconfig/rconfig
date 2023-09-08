@@ -120,11 +120,6 @@ class rconfigTaskDownload extends Command
                 }
             }
 
-            //SNIPPETs BELOW HERE
-            if ($task->snippet->count() > 0) {
-                $this->error('we are in snippet mode ID: ' . $task->snippet[0]->id);
-            }
-
             if (app()->runningInConsole()) {
                 custom_chown(storage_path());
             }
