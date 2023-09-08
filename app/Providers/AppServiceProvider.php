@@ -39,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
             'build-assets',
             fn (Run $run): Run => $run
                 ->exec('export NODE_OPTIONS="--dns-result-order=ipv4first"')
+                ->exec('export NODE_OPTIONS=--max_old_space_size=4096')
                 ->exec('npm install')
                 ->exec('npm run build')
         );

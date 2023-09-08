@@ -14,7 +14,6 @@
 *.todo
 
 report.xml
-phpunit.xml
 .phpunit.result.cache
 .phpunit.cache
 
