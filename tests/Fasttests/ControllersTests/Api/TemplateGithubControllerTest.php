@@ -106,13 +106,13 @@ class TemplateGithubControllerTest extends TestCase
 
         $response = $this->json('GET', '/api/list-template-repo-folders');
         $response->assertStatus(200)->assertJsonFragment([
-            'path' => '/var/www/html/rconfig6/storage/app/rconfig/templates/rConfig-templates/Brocade',
+            'path' => '/var/www/html/rconfig/storage/app/rconfig/templates/rConfig-templates/Brocade',
         ]);
         $response->assertStatus(200)->assertJsonFragment([
-            'path' => '/var/www/html/rconfig6/storage/app/rconfig/templates/rConfig-templates/Checkpoint',
+            'path' => '/var/www/html/rconfig/storage/app/rconfig/templates/rConfig-templates/Checkpoint',
         ]);
         $response->assertStatus(200)->assertJsonFragment([
-            'path' => '/var/www/html/rconfig6/storage/app/rconfig/templates/rConfig-templates/Sonicwall',
+            'path' => '/var/www/html/rconfig/storage/app/rconfig/templates/rConfig-templates/Sonicwall',
         ]);
 
         if (is_dir($this->templatesDstDir)) {
@@ -133,21 +133,21 @@ class TemplateGithubControllerTest extends TestCase
 
         $this->assertGreaterThan(0, count($arr));
 
-        $response = $this->json('POST', '/api/list-repo-folders-contents', ['directory' => '/var/www/html/rconfig6/storage/app/rconfig/templates/rConfig-templates/Cisco']);
+        $response = $this->json('POST', '/api/list-repo-folders-contents', ['directory' => '/var/www/html/rconfig/storage/app/rconfig/templates/rConfig-templates/Cisco']);
 
         $response->assertStatus(200)->assertJsonFragment([
-            '/var/www/html/rconfig6/storage/app/rconfig/templates/rConfig-templates/Cisco/asa-ssh-enable.yml',
+            '/var/www/html/rconfig/storage/app/rconfig/templates/rConfig-templates/Cisco/asa-ssh-enable.yml',
         ]);
         $response->assertStatus(200)->assertJsonFragment([
-            '/var/www/html/rconfig6/storage/app/rconfig/templates/rConfig-templates/Cisco/ciscowlc-ssh-noenable.yml',
+            '/var/www/html/rconfig/storage/app/rconfig/templates/rConfig-templates/Cisco/ciscowlc-ssh-noenable.yml',
         ]);
         $response->assertStatus(200)->assertJsonFragment([
-            '/var/www/html/rconfig6/storage/app/rconfig/templates/rConfig-templates/Cisco/ios-ssh-noenable.yml',
+            '/var/www/html/rconfig/storage/app/rconfig/templates/rConfig-templates/Cisco/ios-ssh-noenable.yml',
         ]);
 
         // has readme.md
         $response->assertStatus(200)->assertJsonFragment([
-            '/var/www/html/rconfig6/storage/app/rconfig/templates/rConfig-templates/Cisco/README.md',
+            '/var/www/html/rconfig/storage/app/rconfig/templates/rConfig-templates/Cisco/README.md',
         ]);
 
         if (is_dir($this->templatesDstDir)) {
@@ -160,7 +160,7 @@ class TemplateGithubControllerTest extends TestCase
     {
         Artisan::call('rconfig:clone-templates');
 
-        $response = $this->json('POST', '/api/get-template-file-contents', ['filepath' => '/var/www/html/rconfig6/storage/app/rconfig/templates/rConfig-templates/Cisco/asa-ssh-enable.yml']);
+        $response = $this->json('POST', '/api/get-template-file-contents', ['filepath' => '/var/www/html/rconfig/storage/app/rconfig/templates/rConfig-templates/Cisco/asa-ssh-enable.yml']);
 
         $response->assertStatus(200)->assertJsonFragment([
             'templateName' => 'Cisco ASA - SSH - Enable',

@@ -2,7 +2,6 @@
 
 namespace Tests\Slowtests\ControllersTests\Console\Commands;
 
-use App\CustomClasses\FileOperations;
 use App\CustomClasses\GetAndCheckCategoryIds;
 use App\CustomClasses\GetAndCheckTagIds;
 use App\CustomClasses\GetAndCheckTaskIds;
@@ -10,6 +9,7 @@ use App\Http\Controllers\Connections\Params\DeviceParams;
 use App\Models\Device;
 use App\Models\Taskdownloadreport;
 use App\Models\User;
+use App\Services\Config\FileOperations;
 use Artisan;
 use File;
 use Tests\TestCase;

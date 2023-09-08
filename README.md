@@ -56,7 +56,7 @@ https://github.com/mohammadain/laravel-docker-cron/blob/master/Dockerfile -->
 ## Intro
 
 rConfig v6 is an enterprise grade Network Configuration Management (NCM) software package with superior NCM features and capabilities to help you easily manage configurations on large and small heterogenous networks. rConfig v6 is our flagship professional version of rConfig aimed at high value networks and business operations. rConfig v6 runs natively on many variants of Linux. Within this repo, is the code base for rConfig v6 Core, and a set of scripts to help you get started with rConfig v6 Core.
-
+  
 If you are looking for rConfig V6 professional, please visit `https://www.rconfig.com/`.
 
 Supported OS

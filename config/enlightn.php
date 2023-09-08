@@ -169,7 +169,7 @@ return [
                 'details' => '* undefined property*',
             ],
             [
-                'path' => 'app/CustomClasses/FileOperations.php',
+                'path' => 'app/Services/Config/FileOperations.php',
                 'details' => '* undefined property*',
             ],
             [
