@@ -3,6 +3,7 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
+use Lorisleiva\CronTranslator\CronExpression;
 
 class TaskCronIsCorrectFormat implements Rule
 {
@@ -47,11 +48,12 @@ class TaskCronIsCorrectFormat implements Rule
             return false;
         }
 
-        // validate each array item has either a * or integer
-        foreach ($value as $item) {
-            if (!is_numeric($item) && $item !== '*') {
-                return false;
-            }
+        // validate its a cron expression
+        $cron = implode(' ', $value);
+        try {
+            $cron = new CronExpression($cron);
+        } catch (\Exception $e) {
+            return false;
         }
 
         return true;
