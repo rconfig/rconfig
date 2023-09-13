@@ -292,7 +292,7 @@ Check out our docs `docs.rconfig.com` to learn more.
 ## Updating
 
 > [!IMPORTANT]  
-> Your advised to backup your database before proceeding, .env file and storage directory at a minimum. You should also backup your entire server if possible.
+> Your advised to backup your database, .env file and storage directory at a minimum before proceeding. You should also backup your entire server if possible.
 
 Instruction on how to update your installation of rConfig v6 Core, after it is installed, are below. You should run the commands below as root, and you may need to use sudo if installed on Ubuntu.
 
