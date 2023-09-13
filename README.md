@@ -186,7 +186,7 @@ chmod +x setup_supervisor.sh
 9. Run the installation script. This will install the required packages, setup the database, and configure the web server. The script will take a few minutes to complete.
 
 > [!WARNING]  
-> Do not run the next command on existing rConfig deployments in an attempt to update. You must follow the instructions in the <a href="#update">Updating</a> section below.
+> Do not run the next command on existing rConfig deployments in an attempt to update. You must follow the instructions in the <a href="#update">Updating</a> section below. The command below is for new installations only.
 
 ```sh
 php artisan install
@@ -292,7 +292,7 @@ Check out our docs `docs.rconfig.com` to learn more.
 ## Updating
 
 > [!IMPORTANT]  
-> Your advised to backup your database before proceeding, .env file and storage directory at a minimum. You should also backup your entire server if possible.
+> Your advised to backup your database, .env file and storage directory at a minimum before proceeding. You should also backup your entire server if possible.
 
 Instruction on how to update your installation of rConfig v6 Core, after it is installed, are below. You should run the commands below as root, and you may need to use sudo if installed on Ubuntu.
 
