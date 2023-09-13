@@ -186,7 +186,7 @@ chmod +x setup_supervisor.sh
 9. Run the installation script. This will install the required packages, setup the database, and configure the web server. The script will take a few minutes to complete.
 
 > [!WARNING]  
-> Do not run the next command on existing rConfig deployments in an attempt to update. You must follow the instructions in the <a href="#update">Updating</a> section below.
+> Do not run the next command on existing rConfig deployments in an attempt to update. You must follow the instructions in the <a href="#update">Updating</a> section below. The command below is for new installations only.
 
 ```sh
 php artisan install
