@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\DataTransferObjects\StoreTaskDTO;
+use App\Rules\TaskCronIsCorrectFormat;
 use App\Rules\TaskDownloadCategoryHasCategories;
 use App\Rules\TaskDownloadDeviceHasDevices;
 use App\Rules\TaskDownloadTagHasTags;
@@ -57,7 +58,7 @@ class StoreTaskRequest extends FormRequest
                 'task_name' => 'required|min:3|unique:tasks|max:255',
                 'task_desc' => 'required|min:3',
                 'task_command' => 'required',
-                'task_cron' => 'required|array|between:4,5',
+                'task_cron' => new TaskCronIsCorrectFormat(),
                 'device' => new TaskDownloadDeviceHasDevices($this->request->get('task_command')),
                 'category' => new TaskDownloadCategoryHasCategories($this->request->get('task_command')),
                 'tag' => new TaskDownloadTagHasTags($this->request->get('task_command')),

@@ -56,7 +56,7 @@ https://github.com/mohammadain/laravel-docker-cron/blob/master/Dockerfile -->
 ## Intro
 
 rConfig v6 is an enterprise grade Network Configuration Management (NCM) software package with superior NCM features and capabilities to help you easily manage configurations on large and small heterogenous networks. rConfig v6 is our flagship professional version of rConfig aimed at high value networks and business operations. rConfig v6 runs natively on many variants of Linux. Within this repo, is the code base for rConfig v6 Core, and a set of scripts to help you get started with rConfig v6 Core.
-  
+
 If you are looking for rConfig V6 professional, please visit `https://www.rconfig.com/`.
 
 Supported OS
@@ -80,6 +80,9 @@ rConfig v6 core is completely free, you do not need an API key from rConfig to d
 We have made it super easy to get started with rConfig v6. Follow the steps below to get started. Check out our youtube channel for a video walkthrough of the installation process.
 
 [https://www.youtube.com/channel/rconfigV6Core](https://www.youtube.com/playlist?list=PL8dpV2hQIDLR04p5RuJEVcdhQY1gXKOgU)
+
+> [!NOTE]  
+> Do not follow the installation steps to update existing rConfig installations. You must skip to the <a href="#update">Updating</a> section below.
 
 ### Prerequisites
 
@@ -181,6 +184,9 @@ chmod +x setup_supervisor.sh
 ```
 
 9. Run the installation script. This will install the required packages, setup the database, and configure the web server. The script will take a few minutes to complete.
+
+> [!WARNING]  
+> Do not run the next command on existing rConfig deployments in an attempt to update. You must follow the instructions in the <a href="#update">Updating</a> section below.
 
 ```sh
 php artisan install
@@ -284,6 +290,9 @@ Check out our docs `docs.rconfig.com` to learn more.
 <a name="update"></a>
 
 ## Updating
+
+> [!IMPORTANT]  
+> Your advised to backup your database before proceeding, .env file and storage directory at a minimum. You should also backup your entire server if possible.
 
 Instruction on how to update your installation of rConfig v6 Core, after it is installed, are below. You should run the commands below as root, and you may need to use sudo if installed on Ubuntu.
 
