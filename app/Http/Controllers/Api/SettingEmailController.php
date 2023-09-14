@@ -44,11 +44,11 @@ class SettingEmailController extends ApiBaseController
     {
         parent::updateResource($id, $request->toDTO()->toArray(), 1);
 
-        if (! App()->environment('testing')) {
+        if (!App()->environment('testing')) {
             Artisan::call('config:cache'); // cannot to a config:cache when testing
         }
 
-        return $this->successResponse(Str::ucfirst($this->modelname).' edited successfully!');
+        return $this->successResponse(Str::ucfirst($this->modelname) . ' edited successfully!');
     }
 
     public function TestMailNotifications()
@@ -87,11 +87,11 @@ class SettingEmailController extends ApiBaseController
 
     private function makeRecipients()
     {
-        if (! $this->show(1)->mail_to_email) {
+        if (!$this->show(1)->mail_to_email) {
             return $this->failureResponse('Invalid recipient email address');
         }
 
-        $recipientsArr = explode(';', $this->show(1)->mail_to_email);
+        $recipientsArr = explode(';', trim($this->show(1)->mail_to_email, ';'));
 
         foreach ($recipientsArr as $recipient) {
             $users[] = User::make(['email' => trim($recipient)]);

@@ -245,7 +245,7 @@ class SettingsEmailControllerTest extends TestCase
             'mail_password' => env('MAILTRAP_PASSWORD'),
             'mail_from_email' => $this->faker->companyEmail,
             'mail_from_name' => $this->faker->firstName,
-            'mail_to_email' => $this->faker->companyEmail . ';' . $this->faker->companyEmail . ';' . $this->faker->companyEmail,
+            'mail_to_email' => $this->faker->companyEmail . ';' . $this->faker->companyEmail . ';' . $this->faker->companyEmail . ';', // add last semi-colon to test empty email is trimmed per #531
             'mail_authcheck' => true,
             'mail_encryption' => 'tls',
         ];
