@@ -1,5 +1,15 @@
 <template>
     <div>
+        <div class="pf-m-error" v-if="errors.minute || errors.hour || errors.day || errors.month || errors.weekday">
+            <p class="pf-c-form__helper-text pf-m-error" id="form-help-text-info-helper" aria-live="polite">
+                <span class="pf-c-form__helper-text-icon">
+                    <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+                </span>
+                Error Notice:
+            </p>
+            <p class="pf-c-form__helper-text pf-m-error pf-u-ml-lg" v-for="error in errors">{{ error }}</p>
+        </div>
+
         <!--MINUTES-->
         <div class="pf-c-form__group pf-u-pt-md">
             <div class="pf-c-form__group-label">
@@ -10,7 +20,7 @@
             </div>
             <div class="pf-c-form__group-control pf-l-grid pf-m-gutter">
                 <div class="pf-l-grid__item pf-m-3-col">
-                    <input type="text" name="minute" id="minute" v-model="cronReturnArray.minute" autocomplete="off" class="pf-c-form-control" />
+                    <input type="text" name="minute" id="minute" v-model="cronReturnArray.minute" autocomplete="off" spellcheck="false" class="pf-c-form-control" @input="onChangeMin" />
                 </div>
                 <div class="pf-l-grid__item pf-m-9-col">
                     <select id="minuteSelect" class="pf-c-form-control" v-model="cronReturnArray.minute" @change="onChangeMin">
@@ -96,7 +106,7 @@
             </div>
             <div class="pf-c-form__group-control pf-l-grid pf-m-gutter">
                 <div class="pf-l-grid__item pf-m-3-col">
-                    <input type="text" name="hour" id="hour" v-model="cronReturnArray.hour" autocomplete="off" class="pf-c-form-control" />
+                    <input type="text" name="hour" id="hour" v-model="cronReturnArray.hour" autocomplete="off" spellcheck="false" class="pf-c-form-control" @input="onChangeHour" />
                 </div>
                 <div class="pf-l-grid__item pf-m-9-col">
                     <select id="hourSelect" class="pf-c-form-control" v-model="cronReturnArray.hour" @change="onChangeHour">
@@ -147,7 +157,7 @@
             </div>
             <div class="pf-c-form__group-control pf-l-grid pf-m-gutter">
                 <div class="pf-l-grid__item pf-m-3-col">
-                    <input type="text" name="day" id="day" v-model="cronReturnArray.day" autocomplete="off" class="pf-c-form-control" />
+                    <input type="text" name="day" id="day" v-model="cronReturnArray.day" autocomplete="off" spellcheck="false" class="pf-c-form-control" @input="onChangeDay" />
                 </div>
                 <div class="pf-l-grid__item pf-m-9-col">
                     <select id="daySelect" class="pf-c-form-control" v-model="cronReturnArray.day" @change="onChangeDay">
@@ -202,7 +212,7 @@
             </div>
             <div class="pf-c-form__group-control pf-l-grid pf-m-gutter">
                 <div class="pf-l-grid__item pf-m-3-col">
-                    <input type="text" name="month" id="month" v-model="cronReturnArray.month" autocomplete="off" class="pf-c-form-control" />
+                    <input type="text" name="month" id="month" v-model="cronReturnArray.month" autocomplete="off" spellcheck="false" class="pf-c-form-control" @input="onChangeMonth" />
                 </div>
                 <div class="pf-l-grid__item pf-m-9-col">
                     <select id="monthSelect" class="pf-c-form-control" v-model="cronReturnArray.month" @change="onChangeMonth">
@@ -239,7 +249,7 @@
             </div>
             <div class="pf-c-form__group-control pf-l-grid pf-m-gutter">
                 <div class="pf-l-grid__item pf-m-3-col">
-                    <input type="text" name="weekday" id="weekday" v-model="cronReturnArray.weekday" autocomplete="off" class="pf-c-form-control" />
+                    <input type="text" name="weekday" id="weekday" v-model="cronReturnArray.weekday" autocomplete="off" spellcheck="false" class="pf-c-form-control" @change="onChangeWeekday" />
                 </div>
                 <div class="pf-l-grid__item pf-m-9-col">
                     <select id="weekdaySelect" class="pf-c-form-control" v-model="cronReturnArray.weekday" @change="onChangeWeekday">
@@ -277,6 +287,13 @@ export default {
     components: {},
 
     setup(props) {
+        const errors = reactive({
+            minute: '',
+            hour: '',
+            day: '',
+            month: '',
+            weekday: ''
+        });
         const cronReturnArray = reactive({
             minute: props.cronProp[0] ? props.cronProp[0] : '*',
             hour: props.cronProp[1] ? props.cronProp[1] : '*',
@@ -286,19 +303,44 @@ export default {
         });
 
         function onChangeMin() {
-            props.cronProp[0] = cronReturnArray.minute;
+            if (!cronReturnArray.minute) {
+                errors.minute = 'Minute is required';
+            } else {
+                props.cronProp[0] = cronReturnArray.minute;
+                errors.minute = '';
+            }
         }
         function onChangeHour() {
-            props.cronProp[1] = cronReturnArray.hour;
+            if (!cronReturnArray.hour) {
+                errors.hour = 'Hour is required';
+            } else {
+                props.cronProp[1] = cronReturnArray.hour;
+                errors.hour = '';
+            }
         }
         function onChangeDay() {
-            props.cronProp[2] = cronReturnArray.day;
+            if (!cronReturnArray.day) {
+                errors.day = 'Day is required';
+            } else {
+                props.cronProp[2] = cronReturnArray.day;
+                errors.day = '';
+            }
         }
         function onChangeMonth() {
-            props.cronProp[3] = cronReturnArray.month;
+            if (!cronReturnArray.month) {
+                errors.month = 'Month is required';
+            } else {
+                props.cronProp[3] = cronReturnArray.month;
+                errors.month = '';
+            }
         }
         function onChangeWeekday() {
-            props.cronProp[4] = cronReturnArray.weekday;
+            if (!cronReturnArray.weekday) {
+                errors.weekday = 'Weekday is required';
+            } else {
+                props.cronProp[4] = cronReturnArray.weekday;
+                errors.weekday = '';
+            }
         }
 
         watchEffect(() => {
@@ -307,10 +349,16 @@ export default {
             cronReturnArray.day = props.cronProp[2];
             cronReturnArray.month = props.cronProp[3];
             cronReturnArray.weekday = props.cronProp[4];
+            errors.minute = '';
+            errors.hour = '';
+            errors.day = '';
+            errors.month = '';
+            errors.weekday = '';
         });
 
         return {
             cronReturnArray,
+            errors,
             onChangeMin,
             onChangeHour,
             onChangeDay,
