@@ -6,14 +6,17 @@ networks:
 
 services:
   mariadb:
+    #if a mariadb container is created for the first time, is it initialized with the database from the ENV file
+    # unless the database already exists in the volume. Check this in case of issues
     image: mariadb:10.8
     container_name: ${DB_HOST}
     restart: unless-stopped
+    env_file: ./.env
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_USER: ${DB_USERNAME}
       MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_DATABASE: rconfig
     volumes:
       - .${DB_STORAGE_LOCATION}:/var/lib/mysql
     ports:
