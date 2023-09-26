@@ -1,30 +1,39 @@
-Simple, clone the develop branch of https://github.com/rconfig/rconfig
-Copy .env.docker.exampe to .env and edit any or all of the following
-DB_CONNECTION=mysql
-DB_HOST=DBHOST
-DB_PORT=3306
-DB_DATABASE=DBNAME
-DB_USERNAME=DBUSER
-DB_PASSWORD=DBPASS
-DB_STORAGE_LOCATION=/storage/app/rconfig/mysql
+To setup docker for rCOnfig v6 Core, clone the develop branch of https://github.com/rconfig/rconfig
 
-REDIS_HOST=rconfig-redis
-REDIS_PASSWORD=null
-REDIS_PORT=6379
+```bash
+git clone https://github.com/rconfig/rconfig
+checkout develop
+```
+
+Copy .env.docker.example to .env
+
+```bash
+cd /var/www/html/rconfig
+cp .env.docker.example .env
+```
+
+Edit following lines in .env file. Those with a \* are required. The rest are optional.
+
+```bash
+DB_HOST=DBHOST*
+DB_PORT=3306
+DB_DATABASE=DBNAME*
+DB_USERNAME=DBUSER*
+DB_PASSWORD=DBPASS*
+DB_STORAGE_LOCATION=/storage/app/rconfig/mysql
 
 #DOCKER EXPOSED PORTS
 EXPOSED_APP_PORT=8080
 EXPOSED_DB_PORT=3307
 EXPOSED_HORIZON_PORT=8081
 EXPOSED_REDIS_PORT=7000
+```
 
-Docker compose up
+```bash
+docker compose up -d
+```
 
 After the containers are up and active successfully, deploy the app
-docker-compose exec php-apache /bin/bash
-cd /var/www/html && yes | composer install --no-dev
-cd /var/www/html && php artisan install
-And that should be it. Launch the website/ server on port 8080, and login with admin@domain.com and admin.
 
 ```bash
 docker compose exec php-apache /bin/bash
@@ -38,3 +47,9 @@ cd /var/www/html && yes | composer install --no-dev
 cd /var/www/html && php artisan install
 
 ```
+
+And that should be it. Launch the website/ server on port 8080, and login with admin@domain.com and admin.
+
+If you run into difficulties, please open an issue on github.
+
+Please note, the dockerkillall.sh script is for development purposes only. It will kill all docker containers and remove all docker images. It is not recommended for production use.
