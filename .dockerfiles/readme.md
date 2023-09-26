@@ -2,13 +2,13 @@ To setup docker for rCOnfig v6 Core, clone the develop branch of https://github.
 
 ```bash
 git clone https://github.com/rconfig/rconfig
+cd rconfig
 checkout develop
 ```
 
 Copy .env.docker.example to .env
 
 ```bash
-cd /var/www/html/rconfig
 cp .env.docker.example .env
 ```
 
