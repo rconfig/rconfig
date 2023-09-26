@@ -5,13 +5,12 @@ RUN apt-get update && apt-get install -y vim wget curl default-mysql-client git
 
 RUN apt-get install -y software-properties-common
 
-RUN apt install -y g++ libicu-dev libpq-dev libzip-dev zip zlib1g-dev libcurl4-openssl-dev libonig-dev libgmp-dev libpng-dev libwebp-dev iputils-ping telnet ssh \
-    && docker-php-ext-install opcache bcmath gmp mbstring gd zip
+RUN apt install -y g++ libicu-dev libpq-dev libzip-dev zip zlib1g-dev libcurl4-openssl-dev libonig-dev libgmp-dev libpng-dev libwebp-dev iputils-ping telnet ssh 
+RUN docker-php-ext-install mysqli pdo pdo_mysql opcache bcmath gmp mbstring gd zip && docker-php-ext-enable pdo_mysql
 
 # Install pcntl
 RUN docker-php-ext-configure pcntl --enable-pcntl \
     && docker-php-ext-install pcntl
-
 
 # install composer 2 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -32,6 +31,3 @@ RUN a2enmod rewrite && service apache2 restart
 # We must reconfigure here the CMD directive.
 CMD apache2-foreground
 
-# docker-compose exec php-apache /bin/bash
-# cd /var/www/html && yes | composer install --no-dev
-# cd /var/www/html && php artisan install

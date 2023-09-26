@@ -9,8 +9,7 @@ RUN apk update && apk add supervisor bash
 RUN touch /var/log/cron.log
 
 # RUN apt-get update && apt-get install -y cron supervisor
-RUN docker-php-ext-install pdo pdo_mysql
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+RUN docker-php-ext-install  mysqli pdo pdo_mysql
 
 # Configure cron
 COPY crontab /etc/crontabs/root
