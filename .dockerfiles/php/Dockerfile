@@ -6,18 +6,12 @@ RUN apt-get update && apt-get install -y vim wget curl default-mysql-client git
 RUN apt-get install -y software-properties-common
 
 RUN apt install -y g++ libicu-dev libpq-dev libzip-dev zip zlib1g-dev libcurl4-openssl-dev libonig-dev libgmp-dev libpng-dev libwebp-dev iputils-ping telnet ssh \
-    && docker-php-ext-install intl opcache pdo pdo_mysql mysqli zip fileinfo bcmath gmp zip curl mbstring gd 
+    && docker-php-ext-install opcache bcmath gmp mbstring gd zip
 
 # Install pcntl
 RUN docker-php-ext-configure pcntl --enable-pcntl \
     && docker-php-ext-install pcntl
 
-# Install node and npm
-RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs
-
-# output node and npm versions
-RUN node -v && npm -v
 
 # install composer 2 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
