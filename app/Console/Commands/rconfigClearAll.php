@@ -70,7 +70,7 @@ class rconfigClearAll extends Command
         }
 
         if (getenv('IS_DOCKER')) {
-            chmod('/var/www/html/storage', 0755);
+            chmod('/var/www/html/storage', 0777);
         }
 
         $this->info('------  Permissions Updated!  ------');

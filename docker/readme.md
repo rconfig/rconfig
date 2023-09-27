@@ -1,5 +1,7 @@
 To setup docker for rCOnfig v6 Core, clone the develop branch of https://github.com/rconfig/rconfig
 
+Docker, docker compose and git are required to setup rConfig v6 Core for Docker.
+
 ```bash
 git clone https://github.com/rconfig/rconfig
 cd rconfig
@@ -16,18 +18,17 @@ Edit following lines in .env file. Those with a \* are required. The rest are op
 
 ```bash
 APP_DEBUG=false #(recommended: false/ true for development)
-DB_HOST=DBHOST* #(arbitrary name, must not be localhost)
+DB_HOST=rconfig-mariadb-1 #(Do not change unless you know what you are doing)
 DB_PORT=3306
 DB_DATABASE=DBNAME* #(recommended: rconfig)
 DB_USERNAME=DBUSER* #(recommended: anything but root)
 DB_PASSWORD=DBPASS* #(recommended: 16+ characters, alphanumeric, special characters)
 DB_STORAGE_LOCATION=/storage/app/rconfig/mysql
 
-#DOCKER EXPOSED PORTS
-EXPOSED_APP_PORT=8080
-EXPOSED_DB_PORT=3307
-EXPOSED_HORIZON_PORT=8081
-EXPOSED_REDIS_PORT=7000
+#DOCKER EXPOSED PORTS - DO NOT CHANGE UNLESS YOU KNOW WHAT YOU ARE DOING
+APP_PORT=80
+FORWARD_DB_PORT=3307
+FORWARD_REDIS_PORT=7000
 ```
 
 ```bash
@@ -37,7 +38,7 @@ docker compose up -d
 After the containers are up and active successfully, deploy the app
 
 ```bash
-docker compose exec php-apache /bin/bash
+docker exec -it rconfig-rconfig.core-1 /bin/bash
 ```
 
 ```bash
@@ -46,7 +47,7 @@ cd /var/www/html && yes | composer install --no-dev
 
 ```bash
 cd /var/www/html && php artisan install
-chown -R www-data:www-data storage/
+sudo chmod -R 777 storage && sudo chmod -R 777 bootstrap/cache
 php artisan rconfig:clear-all
 ```
 
