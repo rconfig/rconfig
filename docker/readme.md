@@ -3,7 +3,7 @@ To setup docker for rCOnfig v6 Core, clone the develop branch of https://github.
 ```bash
 git clone https://github.com/rconfig/rconfig
 cd rconfig
-checkout develop
+git checkout develop
 ```
 
 Copy .env.docker.example to .env
@@ -15,11 +15,12 @@ cp .env.docker.example .env
 Edit following lines in .env file. Those with a \* are required. The rest are optional.
 
 ```bash
-DB_HOST=DBHOST*
+APP_DEBUG=false #(recommended: false/ true for development)
+DB_HOST=DBHOST* #(arbitrary name, must not be localhost)
 DB_PORT=3306
-DB_DATABASE=DBNAME*
-DB_USERNAME=DBUSER*
-DB_PASSWORD=DBPASS*
+DB_DATABASE=DBNAME* #(recommended: rconfig)
+DB_USERNAME=DBUSER* #(recommended: anything but root)
+DB_PASSWORD=DBPASS* #(recommended: 16+ characters, alphanumeric, special characters)
 DB_STORAGE_LOCATION=/storage/app/rconfig/mysql
 
 #DOCKER EXPOSED PORTS
@@ -45,7 +46,8 @@ cd /var/www/html && yes | composer install --no-dev
 
 ```bash
 cd /var/www/html && php artisan install
-
+chown -R www-data:www-data storage/
+php artisan rconfig:clear-all
 ```
 
 And that should be it. Launch the website/ server on port 8080, and login with admin@domain.com and admin.
