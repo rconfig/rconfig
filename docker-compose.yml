@@ -24,7 +24,6 @@ services:
     depends_on:
       - mariadb
       - redis
-    user: "1000:1000"
   mariadb:
     image: 'mariadb:10'
     ports:
