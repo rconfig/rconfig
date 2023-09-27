@@ -47,8 +47,20 @@ cd /var/www/html && yes | composer install --no-dev
 
 ```bash
 cd /var/www/html && php artisan install
-sudo chmod -R 777 storage && sudo chmod -R 777 bootstrap/cache
 php artisan rconfig:clear-all
+```
+
+Exit the container, and set the storage permissions (this is a temporary fix, and will be fixed in the next release)
+
+```bash
+sudo chmod -R 777 storage && sudo chmod -R 777 bootstrap/cache
+```
+
+Might be best to bring down the containers and bring them back up again.
+
+```bash
+docker compose down
+docker compose up -d
 ```
 
 And that should be it. Launch the website/ server on port 8080, and login with admin@domain.com and admin.
