@@ -60,12 +60,19 @@ class rconfigClearAll extends Command
         Artisan::call('queue:restart');
         $this->info('------  Queues Restarted!  ------');
 
-        echo exec('sudo supervisorctl update') . PHP_EOL;
-        echo exec('sudo supervisorctl reread') . PHP_EOL;
-        echo exec('if [ -f /etc/redhat-release ]; then systemctl restart supervisord; fi;') . PHP_EOL;
-        echo exec('if [ -f /etc/lsb-release ]; then systemctl restart supervisor; fi;') . PHP_EOL;
+        if (!getenv('IS_DOCKER')) {
+            echo exec('sudo supervisorctl update') . PHP_EOL;
+            echo exec('sudo supervisorctl reread') . PHP_EOL;
+            echo exec('if [ -f /etc/redhat-release ]; then systemctl restart supervisord; fi;') . PHP_EOL;
+            echo exec('if [ -f /etc/lsb-release ]; then systemctl restart supervisor; fi;') . PHP_EOL;
 
-        custom_chown(rconfig_appdir_path());
+            custom_chown(rconfig_appdir_path());
+        }
+
+        if (getenv('IS_DOCKER')) {
+            chmod('/var/www/html/storage', 0777);
+        }
+
         $this->info('------  Permissions Updated!  ------');
         echo exec('composer dump-autoload') . PHP_EOL;
         $this->info(config('app.name') . ' application settings have been cleared!');

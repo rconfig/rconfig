@@ -57,7 +57,7 @@ class DeviceDownloadJob extends Command
         // start the download
         $this->devicerecord['start_time'] = Carbon::now();
 
-        $logmsg = 'Start device download for '.($this->devicerecord['device_name'].' ID:'.$this->devicerecord['id']);
+        $logmsg = 'Start device download for ' . ($this->devicerecord['device_name'] . ' ID:' . $this->devicerecord['id']);
         activityLogIt($this->parent_class, $this->parent_function, 'info', $logmsg, 'connection', $this->devicerecord['device_name'], $this->devicerecord['id'], $this->eventtype, $this->devicerecord['id']);
         $this->output['info'][] = $logmsg;
 
@@ -68,10 +68,10 @@ class DeviceDownloadJob extends Command
         // throw and error if configsArray is false
         if ($configsArray === false || isset($configsArray['failure'])) {
             $this->devicerecord['end_time'] = Carbon::now();
-            $logmsg = 'No config data returned for '.($this->devicerecord['device_name'].' - ID:'.$this->devicerecord['id'].'. Check your logs for more information');
+            $logmsg = 'No config data returned for ' . ($this->devicerecord['device_name'] . ' - ID:' . $this->devicerecord['id'] . '. Check your logs for more information');
             Notification::send(User::all(), new DBDeviceConnectionFailureNotification($logmsg, $this->devicerecord['id']));
 
-            $configSaveResult = (new SaveConfigsToDiskAndDb('device_download', null, 0, $this->devicerecord, $this->report_id))->saveConfigs();
+            $configSaveResult = (new SaveConfigsToDiskAndDb('device_download', 'Failed config download', 0, $this->devicerecord, $this->report_id))->saveConfigs();
 
             $this->output['error'][] = $logmsg;
             activityLogIt($this->parent_class, $this->parent_function, 'error', $logmsg, 'connection', $this->devicerecord['device_name'], $this->devicerecord['id'], $this->eventtype, $this->devicerecord['id']);
@@ -81,7 +81,7 @@ class DeviceDownloadJob extends Command
             return; // continue looping around if more devices
         }
         (new SetDeviceStatus($this->devicerecord['id'], 1))->setDeviceStatus();
-        $logmsg = 'End device download for '.($this->devicerecord['device_name'].' ID:'.$this->devicerecord['id']);
+        $logmsg = 'End device download for ' . ($this->devicerecord['device_name'] . ' ID:' . $this->devicerecord['id']);
         activityLogIt($this->parent_class, $this->parent_function, 'info', $logmsg, 'connection', $this->devicerecord['device_name'], $this->devicerecord['id'], $this->eventtype, $this->devicerecord['id']);
 
         if (isset($configsArray['failure'])) {
@@ -94,11 +94,11 @@ class DeviceDownloadJob extends Command
             $this->devicerecord['end_time'] = Carbon::now();
             $configSaveResult = (new SaveConfigsToDiskAndDb('device_download', $commandName, $configArray, $this->devicerecord, $this->report_id))->saveConfigs();
             $configresultText = $configSaveResult['success'] === true ? ' was successful' : 'failed';
-            $logmsg = 'Config downloaded for '.$this->devicerecord['device_name'].' with command: "'.$configSaveResult['commandName'].'"'.$configresultText;
+            $logmsg = 'Config downloaded for ' . $this->devicerecord['device_name'] . ' with command: "' . $configSaveResult['commandName'] . '"' . $configresultText;
             $this->output['info'][] = $logmsg;
             activityLogIt($this->parent_class, $this->parent_function, 'info', $logmsg, 'connection', $this->devicerecord['device_name'], $this->devicerecord['id'], 'device');
         }
-        Redis::set('download-now-'.$this->devicerecord['id'], 'false');
+        Redis::set('download-now-' . $this->devicerecord['id'], 'false');
 
         return $this->output;
     }
