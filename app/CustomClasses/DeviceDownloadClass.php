@@ -57,7 +57,7 @@ class DeviceDownloadClass extends Command
                 $logmsg = 'No config data returned for ' . ($devicerecord['device_name'] . ' - ID:' . $devicerecord['id'] . '. Check your logs for more information');
                 Notification::send(User::all(), new DBDeviceConnectionFailureNotification($logmsg, $devicerecord['id']));
 
-                $configSaveResult = (new SaveConfigsToDiskAndDb('device_download', null, 0, $devicerecord, $this->report_id))->saveConfigs();
+                $configSaveResult = (new SaveConfigsToDiskAndDb('device_download', 'Failed config download', 0, $devicerecord, $this->report_id))->saveConfigs();
 
                 $this->output['error'][] = $logmsg;
                 activityLogIt($this->parent_class, $this->parent_function, 'error', $logmsg, 'connection', $devicerecord['device_name'], $devicerecord['id'], $this->eventtype, $devicerecord['id']);
