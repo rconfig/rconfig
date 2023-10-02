@@ -30,7 +30,7 @@ class UsersControllerTest extends TestCase
     public function show_single_user()
     {
         $user = User::factory()->create();
-        $response = $this->get('/api/users/'.$user->id);
+        $response = $this->get('/api/users/' . $user->id);
 
         $response->assertJson(['name' => $user->name]);
     }
@@ -58,6 +58,22 @@ class UsersControllerTest extends TestCase
     }
 
     /** @test */
+    public function create_user_with_user_role()
+    {
+        $user = User::factory()->create([
+            'role' => 'User',
+        ]);
+        $this->post('/api/users', $user->toArray());
+
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'name' => $user->name,
+            'username' => $user->username,
+            'role' => 'User',
+        ]);
+    }
+
+    /** @test */
     public function create_user_with_blank_username()
     {
         $user = User::factory()->create([
@@ -77,13 +93,13 @@ class UsersControllerTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->patch('/api/users/'.$user->id, [
+        $response = $this->patch('/api/users/' . $user->id, [
             'name' => 'a new tag name',
             'username' => 'username111',
             'email' => 'me@example.com',
             'password' => 'secretpass',
             'repeat_password' => 'secretpass',
-            'role' => 'Admin',
+            'role' => 'User',
         ]);
 
         $this->assertDatabaseHas('users', [
@@ -91,6 +107,7 @@ class UsersControllerTest extends TestCase
             'name' => 'a new tag name',
             'username' => 'username111',
             'email' => 'me@example.com',
+            'role' => 'User',
         ]);
     }
 
@@ -99,8 +116,10 @@ class UsersControllerTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $this->delete('/api/users/'.$user->id);
+        $this->delete('/api/users/' . $user->id);
 
-        $this->assertDatabaseMissing('users', ['id' => $user->id]);
+        $this->assertDatabaseMissing('users', [
+            'id' => $user->id,
+        ]);
     }
 }
