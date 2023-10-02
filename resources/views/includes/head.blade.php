@@ -10,6 +10,9 @@
 <meta name="user-name" content="{{ optional(Auth::user())->name }}">
 <meta name="user-email" content="{{ optional(Auth::user())->email }}">
 <meta name="user-role" content="{{ optional(Auth::user())->role }}">
+<meta name="is_demo" content="false">
+<meta name="server-timezone" content="{{ config('app.timezone') }}">
+
 
 <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
 
