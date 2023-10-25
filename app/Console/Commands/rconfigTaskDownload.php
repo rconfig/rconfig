@@ -120,8 +120,10 @@ class rconfigTaskDownload extends Command
                 }
             }
 
-            if (app()->runningInConsole()) {
-                custom_chown(storage_path());
+            if (!isDocker()) {
+                if (app()->runningInConsole()) {
+                    custom_chown(storage_path());
+                }
             }
 
             $this->create_report();

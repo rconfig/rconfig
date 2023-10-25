@@ -79,6 +79,11 @@ function custom_chown($path)
     File::exists('/etc/redhat-release') ? chown($path, 'apache') : chown($path, 'www-data');
 }
 
+function isDocker(): bool
+{
+    return is_file("/.dockerenv");
+}
+
 function formatSize($bytes)
 {
     $types = ['B', 'KB', 'MB', 'GB', 'TB'];

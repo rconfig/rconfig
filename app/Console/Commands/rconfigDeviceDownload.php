@@ -28,9 +28,9 @@ class rconfigDeviceDownload extends Command
         $ids = (new FilterArgsForCommnds)->filterArgs($this->argument('deviceid'));
         $debug = $this->option('debug');
 
-        $this->info('Start '.$this->eventtype.' IDs:'.implode(' ', $ids));
+        $this->info('Start ' . $this->eventtype . ' IDs:' . implode(' ', $ids));
 
-        $logmsg = 'CLI Download Started for '.($this->eventtype.'IDs:'.implode(' ', $ids));
+        $logmsg = 'CLI Download Started for ' . ($this->eventtype . 'IDs:' . implode(' ', $ids));
         activityLogIt(__CLASS__, __FUNCTION__, 'info', $logmsg, 'connection', '', '', $this->eventtype, $ids);
 
         // get the records from the DB
@@ -51,13 +51,15 @@ class rconfigDeviceDownload extends Command
             }
         }
 
-        $logmsg = 'CLI Download ended for '.($this->eventtype.' IDs:'.implode(' ', $ids));
+        $logmsg = 'CLI Download ended for ' . ($this->eventtype . ' IDs:' . implode(' ', $ids));
         activityLogIt(__CLASS__, __FUNCTION__, 'info', $logmsg, 'connection', '', '', $this->eventtype, $ids);
 
-        $this->info('End '.$this->eventtype.'');
+        $this->info('End ' . $this->eventtype . '');
 
-        if (app()->runningInConsole()) {
-            custom_chown(storage_path());
+        if (!isDocker()) {
+            if (app()->runningInConsole()) {
+                custom_chown(storage_path());
+            }
         }
     }
 }
