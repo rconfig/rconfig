@@ -42,16 +42,6 @@ class SSHConnectionTest extends TestCase
         }
     }
 
-        // check if 192.168.1.170 is reachable
-        $dev_cisco_ip = '192.168.1.170';
-        $pingresult = exec("ping -c 1 -W 1 $dev_cisco_ip", $outcome, $status);
-
-        if (str_contains($outcome[3], '0 received')) {
-            $this->assertTrue(false);
-            $this->markTestSkipped('Router is not reachable');
-        }
-    }
-
     /** @test */
     public function device3_was_found()
     {

@@ -61,7 +61,8 @@ class StoreDeviceRequest extends FormRequest
         if ($this->getMethod() == 'PATCH') {
             $rules = [
                 'device_name' => 'required|min:5|max:255|alpha_dash',
-                'device_ip' => 'required|ip',
+                'device_ip' => new DeviceIpIsValid,
+                'device_port_override' => 'nullable|integer|min:1|max:65535',
                 'device_vendor' => 'required',
                 'device_model' => 'required|max:255|min:2',
                 'device_category_id' => 'required|max:255',
