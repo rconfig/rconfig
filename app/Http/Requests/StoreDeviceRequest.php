@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\DataTransferObjects\StoreDeviceDTO;
 use App\Rules\CategoryHasCommands;
+use App\Rules\DeviceIpIsValid;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreDeviceRequest extends FormRequest
@@ -43,7 +44,8 @@ class StoreDeviceRequest extends FormRequest
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'device_name' => 'required|unique:devices|min:5|max:255|regex:/^\S*$/u',
-                'device_ip' => 'required|ip',
+                'device_ip' => new DeviceIpIsValid,
+                'device_port_override' => 'nullable|integer|min:1|max:65535',
                 'device_vendor' => 'required',
                 'device_model' => 'required|max:255|min:2',
                 'device_category_id' => 'required|max:255',
@@ -58,8 +60,9 @@ class StoreDeviceRequest extends FormRequest
 
         if ($this->getMethod() == 'PATCH') {
             $rules = [
-                'device_name' => 'required|min:5|max:255|regex:/^\S*$/u',
-                'device_ip' => 'required|ip',
+                'device_name' => 'required|min:5|max:255|alpha_dash',
+                'device_ip' => new DeviceIpIsValid,
+                'device_port_override' => 'nullable|integer|min:1|max:65535',
                 'device_vendor' => 'required',
                 'device_model' => 'required|max:255|min:2',
                 'device_category_id' => 'required|max:255',
@@ -86,6 +89,7 @@ class StoreDeviceRequest extends FormRequest
         return new StoreDeviceDTO([
             'device_name' => $this->device_name,
             'device_ip' => $this->device_ip,
+            'device_port_override' => $this->device_port_override,
             'device_vendor' => $this->device_vendor,
             'device_default_creds_on' => $this->device_default_creds_on,
             'device_username' => $this->device_username,

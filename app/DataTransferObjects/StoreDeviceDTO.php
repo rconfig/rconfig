@@ -12,6 +12,8 @@ final class StoreDeviceDTO extends DataTransferObject
 
     public string $device_ip;
 
+    public $device_port_override;
+
     public $device_vendor;
 
     public $device_default_creds_on;

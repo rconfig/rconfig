@@ -10,6 +10,7 @@
         "axios": "^1.3.4",
         "laravel-vite-plugin": "^0.8.0",
         "postcss": "^8.4.21",
+        "prettier": "3.0.3",
         "resolve-url-loader": "^5.0.0",
         "sass": "^1.54.0",
         "sass-loader": "^13.2.0",

@@ -85,6 +85,55 @@ class SSHConnectionTest extends TestCase
      *
      * @group slow-tests
      */
+    public function check_device_can_override_connection_template_port_but_fails_connection()
+    {
+        //start timer
+        $start = microtime(true);
+
+        $devicerecord = (new DeviceRecordPrepare($this->device3))->DeviceRecordToArray();
+        $devicerecord['device_port_override'] = 2222;
+        $this->assertEquals(2222, $devicerecord['device_port_override']);
+
+        $connectionObj = new MainConnectionManager($devicerecord, 0);
+
+        $configsArray = $connectionObj->setupConnectAndReturnOutput();
+        $this->assertEquals('There was an authentication or connection issue with router3', $configsArray['failure']);
+
+        //end timer
+        $time = microtime(true) - $start;
+        $this->assertLessThan(3, $time);
+    }
+
+    /**
+     * @test
+     *
+     * @group slow-tests
+     */
+    public function check_device_can_override_connection_template_port_but_passes_connection()
+    {
+        //start timer
+        $start = microtime(true);
+
+        $devicerecord = (new DeviceRecordPrepare($this->device3))->DeviceRecordToArray();
+        $devicerecord['device_port_override'] = 22;
+        $this->assertEquals(22, $devicerecord['device_port_override']);
+
+        $connectionObj = new MainConnectionManager($devicerecord, 0);
+
+        $configsArray = $connectionObj->setupConnectAndReturnOutput();
+
+        //end timer
+        $time = microtime(true) - $start;
+        $this->assertLessThan(3, $time);
+
+        $this->assertGreaterThan(0, count($configsArray));
+    }
+
+    /**
+     * @test
+     *
+     * @group slow-tests
+     */
     public function full_SSH_download_from_device4_direct_from_classes()
     {
         //start timer
