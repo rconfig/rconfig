@@ -71,7 +71,7 @@ class Connect
         /* CONNECT */
         $this->timeout = $deviceParamsObject->connect['timeout'];
         $this->protocol = $deviceParamsObject->connect['protocol'];
-        $this->port = $deviceParamsObject->connect['port'];
+        $this->port = $deviceParamsObject->deviceparams['device_port_override'] ?? $deviceParamsObject->connect['port'];
         /* AUTH */
         $this->usernamePrompt = $deviceParamsObject->auth['username'];
         $this->passwordPrompt = $deviceParamsObject->auth['password'];

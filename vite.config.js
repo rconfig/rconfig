@@ -4,6 +4,12 @@ import vue from '@vitejs/plugin-vue';
 import autoprefixer from 'autoprefixer';
 
 export default defineConfig({
+    server: {
+        host: '0.0.0.0',
+        hmr: {
+            host: 'localhost'
+        }
+    },
     plugins: [
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.js'],

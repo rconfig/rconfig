@@ -61,7 +61,7 @@ class DeviceTableSeeder extends Seeder
         Device::create([
             'id' => 1003,
             'device_name' => 'router3',
-            'device_ip' => $dev_cisco_ip,
+            'device_ip' => 'router1.rconfig.com',
             'device_default_creds_on' => 0,
             'device_username' => 'cisco',
             'device_password' => 'cisco',

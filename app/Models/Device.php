@@ -16,8 +16,22 @@ class Device extends BaseModel
     ];
 
     public $fillable = [
-        'device_name', 'device_ip', 'device_username', 'device_password', 'device_enable_password', 'device_cred_id', 'device_main_prompt', 'device_enable_prompt', 'device_category_id', 'device_template', 'device_model', 'device_version',
+        'device_name',
+        'device_ip',
+        'device_port_override',
+        'device_username',
+        'device_password',
+        'device_enable_password',
+        'device_cred_id',
+        'device_main_prompt',
+        'device_enable_prompt',
+        'device_category_id',
+        'device_template',
+        'device_model',
+        'device_version',
+        'last_config_at'
     ];
+
 
     //Make it available in the json response
     protected $appends = ['view_url'];
