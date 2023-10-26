@@ -102,6 +102,12 @@ class SendCommand
         }
     }
 
+    public function resetPagingCommand()
+    {
+        $this->send->sendString($this->connectionObj->resetPagingCmd);
+        $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
+    }
+
     public function explodeTextToArray()
     {
         return explode("\r\n", $this->data);

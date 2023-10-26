@@ -85,6 +85,11 @@ class SSHConnectionManager
 
     private function SSHDisconnect()
     {
+        // send resetPagingCommand if paging is set to on
+        if ($this->connectionObj->paging === 'on') {
+            $this->SendCommandObj->resetPagingCommand();
+        }
+
         $this->connectionObj->connection->disconnect();
     }
 }
