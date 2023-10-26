@@ -28,9 +28,9 @@ class rconfigTagDownload extends Command
         $ids = (new FilterArgsForCommnds)->filterArgs($this->argument('tagid'));
         $debug = $this->option('debug');
 
-        $this->info('Start '.$this->eventtype.' IDs:'.implode(' ', $ids));
+        $this->info('Start ' . $this->eventtype . ' IDs:' . implode(' ', $ids));
 
-        $logmsg = 'CLI Download Started for '.($this->eventtype.'IDs:'.implode(' ', $ids));
+        $logmsg = 'CLI Download Started for ' . ($this->eventtype . 'IDs:' . implode(' ', $ids));
         activityLogIt(__CLASS__, __FUNCTION__, 'info', $logmsg, 'connection', '', '', $this->eventtype, $ids);
 
         // get the records from the DB
@@ -46,7 +46,7 @@ class rconfigTagDownload extends Command
         foreach ($tagrecords as $tagrecord) {
             // error if none returned
             if (count($tagrecord->device) === 0) {
-                $this->error('No devices returned for this category with ID: '.$tagrecord->id.'. Downloader will try next category in the list, or terminate!');
+                $this->error('No devices returned for this category with ID: ' . $tagrecord->id . '. Downloader will try next category in the list, or terminate!');
 
                 continue;
             }
@@ -60,14 +60,16 @@ class rconfigTagDownload extends Command
                 }
             }
 
-            if (app()->runningInConsole()) {
-                custom_chown(storage_path());
+            if (!isDocker()) {
+                if (app()->runningInConsole()) {
+                    custom_chown(storage_path());
+                }
             }
         }
 
-        $logmsg = 'CLI Download ended for '.($this->eventtype.' IDs:'.implode(' ', $ids));
+        $logmsg = 'CLI Download ended for ' . ($this->eventtype . ' IDs:' . implode(' ', $ids));
         activityLogIt(__CLASS__, __FUNCTION__, 'info', $logmsg, 'connection', '', '', $this->eventtype, $ids);
 
-        $this->info('End '.$this->eventtype.'');
+        $this->info('End ' . $this->eventtype . '');
     }
 }

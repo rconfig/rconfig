@@ -1,4 +1,4 @@
-To setup docker for rCOnfig v6 Core, clone the develop branch of https://github.com/rconfig/rconfig
+To setup docker for rConfig v6 Core, clone the develop branch of https://github.com/rconfig/rconfig
 
 Docker, docker compose and git are required to setup rConfig v6 Core for Docker.
 

@@ -28,9 +28,9 @@ class rconfigCatDownload extends Command
         $ids = (new FilterArgsForCommnds)->filterArgs($this->argument('catid'));
         $debug = $this->option('debug');
 
-        $this->info('Start '.$this->eventtype.' IDs:'.implode(' ', $ids));
+        $this->info('Start ' . $this->eventtype . ' IDs:' . implode(' ', $ids));
 
-        $logmsg = 'CLI Download Started for '.($this->eventtype.'IDs:'.implode(' ', $ids));
+        $logmsg = 'CLI Download Started for ' . ($this->eventtype . 'IDs:' . implode(' ', $ids));
         activityLogIt(__CLASS__, __FUNCTION__, 'info', $logmsg, 'connection', '', '', $this->eventtype, $ids);
 
         // get the records from the DB
@@ -46,7 +46,7 @@ class rconfigCatDownload extends Command
         foreach ($categoryrecords as $categoryrecord) {
             // error if none returned
             if (count($categoryrecord->device) === 0) {
-                $this->error('No devices returned for this category with ID: '.$categoryrecord->id.'. Downloader will try next category in the list, or terminate!');
+                $this->error('No devices returned for this category with ID: ' . $categoryrecord->id . '. Downloader will try next category in the list, or terminate!');
 
                 continue;
             }
@@ -60,14 +60,16 @@ class rconfigCatDownload extends Command
                 }
             }
 
-            if (app()->runningInConsole()) {
-                custom_chown(storage_path());
+            if (!isDocker()) {
+                if (app()->runningInConsole()) {
+                    custom_chown(storage_path());
+                }
             }
         }
 
-        $logmsg = 'CLI Download ended for '.($this->eventtype.' IDs:'.implode(' ', $ids));
+        $logmsg = 'CLI Download ended for ' . ($this->eventtype . ' IDs:' . implode(' ', $ids));
         activityLogIt(__CLASS__, __FUNCTION__, 'info', $logmsg, 'connection', '', '', $this->eventtype, $ids);
 
-        $this->info('End '.$this->eventtype.'');
+        $this->info('End ' . $this->eventtype . '');
     }
 }
