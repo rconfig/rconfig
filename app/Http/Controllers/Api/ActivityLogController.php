@@ -67,6 +67,16 @@ class ActivityLogController extends ApiBaseController
             ->get();
     }
 
+    public function clearLogsByDeviceId($id)
+    {
+
+        DB::table('activity_log')
+            ->where('device_id', $id)
+            ->delete();
+
+        return $this->successResponse('Logs cleared successfully!');
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -77,6 +87,6 @@ class ActivityLogController extends ApiBaseController
     {
         $model = parent::destroy($id, 1);
 
-        return $this->successResponse(Str::ucfirst($this->modelname).' deleted successfully!');
+        return $this->successResponse(Str::ucfirst($this->modelname) . ' deleted successfully!');
     }
 }

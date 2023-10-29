@@ -102,6 +102,27 @@ class ActivityLogControllerTest extends TestCase
         $response->assertSee('log_name');
     }
 
+
+    /** @test */
+    public function clear_logs_by_deviceid()
+    {
+        $device_name = $this->faker->name;
+        $device_id = $this->faker->randomDigit;
+        for ($i = 0; $i < 100; $i++) {
+            activityLogIt(__CLASS__, __FUNCTION__, $this->faker->randomElement(['error', 'warn', 'info']), $this->faker->sentence, 'downloader', $device_name, $device_id);
+        }
+
+        $response = $this->get('/api/activitylogs/device-stats/' . $device_id);
+        $response->assertStatus(200);
+        $this->assertCount(3, $response->json());
+
+        $response = $this->get('/api/activitylogs/clear-logs/' . $device_id);
+        $response->assertStatus(200);
+
+        $response = $this->get('/api/activitylogs/device-stats/' . $device_id);
+        $response->assertStatus(200);
+        $this->assertCount(0, $response->json());
+    }
     /** @test */
     public function delete_log_entry()
     {

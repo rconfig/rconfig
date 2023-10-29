@@ -81,6 +81,7 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
     Route::prefix('activitylogs')->group(function () {
         Route::get('last5/{deviceid}', 'ActivityLogController@getLast5');
         Route::get('device-stats/{deviceid}', 'ActivityLogController@showStatsByDeviceId');
+        Route::get('clear-logs/{deviceid}', 'ActivityLogController@clearLogsByDeviceId');
     });
 
     Route::resource('users', 'UserController');
