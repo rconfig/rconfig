@@ -52,6 +52,7 @@ class Login
             // $this->privKeyloginErrorCheck();
         } else {
             $this->loginErrorCheck();
+            $this->HPChecks();
         }
 
         if ($this->connectionObj->enable == 'on') {
@@ -108,14 +109,15 @@ class Login
         $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
     }
 
-    // private function HPChecks()
-    // {
-    //     if ($this->_hpAnyKeyStatus === true) {
-    //         $this->connectionObj->connection->read($this->_hpAnyKeyPrmpt, SSH2::READ_REGEX);
-    //         $this->connectionObj->connection->write("\n");
-    //     }
-    //     $this->connectionObj->connection->read('~'.$this->connectionObj->devicePrompt.'~', SSH2::READ_REGEX);
-    // }
+    private function HPChecks()
+    {
+        if ($this->connectionObj->hpAnyKeyStatus === true) {
+            // $this->connectionObj->connection->read($this->connectionObj->hpAnyKeyPrmpt, SSH2::READ_REGEX);
+            $this->connectionObj->connection->write("\n");
+            $this->connectionObj->connection->write("\n");
+        }
+        $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
+    }
 
     private function escapeTildeChars()
     {
