@@ -15,13 +15,9 @@ use Tests\TestCase;
 class SSHConnectionTest extends TestCase
 {
     protected $user;
-
     protected $device3;
-
     protected $device4;
-
     protected $device6;
-
     protected $device11;
 
     public function setUp(): void

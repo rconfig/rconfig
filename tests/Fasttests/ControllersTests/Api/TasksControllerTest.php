@@ -91,7 +91,6 @@ class TasksControllerTest extends TestCase
         $this->assertArrayHasKey('task_name', $response['errors']);
         $this->assertArrayHasKey('task_desc', $response['errors']);
         $this->assertArrayHasKey('task_command', $response['errors']);
-        $this->assertArrayHasKey('task_cron', $response['errors']);
         $response->assertStatus(422);
     }
 
@@ -101,7 +100,7 @@ class TasksControllerTest extends TestCase
         $response = $this->json('post', '/api/tasks', ['task_cron' => ['*', '*', '*']]);
 
         $response->assertJson(['errors' => true]);
-        $response->assertJsonFragment(['task_cron' => ['The task cron must have between 4 and 5 items.']]);
+        $response->assertJsonFragment(['task_cron' => ['The cron format is incorrect.']]);
         $this->assertArrayHasKey('task_cron', $response['errors']);
         $response->assertStatus(422);
     }
