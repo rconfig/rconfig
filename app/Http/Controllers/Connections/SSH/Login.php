@@ -87,7 +87,6 @@ class Login
     private function sendPagingCommand()
     {
         if ($this->connectionObj->paging === 'on') {
-            // dd('~' . $this->connectionObj->devicePrompt . '~');
             $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
             $this->connectionObj->connection->write($this->connectionObj->pagingCmd . "\n");
             sleep(1);
@@ -111,12 +110,12 @@ class Login
 
     private function HPChecks()
     {
-        if ($this->connectionObj->hpAnyKeyStatus === true) {
+        if ($this->connectionObj->hpAnyKeyStatus === 'on') {
             // $this->connectionObj->connection->read($this->connectionObj->hpAnyKeyPrmpt, SSH2::READ_REGEX);
             $this->connectionObj->connection->write("\n");
             $this->connectionObj->connection->write("\n");
+            $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
         }
-        $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
     }
 
     private function escapeTildeChars()

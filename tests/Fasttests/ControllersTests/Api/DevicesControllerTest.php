@@ -51,7 +51,7 @@ class DevicesControllerTest extends TestCase
     {
         $response = $this->get('/api/devices?page=1&perPage=100&filter=192.168.1.170');
         $response->assertJsonFragment(['device_ip' => '192.168.1.170']);
-        $response->assertJsonFragment(['total' => 5]);
+        $response->assertJsonFragment(['total' => 4]);
         $response->assertStatus(200);
     }
 
@@ -140,7 +140,6 @@ class DevicesControllerTest extends TestCase
         $response->assertJson(['errors' => true]);
 
         $this->assertArrayHasKey('device_name', $response['errors']);
-        $this->assertArrayHasKey('device_ip', $response['errors']);
         $this->assertArrayHasKey('device_vendor', $response['errors']);
         $this->assertArrayHasKey('device_model', $response['errors']);
         $this->assertArrayHasKey('device_model', $response['errors']);

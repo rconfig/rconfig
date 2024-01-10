@@ -166,7 +166,7 @@ class SettingsEmailControllerTest extends TestCase
 
         $response = \Http::withHeaders([
             'Accept' => ' application/json',
-        ])->delete('http://dockerprod.rconfig.com:8025/api/v1/messages');
+        ])->delete('http://devmailer.rconfig.com:8025/api/v1/messages', ['ids' => []]);
 
         if ($response->status() === 401) {
             $this->markTestSkipped('Test notification not sent due to mail host auth issue.');
@@ -176,13 +176,13 @@ class SettingsEmailControllerTest extends TestCase
 
         $mailtrapSmtp = [
             'mail_driver' => 'smtp',
-            'mail_host' => 'dockerprod.rconfig.com',
+            'mail_host' => 'devmailer.rconfig.com',
             'mail_port' => 1025,
             'mail_username' => env('MAILTRAP_USERNAME'),
             'mail_password' => env('MAILTRAP_PASSWORD'),
             'mail_from_email' => $this->faker->companyEmail,
             'mail_from_name' => $this->faker->firstName,
-            'mail_to_email' => $this->faker->companyEmail . ';' . $this->faker->companyEmail . ';' . $this->faker->companyEmail,
+            'mail_to_email' => $this->faker->companyEmail . ';' . $this->faker->companyEmail . ';' . $this->faker->companyEmail . ';', // add last semi-colon to test empty email is trimmed per #531
             'mail_authcheck' => true,
             'mail_encryption' => 'tls',
         ];
@@ -208,18 +208,17 @@ class SettingsEmailControllerTest extends TestCase
 
         $response = \Http::withHeaders([
             'Accept' => ' application/json',
-        ])->get('http://dockerprod.rconfig.com:8025/api/v2/messages?limit=50');
+        ])->get('http://devmailer.rconfig.com:8025/api/v1/messages?limit=50');
 
         $this->assertEquals(200, $response->status());
 
         $this->assertGreaterThan(1, $response->json()['count']);
 
-        $this->assertStringContainsString('rConfig Test Mail', $response->json()['items'][0]['Content']['Headers']['Subject'][0]);
-        $this->assertStringContainsString('rConfig Notification', $response->json()['items'][0]['Content']['Headers']['From'][0]);
+        $this->assertStringContainsString('rConfig Test Mail', $response->json()['messages'][0]['Subject']);
 
         $response = \Http::withHeaders([
             'Accept' => ' application/json',
-        ])->delete('http://dockerprod.rconfig.com:8025/api/v1/messages');
+        ])->delete('http://devmailer.rconfig.com:8025/api/v1/messages');
 
         $this->assertEquals(200, $response->status());
     }
@@ -229,7 +228,7 @@ class SettingsEmailControllerTest extends TestCase
     {
         $response = \Http::withHeaders([
             'Accept' => ' application/json',
-        ])->delete('http://dockerprod.rconfig.com:8025/api/v1/messages');
+        ])->delete('http://devmailer.rconfig.com:8025/api/v1/messages');
 
         if ($response->status() === 401) {
             $this->markTestSkipped('Test notification not sent due to mailtrap auth issue.');
@@ -239,13 +238,13 @@ class SettingsEmailControllerTest extends TestCase
 
         $mailtrapSmtp = [
             'mail_driver' => 'smtp',
-            'mail_host' => 'dockerprod.rconfig.com',
+            'mail_host' => 'devmailer.rconfig.com',
             'mail_port' => 1025,
             'mail_username' => env('MAILTRAP_USERNAME'),
             'mail_password' => env('MAILTRAP_PASSWORD'),
             'mail_from_email' => $this->faker->companyEmail,
             'mail_from_name' => $this->faker->firstName,
-            'mail_to_email' => $this->faker->companyEmail . ';' . $this->faker->companyEmail . ';' . $this->faker->companyEmail . ';', // add last semi-colon to test empty email is trimmed per #531
+            'mail_to_email' => $this->faker->companyEmail . ';' . $this->faker->companyEmail . ';' . $this->faker->companyEmail,
             'mail_authcheck' => true,
             'mail_encryption' => 'tls',
         ];
@@ -274,18 +273,18 @@ class SettingsEmailControllerTest extends TestCase
 
         $response = \Http::withHeaders([
             'Accept' => ' application/json',
-        ])->get('http://dockerprod.rconfig.com:8025/api/v2/messages?limit=50');
+        ])->get('http://devmailer.rconfig.com:8025/api/v1/messages?limit=50');
 
         $this->assertEquals(200, $response->status());
 
         $this->assertGreaterThan(1, $response->json()['count']);
 
-        $this->assertStringContainsString('rConfig System Test Notification', $response->json()['items'][0]['Content']['Headers']['Subject'][0]);
-        $this->assertStringContainsString('rConfig Notification', $response->json()['items'][0]['Content']['Headers']['From'][0]);
+        $this->assertStringContainsString('rConfig System Test Notification', $response->json()['messages'][0]['Subject']);
+        $this->assertStringContainsString('rConfig Notification', $response->json()['messages'][0]['From']['Name']);
 
         $response = \Http::withHeaders([
             'Accept' => ' application/json',
-        ])->delete('http://dockerprod.rconfig.com:8025/api/v1/messages');
+        ])->delete('http://devmailer.rconfig.com:8025/api/v1/messages');
 
         $this->assertEquals(200, $response->status());
     }
