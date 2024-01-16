@@ -202,7 +202,7 @@ export default {
         theme: darkmode.value,
         scrollBeyondLastLine: true,
         wordWrap: "on",
-        wrappingStrategy: "advanced",
+        //wrappingStrategy: "advanced",
         automaticLayout: true,
         minimap: {
           enabled: false,
