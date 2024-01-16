@@ -3,7 +3,7 @@
     "file": "assets/ConfigFullScreenView-tUl10Fin.css",
     "src": "_ConfigFullScreenView-!~{00D}~.js"
   },
-  "_ConfigFullScreenView-bo_tpWWN.js": {
+  "_ConfigFullScreenView-UTQDBgy7.js": {
     "assets": [
       "assets/codicon-B7HMvkfX.ttf"
     ],
@@ -104,7 +104,7 @@
       "node_modules/monaco-editor/esm/vs/language/json/jsonMode.js",
       "node_modules/monaco-editor/esm/vs/language/typescript/tsMode.js"
     ],
-    "file": "assets/ConfigFullScreenView-bo_tpWWN.js",
+    "file": "assets/ConfigFullScreenView-UTQDBgy7.js",
     "imports": [
       "resources/js/app.js"
     ]
@@ -113,111 +113,111 @@
     "file": "assets/CopyLogo-AgEric3r.css",
     "src": "_CopyLogo-!~{00s}~.js"
   },
-  "_CopyLogo-j3hWRQrT.js": {
+  "_CopyLogo-lSOpk5vw.js": {
     "css": [
       "assets/CopyLogo-AgEric3r.css"
     ],
-    "file": "assets/CopyLogo-j3hWRQrT.js",
+    "file": "assets/CopyLogo-lSOpk5vw.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_DataTable-AyzS1m_V.js": {
-    "file": "assets/DataTable-AyzS1m_V.js",
+  "_DataTable-D5toa4h8.js": {
+    "file": "assets/DataTable-D5toa4h8.js",
     "imports": [
-      "_DataTableToolbar-_JXd-XvI.js",
-      "_DataTableSpinner-gbBX5NvQ.js",
-      "_DeleteModal-ZdrKnvCi.js",
+      "_DataTableToolbar-TlnwMVMJ.js",
+      "_DataTableSpinner-OKVj-L0h.js",
+      "_DeleteModal-RtET0BWv.js",
       "resources/js/app.js"
     ]
   },
-  "_DataTableSpinner-gbBX5NvQ.js": {
-    "file": "assets/DataTableSpinner-gbBX5NvQ.js",
-    "imports": [
-      "resources/js/app.js"
-    ]
-  },
-  "_DataTableToolbar-_JXd-XvI.js": {
-    "file": "assets/DataTableToolbar-_JXd-XvI.js",
+  "_DataTableSpinner-OKVj-L0h.js": {
+    "file": "assets/DataTableSpinner-OKVj-L0h.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_DeleteModal-ZdrKnvCi.js": {
-    "file": "assets/DeleteModal-ZdrKnvCi.js",
+  "_DataTableToolbar-TlnwMVMJ.js": {
+    "file": "assets/DataTableToolbar-TlnwMVMJ.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_DeviceCategoryField-x6090tk2.js": {
-    "file": "assets/DeviceCategoryField-x6090tk2.js",
+  "_DeleteModal-RtET0BWv.js": {
+    "file": "assets/DeleteModal-RtET0BWv.js",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "_DeviceCategoryField-9ACRDIpW.js": {
+    "file": "assets/DeviceCategoryField-9ACRDIpW.js",
     "imports": [
       "resources/js/app.js",
-      "_ViewFunctions-QkJbCJLB.js"
+      "_ViewFunctions-etaBusRy.js"
     ]
   },
-  "_DeviceViewDeviceDetailsDescr-sAENtsVk.js": {
-    "file": "assets/DeviceViewDeviceDetailsDescr-sAENtsVk.js",
+  "_DeviceViewDeviceDetailsDescr-0Pfxm-Ab.js": {
+    "file": "assets/DeviceViewDeviceDetailsDescr-0Pfxm-Ab.js",
     "imports": [
-      "_CopyLogo-j3hWRQrT.js",
+      "_CopyLogo-lSOpk5vw.js",
       "resources/js/app.js"
     ]
   },
-  "_DevicesBreadcrumbs-RGcyD7SH.js": {
-    "file": "assets/DevicesBreadcrumbs-RGcyD7SH.js",
+  "_DevicesBreadcrumbs-znY_IgDq.js": {
+    "file": "assets/DevicesBreadcrumbs-znY_IgDq.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_DevicesForm-1J0s1rCP.js": {
-    "file": "assets/DevicesForm-1J0s1rCP.js",
+  "_DevicesForm-j4sMq9U_.js": {
+    "file": "assets/DevicesForm-j4sMq9U_.js",
     "imports": [
-      "_DeviceCategoryField-x6090tk2.js",
+      "_DeviceCategoryField-9ACRDIpW.js",
       "resources/js/app.js",
-      "_MultiSelect-oYuYhTF8.js",
-      "_ViewFunctions-QkJbCJLB.js"
+      "_MultiSelect-hJW7AH64.js",
+      "_ViewFunctions-etaBusRy.js"
     ]
   },
-  "_HelpContent-Hn7Xn7Zh.js": {
-    "file": "assets/HelpContent-Hn7Xn7Zh.js",
+  "_HelpContent-1oLzdkds.js": {
+    "file": "assets/HelpContent-1oLzdkds.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_LoadingSpinner-HcJ2r_wK.js": {
-    "file": "assets/LoadingSpinner-HcJ2r_wK.js",
+  "_LoadingSpinner-ErrFA9cp.js": {
+    "file": "assets/LoadingSpinner-ErrFA9cp.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_MultiSelect-oYuYhTF8.js": {
-    "file": "assets/MultiSelect-oYuYhTF8.js",
+  "_MultiSelect-hJW7AH64.js": {
+    "file": "assets/MultiSelect-hJW7AH64.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_PageHeader-pdESKEfy.js": {
-    "file": "assets/PageHeader-pdESKEfy.js",
+  "_PageHeader-XFyXy75-.js": {
+    "file": "assets/PageHeader-XFyXy75-.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_SideDrawer-o0BZJHFv.js": {
-    "file": "assets/SideDrawer-o0BZJHFv.js",
+  "_SideDrawer-7j4m40x_.js": {
+    "file": "assets/SideDrawer-7j4m40x_.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_UsersForm-nbVTqtZK.js": {
-    "file": "assets/UsersForm-nbVTqtZK.js",
+  "_UsersForm-rJ3Qpp1u.js": {
+    "file": "assets/UsersForm-rJ3Qpp1u.js",
     "imports": [
       "resources/js/app.js",
-      "_ViewFunctions-QkJbCJLB.js",
-      "_LoadingSpinner-HcJ2r_wK.js"
+      "_ViewFunctions-etaBusRy.js",
+      "_LoadingSpinner-ErrFA9cp.js"
     ]
   },
-  "_ViewFunctions-QkJbCJLB.js": {
-    "file": "assets/ViewFunctions-QkJbCJLB.js",
+  "_ViewFunctions-etaBusRy.js": {
+    "file": "assets/ViewFunctions-etaBusRy.js",
     "imports": [
       "resources/js/app.js"
     ]
@@ -697,9 +697,9 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/freemarker2-a2-FQ4Qh.js",
+    "file": "assets/freemarker2-EO4njsc9.js",
     "imports": [
-      "_ConfigFullScreenView-bo_tpWWN.js",
+      "_ConfigFullScreenView-UTQDBgy7.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
@@ -806,9 +806,9 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/handlebars-VZJt3AgY.js",
+    "file": "assets/handlebars-kqdUI3Lp.js",
     "imports": [
-      "_ConfigFullScreenView-bo_tpWWN.js",
+      "_ConfigFullScreenView-UTQDBgy7.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
@@ -905,9 +905,9 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/html-5dYQzsr9.js",
+    "file": "assets/html-NrV_v1wa.js",
     "imports": [
-      "_ConfigFullScreenView-bo_tpWWN.js",
+      "_ConfigFullScreenView-UTQDBgy7.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
@@ -1009,10 +1009,10 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/javascript-tZkKVe_d.js",
+    "file": "assets/javascript-oNTzuAWc.js",
     "imports": [
       "node_modules/monaco-editor/esm/vs/basic-languages/typescript/typescript.js",
-      "_ConfigFullScreenView-bo_tpWWN.js",
+      "_ConfigFullScreenView-UTQDBgy7.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
@@ -1124,9 +1124,9 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/liquid-Q_LMKEf5.js",
+    "file": "assets/liquid-ecahw7E-.js",
     "imports": [
-      "_ConfigFullScreenView-bo_tpWWN.js",
+      "_ConfigFullScreenView-UTQDBgy7.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
@@ -1233,9 +1233,9 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/mdx-X60vxANc.js",
+    "file": "assets/mdx-2LP0BRP6.js",
     "imports": [
-      "_ConfigFullScreenView-bo_tpWWN.js",
+      "_ConfigFullScreenView-UTQDBgy7.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
@@ -1402,9 +1402,9 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/python-zt76ozi_.js",
+    "file": "assets/python-3a7rx67a.js",
     "imports": [
-      "_ConfigFullScreenView-bo_tpWWN.js",
+      "_ConfigFullScreenView-UTQDBgy7.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
@@ -1506,9 +1506,9 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/razor-qH5aIMSm.js",
+    "file": "assets/razor-24sZbagL.js",
     "imports": [
-      "_ConfigFullScreenView-bo_tpWWN.js",
+      "_ConfigFullScreenView-UTQDBgy7.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
@@ -1695,9 +1695,9 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/typescript-_MJT20_x.js",
+    "file": "assets/typescript-Z_cDGl41.js",
     "imports": [
-      "_ConfigFullScreenView-bo_tpWWN.js",
+      "_ConfigFullScreenView-UTQDBgy7.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
@@ -1799,9 +1799,9 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/xml-zI-IaKeH.js",
+    "file": "assets/xml-D6ozviYD.js",
     "imports": [
-      "_ConfigFullScreenView-bo_tpWWN.js",
+      "_ConfigFullScreenView-UTQDBgy7.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
@@ -1893,9 +1893,9 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/yaml--zXR7TiC.js",
+    "file": "assets/yaml-C6pG9iNV.js",
     "imports": [
-      "_ConfigFullScreenView-bo_tpWWN.js",
+      "_ConfigFullScreenView-UTQDBgy7.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
@@ -1987,9 +1987,9 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/cssMode-DK3pIB36.js",
+    "file": "assets/cssMode-Kesldfze.js",
     "imports": [
-      "_ConfigFullScreenView-bo_tpWWN.js",
+      "_ConfigFullScreenView-UTQDBgy7.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
@@ -2081,9 +2081,9 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/htmlMode-vC-V8E9v.js",
+    "file": "assets/htmlMode-VZOB5pAx.js",
     "imports": [
-      "_ConfigFullScreenView-bo_tpWWN.js",
+      "_ConfigFullScreenView-UTQDBgy7.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
@@ -2175,9 +2175,9 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/jsonMode-nFLCsbwd.js",
+    "file": "assets/jsonMode-6bkAVc7P.js",
     "imports": [
-      "_ConfigFullScreenView-bo_tpWWN.js",
+      "_ConfigFullScreenView-UTQDBgy7.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
@@ -2269,9 +2269,9 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/tsMode-vd3pJTyy.js",
+    "file": "assets/tsMode-HU0925lG.js",
     "imports": [
-      "_ConfigFullScreenView-bo_tpWWN.js",
+      "_ConfigFullScreenView-UTQDBgy7.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
@@ -2426,7 +2426,7 @@
       "resources/js/views/ActivityLog.vue",
       "resources/js/views/PageNotFound.vue"
     ],
-    "file": "assets/app-_cjOT05D.js",
+    "file": "assets/app-WFXKRrC4.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   },
@@ -2516,16 +2516,16 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/ActivityLog-_4lfSAZH.js",
+    "file": "assets/ActivityLog-KMMqKQbG.js",
     "imports": [
-      "_ViewFunctions-QkJbCJLB.js",
-      "_PageHeader-pdESKEfy.js",
+      "_ViewFunctions-etaBusRy.js",
+      "_PageHeader-XFyXy75-.js",
       "resources/js/app.js",
-      "_DeleteModal-ZdrKnvCi.js",
-      "_DataTableSpinner-gbBX5NvQ.js",
-      "_DataTableToolbar-_JXd-XvI.js",
-      "_UsersForm-nbVTqtZK.js",
-      "_LoadingSpinner-HcJ2r_wK.js"
+      "_DeleteModal-RtET0BWv.js",
+      "_DataTableSpinner-OKVj-L0h.js",
+      "_DataTableToolbar-TlnwMVMJ.js",
+      "_UsersForm-rJ3Qpp1u.js",
+      "_LoadingSpinner-ErrFA9cp.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/views/ActivityLog.vue"
@@ -2616,17 +2616,17 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/Categorys-Uv91QTZQ.js",
+    "file": "assets/Categorys-YxBedbZ9.js",
     "imports": [
-      "_ViewFunctions-QkJbCJLB.js",
-      "_PageHeader-pdESKEfy.js",
-      "_DataTable-AyzS1m_V.js",
-      "_SideDrawer-o0BZJHFv.js",
-      "_DeleteModal-ZdrKnvCi.js",
+      "_ViewFunctions-etaBusRy.js",
+      "_PageHeader-XFyXy75-.js",
+      "_DataTable-D5toa4h8.js",
+      "_SideDrawer-7j4m40x_.js",
+      "_DeleteModal-RtET0BWv.js",
       "resources/js/app.js",
-      "_LoadingSpinner-HcJ2r_wK.js",
-      "_DataTableToolbar-_JXd-XvI.js",
-      "_DataTableSpinner-gbBX5NvQ.js"
+      "_LoadingSpinner-ErrFA9cp.js",
+      "_DataTableToolbar-TlnwMVMJ.js",
+      "_DataTableSpinner-OKVj-L0h.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/views/Categorys.vue"
@@ -2717,17 +2717,17 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/Commands-RYqRklwQ.js",
+    "file": "assets/Commands-iWL4PEof.js",
     "imports": [
-      "_ViewFunctions-QkJbCJLB.js",
-      "_PageHeader-pdESKEfy.js",
-      "_DataTableToolbar-_JXd-XvI.js",
-      "_DataTableSpinner-gbBX5NvQ.js",
-      "_DeleteModal-ZdrKnvCi.js",
+      "_ViewFunctions-etaBusRy.js",
+      "_PageHeader-XFyXy75-.js",
+      "_DataTableToolbar-TlnwMVMJ.js",
+      "_DataTableSpinner-OKVj-L0h.js",
+      "_DeleteModal-RtET0BWv.js",
       "resources/js/app.js",
-      "_SideDrawer-o0BZJHFv.js",
-      "_LoadingSpinner-HcJ2r_wK.js",
-      "_MultiSelect-oYuYhTF8.js"
+      "_SideDrawer-7j4m40x_.js",
+      "_LoadingSpinner-ErrFA9cp.js",
+      "_MultiSelect-hJW7AH64.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/views/Commands.vue"
@@ -2818,16 +2818,16 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/ConfigReports-f_5D7iWL.js",
+    "file": "assets/ConfigReports-99QWDOgh.js",
     "imports": [
-      "_ViewFunctions-QkJbCJLB.js",
-      "_PageHeader-pdESKEfy.js",
-      "_DataTableToolbar-_JXd-XvI.js",
-      "_DataTableSpinner-gbBX5NvQ.js",
-      "_DeleteModal-ZdrKnvCi.js",
+      "_ViewFunctions-etaBusRy.js",
+      "_PageHeader-XFyXy75-.js",
+      "_DataTableToolbar-TlnwMVMJ.js",
+      "_DataTableSpinner-OKVj-L0h.js",
+      "_DeleteModal-RtET0BWv.js",
       "resources/js/app.js",
-      "_SideDrawer-o0BZJHFv.js",
-      "_LoadingSpinner-HcJ2r_wK.js"
+      "_SideDrawer-7j4m40x_.js",
+      "_LoadingSpinner-ErrFA9cp.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/views/ConfigReports.vue"
@@ -2918,15 +2918,15 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/ConfigSearch-_sJ2YxJX.js",
+    "file": "assets/ConfigSearch-kLcXOYnk.js",
     "imports": [
       "resources/js/app.js",
-      "_PageHeader-pdESKEfy.js",
-      "_LoadingSpinner-HcJ2r_wK.js",
+      "_PageHeader-XFyXy75-.js",
+      "_LoadingSpinner-ErrFA9cp.js",
       "_scrollToBottom-ij4MVQVH.js",
-      "_DeviceCategoryField-x6090tk2.js",
-      "_CopyLogo-j3hWRQrT.js",
-      "_ViewFunctions-QkJbCJLB.js"
+      "_DeviceCategoryField-9ACRDIpW.js",
+      "_CopyLogo-lSOpk5vw.js",
+      "_ViewFunctions-etaBusRy.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/views/ConfigSearch.vue"
@@ -3017,13 +3017,13 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/Dashboard-PEl5gU-S.js",
+    "file": "assets/Dashboard-WKuErGsc.js",
     "imports": [
       "resources/js/app.js",
-      "_HelpContent-Hn7Xn7Zh.js",
-      "_PageHeader-pdESKEfy.js",
-      "_DeviceViewDeviceDetailsDescr-sAENtsVk.js",
-      "_CopyLogo-j3hWRQrT.js"
+      "_HelpContent-1oLzdkds.js",
+      "_PageHeader-XFyXy75-.js",
+      "_DeviceViewDeviceDetailsDescr-0Pfxm-Ab.js",
+      "_CopyLogo-lSOpk5vw.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/views/Dashboard.vue"
@@ -3115,18 +3115,18 @@
       "assets/Devices-YVB8hc_9.css",
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/Devices-K3wrEoV-.js",
+    "file": "assets/Devices-a1LUOjt8.js",
     "imports": [
-      "_DeleteModal-ZdrKnvCi.js",
-      "_DataTableSpinner-gbBX5NvQ.js",
+      "_DeleteModal-RtET0BWv.js",
+      "_DataTableSpinner-OKVj-L0h.js",
       "resources/js/app.js",
-      "_MultiSelect-oYuYhTF8.js",
-      "_DevicesBreadcrumbs-RGcyD7SH.js",
-      "_DevicesForm-1J0s1rCP.js",
-      "_PageHeader-pdESKEfy.js",
-      "_SideDrawer-o0BZJHFv.js",
-      "_ViewFunctions-QkJbCJLB.js",
-      "_DeviceCategoryField-x6090tk2.js"
+      "_MultiSelect-hJW7AH64.js",
+      "_DevicesBreadcrumbs-znY_IgDq.js",
+      "_DevicesForm-j4sMq9U_.js",
+      "_PageHeader-XFyXy75-.js",
+      "_SideDrawer-7j4m40x_.js",
+      "_ViewFunctions-etaBusRy.js",
+      "_DeviceCategoryField-9ACRDIpW.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/views/Devices.vue"
@@ -3218,16 +3218,16 @@
       "assets/DeviceConfigs-xe3OudNE.css",
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/DeviceConfigs-2Pi2PaDe.js",
+    "file": "assets/DeviceConfigs-79Bs1vLG.js",
     "imports": [
-      "_DataTableToolbar-_JXd-XvI.js",
-      "_DataTableSpinner-gbBX5NvQ.js",
-      "_DeleteModal-ZdrKnvCi.js",
+      "_DataTableToolbar-TlnwMVMJ.js",
+      "_DataTableSpinner-OKVj-L0h.js",
+      "_DeleteModal-RtET0BWv.js",
       "resources/js/app.js",
-      "_DevicesBreadcrumbs-RGcyD7SH.js",
-      "_LoadingSpinner-HcJ2r_wK.js",
-      "_PageHeader-pdESKEfy.js",
-      "_ViewFunctions-QkJbCJLB.js"
+      "_DevicesBreadcrumbs-znY_IgDq.js",
+      "_LoadingSpinner-ErrFA9cp.js",
+      "_PageHeader-XFyXy75-.js",
+      "_ViewFunctions-etaBusRy.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/views/DevicesViews/DeviceConfigs.vue"
@@ -3318,17 +3318,17 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/DeviceEventLog-px1tJqY9.js",
+    "file": "assets/DeviceEventLog-D3KTY9Eb.js",
     "imports": [
-      "_DataTable-AyzS1m_V.js",
-      "_DevicesBreadcrumbs-RGcyD7SH.js",
-      "_LoadingSpinner-HcJ2r_wK.js",
-      "_PageHeader-pdESKEfy.js",
-      "_ViewFunctions-QkJbCJLB.js",
-      "_DeleteModal-ZdrKnvCi.js",
+      "_DataTable-D5toa4h8.js",
+      "_DevicesBreadcrumbs-znY_IgDq.js",
+      "_LoadingSpinner-ErrFA9cp.js",
+      "_PageHeader-XFyXy75-.js",
+      "_ViewFunctions-etaBusRy.js",
+      "_DeleteModal-RtET0BWv.js",
       "resources/js/app.js",
-      "_DataTableToolbar-_JXd-XvI.js",
-      "_DataTableSpinner-gbBX5NvQ.js"
+      "_DataTableToolbar-TlnwMVMJ.js",
+      "_DataTableSpinner-OKVj-L0h.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/views/DevicesViews/DeviceEventLog.vue"
@@ -3419,19 +3419,19 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/DeviceView-F0fys805.js",
+    "file": "assets/DeviceView-rSI8IllH.js",
     "imports": [
       "resources/js/app.js",
-      "_DeviceViewDeviceDetailsDescr-sAENtsVk.js",
-      "_DevicesBreadcrumbs-RGcyD7SH.js",
-      "_DevicesForm-1J0s1rCP.js",
-      "_LoadingSpinner-HcJ2r_wK.js",
-      "_PageHeader-pdESKEfy.js",
-      "_SideDrawer-o0BZJHFv.js",
-      "_ViewFunctions-QkJbCJLB.js",
-      "_CopyLogo-j3hWRQrT.js",
-      "_DeviceCategoryField-x6090tk2.js",
-      "_MultiSelect-oYuYhTF8.js"
+      "_DeviceViewDeviceDetailsDescr-0Pfxm-Ab.js",
+      "_DevicesBreadcrumbs-znY_IgDq.js",
+      "_DevicesForm-j4sMq9U_.js",
+      "_LoadingSpinner-ErrFA9cp.js",
+      "_PageHeader-XFyXy75-.js",
+      "_SideDrawer-7j4m40x_.js",
+      "_ViewFunctions-etaBusRy.js",
+      "_CopyLogo-lSOpk5vw.js",
+      "_DeviceCategoryField-9ACRDIpW.js",
+      "_MultiSelect-hJW7AH64.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/views/DevicesViews/DeviceView.vue"
@@ -3520,19 +3520,19 @@
       "assets/rconfig_msp_2000-D4qL723K.png"
     ],
     "css": [
-      "assets/DeviceViewConfig-MIdzT5e0.css",
+      "assets/DeviceViewConfig-rkEMUmRT.css",
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/DeviceViewConfig-f3-E6vZS.js",
+    "file": "assets/DeviceViewConfig-q0D4bJy3.js",
     "imports": [
-      "_ConfigFullScreenView-bo_tpWWN.js",
-      "_DeviceViewDeviceDetailsDescr-sAENtsVk.js",
+      "_ConfigFullScreenView-UTQDBgy7.js",
+      "_DeviceViewDeviceDetailsDescr-0Pfxm-Ab.js",
       "resources/js/app.js",
-      "_DevicesBreadcrumbs-RGcyD7SH.js",
-      "_LoadingSpinner-HcJ2r_wK.js",
-      "_PageHeader-pdESKEfy.js",
-      "_SideDrawer-o0BZJHFv.js",
-      "_CopyLogo-j3hWRQrT.js"
+      "_DevicesBreadcrumbs-znY_IgDq.js",
+      "_LoadingSpinner-ErrFA9cp.js",
+      "_PageHeader-XFyXy75-.js",
+      "_SideDrawer-7j4m40x_.js",
+      "_CopyLogo-lSOpk5vw.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/views/DevicesViews/DeviceViewConfig.vue"
@@ -3623,7 +3623,7 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/PageNotFound-s9-2e1Dh.js",
+    "file": "assets/PageNotFound-mC6y0fpw.js",
     "imports": [
       "resources/js/app.js"
     ],
@@ -3717,10 +3717,10 @@
       "assets/Settings-5oFkXLjJ.css",
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/Settings-VhhPBjFX.js",
+    "file": "assets/Settings-50W6CLk7.js",
     "imports": [
-      "_ViewFunctions-QkJbCJLB.js",
-      "_PageHeader-pdESKEfy.js",
+      "_ViewFunctions-etaBusRy.js",
+      "_PageHeader-XFyXy75-.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
@@ -3812,9 +3812,9 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/0Overview-PgvsVeQV.js",
+    "file": "assets/0Overview-7Qpqc02i.js",
     "imports": [
-      "_HelpContent-Hn7Xn7Zh.js",
+      "_HelpContent-1oLzdkds.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
@@ -3906,9 +3906,9 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/10About-rhhcITsO.js",
+    "file": "assets/10About-DvHDVXi-.js",
     "imports": [
-      "_DataTableSpinner-gbBX5NvQ.js",
+      "_DataTableSpinner-OKVj-L0h.js",
       "resources/js/app.js"
     ],
     "isDynamicEntry": true,
@@ -4000,7 +4000,7 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/1System-EnJ52y4S.js",
+    "file": "assets/1System-pAPEWV_t.js",
     "imports": [
       "resources/js/app.js",
       "_scrollToBottom-ij4MVQVH.js"
@@ -4094,7 +4094,7 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/4Security-V6UBXDHz.js",
+    "file": "assets/4Security-UXyW9Jmg.js",
     "imports": [
       "resources/js/app.js"
     ],
@@ -4187,17 +4187,17 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/Tags-U5lXO3K7.js",
+    "file": "assets/Tags-RJhBY-ut.js",
     "imports": [
-      "_ViewFunctions-QkJbCJLB.js",
-      "_PageHeader-pdESKEfy.js",
-      "_DataTable-AyzS1m_V.js",
-      "_SideDrawer-o0BZJHFv.js",
-      "_DeleteModal-ZdrKnvCi.js",
+      "_ViewFunctions-etaBusRy.js",
+      "_PageHeader-XFyXy75-.js",
+      "_DataTable-D5toa4h8.js",
+      "_SideDrawer-7j4m40x_.js",
+      "_DeleteModal-RtET0BWv.js",
       "resources/js/app.js",
-      "_LoadingSpinner-HcJ2r_wK.js",
-      "_DataTableToolbar-_JXd-XvI.js",
-      "_DataTableSpinner-gbBX5NvQ.js"
+      "_LoadingSpinner-ErrFA9cp.js",
+      "_DataTableToolbar-TlnwMVMJ.js",
+      "_DataTableSpinner-OKVj-L0h.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/views/Tags.vue"
@@ -4288,18 +4288,18 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/Tasks-JD6cb4we.js",
+    "file": "assets/Tasks-WxvG5i1_.js",
     "imports": [
       "resources/js/app.js",
-      "_DataTable-AyzS1m_V.js",
-      "_DeleteModal-ZdrKnvCi.js",
-      "_LoadingSpinner-HcJ2r_wK.js",
-      "_PageHeader-pdESKEfy.js",
-      "_SideDrawer-o0BZJHFv.js",
-      "_ViewFunctions-QkJbCJLB.js",
-      "_MultiSelect-oYuYhTF8.js",
-      "_DataTableToolbar-_JXd-XvI.js",
-      "_DataTableSpinner-gbBX5NvQ.js"
+      "_DataTable-D5toa4h8.js",
+      "_DeleteModal-RtET0BWv.js",
+      "_LoadingSpinner-ErrFA9cp.js",
+      "_PageHeader-XFyXy75-.js",
+      "_SideDrawer-7j4m40x_.js",
+      "_ViewFunctions-etaBusRy.js",
+      "_MultiSelect-hJW7AH64.js",
+      "_DataTableToolbar-TlnwMVMJ.js",
+      "_DataTableSpinner-OKVj-L0h.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/views/Tasks.vue"
@@ -4390,18 +4390,18 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/Templates-lvyf9V7t.js",
+    "file": "assets/Templates-F2CjY3wl.js",
     "imports": [
-      "_ViewFunctions-QkJbCJLB.js",
-      "_PageHeader-pdESKEfy.js",
-      "_DataTable-AyzS1m_V.js",
-      "_SideDrawer-o0BZJHFv.js",
-      "_DeleteModal-ZdrKnvCi.js",
-      "_ConfigFullScreenView-bo_tpWWN.js",
-      "_LoadingSpinner-HcJ2r_wK.js",
+      "_ViewFunctions-etaBusRy.js",
+      "_PageHeader-XFyXy75-.js",
+      "_DataTable-D5toa4h8.js",
+      "_SideDrawer-7j4m40x_.js",
+      "_DeleteModal-RtET0BWv.js",
+      "_ConfigFullScreenView-UTQDBgy7.js",
+      "_LoadingSpinner-ErrFA9cp.js",
       "resources/js/app.js",
-      "_DataTableToolbar-_JXd-XvI.js",
-      "_DataTableSpinner-gbBX5NvQ.js"
+      "_DataTableToolbar-TlnwMVMJ.js",
+      "_DataTableSpinner-OKVj-L0h.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/views/Templates.vue"
@@ -4492,17 +4492,17 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/Users-MTS7PGFC.js",
+    "file": "assets/Users-eMTRTnAs.js",
     "imports": [
-      "_DataTableToolbar-_JXd-XvI.js",
-      "_DataTableSpinner-gbBX5NvQ.js",
-      "_DeleteModal-ZdrKnvCi.js",
+      "_DataTableToolbar-TlnwMVMJ.js",
+      "_DataTableSpinner-OKVj-L0h.js",
+      "_DeleteModal-RtET0BWv.js",
       "resources/js/app.js",
-      "_PageHeader-pdESKEfy.js",
-      "_SideDrawer-o0BZJHFv.js",
-      "_UsersForm-nbVTqtZK.js",
-      "_ViewFunctions-QkJbCJLB.js",
-      "_LoadingSpinner-HcJ2r_wK.js"
+      "_PageHeader-XFyXy75-.js",
+      "_SideDrawer-7j4m40x_.js",
+      "_UsersForm-rJ3Qpp1u.js",
+      "_ViewFunctions-etaBusRy.js",
+      "_LoadingSpinner-ErrFA9cp.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/views/Users.vue"
@@ -4593,17 +4593,17 @@
     "css": [
       "assets/app-rbmETtz3.css"
     ],
-    "file": "assets/Vendors-SPfqbm6q.js",
+    "file": "assets/Vendors-B2jXEI2f.js",
     "imports": [
-      "_ViewFunctions-QkJbCJLB.js",
-      "_PageHeader-pdESKEfy.js",
-      "_DataTable-AyzS1m_V.js",
-      "_SideDrawer-o0BZJHFv.js",
-      "_DeleteModal-ZdrKnvCi.js",
+      "_ViewFunctions-etaBusRy.js",
+      "_PageHeader-XFyXy75-.js",
+      "_DataTable-D5toa4h8.js",
+      "_SideDrawer-7j4m40x_.js",
+      "_DeleteModal-RtET0BWv.js",
       "resources/js/app.js",
-      "_LoadingSpinner-HcJ2r_wK.js",
-      "_DataTableToolbar-_JXd-XvI.js",
-      "_DataTableSpinner-gbBX5NvQ.js"
+      "_LoadingSpinner-ErrFA9cp.js",
+      "_DataTableToolbar-TlnwMVMJ.js",
+      "_DataTableSpinner-OKVj-L0h.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/views/Vendors.vue"
