@@ -23,6 +23,12 @@ class Login
     public function login()
     {
 
+        if (isset($this->connectionObj->hasSplashScreen) && $this->connectionObj->hasSplashScreen == 'on') {
+            // avaya login
+            $this->read->readTo($this->connectionObj->splashScreenReadToText);
+            $this->send->sendControlCode($this->connectionObj->splashScreenSendControlCode);
+        }
+
         $this->read->readTo($this->connectionObj->usernamePrompt);
         $this->send->sendString($this->connectionObj->username);
         $this->read->readTo($this->connectionObj->passwordPrompt);
