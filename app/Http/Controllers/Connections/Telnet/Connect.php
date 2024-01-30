@@ -74,6 +74,11 @@ class Connect
     /* OPTIONS */
     public $AnsiHost;
 
+    /* VT100 */
+    public $hasSplashScreen;
+    public $splashScreenReadToText;
+    public $splashScreenSendControlCode;
+
     public function __construct(object $deviceParamsObject, $debug)
     {
         // dd($deviceParamsObject);
@@ -119,6 +124,11 @@ class Connect
         $this->AnsiHost = isset($deviceParamsObject->options['AnsiHost']) ? $deviceParamsObject->options['AnsiHost'] : null; // ssh option only - keeping here for consistency
         $this->setWindowSize = isset($deviceParamsObject->options['setWindowSize']) ? $deviceParamsObject->options['setWindowSize'] : null; // ssh option only - keeping here for consistency
         $this->setTerminalDimensions = isset($deviceParamsObject->options['setTerminalDimensions']) ? $deviceParamsObject->options['setTerminalDimensions'] : null; // ssh option only - keeping here for consistency
+
+        /* VT100 */
+        $this->hasSplashScreen = isset($deviceParamsObject->vt100['hasSplashScreen']) ? $deviceParamsObject->vt100['hasSplashScreen'] : null;
+        $this->splashScreenReadToText = isset($deviceParamsObject->vt100['splashScreenReadToText']) ? $deviceParamsObject->vt100['splashScreenReadToText'] : null;
+        $this->splashScreenSendControlCode = isset($deviceParamsObject->vt100['splashScreenSendControlCode']) ? $deviceParamsObject->vt100['splashScreenSendControlCode'] : null;
 
         $this->cliDebugStatus = $debug;
         $this->commands = $deviceParamsObject->deviceparams['commands'];
