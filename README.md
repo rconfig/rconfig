@@ -299,6 +299,25 @@ Instruction on how to update your installation of rConfig v6 Core are below. You
 > [!WARNING]
 > If you edit any of the files in the rConfig directory, you may need to resolve conflicts when you run the `git pull` command. You should be familiar with git and how to resolve conflicts. If you are not, you should not edit any of the files in the rConfig directory. If you get a warning about conflicts, you can try a `git stash` and `git pull` to resolve the conflicts. If you are not familiar with git, you should seek help from a professional.
 
+> [!IMPORTANT]  
+> As of Feb 2024, you will need to update PHP to version 8.3 when updating rConfig Core V6. You will also need to update the composer version to 2.4. You can do this by running the following commands:
+
+```sh
+# Update PHP CentOS/RHEL/ Rocky
+cd /home
+yum -y install wget
+wget https://www.rconfig.com/downloads/php-updates/centos-php8-update.sh -O /home/centos-php8-update.sh
+chmod +x centos-php8-update.sh
+./centos-php8-update.sh
+
+# Update PHP Ubuntu
+cd /home
+sudo apt-get install wget
+wget https://www.rconfig.com/downloads/php-updates/ubuntu-php8-update.sh -O /home/ubuntu-php8-update.sh
+chmod +x ubuntu-php8-update.sh
+./ubuntu-php8-update.sh
+```
+
 rConfig V7 professional subscribers should follow the instructions in the rConfig V7 professional documentation. As the installation and update process is different.
 
 ```sh
