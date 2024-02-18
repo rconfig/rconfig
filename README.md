@@ -61,11 +61,11 @@ If you are looking for rConfig V6 professional, please visit `https://www.rconfi
 
 Supported OS
 
--   Rocky Linux 8/9+
--   RHEL Linux 8/9+
--   CentOS Linux 8/9+
--   Ubuntu 20.04+
--   Docker (Linux)(not yet ready)
+- Rocky Linux 8/9+
+- RHEL Linux 8/9+
+- CentOS Linux 8/9+
+- Ubuntu 20.04+
+- Docker (Linux)(not yet ready)
 
 rConfig v6 core is completely free, you do not need an API key from rConfig to download and use this version. Please follow the instructions below to get started.
 
@@ -294,7 +294,12 @@ Check out our docs `docs.rconfig.com` to learn more.
 > [!IMPORTANT]  
 > Your advised to backup your database, .env file and storage directory at a minimum before proceeding. You should also backup your entire server if possible.
 
-Instruction on how to update your installation of rConfig v6 Core, after it is installed, are below. You should run the commands below as root, and you may need to use sudo if installed on Ubuntu.
+Instruction on how to update your installation of rConfig v6 Core are below. You should run the commands below as root, and you may need to use sudo if installed on Ubuntu.
+
+> [!WARNING]
+> If you edit any of the files in the rConfig directory, you may need to resolve conflicts when you run the `git pull` command. You should be familiar with git and how to resolve conflicts. If you are not, you should not edit any of the files in the rConfig directory. If you get a warning about conflicts, you can try a `git stash` and `git pull` to resolve the conflicts. If you are not familiar with git, you should seek help from a professional.
+
+rConfig V7 professional subscribers should follow the instructions in the rConfig V7 professional documentation. As the installation and update process is different.
 
 ```sh
 # Centos/Rocky/RHEL
@@ -324,7 +329,7 @@ php artisan rconfig:clear-all
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**. We are fairly strict on code quality and style. Please follow the best practices. You should also have a strong working knowledge of PHP, Laravel, and VueJS.
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**. We are pretty strict on code quality and style. Please follow the best practices. You should also have a strong working knowledge of PHP, Laravel, and VueJS.
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
 Don't forget to give the project a star! Thanks again!
@@ -374,8 +379,8 @@ Although we provide this code free and open source, rConfig v6 core is based bes
 
 Inspiration, code snippets, etc.
 
--   [Laravel](https://www.laravel.com)
--   [vuejs](https://vuejs.org/)
--   [patternfly v4](https://www.patternfly.org/v4/)
+- [Laravel](https://www.laravel.com)
+- [vuejs](https://vuejs.org/)
+- [patternfly v4](https://www.patternfly.org/v4/)
 
 See composer.json and package.json for a full list of dependencies, and their licenses.
