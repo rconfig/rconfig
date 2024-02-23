@@ -102,8 +102,8 @@ class Login
         $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
         if ($this->connectionObj->paging === 'on') {
             $this->connectionObj->connection->write($this->connectionObj->pagingCmd . "\n");
+            $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
         }
-        $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
         $this->connectionObj->connection->write("\n"); // to line break after command output
         $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
     }
