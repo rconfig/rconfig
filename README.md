@@ -74,8 +74,9 @@ rConfig v6 core is completely free, you do not need an API key from rConfig to d
 | Feature              | rConfig Core        | rConfig Professional |
 |----------------------|---------------------|----------------------|
 | Configuration Backup | :white_check_mark:  | :white_check_mark:   |
-| Real-Time Alerts     | :white_check_mark:  | :white_check_mark:   |
 | Multi-Vendor Support | :white_check_mark:  | :white_check_mark:   |
+| Unlimited Devices | :white_check_mark:  | :white_check_mark:   |
+| Enterprise Features  | :x:                 | :white_check_mark:   |
 | API Access           | :x:                 | :white_check_mark:   |
 | Premium Support      | :x:                 | :white_check_mark:   |
 
