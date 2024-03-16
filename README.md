@@ -69,6 +69,18 @@ Supported OS
 
 rConfig v6 core is completely free, you do not need an API key from rConfig to download and use this version. Please follow the instructions below to get started.
 
+## rConfig Editions
+
+| Feature              | rConfig Core        | rConfig Professional |
+|----------------------|---------------------|----------------------|
+| Configuration Backup | :white_check_mark:  | :white_check_mark:   |
+| Real-Time Alerts     | :white_check_mark:  | :white_check_mark:   |
+| Multi-Vendor Support | :white_check_mark:  | :white_check_mark:   |
+| API Access           | :x:                 | :white_check_mark:   |
+| Premium Support      | :x:                 | :white_check_mark:   |
+
+_Check out more on our [features page](https://www.rconfig.com/features)._
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- Installation -->
