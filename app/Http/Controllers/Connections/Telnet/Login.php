@@ -29,8 +29,11 @@ class Login
             $this->send->sendControlCode($this->connectionObj->splashScreenSendControlCode);
         }
 
-        $this->read->readTo($this->connectionObj->usernamePrompt);
-        $this->send->sendString($this->connectionObj->username);
+        if ($this->connectionObj->usernamePrompt != "") {
+            $this->read->readTo($this->connectionObj->usernamePrompt);
+            $this->send->sendString($this->connectionObj->username);
+        }
+        
         $this->read->readTo($this->connectionObj->passwordPrompt);
         $this->send->sendString($this->connectionObj->password);
 
