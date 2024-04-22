@@ -31,7 +31,11 @@ class TelnetConnectionManager
         if ($this->loadTelnetConnect() === false) {
             return false;
         }
-        $this->loadTelnetLogin();
+
+        if ($this->loadTelnetLogin() === false) {
+            return false;
+        }
+
         $this->SendCommandObj = new SendCommand($this->connectionObj);
         $outputArray = $this->sendTelnetCommand();
 
@@ -50,6 +54,7 @@ class TelnetConnectionManager
     private function loadTelnetLogin()
     {
         $this->loginObj = new Login($this->connectionObj);
+
         if (!$this->loginObj->login()) {
             (new SetDeviceStatus($this->connectionObj->device_id, 0))->setDeviceStatus();
             $logmsg = 'There was an authentication or connection issue with ' . $this->deviceParamsObject->deviceparams['device_name'];

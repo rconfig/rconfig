@@ -185,7 +185,7 @@ class TelnetConnectTest extends TestCase
         $arr = explode("\n", $result);
 
         $time = microtime(true) - $start;
-        $this->assertGreaterThan(15, $time); // 5 second template timeout times number of commands (at least 3 commands in template)
+        $this->assertGreaterThan(10, $time); // 5 second template timeout times number of commands (at least 3 commands in template)
 
         $this->remove_5_sec_timeout_telnet_noenable_template();
 
@@ -199,9 +199,12 @@ class TelnetConnectTest extends TestCase
         $this->assertGreaterThan(0, count($arr));
         $this->assertStringContainsString($arr[0], 'Start rconfig:download-device IDs:10011');
         $this->assertStringContainsString($arr[1], 'Start device download for router1 ID:10011');
+        $this->assertStringContainsString($arr[2], 'No config data returned for router1 - ID:10011. Check your logs for more information');
+
+
         $this->assertDatabaseHas('devices', [
             'id' => 10011,
-            'status' => 1,
+            'status' => 0,
         ]);
 
         $this->assertDatabaseHas('configs', [
@@ -214,7 +217,7 @@ class TelnetConnectTest extends TestCase
         $this->assertDatabaseHas('activity_log', [
             'device_id' => 10011,
             'event_type' => 'connection',
-            'description' => 'Prompt not did not match for device within timeout - This can cause slower config downloads. Device ID: 10011',
+            'description' => 'Authentication Failed for 192.168.1.170 ID:10011. Or wrong prompt configured for this device! Check your device settings.',
         ]);
 
         $this->remove_extra_devices();

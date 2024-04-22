@@ -29,8 +29,8 @@ class Quit
 
     private function checkConnectionStatus()
     {
-        if (! $this->connectionObj->connection) {
-            $logmsg = 'Telnet connection already closed for '.($this->connectionObj->hostname.' ID:'.$this->connectionObj->device_id);
+        if (!$this->connectionObj->connection) {
+            $logmsg = 'Telnet connection already closed for ' . ($this->connectionObj->hostname . ' ID:' . $this->connectionObj->device_id);
             activityLogIt(__CLASS__, __FUNCTION__, 'error', $logmsg, 'connection', $this->connectionObj->hostname, $this->connectionObj->device_id, 'device');
 
             return false;
@@ -39,7 +39,7 @@ class Quit
 
     private function resetPagingCmd()
     {
-        if (! empty($this->connectionObj->resetPagingCmd)) {
+        if (!empty($this->connectionObj->resetPagingCmd)) {
             $this->send->sendString($this->connectionObj->resetPagingCmd);
             $this->read->readTo($this->connectionObj->devicePrompt);
         }
@@ -47,7 +47,7 @@ class Quit
 
     private function sendSaveConfig()
     {
-        if (! empty($this->connectionObj->saveConfig)) {
+        if (!empty($this->connectionObj->saveConfig)) {
             $this->send->sendString($this->connectionObj->saveConfig);
             $this->read->readTo($this->connectionObj->devicePrompt);
         }
@@ -55,7 +55,7 @@ class Quit
 
     private function sendExitCmd()
     {
-        if (! empty($this->connectionObj->exitCmd)) {
+        if (!empty($this->connectionObj->exitCmd)) {
             $this->send->sendString($this->connectionObj->exitCmd);
         }
     }

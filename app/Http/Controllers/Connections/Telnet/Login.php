@@ -33,7 +33,7 @@ class Login
             $this->read->readTo($this->connectionObj->usernamePrompt);
             $this->send->sendString($this->connectionObj->username);
         }
-        
+
         $this->read->readTo($this->connectionObj->passwordPrompt);
         $this->send->sendString($this->connectionObj->password);
 
@@ -41,11 +41,6 @@ class Login
             $devicePromptValid = $this->enableModeLogin();
         } else {
             $devicePromptValid = $this->read->readTo($this->connectionObj->devicePrompt);
-        }
-
-        // valid prompt check - must be located here
-        if (!preg_match('/(' . $this->connectionObj->devicePrompt . ')/i', $devicePromptValid)) {
-            activityLogIt(__CLASS__, __FUNCTION__, 'error', 'Prompt not did not match for device within timeout - This can cause slower config downloads. Device ID: ' . $this->connectionObj->device_id, 'connection', $this->connectionObj->hostname, $this->connectionObj->device_id, 'device');
         }
 
         $this->send->sendString($this->connectionObj->pagingCmd);

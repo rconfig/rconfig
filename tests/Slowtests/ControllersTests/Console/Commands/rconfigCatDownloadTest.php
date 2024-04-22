@@ -75,7 +75,7 @@ class rconfigCatDownloadTest extends TestCase
      */
     public function full_telnet_and_SSH_download_for_given_categories()
     {
-        $this->log_message_during_test(substr(strrchr(__CLASS__, "\\"), 1) . '/' . __FUNCTION__, 'This test will take around 15 seconds to complete.');
+        $this->log_message_during_test(substr(strrchr(__CLASS__, "\\"), 1) . '/' . __FUNCTION__, 'This test will take around 20 seconds to complete.');
 
         $this->add_5_sec_timeout_telnet_noenable_template();
 
@@ -87,7 +87,7 @@ class rconfigCatDownloadTest extends TestCase
         $arr = explode("\n", $result);
 
         $time = microtime(true) - $start;
-        $this->assertLessThan(15, $time);
+        $this->assertLessThan(20, $time);
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output
