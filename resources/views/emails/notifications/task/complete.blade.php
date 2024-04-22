@@ -53,7 +53,7 @@
                                 <tr>
                                     <td class="content-cell"
                                         style="font-family: Avenir, Helvetica, sans-serif; box-sizing: border-box; padding: 35px;">
-                                        <img src="{!! url('/images/new/blue/hex_logo_blue_horizontal_72.png'); !!}"
+                                        <img src="https://www.rconfig.com/images/rConfig_logos/new/blue/hex_logo_blue_horizontal_72.png"
                                             alt="rConfig Logo" title="rConfig Logo"
                                             style="display: block;  margin-left: auto; margin-right: auto; padding-bottom: 15px;" />
                                         <h1
@@ -163,7 +163,7 @@
                             style="font-family: Avenir, Helvetica, sans-serif; box-sizing: border-box; padding: 35px;">
                             <p
                                 style="font-family: Avenir, Helvetica, sans-serif; box-sizing: border-box; line-height: 1.5em; margin-top: 0; color: #74787e; font-size: 12px; text-align: center;">
-                                © 2019 rConfig. All rights reserved.</p>
+                                         Copyright © 2010 - <?php echo date('Y'); ?> OS Informatics Ltd. T/A rConfig. All rights reserved.</p>
                         </td>
                     </tr>
                 </table>
