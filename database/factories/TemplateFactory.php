@@ -14,7 +14,6 @@ class TemplateFactory extends Factory
     public function definition()
     {
         return [
-            'id' => $this->faker->numberBetween(5000, 9000),
             'fileName' => $this->faker->firstNameMale,
             'templateName' => $this->faker->word,
             'description' => $this->faker->sentence,

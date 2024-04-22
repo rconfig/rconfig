@@ -116,7 +116,7 @@ class rconfigDeviceDownloadTest extends TestCase
         $this->device1['device_username'] = 'stephen';
 
         $devicerecord = (new DeviceRecordPrepare($this->device1))->DeviceRecordToArray();
-        $connectionObj = new MainConnectionManager($devicerecord, 0);
+        $connectionObj = new MainConnectionManager($devicerecord, 1);
         $configsArray = $connectionObj->setupConnectAndReturnOutput();
 
         $this->remove_5_sec_timeout_telnet_noenable_template();
