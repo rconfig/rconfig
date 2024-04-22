@@ -216,7 +216,7 @@ interface GigabitEthernet1
  ip address 192.168.1.170 255.255.255.0
  negotiation auto
  ipv6 address 2001:BB6:788A:8000::/64 eui-64
- ipv6 address 2001:BB6:788A:8000:20C:29FF:FE6D:A267/64
+ ipv6 address 2001:bb6:788a:8000:6273:5cff:fed9:4c01/64
  no mop enabled
  no mop sysid
 !

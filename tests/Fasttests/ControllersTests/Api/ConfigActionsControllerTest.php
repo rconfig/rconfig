@@ -31,7 +31,7 @@ class ConfigActionsControllerTest extends TestCase
         $lastestConfig = Config::where('device_id', 1001)->orderBy('id', 'desc')->first();
         $this->assertFileExists($lastestConfig->config_location);
         $fileContents = File::get($lastestConfig->config_location);
-        $this->assertStringContainsString('ipv6 address 2001:BB6:788A:8000:20C:29FF:FE6D:A267/64', $fileContents);
+        $this->assertStringContainsString('ipv6 address 2001:bb6:788a:8000:6273:5cff:fed9:4c01/64', $fileContents);
     }
 
     /** @test */
