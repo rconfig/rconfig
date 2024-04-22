@@ -25,7 +25,7 @@ class MailTaskCompleteNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('rConfig Download-Task Complete')
+            ->subject($this->report_data->task->task_name . ' - rConfig Download-Task Complete')
             ->markdown(
                 'emails.notifications.task.complete',
                 [

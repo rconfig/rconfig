@@ -2,21 +2,11 @@
 
 namespace App\Console;
 
-use App\Jobs\ArchiveLogsJob;
-use App\Jobs\BackupCleanJob;
-use App\Jobs\BackupRun;
-use App\Jobs\PurgeConfigsJob;
 use App\Models\Task;
-use App\Models\User;
-use App\Notifications\DBNotification;
-use App\Notifications\MailTaskRunNotification;
 use App\Traits\LogsTaskActivity;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Str;
 use Spatie\Health\Commands\RunHealthChecksCommand;
 use Spatie\Health\Commands\ScheduleCheckHeartbeatCommand;
 
@@ -82,7 +72,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('queue:prune-batches --hours=48 --unfinished=72')->daily();
         $schedule->command('model:prune', ['--model' => MonitoredScheduledTaskLogItem::class])->daily();
         $schedule->command('model:prune', ['--model' => \Spatie\Health\Models\HealthCheckResultHistoryItem::class])->daily();
-
     }
 
     private function download_task($executionStartTime, $task)
@@ -103,25 +92,7 @@ class Kernel extends ConsoleKernel
                 $logmsg = 'Task command "' . $task->task_command . ' ' . $task->id . '" was run with ID:' . $task->id;
                 activityLogIt(__CLASS__, __FUNCTION__, 'info', $logmsg, 'cron_scheduler');
                 $this->logTaskFinished($task->id);
-                $this->_notifyTaskSend($executionStartTime, $task);
             });
-    }
-
-    private function _notifyTaskSend($executionStartTime, $task)
-    {
-        if ($task->task_email_notify == 1) {
-            $seconds = round(microtime(true) - $executionStartTime, 2);
-            try {
-                Notification::send(User::all(), new MailTaskRunNotification($seconds, $task));
-            } catch (\Throwable $th) {
-                Log::error('MailTaskRunNotification Error:' . $th->getMessage());
-            }
-            try {
-                Notification::send(User::all(), new DBNotification('Scheduled Task Completed', 'Task ID ' . $task->id . ' - "' . $task->task_name . '" was completed in ' . $executionStartTime, 'system', 'info', 'pficon-info'));
-            } catch (\Throwable $th) {
-                Log::error('DBNotification Error:' . $th->getMessage());
-            }
-        }
     }
 
     private function afterTaskRunActions($task, $executionStartTime)
@@ -129,7 +100,6 @@ class Kernel extends ConsoleKernel
         $logmsg = 'Task command "' . $task->task_command . ' ' . $task->id . '" was run with ID:' . $task->id;
         $this->logTaskFinished($task->id);
         activityLogIt(__CLASS__, __FUNCTION__, 'info', $logmsg, 'cron_scheduler');
-        $this->_notifyTaskSend($executionStartTime, $task);
     }
 
     private function onTaskFailureActions($task, $executionStartTime)
@@ -137,7 +107,6 @@ class Kernel extends ConsoleKernel
         $logmsg = 'Task command "' . $task->task_command . ' ' . $task->id . '" failed. See logs for more information.';
         $this->logTaskFailed($task->id);
         activityLogIt(__CLASS__, __FUNCTION__, 'info', $logmsg, 'cron_scheduler');
-        $this->_notifyTaskSend($executionStartTime, $task);
     }
 
     /**
