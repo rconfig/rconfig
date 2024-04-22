@@ -19,7 +19,6 @@ class Quit
 
     public function closeTelnet()
     {
-        dump($this->connectionObj->connection);
         $this->checkConnectionStatus();
         $this->resetPagingCmd();
         $this->sendSaveConfig();
