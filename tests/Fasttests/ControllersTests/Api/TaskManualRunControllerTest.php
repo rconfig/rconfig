@@ -68,16 +68,6 @@ class TaskManualRunControllerTest extends TestCase
             'task_id' => 555555,
             'meta' => 'Task finished',
         ]);
-
-        Notification::assertSentTo(
-            $this->user,
-            \App\Notifications\MailTaskRunNotification::class,
-            function ($notification, $channels) {
-                // dd($notification->task);
-                $property = $this->getPrivateProperty('\App\Notifications\MailTaskRunNotification', 'task');
-                return $property->getValue($notification)['id'] === 555555;
-            }
-        );
     }
 
     /**

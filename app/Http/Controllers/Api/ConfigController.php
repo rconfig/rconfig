@@ -113,7 +113,8 @@ class ConfigController extends ApiBaseController
 
         if ($config_location) {
             $content = File::get($config_location);
-
+            $utf8_string = mb_convert_encoding($content, 'UTF-8');
+            
             return $this->successResponse('Success', $content);
         } else {
             return $this->failureResponse('No config file found');
