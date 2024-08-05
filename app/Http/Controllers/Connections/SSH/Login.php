@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Connections\SSH;
+namespace App\Http\Controllers\Connections\SSH;
 
 // use App\Http\use App\Services\Connections\Params\DeviceParams;\SSH\Send;
 // use App\Http\use App\Services\Connections\Params\DeviceParams;\SSH\Read;

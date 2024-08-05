@@ -38,7 +38,7 @@
         "cronstrue": "^2.4.0",
         "file-saver": "^2.0.5",
         "highlight.js": "^11.6.0",
-        "monaco-editor": "^0.45.0",
+        "monaco-editor": "^0.50.0",
         "monaco-editor-webpack-plugin": "^7.0.1",
         "vue-axios": "^3.4.0",
         "vue-clipboard3": "^2.0.0",
