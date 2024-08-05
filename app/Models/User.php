@@ -71,6 +71,7 @@ class User extends Authenticatable
                 }
 
                 $users->push((new User)->forceFill([
+                    'id' => crc32(trim($recipient)),
                     'name' => $recipient,
                     'email' => trim($recipient),
                 ]));
