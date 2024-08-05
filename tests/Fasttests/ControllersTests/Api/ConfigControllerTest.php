@@ -115,10 +115,12 @@ class ConfigControllerTest extends TestCase
 
         $response = $this->get('/api/configs/latest-by-deviceid/1001');
         $id = $response->json()['data'][1]['id']; // for the show run
-
+ 
         $response = $this->get('/api/configs/view-config/' . $id);
         $response->assertStatus(200);
+
         $this->assertStringContainsString('service timestamps debug datetime msec', $response->getContent());
+        $this->assertStringContainsString('transport output pad telnet rlogin lapb-ta mop udptn v120', $response->getContent());
     }
 
     /** @test */

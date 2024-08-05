@@ -22,6 +22,7 @@ class Connect
     public $port;
 
     /* AUTH */
+    public $sshInteractive;
     public $usernamePrompt;
     public $passwordPrompt;
     public $enable;
@@ -73,6 +74,7 @@ class Connect
         $this->protocol = $deviceParamsObject->connect['protocol'];
         $this->port = $deviceParamsObject->deviceparams['device_port_override'] ?? $deviceParamsObject->connect['port'];
         /* AUTH */
+        $this->sshInteractive = $deviceParamsObject->auth['sshInteractive'] ?? null;
         $this->usernamePrompt = $deviceParamsObject->auth['username'];
         $this->passwordPrompt = $deviceParamsObject->auth['password'];
         $this->enable = $deviceParamsObject->auth['enable'];

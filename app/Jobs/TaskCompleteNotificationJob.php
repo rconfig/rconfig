@@ -25,7 +25,7 @@ class TaskCompleteNotificationJob implements ShouldQueue
 
     public function handle()
     {
-        Notification::send(User::allUsersAndRecipients(), new MailTaskCompleteNotification($this->report_data));
+         Notification::send(User::allUsersAndRecipients(), new MailTaskCompleteNotification($this->report_data));
         Notification::send(User::allUsersAndRecipients(), new DBTaskCompleteNotification($this->report_data));
     }
 }
