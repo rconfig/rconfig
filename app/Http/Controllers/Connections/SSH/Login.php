@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Connections\SSH;
+namespace App\Services\Connections\SSH;
 
-// use App\Http\Controllers\Connections\SSH\Send;
-// use App\Http\Controllers\Connections\SSH\Read;
-// use App\Http\Controllers\Connections\SSH\Quit;
+// use App\Http\use App\Services\Connections\Params\DeviceParams;\SSH\Send;
+// use App\Http\use App\Services\Connections\Params\DeviceParams;\SSH\Read;
+// use App\Http\use App\Services\Connections\Params\DeviceParams;\SSH\Quit;
 use App\Models\PrivSshKeys;
 use phpseclib3\Crypt\PublicKeyLoader;
 use phpseclib3\Net\SSH2;
@@ -12,11 +12,8 @@ use phpseclib3\Net\SSH2;
 class Login
 {
     protected $send;
-
     protected $read;
-
     protected $connectionObj;
-
     protected $loadedKey;
 
     public function __construct(object $connectionObj)
@@ -25,19 +22,6 @@ class Login
         // $this->send = new Send($this->connectionObj->connection);
         // $this->read = new Read($this->connectionObj);
     }
-
-    // public function interactive_login()
-    // {
-    //     $this->connectionObj->connection->login($this->connectionObj->username);
-    //     echo $this->connectionObj->connection->read('User:');
-    //     echo $this->connectionObj->connection->write($this->connectionObj->username . "\n");
-    //     echo $this->connectionObj->connection->read('Password:');
-    //     echo $this->connectionObj->connection->write($this->connectionObj->password . "\n");
-    //     echo $this->connectionObj->connection->read();
-    //     echo $this->connectionObj->connection->write($this->connectionObj->pagingCmd . "\n");
-    //     echo $this->connectionObj->connection->read('~'.$this->connectionObj->devicePrompt.'~');
-    //     return true;
-    // }
 
     public function login()
     {
@@ -55,6 +39,10 @@ class Login
             $this->HPChecks();
         }
 
+        if ($this->connectionObj->sshInteractive === 'on') {
+            $this->interactive_login();
+        }
+
         if ($this->connectionObj->enable == 'on') {
             $this->enableModeLogin();
         } else {
@@ -63,6 +51,16 @@ class Login
             return true;
         }
     }
+
+    public function interactive_login()
+    {
+        $this->connectionObj->connection->read('~' . $this->connectionObj->usernamePrompt . '~', SSH2::READ_REGEX);
+        $this->connectionObj->connection->write($this->connectionObj->username . "\n");
+        $this->connectionObj->connection->read('~' . $this->connectionObj->passwordPrompt . '~', SSH2::READ_REGEX);
+        $this->connectionObj->connection->write($this->connectionObj->password . "\n");
+        return true;
+    }
+
 
     public function loginErrorCheck()
     {
@@ -87,6 +85,7 @@ class Login
     private function sendPagingCommand()
     {
         if ($this->connectionObj->paging === 'on') {
+            // dd('~' . $this->connectionObj->devicePrompt . '~');
             $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
             $this->connectionObj->connection->write($this->connectionObj->pagingCmd . "\n");
             sleep(1);
@@ -102,8 +101,8 @@ class Login
         $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
         if ($this->connectionObj->paging === 'on') {
             $this->connectionObj->connection->write($this->connectionObj->pagingCmd . "\n");
+            $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
         }
-        $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
         $this->connectionObj->connection->write("\n"); // to line break after command output
         $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
     }
