@@ -3,12 +3,14 @@
 namespace App\Providers;
 
 use App\Models\TrackedJob;
+use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Queue;
-use Illuminate\Support\ServiceProvider;
+ use Illuminate\Support\Facades\Log;
+ use Illuminate\Support\Facades\Queue;
+ use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
 use Qruto\Flora\Run;
 
 class AppServiceProvider extends ServiceProvider
@@ -34,6 +36,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+        if (config('app.force_https') && $this->app->environment('production')) {
+            \URL::forceScheme('https');
+        }
 
         // Run::newScript(
         //     'build-assets',
