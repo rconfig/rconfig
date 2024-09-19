@@ -413,6 +413,6 @@ Inspiration, code snippets, etc.
 
 - [Laravel](https://www.laravel.com)
 - [vuejs](https://vuejs.org/)
-- [patternfly v4](https://v4-archive.patternfly.org/v4/))
+- [patternfly v4](https://v4-archive.patternfly.org/v4/)
 
 See composer.json and package.json for a full list of dependencies, and their licenses.
