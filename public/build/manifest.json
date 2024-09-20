@@ -1,10 +1,10 @@
 {
   "_ConfigFullScreenView-!~{00D}~.js": {
-    "file": "assets/ConfigFullScreenView-DxHh2wMt.css",
+    "file": "assets/ConfigFullScreenView-4IUC7bzK.css",
     "src": "_ConfigFullScreenView-!~{00D}~.js"
   },
-  "_ConfigFullScreenView-BxxYXOL1.js": {
-    "file": "assets/ConfigFullScreenView-BxxYXOL1.js",
+  "_ConfigFullScreenView-DyM624hf.js": {
+    "file": "assets/ConfigFullScreenView-DyM624hf.js",
     "name": "ConfigFullScreenView",
     "imports": [
       "resources/js/app.js"
@@ -105,7 +105,7 @@
       "node_modules/monaco-editor/esm/vs/language/typescript/tsMode.js"
     ],
     "css": [
-      "assets/ConfigFullScreenView-DxHh2wMt.css"
+      "assets/ConfigFullScreenView-4IUC7bzK.css"
     ],
     "assets": [
       "assets/codicon-DCmgc-ay.ttf"
@@ -115,8 +115,8 @@
     "file": "assets/CopyLogo-CASuJzev.css",
     "src": "_CopyLogo-!~{00s}~.js"
   },
-  "_CopyLogo-abmwTAvG.js": {
-    "file": "assets/CopyLogo-abmwTAvG.js",
+  "_CopyLogo-BpYBUaPy.js": {
+    "file": "assets/CopyLogo-BpYBUaPy.js",
     "name": "CopyLogo",
     "imports": [
       "resources/js/app.js"
@@ -125,116 +125,116 @@
       "assets/CopyLogo-CASuJzev.css"
     ]
   },
-  "_DataTable-Ll-HZChy.js": {
-    "file": "assets/DataTable-Ll-HZChy.js",
+  "_DataTable-CUIHY7XH.js": {
+    "file": "assets/DataTable-CUIHY7XH.js",
     "name": "DataTable",
     "imports": [
-      "_DataTableToolbar-CEtFvXhG.js",
-      "_DataTableSpinner-CZOI5RhJ.js",
-      "_DeleteModal-B1xPwAOz.js",
+      "_DataTableToolbar-3HKV5GpG.js",
+      "_DataTableSpinner-DtqR4biL.js",
+      "_DeleteModal-1HgdmIY5.js",
       "resources/js/app.js"
     ]
   },
-  "_DataTableSpinner-CZOI5RhJ.js": {
-    "file": "assets/DataTableSpinner-CZOI5RhJ.js",
+  "_DataTableSpinner-DtqR4biL.js": {
+    "file": "assets/DataTableSpinner-DtqR4biL.js",
     "name": "DataTableSpinner",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_DataTableToolbar-CEtFvXhG.js": {
-    "file": "assets/DataTableToolbar-CEtFvXhG.js",
+  "_DataTableToolbar-3HKV5GpG.js": {
+    "file": "assets/DataTableToolbar-3HKV5GpG.js",
     "name": "DataTableToolbar",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_DeleteModal-B1xPwAOz.js": {
-    "file": "assets/DeleteModal-B1xPwAOz.js",
+  "_DeleteModal-1HgdmIY5.js": {
+    "file": "assets/DeleteModal-1HgdmIY5.js",
     "name": "DeleteModal",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_DeviceCategoryField-CoSR13se.js": {
-    "file": "assets/DeviceCategoryField-CoSR13se.js",
+  "_DeviceCategoryField-0ZNuvd4N.js": {
+    "file": "assets/DeviceCategoryField-0ZNuvd4N.js",
     "name": "DeviceCategoryField",
     "imports": [
       "resources/js/app.js",
-      "_ViewFunctions-Bspdb8wp.js"
+      "_ViewFunctions-B-wUYZaQ.js"
     ]
   },
-  "_DeviceViewDeviceDetailsDescr-p8KFTTzA.js": {
-    "file": "assets/DeviceViewDeviceDetailsDescr-p8KFTTzA.js",
+  "_DeviceViewDeviceDetailsDescr-Dk6snmB_.js": {
+    "file": "assets/DeviceViewDeviceDetailsDescr-Dk6snmB_.js",
     "name": "DeviceViewDeviceDetailsDescr",
     "imports": [
-      "_CopyLogo-abmwTAvG.js",
+      "_CopyLogo-BpYBUaPy.js",
       "resources/js/app.js"
     ]
   },
-  "_DevicesBreadcrumbs-BXr7Btlr.js": {
-    "file": "assets/DevicesBreadcrumbs-BXr7Btlr.js",
+  "_DevicesBreadcrumbs-DyRf85sM.js": {
+    "file": "assets/DevicesBreadcrumbs-DyRf85sM.js",
     "name": "DevicesBreadcrumbs",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_DevicesForm-CFJ3Pbxh.js": {
-    "file": "assets/DevicesForm-CFJ3Pbxh.js",
+  "_DevicesForm-BLoA824a.js": {
+    "file": "assets/DevicesForm-BLoA824a.js",
     "name": "DevicesForm",
     "imports": [
-      "_DeviceCategoryField-CoSR13se.js",
+      "_DeviceCategoryField-0ZNuvd4N.js",
       "resources/js/app.js",
-      "_MultiSelect-CP6gtt4c.js",
-      "_ViewFunctions-Bspdb8wp.js"
+      "_MultiSelect-B5JrnsG5.js",
+      "_ViewFunctions-B-wUYZaQ.js"
     ]
   },
-  "_HelpContent-CFJhk-PQ.js": {
-    "file": "assets/HelpContent-CFJhk-PQ.js",
+  "_HelpContent-Dx8vRmxi.js": {
+    "file": "assets/HelpContent-Dx8vRmxi.js",
     "name": "HelpContent",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_LoadingSpinner-C_eT8odB.js": {
-    "file": "assets/LoadingSpinner-C_eT8odB.js",
+  "_LoadingSpinner-CxUrzMJq.js": {
+    "file": "assets/LoadingSpinner-CxUrzMJq.js",
     "name": "LoadingSpinner",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_MultiSelect-CP6gtt4c.js": {
-    "file": "assets/MultiSelect-CP6gtt4c.js",
+  "_MultiSelect-B5JrnsG5.js": {
+    "file": "assets/MultiSelect-B5JrnsG5.js",
     "name": "MultiSelect",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_PageHeader-Bl5o5qxR.js": {
-    "file": "assets/PageHeader-Bl5o5qxR.js",
+  "_PageHeader-DVPVCgk1.js": {
+    "file": "assets/PageHeader-DVPVCgk1.js",
     "name": "PageHeader",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_SideDrawer-BAujvkqU.js": {
-    "file": "assets/SideDrawer-BAujvkqU.js",
+  "_SideDrawer-WeZa4FOQ.js": {
+    "file": "assets/SideDrawer-WeZa4FOQ.js",
     "name": "SideDrawer",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_UsersForm-Dnh6QHht.js": {
-    "file": "assets/UsersForm-Dnh6QHht.js",
+  "_UsersForm-CBVbRMPB.js": {
+    "file": "assets/UsersForm-CBVbRMPB.js",
     "name": "UsersForm",
     "imports": [
       "resources/js/app.js",
-      "_ViewFunctions-Bspdb8wp.js",
-      "_LoadingSpinner-C_eT8odB.js"
+      "_ViewFunctions-B-wUYZaQ.js",
+      "_LoadingSpinner-CxUrzMJq.js"
     ]
   },
-  "_ViewFunctions-Bspdb8wp.js": {
-    "file": "assets/ViewFunctions-Bspdb8wp.js",
+  "_ViewFunctions-B-wUYZaQ.js": {
+    "file": "assets/ViewFunctions-B-wUYZaQ.js",
     "name": "ViewFunctions",
     "imports": [
       "resources/js/app.js"
@@ -541,124 +541,124 @@
     "src": "node_modules/monaco-editor/esm/vs/base/browser/ui/codicons/codicon/codicon.ttf"
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/abap/abap.js": {
-    "file": "assets/abap-DRC6TkPh.js",
+    "file": "assets/abap-Dwu-KH2x.js",
     "name": "abap",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/abap/abap.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/apex/apex.js": {
-    "file": "assets/apex-BuapDI9Y.js",
+    "file": "assets/apex-Dn-XaljK.js",
     "name": "apex",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/apex/apex.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/azcli/azcli.js": {
-    "file": "assets/azcli-BypH-vXm.js",
+    "file": "assets/azcli-C9RgAbUI.js",
     "name": "azcli",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/azcli/azcli.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/bat/bat.js": {
-    "file": "assets/bat-BY6pwuIY.js",
+    "file": "assets/bat-CoZ5qQQA.js",
     "name": "bat",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/bat/bat.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/bicep/bicep.js": {
-    "file": "assets/bicep-gRuQeaLk.js",
+    "file": "assets/bicep-BTXPn4uT.js",
     "name": "bicep",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/bicep/bicep.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/cameligo/cameligo.js": {
-    "file": "assets/cameligo-ul-Lp4lw.js",
+    "file": "assets/cameligo-J_4-LjdT.js",
     "name": "cameligo",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/cameligo/cameligo.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/clojure/clojure.js": {
-    "file": "assets/clojure-DeYg-96x.js",
+    "file": "assets/clojure-DDKRPAGl.js",
     "name": "clojure",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/clojure/clojure.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/coffee/coffee.js": {
-    "file": "assets/coffee-CfnpWUYo.js",
+    "file": "assets/coffee-C8z2l6sj.js",
     "name": "coffee",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/coffee/coffee.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/cpp/cpp.js": {
-    "file": "assets/cpp-C9L3yaDO.js",
+    "file": "assets/cpp-DI3p9f9v.js",
     "name": "cpp",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/cpp/cpp.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/csharp/csharp.js": {
-    "file": "assets/csharp-DWGz5Zuj.js",
+    "file": "assets/csharp-Bya7J2fC.js",
     "name": "csharp",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/csharp/csharp.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/csp/csp.js": {
-    "file": "assets/csp-DrRCxMg5.js",
+    "file": "assets/csp-g7vr-vut.js",
     "name": "csp",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/csp/csp.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/css/css.js": {
-    "file": "assets/css-BfLuTCmN.js",
+    "file": "assets/css-fOVBx6Gk.js",
     "name": "css",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/css/css.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/cypher/cypher.js": {
-    "file": "assets/cypher-DoFvH58O.js",
+    "file": "assets/cypher-DciL1opS.js",
     "name": "cypher",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/cypher/cypher.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/dart/dart.js": {
-    "file": "assets/dart-DIovg4uR.js",
+    "file": "assets/dart-CAkRrlCV.js",
     "name": "dart",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/dart/dart.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/dockerfile/dockerfile.js": {
-    "file": "assets/dockerfile-D2PfwrvU.js",
+    "file": "assets/dockerfile-CHkS34TV.js",
     "name": "dockerfile",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/dockerfile/dockerfile.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/ecl/ecl.js": {
-    "file": "assets/ecl-C_scCXcs.js",
+    "file": "assets/ecl-qjrLrnvP.js",
     "name": "ecl",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/ecl/ecl.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/elixir/elixir.js": {
-    "file": "assets/elixir-BRk-K-rg.js",
+    "file": "assets/elixir-Bn2aVyyF.js",
     "name": "elixir",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/elixir/elixir.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/flow9/flow9.js": {
-    "file": "assets/flow9-DLs3tTet.js",
+    "file": "assets/flow9-CcGMeAxr.js",
     "name": "flow9",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/flow9/flow9.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/freemarker2/freemarker2.js": {
-    "file": "assets/freemarker2-ZfZLA9Y8.js",
+    "file": "assets/freemarker2-zdAkFRAq.js",
     "name": "freemarker2",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/freemarker2/freemarker2.js",
     "isDynamicEntry": true,
     "imports": [
-      "_ConfigFullScreenView-BxxYXOL1.js",
+      "_ConfigFullScreenView-DyM624hf.js",
       "resources/js/app.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -744,34 +744,34 @@
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/fsharp/fsharp.js": {
-    "file": "assets/fsharp-D0UiDa5C.js",
+    "file": "assets/fsharp-P5WqO7sL.js",
     "name": "fsharp",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/fsharp/fsharp.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/go/go.js": {
-    "file": "assets/go-CyVeKkvQ.js",
+    "file": "assets/go-DHzw8g6E.js",
     "name": "go",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/go/go.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/graphql/graphql.js": {
-    "file": "assets/graphql-BygKL3ZF.js",
+    "file": "assets/graphql-DHR0rah7.js",
     "name": "graphql",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/graphql/graphql.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/handlebars/handlebars.js": {
-    "file": "assets/handlebars-DWiuYsTU.js",
+    "file": "assets/handlebars-6nwRu9yM.js",
     "name": "handlebars",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/handlebars/handlebars.js",
     "isDynamicEntry": true,
     "imports": [
-      "_ConfigFullScreenView-BxxYXOL1.js",
+      "_ConfigFullScreenView-DyM624hf.js",
       "resources/js/app.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -857,22 +857,22 @@
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/hcl/hcl.js": {
-    "file": "assets/hcl-D_OY6ada.js",
+    "file": "assets/hcl-C75BKXms.js",
     "name": "hcl",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/hcl/hcl.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/html/html.js": {
-    "file": "assets/html-BkoXxt6v.js",
+    "file": "assets/html-DEbLLaKT.js",
     "name": "html",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/html/html.js",
     "isDynamicEntry": true,
     "imports": [
-      "_ConfigFullScreenView-BxxYXOL1.js",
+      "_ConfigFullScreenView-DyM624hf.js",
       "resources/js/app.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -958,29 +958,29 @@
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/ini/ini.js": {
-    "file": "assets/ini-BTpWsGps.js",
+    "file": "assets/ini-BJrO4HmQ.js",
     "name": "ini",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/ini/ini.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/java/java.js": {
-    "file": "assets/java-3TATJI7h.js",
+    "file": "assets/java-BZVcG1df.js",
     "name": "java",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/java/java.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/javascript/javascript.js": {
-    "file": "assets/javascript-CkdVMVNq.js",
+    "file": "assets/javascript-CzD74UT2.js",
     "name": "javascript",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/javascript/javascript.js",
     "isDynamicEntry": true,
     "imports": [
       "node_modules/monaco-editor/esm/vs/basic-languages/typescript/typescript.js",
-      "_ConfigFullScreenView-BxxYXOL1.js",
+      "_ConfigFullScreenView-DyM624hf.js",
       "resources/js/app.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -1066,40 +1066,40 @@
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/julia/julia.js": {
-    "file": "assets/julia-DDpSJMW6.js",
+    "file": "assets/julia-y6tXNwRO.js",
     "name": "julia",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/julia/julia.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/kotlin/kotlin.js": {
-    "file": "assets/kotlin-DVYH6Lj_.js",
+    "file": "assets/kotlin-a3XSJ_gM.js",
     "name": "kotlin",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/kotlin/kotlin.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/less/less.js": {
-    "file": "assets/less-CuFlys0T.js",
+    "file": "assets/less-DFUTkVLx.js",
     "name": "less",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/less/less.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/lexon/lexon.js": {
-    "file": "assets/lexon-m09vb5r-.js",
+    "file": "assets/lexon-DVsYuwex.js",
     "name": "lexon",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/lexon/lexon.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/liquid/liquid.js": {
-    "file": "assets/liquid-BDbeaAQe.js",
+    "file": "assets/liquid-pG5LQvZh.js",
     "name": "liquid",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/liquid/liquid.js",
     "isDynamicEntry": true,
     "imports": [
-      "_ConfigFullScreenView-BxxYXOL1.js",
+      "_ConfigFullScreenView-DyM624hf.js",
       "resources/js/app.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -1185,34 +1185,34 @@
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/lua/lua.js": {
-    "file": "assets/lua-D2Z7JJdl.js",
+    "file": "assets/lua-DYx-Jejz.js",
     "name": "lua",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/lua/lua.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/m3/m3.js": {
-    "file": "assets/m3-B2Cf9XSq.js",
+    "file": "assets/m3-BMrvfaad.js",
     "name": "m3",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/m3/m3.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/markdown/markdown.js": {
-    "file": "assets/markdown-BXYnMxBe.js",
+    "file": "assets/markdown-DuPmBnHi.js",
     "name": "markdown",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/markdown/markdown.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/mdx/mdx.js": {
-    "file": "assets/mdx-BJVPMyQm.js",
+    "file": "assets/mdx--YMrVyFn.js",
     "name": "mdx",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/mdx/mdx.js",
     "isDynamicEntry": true,
     "imports": [
-      "_ConfigFullScreenView-BxxYXOL1.js",
+      "_ConfigFullScreenView-DyM624hf.js",
       "resources/js/app.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -1298,106 +1298,106 @@
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/mips/mips.js": {
-    "file": "assets/mips-Ckkbw-AO.js",
+    "file": "assets/mips-BqUeXQd9.js",
     "name": "mips",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/mips/mips.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/msdax/msdax.js": {
-    "file": "assets/msdax-B5uW3Zvf.js",
+    "file": "assets/msdax-Dw-TSVhm.js",
     "name": "msdax",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/msdax/msdax.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/mysql/mysql.js": {
-    "file": "assets/mysql-B8ssZoUh.js",
+    "file": "assets/mysql-CcpH9Ljq.js",
     "name": "mysql",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/mysql/mysql.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/objective-c/objective-c.js": {
-    "file": "assets/objective-c-CrrKwR0a.js",
+    "file": "assets/objective-c-BRNxDdm3.js",
     "name": "objective-c",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/objective-c/objective-c.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/pascal/pascal.js": {
-    "file": "assets/pascal-BWBTHuhh.js",
+    "file": "assets/pascal-Cn8aAeCV.js",
     "name": "pascal",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/pascal/pascal.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/pascaligo/pascaligo.js": {
-    "file": "assets/pascaligo-BGLI1Hdo.js",
+    "file": "assets/pascaligo-dBAnVStS.js",
     "name": "pascaligo",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/pascaligo/pascaligo.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/perl/perl.js": {
-    "file": "assets/perl-DDrv2Hr-.js",
+    "file": "assets/perl-C4L3BrdA.js",
     "name": "perl",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/perl/perl.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/pgsql/pgsql.js": {
-    "file": "assets/pgsql-DLPipH_Q.js",
+    "file": "assets/pgsql-BOSk5tQb.js",
     "name": "pgsql",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/pgsql/pgsql.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/php/php.js": {
-    "file": "assets/php-CTNlIIiR.js",
+    "file": "assets/php-DzsKq5vr.js",
     "name": "php",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/php/php.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/pla/pla.js": {
-    "file": "assets/pla-2oJWbEOo.js",
+    "file": "assets/pla-C6GoMDq5.js",
     "name": "pla",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/pla/pla.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/postiats/postiats.js": {
-    "file": "assets/postiats-DOk3G3cc.js",
+    "file": "assets/postiats-DQpJ_7Kk.js",
     "name": "postiats",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/postiats/postiats.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/powerquery/powerquery.js": {
-    "file": "assets/powerquery-Dgyr3wWZ.js",
+    "file": "assets/powerquery-M-mSA4YD.js",
     "name": "powerquery",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/powerquery/powerquery.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/powershell/powershell.js": {
-    "file": "assets/powershell-B_i9asfM.js",
+    "file": "assets/powershell-DzOgjbHk.js",
     "name": "powershell",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/powershell/powershell.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/protobuf/protobuf.js": {
-    "file": "assets/protobuf-CV9EbfTh.js",
+    "file": "assets/protobuf-BIE5FnyZ.js",
     "name": "protobuf",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/protobuf/protobuf.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/pug/pug.js": {
-    "file": "assets/pug-CCBS_C5_.js",
+    "file": "assets/pug-s9KOoKAL.js",
     "name": "pug",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/pug/pug.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/python/python.js": {
-    "file": "assets/python-DOQrbASj.js",
+    "file": "assets/python-uS2kHHOM.js",
     "name": "python",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/python/python.js",
     "isDynamicEntry": true,
     "imports": [
-      "_ConfigFullScreenView-BxxYXOL1.js",
+      "_ConfigFullScreenView-DyM624hf.js",
       "resources/js/app.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -1483,28 +1483,28 @@
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/qsharp/qsharp.js": {
-    "file": "assets/qsharp-BLuZWbUW.js",
+    "file": "assets/qsharp-DWDrKSir.js",
     "name": "qsharp",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/qsharp/qsharp.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/r/r.js": {
-    "file": "assets/r-CzF1MCbP.js",
+    "file": "assets/r-DnKTOUT4.js",
     "name": "r",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/r/r.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/razor/razor.js": {
-    "file": "assets/razor-iz0PzcH5.js",
+    "file": "assets/razor-DGRVrb4B.js",
     "name": "razor",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/razor/razor.js",
     "isDynamicEntry": true,
     "imports": [
-      "_ConfigFullScreenView-BxxYXOL1.js",
+      "_ConfigFullScreenView-DyM624hf.js",
       "resources/js/app.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -1590,130 +1590,130 @@
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/redis/redis.js": {
-    "file": "assets/redis-C75U4IDy.js",
+    "file": "assets/redis-CWZNkOVt.js",
     "name": "redis",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/redis/redis.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/redshift/redshift.js": {
-    "file": "assets/redshift-Bc5xkKR1.js",
+    "file": "assets/redshift-Bhrh1xcx.js",
     "name": "redshift",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/redshift/redshift.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/restructuredtext/restructuredtext.js": {
-    "file": "assets/restructuredtext-DmdQbaLT.js",
+    "file": "assets/restructuredtext-CWmU_seV.js",
     "name": "restructuredtext",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/restructuredtext/restructuredtext.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/ruby/ruby.js": {
-    "file": "assets/ruby-DB0RB20n.js",
+    "file": "assets/ruby-2Tz7EiV8.js",
     "name": "ruby",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/ruby/ruby.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/rust/rust.js": {
-    "file": "assets/rust-UMmp-gVE.js",
+    "file": "assets/rust-CrxrYIVW.js",
     "name": "rust",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/rust/rust.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/sb/sb.js": {
-    "file": "assets/sb-DVG02705.js",
+    "file": "assets/sb-DkpzO6Ij.js",
     "name": "sb",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/sb/sb.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/scala/scala.js": {
-    "file": "assets/scala-DvSxYeG4.js",
+    "file": "assets/scala-Du7mGxrp.js",
     "name": "scala",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/scala/scala.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/scheme/scheme.js": {
-    "file": "assets/scheme-yf5bffbF.js",
+    "file": "assets/scheme-DnCYVA2x.js",
     "name": "scheme",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/scheme/scheme.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/scss/scss.js": {
-    "file": "assets/scss-Bzb7OGdO.js",
+    "file": "assets/scss-3iLYYaxs.js",
     "name": "scss",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/scss/scss.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/shell/shell.js": {
-    "file": "assets/shell-FNqbgIOG.js",
+    "file": "assets/shell-D4ITwtg2.js",
     "name": "shell",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/shell/shell.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/solidity/solidity.js": {
-    "file": "assets/solidity-DyKutqhl.js",
+    "file": "assets/solidity-Bq53zNw4.js",
     "name": "solidity",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/solidity/solidity.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/sophia/sophia.js": {
-    "file": "assets/sophia-B4VqtPa2.js",
+    "file": "assets/sophia-BtzCauDs.js",
     "name": "sophia",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/sophia/sophia.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/sparql/sparql.js": {
-    "file": "assets/sparql-B7alP455.js",
+    "file": "assets/sparql-7--tI-JV.js",
     "name": "sparql",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/sparql/sparql.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/sql/sql.js": {
-    "file": "assets/sql-D7lU1fdU.js",
+    "file": "assets/sql-B8Hnjumu.js",
     "name": "sql",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/sql/sql.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/st/st.js": {
-    "file": "assets/st-VuadG5SK.js",
+    "file": "assets/st-BtpAQKub.js",
     "name": "st",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/st/st.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/swift/swift.js": {
-    "file": "assets/swift-BYtUz8ZP.js",
+    "file": "assets/swift-CVGPmAnX.js",
     "name": "swift",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/swift/swift.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/systemverilog/systemverilog.js": {
-    "file": "assets/systemverilog-DOAuugfS.js",
+    "file": "assets/systemverilog-CzfWLrvP.js",
     "name": "systemverilog",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/systemverilog/systemverilog.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/tcl/tcl.js": {
-    "file": "assets/tcl-CXKOl_mN.js",
+    "file": "assets/tcl-0V1PA5XN.js",
     "name": "tcl",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/tcl/tcl.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/twig/twig.js": {
-    "file": "assets/twig-D9yiNO04.js",
+    "file": "assets/twig-BwWq3-l7.js",
     "name": "twig",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/twig/twig.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/typescript/typescript.js": {
-    "file": "assets/typescript-C0hYC4aj.js",
+    "file": "assets/typescript-DXVVF4F4.js",
     "name": "typescript",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/typescript/typescript.js",
     "isDynamicEntry": true,
     "imports": [
-      "_ConfigFullScreenView-BxxYXOL1.js",
+      "_ConfigFullScreenView-DyM624hf.js",
       "resources/js/app.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -1799,34 +1799,34 @@
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/typespec/typespec.js": {
-    "file": "assets/typespec-BupSXVCO.js",
+    "file": "assets/typespec-B73e1L9X.js",
     "name": "typespec",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/typespec/typespec.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/vb/vb.js": {
-    "file": "assets/vb-ZlaFEk-P.js",
+    "file": "assets/vb-ByO2b-39.js",
     "name": "vb",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/vb/vb.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/wgsl/wgsl.js": {
-    "file": "assets/wgsl-B-lZjTdr.js",
+    "file": "assets/wgsl-DYQqGqAW.js",
     "name": "wgsl",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/wgsl/wgsl.js",
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/xml/xml.js": {
-    "file": "assets/xml-CDa6W3IO.js",
+    "file": "assets/xml-B3qPOsV-.js",
     "name": "xml",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/xml/xml.js",
     "isDynamicEntry": true,
     "imports": [
-      "_ConfigFullScreenView-BxxYXOL1.js",
+      "_ConfigFullScreenView-DyM624hf.js",
       "resources/js/app.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -1912,16 +1912,16 @@
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/yaml/yaml.js": {
-    "file": "assets/yaml-Crj5LdZf.js",
+    "file": "assets/yaml-Bgs32Ohm.js",
     "name": "yaml",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/yaml/yaml.js",
     "isDynamicEntry": true,
     "imports": [
-      "_ConfigFullScreenView-BxxYXOL1.js",
+      "_ConfigFullScreenView-DyM624hf.js",
       "resources/js/app.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -2007,16 +2007,16 @@
     ]
   },
   "node_modules/monaco-editor/esm/vs/language/css/cssMode.js": {
-    "file": "assets/cssMode-XjiJd_6j.js",
+    "file": "assets/cssMode-B4HY7XzH.js",
     "name": "cssMode",
     "src": "node_modules/monaco-editor/esm/vs/language/css/cssMode.js",
     "isDynamicEntry": true,
     "imports": [
-      "_ConfigFullScreenView-BxxYXOL1.js",
+      "_ConfigFullScreenView-DyM624hf.js",
       "resources/js/app.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -2102,16 +2102,16 @@
     ]
   },
   "node_modules/monaco-editor/esm/vs/language/html/htmlMode.js": {
-    "file": "assets/htmlMode--0ZeXbUd.js",
+    "file": "assets/htmlMode-D9IssiFG.js",
     "name": "htmlMode",
     "src": "node_modules/monaco-editor/esm/vs/language/html/htmlMode.js",
     "isDynamicEntry": true,
     "imports": [
-      "_ConfigFullScreenView-BxxYXOL1.js",
+      "_ConfigFullScreenView-DyM624hf.js",
       "resources/js/app.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -2197,16 +2197,16 @@
     ]
   },
   "node_modules/monaco-editor/esm/vs/language/json/jsonMode.js": {
-    "file": "assets/jsonMode-b2nHcDKP.js",
+    "file": "assets/jsonMode-CpHInpbs.js",
     "name": "jsonMode",
     "src": "node_modules/monaco-editor/esm/vs/language/json/jsonMode.js",
     "isDynamicEntry": true,
     "imports": [
-      "_ConfigFullScreenView-BxxYXOL1.js",
+      "_ConfigFullScreenView-DyM624hf.js",
       "resources/js/app.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -2292,16 +2292,16 @@
     ]
   },
   "node_modules/monaco-editor/esm/vs/language/typescript/tsMode.js": {
-    "file": "assets/tsMode-CXMYA9Iz.js",
+    "file": "assets/tsMode-D86yB-Le.js",
     "name": "tsMode",
     "src": "node_modules/monaco-editor/esm/vs/language/typescript/tsMode.js",
     "isDynamicEntry": true,
     "imports": [
-      "_ConfigFullScreenView-BxxYXOL1.js",
+      "_ConfigFullScreenView-DyM624hf.js",
       "resources/js/app.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -2387,7 +2387,7 @@
     ]
   },
   "resources/css/app.css": {
-    "file": "assets/app-Bbso-sEm.css",
+    "file": "assets/app-DvPRDbNx.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
@@ -2420,7 +2420,7 @@
     "src": "resources/images/login_background/rconfig_msp_992@2x.png"
   },
   "resources/js/app.js": {
-    "file": "assets/app-DWPMZhx6.js",
+    "file": "assets/app-CMvkN1B1.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -2454,8 +2454,8 @@
       "resources/js/views/PageNotFound.vue"
     ],
     "css": [
-      "assets/app-DSjnyYj-.css",
-      "assets/app-Bbso-sEm.css"
+      "assets/app-oTxCVnAD.css",
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -2541,22 +2541,22 @@
     ]
   },
   "resources/js/views/ActivityLog.vue": {
-    "file": "assets/ActivityLog-DT4kBdqQ.js",
+    "file": "assets/ActivityLog-BrPHpw0O.js",
     "name": "ActivityLog",
     "src": "resources/js/views/ActivityLog.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_ViewFunctions-Bspdb8wp.js",
-      "_PageHeader-Bl5o5qxR.js",
+      "_ViewFunctions-B-wUYZaQ.js",
+      "_PageHeader-DVPVCgk1.js",
       "resources/js/app.js",
-      "_DeleteModal-B1xPwAOz.js",
-      "_DataTableSpinner-CZOI5RhJ.js",
-      "_DataTableToolbar-CEtFvXhG.js",
-      "_UsersForm-Dnh6QHht.js",
-      "_LoadingSpinner-C_eT8odB.js"
+      "_DeleteModal-1HgdmIY5.js",
+      "_DataTableSpinner-DtqR4biL.js",
+      "_DataTableToolbar-3HKV5GpG.js",
+      "_UsersForm-CBVbRMPB.js",
+      "_LoadingSpinner-CxUrzMJq.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -2642,23 +2642,23 @@
     ]
   },
   "resources/js/views/Categorys.vue": {
-    "file": "assets/Categorys-DzER-YQx.js",
+    "file": "assets/Categorys-C8oAY1AI.js",
     "name": "Categorys",
     "src": "resources/js/views/Categorys.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_ViewFunctions-Bspdb8wp.js",
-      "_PageHeader-Bl5o5qxR.js",
-      "_DataTable-Ll-HZChy.js",
-      "_SideDrawer-BAujvkqU.js",
-      "_DeleteModal-B1xPwAOz.js",
+      "_ViewFunctions-B-wUYZaQ.js",
+      "_PageHeader-DVPVCgk1.js",
+      "_DataTable-CUIHY7XH.js",
+      "_SideDrawer-WeZa4FOQ.js",
+      "_DeleteModal-1HgdmIY5.js",
       "resources/js/app.js",
-      "_LoadingSpinner-C_eT8odB.js",
-      "_DataTableToolbar-CEtFvXhG.js",
-      "_DataTableSpinner-CZOI5RhJ.js"
+      "_LoadingSpinner-CxUrzMJq.js",
+      "_DataTableToolbar-3HKV5GpG.js",
+      "_DataTableSpinner-DtqR4biL.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -2744,23 +2744,23 @@
     ]
   },
   "resources/js/views/Commands.vue": {
-    "file": "assets/Commands-dYBk9U-E.js",
+    "file": "assets/Commands-BpXh_Yu2.js",
     "name": "Commands",
     "src": "resources/js/views/Commands.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_ViewFunctions-Bspdb8wp.js",
-      "_PageHeader-Bl5o5qxR.js",
-      "_DataTableToolbar-CEtFvXhG.js",
-      "_DataTableSpinner-CZOI5RhJ.js",
-      "_DeleteModal-B1xPwAOz.js",
+      "_ViewFunctions-B-wUYZaQ.js",
+      "_PageHeader-DVPVCgk1.js",
+      "_DataTableToolbar-3HKV5GpG.js",
+      "_DataTableSpinner-DtqR4biL.js",
+      "_DeleteModal-1HgdmIY5.js",
       "resources/js/app.js",
-      "_SideDrawer-BAujvkqU.js",
-      "_LoadingSpinner-C_eT8odB.js",
-      "_MultiSelect-CP6gtt4c.js"
+      "_SideDrawer-WeZa4FOQ.js",
+      "_LoadingSpinner-CxUrzMJq.js",
+      "_MultiSelect-B5JrnsG5.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -2846,22 +2846,22 @@
     ]
   },
   "resources/js/views/ConfigReports.vue": {
-    "file": "assets/ConfigReports-C90oN_1t.js",
+    "file": "assets/ConfigReports-BTHF8Yu9.js",
     "name": "ConfigReports",
     "src": "resources/js/views/ConfigReports.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_ViewFunctions-Bspdb8wp.js",
-      "_PageHeader-Bl5o5qxR.js",
-      "_DataTableToolbar-CEtFvXhG.js",
-      "_DataTableSpinner-CZOI5RhJ.js",
-      "_DeleteModal-B1xPwAOz.js",
+      "_ViewFunctions-B-wUYZaQ.js",
+      "_PageHeader-DVPVCgk1.js",
+      "_DataTableToolbar-3HKV5GpG.js",
+      "_DataTableSpinner-DtqR4biL.js",
+      "_DeleteModal-1HgdmIY5.js",
       "resources/js/app.js",
-      "_SideDrawer-BAujvkqU.js",
-      "_LoadingSpinner-C_eT8odB.js"
+      "_SideDrawer-WeZa4FOQ.js",
+      "_LoadingSpinner-CxUrzMJq.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -2947,21 +2947,21 @@
     ]
   },
   "resources/js/views/ConfigSearch.vue": {
-    "file": "assets/ConfigSearch-CoCE0ne4.js",
+    "file": "assets/ConfigSearch-CfbGQMAT.js",
     "name": "ConfigSearch",
     "src": "resources/js/views/ConfigSearch.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_PageHeader-Bl5o5qxR.js",
-      "_LoadingSpinner-C_eT8odB.js",
+      "_PageHeader-DVPVCgk1.js",
+      "_LoadingSpinner-CxUrzMJq.js",
       "_scrollToBottom-Cz-iWedv.js",
-      "_DeviceCategoryField-CoSR13se.js",
-      "_CopyLogo-abmwTAvG.js",
-      "_ViewFunctions-Bspdb8wp.js"
+      "_DeviceCategoryField-0ZNuvd4N.js",
+      "_CopyLogo-BpYBUaPy.js",
+      "_ViewFunctions-B-wUYZaQ.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -3047,19 +3047,19 @@
     ]
   },
   "resources/js/views/Dashboard.vue": {
-    "file": "assets/Dashboard-BDJRXBqU.js",
+    "file": "assets/Dashboard-DHumjzGE.js",
     "name": "Dashboard",
     "src": "resources/js/views/Dashboard.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_HelpContent-CFJhk-PQ.js",
-      "_PageHeader-Bl5o5qxR.js",
-      "_DeviceViewDeviceDetailsDescr-p8KFTTzA.js",
-      "_CopyLogo-abmwTAvG.js"
+      "_HelpContent-Dx8vRmxi.js",
+      "_PageHeader-DVPVCgk1.js",
+      "_DeviceViewDeviceDetailsDescr-Dk6snmB_.js",
+      "_CopyLogo-BpYBUaPy.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -3145,25 +3145,25 @@
     ]
   },
   "resources/js/views/Devices.vue": {
-    "file": "assets/Devices-BKJGI-01.js",
+    "file": "assets/Devices-BmMmVZXc.js",
     "name": "Devices",
     "src": "resources/js/views/Devices.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_DeleteModal-B1xPwAOz.js",
-      "_DataTableSpinner-CZOI5RhJ.js",
+      "_DeleteModal-1HgdmIY5.js",
+      "_DataTableSpinner-DtqR4biL.js",
       "resources/js/app.js",
-      "_MultiSelect-CP6gtt4c.js",
-      "_DevicesBreadcrumbs-BXr7Btlr.js",
-      "_DevicesForm-CFJ3Pbxh.js",
-      "_PageHeader-Bl5o5qxR.js",
-      "_SideDrawer-BAujvkqU.js",
-      "_ViewFunctions-Bspdb8wp.js",
-      "_DeviceCategoryField-CoSR13se.js"
+      "_MultiSelect-B5JrnsG5.js",
+      "_DevicesBreadcrumbs-DyRf85sM.js",
+      "_DevicesForm-BLoA824a.js",
+      "_PageHeader-DVPVCgk1.js",
+      "_SideDrawer-WeZa4FOQ.js",
+      "_ViewFunctions-B-wUYZaQ.js",
+      "_DeviceCategoryField-0ZNuvd4N.js"
     ],
     "css": [
       "assets/Devices-BhUHyFz_.css",
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -3249,23 +3249,23 @@
     ]
   },
   "resources/js/views/DevicesViews/DeviceConfigs.vue": {
-    "file": "assets/DeviceConfigs-Dyblbd3A.js",
+    "file": "assets/DeviceConfigs-B3JBMMgC.js",
     "name": "DeviceConfigs",
     "src": "resources/js/views/DevicesViews/DeviceConfigs.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_DataTableToolbar-CEtFvXhG.js",
-      "_DataTableSpinner-CZOI5RhJ.js",
-      "_DeleteModal-B1xPwAOz.js",
+      "_DataTableToolbar-3HKV5GpG.js",
+      "_DataTableSpinner-DtqR4biL.js",
+      "_DeleteModal-1HgdmIY5.js",
       "resources/js/app.js",
-      "_DevicesBreadcrumbs-BXr7Btlr.js",
-      "_LoadingSpinner-C_eT8odB.js",
-      "_PageHeader-Bl5o5qxR.js",
-      "_ViewFunctions-Bspdb8wp.js"
+      "_DevicesBreadcrumbs-DyRf85sM.js",
+      "_LoadingSpinner-CxUrzMJq.js",
+      "_PageHeader-DVPVCgk1.js",
+      "_ViewFunctions-B-wUYZaQ.js"
     ],
     "css": [
       "assets/DeviceConfigs-DF7c6500.css",
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -3351,23 +3351,23 @@
     ]
   },
   "resources/js/views/DevicesViews/DeviceEventLog.vue": {
-    "file": "assets/DeviceEventLog-DNu_0WWN.js",
+    "file": "assets/DeviceEventLog-DGXB4nvm.js",
     "name": "DeviceEventLog",
     "src": "resources/js/views/DevicesViews/DeviceEventLog.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_DataTable-Ll-HZChy.js",
-      "_DevicesBreadcrumbs-BXr7Btlr.js",
-      "_LoadingSpinner-C_eT8odB.js",
-      "_PageHeader-Bl5o5qxR.js",
-      "_ViewFunctions-Bspdb8wp.js",
-      "_DeleteModal-B1xPwAOz.js",
+      "_DataTable-CUIHY7XH.js",
+      "_DevicesBreadcrumbs-DyRf85sM.js",
+      "_LoadingSpinner-CxUrzMJq.js",
+      "_PageHeader-DVPVCgk1.js",
+      "_ViewFunctions-B-wUYZaQ.js",
+      "_DeleteModal-1HgdmIY5.js",
       "resources/js/app.js",
-      "_DataTableToolbar-CEtFvXhG.js",
-      "_DataTableSpinner-CZOI5RhJ.js"
+      "_DataTableToolbar-3HKV5GpG.js",
+      "_DataTableSpinner-DtqR4biL.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -3453,25 +3453,25 @@
     ]
   },
   "resources/js/views/DevicesViews/DeviceView.vue": {
-    "file": "assets/DeviceView-DZ7m6qZl.js",
+    "file": "assets/DeviceView-Cl1Hb6sD.js",
     "name": "DeviceView",
     "src": "resources/js/views/DevicesViews/DeviceView.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_DeviceViewDeviceDetailsDescr-p8KFTTzA.js",
-      "_DevicesBreadcrumbs-BXr7Btlr.js",
-      "_DevicesForm-CFJ3Pbxh.js",
-      "_LoadingSpinner-C_eT8odB.js",
-      "_PageHeader-Bl5o5qxR.js",
-      "_SideDrawer-BAujvkqU.js",
-      "_ViewFunctions-Bspdb8wp.js",
-      "_CopyLogo-abmwTAvG.js",
-      "_DeviceCategoryField-CoSR13se.js",
-      "_MultiSelect-CP6gtt4c.js"
+      "_DeviceViewDeviceDetailsDescr-Dk6snmB_.js",
+      "_DevicesBreadcrumbs-DyRf85sM.js",
+      "_DevicesForm-BLoA824a.js",
+      "_LoadingSpinner-CxUrzMJq.js",
+      "_PageHeader-DVPVCgk1.js",
+      "_SideDrawer-WeZa4FOQ.js",
+      "_ViewFunctions-B-wUYZaQ.js",
+      "_CopyLogo-BpYBUaPy.js",
+      "_DeviceCategoryField-0ZNuvd4N.js",
+      "_MultiSelect-B5JrnsG5.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -3557,23 +3557,23 @@
     ]
   },
   "resources/js/views/DevicesViews/DeviceViewConfig.vue": {
-    "file": "assets/DeviceViewConfig-Butn2JIO.js",
+    "file": "assets/DeviceViewConfig-BB_lD_6Z.js",
     "name": "DeviceViewConfig",
     "src": "resources/js/views/DevicesViews/DeviceViewConfig.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_ConfigFullScreenView-BxxYXOL1.js",
-      "_DeviceViewDeviceDetailsDescr-p8KFTTzA.js",
+      "_ConfigFullScreenView-DyM624hf.js",
+      "_DeviceViewDeviceDetailsDescr-Dk6snmB_.js",
       "resources/js/app.js",
-      "_DevicesBreadcrumbs-BXr7Btlr.js",
-      "_LoadingSpinner-C_eT8odB.js",
-      "_PageHeader-Bl5o5qxR.js",
-      "_SideDrawer-BAujvkqU.js",
-      "_CopyLogo-abmwTAvG.js"
+      "_DevicesBreadcrumbs-DyRf85sM.js",
+      "_LoadingSpinner-CxUrzMJq.js",
+      "_PageHeader-DVPVCgk1.js",
+      "_SideDrawer-WeZa4FOQ.js",
+      "_CopyLogo-BpYBUaPy.js"
     ],
     "css": [
       "assets/DeviceViewConfig-CuQQxSZF.css",
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -3659,7 +3659,7 @@
     ]
   },
   "resources/js/views/PageNotFound.vue": {
-    "file": "assets/PageNotFound-D-r0F1VP.js",
+    "file": "assets/PageNotFound-CjgxwSmR.js",
     "name": "PageNotFound",
     "src": "resources/js/views/PageNotFound.vue",
     "isDynamicEntry": true,
@@ -3667,7 +3667,7 @@
       "resources/js/app.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -3753,18 +3753,18 @@
     ]
   },
   "resources/js/views/Settings.vue": {
-    "file": "assets/Settings-B2xIaQw4.js",
+    "file": "assets/Settings-Zlt2WCb9.js",
     "name": "Settings",
     "src": "resources/js/views/Settings.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_ViewFunctions-Bspdb8wp.js",
-      "_PageHeader-Bl5o5qxR.js",
+      "_ViewFunctions-B-wUYZaQ.js",
+      "_PageHeader-DVPVCgk1.js",
       "resources/js/app.js"
     ],
     "css": [
       "assets/Settings-DmgWRcuM.css",
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -3850,16 +3850,16 @@
     ]
   },
   "resources/js/views/SettingsTabs/0Overview.vue": {
-    "file": "assets/0Overview-CWD_Notu.js",
+    "file": "assets/0Overview-CDe4OOlI.js",
     "name": "0Overview",
     "src": "resources/js/views/SettingsTabs/0Overview.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_HelpContent-CFJhk-PQ.js",
+      "_HelpContent-Dx8vRmxi.js",
       "resources/js/app.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -3945,16 +3945,16 @@
     ]
   },
   "resources/js/views/SettingsTabs/10About.vue": {
-    "file": "assets/10About-Bc9INAdh.js",
+    "file": "assets/10About-C57HWxIL.js",
     "name": "10About",
     "src": "resources/js/views/SettingsTabs/10About.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_DataTableSpinner-CZOI5RhJ.js",
+      "_DataTableSpinner-DtqR4biL.js",
       "resources/js/app.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -4040,7 +4040,7 @@
     ]
   },
   "resources/js/views/SettingsTabs/1System.vue": {
-    "file": "assets/1System-RojBDS12.js",
+    "file": "assets/1System-CJxbGKzd.js",
     "name": "1System",
     "src": "resources/js/views/SettingsTabs/1System.vue",
     "isDynamicEntry": true,
@@ -4049,7 +4049,7 @@
       "_scrollToBottom-Cz-iWedv.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -4135,7 +4135,7 @@
     ]
   },
   "resources/js/views/SettingsTabs/4Security.vue": {
-    "file": "assets/4Security-DlhnKWNx.js",
+    "file": "assets/4Security-CpXKGVz7.js",
     "name": "4Security",
     "src": "resources/js/views/SettingsTabs/4Security.vue",
     "isDynamicEntry": true,
@@ -4143,7 +4143,7 @@
       "resources/js/app.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -4229,23 +4229,23 @@
     ]
   },
   "resources/js/views/Tags.vue": {
-    "file": "assets/Tags-MPOPrSUl.js",
+    "file": "assets/Tags-DMeLK74F.js",
     "name": "Tags",
     "src": "resources/js/views/Tags.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_ViewFunctions-Bspdb8wp.js",
-      "_PageHeader-Bl5o5qxR.js",
-      "_DataTable-Ll-HZChy.js",
-      "_SideDrawer-BAujvkqU.js",
-      "_DeleteModal-B1xPwAOz.js",
+      "_ViewFunctions-B-wUYZaQ.js",
+      "_PageHeader-DVPVCgk1.js",
+      "_DataTable-CUIHY7XH.js",
+      "_SideDrawer-WeZa4FOQ.js",
+      "_DeleteModal-1HgdmIY5.js",
       "resources/js/app.js",
-      "_LoadingSpinner-C_eT8odB.js",
-      "_DataTableToolbar-CEtFvXhG.js",
-      "_DataTableSpinner-CZOI5RhJ.js"
+      "_LoadingSpinner-CxUrzMJq.js",
+      "_DataTableToolbar-3HKV5GpG.js",
+      "_DataTableSpinner-DtqR4biL.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -4331,24 +4331,24 @@
     ]
   },
   "resources/js/views/Tasks.vue": {
-    "file": "assets/Tasks-BQhUXWqn.js",
+    "file": "assets/Tasks-UScrc2bX.js",
     "name": "Tasks",
     "src": "resources/js/views/Tasks.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_DataTable-Ll-HZChy.js",
-      "_DeleteModal-B1xPwAOz.js",
-      "_LoadingSpinner-C_eT8odB.js",
-      "_PageHeader-Bl5o5qxR.js",
-      "_SideDrawer-BAujvkqU.js",
-      "_ViewFunctions-Bspdb8wp.js",
-      "_MultiSelect-CP6gtt4c.js",
-      "_DataTableToolbar-CEtFvXhG.js",
-      "_DataTableSpinner-CZOI5RhJ.js"
+      "_DataTable-CUIHY7XH.js",
+      "_DeleteModal-1HgdmIY5.js",
+      "_LoadingSpinner-CxUrzMJq.js",
+      "_PageHeader-DVPVCgk1.js",
+      "_SideDrawer-WeZa4FOQ.js",
+      "_ViewFunctions-B-wUYZaQ.js",
+      "_MultiSelect-B5JrnsG5.js",
+      "_DataTableToolbar-3HKV5GpG.js",
+      "_DataTableSpinner-DtqR4biL.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -4434,24 +4434,24 @@
     ]
   },
   "resources/js/views/Templates.vue": {
-    "file": "assets/Templates-mwEhUadq.js",
+    "file": "assets/Templates-D-WEzOmo.js",
     "name": "Templates",
     "src": "resources/js/views/Templates.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_ViewFunctions-Bspdb8wp.js",
-      "_PageHeader-Bl5o5qxR.js",
-      "_DataTable-Ll-HZChy.js",
-      "_SideDrawer-BAujvkqU.js",
-      "_DeleteModal-B1xPwAOz.js",
-      "_ConfigFullScreenView-BxxYXOL1.js",
-      "_LoadingSpinner-C_eT8odB.js",
+      "_ViewFunctions-B-wUYZaQ.js",
+      "_PageHeader-DVPVCgk1.js",
+      "_DataTable-CUIHY7XH.js",
+      "_SideDrawer-WeZa4FOQ.js",
+      "_DeleteModal-1HgdmIY5.js",
+      "_ConfigFullScreenView-DyM624hf.js",
+      "_LoadingSpinner-CxUrzMJq.js",
       "resources/js/app.js",
-      "_DataTableToolbar-CEtFvXhG.js",
-      "_DataTableSpinner-CZOI5RhJ.js"
+      "_DataTableToolbar-3HKV5GpG.js",
+      "_DataTableSpinner-DtqR4biL.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -4537,23 +4537,23 @@
     ]
   },
   "resources/js/views/Users.vue": {
-    "file": "assets/Users-DdfYBzKS.js",
+    "file": "assets/Users-BRX7U3YY.js",
     "name": "Users",
     "src": "resources/js/views/Users.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_DataTableToolbar-CEtFvXhG.js",
-      "_DataTableSpinner-CZOI5RhJ.js",
-      "_DeleteModal-B1xPwAOz.js",
+      "_DataTableToolbar-3HKV5GpG.js",
+      "_DataTableSpinner-DtqR4biL.js",
+      "_DeleteModal-1HgdmIY5.js",
       "resources/js/app.js",
-      "_PageHeader-Bl5o5qxR.js",
-      "_SideDrawer-BAujvkqU.js",
-      "_UsersForm-Dnh6QHht.js",
-      "_ViewFunctions-Bspdb8wp.js",
-      "_LoadingSpinner-C_eT8odB.js"
+      "_PageHeader-DVPVCgk1.js",
+      "_SideDrawer-WeZa4FOQ.js",
+      "_UsersForm-CBVbRMPB.js",
+      "_ViewFunctions-B-wUYZaQ.js",
+      "_LoadingSpinner-CxUrzMJq.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
@@ -4639,23 +4639,23 @@
     ]
   },
   "resources/js/views/Vendors.vue": {
-    "file": "assets/Vendors-B0dZhfuj.js",
+    "file": "assets/Vendors-Cqu9heSU.js",
     "name": "Vendors",
     "src": "resources/js/views/Vendors.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_ViewFunctions-Bspdb8wp.js",
-      "_PageHeader-Bl5o5qxR.js",
-      "_DataTable-Ll-HZChy.js",
-      "_SideDrawer-BAujvkqU.js",
-      "_DeleteModal-B1xPwAOz.js",
+      "_ViewFunctions-B-wUYZaQ.js",
+      "_PageHeader-DVPVCgk1.js",
+      "_DataTable-CUIHY7XH.js",
+      "_SideDrawer-WeZa4FOQ.js",
+      "_DeleteModal-1HgdmIY5.js",
       "resources/js/app.js",
-      "_LoadingSpinner-C_eT8odB.js",
-      "_DataTableToolbar-CEtFvXhG.js",
-      "_DataTableSpinner-CZOI5RhJ.js"
+      "_LoadingSpinner-CxUrzMJq.js",
+      "_DataTableToolbar-3HKV5GpG.js",
+      "_DataTableSpinner-DtqR4biL.js"
     ],
     "css": [
-      "assets/app-Bbso-sEm.css"
+      "assets/app-DvPRDbNx.css"
     ],
     "assets": [
       "assets/RedHatDisplay-Regular-D1eLwut6.woff2",
