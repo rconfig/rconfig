@@ -4,8 +4,10 @@ import vue from '@vitejs/plugin-vue';
 import autoprefixer from 'autoprefixer';
 
 export default defineConfig({
+  base: '',
   server: {
     host: '0.0.0.0',
+    port: 3500,
     hmr: {
       host: 'localhost'
     }

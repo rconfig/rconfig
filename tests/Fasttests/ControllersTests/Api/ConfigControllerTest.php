@@ -12,7 +12,6 @@ use Tests\TestCase;
 class ConfigControllerTest extends TestCase
 {
     // this entire config controller is based on fake device 1001
-
     protected $user;
 
     public function setUp(): void
@@ -21,11 +20,8 @@ class ConfigControllerTest extends TestCase
         $this->user = User::factory()->create();
         $this->actingAs($this->user, 'api');
     }
-    //TODO: Load NTT Data
-    //TODO: PerF check NTT Data
 
-    /** @test */
-    public function get_all_configs()
+    public function test_get_all_configs()
     {
         Config::factory(100)->create();
         $response = $this->get('/api/configs?page=1&perPage=100');
@@ -33,8 +29,7 @@ class ConfigControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function get_all_configs_for_given_device_id()
+    public function test_get_all_configs_for_given_device_id()
     {
         Config::factory(100)->create(['device_id' => 1001]);
         $response = $this->get('/api/configs/all-by-deviceid/1001/all/?page=1&perPage=100&filter=&sortCol=&sortOrd=');
@@ -57,8 +52,7 @@ class ConfigControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function get_distinct_commands_for_given_device_id()
+    public function test_get_distinct_commands_for_given_device_id()
     {
         Config::factory(100)->create(['device_id' => 1001]);
         $response = $this->get('/api/configs/distinct-commands/1001');
@@ -67,8 +61,7 @@ class ConfigControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function get_latest_configs_for_given_device_id()
+    public function test_get_latest_configs_for_given_device_id()
     {
         Config::truncate();
         $this->fakeConfigInserts();
@@ -94,8 +87,7 @@ class ConfigControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function show_single_config()
+    public function test_show_single_config()
     {
         $config = Config::factory()->create();
         $response = $this->get('/api/configs/' . $config->id);
@@ -108,23 +100,21 @@ class ConfigControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function get_single_config_file_contents()
+    public function test_get_single_config_file_contents()
     {
         Artisan::call('rconfig:download-device 1001');
 
         $response = $this->get('/api/configs/latest-by-deviceid/1001');
-        $id = $response->json()['data'][1]['id']; // for the show run
- 
+        $id = collect($response->json()['data'])->firstWhere('command', 'show run')['id'];
+  
         $response = $this->get('/api/configs/view-config/' . $id);
         $response->assertStatus(200);
-
-        $this->assertStringContainsString('service timestamps debug datetime msec', $response->getContent());
+ 
+        $this->assertStringContainsString('ip domain name rconfigdev.com', $response->getContent());
         $this->assertStringContainsString('transport output pad telnet rlogin lapb-ta mop udptn v120', $response->getContent());
     }
 
-    /** @test */
-    public function delete_config()
+    public function test_delete_config()
     {
         $config = Config::factory()->create();
         if (!File::exists($config->config_location)) {

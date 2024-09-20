@@ -96,8 +96,15 @@ class Login
     private function enableModeLogin()
     {
         $this->connectionObj->connection->write($this->connectionObj->enableCmd . "\n");
+
+        if ($this->connectionObj->enableUsername === 'on') {
+            $this->connectionObj->connection->read('~' . $this->connectionObj->enableUsernamePrmpt . '~', SSH2::READ_REGEX);
+            $this->connectionObj->connection->write($this->connectionObj->username . "\n");
+        }
+
         $this->connectionObj->connection->read('~' . $this->connectionObj->enablePassPrmpt . '~', SSH2::READ_REGEX);
         $this->connectionObj->connection->write($this->connectionObj->enableModePassword . "\n");
+
         $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
         if ($this->connectionObj->paging === 'on') {
             $this->connectionObj->connection->write($this->connectionObj->pagingCmd . "\n");

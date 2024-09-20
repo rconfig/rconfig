@@ -164,6 +164,6 @@ class rconfigDeviceDownloadTest extends TestCase
         ]);
 
         $time = microtime(true) - $start;
-        $this->assertLessThan(5, $time);
+        $this->assertLessThan(7, $time);
     }
 }

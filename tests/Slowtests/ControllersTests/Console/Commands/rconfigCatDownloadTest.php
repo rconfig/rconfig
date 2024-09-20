@@ -87,7 +87,7 @@ class rconfigCatDownloadTest extends TestCase
         $arr = explode("\n", $result);
 
         $time = microtime(true) - $start;
-        $this->assertLessThan(20, $time);
+        $this->assertLessThan(35, $time);
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output

@@ -27,6 +27,8 @@ class Connect
     public $passwordPrompt;
     public $enable;
     public $enableCmd;
+    public $enableUsername;
+    public $enableUsernamePrmpt;
     public $enablePassPrmpt;
     public $hpAnyKeyStatus;
     public $hpAnyKeyPrmpt;
@@ -79,6 +81,8 @@ class Connect
         $this->passwordPrompt = $deviceParamsObject->auth['password'];
         $this->enable = $deviceParamsObject->auth['enable'];
         $this->enableCmd = $deviceParamsObject->auth['enableCmd'];
+        $this->enableUsername = $deviceParamsObject->auth['enableUsername'] ?? null;
+        $this->enableUsernamePrmpt = $deviceParamsObject->auth['enableUsernamePrmpt'] ?? null;
         $this->enablePassPrmpt = $deviceParamsObject->auth['enablePassPrmpt'];
         $this->hpAnyKeyStatus = $deviceParamsObject->auth['hpAnyKeyStatus'];
         $this->hpAnyKeyPrmpt = $deviceParamsObject->auth['hpAnyKeyPrmpt'];

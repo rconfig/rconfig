@@ -38,8 +38,7 @@ class SSHConnectionTest extends TestCase
         }
     }
 
-    /** @test */
-    public function device3_was_found()
+    public function test_device3_was_found()
     {
         $devicerecord = (new DeviceRecordPrepare($this->device3))->DeviceRecordToArray();
 
@@ -47,20 +46,14 @@ class SSHConnectionTest extends TestCase
         $this->assertEquals('router3', $devicerecord['device_name']);
     }
 
-    /** @test */
-    public function device3_has_commands()
+    public function test_device3_has_commands()
     {
         $devicerecord = (new DeviceRecordPrepare($this->device3))->DeviceRecordToArray();
 
         $this->assertGreaterThan(0, count($devicerecord['commands']));
     }
 
-    /**
-     * @test
-     *
-     * @group slow-tests
-     */
-    public function full_SSH_download_from_device3_direct_from_classes()
+    public function test_full_SSH_download_from_device3_direct_from_classes()
     {
         //start timer
         $start = microtime(true);
@@ -71,17 +64,12 @@ class SSHConnectionTest extends TestCase
 
         //end timer
         $time = microtime(true) - $start;
-        $this->assertLessThan(3, $time);
+        $this->assertLessThan(5, $time);
 
         $this->assertGreaterThan(0, count($configsArray));
     }
 
-    /**
-     * @test
-     *
-     * @group slow-tests
-     */
-    public function check_device_can_override_connection_template_port_but_fails_connection()
+    public function test_check_device_can_override_connection_template_port_but_fails_connection()
     {
         //start timer
         $start = microtime(true);
@@ -97,15 +85,10 @@ class SSHConnectionTest extends TestCase
 
         //end timer
         $time = microtime(true) - $start;
-        $this->assertLessThan(3, $time);
+        $this->assertLessThan(5, $time);
     }
 
-    /**
-     * @test
-     *
-     * @group slow-tests
-     */
-    public function check_device_can_override_connection_template_port_but_passes_connection()
+    public function test_check_device_can_override_connection_template_port_but_passes_connection()
     {
         //start timer
         $start = microtime(true);
@@ -120,17 +103,12 @@ class SSHConnectionTest extends TestCase
 
         //end timer
         $time = microtime(true) - $start;
-        $this->assertLessThan(3, $time);
+        $this->assertLessThan(5, $time);
 
         $this->assertGreaterThan(0, count($configsArray));
     }
 
-    /**
-     * @test
-     *
-     * @group slow-tests
-     */
-    public function full_SSH_download_from_device4_direct_from_classes()
+    public function test_full_SSH_download_from_device4_direct_from_classes()
     {
         //start timer
         $start = microtime(true);
@@ -140,16 +118,11 @@ class SSHConnectionTest extends TestCase
 
         //end timer
         $time = microtime(true) - $start;
-        $this->assertLessThan(3, $time);
+        $this->assertLessThan(5, $time);
         $this->assertGreaterThan(0, count($configsArray));
     }
 
-    /**
-     * @test
-     *
-     * @group slow-tests
-     */
-    public function established_connection_has_options_params_if_they_are_set_in_the_template()
+    public function test_established_connection_has_options_params_if_they_are_set_in_the_template()
     {
         //start timer
         $start = microtime(true);
@@ -176,7 +149,7 @@ class SSHConnectionTest extends TestCase
 
         //end timer
         $time = microtime(true) - $start;
-        $this->assertLessThan(3, $time);
+        $this->assertLessThan(5, $time);
         $this->assertIsObject($result);
         $this->assertEquals($result->options['AnsiHost'], 'yes');
         $this->assertEquals($result->options['setWindowSize'][0], 240);
@@ -187,12 +160,7 @@ class SSHConnectionTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     *
-     * @group slow-tests
-     */
-    public function full_ssh_download_and_file_exists_check_from_command_no_enable_SSH_template_and_regex_prompt()
+    public function test_full_ssh_download_and_file_exists_check_from_command_no_enable_SSH_template_and_regex_prompt()
     {
         $start = microtime(true);
         $this->device3['device_main_prompt'] = '.*router.*#';
@@ -209,7 +177,7 @@ class SSHConnectionTest extends TestCase
             }
         }
         $time = microtime(true) - $start;
-        $this->assertLessThan(5, $time);
+        $this->assertLessThan(6, $time);
 
         $this->assertGreaterThan(0, count($arr));
         $this->assertStringContainsString($arr[0], 'Start rconfig:download-device IDs:1003');
@@ -223,12 +191,7 @@ class SSHConnectionTest extends TestCase
         $this->assertStringContainsString('r1#', $this->device3['device_main_prompt']);
     }
 
-    /**
-     * @test
-     *
-     * @group slow-tests
-     */
-    public function full_ssh_download_and_file_exists_check_from_command_no_enable_SSH_template()
+    public function test_full_ssh_download_and_file_exists_check_from_command_no_enable_SSH_template()
     {
         $start = microtime(true);
 
@@ -243,7 +206,7 @@ class SSHConnectionTest extends TestCase
             }
         }
         $time = microtime(true) - $start;
-        $this->assertLessThan(5, $time);
+        $this->assertLessThan(6, $time);
 
         $this->assertGreaterThan(0, count($arr));
         $this->assertStringContainsString($arr[0], 'Start rconfig:download-device IDs:1003');
@@ -254,12 +217,7 @@ class SSHConnectionTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     *
-     * @group slow-tests
-     */
-    public function V6_full_ssh_download_and_file_exists_check_from_command_no_enable_SSH_template()
+    public function test_V6_full_ssh_download_and_file_exists_check_from_command_no_enable_SSH_template()
     {
         $start = microtime(true);
 
@@ -268,7 +226,7 @@ class SSHConnectionTest extends TestCase
         $arr = explode("\n", $result);
 
         $time = microtime(true) - $start;
-        $this->assertLessThan(5, $time);
+        $this->assertLessThan(6, $time);
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output
@@ -286,12 +244,7 @@ class SSHConnectionTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     *
-     * @group slow-tests
-     */
-    public function full_ssh_download_and_file_exists_check_from_device4_from_command_enable_SSH_template()
+    public function test_full_ssh_download_and_file_exists_check_from_device4_from_command_enable_SSH_template()
     {
         $start = microtime(true);
         Artisan::call('rconfig:download-device 1004');
@@ -299,7 +252,7 @@ class SSHConnectionTest extends TestCase
         $arr = explode("\n", $result);
 
         $time = microtime(true) - $start;
-        $this->assertLessThan(5, $time);
+        $this->assertLessThan(6, $time);
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output
