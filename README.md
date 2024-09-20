@@ -17,10 +17,10 @@ https://github.com/mohammadain/laravel-docker-cron/blob/master/Dockerfile -->
   <h3 align="center">rConfig v6 Core</h3>
 
   <p align="center">
-    rConfig v6 Core is a free, open source, community edition of rConfig v6. It is a fully functional version of rConfig v6, with all the core features of rConfig v6 Professional, but with some limitations. Check out our features list <a href="https://www.rconfig.com/features"><strong>www.rconfig.com/features</strong></a> to learn more.
+    rConfig v6 Core is a free, open source, community edition of rConfig v6. It is a fully functional version of rConfig v6, with all the core features of rConfig v6 Professional, but with some limitations. Check out our <a href="https://www.rconfig.com/pricing#full-features"><strong>features list</strong></a> to learn more.
     <br />
     <br />
-    <a href="https://www.rconfig.com/docs"><strong>Explore the docs »</strong></a>
+    <a href="https://v6docs.rconfig.com"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="#intro">Intro</a>
@@ -68,6 +68,19 @@ Supported OS
 - Docker (Linux)(not yet ready)
 
 rConfig v6 core is completely free, you do not need an API key from rConfig to download and use this version. Please follow the instructions below to get started.
+
+## rConfig Editions
+
+| Feature              | rConfig Core        | rConfig Professional |
+|----------------------|---------------------|----------------------|
+| Configuration Backup | :white_check_mark:  | :white_check_mark:   |
+| Multi-Vendor Support | :white_check_mark:  | :white_check_mark:   |
+| Unlimited Devices | :white_check_mark:  | :white_check_mark:   |
+| Enterprise Features  | :x:                 | :white_check_mark:   |
+| API Access           | :x:                 | :white_check_mark:   |
+| Premium Support      | :x:                 | :white_check_mark:   |
+
+_Check out more on our [features page](https://www.rconfig.com/pricing#full-features)._
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -229,7 +242,7 @@ Generated optimized autoload files containing 6960 classes
 
 ```
 
-8. Update apache config file for correct server name.
+10. Update apache config file for correct server name.
 
 ```sh
 # CentOS/RHEL
@@ -248,7 +261,7 @@ ServerName YourServerName.domain.local
 ServerAlias YourServerName.domain.local
 ```
 
-9. Restart apache
+11. Restart apache
 
 ```sh
 # CENTOS/RHEL
@@ -260,7 +273,7 @@ sudo systemctl restart httpd
 sudo systemctl restart apache2
 ```
 
-10. Clear the cache & reset permissions
+12. Clear the cache & reset permissions
 
 ```sh
 # CENTOS/RHEL
@@ -276,12 +289,12 @@ chown -R www-data storage bootstrap/cache
 php artisan rconfig:clear-all
 ```
 
-11. Open your browser and navigate to your server's domain name. You should see the rConfig login page. The default system credentials are below. Please change or remove these as soon as a new admin user is created.
+13. Open your browser and navigate to your server's domain name. You should see the rConfig login page. The default system credentials are below. Please change or remove these as soon as a new admin user is created.
 
 Username: admin@domain.com
 Password: admin
 
-Check out our docs `docs.rconfig.com` to learn more.
+Check out our docs [v6docs.rconfig.com](https://v6docs.rconfig.com) to learn more.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -400,6 +413,6 @@ Inspiration, code snippets, etc.
 
 - [Laravel](https://www.laravel.com)
 - [vuejs](https://vuejs.org/)
-- [patternfly v4](https://www.patternfly.org/v4/)
+- [patternfly v4](https://v4-archive.patternfly.org/v4/)
 
 See composer.json and package.json for a full list of dependencies, and their licenses.
