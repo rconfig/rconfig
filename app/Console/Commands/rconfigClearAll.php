@@ -68,8 +68,7 @@ class rconfigClearAll extends Command
 
             custom_chown(rconfig_appdir_path());
         }
-
-        if (getenv('IS_DOCKER')) {
+         if ( getenv('IS_DOCKER') ===  "true") {
             chmod('/var/www/html/storage', 0777);
         }
 
