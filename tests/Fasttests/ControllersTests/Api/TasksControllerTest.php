@@ -54,7 +54,8 @@ class TasksControllerTest extends TestCase
             'verbose_download_report_notify' => $task->verbose_download_report_notify,
             'is_system' => $task->is_system,
         ]);
-
+        $response->assertStatus(200);
+ 
         $latestTaskId = $response->json()['data']['id'];
 
         $cronPattern = $this->_getCronPattern('0', '0', '1', '1', '*');

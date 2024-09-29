@@ -1,7 +1,7 @@
 {
     "name": "rconfig/rconfig",
     "type": "project",
-    "description": "rCOnfig V6 Core",
+    "description": "rConfig V6 Core",
     "version": "6.0.0",
     "keywords": [
         "framework",
