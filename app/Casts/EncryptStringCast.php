@@ -3,6 +3,7 @@
 namespace App\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Illuminate\Support\Facades\Crypt;
 
 class EncryptStringCast implements CastsAttributes
 {
@@ -11,7 +12,11 @@ class EncryptStringCast implements CastsAttributes
 
     public function get($model, string $key, $value, array $attributes)
     {
-        $value = ! is_null($value) ? \Crypt::decryptString($value) : null;
+        $value = !empty($value) ? Crypt::decryptString($value) : null;
+        // check if $value is spaces
+        if (trim($value) === '') {
+            $value = null;
+        }
 
         if ($this->is_serialized($value)) {
             $value = unserialize($value);
@@ -22,7 +27,7 @@ class EncryptStringCast implements CastsAttributes
 
     public function set($model, string $key, $value, array $attributes)
     {
-        return [$key => ! is_null($value) ? \Crypt::encryptString($value) : null];
+        return [$key => ! is_null($value) ? Crypt::encryptString($value) : null];
     }
 
     private function is_serialized($string)
