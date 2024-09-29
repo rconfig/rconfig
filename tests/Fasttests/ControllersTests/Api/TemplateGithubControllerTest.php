@@ -24,8 +24,7 @@ class TemplateGithubControllerTest extends TestCase
 
     // 1. download rConfig-templates repo during deployment
 
-    /** @test */
-    public function github_connectivity_test()
+    public function test_github_connectivity_test()
     {
         $response = $this->json('GET', '/api/test-template-repo-connection');
 
@@ -38,8 +37,7 @@ class TemplateGithubControllerTest extends TestCase
         // $json = $response->decodeResponseJson();
     }
 
-    /** @test */
-    public function failed_github_connectivity_test()
+    public function test_failed_github_connectivity_test()
     {
         Config::set('github.git.rconfig-template-repo', '123');
         $this->assertEquals('123', Config::get('github.git.rconfig-template-repo'));
@@ -48,8 +46,7 @@ class TemplateGithubControllerTest extends TestCase
         $this->assertStringContainsString('Exception thrown: Could not connect to repo - HTTP request returned status code 404', $response->json()['message']['msg']);
     }
 
-    /** @test */
-    public function storage_has_github_clone()
+    public function test_storage_has_github_clone()
     {
         if (is_dir($this->templatesDstDir)) {
             File::deleteDirectory($this->templatesDstDir);
@@ -78,8 +75,7 @@ class TemplateGithubControllerTest extends TestCase
         }
     }
 
-    /** @test */
-    public function storage_does_not_have_github_clone()
+    public function test_storage_does_not_have_github_clone()
     {
         if (is_dir($this->templatesDstDir)) {
             File::deleteDirectory($this->templatesDstDir);
@@ -91,8 +87,7 @@ class TemplateGithubControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function can_get_list_of_dirs()
+    public function test_can_get_list_of_dirs()
     {
         if (is_dir($this->templatesDstDir)) {
             File::deleteDirectory($this->templatesDstDir);
@@ -120,8 +115,7 @@ class TemplateGithubControllerTest extends TestCase
         }
     }
 
-    /** @test */
-    public function given_dir_can_get_list_of_files()
+    public function test_given_dir_can_get_list_of_files()
     {
         if (is_dir($this->templatesDstDir)) {
             File::deleteDirectory($this->templatesDstDir);
@@ -155,8 +149,7 @@ class TemplateGithubControllerTest extends TestCase
         }
     }
 
-    /** @test */
-    public function given_file_can_be_read()
+    public function test_given_file_can_be_read()
     {
         Artisan::call('rconfig:clone-templates');
 

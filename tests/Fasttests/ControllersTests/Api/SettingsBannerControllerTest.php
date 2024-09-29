@@ -20,8 +20,7 @@ class SettingsBannerControllerTest extends TestCase
         $this->actingAs($this->user, 'api');
     }
 
-    /** @test */
-    public function get_login_banner()
+    public function test_get_login_banner()
     {
         $response = $this->get('/api/settings/banner/1');
         $response->assertJson([
@@ -29,8 +28,7 @@ class SettingsBannerControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function update_banner()
+    public function test_update_banner()
     {
         $new_banner = $this->faker->sentence;
 

@@ -15,8 +15,7 @@ class TrackedJobControllerTest extends TestCase
         $this->actingAs($this->user, 'api');
     }
 
-    /** @test */
-    public function show_single_latest_tracked_job()
+    public function test_show_single_latest_tracked_job()
     {
         $job = \App\Models\TrackedJob::factory(100)->create();
         $response = $this->get('/api/tracked-jobs/'.$job[0]->device_id);

@@ -33,8 +33,7 @@ class rconfigTagDownloadTest extends TestCase
         $this->device1_params_object = $device1_params->getAllDeviceParams();
     }
 
-    /** @test */
-    public function tag_was_not_found()
+    public function test_tag_was_not_found()
     {
         Artisan::call('rconfig:download-tag 2123123');
         $result = Artisan::output();
@@ -44,8 +43,7 @@ class rconfigTagDownloadTest extends TestCase
         $this->assertStringContainsString($arr[1], 'No tag records returned. Download will now terminate!');
     }
 
-    /** @test */
-    public function the_tag_was_found_and_routers_tag_has_devices()
+    public function test_the_tag_was_found_and_routers_tag_has_devices()
     {
         $tagrecords = (new GetAndCheckTagIds([1001, 1002, 1003]))->GetTagRecords(); // 1000 = devtag1  & 1002 = devtag2 & 1003 = devtag3 which are seeded categories
         // dd($tagrecords);
@@ -56,8 +54,7 @@ class rconfigTagDownloadTest extends TestCase
         $this->assertGreaterThan(0, $tagrecords[2]->device->count());
     }
 
-    /** @test */
-    public function tag_did_not_contain_devices()
+    public function test_tag_did_not_contain_devices()
     {
         Artisan::call('rconfig:download-tag 1010');
         $result = Artisan::output();
@@ -66,12 +63,8 @@ class rconfigTagDownloadTest extends TestCase
         $this->assertStringContainsString($arr[0], 'Start rconfig:download-tag IDs:1010');
         $this->assertStringContainsString($arr[1], 'No devices returned for this category with ID: 1010. Downloader will try next category in the list, or terminate!');
     }
-
-    /**
-     * @test
-     * @group slow-tests
-     */
-    public function full_telnet_download_for_given_tags()
+ 
+    public function test_full_telnet_download_for_given_tags()
     {
         Artisan::call('rconfig:download-tag 1001 1002');
         $result = Artisan::output();

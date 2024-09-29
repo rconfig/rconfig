@@ -17,8 +17,7 @@ class SettingsSupportInfoControllerTest extends TestCase
         $this->actingAs($this->user, 'api');
     }
 
-    /** @test */
-    public function get_support_info()
+     public function test_get_support_info()
     {
         $response = $this->get('/api/settings/support-info');
         $response->assertJson([

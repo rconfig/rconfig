@@ -17,8 +17,7 @@ class TagsControllerTest extends TestCase
         $this->actingAs($this->user, 'api');
     }
 
-    /** @test */
-    public function a_tag_requires_a_name()
+    public function test_a_tag_requires_a_name()
     {
         $response = $this->json('post', '/api/tags', ['tagname' => null]);
 
@@ -27,8 +26,7 @@ class TagsControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function show_single_tag()
+    public function test_show_single_tag()
     {
         $tag = \App\Models\Tag::factory()->create();
         $response = $this->get('/api/tags/' . $tag->id);
@@ -36,8 +34,7 @@ class TagsControllerTest extends TestCase
         $response->assertJson(['tagname' => $tag->tagname]);
     }
 
-    /** @test */
-    public function get_all_tags()
+    public function test_get_all_tags()
     {
         $tag = \App\Models\Tag::factory(100)->create();
         $response = $this->get('/api/tags?page=1&perPage=100');
@@ -45,8 +42,7 @@ class TagsControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function create_tag()
+    public function test_create_tag()
     {
         $tag = \App\Models\Tag::factory()->create();
         $this->post('/api/tag', $tag->toArray());
@@ -57,8 +53,7 @@ class TagsControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function edit_tag()
+    public function test_edit_tag()
     {
         $tag = \App\Models\Tag::factory()->create();
 
@@ -74,8 +69,7 @@ class TagsControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function delete_tag()
+    public function test_delete_tag()
     {
         $tag = \App\Models\Tag::factory()->create();
 
@@ -84,8 +78,7 @@ class TagsControllerTest extends TestCase
         $this->assertDatabaseMissing('tags', ['id' => $tag->id]);
     }
 
-    /** @test */
-    public function count_devices_with_tag()
+    public function test_count_devices_with_tag()
     {
         //set config('queue') to redis to bypass DownloadConfigNow.php in device store and avoid errors due to incomplete data for the test
         config(['queue.default' => 'redis']);

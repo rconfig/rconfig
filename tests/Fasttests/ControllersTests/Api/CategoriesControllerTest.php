@@ -18,8 +18,7 @@ class CategoriesControllerTest extends TestCase
         $this->actingAs($this->user, 'api');
     }
 
-    /** @test */
-    public function a_category_requires_a_name()
+    public function test_a_category_requires_a_name()
     {
         $response = $this->json('post', '/api/categories', ['categoryName' => null]);
 
@@ -28,8 +27,7 @@ class CategoriesControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function a_category_cannot_have_whitespace()
+    public function test_a_category_cannot_have_whitespace()
     {
         $response = $this->json('post', '/api/categories', ['categoryName' => 'stephen stack']);
 
@@ -41,8 +39,7 @@ class CategoriesControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function show_single_category()
+    public function test_show_single_category()
     {
         $category = Category::factory()->create();
         $response = $this->get('/api/categories/'.$category->id);
@@ -50,8 +47,7 @@ class CategoriesControllerTest extends TestCase
         $response->assertJson(['categoryName' => $category->categoryName]);
     }
 
-    /** @test */
-    public function show_single_category_with_command()
+    public function test_show_single_category_with_command()
     {
         $category = Category::factory()->create();
         $command = Command::factory()->create();
@@ -75,8 +71,7 @@ class CategoriesControllerTest extends TestCase
         $response->assertJsonFragment(['description' => $command->description]);
     }
 
-    /** @test */
-    public function get_all_categories()
+    public function test_get_all_categories()
     {
         $category = \App\Models\Category::factory(100)->create();
         $response = $this->get('/api/categories?page=1&perPage=100');
@@ -84,8 +79,7 @@ class CategoriesControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function get_all_categories_with_generic_filter()
+    public function test_get_all_categories_with_generic_filter()
     {
         $response = $this->get('/api/categories?page=1&perPage=100&filter=Switches');
         $response->assertJsonFragment(['categoryName' => 'Switches']);
@@ -93,8 +87,7 @@ class CategoriesControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function create_category()
+    public function test_create_category()
     {
         $category = \App\Models\Category::factory()->create();
         $this->post('/api/categories', $category->toArray());
@@ -105,8 +98,7 @@ class CategoriesControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function edit_category()
+    public function test_edit_category()
     {
         $category = \App\Models\Category::factory()->create();
 
@@ -122,8 +114,7 @@ class CategoriesControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function delete_category()
+    public function test_delete_category()
     {
         $category = \App\Models\Category::factory()->create();
 

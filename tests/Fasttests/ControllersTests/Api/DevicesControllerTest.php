@@ -24,8 +24,7 @@ class DevicesControllerTest extends TestCase
         $this->actingAs($this->user, 'api');
     }
 
-    /** @test */
-    public function get_all_devices()
+    public function test_get_all_devices()
     {
         Device::factory(100)->create();
         $response = $this->get('/api/devices?page=1&perPage=100');
@@ -33,8 +32,7 @@ class DevicesControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function devices_have_relationships()
+    public function test_devices_have_relationships()
     {
         Device::factory(100)->create();
         $response = $this->get('/api/devices?page=1&perPage=100');
@@ -46,8 +44,7 @@ class DevicesControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function get_all_devices_with_generic_filter()
+    public function test_get_all_devices_with_generic_filter()
     {
         $response = $this->get('/api/devices?page=1&perPage=100&filter=192.168.1.170');
         $response->assertJsonFragment(['device_ip' => '192.168.1.170']);
@@ -55,8 +52,7 @@ class DevicesControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function get_one_device()
+    public function test_get_one_device()
     {
         $device = Device::factory()->create();
         $response = $this->get('/api/devices/' . $device->id);
@@ -79,8 +75,7 @@ class DevicesControllerTest extends TestCase
         );
     }
 
-    /** @test */
-    public function get_list_of_device_models()
+    public function test_get_list_of_device_models()
     {
         $devices = Device::factory(10)->create();
         $models = $devices->pluck('device_model');
@@ -93,8 +88,7 @@ class DevicesControllerTest extends TestCase
         $response->assertJsonFragment([$models[9]]);
     }
 
-    /** @test */
-    public function get_list_of_a_devices_commands()
+    public function test_get_list_of_a_devices_commands()
     {
         $category = Category::factory()->create();
         $device = Device::factory()->create((['device_category_id' => $category->id]));
@@ -133,8 +127,7 @@ class DevicesControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function a_device_requires_fields()
+    public function test_a_device_requires_fields()
     {
         $response = $this->json('post', '/api/devices');
         $response->assertJson(['errors' => true]);
@@ -151,8 +144,7 @@ class DevicesControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function create_device()
+    public function test_create_device()
     {
 
         Queue::fake();
@@ -210,8 +202,7 @@ class DevicesControllerTest extends TestCase
         Queue::assertPushed(DownloadConfigNow::class);
     }
 
-    /** @test */
-    public function edit_device()
+    public function test_edit_device()
     {
         $category = Category::factory()->create();
         $vendor = Vendor::factory()->create();
@@ -258,8 +249,7 @@ class DevicesControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function delete_device()
+    public function test_delete_device()
     {
         $device = Device::factory()->create();
         $this->assertDatabaseHas('devices', ['id' => $device->id]);
@@ -269,8 +259,7 @@ class DevicesControllerTest extends TestCase
         $this->assertDatabaseMissing('devices', ['id' => $device->id]);
     }
 
-    /** @test */
-    public function add_serialised_encrypted_password_and_decrypt_correctly_if_pw_is_serialised_v5_migration_bug()
+    public function test_add_serialised_encrypted_password_and_decrypt_correctly_if_pw_is_serialised_v5_migration_bug()
     {
         DB::table('devices')->insert([
             'id' => 1111111,

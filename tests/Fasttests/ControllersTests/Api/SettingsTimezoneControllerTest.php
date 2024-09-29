@@ -17,8 +17,7 @@ class SettingsTimezoneControllerTest extends TestCase
         $this->actingAs($this->user, 'api');
     }
 
-    /** @test */
-    public function get_timezone()
+    public function test_get_timezone()
     {
         $timezone = 'Europe/Dublin';
 
@@ -33,8 +32,7 @@ class SettingsTimezoneControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function get_timezone_list()
+    public function test_get_timezone_list()
     {
         $response = $this->get('/api/settings/get-timezone-list');
         $response->assertJsonFragment([
@@ -42,8 +40,7 @@ class SettingsTimezoneControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function update_timezone()
+    public function test_update_timezone()
     {
         $timezone = 'Pacific/Midway';
         $response = $this->patch('/api/settings/timezone/1', ['timezone' => $timezone]);

@@ -34,8 +34,7 @@ class TasksControllerTest extends TestCase
         ];
     }
 
-    /** @test */
-    public function delete_task_and_a_test_relationship()
+    public function test_delete_task_and_a_test_relationship()
     {
         $task = \App\Models\Task::factory()->make();
         $task->task_cron = ['0', '0', '1', '1', '*'];
@@ -82,8 +81,7 @@ class TasksControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function a_task_requires_a_name_and_desc_and_command_and_cron()
+    public function test_a_task_requires_a_name_and_desc_and_command_and_cron()
     {
         $response = $this->json('post', '/api/tasks', ['task_name' => null]);
 
@@ -94,8 +92,7 @@ class TasksControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function a_cron_must_be_a_full_array()
+    public function test_a_cron_must_be_a_full_array()
     {
         $response = $this->json('post', '/api/tasks', ['task_cron' => ['*', '*', '*']]);
 
@@ -105,8 +102,7 @@ class TasksControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function a_cron_is_a_full_array()
+    public function test_a_cron_is_a_full_array()
     {
         $response = $this->json('post', '/api/tasks', ['task_cron' => ['*', '*', '*', '*', '*']]);
 
@@ -114,8 +110,7 @@ class TasksControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function check_custom_validators_device_passes()
+    public function test_check_custom_validators_device_passes()
     {
         $this->validationTestArr['task_command'] = 'rconfig:download-device';
         $this->validationTestArr['device'] = [
@@ -137,8 +132,7 @@ class TasksControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function check_custom_validators_category_passes()
+    public function test_check_custom_validators_category_passes()
     {
         $this->validationTestArr['task_command'] = 'rconfig:download-category';
         $this->validationTestArr['category'] = [
@@ -160,8 +154,7 @@ class TasksControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function check_custom_validators_task_tags_passes()
+    public function test_check_custom_validators_task_tags_passes()
     {
         $this->validationTestArr['task_command'] = 'rconfig:download-tag';
         $this->validationTestArr['task_tags'] = [
@@ -183,8 +176,7 @@ class TasksControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function check_custom_validators_task_tags_fails_download()
+    public function test_check_custom_validators_task_tags_fails_download()
     {
         $this->validationTestArr['task_command'] = 'rconfig:download-tag';
         $this->validationTestArr['task_tags'] = null;
@@ -199,8 +191,7 @@ class TasksControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function check_custom_validators_device_fails_download()
+    public function test_check_custom_validators_device_fails_download()
     {
         $this->validationTestArr['task_command'] = 'rconfig:download-device';
         $this->validationTestArr['device'] = null;
@@ -215,8 +206,7 @@ class TasksControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function check_custom_validators_category_fails_download()
+    public function test_check_custom_validators_category_fails_download()
     {
         $this->validationTestArr['task_command'] = 'rconfig:download-category';
         $this->validationTestArr['category'] = null;
@@ -232,8 +222,7 @@ class TasksControllerTest extends TestCase
     }
 
 
-    /** @test */
-    public function show_single_task()
+    public function test_show_single_task()
     {
         $task = \App\Models\Task::factory()->create();
         $response = $this->get('/api/tasks/' . $task->id);
@@ -242,8 +231,7 @@ class TasksControllerTest extends TestCase
         $response->assertJson(['task_desc' => $task->task_desc]);
     }
 
-    /** @test */
-    public function get_all_tasks()
+    public function test_get_all_tasks()
     {
         $task = \App\Models\Task::factory(100)->create();
         $response = $this->get('/api/tasks?page=1&perPage=100');
@@ -252,8 +240,7 @@ class TasksControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function create_task_with_real_props_and_transform_some_props()
+    public function test_create_task_with_real_props_and_transform_some_props()
     {
         $task = [
             'task_name' => 'avsasvascasc',
@@ -314,8 +301,7 @@ class TasksControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function create_task_with_real_props_and_transform_some_props_and_verify_device_relationship()
+    public function test_create_task_with_real_props_and_transform_some_props_and_verify_device_relationship()
     {
         $task = [
             'task_name' => 'avsasvascasc123123',
@@ -362,8 +348,7 @@ class TasksControllerTest extends TestCase
         $this->assertCount(4, json_decode($response->getContent())->device);
     }
 
-    /** @test */
-    public function create_task()
+    public function test_create_task()
     {
         $task = \App\Models\Task::factory()->make();
 
@@ -382,8 +367,7 @@ class TasksControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function edit_task()
+    public function test_edit_task()
     {
         $task = \App\Models\Task::factory()->create();
 
@@ -415,8 +399,7 @@ class TasksControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function delete_task()
+    public function test_delete_task()
     {
         $task = \App\Models\Task::factory()->create();
 
@@ -425,8 +408,7 @@ class TasksControllerTest extends TestCase
         $this->assertDatabaseMissing('tasks', ['id' => $task->id]);
     }
 
-    /** @test */
-    public function test_tag_relationship()
+    public function test_test_tag_relationship()
     {
         $task = \App\Models\Task::factory()->make(['task_command' => 'rconfig:download-tag']);
         $task->task_cron = ['0', '0', '1', '1', '*'];
@@ -463,8 +445,7 @@ class TasksControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function test_device_relationship()
+    public function test_test_device_relationship()
     {
         $task = \App\Models\Task::factory()->make();
         $task->task_cron = ['0', '0', '1', '1', '*'];
@@ -501,8 +482,7 @@ class TasksControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function test_category_relationship()
+    public function test_test_category_relationship()
     {
         $task = \App\Models\Task::factory()->make();
         $task->task_cron = ['0', '0', '1', '1', '*'];
@@ -539,8 +519,7 @@ class TasksControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function task_finished_relationship()
+    public function test_task_finished_relationship()
     {
         $task = \App\Models\Task::factory()->create();
         $this->post('/api/tasks', $task->toArray());

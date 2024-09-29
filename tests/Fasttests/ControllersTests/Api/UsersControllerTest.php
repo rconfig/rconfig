@@ -16,8 +16,7 @@ class UsersControllerTest extends TestCase
         $this->actingAs($this->user, 'api');
     }
 
-    /** @test */
-    public function a_user_requires_a_name()
+    public function test_a_user_requires_a_name()
     {
         $response = $this->json('post', '/api/users', ['name' => null]);
 
@@ -26,8 +25,7 @@ class UsersControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function show_single_user()
+    public function test_show_single_user()
     {
         $user = User::factory()->create();
         $response = $this->get('/api/users/' . $user->id);
@@ -35,8 +33,7 @@ class UsersControllerTest extends TestCase
         $response->assertJson(['name' => $user->name]);
     }
 
-    /** @test */
-    public function get_all_users()
+    public function test_get_all_users()
     {
         $user = User::factory(10)->create();
         $response = $this->get('/api/users?page=1&perPage=100');
@@ -44,8 +41,7 @@ class UsersControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function create_user()
+    public function test_create_user()
     {
         $user = User::factory()->create();
         $this->post('/api/users', $user->toArray());
@@ -57,8 +53,7 @@ class UsersControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function create_user_with_user_role()
+    public function test_create_user_with_user_role()
     {
         $user = User::factory()->create([
             'role' => 'User',
@@ -73,8 +68,7 @@ class UsersControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function create_user_with_blank_username()
+    public function test_create_user_with_blank_username()
     {
         $user = User::factory()->create([
             'username' => null,
@@ -88,8 +82,7 @@ class UsersControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function edit_user()
+    public function test_edit_user()
     {
         $user = User::factory()->create();
 
@@ -111,8 +104,7 @@ class UsersControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function delete_user()
+    public function test_delete_user()
     {
         $user = User::factory()->create();
 

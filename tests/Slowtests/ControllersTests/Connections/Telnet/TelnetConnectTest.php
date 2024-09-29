@@ -39,8 +39,7 @@ class TelnetConnectTest extends TestCase
         $this->device1_params_object = $device1_params->getAllDeviceParams();
     }
 
-    /** @test */
-    public function the_device_was_not_found()
+    public function test_the_device_was_not_found()
     {
         $start = microtime(true);
 
@@ -55,8 +54,7 @@ class TelnetConnectTest extends TestCase
         $this->assertLessThan(5, $time);
     }
 
-    /** @test */
-    public function the_device_was_found()
+    public function test_the_device_was_found()
     {
         $devicerecord = (new DeviceRecordPrepare($this->device1))->DeviceRecordToArray();
 
@@ -64,20 +62,14 @@ class TelnetConnectTest extends TestCase
         $this->assertEquals('router1', $devicerecord['device_name']);
     }
 
-    /** @test */
-    public function the_device_has_commands()
+    public function test_the_device_has_commands()
     {
         $devicerecord = (new DeviceRecordPrepare($this->device1))->DeviceRecordToArray();
 
         $this->assertGreaterThan(0, count($devicerecord['commands']));
     }
 
-    /**
-     * @test
-     *
-     * @group slow-tests
-     */
-    public function full_telnet_download_from_device_direct_from_classes()
+    public function test_full_telnet_download_from_device_direct_from_classes()
     {
         $start = microtime(true);
 
@@ -90,12 +82,7 @@ class TelnetConnectTest extends TestCase
         $this->assertLessThan(5, $time);
     }
 
-    /**
-     * @test
-     *
-     * @group slow-tests
-     */
-    public function full_telnet_download_and_file_exists_check_from_device_from_command_no_enable_template()
+    public function test_full_telnet_download_and_file_exists_check_from_device_from_command_no_enable_template()
     {
         $start = microtime(true);
 
@@ -127,12 +114,7 @@ class TelnetConnectTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     *
-     * @group slow-tests
-     */
-    public function V6_full_telnet_download_and_file_exists_check_from_device_from_command_no_enable_template()
+    public function test_V6_full_telnet_download_and_file_exists_check_from_device_from_command_no_enable_template()
     {
         $start = microtime(true);
 
@@ -164,12 +146,7 @@ class TelnetConnectTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     *
-     * @group slow-tests
-     */
-    public function telnet_log_error_if_prompt_is_not_matched_within_specified_time_which_implies_an_incorrect_prompt()
+    public function test_telnet_log_error_if_prompt_is_not_matched_within_specified_time_which_implies_an_incorrect_prompt()
     {
         // setup extra devices for testing
         $this->setup_extra_devices();
@@ -223,12 +200,7 @@ class TelnetConnectTest extends TestCase
         $this->remove_extra_devices();
     }
 
-    /**
-     * @test
-     *
-     * @group slow-tests
-     */
-    public function full_telnet_download_and_file_exists_check_from_device_from_command_enable_template()
+    public function test_full_telnet_download_and_file_exists_check_from_device_from_command_enable_template()
     {
         $start = microtime(true);
 
@@ -255,12 +227,7 @@ class TelnetConnectTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     *
-     * @group slow-tests
-     */
-    public function full_telnet_download_from_unreachable_device_direct_from_classes()
+    public function test_full_telnet_download_from_unreachable_device_direct_from_classes()
     {
         $this->log_message_during_test(substr(strrchr(__CLASS__, '\\'), 1) . '/' . __FUNCTION__ . '/' . __FUNCTION__, 'This test will take over 10 seconds to complete.');
 
@@ -287,12 +254,7 @@ class TelnetConnectTest extends TestCase
         ]);
     }
 
-    /**
-     * @group slow-tests
-     *
-     * @test
-     */
-    public function full_telnet_download_from_unreachable_device_from_command()
+    public function test_full_telnet_download_from_unreachable_device_from_command()
     {
         $this->log_message_during_test(substr(strrchr(__CLASS__, '\\'), 1) . '/' . __FUNCTION__ . '/' . __FUNCTION__, 'This test will take over 10 seconds to complete.');
 

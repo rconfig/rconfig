@@ -15,8 +15,7 @@ class VendorsControllerTest extends TestCase
         $this->actingAs($this->user, 'api');
     }
 
-    /** @test */
-    public function a_vendor_requires_a_name()
+    public function test_a_vendor_requires_a_name()
     {
         $response = $this->json('post', '/api/vendors', ['vendorName' => null]);
 
@@ -25,8 +24,7 @@ class VendorsControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function show_single_vendor()
+    public function test_show_single_vendor()
     {
         $vendor = \App\Models\Vendor::factory()->create();
         $response = $this->get('/api/vendors/'.$vendor->id);
@@ -34,8 +32,7 @@ class VendorsControllerTest extends TestCase
         $response->assertJson(['vendorName' => $vendor->vendorName]);
     }
 
-    /** @test */
-    public function get_all_vendors()
+    public function test_get_all_vendors()
     {
         $vendor = \App\Models\Vendor::factory(100)->create();
         $response = $this->get('/api/vendors?page=1&perPage=100');
@@ -43,8 +40,7 @@ class VendorsControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function create_vendor()
+    public function test_create_vendor()
     {
         $vendor = \App\Models\Vendor::factory()->create();
         $this->post('/api/vendors', $vendor->toArray());
@@ -55,8 +51,7 @@ class VendorsControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function edit_vendor()
+    public function test_edit_vendor()
     {
         $vendor = \App\Models\Vendor::factory()->create();
 
@@ -70,8 +65,7 @@ class VendorsControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function delete_vendor()
+    public function test_delete_vendor()
     {
         $vendor = \App\Models\Vendor::factory()->create();
 

@@ -15,8 +15,7 @@ class DashboardControllerTest extends TestCase
         $this->actingAs($this->user, 'api');
     }
 
-    /** @test */
-    public function sys_info_test()
+    public function test_sys_info_test()
     {
         $response = $this->json('get', '/api/dashboard/sysinfo');
 
@@ -32,8 +31,7 @@ class DashboardControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function config_info_test()
+    public function test_config_info_test()
     {
         $response = $this->json('get', '/api/dashboard/configinfo');
         $response->assertStatus(200);

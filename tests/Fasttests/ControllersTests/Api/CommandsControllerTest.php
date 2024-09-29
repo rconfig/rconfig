@@ -18,8 +18,7 @@ class CommandsControllerTest extends TestCase
         $this->actingAs($this->user, 'api');
     }
 
-    /** @test */
-    public function a_command_requires_a_name_and_a_category_array()
+    public function test_a_command_requires_a_name_and_a_category_array()
     {
         $response = $this->json('post', '/api/commands', ['command' => null]);
 
@@ -30,8 +29,7 @@ class CommandsControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function show_single_command()
+    public function test_show_single_command()
     {
         $command = Command::factory()->create();
         $response = $this->get('/api/commands/'.$command->id);
@@ -39,8 +37,7 @@ class CommandsControllerTest extends TestCase
         $response->assertJson(['command' => $command->command]);
     }
 
-    /** @test */
-    public function show_single_command_with_categoryArray()
+    public function test_show_single_command_with_categoryArray()
     {
         $category = Category::factory()->create();
         $command = Command::factory()->create();
@@ -65,8 +62,7 @@ class CommandsControllerTest extends TestCase
         $response->assertJsonFragment(['categoryName' => $category->categoryName]);
     }
 
-    /** @test */
-    public function get_all_commands()
+    public function test_get_all_commands()
     {
         Command::factory(100)->create();
         $response = $this->get('/api/commands?page=1&perPage=100');
@@ -74,8 +70,7 @@ class CommandsControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function get_all_commands_with_filter()
+    public function test_get_all_commands_with_filter()
     {
         $response = $this->get('/api/commands?page=1&perPage=100&filter=show clock');
         $response->assertJsonFragment(['command' => 'show clock']);
@@ -83,8 +78,7 @@ class CommandsControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function create_command_with_categoryArray()
+    public function test_create_command_with_categoryArray()
     {
         $command = Command::factory()->make(); // do not persist to DB
         $categories = Category::factory(3)->create();
@@ -119,8 +113,7 @@ class CommandsControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function edit_command()
+    public function test_edit_command()
     {
         $command = Command::factory()->make(); // do not persist to DB
         $categories = Category::factory(3)->create();
@@ -183,8 +176,7 @@ class CommandsControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function delete_command()
+    public function test_delete_command()
     {
         $command = Command::factory()->create();
         $this->assertDatabaseHas('commands', ['id' => $command->id]);

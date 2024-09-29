@@ -22,8 +22,7 @@ class TaskReportControllerTest extends TestCase
         $this->actingAs($this->user, 'api');
     }
 
-    /** @test */
-    public function get_all_reports()
+    public function test_get_all_reports()
     {
         Taskdownloadreport::factory(100)->create();
         $response = $this->get('/api/reports?page=1&perPage=100');
@@ -31,8 +30,7 @@ class TaskReportControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function show_single_report()
+    public function test_show_single_report()
     {
         $report = Taskdownloadreport::factory()->create();
         $response = $this->get('/api/reports/' . $report->id);
@@ -40,8 +38,7 @@ class TaskReportControllerTest extends TestCase
         $response->assertJson(['report_id' => $report->report_id]);
     }
 
-    /** @test */
-    public function delete_report()
+    public function test_delete_report()
     {
         $report = Taskdownloadreport::factory()->create();
         $this->assertDatabaseHas('taskdownloadreports', ['report_id' => $report->report_id]);
@@ -51,8 +48,7 @@ class TaskReportControllerTest extends TestCase
         $this->assertDatabaseMissing('taskdownloadreports', ['report_id' => $report->report_id]);
     }
 
-    /** @test */
-    public function can_save_a_report()
+    public function test_can_save_a_report()
     {
         $task = new stdClass();
         $task->id = 515151;

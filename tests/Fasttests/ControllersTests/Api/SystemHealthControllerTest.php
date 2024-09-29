@@ -15,8 +15,8 @@ class SystemHealthControllerTest extends TestCase
         $this->actingAs($this->user, 'api');
     }
 
-    /** @test */
-    public function sys_environment_latest()
+
+    public function test_sys_environment_latest()
     {
         $response = $this->json('get', '/api/dashboard/health-latest');
 

@@ -15,14 +15,12 @@ class rconfigTaskListTest extends TestCase
         parent::setUp();
     }
 
-    /** @test */
-    public function it_has_rconfigTaskList_command()
+    public function test_it_has_rconfigTaskList_command()
     {
         $this->assertTrue(class_exists(\App\Console\Commands\rconfigTaskList::class));
     }
 
-    /** @test */
-    public function list_tasks_command()
+    public function test_list_tasks_command()
     {
         $tasks = Task::factory(20)->create();
 

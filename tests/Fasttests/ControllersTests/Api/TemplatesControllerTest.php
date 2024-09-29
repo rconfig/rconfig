@@ -16,8 +16,7 @@ class TemplatesControllerTest extends TestCase
         $this->actingAs($this->user, 'api');
     }
 
-    /** @test */
-    public function a_template_requires_a_name()
+    public function test_a_template_requires_a_name()
     {
         $response = $this->json('post', '/api/templates', ['fileName' => null]);
 
@@ -27,8 +26,7 @@ class TemplatesControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function show_single_template()
+    public function test_show_single_template()
     {
         $response = $this->get('/api/templates/'. 1);
         $response->assertJson([
@@ -39,8 +37,7 @@ class TemplatesControllerTest extends TestCase
         $response->assertSee('# rConfig connection template -'); // test file data has returned
     }
 
-    /** @test */
-    public function can_get_default_template()
+    public function test_can_get_default_template()
     {
         $template = \App\Models\Template::factory()->create();
         $response = $this->get('/api/get-default-template');
@@ -48,8 +45,7 @@ class TemplatesControllerTest extends TestCase
         $this->assertStringContainsString('name: "Name of Template"', $response->getContent());
     }
 
-    /** @test */
-    public function get_all_templates()
+    public function test_get_all_templates()
     {
         $template = \App\Models\Template::factory(10)->create();
         $response = $this->get('/api/templates?page=1&perPage=100');
@@ -57,8 +53,7 @@ class TemplatesControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function create_template()
+    public function test_create_template()
     {
         $code = file_get_contents(base_path('tests/storage/default_template_test.yml'));
 
@@ -77,8 +72,7 @@ class TemplatesControllerTest extends TestCase
         unlink(storage_path().'/app/rconfig/templates/test_file_name.yml');
     }
 
-    /** @test */
-    public function edit_template()
+    public function test_edit_template()
     {
         // Add first
         $code = file_get_contents(base_path('tests/storage/default_template_test.yml'));
@@ -113,8 +107,7 @@ class TemplatesControllerTest extends TestCase
         unlink(storage_path().'/app/rconfig/templates/test_file_name.yml');
     }
 
-    /** @test */
-    public function delete_template()
+    public function test_delete_template()
     {
         // Add first
         $code = file_get_contents(base_path('tests/storage/default_template_test.yml'));

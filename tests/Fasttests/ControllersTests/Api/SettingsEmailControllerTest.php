@@ -21,8 +21,7 @@ class SettingsEmailControllerTest extends TestCase
         $this->actingAs($this->user, 'api');
     }
 
-    /** @test */
-    public function get_smtp_settings()
+    public function test_get_smtp_settings()
     {
         $response = $this->get('/api/settings/email/1');
 
@@ -41,8 +40,7 @@ class SettingsEmailControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function get_smtp_settings_from_config_cache()
+    public function test_get_smtp_settings_from_config_cache()
     {
         $cached = Config::get('mail');
 
@@ -52,8 +50,7 @@ class SettingsEmailControllerTest extends TestCase
         $this->assertEquals(false, $cached['verify_peer']); // bug: #160
     }
 
-    /** @test */
-    public function smtp_required_fields()
+    public function test_smtp_required_fields()
     {
         $smtp_array = [];
 
@@ -67,8 +64,7 @@ class SettingsEmailControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function smtp_required_tls_encryption_field()
+    public function test_smtp_required_tls_encryption_field()
     {
         $smtp_array = [];
         $smtp_array['mail_authcheck'] = true;
@@ -84,8 +80,7 @@ class SettingsEmailControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function update_smtp()
+    public function test_update_smtp()
     {
         $smtp_array = [];
         $smtp_array['mail_host'] = $this->faker->ipv4;
@@ -111,8 +106,7 @@ class SettingsEmailControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function update_smtp_and_set_encryption_to_null_if_auth_disabled()
+    public function test_update_smtp_and_set_encryption_to_null_if_auth_disabled()
     {
         $smtp_array = [];
         $smtp_array['mail_host'] = $this->faker->ipv4;
@@ -138,8 +132,7 @@ class SettingsEmailControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function can_update_smtp_password_and_get_password_back_after_encryption()
+    public function test_can_update_smtp_password_and_get_password_back_after_encryption()
     {
         $smtp_array = [];
         $smtp_array['mail_host'] = $this->faker->ipv4;
@@ -160,8 +153,7 @@ class SettingsEmailControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function sending_a_test_email_works()
+    public function test_sending_a_test_email_works()
     {
 
         $response = \Http::withHeaders([
@@ -223,8 +215,7 @@ class SettingsEmailControllerTest extends TestCase
         $this->assertEquals(200, $response->status());
     }
 
-    /** @test */
-    public function sending_a_test_notification_works()
+    public function test_sending_a_test_notification_works()
     {
         $response = \Http::withHeaders([
             'Accept' => ' application/json',

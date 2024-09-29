@@ -18,8 +18,7 @@ class BasicDeviceSeedTest extends TestCase
         $this->device = Device::where('id', 1001)->first();
     }
 
-    /** @test */
-    public function device_1001_was_seeded_to_db()
+    public function test_device_1001_was_seeded_to_db()
     {
         $this->assertDatabaseHas('devices', [
             'id' => 1001,
@@ -28,8 +27,7 @@ class BasicDeviceSeedTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function device_1005_was_seeded_to_db()
+    public function test_device_1005_was_seeded_to_db()
     {
         $this->assertDatabaseHas('devices', [
             'id' => 1005,
@@ -38,8 +36,7 @@ class BasicDeviceSeedTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function category_exists_for_this_device()
+    public function test_category_exists_for_this_device()
     {
         $category = Category::where('id', $this->device['device_category_id'])->first();
         $category = $category->toArray();

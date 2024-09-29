@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace App\DataTransferObjects;
 
-use Spatie\DataTransferObject\DataTransferObject;
+use App\DataTransferObjects\DtoBase;
 
-final class StoreCommandDTO extends DataTransferObject
+final class StoreCommandDTO extends DtoBase
 {
     public string $command;
-
-    public string $description;
-    // public array $categoryArray;
+    public ?string $description;
+ 
+    public function __construct(array $parameters = [])
+    {
+        $this->command = $parameters['command'];
+        $this->description = $parameters['description'];
+     }
 }
