@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue';
-import { Badge } from '@/components/ui/badge';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import QuickActions from '@/Layouts/Components/QuickActions.vue';
@@ -164,6 +164,15 @@ onUnmounted(() => {
             <div class="mx-2 hover:transition-all">
               <nav class="grid items-start px-2 text-sm font-medium lg:px-4">
                 <router-link
+                  to="/notifications"
+                  class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
+                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'notifications' }">
+                  <Icon
+                    icon="carbon:notification"
+                    class="text-rcgray-400" />
+                  <div class="p-1 ml-2 text-left text-gray-200"><div>Notifications</div></div>
+                </router-link>
+                <router-link
                   to="/"
                   class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
                   :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'Home' }">
@@ -173,32 +182,79 @@ onUnmounted(() => {
                   <div class="p-1 ml-2 text-left text-gray-200"><div>Dashboard</div></div>
                 </router-link>
                 <router-link
+                  to="/devices"
+                  class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
+                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'devices' }">
+                  <Icon
+                    icon="carbon:network-1"
+                    class="text-rcgray-400" />
+                  <div class="p-1 ml-2 text-left text-gray-200"><div>Inventory</div></div>
+                </router-link>
+                <router-link
+                  to="/scheduled-tasks"
+                  class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
+                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'scheduled-tasks' }">
+                  <Icon
+                    icon="carbon:event-schedule"
+                    class="text-rcgray-400" />
+                  <div class="p-1 ml-2 text-left text-gray-200"><div>Tasks</div></div>
+                </router-link>
+                <router-link
                   to="/settings/users"
                   class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
                   :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'users' }">
                   <Icon
-                    icon="carbon:user"
+                    icon="carbon:user-settings"
                     class="text-rcgray-400" />
                   <div class="p-1 ml-2 text-left text-gray-200"><div>Users</div></div>
                 </router-link>
-                <!-- <a
-                href="#"
-                class="flex items-center gap-3 px-3 py-2 transition-all rounded-lg bg-muted text-primary hover:text-primary">
-                <Package class="w-4 h-4" />
-                Products
-              </a>
-              <a
-                href="#"
-                class="flex items-center gap-3 px-3 py-2 transition-all rounded-lg text-muted-foreground hover:text-primary">
-                <Users class="w-4 h-4" />
-                Customers
-              </a>
-              <a
-                href="#"
-                class="flex items-center gap-3 px-3 py-2 transition-all rounded-lg text-muted-foreground hover:text-primary">
-                <LineChart class="w-4 h-4" />
-                Analytics
-              </a> -->
+                <router-link
+                  to="/settings"
+                  class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
+                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'settings' }">
+                  <Icon
+                    icon="carbon:settings-edit"
+                    class="text-rcgray-400" />
+                  <div class="p-1 ml-2 text-left text-gray-200"><div>Settings</div></div>
+                </router-link>
+                <Collapsible
+                  v-model:open="isOpen1"
+                  class="w-full space-y-2">
+                  <div class="flex items-center justify-between space-x-4">
+                    <CollapsibleTrigger as-child>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        class="pl-0">
+                        <div
+                          class="flex items-center cursor-pointer"
+                          type="button"
+                          aria-expanded="true"
+                          data-state="open">
+                          <Icon
+                            icon="fluent:chevron-right-28-filled"
+                            v-if="!isOpen1" />
+                          <Icon
+                            icon="fluent:chevron-down-48-filled"
+                            v-if="isOpen1" />
+                          <div
+                            class="text-left"
+                            data-truncate="false"
+                            data-numeric="false"
+                            data-uppercase="false"
+                            style="color: rgb(134, 136, 141)">
+                            Favorites
+                          </div>
+                        </div>
+                      </Button>
+                    </CollapsibleTrigger>
+                  </div>
+                  <CollapsibleContent class="px-4 py-3 font-mono text-sm border rounded-md cursor-pointer hover:bg-gray-700">@radix-ui/primitives</CollapsibleContent>
+                  <CollapsibleContent class="space-y-2">
+                    <div class="px-4 py-3 font-mono text-sm border rounded-md cursor-pointer hover:bg-gray-700">@radix-ui/colors</div>
+                    <div class="px-4 py-3 font-mono text-sm border rounded-md cursor-pointer hover:bg-gray-700">@stitches/react</div>
+                  </CollapsibleContent>
+                </Collapsible>
               </nav>
             </div>
           </div>

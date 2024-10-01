@@ -71,7 +71,6 @@ vm.removeNotifications = removeNotifications;
 import './bootstrap';
 import { usePanelStore } from '@/stores/panelStore';
 const panelStore = usePanelStore();
-console.log(panelStore.panelRef); // panelRef is reactive here
 
 var storedTheme = localStorage.getItem('theme');
 if (storedTheme) {
