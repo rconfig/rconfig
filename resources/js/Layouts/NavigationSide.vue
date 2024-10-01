@@ -44,6 +44,10 @@ function setHoveringClose(state) {
   svgIshoveringClose.value = state;
 }
 
+const goToRconfig = () => {
+  window.open('https://rconfig.com', '_blank');
+};
+
 onUnmounted(() => {
   // Clean up the event listener when the component is unmounted
   mobileQuery.removeEventListener('change', handleBreakpointChange);
@@ -96,9 +100,9 @@ onUnmounted(() => {
     :collapsed-size="0"
     ref="panelElement">
     <div class="grid min-h-screen">
-      <div class="bg-gray-100 bg-muted/40 md:block dark:bg-rcgray-800">
+      <div class="bg-gray-100 bg-muted/40 md:block">
         <div class="flex flex-col h-full max-h-screen gap-2">
-          <div class="flex justify-between w-full max-w-full p-2 border-b border-rcgray-600">
+          <div class="flex justify-between w-full max-w-full p-2 border-b">
             <div class="flex items-center my-2">
               <img
                 alt="rConfig"
@@ -298,7 +302,8 @@ onUnmounted(() => {
               <CardContent class="p-2 pt-0 md:p-4 md:pt-0">
                 <Button
                   size="sm"
-                  class="w-full">
+                  class="w-full py-2 hover:bg-rcgray-300 hover:animate-pulse"
+                  @click="goToRconfig()">
                   Upgrade
                 </Button>
               </CardContent>
