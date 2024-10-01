@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import QuickActions from '@/Layouts/Components/QuickActions.vue';
 import { ResizablePanel } from '@/components/ui/resizable';
@@ -165,7 +166,7 @@ onUnmounted(() => {
               <nav class="grid items-start px-2 text-sm font-medium lg:px-4">
                 <router-link
                   to="/notifications"
-                  class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
+                  class="transition ease-in-out delay-50 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
                   :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'notifications' }">
                   <Icon
                     icon="carbon:notification"
@@ -174,7 +175,7 @@ onUnmounted(() => {
                 </router-link>
                 <router-link
                   to="/"
-                  class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
+                  class="transition ease-in-out delay-50 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
                   :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'Home' }">
                   <Icon
                     icon="carbon:home"
@@ -183,12 +184,17 @@ onUnmounted(() => {
                 </router-link>
                 <router-link
                   to="/devices"
-                  class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
+                  class="transition ease-in-out delay-50 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
                   :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'devices' }">
-                  <Icon
-                    icon="carbon:network-1"
-                    class="text-rcgray-400" />
-                  <div class="p-1 ml-2 text-left text-gray-200"><div>Inventory</div></div>
+                  <div class="flex justify-between w-full">
+                    <div class="flex">
+                      <Icon
+                        icon="carbon:network-1"
+                        class="text-rcgray-400" />
+                      <div class="p-1 ml-2 selection:text-gray-200">Inventory</div>
+                    </div>
+                    <div><Badge class="flex bg-blue-600 text-slate-50">02</Badge></div>
+                  </div>
                 </router-link>
                 <router-link
                   to="/scheduled-tasks"
@@ -219,8 +225,8 @@ onUnmounted(() => {
                 </router-link>
                 <Collapsible
                   v-model:open="isOpen1"
-                  class="w-full space-y-2">
-                  <div class="flex items-center justify-between space-x-4">
+                  class="w-full my-4">
+                  <div class="flex items-center justify-between">
                     <CollapsibleTrigger as-child>
                       <Button
                         variant="ghost"
@@ -249,10 +255,35 @@ onUnmounted(() => {
                       </Button>
                     </CollapsibleTrigger>
                   </div>
-                  <CollapsibleContent class="px-4 py-3 font-mono text-sm border rounded-md cursor-pointer hover:bg-gray-700">@radix-ui/primitives</CollapsibleContent>
-                  <CollapsibleContent class="space-y-2">
-                    <div class="px-4 py-3 font-mono text-sm border rounded-md cursor-pointer hover:bg-gray-700">@radix-ui/colors</div>
-                    <div class="px-4 py-3 font-mono text-sm border rounded-md cursor-pointer hover:bg-gray-700">@stitches/react</div>
+
+                  <CollapsibleContent>
+                    <router-link
+                      to="/settings1"
+                      class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
+                      :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'settings1' }">
+                      <Icon
+                        icon="carbon:settings-edit"
+                        class="text-rcgray-400" />
+                      <div class="p-1 ml-2 text-left text-gray-200"><div>Settings</div></div>
+                    </router-link>
+                    <router-link
+                      to="/settings2"
+                      class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
+                      :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'settings2' }">
+                      <Icon
+                        icon="carbon:settings-edit"
+                        class="text-rcgray-400" />
+                      <div class="p-1 ml-2 text-left text-gray-200"><div>Settings</div></div>
+                    </router-link>
+                    <router-link
+                      to="/settings3"
+                      class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
+                      :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'settings3' }">
+                      <Icon
+                        icon="carbon:settings-edit"
+                        class="text-rcgray-400" />
+                      <div class="p-1 ml-2 text-left text-gray-200"><div>Settings</div></div>
+                    </router-link>
                   </CollapsibleContent>
                 </Collapsible>
               </nav>
