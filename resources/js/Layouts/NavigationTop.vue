@@ -1,11 +1,84 @@
+<script setup>
+import { ref, reactive, computed, onMounted } from 'vue';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { Icon } from '@iconify/vue';
+import { useColorMode } from '@vueuse/core';
+import { usePanelStore } from '../stores/panelStore'; // Import the Pinia store
+
+const svgIshoveringOpen = ref(false);
+const mode = useColorMode();
+const panelStore = usePanelStore(); // Access the panel store
+
+defineProps({
+  title: {
+    type: String,
+    required: true
+  },
+  panelRef: {
+    type: Object,
+    default: null
+  }
+});
+
+function setHoveringOpen(state) {
+  svgIshoveringOpen.value = state;
+}
+
+function collapsePanel() {
+  panelStore.panelRef?.isCollapsed ? panelStore.panelRef?.expand() : panelStore.panelRef?.collapse();
+  svgIshoveringOpen.value = false;
+}
+</script>
+
+<style scoped>
+.top-nav-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+/* open nav icon */
+.dbUOim[data-hovering='false'] {
+  transform: translateX(-6px) scale(0.9);
+  opacity: 0;
+}
+
+.dbUOim {
+  transition:
+    transform 200ms ease 0s,
+    opacity 120ms ease 0s;
+}
+
+.ekwKMA[data-hovering='false'] {
+  transform: translateX(-6px);
+}
+
+.ekwKMA {
+  transition: all 200ms ease 0s;
+}
+
+.hxMVRj[data-hovering='false'] {
+  transform: translateX(-4px);
+  opacity: 0;
+}
+
+.hxMVRj {
+  transition:
+    transform 200ms ease 0s,
+    opacity 120ms ease 0s;
+}
+</style>
+
 <template>
   <nav class="dark:bg-rcgray-900">
-    <div class="relative flex items-center justify-between w-full max-w-full">
-      <div class="flex items-center">
+    <div class="relative flex items-center justify-between w-full max-w-full p-2">
+      <div class="flex items-center ml-4">
         <button
           aria-label="Collapse sidebar"
           data-state="closed"
-          v-if="panelRef?.isCollapsed"
+          v-if="panelStore.panelRef?.isCollapsed"
           @click="collapsePanel()">
           <svg
             width="18"
@@ -55,7 +128,7 @@
           class="ml-4"></span>
       </div>
 
-      <div class="top-nav-div">
+      <div class="mt-1 top-nav-div">
         <Button variant="ghost">
           <Icon
             icon="carbon:help"
@@ -113,96 +186,3 @@
     </div>
   </nav>
 </template>
-
-<script>
-import { ref, reactive, computed, onMounted } from 'vue';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { Icon } from '@iconify/vue';
-import { useColorMode } from '@vueuse/core';
-
-export default {
-  props: {
-    title: {
-      type: String,
-      required: true
-    },
-    panelRef: {
-      type: Object,
-      default: null
-    }
-  },
-
-  components: {
-    Button,
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    Icon
-  },
-
-  setup(props) {
-    const svgIshoveringOpen = ref(false);
-    const mode = useColorMode();
-
-    function setHoveringOpen(state) {
-      svgIshoveringOpen.value = state;
-    }
-
-    function collapsePanel() {
-      props.panelRef?.isCollapsed ? props.panelRef?.expand() : props.panelRef?.collapse();
-      svgIshoveringOpen.value = false;
-    }
-
-    return {
-      collapsePanel,
-      mode,
-      setHoveringOpen,
-      svgIshoveringOpen
-    };
-  }
-};
-</script>
-
-<style scoped>
-.top-nav-div {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 8px;
-}
-/* open nav icon */
-.dbUOim[data-hovering='false'] {
-  transform: translateX(-6px) scale(0.9);
-  opacity: 0;
-}
-
-.dbUOim {
-  transition:
-    transform 200ms ease 0s,
-    opacity 120ms ease 0s;
-}
-
-.ekwKMA[data-hovering='false'] {
-  transform: translateX(-6px);
-}
-
-.ekwKMA {
-  transition: all 200ms ease 0s;
-}
-
-.hxMVRj[data-hovering='false'] {
-  transform: translateX(-4px);
-  opacity: 0;
-}
-
-.hxMVRj {
-  transition:
-    transform 200ms ease 0s,
-    opacity 120ms ease 0s;
-}
-</style>

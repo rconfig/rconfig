@@ -9,14 +9,16 @@ import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import router from './router';
 
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from './components/ui/resizable';
-import NavigationTop from './components/NavigationTop.vue';
-import Navigationside from './components/NavigationSide.vue';
+import NavigationTop from './Layouts/NavigationTop.vue';
+import Navigationside from './Layouts/NavigationSide.vue';
 import NotificationsDrawer from './components/NotificationsDrawer.vue';
 import ToastNotification from './components/ToastNotification.vue';
 import VueHighlightJS from 'vue3-highlightjs';
 import useNotifications from './composables/notifications';
 import { useNavState } from './composables/navstate';
 import useServerTimeZone from './composables/ServerTimezone.js';
+import { Icon } from '@iconify/vue';
+import { createPinia } from 'pinia';
 
 const app = createApp({
   data: () => ({
@@ -34,7 +36,7 @@ const app = createApp({
 const { notifications, createNotification, removeNotifications } = useNotifications(); // see example here https://github.com/zafaralam/vue-3-toast/
 const { darkmode } = useNavState();
 const { formatTime } = useServerTimeZone(app.config.globalProperties.$timezone);
-const panelRef = app.config.globalProperties.$refs;
+const pinia = createPinia();
 
 app.config.globalProperties.$userId = document.querySelector("meta[name='user-id']").getAttribute('content');
 app.config.globalProperties.$userName = document.querySelector("meta[name='user-name']").getAttribute('content');
@@ -49,6 +51,7 @@ app.component('resizable-panel-group', ResizablePanelGroup);
 app.component('resizable-handle', ResizableHandle);
 app.component('notification-drawer', NotificationsDrawer);
 app.component('toast-notification', ToastNotification);
+app.component('Icon', Icon);
 
 app.provide('create-notification', createNotification);
 app.provide('darkmode', darkmode);
@@ -60,10 +63,15 @@ app.provide('formatTime', formatTime);
 // mount the app to the DOM
 app.use(router);
 app.use(VueHighlightJS);
+app.use(pinia);
+
 const vm = app.mount('#app');
 vm.notifications = notifications;
 vm.removeNotifications = removeNotifications;
 import './bootstrap';
+import { usePanelStore } from '@/stores/panelStore';
+const panelStore = usePanelStore();
+console.log(panelStore.panelRef); // panelRef is reactive here
 
 var storedTheme = localStorage.getItem('theme');
 if (storedTheme) {
