@@ -1,9 +1,10 @@
 <script setup>
 import { computed } from "vue";
-import { DialogTitle } from "radix-vue";
+import { Label } from "radix-vue";
 import { cn } from "@/lib/utils";
 
 const props = defineProps({
+  for: { type: String, required: false },
   asChild: { type: Boolean, required: false },
   as: { type: null, required: false },
   class: { type: null, required: false },
@@ -17,10 +18,15 @@ const delegatedProps = computed(() => {
 </script>
 
 <template>
-  <DialogTitle
-    :class="cn('text-lg font-semibold text-foreground', props.class)"
+  <Label
     v-bind="delegatedProps"
+    :class="
+      cn(
+        'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+        props.class,
+      )
+    "
   >
     <slot />
-  </DialogTitle>
+  </Label>
 </template>

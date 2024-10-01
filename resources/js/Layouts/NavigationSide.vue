@@ -1,18 +1,22 @@
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import QuickActions from '@/Layouts/Components/QuickActions.vue';
+import SheetHelp from '@/components/Sheets/SheetHelp.vue';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ResizablePanel } from '@/components/ui/resizable';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { usePanelStore } from '../stores/panelStore'; // Import the Pinia store
+import { useSheetStore } from '@/stores/sheet';
 
 const isOpen1 = ref(false);
 const isOpen2 = ref(false);
 const svgIshoveringClose = ref(false);
 const panelStore = usePanelStore(); // Access the panel store
 const panelElement = ref(null);
+const sheetStore = useSheetStore();
+const { openSheet, closeSheet, isSheetOpen } = sheetStore;
 
 defineProps({});
 
@@ -308,6 +312,19 @@ onUnmounted(() => {
                 </Button>
               </CardContent>
             </Card>
+          </div>
+          <div class="p-4 mt-auto border-t">
+            <a
+              @click.prevent="openSheet('SheetHelp')"
+              class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
+              :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'scheduled-tasks' }">
+              <Icon
+                icon="carbon:lifesaver"
+                class="text-rcgray-400" />
+              <div class="p-1 ml-2 text-left text-gray-200"><div>Getting started & Help</div></div>
+            </a>
+
+            <SheetHelp />
           </div>
         </div>
       </div>

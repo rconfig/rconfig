@@ -1,4 +1,6 @@
 <script setup>
+import { Button } from '@/components/ui/button';
+
 const title = 'Dashboard';
 
 defineProps({});
