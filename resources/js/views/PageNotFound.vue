@@ -1,43 +1,28 @@
-<template>
-    <main class="pf-c-page__main" tabindex="-1">
-        <alert v-if="openAlert" :alertType="alertType" :alertMsg="alertMsg" @closeAlert="openAlert = false"></alert>
-        <section class="pf-c-page__main-section pf-m-light">
-            <div class="pf-c-content">
-                <h1>404 - Page not found!</h1>
-                <!-- <p>Body text should be Red Hat Text Regular at 16px. It should have leading of 24px because of its relative line height of 1.5</p> -->
-            </div>
-        </section>
-        <div class="pf-c-divider" role="separator"></div>
+<script setup>
+const title = 'Dashboard';
 
-        <section class="pf-c-page__main-section pf-m-no-padding">
-            <div class="pf-c-card" style="height: 50vh">
-                <div class="pf-l-bullseye">
-                    <div class="pf-c-empty-state pf-m-sm">
-                        <div class="pf-c-empty-state__content">
-                            <i class="fas fa- fa-search pf-c-empty-state__icon" aria-hidden="true"></i>
-                            <h2 class="pf-c-title pf-m-lg">404, that's an error!</h2>
-                            <div class="pf-c-empty-state__body">The url {{ this.$route.path }} does not exist on this server.</div>
-                            <div class="pf-c-empty-state__primary">
-                                <router-link to="/dashboard" class="alink">Go to Dashboard</router-link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-</template>
-
-<script>
-export default {
-    data: () => ({
-        openAlert: false,
-        alertType: null,
-        alertMsg: null
-    }),
-    components: {},
-    methods: {},
-    mounted() {},
-    filters: {}
-};
+defineProps({});
 </script>
+
+<template>
+  <main class="flex flex-col flex-1 gap-4 p-4 lg:gap-6 lg:p-6">
+    <div class="flex items-center">
+      <h1 class="text-lg font-semibold md:text-2xl">404, that's an error!</h1>
+    </div>
+    <div class="flex items-center justify-center flex-1 border border-dashed rounded-lg shadow-sm">
+      <div class="flex flex-col items-center gap-1 text-center">
+        <h3 class="text-2xl font-bold tracking-tight">
+          <Icon
+            icon="carbon:strategy-play"
+            class="w-24 h-24 dark:text-rcgray-400 text-rcgray-900" />
+        </h3>
+        <p class="text-sm text-muted-foreground">The url {{ this.$route.path }} does not exist on this server.</p>
+        <router-link
+          to="/dashboard"
+          class="alink">
+          Go to Dashboard
+        </router-link>
+      </div>
+    </div>
+  </main>
+</template>
