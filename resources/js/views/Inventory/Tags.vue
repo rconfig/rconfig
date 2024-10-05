@@ -214,21 +214,27 @@ function toggleSelectRow(rowId: number) {
                     class="w-56"
                     align="end"
                     side="bottom">
-                    <DropdownMenuItem @click="() => onAssignRole(row.original)">
+                    <DropdownMenuItem
+                      class="cursor-pointer hover:bg-rcgray-800"
+                      @click="() => onAssignRole(row.id)">
                       <span>Assign Roles</span>
                       <DropdownMenuShortcut>
                         <Icon icon="fluent-color:people-team-16" />
                       </DropdownMenuShortcut>
                     </DropdownMenuItem>
-                    <DropdownMenuItem @click="() => onEdit(row.original)">
+                    <DropdownMenuItem
+                      class="cursor-pointer hover:bg-rcgray-800"
+                      @click="() => onEdit(row.id)">
                       <span>Edit</span>
                       <DropdownMenuShortcut>
                         <Icon icon="fluent-color:text-edit-style-16" />
                       </DropdownMenuShortcut>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem @click="() => onDelete(row.original)">
-                      <span spaclass="text-red-500">Delete</span>
+                    <DropdownMenuItem
+                      class="cursor-pointer hover:bg-rcgray-800"
+                      @click="() => onDelete(row.id)">
+                      <span class="text-red-400">Delete</span>
                       <DropdownMenuShortcut>
                         <Icon icon="fluent-color:cloud-dismiss-48" />
                       </DropdownMenuShortcut>
