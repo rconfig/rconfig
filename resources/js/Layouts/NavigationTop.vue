@@ -72,7 +72,7 @@ function collapsePanel() {
 </style>
 
 <template>
-  <nav class="dark:bg-rcgray-900">
+  <nav class="border-b dark:bg-rcgray-900">
     <div class="relative flex items-center justify-between w-full max-w-full p-2">
       <div class="flex items-center ml-4">
         <button
@@ -124,7 +124,7 @@ function collapsePanel() {
           </svg>
         </button>
         <span
-          v-text="title"
+          v-text="title.charAt(0).toUpperCase() + title.slice(1)"
           class="ml-4"></span>
       </div>
 
