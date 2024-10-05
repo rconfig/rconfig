@@ -1,61 +1,26 @@
 <script setup lang="ts">
-import { h, ref, onMounted, watch } from 'vue';
-import { useDebounceFn } from '@vueuse/core';
-import { Button } from '@/components/ui/button';
-import { ColumnDef } from '@tanstack/vue-table';
-import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
 import DataTable from './DataTable.vue';
 import axios from 'axios';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { h, ref, onMounted, watch } from 'vue';
+import { useDebounceFn } from '@vueuse/core';
 
-const tags = ref<Tag[]>([]);
+const tags = ref([]);
 const isLoading = ref(true);
 const currentPage = ref(1);
 const last_page = ref(1);
-const filters = ref<{ search?: string }>({});
+const filters = ref({});
 const perPage = ref(10);
 const searchTerm = ref('');
 
-interface Tag {
-  id: number;
-  tagname: string;
-  tagDescription: string;
-}
-
-const columns: ColumnDef<Tag>[] = [
-  {
-    id: 'select',
-    header: ({ table }) =>
-      h(Checkbox, {
-        checked: table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate'),
-        'onUpdate:checked': value => table.toggleAllPageRowsSelected(!!value),
-        ariaLabel: 'Select all'
-      }),
-    cell: ({ row }) =>
-      h(Checkbox, {
-        checked: row.getIsSelected(),
-        'onUpdate:checked': value => row.toggleSelected(!!value),
-        ariaLabel: 'Select row'
-      }),
-    enableSorting: false,
-    enableHiding: false
-  },
-  {
-    accessorKey: 'id',
-    header: () => h('div', { class: 'text-left' }, 'ID'),
-    cell: ({ row }) => h('div', { class: 'text-left' }, row.getValue('id'))
-  },
-  {
-    accessorKey: 'tagname',
-    header: () => h('div', { class: 'text-left' }, 'Tag Name'),
-    cell: ({ row }) => h('div', { class: 'text-left' }, row.getValue('tagname'))
-  },
-  {
-    accessorKey: 'tagDescription',
-    header: () => h('div', { class: 'text-left' }, 'Tag Description'),
-    cell: ({ row }) => h('div', { class: 'text-left' }, row.getValue('tagDescription'))
-  }
-];
+// Select Row Management
+const selectedRows = ref([]);
+const selectAll = ref(false);
 
 const fetchTags = async () => {
   isLoading.value = true;
@@ -76,6 +41,21 @@ const fetchTags = async () => {
   }
 };
 
+function onEdit(rowData) {
+  // Handle edit action
+  console.log('Edit:', rowData);
+}
+
+function onDelete(rowData) {
+  // Handle delete action
+  console.log('Delete:', rowData);
+}
+
+function onAssignRole(rowData) {
+  // Handle assign role action
+  console.log('Assign Role:', rowData);
+}
+
 const debouncedFilter = useDebounceFn(() => {
   filters.value[`filter[tagname]`] = searchTerm.value;
   currentPage.value = 1;
@@ -93,10 +73,33 @@ watch([currentPage, perPage], () => {
 watch(searchTerm, () => {
   debouncedFilter();
 });
+
+function toggleSelectAll() {
+  selectAll.value = !selectAll.value;
+  if (selectAll.value) {
+    console.log(tags.value.data);
+    // Select all rows
+
+    selectedRows.value = tags.value.data.map(row => row.id);
+  } else {
+    // Deselect all rows
+    selectedRows.value = [];
+  }
+}
+
+function toggleSelectRow(rowId: number) {
+  console.log(rowId);
+
+  if (selectedRows.value.includes(rowId)) {
+    selectedRows.value = selectedRows.value.filter(id => id !== rowId);
+  } else {
+    selectedRows.value.push(rowId);
+  }
+}
 </script>
 
 <template>
-  <div class="flex flex-col h-screen gap-1 text-center">
+  <div class="flex flex-col h-full gap-1 text-center">
     <div class="flex items-center py-4">
       <Input
         class="max-w-sm ml-8"
@@ -117,6 +120,7 @@ watch(searchTerm, () => {
         New Tag
       </Button>
     </div>
+    {{ selectedRows }}
 
     <div
       v-if="isLoading"
@@ -127,24 +131,162 @@ watch(searchTerm, () => {
 
     <div
       v-else
-      class="container mx-auto">
-      <DataTable
-        :columns="columns"
-        :data="tags" />
+      class="px-6">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>
+              <Checkbox
+                id="selectAll"
+                v-model="selectAll"
+                @click="toggleSelectAll()" />
+            </TableHead>
+            <TableHead>ID</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Description</TableHead>
+            <TableHead>Devices</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <template v-if="tags.data.length">
+            <TableRow
+              v-for="row in tags.data"
+              :key="row.id">
+              <TableCell class="text-start">
+                <Checkbox
+                  class="cursor-pointer"
+                  :id="'select-' + row.id"
+                  @click="toggleSelectRow(row.id)" />
+              </TableCell>
+              <TableCell class="text-start">
+                {{ row.id }}
+              </TableCell>
+              <TableCell class="text-start">
+                {{ row.tagname }}
+              </TableCell>
+              <TableCell class="text-start">
+                {{ row.tagDescription }}
+              </TableCell>
+              <TableCell class="text-start">
+                <span
+                  v-for="(device, index) in row.device.slice(0, 4)"
+                  :key="device.device_name"
+                  class="mr-2">
+                  <Badge variant="outline">{{ device.device_name }}</Badge>
+                </span>
+                <span
+                  v-if="row.device.length > 4"
+                  class="mr-2">
+                  <Badge variant="outline">...</Badge>
+                </span>
+              </TableCell>
+              <!-- Add Dropdown Button for Edit/Delete -->
+              <TableCell class="text-start">
+                <DropdownMenu>
+                  <DropdownMenuTrigger as-child>
+                    <Button
+                      variant="ghost"
+                      class="hover:animate-pulse">
+                      ...
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    class="w-56"
+                    align="end"
+                    side="bottom">
+                    <DropdownMenuItem @click="() => onAssignRole(row.original)">
+                      <span>Assign Roles</span>
+                      <DropdownMenuShortcut>
+                        <Icon icon="fluent-color:people-team-16" />
+                      </DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem @click="() => onEdit(row.original)">
+                      <span>Edit</span>
+                      <DropdownMenuShortcut>
+                        <Icon icon="fluent-color:text-edit-style-16" />
+                      </DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem @click="() => onDelete(row.original)">
+                      <span spaclass="text-red-500">Delete</span>
+                      <DropdownMenuShortcut>
+                        <Icon icon="fluent-color:cloud-dismiss-48" />
+                      </DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+          </template>
+          <template v-else>
+            <TableRow>
+              <TableCell
+                :colspan="props.columns.length + 1"
+                class="h-24 text-center">
+                No results.
+              </TableCell>
+            </TableRow>
+          </template>
+        </TableBody>
+      </Table>
 
       <div class="flex items-center justify-end py-4 space-x-2">
+        <DropdownMenu>
+          <DropdownMenuTrigger as-child>
+            <Button variant="outline">
+              <span class="flex gap-2 items -center">
+                <Icon icon="fluent-color:pin-16" />
+                View Options
+              </span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            class="w-56"
+            align="start">
+            <DropdownMenuGroup>
+              <DropdownMenuItem @click="perPage = 5">
+                <span class="flex gap-2 items -center">
+                  <Icon icon="fluent-color:pin-16" />
+                  5 per page
+                </span>
+              </DropdownMenuItem>
+              <DropdownMenuItem @click="perPage = 10">
+                <span class="flex gap-2 items -center">
+                  <Icon icon="fluent-color:pin-16" />
+                  10 per page
+                </span>
+              </DropdownMenuItem>
+              <DropdownMenuItem @click="perPage = 20">
+                <span class="flex gap-2 items -center">
+                  <Icon icon="fluent-color:pin-16" />
+                  20 per page
+                </span>
+              </DropdownMenuItem>
+              <DropdownMenuItem @click="perPage = 50">
+                <span class="flex gap-2 items -center">
+                  <Icon icon="fluent-color:pin-16" />
+                  50 per page
+                </span>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         <div class="flex-1 text-sm text-muted-foreground">{{ currentPage }} of {{ last_page }} row(s) selected.</div>
         <div class="space-x-2">
           <Button
             @click="currentPage = Math.max(currentPage - 1, 1)"
             :disabled="currentPage === 1"
             variant="outline"
-            size="sm">
+            size="sm"
+            class="py-1">
             Previous
           </Button>
           <Button
             variant="outline"
             size="sm"
+            class="py-1"
             @click="currentPage += 1"
             :disabled="currentPage >= last_page">
             Next
