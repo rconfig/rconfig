@@ -194,9 +194,9 @@ onUnmounted(() => {
                   <div class="p-1 ml-2 text-left text-gray-200"><div>Dashboard</div></div>
                 </router-link>
                 <router-link
-                  to="/devices"
+                  to="/inventory"
                   class="transition ease-in-out delay-50 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
-                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'devices' }">
+                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'inventory' }">
                   <div class="flex justify-between w-full">
                     <div class="flex">
                       <Icon

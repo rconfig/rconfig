@@ -1,5 +1,6 @@
 <script setup>
 import Devices from '@/views/Inventory/Devices.vue';
+import CommandGroups from '@/views/Inventory/CommandGroups.vue';
 import Tags from '@/views/Inventory/Tags.vue';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -95,14 +96,7 @@ function toggleFavorite(viewId) {
 
     <Devices v-if="currentView === 'devices'"></Devices>
 
-    <div
-      v-else-if="currentView === 'commandgroups'"
-      class="flex items-center justify-center flex-1 border border-dashed rounded-lg shadow-sm">
-      <div class="flex flex-col items-center gap-1 text-center">
-        <h3 class="text-2xl font-bold tracking-tight">Command Groups View</h3>
-        <p class="text-sm text-muted-foreground">Details for command groups will be shown here.</p>
-      </div>
-    </div>
+    <CommandGroups v-if="currentView === 'commandgroups'"></CommandGroups>
 
     <div
       v-else-if="currentView === 'commands'"
