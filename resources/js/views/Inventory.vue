@@ -40,6 +40,7 @@ onMounted(() => {
 
 function changeView(view) {
   localStorage.setItem('inventorySelectedView', view);
+  currentView.value = view;
   router.push({ name: view });
 }
 
