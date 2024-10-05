@@ -26,7 +26,6 @@ class TagController extends ApiBaseController
             ->allowedSorts('id', 'tagname')
             ->paginate((int) $request->perPage);
 
-        // return response()->json(parent::index($request, $searchCols, null, ['device'], ['device']));
         return response()->json($response);
     }
 
