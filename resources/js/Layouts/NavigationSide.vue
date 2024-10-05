@@ -8,7 +8,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { ResizablePanel } from '@/components/ui/resizable';
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { usePanelStore } from '../stores/panelStore'; // Import the Pinia store
-import { useSheetStore } from '@/stores/sheet';
+import { useSheetStore } from '@/stores/sheetActions';
 import { useFavoritesStore } from '@/stores/favorites';
 const favoritesStore = useFavoritesStore();
 

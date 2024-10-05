@@ -3,14 +3,16 @@ import ActionsMenu from '@/components/Table/ActionsMenu.vue';
 import Loading from '@/components/Table/Loading.vue';
 import NoResults from '@/components/Table/NoResults.vue';
 import Pagination from '@/components/Table/Pagination.vue';
+import NewTag from '@/components/Dialogs/NewTag.vue';
 import axios from 'axios';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { h, ref, onMounted, watch } from 'vue';
+import { h, ref, onMounted, onUnmounted, watch } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
+import { useDialogStore } from '@/stores/dialogActions';
+import { Input } from '@/components/ui/input';
 
 const tags = ref([]);
 const isLoading = ref(true);
@@ -20,10 +22,23 @@ const filters = ref({});
 const perPage = ref(parseInt(localStorage.getItem('perPage') || '10'));
 const searchTerm = ref('');
 const sortParam = ref('-id');
+const dialogStore = useDialogStore();
+const { openDialog } = dialogStore;
 
 // Select Row Management
 const selectedRows = ref([]);
 const selectAll = ref(false);
+
+onMounted(() => {
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.altKey && event.key === 'n') {
+      event.preventDefault(); // Prevent default behavior (e.g., opening a new window in some browsers)
+      openDialog('DialogNewTag');
+    }
+  };
+
+  window.addEventListener('keydown', handleKeyDown);
+});
 
 const fetchTags = async () => {
   isLoading.value = true;
@@ -109,6 +124,10 @@ function toggleSort(field) {
   }
   fetchTags();
 }
+// Cleanup event listener on unmount
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown);
+});
 </script>
 
 <template>
@@ -137,11 +156,17 @@ function toggleSort(field) {
           variant="primary">
           Delete Selected {{ selectedRows.length }} Tag(s)
         </Button>
+
         <Button
-          class="px-2 py-1 ml-2 bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
-          size="md"
+          type="submit"
+          class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+          size="sm"
+          @click.prevent="openDialog('DialogNewTag')"
           variant="primary">
           New Tag
+          <div class="pl-2 ml-auto">
+            <kbd class="bxnAJf2">ALT N</kbd>
+          </div>
         </Button>
       </div>
     </div>
@@ -245,6 +270,8 @@ function toggleSort(field) {
         @update:currentPage="currentPage = $event"
         @update:perPage="perPage = $event" />
       <!-- END PAGINATION -->
+
+      <NewTag />
     </div>
   </div>
 </template>
