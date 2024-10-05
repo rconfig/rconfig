@@ -18,7 +18,7 @@ const last_page = ref(1);
 const filters = ref({});
 const perPage = ref(parseInt(localStorage.getItem('perPage') || '10'));
 const searchTerm = ref('');
-const sortParam = ref('');
+const sortParam = ref('-id');
 
 // Select Row Management
 const selectedRows = ref([]);
@@ -149,13 +149,13 @@ function toggleSort(field) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>
+            <TableHead class="w-[2%]">
               <Checkbox
                 id="selectAll"
                 v-model="selectAll"
                 @click="toggleSelectAll()" />
             </TableHead>
-            <TableHead class="w-[10%]">
+            <TableHead class="w-[5%]">
               <Button
                 class="flex justify-between w-full p-0 hover:bg-rcgray-800"
                 variant="ghost"
@@ -164,7 +164,7 @@ function toggleSort(field) {
                 <Icon :icon="sortParam === 'id' ? 'lucide:sort-asc' : sortParam === '-id' ? 'lucide:sort-desc' : 'hugeicons:sorting-05'" />
               </Button>
             </TableHead>
-            <TableHead class="w-[10%]">
+            <TableHead class="w-[20%]">
               <Button
                 class="flex justify-between w-full p-0 hover:bg-rcgray-800"
                 variant="ghost"
@@ -174,19 +174,27 @@ function toggleSort(field) {
               </Button>
             </TableHead>
             <TableHead class="w-[20%]">Description</TableHead>
-            <TableHead class="w-[30%]">Devices</TableHead>
+            <TableHead class="w-[40%]">Devices</TableHead>
             <TableHead class="w-[10%]">Actions</TableHead>
           </TableRow>
         </TableHeader>
-
         <TableBody>
           <template v-if="isLoading">
-            <div class="flex items-center gap-2 ml-6 dark:text-gray-400">
-              Loading
-              <Icon icon="eos-icons:three-dots-loading" />
-            </div>
+            <TableRow>
+              <TableCell
+                :colspan="12"
+                class="h-24 text-center">
+                <div class="flex items-center justify-center text-sm text-muted-foreground">
+                  <span>Loading</span>
+                  <Icon
+                    icon="eos-icons:three-dots-loading"
+                    class="ml-2" />
+                </div>
+              </TableCell>
+            </TableRow>
           </template>
-          <template v-else-if="tags.data.length > 0">
+
+          <template v-else-if="!isLoading && tags.data.length > 0">
             <TableRow
               v-for="row in tags.data"
               :key="row.id">
@@ -207,7 +215,7 @@ function toggleSort(field) {
               </TableCell>
               <TableCell class="text-start">
                 <span
-                  v-for="(device, index) in row.device.slice(0, 4)"
+                  v-for="(device, index) in row.device.slice(0, 8)"
                   :key="device.device_name"
                   class="mr-2">
                   <Badge
@@ -217,7 +225,7 @@ function toggleSort(field) {
                   </Badge>
                 </span>
                 <span
-                  v-if="row.device.length > 4"
+                  v-if="row.device.length > 8"
                   class="mr-2">
                   <Badge variant="outline">...</Badge>
                 </span>
@@ -269,7 +277,7 @@ function toggleSort(field) {
           <template v-else>
             <TableRow>
               <TableCell
-                :colspan="tags.data.length + 1"
+                :colspan="props.columns.length + 1"
                 class="h-24 text-center">
                 No results.
               </TableCell>
