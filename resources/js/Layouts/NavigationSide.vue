@@ -283,7 +283,7 @@ onUnmounted(() => {
             </div>
           </div>
           <div class="p-4 mt-auto">
-            <Card class="dark:bg-rcgray-600">
+            <Card class="dark:bg-rcgray-900">
               <CardHeader class="p-2 pt-0 md:p-4">
                 <CardTitle>Upgrade to Pro</CardTitle>
                 <CardDescription>Unlock all features and get unlimited access to our support team.</CardDescription>
