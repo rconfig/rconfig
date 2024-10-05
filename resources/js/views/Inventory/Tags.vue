@@ -104,10 +104,10 @@ function toggleSelectRow(rowId: number) {
 
 <template>
   <div class="flex flex-col h-full gap-1 text-center">
-    <div class="flex items-center justify-between py-4">
+    <div class="flex items-center justify-between p-4">
       <div class="flex items-center">
         <Input
-          class="max-w-sm ml-8"
+          class="max-w-sm ml-4"
           autocomplete="off"
           data-1p-ignore
           data-lpignore="true"
@@ -188,7 +188,11 @@ function toggleSelectRow(rowId: number) {
                   v-for="(device, index) in row.device.slice(0, 4)"
                   :key="device.device_name"
                   class="mr-2">
-                  <Badge variant="outline">{{ device.device_name }}</Badge>
+                  <Badge
+                    variant="outline"
+                    class="py-1 hover:bg-rcgray-800">
+                    <router-link :to="device.view_url">{{ device.device_name }}</router-link>
+                  </Badge>
                 </span>
                 <span
                   v-if="row.device.length > 4"
