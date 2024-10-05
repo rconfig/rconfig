@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import DataTable from './DataTable.vue';
 import axios from 'axios';
+import Loading from '@/components/Table/Loading.vue';
+import NoResults from '@/components/Table/NoResults.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -180,18 +181,7 @@ function toggleSort(field) {
         </TableHeader>
         <TableBody>
           <template v-if="isLoading">
-            <TableRow>
-              <TableCell
-                :colspan="12"
-                class="h-24 text-center">
-                <div class="flex items-center justify-center text-sm text-muted-foreground">
-                  <span>Loading</span>
-                  <Icon
-                    icon="eos-icons:three-dots-loading"
-                    class="ml-2" />
-                </div>
-              </TableCell>
-            </TableRow>
+            <Loading />
           </template>
 
           <template v-else-if="!isLoading && tags.data.length > 0">
@@ -275,13 +265,7 @@ function toggleSort(field) {
             </TableRow>
           </template>
           <template v-else>
-            <TableRow>
-              <TableCell
-                :colspan="props.columns.length + 1"
-                class="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
+            <NoResults />
           </template>
         </TableBody>
       </Table>
