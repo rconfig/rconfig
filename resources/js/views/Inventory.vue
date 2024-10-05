@@ -54,7 +54,7 @@ function toggleFavorite(viewId) {
 </script>
 
 <template>
-  <main class="flex flex-col flex-1 gap-2 border-t dark:bg-rcgray-900">
+  <main class="flex flex-col flex-1 gap-2 dark:bg-rcgray-900">
     <div class="border-t border-b topRow">
       <DropdownMenu>
         <DropdownMenuTrigger

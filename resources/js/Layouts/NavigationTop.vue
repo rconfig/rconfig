@@ -4,6 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Icon } from '@iconify/vue';
 import { ref } from 'vue';
 import { useColorMode } from '@vueuse/core';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { usePanelStore } from '../stores/panelStore'; // Import the Pinia store
 
 const svgIshoveringOpen = ref(false);
@@ -11,10 +12,6 @@ const mode = useColorMode();
 const panelStore = usePanelStore(); // Access the panel store
 
 defineProps({
-  title: {
-    type: String,
-    required: true
-  },
   panelRef: {
     type: Object,
     default: null
@@ -123,7 +120,20 @@ function collapsePanel() {
               class="sc-egvMOQ hxMVRj"></path>
           </svg>
         </button>
-        <span class="ml-4">{{ title }}</span>
+
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>
+              <Icon icon="radix-icons:slash" />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/inventory">Inventory</BreadcrumbLink>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
       </div>
 
       <div class="mt-1 top-nav-div">
