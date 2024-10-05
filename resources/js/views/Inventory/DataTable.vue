@@ -40,6 +40,11 @@ function onDelete(rowData) {
   // Handle delete action
   console.log('Delete:', rowData);
 }
+
+function onAssignRole(rowData) {
+  // Handle assign role action
+  console.log('Assign Role:', rowData);
+}
 </script>
 
 <template>
@@ -66,6 +71,7 @@ function onDelete(rowData) {
             :key="row.id"
             :data-state="row.getIsSelected() ? 'selected' : undefined">
             <TableCell
+              :class="row.getCanSelect() ? 'cursor-pointer text-start' : undefined"
               v-for="cell in row.getVisibleCells()"
               :key="cell.id">
               <FlexRender
@@ -82,29 +88,27 @@ function onDelete(rowData) {
                   class="w-56"
                   align="end"
                   side="bottom">
-                  <DropdownMenuItem>
+                  <DropdownMenuItem @click="() => onAssignRole(row.original)">
                     <span>Assign Roles</span>
-                    <DropdownMenuShortcut><Icon icon="fluent-color:people-team-16" /></DropdownMenuShortcut>
+                    <DropdownMenuShortcut>
+                      <Icon icon="fluent-color:people-team-16" />
+                    </DropdownMenuShortcut>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem @click="() => onEdit(row.original)">
                     <span>Edit</span>
-                    <DropdownMenuShortcut><Icon icon="fluent-color:text-edit-style-16" /></DropdownMenuShortcut>
+                    <DropdownMenuShortcut>
+                      <Icon icon="fluent-color:text-edit-style-16" />
+                    </DropdownMenuShortcut>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem @click="() => onDelete(row.original)">
                     <spa class="text-red-500">Delete</spa>
-                    <DropdownMenuShortcut><Icon icon="fluent-color:cloud-dismiss-48" /></DropdownMenuShortcut>
+                    <DropdownMenuShortcut>
+                      <Icon icon="fluent-color:cloud-dismiss-48" />
+                    </DropdownMenuShortcut>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <!-- <DropdownMenu>
-                <DropdownMenuContent>
-                  <DropdownMenuGroup>
-                    <DropdownMenuItem @click="() => onEdit(row.original)">Edit</DropdownMenuItem>
-                    <DropdownMenuItem @click="() => onDelete(row.original)">Delete</DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu> -->
             </TableCell>
           </TableRow>
         </template>
