@@ -53,7 +53,7 @@ function toggleFavorite(viewId) {
           <Button variant="outline">
             <span class="flex items-center gap-2">
               <Icon icon="fluent-color:pin-16" />
-              View Options
+              Select View
             </span>
           </Button>
         </DropdownMenuTrigger>
