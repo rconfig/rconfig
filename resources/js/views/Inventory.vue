@@ -63,6 +63,10 @@ function toggleFavorite(viewId) {
             </span>
           </Button>
         </DropdownMenuTrigger>
+        <div class="flex items-center gap-2 mr-4">
+          <Icon :icon="viewItems.find(item => item.id === currentView)?.icon || ''" />
+          {{ viewItems.find(item => item.id === currentView)?.label || '' }}
+        </div>
 
         <DropdownMenuContent
           class="w-56"

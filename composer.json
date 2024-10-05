@@ -29,6 +29,7 @@
         "spatie/laravel-activitylog": "^4.5",
         "spatie/laravel-health": "^1.8",
         "spatie/laravel-ignition": "^2.0",
+        "spatie/laravel-query-builder": "^6.2",
         "symfony/yaml": "^7.0"
     },
     "require-dev": {

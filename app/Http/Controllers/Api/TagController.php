@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\StoreTagRequest;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class TagController extends ApiBaseController
 {
@@ -14,58 +15,34 @@ class TagController extends ApiBaseController
         $this->modelname = $modelname;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request, $searchCols = null, $relationship = null, $withCount = null)
+    public function index(Request $request, $searchCols = null, $relationship = null, $withCount = null, $return = 0)
     {
         $searchCols = ['tagname'];
 
-        return response()->json(parent::index($request, $searchCols, null, ['device'], ['device']));
+        $response = QueryBuilder::for(Tag::class)
+            ->with(['device'])
+            ->allowedFilters(['tagname'])
+            ->paginate((int) $request->perPage);
+
+        // return response()->json(parent::index($request, $searchCols, null, ['device'], ['device']));
+        return response()->json($response);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(StoreTagRequest $request)
     {
         return parent::storeResource($request->toDTO()->toArray());
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
     public function show($id, $relationship = null, $withCount = null)
     {
         return parent::show($id, null, ['device'], ['device']);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
     public function update($id, StoreTagRequest $request)
     {
         return parent::updateResource($id, $request->toDTO()->toArray());
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id, $return = 0)
     {
         return parent::destroy($id);

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { h, ref, onMounted, watch } from 'vue';
+import { useDebounceFn } from '@vueuse/core';
 import { Button } from '@/components/ui/button';
 import { ColumnDef } from '@tanstack/vue-table';
 import { Input } from '@/components/ui/input';
@@ -11,8 +12,9 @@ const tags = ref<Tag[]>([]);
 const isLoading = ref(true);
 const currentPage = ref(1);
 const last_page = ref(1);
-const filters = ref({});
+const filters = ref<{ search?: string }>({});
 const perPage = ref(10);
+const searchTerm = ref('');
 
 interface Tag {
   id: number;
@@ -74,12 +76,22 @@ const fetchTags = async () => {
   }
 };
 
+const debouncedFilter = useDebounceFn(() => {
+  filters.value[`filter[tagname]`] = searchTerm.value;
+  currentPage.value = 1;
+  fetchTags();
+}, 500);
+
 onMounted(() => {
   fetchTags();
 });
 
-watch([currentPage, filters, perPage], () => {
+watch([currentPage, perPage], () => {
   fetchTags();
+});
+
+watch(searchTerm, () => {
+  debouncedFilter();
 });
 </script>
 
@@ -87,13 +99,28 @@ watch([currentPage, filters, perPage], () => {
   <div class="flex flex-col h-screen gap-1 text-center">
     <div class="flex items-center py-4">
       <Input
-        class="max-w-sm"
-        placeholder="Filter emails..." />
+        class="max-w-sm ml-8"
+        autocomplete="off"
+        data-1p-ignore
+        data-lpignore="true"
+        placeholder="Filter tags..."
+        v-model="searchTerm" />
+      <Button
+        class="ml-2 hover:bg-gray-800"
+        variant="outline"
+        @click="searchTerm = ''">
+        Clear Filter
+      </Button>
+      <Button
+        class="ml-auto mr-8 bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+        variant="primary">
+        New Tag
+      </Button>
     </div>
 
     <div
       v-if="isLoading"
-      class="flex items-center gap-2 dark:text-gray-400">
+      class="flex items-center gap-2 ml-6 dark:text-gray-400">
       Loading
       <Icon icon="eos-icons:three-dots-loading" />
     </div>
