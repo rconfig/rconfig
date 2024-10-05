@@ -102,7 +102,8 @@ onUnmounted(() => {
     :min-size="10"
     collapsible
     :collapsed-size="0"
-    ref="panelElement">
+    ref="panelElement"
+    class="dark:bg-rcgray-800">
     <div class="grid min-h-screen">
       <div class="bg-gray-100 bg-muted/40 md:block">
         <div class="flex flex-col h-full max-h-screen gap-2">

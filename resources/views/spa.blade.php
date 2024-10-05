@@ -12,7 +12,7 @@
                 <div class="pf-c-page">
                     <div class="min-h-screen bg-gray-100 dark:bg-rcgray-800">
 
-                        <resizable-panel-group id="nav-group-1" direction="horizontal" class="min-h-[100vh] max-w-[100vw] rounded-lg border" auto-save-id="any-id" :default-size="['10%', '90%']">
+                        <resizable-panel-group id="nav-group-1" direction="horizontal" class="min-h-[100vh] max-w-[100vw] rounded-lg border dark:bg-rcgray-900" auto-save-id="any-id" :default-size="['10%', '90%']">
 
                             <navigation-side></navigation-side>{{-- first resizable panel inside nav-side component --}}
 
@@ -21,7 +21,7 @@
                             </resizable-handle>
 
                             <resizable-panel id="topnav" :default-size="90">
-                                <div class="flex flex-col">
+                                <div class="flex flex-col ">
                                     <navigation-top :title="$route.name"></navigation-top>
 
                                     <!-- Page Content -->
