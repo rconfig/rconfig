@@ -15,7 +15,7 @@ const isLoading = ref(true);
 const currentPage = ref(1);
 const last_page = ref(1);
 const filters = ref({});
-const perPage = ref(10);
+const perPage = ref(parseInt(localStorage.getItem('perPage') || '10'));
 const searchTerm = ref('');
 
 // Select Row Management
@@ -72,6 +72,10 @@ watch([currentPage, perPage], () => {
 
 watch(searchTerm, () => {
   debouncedFilter();
+});
+
+watch(perPage, newVal => {
+  localStorage.setItem('perPage', newVal.toString());
 });
 
 function toggleSelectAll() {
@@ -237,7 +241,7 @@ function toggleSelectRow(rowId: number) {
             <Button variant="outline">
               <span class="flex gap-2 items -center">
                 <Icon icon="fluent-color:pin-16" />
-                View Options
+                {{ perPage === 100000 ? 'All' : perPage + ' per page' }}
               </span>
             </Button>
           </DropdownMenuTrigger>
@@ -250,24 +254,60 @@ function toggleSelectRow(rowId: number) {
                   <Icon icon="fluent-color:pin-16" />
                   5 per page
                 </span>
+                <DropdownMenuShortcut>
+                  <Icon
+                    v-if="perPage === 5"
+                    icon="flat-color-icons:checkmark"
+                    class="ml-auto" />
+                </DropdownMenuShortcut>
               </DropdownMenuItem>
               <DropdownMenuItem @click="perPage = 10">
                 <span class="flex gap-2 items -center">
                   <Icon icon="fluent-color:pin-16" />
                   10 per page
                 </span>
+                <DropdownMenuShortcut>
+                  <Icon
+                    v-if="perPage === 10"
+                    icon="flat-color-icons:checkmark"
+                    class="ml-auto" />
+                </DropdownMenuShortcut>
               </DropdownMenuItem>
               <DropdownMenuItem @click="perPage = 20">
                 <span class="flex gap-2 items -center">
                   <Icon icon="fluent-color:pin-16" />
                   20 per page
                 </span>
+                <DropdownMenuShortcut>
+                  <Icon
+                    v-if="perPage === 20"
+                    icon="flat-color-icons:checkmark"
+                    class="ml-auto" />
+                </DropdownMenuShortcut>
               </DropdownMenuItem>
               <DropdownMenuItem @click="perPage = 50">
                 <span class="flex gap-2 items -center">
                   <Icon icon="fluent-color:pin-16" />
                   50 per page
                 </span>
+                <DropdownMenuShortcut>
+                  <Icon
+                    v-if="perPage === 50"
+                    icon="flat-color-icons:checkmark"
+                    class="ml-auto" />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuItem @click="perPage = 100000">
+                <span class="flex gap-2 items -center">
+                  <Icon icon="fluent-color:pin-16" />
+                  All
+                </span>
+                <DropdownMenuShortcut>
+                  <Icon
+                    v-if="perPage === 100000"
+                    icon="flat-color-icons:checkmark"
+                    class="ml-auto" />
+                </DropdownMenuShortcut>
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
