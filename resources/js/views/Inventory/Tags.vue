@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import axios from 'axios';
 import Loading from '@/components/Table/Loading.vue';
+import Pagination from '@/components/Table/Pagination.vue';
 import NoResults from '@/components/Table/NoResults.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -270,104 +271,14 @@ function toggleSort(field) {
         </TableBody>
       </Table>
 
-      <div class="flex items-center justify-end py-4 space-x-2">
-        <DropdownMenu>
-          <DropdownMenuTrigger as-child>
-            <Button variant="outline">
-              <span class="flex gap-2 items -center">
-                <Icon icon="fluent-color:pin-16" />
-                {{ perPage === 100000 ? 'All' : perPage + ' per page' }}
-              </span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            class="w-56"
-            align="start">
-            <DropdownMenuGroup>
-              <DropdownMenuItem @click="perPage = 5">
-                <span class="flex gap-2 items -center">
-                  <Icon icon="fluent-color:pin-16" />
-                  5 per page
-                </span>
-                <DropdownMenuShortcut>
-                  <Icon
-                    v-if="perPage === 5"
-                    icon="flat-color-icons:checkmark"
-                    class="ml-auto" />
-                </DropdownMenuShortcut>
-              </DropdownMenuItem>
-              <DropdownMenuItem @click="perPage = 10">
-                <span class="flex gap-2 items -center">
-                  <Icon icon="fluent-color:pin-16" />
-                  10 per page
-                </span>
-                <DropdownMenuShortcut>
-                  <Icon
-                    v-if="perPage === 10"
-                    icon="flat-color-icons:checkmark"
-                    class="ml-auto" />
-                </DropdownMenuShortcut>
-              </DropdownMenuItem>
-              <DropdownMenuItem @click="perPage = 20">
-                <span class="flex gap-2 items -center">
-                  <Icon icon="fluent-color:pin-16" />
-                  20 per page
-                </span>
-                <DropdownMenuShortcut>
-                  <Icon
-                    v-if="perPage === 20"
-                    icon="flat-color-icons:checkmark"
-                    class="ml-auto" />
-                </DropdownMenuShortcut>
-              </DropdownMenuItem>
-              <DropdownMenuItem @click="perPage = 50">
-                <span class="flex gap-2 items -center">
-                  <Icon icon="fluent-color:pin-16" />
-                  50 per page
-                </span>
-                <DropdownMenuShortcut>
-                  <Icon
-                    v-if="perPage === 50"
-                    icon="flat-color-icons:checkmark"
-                    class="ml-auto" />
-                </DropdownMenuShortcut>
-              </DropdownMenuItem>
-              <DropdownMenuItem @click="perPage = 100000">
-                <span class="flex gap-2 items -center">
-                  <Icon icon="fluent-color:pin-16" />
-                  All
-                </span>
-                <DropdownMenuShortcut>
-                  <Icon
-                    v-if="perPage === 100000"
-                    icon="flat-color-icons:checkmark"
-                    class="ml-auto" />
-                </DropdownMenuShortcut>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <div class="flex-1 text-sm text-muted-foreground">{{ currentPage }} of {{ last_page }} row(s) selected.</div>
-        <div class="space-x-2">
-          <Button
-            @click="currentPage = Math.max(currentPage - 1, 1)"
-            :disabled="currentPage === 1"
-            variant="outline"
-            size="sm"
-            class="py-1">
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            class="py-1"
-            @click="currentPage += 1"
-            :disabled="currentPage >= last_page">
-            Next
-          </Button>
-        </div>
-      </div>
+      <!-- PAGINATION -->
+      <Pagination
+        :currentPage="currentPage"
+        :lastPage="last_page"
+        :perPage="perPage"
+        @update:currentPage="currentPage = $event"
+        @update:perPage="perPage = $event" />
+      <!-- END PAGINATION -->
     </div>
   </div>
 </template>
