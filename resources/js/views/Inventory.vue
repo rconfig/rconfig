@@ -45,12 +45,6 @@ function toggleFavorite(viewId) {
 
 <template>
   <main class="flex flex-col flex-1 gap-2 border-t dark:bg-rcgray-900">
-    <!-- <div class="flex items-center">
-      <h1 class="ml-6 text-lg font-semibold md:text-2xl">
-        {{ currentView === 'devices' ? 'Devices' : currentView.charAt(0).toUpperCase() + currentView.slice(1) }}
-      </h1>
-    </div> -->
-
     <div class="border-t border-b topRow">
       <DropdownMenu>
         <DropdownMenuTrigger

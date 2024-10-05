@@ -3,7 +3,7 @@ import { ref, computed } from 'vue';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Pagination, PaginationEllipsis, PaginationFirst, PaginationLast, PaginationList, PaginationListItem, PaginationNext, PaginationPrev } from '@/components/ui/pagination';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 const props = defineProps<{
   columns: ColumnDef<TData, TValue>[];
@@ -31,6 +31,15 @@ const table = useVueTable({
   },
   getCoreRowModel: getCoreRowModel()
 });
+function onEdit(rowData) {
+  // Handle edit action
+  console.log('Edit:', rowData);
+}
+
+function onDelete(rowData) {
+  // Handle delete action
+  console.log('Delete:', rowData);
+}
 </script>
 
 <template>
@@ -63,12 +72,46 @@ const table = useVueTable({
                 :render="cell.column.columnDef.cell"
                 :props="cell.getContext()" />
             </TableCell>
+            <!-- Add Dropdown Button for Edit/Delete -->
+            <TableCell>
+              <DropdownMenu>
+                <DropdownMenuTrigger as-child>
+                  <Button variant="outline">...</Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  class="w-56"
+                  align="end"
+                  side="bottom">
+                  <DropdownMenuItem>
+                    <span>Assign Roles</span>
+                    <DropdownMenuShortcut><Icon icon="fluent-color:people-team-16" /></DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <span>Edit</span>
+                    <DropdownMenuShortcut><Icon icon="fluent-color:text-edit-style-16" /></DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <spa class="text-red-500">Delete</spa>
+                    <DropdownMenuShortcut><Icon icon="fluent-color:cloud-dismiss-48" /></DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <!-- <DropdownMenu>
+                <DropdownMenuContent>
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem @click="() => onEdit(row.original)">Edit</DropdownMenuItem>
+                    <DropdownMenuItem @click="() => onDelete(row.original)">Delete</DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu> -->
+            </TableCell>
           </TableRow>
         </template>
         <template v-else>
           <TableRow>
             <TableCell
-              :colspan="props.columns.length"
+              :colspan="props.columns.length + 1"
               class="h-24 text-center">
               No results.
             </TableCell>
