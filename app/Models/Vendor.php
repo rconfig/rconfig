@@ -17,6 +17,6 @@ class Vendor extends BaseModel
      */
     public function device()
     {
-        return $this->belongsToMany('App\Models\Device', 'foreign_key');
+        return $this->belongsToMany('App\Models\Device');
     }
 }

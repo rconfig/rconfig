@@ -17,9 +17,9 @@ const routes = [
   { path: '/templates', name: 'templates', component: () => import('./views/Templates.vue') },
   { path: '/commandgroups', name: 'commandgroups', component: () => import('./views/Inventory/CommandGroups.vue') },
   { path: '/commands', name: 'commands', component: () => import('./views/Commands.vue') },
-  { path: '/tags', name: 'tags', component: () => import('./views/Inventory/Tags.vue') },
-  { path: '/tags/:id', name: 'tags-id', component: () => import('./views/Tags.vue') },
-  { path: '/vendors', name: 'vendors', component: () => import('./views/Vendors.vue') },
+  { path: '/tags', name: 'tags', component: () => import('./views/Inventory.vue') },
+  { path: '/tags/:id', name: 'tags-id', component: () => import('./views/Inventory.vue') },
+  { path: '/vendors', name: 'vendors', component: () => import('./views/Inventory.vue') },
   { path: '/config-search', name: 'config-search', component: () => import('./views/ConfigSearch.vue') },
   { path: '/config-reports', name: 'config-reports', component: () => import('./views/ConfigReports.vue') },
 

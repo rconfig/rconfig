@@ -2,17 +2,21 @@
 import Devices from '@/views/Inventory/Devices.vue';
 import CommandGroups from '@/views/Inventory/CommandGroups.vue';
 import Tags from '@/views/Inventory/Tags.vue';
+import Vendors from '@/views/Inventory/Vendors.vue';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ref, onMounted } from 'vue';
 import { useFavoritesStore } from '@/stores/favorites';
+import { useRoute, useRouter } from 'vue-router'; // Import the useRoute from Vue Router
 
 defineProps({});
 
 const title = 'Dashboard';
 const favoritesStore = useFavoritesStore();
 const currentView = ref(localStorage.getItem('inventorySelectedView') || 'devices');
+const route = useRoute();
+const router = useRouter();
 
 const viewItems = [
   { id: 'devices', label: 'Devices', icon: 'fluent-color:org-16', isFavorite: ref(false), route: 'devices' },
@@ -24,6 +28,11 @@ const viewItems = [
 ];
 
 onMounted(() => {
+  // Set currentView if path is not Inventory
+  if (!route.path.includes('inventory')) {
+    changeView(route.name);
+  }
+
   viewItems.forEach(item => {
     item.isFavorite.value = favoritesStore.isFavorite(item.id);
   });
@@ -31,7 +40,7 @@ onMounted(() => {
 
 function changeView(view) {
   localStorage.setItem('inventorySelectedView', view);
-  currentView.value = view; // Update the view reactively
+  router.push({ name: view });
 }
 
 function toggleFavorite(viewId) {
@@ -114,14 +123,7 @@ function toggleFavorite(viewId) {
       </div>
     </div>
 
-    <div
-      v-else-if="currentView === 'vendors'"
-      class="flex items-center justify-center flex-1 border border-dashed rounded-lg shadow-sm">
-      <div class="flex flex-col items-center gap-1 text-center">
-        <h3 class="text-2xl font-bold tracking-tight">Vendors View</h3>
-        <p class="text-sm text-muted-foreground">Details for vendors will be shown here.</p>
-      </div>
-    </div>
+    <Vendors v-if="currentView === 'vendors'"></Vendors>
 
     <Tags v-if="currentView === 'tags'"></Tags>
   </main>

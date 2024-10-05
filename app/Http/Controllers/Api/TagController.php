@@ -17,8 +17,6 @@ class TagController extends ApiBaseController
 
     public function index(Request $request, $searchCols = null, $relationship = null, $withCount = null, $return = 0)
     {
-        $searchCols = ['tagname'];
-
         $response = QueryBuilder::for(Tag::class)
             ->with(['device'])
             ->allowedFilters(['tagname'])

@@ -193,19 +193,15 @@ onUnmounted(() => {
                     class="text-rcgray-400" />
                   <div class="p-1 ml-2 text-left text-gray-200"><div>Dashboard</div></div>
                 </router-link>
+
                 <router-link
                   to="/inventory"
-                  class="transition ease-in-out delay-50 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
-                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'inventory' }">
-                  <div class="flex justify-between w-full">
-                    <div class="flex">
-                      <Icon
-                        icon="carbon:network-1"
-                        class="text-rcgray-400" />
-                      <div class="p-1 ml-2 selection:text-gray-200">Inventory</div>
-                    </div>
-                    <div><Badge class="flex bg-blue-600 text-slate-50">02</Badge></div>
-                  </div>
+                  class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
+                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'scheduled-tasks' }">
+                  <Icon
+                    icon="carbon:network-1"
+                    class="text-rcgray-400" />
+                  <div class="p-1 ml-2 text-left text-gray-200"><div>Inventory</div></div>
                 </router-link>
                 <router-link
                   to="/scheduled-tasks"
