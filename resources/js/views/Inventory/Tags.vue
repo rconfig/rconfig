@@ -104,27 +104,38 @@ function toggleSelectRow(rowId: number) {
 
 <template>
   <div class="flex flex-col h-full gap-1 text-center">
-    <div class="flex items-center py-4">
-      <Input
-        class="max-w-sm ml-8"
-        autocomplete="off"
-        data-1p-ignore
-        data-lpignore="true"
-        placeholder="Filter tags..."
-        v-model="searchTerm" />
-      <Button
-        class="ml-2 hover:bg-gray-800"
-        variant="outline"
-        @click="searchTerm = ''">
-        Clear Filter
-      </Button>
-      <Button
-        class="ml-auto mr-8 bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
-        variant="primary">
-        New Tag
-      </Button>
+    <div class="flex items-center justify-between py-4">
+      <div class="flex items-center">
+        <Input
+          class="max-w-sm ml-8"
+          autocomplete="off"
+          data-1p-ignore
+          data-lpignore="true"
+          placeholder="Filter tags..."
+          v-model="searchTerm" />
+        <Button
+          class="ml-2 hover:bg-gray-800"
+          variant="outline"
+          @click="searchTerm = ''">
+          Clear Filter
+        </Button>
+      </div>
+      <div class="flex">
+        <Button
+          v-if="selectedRows.length"
+          class="px-2 py-1 bg-red-600 hover:bg-red-700 hover:animate-pulse"
+          size="md"
+          variant="primary">
+          Delete Selected {{ selectedRows.length }} Tag(s)
+        </Button>
+        <Button
+          class="px-2 py-1 ml-2 bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+          size="md"
+          variant="primary">
+          New Tag
+        </Button>
+      </div>
     </div>
-    {{ selectedRows }}
 
     <div
       v-if="isLoading"
