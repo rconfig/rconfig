@@ -1,22 +1,31 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@iconify/vue';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useFavoritesStore } from '@/stores/favorites';
 
 defineProps({});
 
 const title = 'Dashboard';
-const currentView = ref('devices'); // Reactive view state
+const currentView = ref('devices');
+const favoritesStore = useFavoritesStore();
+
 const viewItems = [
-  { id: 'devices', label: 'Devices', icon: 'fluent-color:org-16', isFavorite: ref(false) },
-  { id: 'commandGroups', label: 'Command Groups', icon: 'fluent-color:search-visual-24', isFavorite: ref(false) },
-  { id: 'commands', label: 'Commands', icon: 'fluent-color:text-edit-style-16', isFavorite: ref(false) },
-  { id: 'templates', label: 'Templates', icon: 'fluent-color:code-block-32', isFavorite: ref(false) },
-  { id: 'vendors', label: 'Vendors', icon: 'fluent-color:apps-16', isFavorite: ref(false) },
-  { id: 'tags', label: 'Tags', icon: 'fluent-emoji:keycap-hashtag', isFavorite: ref(false) }
+  { id: 'devices', label: 'Devices', icon: 'fluent-color:org-16', isFavorite: ref(false), route: 'devices' },
+  { id: 'commandgroups', label: 'Command Groups', icon: 'fluent-color:search-visual-24', isFavorite: ref(false), route: 'commandgroups' },
+  { id: 'commands', label: 'Commands', icon: 'fluent-color:text-edit-style-16', isFavorite: ref(false), route: 'commands' },
+  { id: 'templates', label: 'Templates', icon: 'fluent-color:code-block-32', isFavorite: ref(false), route: 'templates' },
+  { id: 'vendors', label: 'Vendors', icon: 'fluent-color:apps-16', isFavorite: ref(false), route: 'vendors' },
+  { id: 'tags', label: 'Tags', icon: 'fluent-emoji:keycap-hashtag', isFavorite: ref(false), route: 'tags' }
 ];
+
+onMounted(() => {
+  viewItems.forEach(item => {
+    item.isFavorite.value = favoritesStore.isFavorite(item.id);
+  });
+});
 
 function changeView(view) {
   currentView.value = view; // Update the view reactively
@@ -26,6 +35,7 @@ function toggleFavorite(viewId) {
   const viewItem = viewItems.find(item => item.id === viewId);
   if (viewItem) {
     viewItem.isFavorite.value = !viewItem.isFavorite.value;
+    favoritesStore.toggleFavorite(viewItem);
   }
 }
 </script>
@@ -76,7 +86,7 @@ function toggleFavorite(viewId) {
     </div>
 
     <div class="flex items-center">
-      <h1 class="text-lg font-semibold md:text-2xl">
+      <h1 class="ml-6 text-lg font-semibold md:text-2xl">
         {{ currentView === 'devices' ? 'Devices' : currentView.charAt(0).toUpperCase() + currentView.slice(1) }}
       </h1>
     </div>
@@ -92,7 +102,7 @@ function toggleFavorite(viewId) {
     </div>
 
     <div
-      v-else-if="currentView === 'commandGroups'"
+      v-else-if="currentView === 'commandgroups'"
       class="flex items-center justify-center flex-1 border border-dashed rounded-lg shadow-sm">
       <div class="flex flex-col items-center gap-1 text-center">
         <h3 class="text-2xl font-bold tracking-tight">Command Groups View</h3>
@@ -109,7 +119,32 @@ function toggleFavorite(viewId) {
       </div>
     </div>
 
-    <!-- Add similar blocks for other views (templates, vendors, tags) -->
+    <div
+      v-else-if="currentView === 'templates'"
+      class="flex items-center justify-center flex-1 border border-dashed rounded-lg shadow-sm">
+      <div class="flex flex-col items-center gap-1 text-center">
+        <h3 class="text-2xl font-bold tracking-tight">Templates View</h3>
+        <p class="text-sm text-muted-foreground">Details for templates will be shown here.</p>
+      </div>
+    </div>
+
+    <div
+      v-else-if="currentView === 'vendors'"
+      class="flex items-center justify-center flex-1 border border-dashed rounded-lg shadow-sm">
+      <div class="flex flex-col items-center gap-1 text-center">
+        <h3 class="text-2xl font-bold tracking-tight">Vendors View</h3>
+        <p class="text-sm text-muted-foreground">Details for vendors will be shown here.</p>
+      </div>
+    </div>
+
+    <div
+      v-else-if="currentView === 'tags'"
+      class="flex items-center justify-center flex-1 border border-dashed rounded-lg shadow-sm">
+      <div class="flex flex-col items-center gap-1 text-center">
+        <h3 class="text-2xl font-bold tracking-tight">Tags View</h3>
+        <p class="text-sm text-muted-foreground">Details for tags will be shown here.</p>
+      </div>
+    </div>
   </main>
 </template>
 

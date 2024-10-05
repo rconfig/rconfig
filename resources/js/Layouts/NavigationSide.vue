@@ -9,8 +9,10 @@ import { ResizablePanel } from '@/components/ui/resizable';
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { usePanelStore } from '../stores/panelStore'; // Import the Pinia store
 import { useSheetStore } from '@/stores/sheet';
+import { useFavoritesStore } from '@/stores/favorites';
+const favoritesStore = useFavoritesStore();
 
-const isOpen1 = ref(false);
+const isOpen1 = ref(true);
 const isOpen2 = ref(false);
 const svgIshoveringClose = ref(false);
 const panelStore = usePanelStore(); // Access the panel store
@@ -240,7 +242,7 @@ onUnmounted(() => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        class="pl-0">
+                        class="pb-2 pl-0">
                         <div
                           class="flex items-center cursor-pointer"
                           type="button"
@@ -267,31 +269,17 @@ onUnmounted(() => {
 
                   <CollapsibleContent>
                     <router-link
-                      to="/settings1"
+                      v-for="item in favoritesStore.favorites"
+                      :key="item.id"
+                      :to="item.route"
                       class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
-                      :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'settings1' }">
+                      :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === item.route }">
                       <Icon
-                        icon="carbon:settings-edit"
+                        :icon="item.icon"
                         class="text-rcgray-400" />
-                      <div class="p-1 ml-2 text-left text-gray-200"><div>Settings</div></div>
-                    </router-link>
-                    <router-link
-                      to="/settings2"
-                      class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
-                      :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'settings2' }">
-                      <Icon
-                        icon="carbon:settings-edit"
-                        class="text-rcgray-400" />
-                      <div class="p-1 ml-2 text-left text-gray-200"><div>Settings</div></div>
-                    </router-link>
-                    <router-link
-                      to="/settings3"
-                      class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
-                      :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'settings3' }">
-                      <Icon
-                        icon="carbon:settings-edit"
-                        class="text-rcgray-400" />
-                      <div class="p-1 ml-2 text-left text-gray-200"><div>Settings</div></div>
+                      <div class="p-1 ml-2 text-left text-gray-200">
+                        <div>{{ item.label }}</div>
+                      </div>
                     </router-link>
                   </CollapsibleContent>
                 </Collapsible>
