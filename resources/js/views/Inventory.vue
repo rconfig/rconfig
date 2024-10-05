@@ -49,7 +49,7 @@ function toggleFavorite(viewId) {
       <DropdownMenu>
         <DropdownMenuTrigger
           as-child
-          class="p-2">
+          class="p-4 ml-2">
           <Button variant="outline">
             <span class="flex items-center gap-2">
               <Icon icon="fluent-color:pin-16" />
