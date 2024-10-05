@@ -22,6 +22,8 @@ class TagController extends ApiBaseController
         $response = QueryBuilder::for(Tag::class)
             ->with(['device'])
             ->allowedFilters(['tagname'])
+            ->defaultSort('-id')
+            ->allowedSorts('id', 'tagname')
             ->paginate((int) $request->perPage);
 
         // return response()->json(parent::index($request, $searchCols, null, ['device'], ['device']));

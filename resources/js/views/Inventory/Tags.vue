@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { h, ref, onMounted, watch } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
+import { Icon } from '@iconify/vue';
 
 const tags = ref([]);
 const isLoading = ref(true);
@@ -17,6 +18,7 @@ const last_page = ref(1);
 const filters = ref({});
 const perPage = ref(parseInt(localStorage.getItem('perPage') || '10'));
 const searchTerm = ref('');
+const sortParam = ref('');
 
 // Select Row Management
 const selectedRows = ref([]);
@@ -29,6 +31,7 @@ const fetchTags = async () => {
       params: {
         page: currentPage.value,
         perPage: perPage.value,
+        sort: sortParam.value,
         ...filters.value
       }
     });
@@ -81,9 +84,7 @@ watch(perPage, newVal => {
 function toggleSelectAll() {
   selectAll.value = !selectAll.value;
   if (selectAll.value) {
-    console.log(tags.value.data);
     // Select all rows
-
     selectedRows.value = tags.value.data.map(row => row.id);
   } else {
     // Deselect all rows
@@ -92,13 +93,20 @@ function toggleSelectAll() {
 }
 
 function toggleSelectRow(rowId: number) {
-  console.log(rowId);
-
   if (selectedRows.value.includes(rowId)) {
     selectedRows.value = selectedRows.value.filter(id => id !== rowId);
   } else {
     selectedRows.value.push(rowId);
   }
+}
+
+function toggleSort(field) {
+  if (sortParam.value === field) {
+    sortParam.value = `-${field}`;
+  } else {
+    sortParam.value = field;
+  }
+  fetchTags();
 }
 </script>
 
@@ -137,16 +145,7 @@ function toggleSelectRow(rowId: number) {
       </div>
     </div>
 
-    <div
-      v-if="isLoading"
-      class="flex items-center gap-2 ml-6 dark:text-gray-400">
-      Loading
-      <Icon icon="eos-icons:three-dots-loading" />
-    </div>
-
-    <div
-      v-else
-      class="px-6">
+    <div class="px-6">
       <Table>
         <TableHeader>
           <TableRow>
@@ -156,15 +155,38 @@ function toggleSelectRow(rowId: number) {
                 v-model="selectAll"
                 @click="toggleSelectAll()" />
             </TableHead>
-            <TableHead>ID</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Description</TableHead>
-            <TableHead>Devices</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead class="w-[10%]">
+              <Button
+                class="flex justify-between w-full p-0 hover:bg-rcgray-800"
+                variant="ghost"
+                @click="toggleSort('id')">
+                <span>ID</span>
+                <Icon :icon="sortParam === 'id' ? 'lucide:sort-asc' : sortParam === '-id' ? 'lucide:sort-desc' : 'hugeicons:sorting-05'" />
+              </Button>
+            </TableHead>
+            <TableHead class="w-[10%]">
+              <Button
+                class="flex justify-between w-full p-0 hover:bg-rcgray-800"
+                variant="ghost"
+                @click="toggleSort('tagname')">
+                <span>Name</span>
+                <Icon :icon="sortParam === 'tagname' ? 'lucide:sort-asc' : sortParam === '-tagname' ? 'lucide:sort-desc' : 'hugeicons:sorting-05'" />
+              </Button>
+            </TableHead>
+            <TableHead class="w-[20%]">Description</TableHead>
+            <TableHead class="w-[30%]">Devices</TableHead>
+            <TableHead class="w-[10%]">Actions</TableHead>
           </TableRow>
         </TableHeader>
+
         <TableBody>
-          <template v-if="tags.data.length">
+          <template v-if="isLoading">
+            <div class="flex items-center gap-2 ml-6 dark:text-gray-400">
+              Loading
+              <Icon icon="eos-icons:three-dots-loading" />
+            </div>
+          </template>
+          <template v-else-if="tags.data.length > 0">
             <TableRow
               v-for="row in tags.data"
               :key="row.id">
@@ -247,7 +269,7 @@ function toggleSelectRow(rowId: number) {
           <template v-else>
             <TableRow>
               <TableCell
-                :colspan="props.columns.length + 1"
+                :colspan="tags.data.length + 1"
                 class="h-24 text-center">
                 No results.
               </TableCell>
