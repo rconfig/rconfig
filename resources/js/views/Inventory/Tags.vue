@@ -87,14 +87,17 @@ function onEdit(rowData) {
   console.log('Edit:', rowData);
 }
 
-function onDelete(rowData) {
-  // Handle delete action
-  console.log('Delete:', rowData);
-}
-
-function onAssignRole(rowData) {
-  // Handle assign role action
-  console.log('Assign Role:', rowData);
+function onDelete(id) {
+  axios
+    .delete(`/api/tags/${id}`)
+    .then(() => {
+      fetchTags();
+      toastSuccess('Tag deleted', 'The tag has been deleted successfully.');
+    })
+    .catch(error => {
+      console.error('Error deleting tag:', error);
+      toastError('Error deleting tag', 'There was a problem deleting the tag.');
+    });
 }
 
 const debouncedFilter = useDebounceFn(() => {
@@ -264,8 +267,7 @@ function toggleSort(field) {
                 <ActionsMenu
                   :rowData="row"
                   :onEdit="onEdit"
-                  :onDelete="onDelete"
-                  :onAssignRole="onAssignRole" />
+                  @onDelete="onDelete(row.id)" />
               </TableCell>
               <!-- ACTIONS MENU -->
             </TableRow>

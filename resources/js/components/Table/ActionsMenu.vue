@@ -1,68 +1,80 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Icon } from '@iconify/vue';
 
-interface Props {
-  rowData: any;
-  onEdit: (rowData: any) => void;
-  onDelete: (rowData: any) => void;
-  onAssignRole: (rowData: any) => void;
+const showConfirmDelete = ref(false);
+const emits = defineEmits(['onDelete']);
+
+defineProps({
+  rowData: {
+    type: Object,
+    required: true
+  }
+});
+
+function handleEdit() {
+  // Add your edit logic here
 }
 
-const props = defineProps<Props>();
+function showAlert() {
+  showConfirmDelete.value = true;
+}
 
-const handleAssignRole = () => {
-  props.onAssignRole(props.rowData);
-};
-
-const handleEdit = () => {
-  props.onEdit(props.rowData);
-};
-
-const handleDelete = () => {
-  props.onDelete(props.rowData);
-};
+function handleDelete() {
+  emits('onDelete');
+  showConfirmDelete.value = false;
+}
 </script>
 
 <template>
-  <DropdownMenu>
-    <DropdownMenuTrigger as-child>
-      <Button
-        variant="ghost"
-        class="hover:animate-pulse">
-        ...
-      </Button>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent
-      class="w-56"
-      align="end"
-      side="bottom">
-      <DropdownMenuItem
-        class="cursor-pointer hover:bg-rcgray-800"
-        @click="handleAssignRole">
-        <span>Assign Roles</span>
-        <DropdownMenuShortcut>
-          <Icon icon="fluent-color:people-team-16" />
-        </DropdownMenuShortcut>
-      </DropdownMenuItem>
-      <DropdownMenuItem
-        class="cursor-pointer hover:bg-rcgray-800"
-        @click="handleEdit">
-        <span>Edit</span>
-        <DropdownMenuShortcut>
-          <Icon icon="fluent-color:text-edit-style-16" />
-        </DropdownMenuShortcut>
-      </DropdownMenuItem>
-      <DropdownMenuSeparator />
-      <DropdownMenuItem
-        class="cursor-pointer hover:bg-rcgray-800"
-        @click="handleDelete">
-        <span class="text-red-400">Delete</span>
-        <DropdownMenuShortcut>
-          <Icon icon="fluent-color:cloud-dismiss-48" />
-        </DropdownMenuShortcut>
-      </DropdownMenuItem>
-    </DropdownMenuContent>
-  </DropdownMenu>
+  <div>
+    <DropdownMenu>
+      <DropdownMenuTrigger as-child>
+        <Button
+          variant="ghost"
+          class="hover:animate-pulse">
+          ...
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        class="w-56"
+        align="end"
+        side="bottom">
+        <DropdownMenuItem
+          class="cursor-pointer hover:bg-rcgray-800"
+          @click="handleEdit">
+          <span>Edit</span>
+          <DropdownMenuShortcut>
+            <Icon icon="fluent-color:text-edit-style-16" />
+          </DropdownMenuShortcut>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          class="cursor-pointer hover:bg-rcgray-800"
+          @click="showAlert">
+          <span class="text-red-400">Delete</span>
+          <DropdownMenuShortcut>
+            <Icon icon="flat-color-icons:full-trash" />
+          </DropdownMenuShortcut>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+
+    <AlertDialog :open="showConfirmDelete">
+      <!-- <AlertDialogTrigger>Open</AlertDialogTrigger> -->
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>This action cannot be undone. This will permanently delete the selected data (ID: {{ rowData.id }}).</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel @cancel="showConfirmDelete = false">Cancel</AlertDialogCancel>
+          <AlertDialogAction @action="handleDelete()">Continue</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  </div>
 </template>
