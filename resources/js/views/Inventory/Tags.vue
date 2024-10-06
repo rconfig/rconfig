@@ -13,9 +13,6 @@ import { h, ref, onMounted, onUnmounted, watch } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 import { useDialogStore } from '@/stores/dialogActions';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/components/ui/toast/use-toast';
-const { toast } = useToast();
-
 import { useToaster } from '@/composables/useToaster'; // Import the composable
 const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
 
@@ -29,6 +26,7 @@ const searchTerm = ref('');
 const sortParam = ref('-id');
 const dialogStore = useDialogStore();
 const { openDialog } = dialogStore;
+const newTagModalKey = ref(1);
 
 // Select Row Management
 const selectedRows = ref([]);
@@ -38,16 +36,27 @@ function toastTest() {
   toastSuccess('Uh oh! Something went wrong.', 'There was a problem with your request.');
 }
 
-onMounted(() => {
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.altKey && event.key === 'n') {
-      event.preventDefault(); // Prevent default behavior (e.g., opening a new window in some browsers)
-      openDialog('DialogNewTag');
-    }
-  };
+function handleKeyDown(event: KeyboardEvent) {
+  if (event.altKey && event.key === 'n') {
+    event.preventDefault(); // Prevent default behavior (e.g., opening a new window in some browsers)
+    openDialog('DialogNewTag');
+  }
+}
 
+onMounted(() => {
+  fetchTags();
   window.addEventListener('keydown', handleKeyDown);
 });
+
+// Cleanup event listener on unmount
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown);
+});
+
+function handleSave() {
+  fetchTags(); // Fetch the updated tags after saving
+  newTagModalKey.value = Math.random(); // Force re-render of the dialog component
+}
 
 const fetchTags = async () => {
   isLoading.value = true;
@@ -90,10 +99,6 @@ const debouncedFilter = useDebounceFn(() => {
   fetchTags();
 }, 500);
 
-onMounted(() => {
-  fetchTags();
-});
-
 watch([currentPage, perPage], () => {
   fetchTags();
 });
@@ -133,10 +138,6 @@ function toggleSort(field) {
   }
   fetchTags();
 }
-// Cleanup event listener on unmount
-onUnmounted(() => {
-  window.removeEventListener('keydown', handleKeyDown);
-});
 </script>
 
 <template>
@@ -280,7 +281,9 @@ onUnmounted(() => {
         @update:perPage="perPage = $event" />
       <!-- END PAGINATION -->
 
-      <NewTagDialog />
+      <NewTagDialog
+        @save="handleSave()"
+        :key="newTagModalKey" />
 
       <Button
         variant="outline"

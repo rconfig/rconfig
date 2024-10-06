@@ -5,33 +5,48 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useDialogStore } from '@/stores/dialogActions';
 import { Button } from '@/components/ui/button';
+import axios from 'axios';
+import { useToaster } from '@/composables/useToaster'; // Import the composable
+const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
 
 const dialogStore = useDialogStore();
 const { openDialog, closeDialog, isDialogOpen } = dialogStore;
 const emit = defineEmits(['save']);
+const roles = ref([]);
+const errors = ref([]);
+const model = ref({
+  tagname: '',
+  tagDescription: ''
+});
 
 defineProps({});
 
-onMounted(() => {
-  const handleKeyDown = event => {
-    if (event.ctrlKey && event.key === 'Enter') {
-      saveDialog();
-    }
-  };
+function handleKeyDown(event) {
+  if (event.ctrlKey && event.key === 'Enter') {
+    saveDialog();
+  }
+}
 
+onMounted(() => {
   window.addEventListener('keydown', handleKeyDown);
 });
 
-const saveDialog = () => {
-  console.log('Save dialog');
-  emit('save');
-  closeDialog('DialogNewTag');
-};
-
-// Cleanup event listener on unmount
 onUnmounted(() => {
   window.removeEventListener('keydown', handleKeyDown);
 });
+
+function saveDialog() {
+  axios
+    .post('/api/tags', model.value)
+    .then(response => {
+      emit('save', response.data);
+      toastSuccess('Tag created', 'The tag has been created successfully.');
+      closeDialog('DialogNewTag');
+    })
+    .catch(error => {
+      errors.value = error.response.data.errors;
+    });
+}
 </script>
 
 <template>
@@ -48,40 +63,43 @@ onUnmounted(() => {
         <DialogTitle>Edit profile</DialogTitle>
         <DialogDescription>Make changes to your profile here. Click save when you're done.</DialogDescription>
       </DialogHeader>
-      <div class="grid gap-4 py-4">
+      <div class="grid gap-2 py-4">
         <div class="grid items-center grid-cols-4 gap-4">
           <Label
-            for="name"
+            for="tagname"
             class="text-right">
             Tag Name
           </Label>
           <Input
-            id="name"
-            value="Pedro Duarte"
+            v-model="model.tagname"
+            id="tagname"
             class="col-span-3" />
         </div>
+
         <div class="grid items-center grid-cols-4 gap-4">
           <Label
-            for="username"
+            for="tagDescription"
             class="text-right">
             Description
           </Label>
           <Input
-            id="username"
-            value="@peduarte"
+            v-model="model.tagDescription"
+            id="tagDescription"
             class="col-span-3" />
         </div>
-        <div class="grid items-center grid-cols-4 gap-4">
-          <Label
-            for="username"
-            class="text-right">
-            Roles
-          </Label>
-          <Input
-            id="username"
-            value="@peduarte"
-            class="col-span-3" />
-        </div>
+      </div>
+      <div class="flex flex-col w-full space-y-2">
+        <span
+          class="text-red-400"
+          v-if="errors.tagDescription">
+          {{ errors.tagDescription[0] }}
+        </span>
+
+        <span
+          class="text-red-400"
+          v-if="errors.tagname">
+          {{ errors.tagname[0] }}
+        </span>
       </div>
       <DialogFooter>
         <Button
