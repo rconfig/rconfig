@@ -19,6 +19,7 @@ import { useNavState } from './composables/navstate';
 import useServerTimeZone from './composables/ServerTimezone.js';
 import { Icon } from '@iconify/vue';
 import { createPinia } from 'pinia';
+import { Toaster } from '@/components/ui/toast';
 
 const app = createApp({
   data: () => ({
@@ -51,6 +52,7 @@ app.component('resizable-panel-group', ResizablePanelGroup);
 app.component('resizable-handle', ResizableHandle);
 app.component('notification-drawer', NotificationsDrawer);
 app.component('toast-notification', ToastNotification);
+app.component('Toaster', Toaster);
 app.component('Icon', Icon);
 
 app.provide('create-notification', createNotification);

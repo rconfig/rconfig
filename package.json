@@ -60,6 +60,7 @@
         "vue-clipboard3": "^2.0.0",
         "vue-columns-resizable": "^0.0.1",
         "vue-router": "^4.0.12",
+        "vue-sonner": "^1.2.1",
         "vue3-highlightjs": "^1.0.5"
     }
 }

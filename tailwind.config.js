@@ -3,7 +3,7 @@ const animate = require('tailwindcss-animate');
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
-  safelist: ['dark'],
+  safelist: ['dark', 'bg-blue-500', 'text-white', 'border-blue-400', 'border-orange-400', 'bg-orange-500', 'border-green-400', 'bg-green-500'], // add some to safelist for toasts
   prefix: '',
 
   content: ['./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php', './storage/framework/views/*.php', './resources/views/**/*.blade.php', './resources/js/**/*.{js,jsx,vue}'],

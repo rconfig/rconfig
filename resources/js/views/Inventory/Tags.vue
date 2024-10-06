@@ -3,7 +3,7 @@ import ActionsMenu from '@/components/Table/ActionsMenu.vue';
 import Loading from '@/components/Table/Loading.vue';
 import NoResults from '@/components/Table/NoResults.vue';
 import Pagination from '@/components/Table/Pagination.vue';
-import NewTag from '@/components/Dialogs/NewTag.vue';
+import NewTagDialog from '@/components/Dialogs/NewTagDialog.vue';
 import axios from 'axios';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -13,6 +13,11 @@ import { h, ref, onMounted, onUnmounted, watch } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 import { useDialogStore } from '@/stores/dialogActions';
 import { Input } from '@/components/ui/input';
+import { useToast } from '@/components/ui/toast/use-toast';
+const { toast } = useToast();
+
+import { useToaster } from '@/composables/useToaster'; // Import the composable
+const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
 
 const tags = ref([]);
 const isLoading = ref(true);
@@ -28,6 +33,10 @@ const { openDialog } = dialogStore;
 // Select Row Management
 const selectedRows = ref([]);
 const selectAll = ref(false);
+
+function toastTest() {
+  toastSuccess('Uh oh! Something went wrong.', 'There was a problem with your request.');
+}
 
 onMounted(() => {
   const handleKeyDown = (event: KeyboardEvent) => {
@@ -271,7 +280,14 @@ onUnmounted(() => {
         @update:perPage="perPage = $event" />
       <!-- END PAGINATION -->
 
-      <NewTag />
+      <NewTagDialog />
+
+      <Button
+        variant="outline"
+        @click="toastTest()">
+        Show Toast
+      </Button>
+      <Toaster />
     </div>
   </div>
 </template>
