@@ -33,7 +33,11 @@ const selectedRows = ref([]);
 const selectAll = ref(false);
 
 function toastTest() {
-  toastSuccess('Uh oh! Something went wrong.', 'There was a problem with your request.');
+  toastDefault('Default Message', 'There was a problem with your request.');
+  toastError('Uh oh! Something went wrong.', 'There was a problem with your request.');
+  toastWarning('Uh oh! Something went wrong.', 'There was a problem with your request.');
+  toastInfo('Info: Happy days', 'There was a Info with your request.');
+  toastSuccess('Success: Happy days', 'There was a Success with your request.');
 }
 
 function handleKeyDown(event: KeyboardEvent) {
