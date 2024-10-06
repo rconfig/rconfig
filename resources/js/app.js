@@ -9,14 +9,14 @@ import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import router from './router';
 
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from './components/ui/resizable';
-import NavigationTop from './Layouts/NavigationTop.vue';
-import Navigationside from './Layouts/NavigationSide.vue';
-import NotificationsDrawer from './components/NotificationsDrawer.vue';
-import ToastNotification from './components/ToastNotification.vue';
+import NavigationTop from './layouts/NavigationTop.vue';
+import Navigationside from './layouts/NavigationSide.vue';
+import NotificationsDrawer from './.archive/components/NotificationsDrawer.vue';
+import ToastNotification from './.archive/components/ToastNotification.vue';
 import VueHighlightJS from 'vue3-highlightjs';
-import useNotifications from './composables/notifications';
-import { useNavState } from './composables/navstate';
-import useServerTimeZone from './composables/ServerTimezone.js';
+// import useNotifications from './.archive/composables/notifications';
+// import { useNavState } from './.archive/composables/navstate';
+// import useServerTimeZone from './.archive/composables/ServerTimezone.js';
 import { Icon } from '@iconify/vue';
 import { createPinia } from 'pinia';
 import { Toaster } from '@/components/ui/toast';
@@ -34,9 +34,9 @@ const app = createApp({
   }
 });
 
-const { notifications, createNotification, removeNotifications } = useNotifications(); // see example here https://github.com/zafaralam/vue-3-toast/
-const { darkmode } = useNavState();
-const { formatTime } = useServerTimeZone(app.config.globalProperties.$timezone);
+// const { notifications, createNotification, removeNotifications } = useNotifications(); // see example here https://github.com/zafaralam/vue-3-toast/
+// const { darkmode } = useNavState();
+// const { formatTime } = useServerTimeZone(app.config.globalProperties.$timezone);
 const pinia = createPinia();
 
 app.config.globalProperties.$userId = document.querySelector("meta[name='user-id']").getAttribute('content');
@@ -50,17 +50,17 @@ app.component('navigation-top', NavigationTop);
 app.component('resizable-panel', ResizablePanel);
 app.component('resizable-panel-group', ResizablePanelGroup);
 app.component('resizable-handle', ResizableHandle);
-app.component('notification-drawer', NotificationsDrawer);
-app.component('toast-notification', ToastNotification);
+// app.component('notification-drawer', NotificationsDrawer);
+// app.component('toast-notification', ToastNotification);
 app.component('Toaster', Toaster);
 app.component('Icon', Icon);
 
-app.provide('create-notification', createNotification);
-app.provide('darkmode', darkmode);
+// app.provide('create-notification', createNotification);
+// app.provide('darkmode', darkmode);
 app.provide('useremail', app.config.globalProperties.$userEmail);
 app.provide('userid', app.config.globalProperties.$userId);
 app.provide('timezone', app.config.globalProperties.$timezone);
-app.provide('formatTime', formatTime);
+// app.provide('formatTime', formatTime);
 
 // mount the app to the DOM
 app.use(router);
@@ -68,8 +68,8 @@ app.use(VueHighlightJS);
 app.use(pinia);
 
 const vm = app.mount('#app');
-vm.notifications = notifications;
-vm.removeNotifications = removeNotifications;
+// vm.notifications = notifications;
+// vm.removeNotifications = removeNotifications;
 import './bootstrap';
 import { usePanelStore } from '@/stores/panelStore';
 const panelStore = usePanelStore();

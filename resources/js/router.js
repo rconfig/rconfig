@@ -1,47 +1,52 @@
 import { createWebHistory, createRouter } from 'vue-router';
 
 const routes = [
-  { path: '/', name: 'Home', component: () => import('./views/Dashboard.vue') },
-  { path: '/dashboard', name: 'dashboard', component: () => import('./views/Dashboard.vue') },
-  { path: '/inventory', name: 'inventory', component: () => import('./views/Inventory.vue') },
-  { path: '/devices', name: 'devices', component: () => import('./views/Inventory/Devices.vue') },
-  { path: '/devices/status/:id', name: 'devices-status', component: () => import('./views/Inventory.vue') },
-  { path: '/devices/tag/:id', name: 'devices-tag', component: () => import('./views/Inventory.vue') },
-  { path: '/devices/category/:id', name: 'devices-category', component: () => import('./views/Inventory.vue') },
-  { path: '/device/view/:id', component: () => import('./views/DevicesViews/DeviceView.vue'), props: true },
-  { path: '/device/view/configs/:id', component: () => import('./views/DevicesViews/DeviceConfigs.vue'), props: true },
-  { path: '/device/view/configs/view-config/:id', component: () => import('./views/DevicesViews/DeviceViewConfig.vue') },
-  { path: '/device/view/eventlog/:id', component: () => import('./views/DevicesViews/DeviceEventLog.vue'), props: true },
+  { path: '/', name: 'Home', component: () => import('@/pages/Dashboard/Main.vue') },
+  { path: '/dashboard', name: 'dashboard', component: () => import('@/pages/Dashboard/Main.vue') },
+  { path: '/inventory', name: 'inventory', component: () => import('@/pages/Inventory/Main.vue') },
+  { path: '/devices', name: 'devices', component: () => import('@/pages/Inventory/Main.vue') },
+  { path: '/tags', name: 'tags', component: () => import('@/pages/Inventory/Main.vue') },
+  { path: '/vendors', name: 'vendors', component: () => import('@/pages/Inventory/Main.vue') },
+  // { path: '/templates', name: 'templates', component: () => import('@/pages/Templates.vue') },
+  // { path: '/commandgroups', name: 'commandgroups', component: () => import('@/pages/Inventory/main.vue') },
+  // { path: '/commands', name: 'commands', component: () => import('@/pages/Commands.vue') },
 
-  { path: '/scheduled-tasks', name: 'scheduled-tasks', component: () => import('./views/Tasks.vue') },
-  { path: '/templates', name: 'templates', component: () => import('./views/Templates.vue') },
-  { path: '/commandgroups', name: 'commandgroups', component: () => import('./views/Inventory/CommandGroups.vue') },
-  { path: '/commands', name: 'commands', component: () => import('./views/Commands.vue') },
-  { path: '/tags', name: 'tags', component: () => import('./views/Inventory.vue') },
-  { path: '/tags/:id', name: 'tags-id', component: () => import('./views/Inventory.vue') },
-  { path: '/vendors', name: 'vendors', component: () => import('./views/Inventory.vue') },
-  { path: '/config-search', name: 'config-search', component: () => import('./views/ConfigSearch.vue') },
-  { path: '/config-reports', name: 'config-reports', component: () => import('./views/ConfigReports.vue') },
+  // working above
+
+  // { path: '/devices', name: 'devices', component: () => import('./views/Inventory/Devices.vue') },
+  // { path: '/devices/status/:id', name: 'devices-status', component: () => import('./views/Inventory.vue') },
+  // { path: '/devices/tag/:id', name: 'devices-tag', component: () => import('./views/Inventory.vue') },
+  // { path: '/devices/category/:id', name: 'devices-category', component: () => import('./views/Inventory.vue') },
+  // { path: '/device/view/:id', component: () => import('./views/DevicesViews/DeviceView.vue'), props: true },
+  // { path: '/device/view/configs/:id', component: () => import('./views/DevicesViews/DeviceConfigs.vue'), props: true },
+  // { path: '/device/view/configs/view-config/:id', component: () => import('./views/DevicesViews/DeviceViewConfig.vue') },
+  // { path: '/device/view/eventlog/:id', component: () => import('./views/DevicesViews/DeviceEventLog.vue'), props: true },
+
+  // { path: '/scheduled-tasks', name: 'scheduled-tasks', component: () => import('./views/Tasks.vue') },
+
+  // { path: '/tags/:id', name: 'tags-id', component: () => import('./views/Inventory.vue') },
+  // { path: '/config-search', name: 'config-search', component: () => import('./views/ConfigSearch.vue') },
+  // { path: '/config-reports', name: 'config-reports', component: () => import('./views/ConfigReports.vue') },
 
   // Settings
-  {
-    path: '/settings/',
-    name: 'settings',
-    component: () => import('./views/Settings.vue'),
-    beforeEnter: guardMyroute,
-    children: [
-      { path: '/settings/overview', name: 'overview', component: () => import('./views/SettingsTabs/0Overview.vue') },
-      { path: '/settings/system', name: 'system', component: () => import('./views/SettingsTabs/1System.vue') },
-      { path: '/settings/security', name: 'security', component: () => import('./views/SettingsTabs/4Security.vue') },
-      { path: '/settings/about', name: 'about', component: () => import('./views/SettingsTabs/10About.vue') }
-    ]
-  },
+  // {
+  //   path: '/settings/',
+  //   name: 'settings',
+  //   component: () => import('./views/Settings.vue'),
+  //   beforeEnter: guardMyroute,
+  //   children: [
+  //     { path: '/settings/overview', name: 'overview', component: () => import('./views/SettingsTabs/0Overview.vue') },
+  //     { path: '/settings/system', name: 'system', component: () => import('./views/SettingsTabs/1System.vue') },
+  //     { path: '/settings/security', name: 'security', component: () => import('./views/SettingsTabs/4Security.vue') },
+  //     { path: '/settings/about', name: 'about', component: () => import('./views/SettingsTabs/10About.vue') }
+  //   ]
+  // },
 
-  { path: '/settings/users/:userId?', name: 'users', component: () => import('./views/Users.vue'), beforeEnter: guardMyroute },
-  { path: '/settings/activitylog', name: 'activitylog', component: () => import('./views/ActivityLog.vue'), beforeEnter: guardMyroute },
+  // { path: '/settings/users/:userId?', name: 'users', component: () => import('./views/Users.vue'), beforeEnter: guardMyroute },
+  // { path: '/settings/activitylog', name: 'activitylog', component: () => import('./views/ActivityLog.vue'), beforeEnter: guardMyroute },
 
   /* PAGENOTFOUND */
-  { path: '/:catchAll(.*)', component: () => import('./views/PageNotFound.vue') }
+  { path: '/:catchAll(.*)', component: () => import('./pages/Shared/PageNotFound.vue') }
 ];
 
 const router = createRouter({
