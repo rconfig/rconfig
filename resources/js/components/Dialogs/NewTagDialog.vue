@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineEmits, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,7 +19,9 @@ const model = ref({
   tagDescription: ''
 });
 
-defineProps({});
+const props = defineProps({
+  editId: Number
+});
 
 function handleKeyDown(event) {
   if (event.ctrlKey && event.key === 'Enter') {
@@ -28,6 +30,12 @@ function handleKeyDown(event) {
 }
 
 onMounted(() => {
+  if (props.editId > 0) {
+    axios.get(`/api/tags/${props.editId}`).then(response => {
+      model.value = response.data;
+    });
+  }
+
   window.addEventListener('keydown', handleKeyDown);
 });
 
@@ -36,8 +44,9 @@ onUnmounted(() => {
 });
 
 function saveDialog() {
-  axios
-    .post('/api/tags', model.value)
+  let id = props.editId > 0 ? `/${props.editId}` : ''; // determine if we are creating or updating
+  let method = props.editId > 0 ? 'patch' : 'post'; // determine if we are creating or updating
+  axios[method]('/api/tags' + id, model.value)
     .then(response => {
       emit('save', response.data);
       toastSuccess('Tag created', 'The tag has been created successfully.');
@@ -60,8 +69,8 @@ function saveDialog() {
       @pointerDownOutside="closeDialog('DialogNewTag')"
       @closeClicked="closeDialog('DialogNewTag')">
       <DialogHeader>
-        <DialogTitle>Edit profile</DialogTitle>
-        <DialogDescription>Make changes to your profile here. Click save when you're done.</DialogDescription>
+        <DialogTitle>Edit Tag {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</DialogTitle>
+        <DialogDescription>Make changes to your tag here. Click {{ editId > 0 ? 'update' : 'save' }} when you're done.</DialogDescription>
       </DialogHeader>
       <div class="grid gap-2 py-4">
         <div class="grid items-center grid-cols-4 gap-4">
@@ -113,13 +122,33 @@ function saveDialog() {
             <kbd class="bxnAJf">ESC</kbd>
           </div>
         </Button>
+
         <Button
+          v-if="props.editId === 0"
           type="submit"
           class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
           size="sm"
           @click="saveDialog()"
           variant="primary">
           Save
+          <div class="pl-2 ml-auto">
+            <kbd class="bxnAJf2">
+              Ctrl&nbsp;
+              <Icon
+                icon="uil:enter"
+                class="" />
+            </kbd>
+          </div>
+        </Button>
+
+        <Button
+          v-if="props.editId > 0"
+          type="submit"
+          class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+          size="sm"
+          @click="saveDialog()"
+          variant="primary">
+          Update
           <div class="pl-2 ml-auto">
             <kbd class="bxnAJf2">
               Ctrl&nbsp;

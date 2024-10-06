@@ -6,7 +6,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Icon } from '@iconify/vue';
 
 const showConfirmDelete = ref(false);
-const emits = defineEmits(['onDelete']);
+const emits = defineEmits(['onEdit', 'onDelete']);
 
 defineProps({
   rowData: {
@@ -16,7 +16,7 @@ defineProps({
 });
 
 function handleEdit() {
-  // Add your edit logic here
+  emits('onEdit');
 }
 
 function showAlert() {

@@ -27,6 +27,7 @@ const sortParam = ref('-id');
 const dialogStore = useDialogStore();
 const { openDialog } = dialogStore;
 const newTagModalKey = ref(1);
+const editId = ref(0);
 
 // Select Row Management
 const selectedRows = ref([]);
@@ -82,9 +83,10 @@ const fetchTags = async () => {
   }
 };
 
-function onEdit(rowData) {
-  // Handle edit action
-  console.log('Edit:', rowData);
+function onEdit(id) {
+  editId.value = id;
+  newTagModalKey.value = Math.random(); // Force re-render of the dialog component
+  openDialog('DialogNewTag');
 }
 
 function onDelete(id) {
@@ -266,7 +268,7 @@ function toggleSort(field) {
               <TableCell class="text-start">
                 <ActionsMenu
                   :rowData="row"
-                  :onEdit="onEdit"
+                  @onEdit="onEdit(row.id)"
                   @onDelete="onDelete(row.id)" />
               </TableCell>
               <!-- ACTIONS MENU -->
@@ -289,7 +291,8 @@ function toggleSort(field) {
 
       <NewTagDialog
         @save="handleSave()"
-        :key="newTagModalKey" />
+        :key="newTagModalKey"
+        :editId="editId" />
 
       <Button
         variant="outline"
