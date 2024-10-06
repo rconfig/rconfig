@@ -75,6 +75,7 @@ function collapsePanel() {
         <button
           aria-label="Collapse sidebar"
           data-state="closed"
+          :class="{ 'mr-4': panelStore.panelRef?.isCollapsed }"
           v-if="panelStore.panelRef?.isCollapsed"
           @click="collapsePanel()">
           <svg
