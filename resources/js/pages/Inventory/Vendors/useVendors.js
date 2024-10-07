@@ -1,0 +1,136 @@
+import axios from 'axios';
+import { ref, watch } from 'vue';
+import { useDebounceFn } from '@vueuse/core';
+import { useDialogStore } from '@/stores/dialogActions';
+import { useToaster } from '@/composables/useToaster'; // Import the composable
+
+export function useVendors() {
+  const currentPage = ref(1);
+  const perPage = ref(parseInt(localStorage.getItem('perPage') || '10'));
+  const sortParam = ref('-id');
+  const searchTerm = ref('');
+  const filters = ref({});
+  const dialogStore = useDialogStore();
+  const editId = ref(0);
+  const isLoading = ref(false);
+  const lastPage = ref(1);
+  const newVendorModalKey = ref(1);
+  const vendors = ref([]);
+  const { openDialog } = dialogStore;
+  const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
+
+  // Fetch Vendors
+  async function fetchVendors(params = {}) {
+    isLoading.value = true;
+    try {
+      const response = await axios.get('/api/vendors', {
+        params: {
+          page: currentPage.value,
+          perPage: perPage.value,
+          sort: sortParam.value,
+          ...filters.value
+        }
+      });
+      vendors.value = response.data;
+      lastPage.value = response.data.last_page;
+    } catch (error) {
+      console.error('Error fetching vendors:', error);
+      toastError('Error', 'Failed to fetch vendors.');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // Create Vendor
+  const createVendor = async => {
+    editId.value = 0;
+    newVendorModalKey.value = Math.random(); // Force re-render of the dialog component
+    openDialog('DialogNewVendor');
+  };
+
+  function updateVendor(id) {
+    editId.value = id;
+    newVendorModalKey.value = Math.random(); // Force re-render of the dialog component
+    openDialog('DialogNewVendor');
+  }
+
+  // Delete Vendor
+  const deleteVendor = async id => {
+    try {
+      await axios.delete(`/api/vendors/${id}`);
+      fetchVendors(); // Refresh vendors list after deletion
+      toastSuccess('Vendor Deleted', 'The vendor has been deleted successfully.');
+    } catch (error) {
+      console.error('Error deleting vendor:', error);
+      toastError('Error', 'Failed to delete vendor.');
+    }
+  };
+
+  const viewEditDialog = id => {
+    editId.value = id;
+    newVendorModalKey.value = Math.random(); // Force re-render of the dialog component
+    openDialog('DialogNewVendor');
+  };
+
+  // Re-render Dialog
+  const handleSave = () => {
+    fetchVendors(); // Fetch the updated vendors after saving
+    newVendorModalKey.value = Math.random(); // Force re-render of the dialog component
+  };
+
+  function handleKeyDown(event) {
+    if (event.altKey && event.key === 'n') {
+      event.preventDefault(); // Prevent default behavior (e.g., opening a new window in some browsers)
+      openDialog('DialogNewVendor');
+    }
+  }
+
+  const debouncedFilter = useDebounceFn(() => {
+    filters.value[`filter[vendorName]`] = searchTerm.value;
+    currentPage.value = 1;
+    fetchVendors();
+  }, 500);
+
+  // Watchers for state changes
+  watch([currentPage, perPage], () => {
+    fetchVendors();
+  });
+
+  watch(searchTerm, () => {
+    debouncedFilter();
+  });
+
+  watch(perPage, newVal => {
+    localStorage.setItem('perPage', newVal.toString());
+  });
+
+  function toggleSort(field) {
+    if (sortParam.value === field) {
+      sortParam.value = `-${field}`;
+    } else {
+      sortParam.value = field;
+    }
+    fetchVendors();
+  }
+
+  return {
+    vendors,
+    isLoading,
+    currentPage,
+    perPage,
+    lastPage,
+    editId,
+    newVendorModalKey,
+    searchTerm,
+    openDialog,
+    fetchVendors,
+    createVendor,
+    updateVendor,
+    deleteVendor,
+    handleSave,
+    handleKeyDown,
+    viewEditDialog,
+    toggleSort,
+    sortParam
+  };
+}

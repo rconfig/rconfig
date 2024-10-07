@@ -100,7 +100,7 @@ const handlePerPageChange = (newPerPage: number) => {
       </DropdownMenuContent>
     </DropdownMenu>
 
-    <div class="flex-1 text-sm text-muted-foreground">{{ currentPage }} of {{ lastPage }} row(s) selected.</div>
+    <div class="flex-1 text-sm text-muted-foreground">Page {{ currentPage }} of {{ lastPage }}</div>
     <div class="space-x-2">
       <Button
         @click="handlePageChange(Math.max(currentPage - 1, 1))"

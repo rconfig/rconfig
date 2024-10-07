@@ -1,44 +1,20 @@
-<script setup lang="ts">
-const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
+<script setup>
 import ActionsMenu from '@/pages/Shared/Table/ActionsMenu.vue';
 import Loading from '@/pages/Shared/Table/Loading.vue';
-import TagAddEditDialog from '@/pages/Inventory/Tags/TagAddEditDialog.vue';
 import NoResults from '@/pages/Shared/Table/NoResults.vue';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
-import axios from 'axios';
+import TagAddEditDialog from '@/pages/Inventory/Tags/TagAddEditDialog.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ref, onMounted, onUnmounted, watch } from 'vue';
-import { useDebounceFn } from '@vueuse/core';
-import { useDialogStore } from '@/stores/dialogActions';
-import { useToaster } from '@/composables/useToaster'; // Import the composable
+import { onMounted, onUnmounted } from 'vue';
+import { useRowSelection } from '@/composables/useRowSelection';
+import { useTags } from '@/pages/Inventory/Tags/useTags';
 
-const tags = ref([]);
-const isLoading = ref(true);
-const currentPage = ref(1);
-const last_page = ref(1);
-const filters = ref({});
-const perPage = ref(parseInt(localStorage.getItem('perPage') || '10'));
-const searchTerm = ref('');
-const sortParam = ref('-id');
-const dialogStore = useDialogStore();
-const { openDialog } = dialogStore;
-const newTagModalKey = ref(1);
-const editId = ref(0);
-
-// Select Row Management
-const selectedRows = ref([]);
-const selectAll = ref(false);
-
-function handleKeyDown(event: KeyboardEvent) {
-  if (event.altKey && event.key === 'n') {
-    event.preventDefault(); // Prevent default behavior (e.g., opening a new window in some browsers)
-    openDialog('DialogNewTag');
-  }
-}
+const { editId, tags, currentPage, perPage, searchTerm, lastPage, isLoading, fetchTags, viewEditDialog, createTag, deleteTag, handleSave, handleKeyDown, newTagModalKey, toggleSort, sortParam } = useTags();
+const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(tags);
 
 onMounted(() => {
   fetchTags();
@@ -49,96 +25,6 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('keydown', handleKeyDown);
 });
-
-function handleSave() {
-  fetchTags(); // Fetch the updated tags after saving
-  newTagModalKey.value = Math.random(); // Force re-render of the dialog component
-}
-
-const fetchTags = async () => {
-  isLoading.value = true;
-  try {
-    const response = await axios.get('/api/tags', {
-      params: {
-        page: currentPage.value,
-        perPage: perPage.value,
-        sort: sortParam.value,
-        ...filters.value
-      }
-    });
-    tags.value = response.data;
-    last_page.value = response.data.last_page;
-  } catch (error) {
-    console.error('Error fetching data:', error);
-  } finally {
-    isLoading.value = false;
-  }
-};
-
-function onEdit(id) {
-  editId.value = id;
-  newTagModalKey.value = Math.random(); // Force re-render of the dialog component
-  openDialog('DialogNewTag');
-}
-
-function onDelete(id) {
-  axios
-    .delete(`/api/tags/${id}`)
-    .then(() => {
-      fetchTags();
-      toastSuccess('Tag deleted', 'The tag has been deleted successfully.');
-    })
-    .catch(error => {
-      console.error('Error deleting tag:', error);
-      toastError('Error deleting tag', 'There was a problem deleting the tag.');
-    });
-}
-
-const debouncedFilter = useDebounceFn(() => {
-  filters.value[`filter[tagname]`] = searchTerm.value;
-  currentPage.value = 1;
-  fetchTags();
-}, 500);
-
-watch([currentPage, perPage], () => {
-  fetchTags();
-});
-
-watch(searchTerm, () => {
-  debouncedFilter();
-});
-
-watch(perPage, newVal => {
-  localStorage.setItem('perPage', newVal.toString());
-});
-
-function toggleSelectAll() {
-  selectAll.value = !selectAll.value;
-  if (selectAll.value) {
-    // Select all rows
-    selectedRows.value = tags.value.data.map(row => row.id);
-  } else {
-    // Deselect all rows
-    selectedRows.value = [];
-  }
-}
-
-function toggleSelectRow(rowId: number) {
-  if (selectedRows.value.includes(rowId)) {
-    selectedRows.value = selectedRows.value.filter(id => id !== rowId);
-  } else {
-    selectedRows.value.push(rowId);
-  }
-}
-
-function toggleSort(field) {
-  if (sortParam.value === field) {
-    sortParam.value = `-${field}`;
-  } else {
-    sortParam.value = field;
-  }
-  fetchTags();
-}
 </script>
 
 <template>
@@ -172,7 +58,7 @@ function toggleSort(field) {
           type="submit"
           class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
           size="sm"
-          @click.prevent="openDialog('DialogNewTag')"
+          @click.prevent="createTag"
           variant="primary">
           New Tag
           <div class="pl-2 ml-auto">
@@ -220,7 +106,7 @@ function toggleSort(field) {
             <Loading />
           </template>
 
-          <template v-else-if="!isLoading && tags.data.length > 0">
+          <template v-else-if="!isLoading">
             <TableRow
               v-for="row in tags.data"
               :key="row.id">
@@ -228,6 +114,7 @@ function toggleSort(field) {
                 <Checkbox
                   class="cursor-pointer"
                   :id="'select-' + row.id"
+                  :checked="selectedRows.includes(row.id) ? true : false"
                   @click="toggleSelectRow(row.id)" />
               </TableCell>
               <TableCell class="text-start">
@@ -260,8 +147,8 @@ function toggleSort(field) {
               <TableCell class="text-start">
                 <ActionsMenu
                   :rowData="row"
-                  @onEdit="onEdit(row.id)"
-                  @onDelete="onDelete(row.id)" />
+                  @onEdit="viewEditDialog(row.id)"
+                  @onDelete="deleteTag(row.id)" />
               </TableCell>
               <!-- ACTIONS MENU -->
             </TableRow>
@@ -275,7 +162,7 @@ function toggleSort(field) {
       <!-- PAGINATION -->
       <Pagination
         :currentPage="currentPage"
-        :lastPage="last_page"
+        :lastPage="lastPage"
         :perPage="perPage"
         @update:currentPage="currentPage = $event"
         @update:perPage="perPage = $event" />
