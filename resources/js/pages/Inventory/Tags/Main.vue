@@ -2,9 +2,9 @@
 const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
 import ActionsMenu from '@/pages/Shared/Table/ActionsMenu.vue';
 import Loading from '@/pages/Shared/Table/Loading.vue';
+import TagAddEditDialog from '@/pages/Inventory/Tags/TagAddEditDialog.vue';
 import NoResults from '@/pages/Shared/Table/NoResults.vue';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
-import NewTagDialog from '@/pages/Inventory/Tags/NewTagDialog.vue';
 import axios from 'axios';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -32,14 +32,6 @@ const editId = ref(0);
 // Select Row Management
 const selectedRows = ref([]);
 const selectAll = ref(false);
-
-function toastTest() {
-  toastDefault('Default Message', 'There was a problem with your request.');
-  toastError('Uh oh! Something went wrong.', 'There was a problem with your request.');
-  toastWarning('Uh oh! Something went wrong.', 'There was a problem with your request.');
-  toastInfo('Info: Happy days', 'There was a Info with your request.');
-  toastSuccess('Success: Happy days', 'There was a Success with your request.');
-}
 
 function handleKeyDown(event: KeyboardEvent) {
   if (event.altKey && event.key === 'n') {
@@ -289,16 +281,11 @@ function toggleSort(field) {
         @update:perPage="perPage = $event" />
       <!-- END PAGINATION -->
 
-      <NewTagDialog
+      <TagAddEditDialog
         @save="handleSave()"
         :key="newTagModalKey"
         :editId="editId" />
 
-      <Button
-        variant="outline"
-        @click="toastTest()">
-        Show Toast
-      </Button>
       <Toaster />
     </div>
   </div>

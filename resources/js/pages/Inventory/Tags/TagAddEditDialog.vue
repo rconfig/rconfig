@@ -69,7 +69,7 @@ function saveDialog() {
       @pointerDownOutside="closeDialog('DialogNewTag')"
       @closeClicked="closeDialog('DialogNewTag')">
       <DialogHeader>
-        <DialogTitle>Edit Tag {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</DialogTitle>
+        <DialogTitle>{{ editId > 0 ? 'Edit' : 'Add' }} Tag {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</DialogTitle>
         <DialogDescription>Make changes to your tag here. Click {{ editId > 0 ? 'update' : 'save' }} when you're done.</DialogDescription>
       </DialogHeader>
       <div class="grid gap-2 py-4">

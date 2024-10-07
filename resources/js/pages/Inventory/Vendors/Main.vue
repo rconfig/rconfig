@@ -1,6 +1,8 @@
 <script setup lang="ts">
+const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
 import ActionsMenu from '@/pages/Shared/Table/ActionsMenu.vue';
 import Loading from '@/pages/Shared/Table/Loading.vue';
+import VendorAddEditDialog from '@/pages/Inventory/Vendors/VendorAddEditDialog.vue';
 import NoResults from '@/pages/Shared/Table/NoResults.vue';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
 import axios from 'axios';
@@ -9,8 +11,10 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { h, ref, onMounted, watch } from 'vue';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
+import { useDialogStore } from '@/stores/dialogActions';
+import { useToaster } from '@/composables/useToaster'; // Import the composable
 
 const vendors = ref([]);
 const isLoading = ref(true);
@@ -20,10 +24,36 @@ const filters = ref({});
 const perPage = ref(parseInt(localStorage.getItem('perPage') || '10'));
 const searchTerm = ref('');
 const sortParam = ref('-id');
+const dialogStore = useDialogStore();
+const { openDialog } = dialogStore;
+const newVendorModalKey = ref(1);
+const editId = ref(0);
 
 // Select Row Management
 const selectedRows = ref([]);
 const selectAll = ref(false);
+
+function handleKeyDown(event: KeyboardEvent) {
+  if (event.altKey && event.key === 'n') {
+    event.preventDefault(); // Prevent default behavior (e.g., opening a new window in some browsers)
+    openDialog('DialogNewVendor');
+  }
+}
+
+onMounted(() => {
+  fetchVendors();
+  window.addEventListener('keydown', handleKeyDown);
+});
+
+// Cleanup event listener on unmount
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown);
+});
+
+function handleSave() {
+  fetchVendors(); // Fetch the updated vendors after saving
+  newVendorModalKey.value = Math.random(); // Force re-render of the dialog component
+}
 
 const fetchVendors = async () => {
   isLoading.value = true;
@@ -45,19 +75,23 @@ const fetchVendors = async () => {
   }
 };
 
-function onEdit(rowData) {
-  // Handle edit action
-  console.log('Edit:', rowData);
+function onEdit(id) {
+  editId.value = id;
+  newVendorModalKey.value = Math.random(); // Force re-render of the dialog component
+  openDialog('DialogNewVendor');
 }
 
-function onDelete(rowData) {
-  // Handle delete action
-  console.log('Delete:', rowData);
-}
-
-function onAssignRole(rowData) {
-  // Handle assign role action
-  console.log('Assign Role:', rowData);
+function onDelete(id) {
+  axios
+    .delete(`/api/vendors/${id}`)
+    .then(() => {
+      fetchVendors();
+      toastSuccess('Vendor deleted', 'The vendor has been deleted successfully.');
+    })
+    .catch(error => {
+      console.error('Error deleting vendor:', error);
+      toastError('Error deleting vendor', 'There was a problem deleting the vendor.');
+    });
 }
 
 const debouncedFilter = useDebounceFn(() => {
@@ -65,10 +99,6 @@ const debouncedFilter = useDebounceFn(() => {
   currentPage.value = 1;
   fetchVendors();
 }, 500);
-
-onMounted(() => {
-  fetchVendors();
-});
 
 watch([currentPage, perPage], () => {
   fetchVendors();
@@ -137,11 +167,17 @@ function toggleSort(field) {
           variant="primary">
           Delete Selected {{ selectedRows.length }} Vendor(s)
         </Button>
+
         <Button
-          class="px-2 py-1 ml-2 bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
-          size="md"
+          type="submit"
+          class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+          size="sm"
+          @click.prevent="openDialog('DialogNewVendor')"
           variant="primary">
           New Vendor
+          <div class="pl-2 ml-auto">
+            <kbd class="bxnAJf2">ALT N</kbd>
+          </div>
         </Button>
       </div>
     </div>
@@ -221,9 +257,8 @@ function toggleSort(field) {
               <TableCell class="text-start">
                 <ActionsMenu
                   :rowData="row"
-                  :onEdit="onEdit"
-                  :onDelete="onDelete"
-                  :onAssignRole="onAssignRole" />
+                  @onEdit="onEdit(row.id)"
+                  @onDelete="onDelete(row.id)" />
               </TableCell>
               <!-- ACTIONS MENU -->
             </TableRow>
@@ -242,6 +277,13 @@ function toggleSort(field) {
         @update:currentPage="currentPage = $event"
         @update:perPage="perPage = $event" />
       <!-- END PAGINATION -->
+
+      <VendorAddEditDialog
+        @save="handleSave()"
+        :key="newVendorModalKey"
+        :editId="editId" />
+
+      <Toaster />
     </div>
   </div>
 </template>
