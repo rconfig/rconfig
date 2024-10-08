@@ -1,6 +1,13 @@
 {
+  "_useToaster-lWiG7Bcj.js": {
+    "file": "assets/useToaster-lWiG7Bcj.js",
+    "name": "useToaster",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
   "resources/css/global.css": {
-    "file": "assets/global-CHBvJNaQ.css",
+    "file": "assets/global-y7bsyHFw.css",
     "src": "resources/css/global.css",
     "isEntry": true
   },
@@ -33,7 +40,7 @@
     "src": "resources/images/login_background/rconfig_msp_992@2x.png"
   },
   "resources/js/app.js": {
-    "file": "assets/app-v4ilaWqS.js",
+    "file": "assets/app-Bx3zayJ3.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -48,7 +55,7 @@
     ],
     "css": [
       "assets/app-FUr-8KFx.css",
-      "assets/global-CHBvJNaQ.css"
+      "assets/global-y7bsyHFw.css"
     ],
     "assets": [
       "assets/rconfig_msp_576-BrMGLpCo.png",
@@ -61,32 +68,34 @@
     ]
   },
   "resources/js/pages/Dashboard/Main.vue": {
-    "file": "assets/Main-ByII1OlU.js",
+    "file": "assets/Main-CDWxthmf.js",
     "name": "Main",
     "src": "resources/js/pages/Dashboard/Main.vue",
     "isDynamicEntry": true,
     "imports": [
-      "resources/js/app.js"
+      "resources/js/app.js",
+      "_useToaster-lWiG7Bcj.js"
     ],
     "css": [
-      "assets/global-CHBvJNaQ.css"
+      "assets/global-y7bsyHFw.css"
     ]
   },
   "resources/js/pages/Inventory/Main.vue": {
-    "file": "assets/Main-BC140MPY.js",
+    "file": "assets/Main-CX6H3hys.js",
     "name": "Main",
     "src": "resources/js/pages/Inventory/Main.vue",
     "isDynamicEntry": true,
     "imports": [
-      "resources/js/app.js"
+      "resources/js/app.js",
+      "_useToaster-lWiG7Bcj.js"
     ],
     "css": [
       "assets/Main-DCMmu1z4.css",
-      "assets/global-CHBvJNaQ.css"
+      "assets/global-y7bsyHFw.css"
     ]
   },
   "resources/js/pages/Shared/PageNotFound.vue": {
-    "file": "assets/PageNotFound-Diy05qd9.js",
+    "file": "assets/PageNotFound-DdJjRBnQ.js",
     "name": "PageNotFound",
     "src": "resources/js/pages/Shared/PageNotFound.vue",
     "isDynamicEntry": true,
@@ -94,7 +103,7 @@
       "resources/js/app.js"
     ],
     "css": [
-      "assets/global-CHBvJNaQ.css"
+      "assets/global-y7bsyHFw.css"
     ]
   }
 }

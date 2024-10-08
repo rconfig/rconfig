@@ -16,7 +16,7 @@ const copy = async (key, value) => {
     activeIcons.value[key] = true;
     setTimeout(() => {
       activeIcons.value[key] = false;
-    }, 3000);
+    }, 1500);
   } catch (e) {
     console.error('Failed to copy:', e);
   }
