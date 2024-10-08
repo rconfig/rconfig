@@ -42,7 +42,7 @@ const routes = [
   //   ]
   // },
 
-  // { path: '/settings/users/:userId?', name: 'users', component: () => import('./views/Users.vue'), beforeEnter: guardMyroute },
+  { path: '/settings/users/:userId?', name: 'users', component: () => import('./pages/Users/Main.vue'), beforeEnter: guardMyroute },
   // { path: '/settings/activitylog', name: 'activitylog', component: () => import('./views/ActivityLog.vue'), beforeEnter: guardMyroute },
 
   /* PAGENOTFOUND */

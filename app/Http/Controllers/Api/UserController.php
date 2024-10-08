@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class UserController extends ApiBaseController
 {
@@ -21,9 +22,14 @@ class UserController extends ApiBaseController
      */
     public function index(Request $request, $searchCols = null, $relationship = null, $withCount = null)
     {
-        $searchCols = ['id', 'name', 'username', 'email'];
 
-        return response()->json(parent::index($request, $searchCols));
+        $response = QueryBuilder::for(User::class)
+            ->allowedFilters(['name'])
+            ->defaultSort('-id')
+            ->allowedSorts(['id', 'name', 'email', 'last_login'])
+            ->paginate((int) $request->perPage);
+
+        return response()->json($response);
     }
 
     /**

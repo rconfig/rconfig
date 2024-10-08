@@ -80,20 +80,20 @@ onUnmounted(() => {
             </TableHead>
             <TableHead class="w-[5%]">
               <Button
-                class="flex justify-between w-full p-0 hover:bg-rcgray-800"
+                class="flex justify-start w-full p-0 hover:bg-rcgray-800"
                 variant="ghost"
                 @click="toggleSort('id')">
-                <span>ID</span>
                 <Icon :icon="sortParam === 'id' ? 'lucide:sort-asc' : sortParam === '-id' ? 'lucide:sort-desc' : 'hugeicons:sorting-05'" />
+                <span class="ml-2">ID</span>
               </Button>
             </TableHead>
             <TableHead class="w-[20%]">
               <Button
-                class="flex justify-between w-full p-0 hover:bg-rcgray-800"
+                class="flex justify-start w-full p-0 hover:bg-rcgray-800"
                 variant="ghost"
                 @click="toggleSort('vendorName')">
-                <span>Name</span>
                 <Icon :icon="sortParam === 'vendorName' ? 'lucide:sort-asc' : sortParam === '-vendorName' ? 'lucide:sort-desc' : 'hugeicons:sorting-05'" />
+                <span class="ml-2">Name</span>
               </Button>
             </TableHead>
             <TableHead class="w-[50%]">Devices</TableHead>

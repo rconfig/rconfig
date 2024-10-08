@@ -3,7 +3,7 @@ import ActionsMenu from '@/pages/Shared/Table/ActionsMenu.vue';
 import Loading from '@/pages/Shared/Table/Loading.vue';
 import NoResults from '@/pages/Shared/Table/NoResults.vue';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
-import TagAddEditDialog from '@/pages/Inventory/Tags/TagAddEditDialog.vue';
+import UserAddEditDialog from '@/pages/Users/UserAddEditDialog.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -11,13 +11,13 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { onMounted, onUnmounted } from 'vue';
 import { useRowSelection } from '@/composables/useRowSelection';
-import { useTags } from '@/pages/Inventory/Tags/useTags';
+import { useUsers } from '@/pages/Users/useUsers';
 
-const { editId, tags, currentPage, perPage, searchTerm, lastPage, isLoading, fetchTags, viewEditDialog, createTag, deleteTag, handleSave, handleKeyDown, newTagModalKey, toggleSort, sortParam } = useTags();
-const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(tags);
+const { editId, users, currentPage, perPage, searchTerm, lastPage, isLoading, fetchUsers, viewEditDialog, createUser, deleteUser, handleSave, handleKeyDown, newUserModalKey, toggleSort, sortParam } = useUsers();
+const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(users);
 
 onMounted(() => {
-  fetchTags();
+  fetchUsers();
   window.addEventListener('keydown', handleKeyDown);
 });
 
@@ -36,7 +36,7 @@ onUnmounted(() => {
           autocomplete="off"
           data-1p-ignore
           data-lpignore="true"
-          placeholder="Filter tags..."
+          placeholder="Filter users..."
           v-model="searchTerm" />
         <Button
           class="ml-2 hover:bg-gray-800"
@@ -51,16 +51,16 @@ onUnmounted(() => {
           class="px-2 py-1 bg-red-600 hover:bg-red-700 hover:animate-pulse"
           size="md"
           variant="primary">
-          Delete Selected {{ selectedRows.length }} Tag(s)
+          Delete Selected {{ selectedRows.length }} User(s)
         </Button>
 
         <Button
           type="submit"
           class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
           size="sm"
-          @click.prevent="createTag"
+          @click.prevent="createUser"
           variant="primary">
-          New Tag
+          New User
           <div class="pl-2 ml-auto">
             <kbd class="bxnAJf2">ALT N</kbd>
           </div>
@@ -91,13 +91,29 @@ onUnmounted(() => {
               <Button
                 class="flex justify-start w-full p-0 hover:bg-rcgray-800"
                 variant="ghost"
-                @click="toggleSort('tagname')">
-                <Icon :icon="sortParam === 'tagname' ? 'lucide:sort-asc' : sortParam === '-tagname' ? 'lucide:sort-desc' : 'hugeicons:sorting-05'" />
+                @click="toggleSort('name')">
+                <Icon :icon="sortParam === 'name' ? 'lucide:sort-asc' : sortParam === '-name' ? 'lucide:sort-desc' : 'hugeicons:sorting-05'" />
                 <span class="ml-2">Name</span>
               </Button>
             </TableHead>
-            <TableHead class="w-[20%]">Description</TableHead>
-            <TableHead class="w-[40%]">Devices</TableHead>
+            <TableHead class="w-[20%]">
+              <Button
+                class="flex justify-start w-full p-0 hover:bg-rcgray-800"
+                variant="ghost"
+                @click="toggleSort('email')">
+                <Icon :icon="sortParam === 'email' ? 'lucide:sort-asc' : sortParam === '-email' ? 'lucide:sort-desc' : 'hugeicons:sorting-05'" />
+                <span class="ml-2">Email</span>
+              </Button>
+            </TableHead>
+            <TableHead class="w-[20%]">
+              <Button
+                class="flex justify-start w-full p-0 hover:bg-rcgray-800"
+                variant="ghost"
+                @click="toggleSort('last_login')">
+                <Icon :icon="sortParam === 'last_login' ? 'lucide:sort-asc ' : sortParam === '-last_login' ? 'lucide:sort-desc' : 'hugeicons:sorting-05'" />
+                <span class="ml-2">Last Login</span>
+              </Button>
+            </TableHead>
             <TableHead class="w-[10%]">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -108,7 +124,7 @@ onUnmounted(() => {
 
           <template v-else-if="!isLoading">
             <TableRow
-              v-for="row in tags.data"
+              v-for="row in users.data"
               :key="row.id">
               <TableCell class="text-start">
                 <Checkbox
@@ -121,34 +137,20 @@ onUnmounted(() => {
                 {{ row.id }}
               </TableCell>
               <TableCell class="text-start">
-                {{ row.tagname }}
+                {{ row.name }}
               </TableCell>
               <TableCell class="text-start">
-                {{ row.tagDescription }}
+                {{ row.email }}
               </TableCell>
               <TableCell class="text-start">
-                <span
-                  v-for="(device, index) in row.device.slice(0, 8)"
-                  :key="device.device_name"
-                  class="mr-2">
-                  <Badge
-                    variant="outline"
-                    class="py-1 hover:bg-rcgray-800">
-                    <router-link :to="device.view_url">{{ device.device_name }}</router-link>
-                  </Badge>
-                </span>
-                <span
-                  v-if="row.device.length > 8"
-                  class="mr-2">
-                  <Badge variant="outline">...</Badge>
-                </span>
+                {{ row.last_login }}
               </TableCell>
               <!-- ACTIONS MENU -->
               <TableCell class="text-start">
                 <ActionsMenu
                   :rowData="row"
                   @onEdit="viewEditDialog(row.id)"
-                  @onDelete="deleteTag(row.id)" />
+                  @onDelete="deleteUser(row.id)" />
               </TableCell>
               <!-- ACTIONS MENU -->
             </TableRow>
@@ -168,9 +170,9 @@ onUnmounted(() => {
         @update:perPage="perPage = $event" />
       <!-- END PAGINATION -->
 
-      <TagAddEditDialog
+      <UserAddEditDialog
         @save="handleSave()"
-        :key="newTagModalKey"
+        :key="newUserModalKey"
         :editId="editId" />
 
       <Toaster />
