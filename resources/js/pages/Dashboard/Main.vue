@@ -26,7 +26,7 @@ onMounted(() => {
       :configinfo="configinfo"
       :isLoadingConfiginfo="isLoadingConfiginfo" />
 
-    <div class="flex flex-row gap-8 px-8">
+    <div class="grid grid-cols-1 gap-2 px-8 lg:grid-cols-2 md:gap-4 xl:gap-8">
       <div class="flex-1">
         <HealthLatestCards
           :healthLatest="healthLatest"

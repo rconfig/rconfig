@@ -18,7 +18,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="grid gap-4 p-8 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
+  <div class="grid gap-2 p-8 sm:gap-4 md:grid-cols-2 xl:gap-8 lg:grid-cols-4">
     <Card class="border shadow rounded-xl bg-card text-card-foreground">
       <CardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
         <CardTitle class="text-sm font-medium">Device count</CardTitle>
