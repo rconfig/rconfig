@@ -9,7 +9,7 @@ const routes = [
   { path: '/tags', name: 'tags', component: () => import('@/pages/Inventory/Main.vue') },
   { path: '/vendors', name: 'vendors', component: () => import('@/pages/Inventory/Main.vue') },
   { path: '/commands', name: 'commands', component: () => import('@/pages/Inventory/Main.vue') },
-  // { path: '/templates', name: 'templates', component: () => import('@/pages/Templates.vue') },
+  { path: '/templates', name: 'templates', component: () => import('@/pages/Inventory/Main.vue') },
 
   // working above
 

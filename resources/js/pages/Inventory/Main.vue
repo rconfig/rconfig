@@ -2,6 +2,7 @@
 import Devices from '@/pages/Inventory/Devices/Main.vue';
 import CommandGroups from '@/pages/Inventory/CommandGroups/Main.vue';
 import Command from '@/pages/Inventory/Commands/Main.vue';
+import Template from '@/pages/Inventory/Templates/Main.vue';
 import Tags from '@/pages/Inventory/Tags/Main.vue';
 import Vendors from '@/pages/Inventory/Vendors/Main.vue';
 import { Button } from '@/components/ui/button';
@@ -106,18 +107,8 @@ function toggleFavorite(viewId) {
     <Devices v-if="currentView === 'devices'"></Devices>
     <CommandGroups v-if="currentView === 'commandgroups'"></CommandGroups>
     <Command v-if="currentView === 'commands'"></Command>
-
-    <div
-      v-else-if="currentView === 'templates'"
-      class="flex items-center justify-center flex-1 border border-dashed rounded-lg shadow-sm">
-      <div class="flex flex-col items-center gap-1 text-center">
-        <h3 class="text-2xl font-bold tracking-tight">Templates View</h3>
-        <p class="text-sm text-muted-foreground">Details for templates will be shown here.</p>
-      </div>
-    </div>
-
+    <Template v-if="currentView === 'templates'"></Template>
     <Vendors v-if="currentView === 'vendors'"></Vendors>
-
     <Tags v-if="currentView === 'tags'"></Tags>
   </main>
 </template>

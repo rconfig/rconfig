@@ -1,13 +1,13 @@
 {
-  "_useRowSelection-BqPKtCvM.js": {
-    "file": "assets/useRowSelection-BqPKtCvM.js",
+  "_useRowSelection-BQvgO_4K.js": {
+    "file": "assets/useRowSelection-BQvgO_4K.js",
     "name": "useRowSelection",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_useToaster-B7Onb4AL.js": {
-    "file": "assets/useToaster-B7Onb4AL.js",
+  "_useToaster-DYMRp10t.js": {
+    "file": "assets/useToaster-DYMRp10t.js",
     "name": "useToaster",
     "imports": [
       "resources/js/app.js"
@@ -47,13 +47,14 @@
     "src": "resources/images/login_background/rconfig_msp_992@2x.png"
   },
   "resources/js/app.js": {
-    "file": "assets/app-CdRg-NKq.js",
+    "file": "assets/app-CIhaSv4l.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "dynamicImports": [
       "resources/js/pages/Dashboard/Main.vue",
       "resources/js/pages/Dashboard/Main.vue",
+      "resources/js/pages/Inventory/Main.vue",
       "resources/js/pages/Inventory/Main.vue",
       "resources/js/pages/Inventory/Main.vue",
       "resources/js/pages/Inventory/Main.vue",
@@ -78,13 +79,13 @@
     ]
   },
   "resources/js/pages/Dashboard/Main.vue": {
-    "file": "assets/Main-Dy829LNb.js",
+    "file": "assets/Main-rZeHfC6r.js",
     "name": "Main",
     "src": "resources/js/pages/Dashboard/Main.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_useToaster-B7Onb4AL.js"
+      "_useToaster-DYMRp10t.js"
     ],
     "css": [
       "assets/Main-BGpbkDf4.css",
@@ -92,22 +93,22 @@
     ]
   },
   "resources/js/pages/Inventory/Main.vue": {
-    "file": "assets/Main-DQbBwhQm.js",
+    "file": "assets/Main-D-4eU0E4.js",
     "name": "Main",
     "src": "resources/js/pages/Inventory/Main.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_useRowSelection-BqPKtCvM.js",
-      "_useToaster-B7Onb4AL.js"
+      "_useRowSelection-BQvgO_4K.js",
+      "_useToaster-DYMRp10t.js"
     ],
     "css": [
-      "assets/Main-D_6WTQux.css",
+      "assets/Main-CEMN1_xK.css",
       "assets/global-DUKy_Ysg.css"
     ]
   },
   "resources/js/pages/Shared/PageNotFound.vue": {
-    "file": "assets/PageNotFound-DN5eYAhO.js",
+    "file": "assets/PageNotFound-Bq8AkgEg.js",
     "name": "PageNotFound",
     "src": "resources/js/pages/Shared/PageNotFound.vue",
     "isDynamicEntry": true,
@@ -119,14 +120,14 @@
     ]
   },
   "resources/js/pages/Users/Main.vue": {
-    "file": "assets/Main-W9KLJrOx.js",
+    "file": "assets/Main-inu7UiG-.js",
     "name": "Main",
     "src": "resources/js/pages/Users/Main.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_useRowSelection-BqPKtCvM.js",
-      "_useToaster-B7Onb4AL.js"
+      "_useRowSelection-BQvgO_4K.js",
+      "_useToaster-DYMRp10t.js"
     ],
     "css": [
       "assets/global-DUKy_Ysg.css"
