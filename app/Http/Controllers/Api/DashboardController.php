@@ -16,6 +16,7 @@ class DashboardController extends Controller
 
     public function getSysInfo()
     {
+
         return Cache::remember('dashboard.sysinfo', 604800, function () {
             return $this->Sysinfo();
         });
@@ -54,6 +55,8 @@ class DashboardController extends Controller
         $serverInfos['PHPVersion'] = phpversion() . ' / ' . app()->version();
         $serverInfos['RedisVersion'] = $this->redisVersion();
         $serverInfos['MySQLVersion'] = $this->mysqlversion();
+        $serverInfos['SystemUptime'] = $this->systemUptime();
+        $serverInfos['LaravelVersion'] =  app()->version();
 
         return $serverInfos;
     }

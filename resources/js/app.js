@@ -20,6 +20,7 @@ import VueHighlightJS from 'vue3-highlightjs';
 import { Icon } from '@iconify/vue';
 import { createPinia } from 'pinia';
 import { Toaster } from '@/components/ui/toast';
+import { Button } from '@/components/ui/button';
 
 const app = createApp({
   data: () => ({
@@ -53,6 +54,7 @@ app.component('resizable-handle', ResizableHandle);
 // app.component('notification-drawer', NotificationsDrawer);
 // app.component('toast-notification', ToastNotification);
 app.component('Toaster', Toaster);
+app.component('Button', Button);
 app.component('Icon', Icon);
 
 // app.provide('create-notification', createNotification);
