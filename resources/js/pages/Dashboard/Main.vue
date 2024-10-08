@@ -36,7 +36,7 @@ onMounted(() => {
 
       <div class="flex-1">
         <SysinfoCards
-          @refresh="fetchSysinfo()"
+          @refresh="fetchSysinfo(true)"
           :sysinfo="sysinfo"
           :isLoadingSysinfo="isLoadingSysinfo" />
       </div>

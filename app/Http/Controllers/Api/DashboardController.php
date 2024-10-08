@@ -17,6 +17,13 @@ class DashboardController extends Controller
     public function getSysInfo()
     {
 
+        // get param from url
+        $clearcache = request()->input('clearcache');
+
+        if ($clearcache == 'true') {
+            Cache::forget('dashboard.sysinfo');
+        }
+
         return Cache::remember('dashboard.sysinfo', 604800, function () {
             return $this->Sysinfo();
         });
@@ -43,9 +50,12 @@ class DashboardController extends Controller
     {
         $this->checkAppUrl();
 
-        $osVersion = getOSInformation()['pretty_name'];
+        $osInfo = getOSInformation();
+        $osVersion = isset($osInfo['PRETTY_NAME']) ? $osInfo['PRETTY_NAME'] : $osInfo['PRETTY_NAME'];
         $osVersion = str_replace('(Core)', '', $osVersion);
         $osVersion = str_replace('Linux', '', $osVersion);
+        $serverInfos = []; // array for Server Info Table
+        $serverInfos['OSVersion'] = $osVersion;
 
         $serverInfos = []; // array for Server Info Table
         $serverInfos['OSVersion'] = $osVersion;
@@ -54,7 +64,12 @@ class DashboardController extends Controller
         $serverInfos['ServerName'] = gethostname();
         $serverInfos['PHPVersion'] = phpversion() . ' / ' . app()->version();
         $serverInfos['RedisVersion'] = $this->redisVersion();
-        $serverInfos['MySQLVersion'] = $this->mysqlversion();
+        if (config('database.default') == 'mysql' || config('database.default') == 'testing_db') {
+            $serverInfos['MySQLVersion'] = 'MySQL ' . $this->mysqlversion();
+        }
+        if (config('database.default') == 'pgsql') {
+            $serverInfos['MySQLVersion'] = 'PostgreSQL ' . $this->mysqlversion();
+        }
         $serverInfos['SystemUptime'] = $this->systemUptime();
         $serverInfos['LaravelVersion'] =  app()->version();
 
@@ -73,9 +88,18 @@ class DashboardController extends Controller
     private function mysqlversion()
     {
 
-        $mysqlVersionNumber = DB::select(DB::raw('SHOW VARIABLES LIKE "%version%"')->getValue(DB::connection()->getQueryGrammar()));
+        if (config('database.default') == 'mysql' || config('database.default') == 'testing_db') {
+            $mysqlVersionNumber = DB::select(DB::raw('SHOW VARIABLES LIKE "%version%"')->getValue(DB::connection()->getQueryGrammar()));
 
-        return $mysqlVersionNumber[1]->Value;
+            return $mysqlVersionNumber[7]->Value;
+        }
+
+        if (config('database.default') == 'pgsql') {
+            // $mysqlVersionNumber = DB::select(DB::raw('SHOW VARIABLES LIKE "%version%"')->getValue(DB::connection()->getQueryGrammar()));
+            $mysqlVersionNumber = DB::select(DB::raw('SHOW server_version')->getValue(DB::connection()->getQueryGrammar()));
+
+            return $mysqlVersionNumber[0]->server_version;
+        }
     }
 
     private function redisVersion()

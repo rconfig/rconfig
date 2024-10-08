@@ -11,10 +11,10 @@ export function useDashboard() {
   const isLoadingHealth = ref(false);
   const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
 
-  async function fetchSysinfo(params = {}) {
+  async function fetchSysinfo(clearCache = false, params = {}) {
     isLoadingSysinfo.value = true;
     try {
-      const response = await axios.get('/api/dashboard/sysinfo');
+      const response = await axios.get('/api/dashboard/sysinfo?clearcache=' + clearCache);
       sysinfo.value = response.data;
     } catch (error) {
       console.error('Error fetching sysinfo:', error);

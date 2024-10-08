@@ -79,6 +79,8 @@ function refresh() {
             <Skeleton class="h-4 w-[250px]" />
             <Skeleton class="h-4 w-[250px]" />
             <Skeleton class="h-4 w-[250px]" />
+            <Skeleton class="h-4 w-[250px]" />
+            <Skeleton class="h-4 w-[250px]" />
           </div>
         </div>
 

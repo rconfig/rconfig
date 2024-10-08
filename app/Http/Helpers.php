@@ -131,28 +131,22 @@ function diskInfo()
 
 function getOSInformation()
 {
-    if (false == function_exists('shell_exec') || false == is_readable('/etc/os-release')) {
+    if (function_exists('shell_exec') == false || is_readable('/etc/os-release') == false) {
         return null;
     }
 
-    $os = shell_exec('cat /etc/os-release');
-    $listIds = preg_match_all('/.*=/', $os, $matchListIds);
-    $listIds = $matchListIds[0];
+    $osReleaseFile = '/etc/os-release';
+    if (file_exists($osReleaseFile)) {
+        $osRelease = parse_ini_file($osReleaseFile);
+    } else {
+        $osReleaseFile = '/usr/lib/os-release';
+        if (file_exists($osReleaseFile)) {
+            $osRelease = parse_ini_file($osReleaseFile);
+        }
+    }
 
-    $listVal = preg_match_all('/=.*/', $os, $matchListVal);
-    $listVal = $matchListVal[0];
-
-    array_walk($listIds, function (&$v, $k) {
-        $v = strtolower(str_replace('=', '', $v));
-    });
-
-    array_walk($listVal, function (&$v, $k) {
-        $v = preg_replace('/=|"/', '', $v);
-    });
-
-    return array_combine($listIds, $listVal);
+    return $osRelease;
 }
-
 function activityLogIt($class, $function, $log_name, $description, $event_type, $device_name = null, $device_id = null, $connection_category = null, $connection_ids = null)
 {
     // test covered
