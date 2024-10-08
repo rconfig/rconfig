@@ -1,18 +1,195 @@
 <script setup>
-import { ref } from 'vue';
+import ActionsMenu from '@/pages/Shared/Table/ActionsMenu.vue';
+import Loading from '@/pages/Shared/Table/Loading.vue';
+import NoResults from '@/pages/Shared/Table/NoResults.vue';
+import Pagination from '@/pages/Shared/Table/Pagination.vue';
+import CommandGroupAddEditDialog from '@/pages/Inventory/CommandGroups/CommandGroupAddEditDialog.vue';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { onMounted, onUnmounted } from 'vue';
+import { useRowSelection } from '@/composables/useRowSelection';
+import { useCommandGroups } from '@/pages/Inventory/CommandGroups/useCommandGroups';
 
-defineProps({});
+const { categories, isLoading, currentPage, perPage, lastPage, editId, newCommandGroupsModalKey, searchTerm, openDialog, fetchCommandGroups, createCommandGroup, updateCommandGroup, deleteCommandGroup, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam } = useCommandGroups();
+const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(categories);
+
+onMounted(() => {
+  fetchCommandGroups();
+  window.addEventListener('keydown', handleKeyDown);
+});
+
+// Cleanup event listener on unmount
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown);
+});
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center h-screen gap-1 text-center">
-    <div class="flex items-center gap-2 dark:text-gray-400">
-      Loading
-      <Icon icon="eos-icons:three-dots-loading" />
+  <div class="flex flex-col h-full gap-1 text-center">
+    <div class="flex items-center justify-between p-4">
+      <div class="flex items-center">
+        <Input
+          class="max-w-sm ml-4"
+          autocomplete="off"
+          data-1p-ignore
+          data-lpignore="true"
+          placeholder="Filter command groups..."
+          v-model="searchTerm" />
+        <Button
+          class="ml-2 hover:bg-gray-800"
+          variant="outline"
+          @click="searchTerm = ''">
+          Clear Filter
+        </Button>
+      </div>
+      <div class="flex">
+        <Button
+          v-if="selectedRows.length"
+          class="px-2 py-1 bg-red-600 hover:bg-red-700 hover:animate-pulse"
+          size="md"
+          variant="primary">
+          Delete Selected {{ selectedRows.length }} Command Group(s)
+        </Button>
+
+        <Button
+          type="submit"
+          class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+          size="sm"
+          @click.prevent="createCommandGroup"
+          variant="primary">
+          New Command Group
+          <div class="pl-2 ml-auto">
+            <kbd class="bxnAJf2">ALT N</kbd>
+          </div>
+        </Button>
+      </div>
     </div>
 
-    <h3 class="text-xl font-semibold tracking-tight">You have no command groups</h3>
-    <p class="text-sm text-muted-foreground">You can add a command groups.</p>
-    <button class="inline-flex items-center justify-center px-4 py-2 mt-4 text-sm font-medium transition-colors rounded-md shadow whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9">Add Device</button>
+    <div class="px-6">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead class="w-[2%]">
+              <Checkbox
+                id="selectAll"
+                v-model="selectAll"
+                @click="toggleSelectAll()" />
+            </TableHead>
+            <TableHead class="w-[5%]">
+              <Button
+                class="flex justify-start w-full p-0 hover:bg-rcgray-800"
+                variant="ghost"
+                @click="toggleSort('id')">
+                <Icon :icon="sortParam === 'id' ? 'lucide:sort-asc' : sortParam === '-id' ? 'lucide:sort-desc' : 'hugeicons:sorting-05'" />
+                <span class="ml-2">ID</span>
+              </Button>
+            </TableHead>
+            <TableHead class="w-[20%]">
+              <Button
+                class="flex justify-start w-full p-0 hover:bg-rcgray-800"
+                variant="ghost"
+                @click="toggleSort('categoryName')">
+                <Icon :icon="sortParam === 'categoryName' ? 'lucide:sort-asc' : sortParam === '-categoryName' ? 'lucide:sort-desc' : 'hugeicons:sorting-05'" />
+                <span class="ml-2">Name</span>
+              </Button>
+            </TableHead>
+            <TableHead class="w-[20%]">Description</TableHead>
+            <TableHead class="w-[10%]">Commands</TableHead>
+            <TableHead class="w-[40%]">Devices</TableHead>
+            <TableHead class="w-[10%]">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <template v-if="isLoading">
+            <Loading />
+          </template>
+
+          <template v-else-if="!isLoading">
+            <TableRow
+              v-for="row in categories.data"
+              :key="row.id">
+              <TableCell class="text-start">
+                <Checkbox
+                  class="cursor-pointer"
+                  :id="'select-' + row.id"
+                  :checked="selectedRows.includes(row.id) ? true : false"
+                  @click="toggleSelectRow(row.id)" />
+              </TableCell>
+              <TableCell class="text-start">
+                {{ row.id }}
+              </TableCell>
+              <TableCell class="text-start">
+                {{ row.categoryName }}
+              </TableCell>
+              <TableCell class="text-start">
+                {{ row.categoryDescription }}
+              </TableCell>
+              <TableCell class="text-start">
+                <div>
+                  <span class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs bg-gray-100 text-gray-800 rounded-md dark:bg-neutral-500/20 dark:text-neutral-400">
+                    <Icon
+                      icon="mage:box-3d-check"
+                      class="text-green-500"
+                      v-if="row.command.length > 0" />
+                    <Icon
+                      icon="mage:box-3d-cross"
+                      class="text-red-400"
+                      v-if="row.command.length === 0" />
+                    {{ row.command.length }}
+                  </span>
+                </div>
+              </TableCell>
+              <TableCell class="text-start">
+                <span
+                  v-for="(device, index) in row.device.slice(0, 8)"
+                  :key="device.device_name"
+                  class="mr-2">
+                  <Badge
+                    variant="outline"
+                    class="py-1 hover:bg-rcgray-800">
+                    <router-link :to="device.view_url">{{ device.device_name }}</router-link>
+                  </Badge>
+                </span>
+                <span
+                  v-if="row.device.length > 8"
+                  class="mr-2">
+                  <Badge variant="outline">...</Badge>
+                </span>
+              </TableCell>
+              <!-- ACTIONS MENU -->
+              <TableCell class="text-start">
+                <ActionsMenu
+                  :rowData="row"
+                  @onEdit="viewEditDialog(row.id)"
+                  @onDelete="deleteCommandGroup(row.id)" />
+              </TableCell>
+              <!-- ACTIONS MENU -->
+            </TableRow>
+          </template>
+          <template v-else>
+            <NoResults />
+          </template>
+        </TableBody>
+      </Table>
+
+      <!-- PAGINATION -->
+      <Pagination
+        :currentPage="currentPage"
+        :lastPage="lastPage"
+        :perPage="perPage"
+        @update:currentPage="currentPage = $event"
+        @update:perPage="perPage = $event" />
+      <!-- END PAGINATION -->
+
+      <CommandGroupAddEditDialog
+        @save="handleSave()"
+        :key="newCommandGroupModalKey"
+        :editId="editId" />
+
+      <Toaster />
+    </div>
   </div>
 </template>

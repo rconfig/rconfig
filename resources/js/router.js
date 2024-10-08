@@ -4,11 +4,11 @@ const routes = [
   { path: '/', name: 'Home', component: () => import('@/pages/Dashboard/Main.vue') },
   { path: '/dashboard', name: 'dashboard', component: () => import('@/pages/Dashboard/Main.vue') },
   { path: '/inventory', name: 'inventory', component: () => import('@/pages/Inventory/Main.vue') },
+  { path: '/commandgroups', name: 'commandgroups', component: () => import('@/pages/Inventory/Main.vue') },
   { path: '/devices', name: 'devices', component: () => import('@/pages/Inventory/Main.vue') },
   { path: '/tags', name: 'tags', component: () => import('@/pages/Inventory/Main.vue') },
   { path: '/vendors', name: 'vendors', component: () => import('@/pages/Inventory/Main.vue') },
   // { path: '/templates', name: 'templates', component: () => import('@/pages/Templates.vue') },
-  // { path: '/commandgroups', name: 'commandgroups', component: () => import('@/pages/Inventory/main.vue') },
   // { path: '/commands', name: 'commands', component: () => import('@/pages/Commands.vue') },
 
   // working above
