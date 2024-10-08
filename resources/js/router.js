@@ -8,8 +8,8 @@ const routes = [
   { path: '/devices', name: 'devices', component: () => import('@/pages/Inventory/Main.vue') },
   { path: '/tags', name: 'tags', component: () => import('@/pages/Inventory/Main.vue') },
   { path: '/vendors', name: 'vendors', component: () => import('@/pages/Inventory/Main.vue') },
+  { path: '/commands', name: 'commands', component: () => import('@/pages/Inventory/Main.vue') },
   // { path: '/templates', name: 'templates', component: () => import('@/pages/Templates.vue') },
-  // { path: '/commands', name: 'commands', component: () => import('@/pages/Commands.vue') },
 
   // working above
 

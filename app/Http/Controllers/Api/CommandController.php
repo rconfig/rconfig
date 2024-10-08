@@ -7,6 +7,7 @@ use App\Models\Command;
 use App\Traits\RespondsWithHttpStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class CommandController extends ApiBaseController
 {
@@ -18,24 +19,18 @@ class CommandController extends ApiBaseController
         $this->modelname = $modelname;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request, $searchCols = null, $relationship = null, $withCount = null)
     {
-        $searchCols = ['command'];
+        $response = QueryBuilder::for(Command::class)
+            ->with('category')
+            ->allowedFilters(['command'])
+            ->defaultSort('-id')
+            ->allowedSorts(['id', 'command'])
+            ->paginate((int) $request->perPage);
 
-        return response()->json(parent::index($request, $searchCols, ['category']));
+        return response()->json($response);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(StoreCommandRequest $request)
     {
         $model = parent::storeResource($request->toDTO()->toArray(), 1);
@@ -45,24 +40,11 @@ class CommandController extends ApiBaseController
         return $this->successResponse(Str::ucfirst($this->modelname) . ' created successfully!');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Command  $tag
-     * @return \Illuminate\Http\Response
-     */
     public function show($id, $relationship = null, $withCount = null)
     {
         return parent::show($id, ['category']);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Command  $tag
-     * @return \Illuminate\Http\Response
-     */
     public function update($id, StoreCommandRequest $request)
     {
         $model = parent::updateResource($id, $request->toDTO()->toArray(), 1);
@@ -71,12 +53,6 @@ class CommandController extends ApiBaseController
         return $this->successResponse(Str::ucfirst($this->modelname) . ' edited successfully!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id, $return = 0)
     {
         $model = parent::destroy($id, 1);

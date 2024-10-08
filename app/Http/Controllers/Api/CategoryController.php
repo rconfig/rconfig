@@ -17,6 +17,7 @@ class CategoryController extends ApiBaseController
 
     public function index(Request $request, $searchCols = null, $relationship = null, $withCount = null)
     {
+
         $response = QueryBuilder::for(Category::class)
             ->with('command', 'device')
             ->allowedFilters(['categoryName'])
