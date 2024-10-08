@@ -1,6 +1,6 @@
 {
-  "_useToaster-lWiG7Bcj.js": {
-    "file": "assets/useToaster-lWiG7Bcj.js",
+  "_useToaster-C8xj9kB-.js": {
+    "file": "assets/useToaster-C8xj9kB-.js",
     "name": "useToaster",
     "imports": [
       "resources/js/app.js"
@@ -40,7 +40,7 @@
     "src": "resources/images/login_background/rconfig_msp_992@2x.png"
   },
   "resources/js/app.js": {
-    "file": "assets/app-Bx3zayJ3.js",
+    "file": "assets/app-DdQLHh8w.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -68,26 +68,26 @@
     ]
   },
   "resources/js/pages/Dashboard/Main.vue": {
-    "file": "assets/Main-CDWxthmf.js",
+    "file": "assets/Main-9V_Mn8Y0.js",
     "name": "Main",
     "src": "resources/js/pages/Dashboard/Main.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_useToaster-lWiG7Bcj.js"
+      "_useToaster-C8xj9kB-.js"
     ],
     "css": [
       "assets/global-y7bsyHFw.css"
     ]
   },
   "resources/js/pages/Inventory/Main.vue": {
-    "file": "assets/Main-CX6H3hys.js",
+    "file": "assets/Main-BoQy7RsQ.js",
     "name": "Main",
     "src": "resources/js/pages/Inventory/Main.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_useToaster-lWiG7Bcj.js"
+      "_useToaster-C8xj9kB-.js"
     ],
     "css": [
       "assets/Main-DCMmu1z4.css",
@@ -95,7 +95,7 @@
     ]
   },
   "resources/js/pages/Shared/PageNotFound.vue": {
-    "file": "assets/PageNotFound-DdJjRBnQ.js",
+    "file": "assets/PageNotFound-Dxnlu2_D.js",
     "name": "PageNotFound",
     "src": "resources/js/pages/Shared/PageNotFound.vue",
     "isDynamicEntry": true,

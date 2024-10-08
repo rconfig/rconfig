@@ -58,8 +58,8 @@ function refresh() {
           <Button
             @click="refresh()"
             size="sm"
-            variant="none"
-            class="h-8 gap-1">
+            variant="outline"
+            class="gap-1 hover:bg-rcgray-800">
             <Icon
               icon="flat-color-icons:refresh"
               class="hover:animate-pulse" />

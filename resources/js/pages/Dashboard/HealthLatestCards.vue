@@ -39,8 +39,8 @@ function refresh() {
           <Button
             @click="refresh()"
             size="sm"
-            variant="none"
-            class="gap-1">
+            variant="outline"
+            class="gap-1 hover:bg-rcgray-800">
             <Icon
               icon="flat-color-icons:refresh"
               class="hover:animate-pulse" />
@@ -83,12 +83,6 @@ function refresh() {
               </dd>
             </div>
             <div class="flex items-center justify-between">
-              <dt class="text-muted-foreground">{{ healthLatest.data[2].label }}</dt>
-              <dd class="flex items-center gap-2">
-                {{ healthLatest.data[2].status }}
-              </dd>
-            </div>
-            <div class="flex items-center justify-between">
               <dt class="text-muted-foreground">{{ healthLatest.data[3].label }}</dt>
               <dd class="flex items-center gap-2">
                 <Icon :icon="healthLatest.data[3].status === 'Running' ? 'fluent-color:checkmark-circle-32' : 'fluent-color:dismiss-circle-32'" />
@@ -112,12 +106,18 @@ function refresh() {
                 {{ healthLatest.data[7].status }}
               </dd>
             </div>
+            <div class="flex items-center justify-between">
+              <dt class="text-muted-foreground">{{ healthLatest.data[2].label }}</dt>
+              <dd class="flex items-center gap-2">
+                {{ healthLatest.data[2].status }}
+              </dd>
+            </div>
           </dl>
         </div>
       </CardContent>
       <CardFooter class="flex flex-row items-center px-6 py-3 border-t bg-muted/50">
         <div class="text-xs text-muted-foreground">
-          Laravel Version
+          System Uptime:
           <time dateTime="2023-11-23">{{ SystemUptime }}</time>
         </div>
       </CardFooter>
