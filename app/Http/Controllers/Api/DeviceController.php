@@ -8,6 +8,7 @@ use App\Models\Device;
 use App\Traits\RespondsWithHttpStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class DeviceController extends ApiBaseController
 {
@@ -19,25 +20,24 @@ class DeviceController extends ApiBaseController
         $this->modelname = $modelname;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request, $searchCols = null, $relationship = null, $withCount = null)
     {
         $searchCols = ['id', 'device_name', 'device_ip', 'device_model'];
-        $result = parent::index($request, $searchCols, ['vendor', 'category',  'category.command', 'tag', 'template', 'lastConfig'], ['config_good', 'config_bad', 'config_unknown']);
+
+        $result = QueryBuilder::for(Device::class)
+            ->with(['vendor', 'category',  'category.command', 'tag', 'template', 'lastConfig'])
+            ->withCount(['config_good', 'config_bad', 'config_unknown'])
+            ->allowedFilters($searchCols)
+            ->defaultSort('-id')
+            ->allowedSorts('id', 'device_name', 'device_ip', 'device_model')
+            ->paginate((int) $request->perPage);
+
+        // return $item;
+        // $result = parent::index($request, $searchCols, ['vendor', 'category',  'category.command', 'tag', 'template', 'lastConfig'], ['config_good', 'config_bad', 'config_unknown']);
 
         return response()->json($result);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(StoreDeviceRequest $request)
     {
         $model = parent::storeResource($request->toDTO()->toArray(), 1);
@@ -52,12 +52,6 @@ class DeviceController extends ApiBaseController
         return $this->successResponse(Str::ucfirst($this->modelname) . ' created successfully!', ['id' => $model->id]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Device  $tag
-     * @return \Illuminate\Http\Response
-     */
     public function show($id, $relationship = null, $withCount = null)
     {
         $results = parent::show($id, ['vendor', 'category',  'category.command', 'tag', 'template', 'lastConfig'], ['config_good', 'config_bad', 'config_unknown']);
@@ -65,13 +59,6 @@ class DeviceController extends ApiBaseController
         return $results;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Device  $tag
-     * @return \Illuminate\Http\Response
-     */
     public function update($id, StoreDeviceRequest $request)
     {
         $model = parent::updateResource($id, $request->toDTO()->toArray(), 1);
@@ -84,12 +71,6 @@ class DeviceController extends ApiBaseController
         return $this->successResponse(Str::ucfirst($this->modelname) . ' edited successfully!', ['id' => $model->id]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id, $return = 0)
     {
         $model = parent::destroy($id, 1);
@@ -103,11 +84,6 @@ class DeviceController extends ApiBaseController
         return $this->successResponse(Str::ucfirst($this->modelname) . ' deleted successfully!');
     }
 
-    /**
-     * Get unique list of all devices models in the table
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function getDeviceModels()
     {
         $collection = Device::select('device_model')->whereNotNull('device_model')->groupBy('device_model')->get();
@@ -116,11 +92,6 @@ class DeviceController extends ApiBaseController
         return $this->successResponse('All Device Models!', $plucked);
     }
 
-    /**
-     * Get unique list of all devices models in the table
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function allDeviceNames()
     {
         $collection = Device::select('id', 'device_name')->get();
