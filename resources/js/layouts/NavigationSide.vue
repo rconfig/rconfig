@@ -274,7 +274,7 @@ onUnmounted(() => {
                             icon="fluent:chevron-down-48-filled"
                             v-if="isOpen1" />
                           <div
-                            class="text-left"
+                            class="ml-2 text-left"
                             data-truncate="false"
                             data-numeric="false"
                             data-uppercase="false"
@@ -285,21 +285,27 @@ onUnmounted(() => {
                       </Button>
                     </CollapsibleTrigger>
                   </div>
-
                   <CollapsibleContent>
-                    <router-link
-                      v-for="item in favoritesStore.favorites"
-                      :key="item.id"
-                      :to="item.route"
-                      class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
-                      :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === item.route }">
-                      <Icon
-                        :icon="item.icon"
-                        class="text-rcgray-400" />
-                      <div class="p-1 ml-2 text-left text-gray-200">
-                        <div>{{ item.label }}</div>
-                      </div>
-                    </router-link>
+                    <div
+                      v-if="favoritesStore.favorites.size == 0"
+                      class="ml-6 text-xs text-muted-foreground">
+                      No favorites set
+                    </div>
+                    <div v-else>
+                      <router-link
+                        v-for="item in favoritesStore.favorites"
+                        :key="item.id"
+                        :to="item.route"
+                        class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
+                        :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === item.route }">
+                        <Icon
+                          :icon="item.icon"
+                          class="text-rcgray-400" />
+                        <div class="p-1 ml-2 text-left text-gray-200">
+                          <div>{{ item.label }}</div>
+                        </div>
+                      </router-link>
+                    </div>
                   </CollapsibleContent>
                 </Collapsible>
               </nav>
