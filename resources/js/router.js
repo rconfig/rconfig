@@ -12,9 +12,21 @@ const routes = [
   { path: '/templates', name: 'templates', component: () => import('@/pages/Inventory/Main.vue') },
 
   { path: '/devices', name: 'devices', component: () => import('@/pages/Inventory/Main.vue') },
-  { path: '/settings', name: 'settings', component: () => import('@/pages/Settings/Main.vue'), beforeEnter: guardMyroute },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: () => import('@/pages/Settings/Main.vue'),
+    beforeEnter: guardMyroute,
+    meta: {
+      breadcrumb: [
+        { label: 'Home', link: '/' },
+        { label: 'Settings', link: '/settings' }
+      ]
+    }
+  },
   // working above
 
+  // See chat gpt on how to implement breadcrum with dyanmic routes using meta data
   // { path: '/devices/status/:id', name: 'devices-status', component: () => import('./views/Inventory.vue') },
   // { path: '/devices/tag/:id', name: 'devices-tag', component: () => import('./views/Inventory.vue') },
   // { path: '/devices/category/:id', name: 'devices-category', component: () => import('./views/Inventory.vue') },

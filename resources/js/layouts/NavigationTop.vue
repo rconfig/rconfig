@@ -3,13 +3,15 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbS
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { Icon } from '@iconify/vue';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useColorMode } from '@vueuse/core';
 import { usePanelStore } from '@/stores/panelStore'; // Import the Pinia store
+import { useRoute } from 'vue-router';
 
 const svgIshoveringOpen = ref(false);
 const mode = useColorMode();
 const panelStore = usePanelStore(); // Access the panel store
+const route = useRoute();
 
 defineProps({
   panelRef: {
@@ -26,6 +28,10 @@ function collapsePanel() {
   panelStore.panelRef?.isCollapsed ? panelStore.panelRef?.expand() : panelStore.panelRef?.collapse();
   svgIshoveringOpen.value = false;
 }
+
+const breadcrumbs = computed(() => {
+  return route.meta.breadcrumb || [];
+});
 </script>
 
 <style scoped>
@@ -122,19 +128,25 @@ function collapsePanel() {
           </svg>
         </button>
 
+        <!-- Breadcrumb -->
         <Breadcrumb>
           <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <Icon icon="radix-icons:slash" />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/inventory">Inventory</BreadcrumbLink>
+            <BreadcrumbItem
+              v-for="(item, index) in breadcrumbs"
+              :key="index">
+              <BreadcrumbLink
+                v-if="item.link"
+                :href="item.link">
+                {{ item.label }}
+              </BreadcrumbLink>
+              <span v-else>{{ item.label }}</span>
+              <BreadcrumbSeparator v-if="index < breadcrumbs.length - 1">
+                <Icon icon="radix-icons:slash" />
+              </BreadcrumbSeparator>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
+        <!-- Breadcrumb -->
       </div>
 
       <div class="mt-1 top-nav-div">

@@ -16,7 +16,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-10 pb-16 space-y-6 md:block">
+  <div class="pb-16 pl-10 space-y-6 md:block">
     <div class="space-y-0.5">
       <h2 class="flex items-center space-x-2 text-2xl font-bold tracking-tight">
         <Icon
