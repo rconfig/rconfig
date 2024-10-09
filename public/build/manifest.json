@@ -1,20 +1,20 @@
 {
-  "_useRowSelection-C1C3sNwh.js": {
-    "file": "assets/useRowSelection-C1C3sNwh.js",
+  "_useRowSelection-UE858ucz.js": {
+    "file": "assets/useRowSelection-UE858ucz.js",
     "name": "useRowSelection",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_useToaster-BYDoeTf1.js": {
-    "file": "assets/useToaster-BYDoeTf1.js",
+  "_useToaster-amSPtvaL.js": {
+    "file": "assets/useToaster-amSPtvaL.js",
     "name": "useToaster",
     "imports": [
       "resources/js/app.js"
     ]
   },
   "resources/css/global.css": {
-    "file": "assets/global-D_NG_CCd.css",
+    "file": "assets/global-CNEYUxup.css",
     "src": "resources/css/global.css",
     "isEntry": true
   },
@@ -47,7 +47,7 @@
     "src": "resources/images/login_background/rconfig_msp_992@2x.png"
   },
   "resources/js/app.js": {
-    "file": "assets/app-7hO3kobU.js",
+    "file": "assets/app-D_qib-O2.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -68,8 +68,8 @@
       "resources/js/pages/Shared/PageNotFound.vue"
     ],
     "css": [
-      "assets/app-BFekfaTe.css",
-      "assets/global-D_NG_CCd.css"
+      "assets/app-BiZ7ou62.css",
+      "assets/global-CNEYUxup.css"
     ],
     "assets": [
       "assets/rconfig_msp_576-BrMGLpCo.png",
@@ -82,36 +82,36 @@
     ]
   },
   "resources/js/pages/Dashboard/Main.vue": {
-    "file": "assets/Main-BwaY5345.js",
+    "file": "assets/Main-B3r80UpA.js",
     "name": "Main",
     "src": "resources/js/pages/Dashboard/Main.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_useToaster-BYDoeTf1.js"
+      "_useToaster-amSPtvaL.js"
     ],
     "css": [
-      "assets/Main-BGpbkDf4.css",
-      "assets/global-D_NG_CCd.css"
+      "assets/Main-D8PzUCYE.css",
+      "assets/global-CNEYUxup.css"
     ]
   },
   "resources/js/pages/Inventory/Main.vue": {
-    "file": "assets/Main-zsShr9UE.js",
+    "file": "assets/Main-D4wW0RtE.js",
     "name": "Main",
     "src": "resources/js/pages/Inventory/Main.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_useRowSelection-C1C3sNwh.js",
-      "_useToaster-BYDoeTf1.js"
+      "_useRowSelection-UE858ucz.js",
+      "_useToaster-amSPtvaL.js"
     ],
     "css": [
-      "assets/Main-CEMN1_xK.css",
-      "assets/global-D_NG_CCd.css"
+      "assets/Main-CfEM5bRy.css",
+      "assets/global-CNEYUxup.css"
     ]
   },
   "resources/js/pages/Settings/Main.vue": {
-    "file": "assets/Main-wzn0DWL5.js",
+    "file": "assets/Main-CzZxmDsH.js",
     "name": "Main",
     "src": "resources/js/pages/Settings/Main.vue",
     "isDynamicEntry": true,
@@ -120,11 +120,11 @@
     ],
     "css": [
       "assets/Main-CtccdEWY.css",
-      "assets/global-D_NG_CCd.css"
+      "assets/global-CNEYUxup.css"
     ]
   },
   "resources/js/pages/Shared/PageNotFound.vue": {
-    "file": "assets/PageNotFound-C462xfkh.js",
+    "file": "assets/PageNotFound-BfxNvFbH.js",
     "name": "PageNotFound",
     "src": "resources/js/pages/Shared/PageNotFound.vue",
     "isDynamicEntry": true,
@@ -132,35 +132,35 @@
       "resources/js/app.js"
     ],
     "css": [
-      "assets/global-D_NG_CCd.css"
+      "assets/global-CNEYUxup.css"
     ]
   },
   "resources/js/pages/Tasks/Main.vue": {
-    "file": "assets/Main-ByVH0mPc.js",
+    "file": "assets/Main-D08eDZl3.js",
     "name": "Main",
     "src": "resources/js/pages/Tasks/Main.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_useRowSelection-C1C3sNwh.js",
-      "_useToaster-BYDoeTf1.js"
+      "_useRowSelection-UE858ucz.js",
+      "_useToaster-amSPtvaL.js"
     ],
     "css": [
-      "assets/global-D_NG_CCd.css"
+      "assets/global-CNEYUxup.css"
     ]
   },
   "resources/js/pages/Users/Main.vue": {
-    "file": "assets/Main-5uMAhKrN.js",
+    "file": "assets/Main-Bd1rMhcI.js",
     "name": "Main",
     "src": "resources/js/pages/Users/Main.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_useRowSelection-C1C3sNwh.js",
-      "_useToaster-BYDoeTf1.js"
+      "_useRowSelection-UE858ucz.js",
+      "_useToaster-amSPtvaL.js"
     ],
     "css": [
-      "assets/global-D_NG_CCd.css"
+      "assets/global-CNEYUxup.css"
     ]
   }
 }
