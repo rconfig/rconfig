@@ -40,6 +40,15 @@ function setPagePath($path)
     return $title;
 }
 
+if (!function_exists('getComposerVersion')) {
+    function getComposerVersion()
+    {
+        $composerFile = base_path('composer.json');
+        $composerData = json_decode(file_get_contents($composerFile), true);
+        return $composerData['version'] ?? '8.0.0';  // Default version if not found
+    }
+}
+
 function rconfig_appdir_path()
 {
     return Config::get('rConfig.app_dir_path');

@@ -5,6 +5,10 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 // State to track the visibility of the mobile menu
 const isMenuOpen = ref(false);
 
+const props = defineProps({
+  licenseInfo: Object
+});
+
 // Function to toggle the mobile menu
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
@@ -70,42 +74,50 @@ const toggleMenu = () => {
       </Popover>
 
       <!-- Navigation Menu - Visible by default on md screens and above -->
-      <nav
-        :class="{ hidden: !isMenuOpen, flex: isMenuOpen }"
-        class="flex-col hidden font-medium text-md md:flex md:flex-row md:items-center md:text-sm">
-        <a
-          href="#"
-          class="flex items-center gap-2 px-4 py-2 font-semibold rounded-md text-md hover:bg-rcgray-800">
+      <div class="flex justify-between w-full">
+        <nav
+          :class="{ hidden: !isMenuOpen, flex: isMenuOpen }"
+          class="flex-col hidden font-medium text-md md:flex md:flex-row md:items-center md:text-sm">
+          <a
+            href="#"
+            class="flex items-center gap-2 px-4 py-2 font-semibold rounded-md text-md hover:bg-rcgray-800">
+            <Icon
+              icon="fluent-color:add-circle-28"
+              class="" />
+            <span>Create New Device</span>
+          </a>
+          <a
+            href="#"
+            class="flex items-center gap-2 px-4 py-2 font-semibold rounded-md text-md hover:bg-rcgray-800">
+            <Icon
+              icon="fluent-color:apps-24"
+              class="" />
+            View Devices
+          </a>
+          <a
+            href="#"
+            class="flex items-center gap-2 px-4 py-2 font-semibold rounded-md text-md hover:bg-rcgray-800">
+            <Icon
+              icon="fluent-color:search-visual-16"
+              class="" />
+            Search Configs
+          </a>
+          <a
+            href="#"
+            class="flex items-center gap-2 px-4 py-2 font-semibold rounded-md text-md hover:bg-rcgray-800">
+            <Icon
+              icon="flat-color-icons:delete-database"
+              class="" />
+            Purge Failed Configs
+          </a>
+        </nav>
+        <div class="flex items-center ml-auto">
           <Icon
-            icon="fluent-color:add-circle-28"
-            class="" />
-          <span>Create New Device</span>
-        </a>
-        <a
-          href="#"
-          class="flex items-center gap-2 px-4 py-2 font-semibold rounded-md text-md hover:bg-rcgray-800">
-          <Icon
-            icon="fluent-color:apps-24"
-            class="" />
-          View Devices
-        </a>
-        <a
-          href="#"
-          class="flex items-center gap-2 px-4 py-2 font-semibold rounded-md text-md hover:bg-rcgray-800">
-          <Icon
-            icon="fluent-color:search-visual-16"
-            class="" />
-          Search Configs
-        </a>
-        <a
-          href="#"
-          class="flex items-center gap-2 px-4 py-2 font-semibold rounded-md text-md hover:bg-rcgray-800">
-          <Icon
-            icon="flat-color-icons:delete-database"
-            class="" />
-          Purge Failed Configs
-        </a>
-      </nav>
+            icon="ph:code-duotone"
+            class="text-muted-foreground" />
+          <span class="ml-2 text-muted-foreground">{{ licenseInfo.data.version }}-Core</span>
+        </div>
+      </div>
     </header>
   </div>
 </template>

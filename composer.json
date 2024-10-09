@@ -1,8 +1,8 @@
 {
     "name": "rconfig/rconfig",
     "type": "project",
-    "description": "rConfig V6 Core",
-    "version": "6.0.0",
+    "description": "rConfig V8 Core",
+    "version": "8.0.0",
     "keywords": [
         "framework",
         "laravel"

@@ -6,7 +6,7 @@ import HealthLatestCards from '@/pages/Dashboard/HealthLatestCards.vue';
 import SysinfoCards from '@/pages/Dashboard/SysinfoCards.vue';
 import DashboardActions from '@/pages/Dashboard/DashboardActions.vue';
 
-const { fetchSysinfo, fetchConfiginfo, fetchHealth, sysinfo, configinfo, healthLatest, isLoadingSysinfo, isLoadingConfiginfo, isLoadingHealth, toastSuccess, toastError } = useDashboard();
+const { fetchSysinfo, fetchConfiginfo, fetchHealth, fetchLicenseInfo, sysinfo, configinfo, healthLatest, licenseInfo, isLoadingSysinfo, isLoadingConfiginfo, isLoadingHealth, toastSuccess, toastError } = useDashboard();
 
 defineProps({});
 
@@ -14,13 +14,14 @@ onMounted(() => {
   fetchSysinfo();
   fetchConfiginfo();
   fetchHealth();
+  fetchLicenseInfo();
   // window.addEventListener('keydown', handleKeyDown);
 });
 </script>
 
 <template>
   <main class="flex flex-col flex-1 gap-2 dark:bg-rcgray-900">
-    <DashboardActions />
+    <DashboardActions :licenseInfo="licenseInfo" />
 
     <ConfigInfoCards
       :configinfo="configinfo"

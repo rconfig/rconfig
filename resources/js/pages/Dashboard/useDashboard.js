@@ -6,6 +6,7 @@ export function useDashboard() {
   const sysinfo = ref([]);
   const configinfo = ref([]);
   const healthLatest = ref([]);
+  const licenseInfo = ref([]);
   const isLoadingSysinfo = ref(false);
   const isLoadingConfiginfo = ref(false);
   const isLoadingHealth = ref(false);
@@ -50,13 +51,25 @@ export function useDashboard() {
     }
   }
 
+  async function fetchLicenseInfo() {
+    try {
+      const response = await axios.get('/api/license-info');
+      licenseInfo.value = response.data;
+    } catch (error) {
+      console.error('Error fetching license info:', error);
+      toastError('Error', 'Failed to fetch license info.');
+    }
+  }
+
   return {
     fetchSysinfo,
     fetchConfiginfo,
     fetchHealth,
+    fetchLicenseInfo,
     sysinfo,
     configinfo,
     healthLatest,
+    licenseInfo,
     isLoadingSysinfo,
     isLoadingConfiginfo,
     isLoadingHealth,

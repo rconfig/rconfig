@@ -15,7 +15,7 @@ return [
 
     'name' => env('APP_NAME', 'rConfig v6 Core'),
     // run test before updating the version
-    'version' => env('APP_VERSION', '6.0.0-core'),
+    'version' => getComposerVersion(),
     'force_https' => env('APP_FORCE_HTTPS', false),
 
     /*
