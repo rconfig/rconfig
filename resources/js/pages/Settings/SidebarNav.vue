@@ -1,6 +1,9 @@
 <script setup>
 import { Button } from '@/components/ui/button';
-import { useRoute } from 'vue-router';
+
+const props = defineProps({
+  activeForm: String
+});
 
 const sidebarNavItems = [
   {
@@ -26,9 +29,6 @@ const sidebarNavItems = [
 ];
 const emit = defineEmits(['nav']);
 
-const route = useRoute();
-const pagename = route.path;
-
 function navTo(href) {
   emit('nav', href);
 }
@@ -41,7 +41,7 @@ function navTo(href) {
       :key="item.title"
       @click="navTo(item.href)"
       variant="ghost"
-      :class="[pagename === item.href ? '  bg-rcgray-600' : 'text-rcgray-300']"
+      :class="[activeForm === item.href ? '  bg-rcgray-600' : 'text-rcgray-300']"
       class="inline-flex items-center justify-start w-full px-4 py-2 text-sm font-medium text-left transition-colors rounded-md whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:text-accent-foreground h-9 hover:bg-rcgray-800">
       {{ item.title }}
     </Button>

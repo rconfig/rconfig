@@ -12,6 +12,7 @@ const routes = [
   { path: '/templates', name: 'templates', component: () => import('@/pages/Inventory/Main.vue') },
 
   { path: '/devices', name: 'devices', component: () => import('@/pages/Inventory/Main.vue') },
+  { path: '/settings', name: 'settings', component: () => import('@/pages/Settings/Main.vue'), beforeEnter: guardMyroute },
   // working above
 
   // { path: '/devices/status/:id', name: 'devices-status', component: () => import('./views/Inventory.vue') },
@@ -29,20 +30,6 @@ const routes = [
   // { path: '/config-reports', name: 'config-reports', component: () => import('./views/ConfigReports.vue') },
 
   // Settings
-  {
-    path: '/settings/',
-    name: 'settings',
-    component: () => import('./pages/Settings/Main.vue'),
-    beforeEnter: guardMyroute,
-    children: [
-      // { path: '/settings/system', name: 'system', component: () => import('./pages/Settings/Main.vue') },
-      // { path: '/settings/security', name: 'security', component: () => import('./pages/Settings/Main.vue') }
-      // { path: '/settings/overview', name: 'overview', component: () => import('./views/SettingsTabs/0Overview.vue') },
-      // { path: '/settings/system', name: 'system', component: () => import('./views/SettingsTabs/1System.vue') },
-      // { path: '/settings/security', name: 'security', component: () => import('./views/SettingsTabs/4Security.vue') },
-      // { path: '/settings/about', name: 'about', component: () => import('./views/SettingsTabs/10About.vue') }
-    ]
-  },
 
   { path: '/settings/users/:userId?', name: 'users', component: () => import('./pages/Users/Main.vue'), beforeEnter: guardMyroute },
   // { path: '/settings/activitylog', name: 'activitylog', component: () => import('./views/ActivityLog.vue'), beforeEnter: guardMyroute },
