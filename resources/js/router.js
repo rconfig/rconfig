@@ -3,7 +3,7 @@ import { createWebHistory, createRouter } from 'vue-router';
 const routes = [
   { path: '/', name: 'Home', component: () => import('@/pages/Dashboard/Main.vue') },
   { path: '/dashboard', name: 'dashboard', component: () => import('@/pages/Dashboard/Main.vue') },
-  { path: '/inventory', name: 'inventory', component: () => import('@/pages/Inventory/Main.vue') },
+  { path: '/inventory/:view?', name: 'inventory', component: () => import('@/pages/Inventory/Main.vue'), props: true },
   { path: '/commandgroups', name: 'commandgroups', component: () => import('@/pages/Inventory/Main.vue') },
   { path: '/devices', name: 'devices', component: () => import('@/pages/Inventory/Main.vue') },
   { path: '/tags', name: 'tags', component: () => import('@/pages/Inventory/Main.vue') },

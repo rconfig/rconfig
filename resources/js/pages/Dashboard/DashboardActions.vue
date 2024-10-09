@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Skeleton } from '@/components/ui/skeleton';
 
 // State to track the visibility of the mobile menu
 const isMenuOpen = ref(false);
@@ -86,14 +87,16 @@ const toggleMenu = () => {
               class="" />
             <span>Create New Device</span>
           </a>
-          <a
-            href="#"
+
+          <router-link
+            :to="{ name: 'inventory', params: { view: 'devices' } }"
             class="flex items-center gap-2 px-4 py-2 font-semibold rounded-md text-md hover:bg-rcgray-800">
             <Icon
               icon="fluent-color:apps-24"
               class="" />
             View Devices
-          </a>
+          </router-link>
+
           <a
             href="#"
             class="flex items-center gap-2 px-4 py-2 font-semibold rounded-md text-md hover:bg-rcgray-800">
@@ -111,7 +114,13 @@ const toggleMenu = () => {
             Purge Failed Configs
           </a>
         </nav>
-        <div class="flex items-center ml-auto">
+
+        <Skeleton
+          v-if="!licenseInfo.data"
+          class="flex items-center ml-auto h-4 w-[50px]" />
+        <div
+          class="flex items-center ml-auto"
+          v-if="licenseInfo.data">
           <Icon
             icon="ph:code-duotone"
             class="text-muted-foreground" />

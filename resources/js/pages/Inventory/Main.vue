@@ -18,6 +18,7 @@ const title = 'Dashboard';
 const favoritesStore = useFavoritesStore();
 const currentView = ref(localStorage.getItem('inventorySelectedView') || 'devices');
 const route = useRoute();
+console.log(route.params.view);
 const router = useRouter();
 
 const viewItems = [
@@ -30,8 +31,10 @@ const viewItems = [
 ];
 
 onMounted(() => {
-  // Set currentView if path is not Inventory
-  if (!route.path.includes('inventory')) {
+  if (route.params.view) {
+    changeView(route.params.view);
+  } // Set currentView if path is not Inventory
+  else if (!route.path.includes('inventory')) {
     changeView(route.name);
   }
 

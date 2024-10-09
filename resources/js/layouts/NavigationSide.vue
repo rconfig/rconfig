@@ -197,7 +197,7 @@ onUnmounted(() => {
                 <router-link
                   to="/inventory"
                   class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
-                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'scheduled-tasks' }">
+                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'inventory' }">
                   <Icon
                     icon="catppuccin:webpack"
                     class="text-rcgray-400" />
@@ -206,7 +206,7 @@ onUnmounted(() => {
                 <router-link
                   to="/tasks"
                   class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
-                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'scheduled-tasks' }">
+                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'tasks' }">
                   <Icon
                     icon="catppuccin:esbuild"
                     class="text-rcgray-400" />
