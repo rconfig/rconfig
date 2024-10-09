@@ -199,7 +199,7 @@ onUnmounted(() => {
                   class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
                   :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'scheduled-tasks' }">
                   <Icon
-                    icon="carbon:network-1"
+                    icon="catppuccin:webpack"
                     class="text-rcgray-400" />
                   <div class="p-1 ml-2 text-left text-gray-200"><div>Inventory</div></div>
                 </router-link>
@@ -208,7 +208,7 @@ onUnmounted(() => {
                   class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
                   :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'scheduled-tasks' }">
                   <Icon
-                    icon="carbon:event-schedule"
+                    icon="catppuccin:esbuild"
                     class="text-rcgray-400" />
                   <div class="p-1 ml-2 text-left text-gray-200"><div>Tasks</div></div>
                 </router-link>
@@ -222,13 +222,36 @@ onUnmounted(() => {
                   <div class="p-1 ml-2 text-left text-gray-200"><div>Users</div></div>
                 </router-link>
                 <router-link
+                  to="/settings/users"
+                  class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
+                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'users' }">
+                  <Icon
+                    icon="catppuccin:eslint"
+                    class="text-rcgray-400" />
+                  <div class="p-1 ml-2 text-left text-gray-200"><div>Config Tools</div></div>
+                </router-link>
+                <router-link
                   to="/settings"
                   class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
-                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'settings' }">
+                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.path.includes('settings') }">
                   <Icon
-                    icon="carbon:settings-edit"
+                    icon="catppuccin:env"
                     class="text-rcgray-400" />
                   <div class="p-1 ml-2 text-left text-gray-200"><div>Settings</div></div>
+                </router-link>
+                <router-link
+                  to="/horizon/dashboard"
+                  target="_blank"
+                  class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1">
+                  <Icon
+                    icon="catppuccin:folder-queue"
+                    class="text-rcgray-400" />
+                  <div class="flex items-center justify-between w-full p-1 ml-2 text-left text-gray-200">
+                    <div>Queues</div>
+                    <Icon
+                      icon="iconamoon:link-external-duotone"
+                      class="text-rcgray-400" />
+                  </div>
                 </router-link>
                 <Collapsible
                   v-model:open="isOpen1"

@@ -49,21 +49,22 @@ function refresh() {
       </CardHeader>
       <CardContent class="text-sm">
         <div
-          class="flex items-start space-x-4"
+          class="flex items-start w-full space-x-4"
           v-if="isLoadingHealth">
           <Skeleton class="w-12 h-12 rounded-full" />
           <div class="space-y-2">
             <Skeleton class="h-4 w-[250px]" />
-            <Skeleton class="h-4 w-[250px]" />
-            <Skeleton class="h-4 w-[250px]" />
-            <Skeleton class="h-4 w-[250px]" />
-            <Skeleton class="h-4 w-[250px]" />
-            <Skeleton class="h-4 w-[250px]" />
-            <Skeleton class="h-4 w-[250px]" />
-            <Skeleton class="h-4 w-[250px]" />
-            <Skeleton class="h-4 w-[250px]" />
+            <Skeleton class="w-[400px] h-4" />
+            <Skeleton class="w-[400px] h-4" />
+            <Skeleton class="w-[400px] h-4" />
+            <Skeleton class="w-[400px] h-4" />
+            <Skeleton class="w-[400px] h-4" />
+            <Skeleton class="w-[400px] h-4" />
+            <Skeleton class="w-[400px] h-4" />
+            <Skeleton class="w-[400px] h-4" />
           </div>
         </div>
+
         <div v-if="!healthLatest">asd</div>
 
         <div

@@ -50,9 +50,6 @@ export function useDashboard() {
     }
   }
 
-  //   Route::get('/configinfo', 'DashboardController@getConfigInfo')->name('api.dashboard.configinfo');
-  //   Route::get('/health-latest', 'SystemHealthController@healthLatest')->name('api.dashboard.health-latest');
-
   return {
     fetchSysinfo,
     fetchConfiginfo,

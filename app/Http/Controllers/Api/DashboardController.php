@@ -16,7 +16,7 @@ class DashboardController extends Controller
 
     public function getSysInfo()
     {
-
+        sleep(30);
         // get param from url
         $clearcache = request()->input('clearcache');
 
