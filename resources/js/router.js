@@ -10,8 +10,19 @@ const routes = [
   { path: '/vendors', name: 'vendors', component: () => import('@/pages/Inventory/Main.vue') },
   { path: '/commands', name: 'commands', component: () => import('@/pages/Inventory/Main.vue') },
   { path: '/templates', name: 'templates', component: () => import('@/pages/Inventory/Main.vue') },
-
   { path: '/devices', name: 'devices', component: () => import('@/pages/Inventory/Main.vue') },
+
+  {
+    path: '/tasks',
+    name: 'tasks',
+    component: () => import('@/pages/Tasks/Main.vue'),
+    meta: {
+      breadcrumb: [
+        { label: 'Home', link: '/' },
+        { label: 'Tasks', link: '/tasks' }
+      ]
+    }
+  },
   {
     path: '/settings',
     name: 'settings',
