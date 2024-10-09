@@ -22,6 +22,7 @@
         "laravel/ui": "^4.2",
         "lorisleiva/cron-translator": "^0.4.2",
         "markhilton/monolog-mysql": "^0.1.6",
+        "opcodesio/log-viewer": "^3.11",
         "phpseclib/phpseclib": "~3.0",
         "predis/predis": "^2.2",
         "qruto/laravel-flora": "^1.0",

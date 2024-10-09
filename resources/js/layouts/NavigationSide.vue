@@ -240,6 +240,20 @@ onUnmounted(() => {
                   <div class="p-1 ml-2 text-left text-gray-200"><div>Settings</div></div>
                 </router-link>
                 <router-link
+                  to="/log-viewer"
+                  target="_blank"
+                  class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1">
+                  <Icon
+                    icon="twemoji:page-facing-up"
+                    class="text-rcgray-400" />
+                  <div class="flex items-center justify-between w-full p-1 ml-2 text-left text-gray-200">
+                    <div>Log Viewer</div>
+                    <Icon
+                      icon="iconamoon:link-external-duotone"
+                      class="text-rcgray-400" />
+                  </div>
+                </router-link>
+                <router-link
                   to="/horizon/dashboard"
                   target="_blank"
                   class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1">

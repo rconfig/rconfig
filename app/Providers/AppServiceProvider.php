@@ -7,10 +7,12 @@ use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
- use Illuminate\Support\Facades\Log;
- use Illuminate\Support\Facades\Queue;
- use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\ServiceProvider;
+use Opcodes\LogViewer\Facades\LogViewer;
 use Qruto\Flora\Run;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,12 +24,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
-    {
-        // if ($this->app->environment('local')) {
-        //     $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
-        // }
-    }
+    public function register() {}
 
     /**
      * Bootstrap any application services.
@@ -37,9 +34,18 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
 
+        if ($this->app->environment('local')) {
+            $this->app->register(IdeHelperServiceProvider::class);
+        }
+
         if (config('app.force_https') && $this->app->environment('production')) {
             \URL::forceScheme('https');
         }
+
+        // Opcodes\LogViewer
+        LogViewer::auth(function ($request) {
+            return Auth::check();
+        });
 
         // Run::newScript(
         //     'build-assets',
