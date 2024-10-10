@@ -172,7 +172,7 @@ const removeExternalLink = async name => {
     :collapsed-size="0"
     ref="panelElement"
     class="dark:bg-rcgray-800">
-    <div class="grid min-h-screen">
+    <div class="grid min-h-[calc(100vh-10px)]">
       <div class="bg-gray-100 bg-muted/40 md:block">
         <div class="flex flex-col h-full max-h-screen gap-2">
           <div class="flex justify-between w-full max-w-full p-2 border-b">
