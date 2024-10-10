@@ -33,12 +33,7 @@
                         </resizable-panel-group>
                     </div>
 
-                    <!-- <toast-notification v-for="(item, idx) in notifications" :key="item.id" :id="item.id" :type="item.type" :title="item.title" :message="item.message" :auto-close="item.autoClose" :duration="item.duration" @close="
-                            () => {
-                                removeNotifications(item.id);
-                            }
-                            "></toast-notification>  -->
-
+                    <Toaster />
                 </div>
             </div>
         </div>

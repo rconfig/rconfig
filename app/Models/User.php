@@ -26,24 +26,14 @@ class User extends Authenticatable
 
     ];
 
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'external_links' => 'array',
     ];
 
     //Make it available in the json response
@@ -53,7 +43,7 @@ class User extends Authenticatable
     protected function viewUrl(): Attribute
     {
         return Attribute::make(
-            get: fn () => '/settings/users',
+            get: fn() => '/settings/users',
         );
     }
 

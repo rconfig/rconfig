@@ -6,7 +6,8 @@ import { onMounted } from 'vue';
 
 onMounted(() => {
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === '/') {
+    if (event.ctrlKey && event.key === '/') {
+      //has to be ctrl
       event.preventDefault();
       // Logic to open the dialog
       const triggerButton = document.querySelector('#quickSearchBtn');

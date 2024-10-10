@@ -18,7 +18,6 @@ const title = 'Dashboard';
 const favoritesStore = useFavoritesStore();
 const currentView = ref(localStorage.getItem('inventorySelectedView') || 'devices');
 const route = useRoute();
-console.log(route.params.view);
 const router = useRouter();
 
 const viewItems = [

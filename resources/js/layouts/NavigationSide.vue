@@ -1,4 +1,5 @@
 <script setup>
+const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
 import QuickActions from '@/layouts/Components/QuickActions.vue';
 import SheetHelp from '@/layouts/Components/SheetHelp.vue';
 import { Badge } from '@/components/ui/badge';
@@ -6,11 +7,19 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ResizablePanel } from '@/components/ui/resizable';
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { ref, onMounted, onUnmounted, inject, watch } from 'vue';
+import { useExternalLinksStore } from '@/stores/externalLinksStore';
+import { useFavoritesStore } from '@/stores/favorites';
 import { usePanelStore } from '../stores/panelStore'; // Import the Pinia store
 import { useSheetStore } from '@/stores/sheetActions';
-import { useFavoritesStore } from '@/stores/favorites';
+import { useToaster } from '@/composables/useToaster'; // Import the composable
+import ExternalToolDialog from '@/layouts/Components/ExternalToolDialog.vue';
+
+const userid = inject('userid');
+
 const favoritesStore = useFavoritesStore();
+const externalLinksStore = useExternalLinksStore();
+const externalLinks = ref([]); // This will store the links for this component
 
 const isOpen1 = ref(true);
 const isOpen2 = ref(false);
@@ -19,6 +28,7 @@ const panelStore = usePanelStore(); // Access the panel store
 const panelElement = ref(null);
 const sheetStore = useSheetStore();
 const { openSheet, closeSheet, isSheetOpen } = sheetStore;
+const externalLinksDialogKey = ref(0);
 
 defineProps({});
 
@@ -44,6 +54,8 @@ onMounted(() => {
 
   // Call it initially to set the correct state on load
   handleBreakpointChange();
+
+  loadLinksFromStoreOrDb();
 });
 
 function setHoveringClose(state) {
@@ -58,6 +70,60 @@ onUnmounted(() => {
   // Clean up the event listener when the component is unmounted
   mobileQuery.removeEventListener('change', handleBreakpointChange);
 });
+
+function closeExtDialog() {
+  externalLinksDialogKey.value += 1;
+  loadLinksFromStoreOrDb();
+}
+
+function loadLinksFromStoreOrDb() {
+  // Check if the store already has links
+
+  if (externalLinksStore.links.length > 0) {
+    // Use the links from the store
+    externalLinks.value = externalLinksStore.links;
+  } else {
+    axios
+      .get(`/api/users/get-external-links/${userid}`)
+      .then(response => {
+        // Store the fetched links in Pinia for future use
+        externalLinksStore.setLinks(response.data);
+
+        // Assign the links to the local reference
+        externalLinks.value = response.data;
+      })
+      .catch(error => {
+        console.error('Error fetching external links:', error);
+      });
+  }
+}
+
+const removeExternalLink = async name => {
+  try {
+    // Make API request to delete the link by name
+    await axios
+      .post(`/api/users/remove-external-link`, { name: encodeURIComponent(name) })
+      .then(response => {
+        // Store the fetched links in Pinia for future use
+        externalLinksStore.setLinks(response.data);
+
+        // Assign the links to the local reference
+        externalLinks.value = response.data;
+
+        // // Update the local reference to reflect changes
+        loadLinksFromStoreOrDb();
+        console.log('Link removed successfully');
+        toastSuccess('External Link', 'Link removed successfully');
+      })
+      .catch(error => {
+        console.error('Error fetching external links:', error);
+        toastError('External Link', 'Error removing link');
+      });
+  } catch (error) {
+    console.error('Error removing link:', error);
+    toastError('External Link', 'Error removing link');
+  }
+};
 </script>
 
 <style scoped>
@@ -239,37 +305,113 @@ onUnmounted(() => {
                     class="text-rcgray-400" />
                   <div class="p-1 ml-2 text-left text-gray-200"><div>Settings</div></div>
                 </router-link>
-                <router-link
-                  to="/log-viewer"
-                  target="_blank"
-                  class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1">
-                  <Icon
-                    icon="twemoji:page-facing-up"
-                    class="text-rcgray-400" />
-                  <div class="flex items-center justify-between w-full p-1 ml-2 text-left text-gray-200">
-                    <div>Log Viewer</div>
-                    <Icon
-                      icon="iconamoon:link-external-duotone"
-                      class="text-rcgray-400" />
-                  </div>
-                </router-link>
-                <router-link
-                  to="/horizon/dashboard"
-                  target="_blank"
-                  class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1">
-                  <Icon
-                    icon="catppuccin:folder-queue"
-                    class="text-rcgray-400" />
-                  <div class="flex items-center justify-between w-full p-1 ml-2 text-left text-gray-200">
-                    <div>Queues</div>
-                    <Icon
-                      icon="iconamoon:link-external-duotone"
-                      class="text-rcgray-400" />
-                  </div>
-                </router-link>
+
                 <Collapsible
                   v-model:open="isOpen1"
-                  class="w-full my-4">
+                  class="w-full mt-4">
+                  <div class="flex items-center justify-between">
+                    <CollapsibleTrigger as-child>
+                      <div class="flex items-center w-full">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          class="w-full pl-0 pr-4">
+                          <div
+                            class="flex items-center w-full cursor-pointer"
+                            type="button"
+                            aria-expanded="true"
+                            data-state="open">
+                            <Icon
+                              icon="fluent:chevron-right-28-filled"
+                              v-if="!isOpen1" />
+                            <Icon
+                              icon="fluent:chevron-down-48-filled"
+                              v-if="isOpen1" />
+                            <div
+                              class="ml-2 text-left"
+                              data-truncate="false"
+                              data-numeric="false"
+                              data-uppercase="false"
+                              style="color: rgb(134, 136, 141)">
+                              <span>External Tools</span>
+                            </div>
+                          </div>
+                        </Button>
+                      </div>
+                    </CollapsibleTrigger>
+                    <ExternalToolDialog
+                      @close="closeExtDialog"
+                      :key="externalLinksDialogKey" />
+                  </div>
+                  <CollapsibleContent>
+                    <div>
+                      <router-link
+                        to="/log-viewer"
+                        target="_blank"
+                        class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1">
+                        <Icon
+                          icon="twemoji:page-facing-up"
+                          class="text-rcgray-400" />
+                        <div class="flex items-center justify-between w-full p-1 ml-2 text-left text-gray-200">
+                          <div>System Log Viewer</div>
+                          <Icon
+                            icon="iconamoon:link-external-duotone"
+                            class="text-rcgray-400" />
+                        </div>
+                      </router-link>
+                      <router-link
+                        to="/horizon/dashboard"
+                        target="_blank"
+                        class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1">
+                        <Icon
+                          icon="catppuccin:folder-queue"
+                          class="text-rcgray-400" />
+                        <div class="flex items-center justify-between w-full p-1 ml-2 text-left text-gray-200">
+                          <div>System Queue Manager</div>
+                          <Icon
+                            icon="iconamoon:link-external-duotone"
+                            class="text-rcgray-400" />
+                        </div>
+                      </router-link>
+                      <div class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1">
+                        <Icon
+                          icon="ph:hexagon-duotone"
+                          class="text-rcgray-400" />
+                        <a
+                          href="https://www.rconfig.com"
+                          target="_blank"
+                          class="flex items-center justify-between w-full p-1 ml-2 text-left text-gray-200">
+                          <div>rConfig.com</div>
+                          <Icon
+                            icon="iconamoon:link-external-duotone"
+                            class="text-rcgray-400" />
+                        </a>
+                      </div>
+                      <div
+                        v-if="externalLinks.length > 0"
+                        v-for="link in externalLinks"
+                        class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1">
+                        <Icon
+                          :icon="link.icon"
+                          class="text-rcgray-400" />
+                        <a
+                          :href="link.url"
+                          target="_blank"
+                          class="flex items-center justify-between w-full p-1 ml-2 text-left text-gray-200">
+                          <div>{{ link.name }}</div>
+                        </a>
+                        <Icon
+                          icon="ic:outline-remove"
+                          class="ml-2 mr-2 cursor-pointer text-muted-foreground hover:text-white"
+                          @click="removeExternalLink(link.name)" />
+                      </div>
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+
+                <Collapsible
+                  v-model:open="isOpen2"
+                  class="w-full mb-4">
                   <div class="flex items-center justify-between">
                     <CollapsibleTrigger as-child>
                       <Button
@@ -283,10 +425,10 @@ onUnmounted(() => {
                           data-state="open">
                           <Icon
                             icon="fluent:chevron-right-28-filled"
-                            v-if="!isOpen1" />
+                            v-if="!isOpen2" />
                           <Icon
                             icon="fluent:chevron-down-48-filled"
-                            v-if="isOpen1" />
+                            v-if="isOpen2" />
                           <div
                             class="ml-2 text-left"
                             data-truncate="false"

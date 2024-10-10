@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
+use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class UserController extends ApiBaseController
@@ -45,5 +47,61 @@ class UserController extends ApiBaseController
     public function destroy($id, $return = 0)
     {
         return parent::destroy($id);
+    }
+
+    public function addExternalLink(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'url' => 'required|url',
+            'icon' => 'required|string|max:255'
+        ]);
+
+        $user = Auth::user();
+        $externalLinks = $user->external_links ?? [];
+        $externalLinks[] = [
+            'name' => $request->input('name'),
+            'url' => $request->input('url'),
+            'icon' => $request->input('icon'),
+        ];
+
+        $user->external_links = $externalLinks;
+        $user->save();
+
+        return response()->json($user->external_links);
+    }
+
+    public function removeExternalLink(Request $request)
+    {
+        $user = Auth::user();
+
+        // Decode the JSON data
+        $externalLinks = $user->external_links;
+        $decodedName = urldecode($request->name);
+
+        // Find the index of the link by name
+        $linkIndex = array_search($decodedName, array_column($externalLinks, 'name'));
+
+        // Check if the link exists
+        if ($linkIndex === false) {
+            return response()->json([
+                'message' => 'Link not found.',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        // Remove the link by the found index
+        array_splice($externalLinks, $linkIndex, 1);
+
+        // Encode the updated links back to JSON and save them
+        $user->external_links = empty($externalLinks) ? null : $externalLinks;
+        $user->save();
+
+        return response()->json($user->external_links);
+    }
+
+    public function getExternalLinks($id)
+    {
+        $user = User::findOrFail($id);
+        return response()->json($user->external_links);
     }
 }

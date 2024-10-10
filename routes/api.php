@@ -66,7 +66,7 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
         Route::resource('/banner', 'SettingBannerController')->only(['show', 'update']);
         Route::resource('/timezone', 'SettingTimezoneController')->only(['show', 'update']);
         Route::resource('/email', 'SettingEmailController')->only(['show', 'update']);
-        Route::resource('/debug', 'SettingDebugController')->only(['show', 'update']);
+        // Route::resource('/debug', 'SettingDebugController')->only(['show', 'update']); missing
         Route::resource('/support-info', 'SettingsSupportInfoController')->only(['index']);
 
         /* SETTINGS SPECIFIC ROUTES*/
@@ -82,6 +82,12 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
         Route::get('last5/{deviceid}', 'ActivityLogController@getLast5');
         Route::get('device-stats/{deviceid}', 'ActivityLogController@showStatsByDeviceId');
         Route::get('clear-logs/{deviceid}', 'ActivityLogController@clearLogsByDeviceId');
+    });
+
+    Route::prefix('users')->group(function () {
+        Route::post('/add-external-link/{id}', 'UserController@addExternalLink');
+        Route::get('/get-external-links/{id}', 'UserController@getExternalLinks');
+        Route::post('/remove-external-link/', 'UserController@removeExternalLink');
     });
 
     Route::resource('users', 'UserController');
