@@ -13,7 +13,8 @@ import { onMounted, onUnmounted } from 'vue';
 import { useRowSelection } from '@/composables/useRowSelection';
 import { useTemplates } from '@/pages/Inventory/Templates/useTemplates';
 
-const { templates, isLoading, currentPage, perPage, lastPage, editId, newTemplateModalKey, searchTerm, openDialog, fetchTemplates, createTemplate, updateTemplate, deleteTemplate, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam } = useTemplates();
+const emit = defineEmits(['createTemplate']);
+const { templates, isLoading, currentPage, perPage, lastPage, editId, newTemplateModalKey, searchTerm, openDialog, fetchTemplates, createTemplate, updateTemplate, deleteTemplate, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam } = useTemplates(emit);
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(templates);
 
 onMounted(() => {
@@ -58,7 +59,7 @@ onUnmounted(() => {
           type="submit"
           class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
           size="sm"
-          @click.prevent="createTemplate"
+          @click.prevent="createTemplate(editId)"
           variant="primary">
           New Template
           <div class="pl-2 ml-auto">
@@ -168,10 +169,10 @@ onUnmounted(() => {
         @update:perPage="perPage = $event" />
       <!-- END PAGINATION -->
 
-      <TemplateAddEditDialog
+      <!-- <TemplateAddEditDialog
         @save="handleSave()"
         :key="newTemplateModalKey"
-        :editId="editId" />
+        :editId="editId" /> -->
 
       <Toaster />
     </div>

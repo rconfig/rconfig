@@ -4,7 +4,7 @@ import { useDebounceFn } from '@vueuse/core';
 import { useDialogStore } from '@/stores/dialogActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
 
-export function useTemplates() {
+export function useTemplates(emit) {
   const currentPage = ref(1);
   const perPage = ref(parseInt(localStorage.getItem('perPage') || '10'));
   const sortParam = ref('-id');
@@ -42,11 +42,9 @@ export function useTemplates() {
   }
 
   // Create useTemplate
-  const createTemplate = async => {
-    editId.value = 0;
-    newTemplateModalKey.value = Math.random(); // Force re-render of the dialog component
-    openDialog('DialogNewTemplate');
-  };
+  function createTemplate(editId) {
+    emit('createTemplate', { id: editId, type: 'template' });
+  }
 
   function updateTemplate(id) {
     editId.value = id;

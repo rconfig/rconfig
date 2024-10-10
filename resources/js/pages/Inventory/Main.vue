@@ -3,6 +3,7 @@ import Devices from '@/pages/Inventory/Devices/Main.vue';
 import CommandGroups from '@/pages/Inventory/CommandGroups/Main.vue';
 import Command from '@/pages/Inventory/Commands/Main.vue';
 import Template from '@/pages/Inventory/Templates/Main.vue';
+import TemplateAddEditDialog from '@/pages/Inventory/Templates/TemplateAddEditDialog.vue';
 import Tags from '@/pages/Inventory/Tags/Main.vue';
 import Vendors from '@/pages/Inventory/Vendors/Main.vue';
 import { Button } from '@/components/ui/button';
@@ -11,10 +12,13 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { ref, onMounted } from 'vue';
 import { useFavoritesStore } from '@/stores/favorites';
 import { useRoute, useRouter } from 'vue-router'; // Import the useRoute from Vue Router
+import AddEditPane from '@/layouts/AddEditPane.vue';
 
 defineProps({});
 
-const title = 'Dashboard';
+const addEditPane = ref(null);
+const addEditPaneEditId = ref(0);
+const addEditPaneKey = ref(1);
 const favoritesStore = useFavoritesStore();
 const currentView = ref(localStorage.getItem('inventorySelectedView') || 'devices');
 const route = useRoute();
@@ -55,11 +59,41 @@ function toggleFavorite(viewId) {
     favoritesStore.toggleFavorite(viewItem);
   }
 }
+
+function launchAddEdit(e) {
+  addEditPane.value = e.type;
+  addEditPaneEditId.value = e.id;
+  addEditPaneKey.value += 1;
+}
+
+function closeAddEditPane() {
+  addEditPane.value = null;
+  addEditPaneKey.value += 1;
+}
 </script>
 
 <template>
   <main class="flex flex-col flex-1 gap-2 dark:bg-rcgray-900">
-    <div class="border-t border-b topRow">
+    <AddEditPane
+      :key="addEditPaneKey"
+      :editId="addEditPaneEditId"
+      :name="addEditPane"
+      v-if="addEditPane"
+      @close="closeAddEditPane()">
+      <template #default>
+        <div
+          class="p-4"
+          v-if="addEditPane === 'template'">
+          <TemplateAddEditDialog
+            :editId="addEditPaneEditId"
+            @close="closeAddEditPane" />
+        </div>
+      </template>
+    </AddEditPane>
+
+    <div
+      class="border-t border-b topRow"
+      v-if="addEditPane === null">
       <DropdownMenu>
         <DropdownMenuTrigger
           as-child
@@ -106,12 +140,16 @@ function toggleFavorite(viewId) {
       </DropdownMenu>
     </div>
 
-    <Devices v-if="currentView === 'devices'"></Devices>
-    <CommandGroups v-if="currentView === 'commandgroups'"></CommandGroups>
-    <Command v-if="currentView === 'commands'"></Command>
-    <Template v-if="currentView === 'templates'"></Template>
-    <Vendors v-if="currentView === 'vendors'"></Vendors>
-    <Tags v-if="currentView === 'tags'"></Tags>
+    <div v-if="!addEditPane">
+      <Devices v-if="currentView === 'devices'"></Devices>
+      <CommandGroups v-if="currentView === 'commandgroups'"></CommandGroups>
+      <Command v-if="currentView === 'commands'"></Command>
+      <Template
+        v-if="currentView === 'templates'"
+        @createTemplate="launchAddEdit($event)"></Template>
+      <Vendors v-if="currentView === 'vendors'"></Vendors>
+      <Tags v-if="currentView === 'tags'"></Tags>
+    </div>
   </main>
 </template>
 

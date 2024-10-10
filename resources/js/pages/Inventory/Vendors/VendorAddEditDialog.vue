@@ -63,7 +63,7 @@ function saveDialog() {
       <!-- <Button variant="outline">Edit Profile</Button> -->
     </DialogTrigger>
     <DialogContent
-      class="sm:max-w-[425px]"
+      class="w-full"
       @escapeKeyDown="closeDialog('DialogNewVendor')"
       @pointerDownOutside="closeDialog('DialogNewVendor')"
       @closeClicked="closeDialog('DialogNewVendor')">
