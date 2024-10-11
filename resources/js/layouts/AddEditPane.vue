@@ -31,16 +31,6 @@ function close() {
       <h2 class="items-center content-center text-muted-foreground">{{ editId === 0 ? 'Add' : 'Edit' }} {{ name }}</h2>
 
       <div class="flex justify-end">
-        <Button
-          type="close"
-          class="px-2 py-1 ml-2 text-sm hover:bg-gray-700"
-          variant="outline">
-          <Icon
-            icon="mdi:github"
-            class="mr-2" />
-          Import Templates
-        </Button>
-
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
             <Button variant="ghost">

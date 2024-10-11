@@ -31,6 +31,9 @@ export default function useCodeEditor(monaco) {
 
     const codeEditorDiv = document.getElementById(divName);
     meditor = monaco.editor.create(codeEditorDiv, {
+      stickyScroll: {
+        enabled: localStorage.getItem('rConfig.editorStickyScroll') === 'true' ? true : false
+      },
       value: meditorValue.value,
       language: language || 'javascript',
       lineNumbers: lineNumbers.value,
@@ -38,11 +41,11 @@ export default function useCodeEditor(monaco) {
       scrollBeyondLastLine: true,
       readOnly: false,
       theme: darkmode.value,
-      scrollBeyondLastLine: true,
+      scrollBeyondLastLine: false,
       automaticLayout: true,
       wordWrap: 'on',
       minimap: {
-        enabled: true
+        enabled: localStorage.getItem('rConfig.editorMinimap') === 'true' ? true : false
       },
       automaticLayout: true
     });
@@ -115,21 +118,53 @@ export default function useCodeEditor(monaco) {
       minimap.enabled = localStorage.getItem('rConfig.editorMinimap');
     }
 
-    console.log(minimap.enabled);
     return minimap.enabled == 'true' ? true : false;
   }
 
   function toggleEditorMinimap() {
-    if (localStorage.getItem('rConfig.editorlineNumbers') === null || localStorage.getItem('rConfig.editorlineNumbers') === false) {
+    if (localStorage.getItem('rConfig.editorMinimap') === null || localStorage.getItem('rConfig.editorMinimap') == 'false') {
       minimap.enabled = true;
       localStorage.setItem('rConfig.editorMinimap', minimap.enabled);
     } else {
       minimap.enabled = false;
       localStorage.setItem('rConfig.editorMinimap', minimap.enabled);
     }
+
     meditor.updateOptions({
       minimap: {
         enabled: minimap.enabled
+      }
+    });
+  }
+
+  /* STICKY SCROLL */
+  const stickyScroll = reactive({
+    enabled: false
+  });
+
+  function checkStickyScrollIsSet() {
+    if (localStorage.getItem('rConfig.editorStickyScroll') === null) {
+      stickyScroll.enabled = false;
+      localStorage.setItem('rConfig.editorStickyScroll', stickyScroll.enabled);
+    } else {
+      stickyScroll.enabled = localStorage.getItem('rConfig.editorStickyScroll');
+    }
+
+    return stickyScroll.enabled == 'true' ? true : false;
+  }
+
+  function toggleStickyScroll() {
+    if (localStorage.getItem('rConfig.editorStickyScroll') === null || localStorage.getItem('rConfig.editorStickyScroll') == 'false') {
+      stickyScroll.enabled = true;
+      localStorage.setItem('rConfig.editorStickyScroll', stickyScroll.enabled);
+    } else {
+      stickyScroll.enabled = false;
+      localStorage.setItem('rConfig.editorStickyScroll', stickyScroll.enabled);
+    }
+
+    meditor.updateOptions({
+      stickyScroll: {
+        enabled: stickyScroll.enabled
       }
     });
   }
@@ -188,6 +223,7 @@ export default function useCodeEditor(monaco) {
     checkDarkModeIsSet,
     checkLineNumbersIsSet,
     checkMiniMapIsSet,
+    checkStickyScrollIsSet,
     copied,
     copy,
     copyPath,
@@ -200,6 +236,7 @@ export default function useCodeEditor(monaco) {
     search,
     toggleEditorDarkMode,
     toggleEditorLineNumbers,
-    toggleEditorMinimap
+    toggleEditorMinimap,
+    toggleStickyScroll
   };
 }

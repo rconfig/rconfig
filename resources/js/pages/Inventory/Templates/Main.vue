@@ -56,6 +56,16 @@ onUnmounted(() => {
         </Button>
 
         <Button
+          type="close"
+          class="px-2 py-1 ml-2 text-sm hover:bg-gray-700"
+          variant="outline">
+          <Icon
+            icon="mdi:github"
+            class="mr-2" />
+          Import Templates
+        </Button>
+
+        <Button
           type="submit"
           class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
           size="sm"
