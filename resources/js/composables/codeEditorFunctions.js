@@ -61,10 +61,11 @@ export default function useCodeEditor(monaco) {
       darkmode.value = localStorage.getItem('rConfig.editordarkmode');
       useMonacoDarkmodeTheme();
     }
+    return darkmode.value == 'vs-dark' ? true : false;
   }
 
-  function toggleEditorDarkMode(event) {
-    if (event.target.checked) {
+  function toggleEditorDarkMode() {
+    if (localStorage.getItem('rConfig.editordarkmode') === null || localStorage.getItem('rConfig.editordarkmode') === 'vs') {
       darkmode.value = 'vs-dark';
       useMonacoDarkmodeTheme();
       localStorage.setItem('rConfig.editordarkmode', darkmode.value);
@@ -85,10 +86,11 @@ export default function useCodeEditor(monaco) {
     } else {
       lineNumbers.value = localStorage.getItem('rConfig.editorlineNumbers');
     }
+    return lineNumbers.value == 'on' ? true : false;
   }
 
-  function toggleEditorLineNumbers(event) {
-    if (event.target.checked) {
+  function toggleEditorLineNumbers() {
+    if (localStorage.getItem('rConfig.editorlineNumbers') === null || localStorage.getItem('rConfig.editorlineNumbers') === 'off') {
       lineNumbers.value = 'on';
       localStorage.setItem('rConfig.editorlineNumbers', lineNumbers.value);
     } else {
@@ -102,7 +104,7 @@ export default function useCodeEditor(monaco) {
 
   /* MINIMAP */
   const minimap = reactive({
-    enabled: true
+    enabled: false
   });
 
   function checkMiniMapIsSet() {
@@ -112,10 +114,13 @@ export default function useCodeEditor(monaco) {
     } else {
       minimap.enabled = localStorage.getItem('rConfig.editorMinimap');
     }
+
+    console.log(minimap.enabled);
+    return minimap.enabled == 'true' ? true : false;
   }
 
-  function toggleEditorMinimap(event) {
-    if (event.target.checked) {
+  function toggleEditorMinimap() {
+    if (localStorage.getItem('rConfig.editorlineNumbers') === null || localStorage.getItem('rConfig.editorlineNumbers') === false) {
       minimap.enabled = true;
       localStorage.setItem('rConfig.editorMinimap', minimap.enabled);
     } else {

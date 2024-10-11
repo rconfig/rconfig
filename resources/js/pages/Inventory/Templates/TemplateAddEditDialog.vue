@@ -6,6 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useDialogStore } from '@/stores/dialogActions';
 import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+
 import axios from 'axios';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
 const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
@@ -16,6 +19,8 @@ const { openDialog, closeDialog, isDialogOpen } = dialogStore;
 const emit = defineEmits(['save', 'cancel']);
 const roles = ref([]);
 const errors = ref([]);
+const toggleStateMultiple = ref([]); //'dark', 'lineNumbers', 'minimap'
+
 const model = ref({
   templatename: '',
   templateDescription: ''
@@ -42,9 +47,9 @@ onMounted(() => {
 
   window.addEventListener('keydown', handleKeyDown);
 
-  checkDarkModeIsSet();
-  checkLineNumbersIsSet();
-  checkMiniMapIsSet();
+  checkDarkModeIsSet() === true ? toggleStateMultiple.value.push('dark') : '';
+  checkLineNumbersIsSet() === true ? toggleStateMultiple.value.push('lineNumbers') : '';
+  checkMiniMapIsSet() === true ? toggleStateMultiple.value.push('minimap') : '';
   // getTemplateRepoFolders();
 
   if (props.editId === 0) {
@@ -126,6 +131,83 @@ function close() {
         class="col-span-3" />
     </div>
   </div>
+
+  <div class="flex flex-col">
+    <div class="flex items-center p-2">
+      <div class="flex items-center gap-2"></div>
+      <button
+        class="inline-flex items-center justify-center text-sm font-medium transition-colors rounded-md whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9"
+        data-state="closed"
+        data-grace-area-trigger="">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-trash2-icon size-4">
+          <path d="M3 6h18"></path>
+          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+          <line
+            x1="10"
+            x2="10"
+            y1="11"
+            y2="17"></line>
+          <line
+            x1="14"
+            x2="14"
+            y1="11"
+            y2="17"></line>
+        </svg>
+        <span class="sr-only">Move to trash</span>
+      </button>
+      <Separator
+        orientation="vertical"
+        class="relative w-px h-6 mx-4 shrink-0 bg-border" />
+
+      <div class="flex items-center gap-2 ml-auto">
+        <ToggleGroup
+          v-model="toggleStateMultiple"
+          type="multiple">
+          <ToggleGroupItem
+            value="dark"
+            title="Toggle bold"
+            @click="toggleEditorDarkMode()">
+            <Icon
+              icon="mdi:theme-light-dark"
+              class="w-4 h-4" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="lineNumbers"
+            title="Line Numbers"
+            @click="toggleEditorLineNumbers()">
+            <Icon
+              icon="mingcute:numbers-09-sort-ascending-line"
+              class="w-4 h-4" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="minimap"
+            title="Minimap"
+            @click="toggleEditorMinimap()">
+            <Icon
+              icon="tabler:map-2"
+              class="w-4 h-4" />
+          </ToggleGroupItem>
+        </ToggleGroup>
+      </div>
+      <Separator
+        orientation="vertical"
+        class="relative w-px h-6 mx-4 shrink-0 bg-border" />
+      <span>YAML</span>
+    </div>
+    <Separator class="relative w-full h-px shrink-0 bg-border"></Separator>
+  </div>
+
   <div class="pf-v5-c-form__group pf-l-grid__item pf-m-9-col">
     <div class="pf-v5-c-form__group-control">
       <div class="pf-v5-c-code-editor">
