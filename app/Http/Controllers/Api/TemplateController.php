@@ -61,36 +61,31 @@ class TemplateController extends ApiBaseController
 
     public function update($id, StoreTemplateRequest $request)
     {
-        // $filedata = $this->prepareYamlFile($request);
 
-        if (File::exists($filedata['filePath'])) {
-            File::delete($filedata['filePath']);
+        if (File::exists(storage_path() . $request['fileName'])) {
+            File::delete(storage_path() . $request['fileName']);
         }
 
-        File::put(storage_path() . $filedata['filePath'], $request->code);
-        if (! File::exists($filedata['filePath'])) {
-            throw new \Exception('Could create file or write to templates location: ' . $filedata['filePath'] . PHP_EOL);
+        $request['fileName'] = '/app/rconfig/templates/' . Str::slug($request['templateName']) . '.yml';
+
+        File::put(storage_path() . $request['fileName'], $request->code);
+
+        if (! File::exists(storage_path() . $request['fileName'])) {
+            throw new \Exception('Could create file or write to templates location: ' . storage_path()  . $request['fileName'] . PHP_EOL);
         }
-
-        $request['fileName'] = '/app/rconfig/templates/' . $filedata['fileName'];
-
-        $request['templateName'] = $filedata['templateName'];
-        $request['description'] = $filedata['description'];
 
         return parent::updateResource($id, $request->toDTO()->toArray(), 0);
     }
 
     public function destroy($id, $return = 0)
     {
-        $model = parent::destroy($id, 1);
+        $model = $this->model::find($id);
 
-        $filePath = $model->fileName;
-
-        $model->delete();
-
-        if (File::exists(storage_path() . $filePath)) {
-            File::delete(storage_path() . $filePath);
+        if (File::exists(storage_path() . $model->fileName)) {
+            File::delete(storage_path() . $model->fileName);
         }
+
+        $model = tap($model)->delete();
 
         return $this->successResponse(Str::ucfirst($this->modelname) . ' deleted successfully!');
     }
@@ -102,24 +97,5 @@ class TemplateController extends ApiBaseController
         }
 
         return $this->failureResponse('Could not read default.yml file from the path: ' . storage_path() . '/app/rconfig/templates/default.yml');
-    }
-
-    private function prepareYamlFile($request)
-    {
-        $yamlContents = Yaml::parse($request->code);
-        $fileName = str_replace(' ', '_', $request->fileName);
-        $fileNameArr = pathinfo($fileName);
-        if (! isset($fileNameArr['extension']) || $fileNameArr['extension'] != 'yml') {
-            $fileName = $fileName . '.yml';
-        }
-        $storage_dir = storage_path() . '/app/rconfig/templates/';
-        $filePath = $storage_dir . $fileName;
-
-        return $filedata = [
-            'filePath' => $filePath,
-            'fileName' => $fileName,
-            'templateName' => $yamlContents['main']['name'],
-            'description' => $yamlContents['main']['desc'],
-        ];
     }
 }

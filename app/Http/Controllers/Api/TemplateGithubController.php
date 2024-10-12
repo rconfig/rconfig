@@ -48,10 +48,10 @@ class TemplateGithubController extends Controller
             //  https://api.github.com/repos/OWNER/REPO/contents/PATH
             $response = Http::get('https://api.github.com/repos/' . $this->username . '/' . $this->repo . '/contents/')->throw();
             // dd($response->json());
-            $result['data'] = $response->json();
+            $result  = $response->json();
             $result['msg'] = 'Successfully connected to rConfig Templates Github repo';
 
-            return $this->successResponse('Success', $result);
+            return $response;
         } catch (\Exception $e) {
             $result['data'] = '';
             $result['msg'] = 'Exception thrown: Could not connect to repo - ' . $e->getMessage();

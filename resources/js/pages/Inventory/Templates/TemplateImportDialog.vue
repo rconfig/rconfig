@@ -1,0 +1,155 @@
+<script setup>
+import { ref, onMounted, onUnmounted } from 'vue';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { useDialogStore } from '@/stores/dialogActions';
+import { Button } from '@/components/ui/button';
+import axios from 'axios';
+import { useToaster } from '@/composables/useToaster'; // Import the composable
+import { useTemplatesGithub } from '@/pages/Inventory/Templates/useTemplatesGithub';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
+const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
+const { importTemplates, importingTemplates, getTemplateRepoFolders, hasVendorTemplateOptions, vendorTemplateOptions, vendorOptionSelected, getTemplatesList, getTemplateFileContents, openImportDialog, showFileOptions, listedFiles, hasReadmeFile, fileOptionSelected } = useTemplatesGithub();
+
+const dialogStore = useDialogStore();
+const { openDialog, closeDialog, isDialogOpen } = dialogStore;
+const emit = defineEmits(['save']);
+const errors = ref([]);
+const model = ref({});
+
+const props = defineProps({
+  editId: Number
+});
+
+function handleKeyDown(event) {
+  if (event.ctrlKey && event.key === 'Enter') {
+    saveDialog();
+  }
+}
+
+onMounted(() => {
+  getTemplateRepoFolders();
+  window.addEventListener('keydown', handleKeyDown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown);
+});
+
+function saveDialog() {
+  let id = props.editId > 0 ? `/${props.editId}` : ''; // determine if we are creating or updating
+  let method = props.editId > 0 ? 'patch' : 'post'; // determine if we are creating or updating
+  axios[method]('/api/vendors' + id, model.value)
+    .then(response => {
+      emit('save', response.data);
+      toastSuccess('Template created', 'The vendor has been created successfully.');
+      closeDialog('DialogTemplateImport');
+    })
+    .catch(error => {
+      errors.value = error.response.data.errors;
+    });
+}
+</script>
+
+<template>
+  <Dialog :open="isDialogOpen('DialogTemplateImport')">
+    <DialogTrigger as-child>
+      <!-- <Button variant="outline">Edit Profile</Button> -->
+    </DialogTrigger>
+    <DialogContent
+      class="w-full"
+      @escapeKeyDown="closeDialog('DialogTemplateImport')"
+      @pointerDownOutside="closeDialog('DialogTemplateImport')"
+      @closeClicked="closeDialog('DialogTemplateImport')">
+      <DialogHeader>
+        <DialogTitle>Select from imported templates</DialogTitle>
+        <DialogDescription>Choose a vendor and select a template to import. You may edit the template after importing.</DialogDescription>
+      </DialogHeader>
+      <div class="grid gap-2 py-4">
+        <div class="grid items-center grid-cols-4 gap-4">
+          <Select v-model="vendorOptionSelected">
+            <SelectTrigger className="w-[280px] flex h-9 items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:truncate text-start w-[180px]">
+              <SelectValue placeholder="Select a template vendor" />
+            </SelectTrigger>
+            <SelectContent position="popper">
+              <SelectGroup>
+                <SelectItem
+                  v-for="option in vendorTemplateOptions.data"
+                  :key="option.name"
+                  :value="option.path.toString()">
+                  {{ option.name }}
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+        <div class="grid items-center grid-cols-4 gap-4">
+          <Select
+            v-if="showFileOptions"
+            v-model="fileOptionSelected">
+            <SelectTrigger className="w-[280px] flex h-9 items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:truncate text-start w-[180px]">
+              <SelectValue placeholder="Select a template file" />
+            </SelectTrigger>
+            <SelectContent position="popper">
+              <SelectGroup>
+                <SelectItem
+                  v-for="vendor in listedFiles.data"
+                  :key="vendor.name"
+                  :value="vendor.path.toString()">
+                  {{ vendor.name }}
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <div class="flex flex-col w-full space-y-2">error</div>
+      <DialogFooter>
+        <Button
+          type="close"
+          variant="outline"
+          class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse"
+          @click="closeDialog('DialogTemplateImport')"
+          size="sm">
+          Cancel
+          <div class="pl-2 ml-auto">
+            <kbd class="bxnAJf">ESC</kbd>
+          </div>
+        </Button>
+
+        <Button
+          v-if="props.editId === 0"
+          type="submit"
+          class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+          size="sm"
+          variant="primary">
+          Save
+          <div class="pl-2 ml-auto">
+            <kbd class="bxnAJf2">
+              Ctrl&nbsp;
+              <Icon
+                icon="uil:enter"
+                class="" />
+            </kbd>
+          </div>
+        </Button>
+
+        <Button
+          v-if="props.editId > 0"
+          type="submit"
+          class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+          size="sm"
+          variant="primary">
+          Update
+          <div class="pl-2 ml-auto">
+            <kbd class="bxnAJf2">
+              Ctrl&nbsp;
+              <Icon
+                icon="uil:enter"
+                class="" />
+            </kbd>
+          </div>
+        </Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
+</template>

@@ -47,7 +47,7 @@
           </div>
         </div>
         <button
-          class="pf-c-button pf-m-link pf-u-pl-xs pf-u-pl-xs pf-u-mt-lg pf-u-mb-md"
+          class="pf-c-button pf-m-link pf-u-pl-xs pf-u-mt-lg pf-u-mb-md"
           type="button"
           @click="showSelectTemplateFields = true"
           v-if="hasVendorTemplateOptions && !showSelectTemplateFields">

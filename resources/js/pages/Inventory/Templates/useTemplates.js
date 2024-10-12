@@ -46,10 +46,8 @@ export function useTemplates(emit) {
     emit('createTemplate', { id: editId, type: 'template' });
   }
 
-  function updateTemplate(id) {
-    editId.value = id;
-    newTemplateModalKey.value = Math.random(); // Force re-render of the dialog component
-    openDialog('DialogNewTemplate');
+  function updateTemplate(editId) {
+    emit('updateTemplate', { id: editId, type: 'template' });
   }
 
   // Delete Template

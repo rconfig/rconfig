@@ -3,18 +3,20 @@ import ActionsMenu from '@/pages/Shared/Table/ActionsMenu.vue';
 import Loading from '@/pages/Shared/Table/Loading.vue';
 import NoResults from '@/pages/Shared/Table/NoResults.vue';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
-import TemplateAddEditDialog from '@/pages/Inventory/Templates/TemplateAddEditDialog.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import Spinner from '@/pages/Shared/Icon/Spinner.vue';
 import { onMounted, onUnmounted } from 'vue';
 import { useRowSelection } from '@/composables/useRowSelection';
 import { useTemplates } from '@/pages/Inventory/Templates/useTemplates';
+import { useTemplatesGithub } from '@/pages/Inventory/Templates/useTemplatesGithub';
 
-const emit = defineEmits(['createTemplate']);
+const emit = defineEmits(['createTemplate', 'updateTemplate']);
 const { templates, isLoading, currentPage, perPage, lastPage, editId, newTemplateModalKey, searchTerm, openDialog, fetchTemplates, createTemplate, updateTemplate, deleteTemplate, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam } = useTemplates(emit);
+const { importTemplates, importingTemplates } = useTemplatesGithub();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(templates);
 
 onMounted(() => {
@@ -58,10 +60,13 @@ onUnmounted(() => {
         <Button
           type="close"
           class="px-2 py-1 ml-2 text-sm hover:bg-gray-700"
+          @click="importTemplates()"
           variant="outline">
           <Icon
+            v-if="!importingTemplates"
             icon="mdi:github"
             class="mr-2" />
+          <Spinner :state="importingTemplates" />
           Import Templates
         </Button>
 
@@ -158,7 +163,7 @@ onUnmounted(() => {
               <TableCell class="text-start">
                 <ActionsMenu
                   :rowData="row"
-                  @onEdit="viewEditDialog(row.id)"
+                  @onEdit="updateTemplate(row.id)"
                   @onDelete="deleteTemplate(row.id)" />
               </TableCell>
               <!-- ACTIONS MENU -->

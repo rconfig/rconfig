@@ -3,7 +3,7 @@ import Devices from '@/pages/Inventory/Devices/Main.vue';
 import CommandGroups from '@/pages/Inventory/CommandGroups/Main.vue';
 import Command from '@/pages/Inventory/Commands/Main.vue';
 import Template from '@/pages/Inventory/Templates/Main.vue';
-import TemplateAddEditDialog from '@/pages/Inventory/Templates/TemplateAddEditDialog.vue';
+import TemplateAddEditPane from '@/pages/Inventory/Templates/TemplateAddEditPane.vue';
 import Tags from '@/pages/Inventory/Tags/Main.vue';
 import Vendors from '@/pages/Inventory/Vendors/Main.vue';
 import { Button } from '@/components/ui/button';
@@ -81,10 +81,9 @@ function closeAddEditPane() {
       v-if="addEditPane"
       @close="closeAddEditPane()">
       <template #default>
-        <div
-          class="p-4 px-8 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
-          v-if="addEditPane === 'template'">
-          <TemplateAddEditDialog
+        <div class="p-4 px-8 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
+          <TemplateAddEditPane
+            v-if="addEditPane === 'template'"
             :editId="addEditPaneEditId"
             @close="closeAddEditPane" />
         </div>
@@ -146,7 +145,8 @@ function closeAddEditPane() {
       <Command v-if="currentView === 'commands'"></Command>
       <Template
         v-if="currentView === 'templates'"
-        @createTemplate="launchAddEdit($event)"></Template>
+        @createTemplate="launchAddEdit($event)"
+        @updateTemplate="launchAddEdit($event)"></Template>
       <Vendors v-if="currentView === 'vendors'"></Vendors>
       <Tags v-if="currentView === 'tags'"></Tags>
     </div>

@@ -1,121 +1,71 @@
 <script setup>
 import * as monaco from 'monaco-editor';
+import TemplateImportDialog from '@/pages/Inventory/Templates/TemplateImportDialog.vue';
 import useCodeEditor from '@/composables/codeEditorFunctions';
-import { ref, onMounted, onUnmounted } from 'vue';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { ref, onMounted, onUnmounted } from 'vue';
+import { useDialogStore } from '@/stores/dialogActions';
+import { useTemplatesGithub } from '@/pages/Inventory/Templates/useTemplatesGithub';
+import useTemplateAddEdit from '@/pages/Inventory/Templates/useTemplateAddEdit';
 
 import axios from 'axios';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
-const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
-const { checkDarkModeIsSet, checkLineNumbersIsSet, checkMiniMapIsSet, checkStickyScrollIsSet, copied, copy, copyPath, darkmode, download, initEditor, lineNumbers, meditorValue, minimap, search, toggleEditorDarkMode, toggleEditorLineNumbers, toggleEditorMinimap, toggleStickyScroll } = useCodeEditor(monaco);
-
-const emit = defineEmits(['save', 'cancel']);
-const errors = ref([]);
-const toggleStateMultiple = ref([]); //'dark', 'lineNumbers', 'minimap', 'stickyscroll'
-
-const model = ref({
-  code: '',
-  templateName: '',
-  description: ''
-});
-const code = ref('');
-let meditor = null;
 
 const props = defineProps({
   editId: Number
 });
+let meditor = null;
 
-function handleKeyDown(event) {
-  if (event.ctrlKey && event.key === 'Enter') {
-    saveDialog();
-  }
-}
+const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
+const { checkDarkModeIsSet, checkLineNumbersIsSet, checkMiniMapIsSet, checkStickyScrollIsSet, copied, copy, copyPath, darkmode, download, initEditor, lineNumbers, meditorValue, minimap, search, toggleEditorDarkMode, toggleEditorLineNumbers, toggleEditorMinimap, toggleStickyScroll } = useCodeEditor(monaco);
+const { openImportDialog, getTemplateRepoFolders, hasVendorTemplateOptions } = useTemplatesGithub();
+
+const dialogStore = useDialogStore();
+const { isDialogOpen } = dialogStore;
+
+const emit = defineEmits(['save', 'close']);
+const toggleStateMultiple = ref([]); //'dark', 'lineNumbers', 'minimap', 'stickyscroll'
+
+const { errors, code, model, getDefaultTemplate, showTemplate, saveDialog, handleKeyDown, fetchTemplateData } = useTemplateAddEdit(props, emit);
 
 onMounted(() => {
-  if (props.editId > 0) {
-    axios.get(`/api/templates/${props.editId}`).then(response => {
-      model.value = response.data;
-    });
-  }
-
-  window.addEventListener('keydown', handleKeyDown);
-
   checkDarkModeIsSet() === true ? toggleStateMultiple.value.push('dark') : '';
   checkLineNumbersIsSet() === true ? toggleStateMultiple.value.push('lineNumbers') : '';
   checkMiniMapIsSet() === true ? toggleStateMultiple.value.push('minimap') : '';
   checkStickyScrollIsSet() === true ? toggleStateMultiple.value.push('stickyscroll') : '';
-  // getTemplateRepoFolders();
+  getTemplateRepoFolders();
+
+  meditor = initEditor('code-editor__code-pre', 'yaml');
 
   if (props.editId === 0) {
-    getDefaultTemplate();
+    getDefaultTemplate(meditor);
   } else {
-    // showTemplate();
+    showTemplate(props.editId, meditor, model);
   }
-  // getModel(props.viewstate.editid);
-  meditor = initEditor('code-editor__code-pre', 'yaml');
 });
-
-function getDefaultTemplate() {
-  axios
-    .get('/api/get-default-template')
-    .then(response => {
-      // handle success
-      // model.fileName = 'default.yml';
-      code.value = response.data;
-      meditor.setValue(response.data);
-    })
-    .catch(error => {
-      meditor.updateOptions({
-        value: 'Something went wrong - could not retrieve the default template from the file system!'
-      });
-      toastError('Error', 'Something went wrong - could not retrieve the default template from the file system!');
-    });
-}
-
-onUnmounted(() => {
-  window.removeEventListener('keydown', handleKeyDown);
-});
-
-function saveDialog() {
-  model.value.code = meditor.getValue();
-  console.log(model.value);
-
-  let id = props.editId > 0 ? `/${props.editId}` : ''; // determine if we are creating or updating
-  let method = props.editId > 0 ? 'patch' : 'post'; // determine if we are creating or updating
-
-  axios[method]('/api/templates' + id, {
-    templateName: model.value.templateName,
-    description: model.value.description,
-    code: model.value.code
-  })
-    .then(response => {
-      emit('save', response.data);
-      toastSuccess('Template created', 'The template has been created successfully.');
-      close();
-    })
-    .catch(error => {
-      errors.value = error.response.data.errors;
-    });
-}
 
 function close() {
   emit('close');
+}
+
+function handleSave() {
+  saveDialog(props.editId, model, meditor, emit, close);
 }
 </script>
 
 <template>
   <div>
-    {{ model }}
     <div class="grid gap-2 py-4">
       <div class="grid items-center grid-cols-4 gap-4">
         <Label
           for="templateName"
           class="text-right">
           Template Name
+
           <span class="text-red-600">*</span>
         </Label>
         <Input
@@ -136,6 +86,25 @@ function close() {
           id="description"
           autocomplete="off"
           class="col-span-3" />
+      </div>
+      <div
+        class="grid items-center grid-cols-4 gap-4"
+        v-if="hasVendorTemplateOptions">
+        <Label
+          for="description"
+          class="text-right">
+          Imported Templates
+        </Label>
+        <Button
+          type="close"
+          @click="openImportDialog()"
+          class="px-2 py-1 text-sm hover:bg-gray-700"
+          variant="outline">
+          <Icon
+            icon="mdi:github"
+            class="mr-2" />
+          Choose an Imported Templates
+        </Button>
       </div>
     </div>
     <div
@@ -248,7 +217,7 @@ function close() {
     <div
       class="code-editor__code-pre"
       id="code-editor__code-pre"
-      style="height: calc(100vh - 400px)"></div>
+      style="height: calc(100vh - 450px)"></div>
     <!-- EDITOR -->
 
     <div class="flex justify-end pt-4">
@@ -269,7 +238,7 @@ function close() {
         type="submit"
         class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
         size="sm"
-        @click="saveDialog()"
+        @click="handleSave()"
         variant="primary">
         Save
         <div class="pl-2 ml-auto">
@@ -287,7 +256,7 @@ function close() {
         type="submit"
         class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
         size="sm"
-        @click="saveDialog()"
+        @click="handleSave()"
         variant="primary">
         Update
         <div class="pl-2 ml-auto">
@@ -300,5 +269,6 @@ function close() {
         </div>
       </Button>
     </div>
+    <TemplateImportDialog v-if="isDialogOpen('DialogTemplateImport')" />
   </div>
 </template>

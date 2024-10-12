@@ -10,7 +10,7 @@ final class StoreTemplateDTO extends DtoBase
 {
     public string $fileName;
     public string $templateName;
-    public string $description;
+    public ?string $description;
 
     public function __construct(array $parameters = [])
     {

@@ -28,7 +28,7 @@ function close() {
           icon="mingcute:close-line"
           class="hover:animate-pulse" />
       </Button>
-      <h2 class="items-center content-center text-muted-foreground">{{ editId === 0 ? 'Add' : 'Edit' }} {{ name }}</h2>
+      <h2 class="items-center content-center text-muted-foreground">{{ editId === 0 ? 'Add' : 'Edit' }} {{ name }} {{ editId === 0 ? '' : '(' + editId + ')' }}</h2>
 
       <div class="flex justify-end">
         <DropdownMenu>
