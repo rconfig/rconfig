@@ -40,15 +40,11 @@ class TemplateController extends ApiBaseController
 
     public function store(StoreTemplateRequest $request)
     {
-        $filedata = $this->prepareYamlFile($request);
+        $request['fileName'] = '/app/rconfig/templates/' . Str::slug($request['templateName']) . '.yml';
 
-        $request['fileName'] = '/app/rconfig/templates/' . $filedata['fileName'];
-        $request['templateName'] = $filedata['templateName'];
-        $request['description'] = $filedata['description'];
-
-        File::put($filedata['filePath'], $request->code);
-        if (! File::exists($filedata['filePath'])) {
-            throw new \Exception('Could create file or write to templates location: ' . $filedata['filePath'] . PHP_EOL);
+        File::put(storage_path() . $request['fileName'], $request->code);
+        if (! File::exists(storage_path() . $request['fileName'])) {
+            throw new \Exception('Could create file or write to templates location: ' . $request['fileName'] . PHP_EOL);
         }
 
         return parent::storeResource($request->toDTO()->toArray(), 0);
@@ -65,13 +61,13 @@ class TemplateController extends ApiBaseController
 
     public function update($id, StoreTemplateRequest $request)
     {
-        $filedata = $this->prepareYamlFile($request);
+        // $filedata = $this->prepareYamlFile($request);
 
         if (File::exists($filedata['filePath'])) {
             File::delete($filedata['filePath']);
         }
 
-        File::put($filedata['filePath'], $request->code);
+        File::put(storage_path() . $filedata['filePath'], $request->code);
         if (! File::exists($filedata['filePath'])) {
             throw new \Exception('Could create file or write to templates location: ' . $filedata['filePath'] . PHP_EOL);
         }

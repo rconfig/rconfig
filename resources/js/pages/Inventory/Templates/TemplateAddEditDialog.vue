@@ -4,7 +4,6 @@ import useCodeEditor from '@/composables/codeEditorFunctions';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useDialogStore } from '@/stores/dialogActions';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
@@ -14,16 +13,14 @@ import { useToaster } from '@/composables/useToaster'; // Import the composable
 const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
 const { checkDarkModeIsSet, checkLineNumbersIsSet, checkMiniMapIsSet, checkStickyScrollIsSet, copied, copy, copyPath, darkmode, download, initEditor, lineNumbers, meditorValue, minimap, search, toggleEditorDarkMode, toggleEditorLineNumbers, toggleEditorMinimap, toggleStickyScroll } = useCodeEditor(monaco);
 
-const dialogStore = useDialogStore();
-const { openDialog, closeDialog, isDialogOpen } = dialogStore;
 const emit = defineEmits(['save', 'cancel']);
-const roles = ref([]);
 const errors = ref([]);
 const toggleStateMultiple = ref([]); //'dark', 'lineNumbers', 'minimap', 'stickyscroll'
 
 const model = ref({
-  templatename: '',
-  templateDescription: ''
+  code: '',
+  templateName: '',
+  description: ''
 });
 const code = ref('');
 let meditor = null;
@@ -75,11 +72,7 @@ function getDefaultTemplate() {
       meditor.updateOptions({
         value: 'Something went wrong - could not retrieve the default template from the file system!'
       });
-      createNotification({
-        type: 'danger',
-        title: 'Error',
-        message: error.response
-      });
+      toastError('Error', 'Something went wrong - could not retrieve the default template from the file system!');
     });
 }
 
@@ -88,9 +81,17 @@ onUnmounted(() => {
 });
 
 function saveDialog() {
+  model.value.code = meditor.getValue();
+  console.log(model.value);
+
   let id = props.editId > 0 ? `/${props.editId}` : ''; // determine if we are creating or updating
   let method = props.editId > 0 ? 'patch' : 'post'; // determine if we are creating or updating
-  axios[method]('/api/templates' + id, model.value)
+
+  axios[method]('/api/templates' + id, {
+    templateName: model.value.templateName,
+    description: model.value.description,
+    code: model.value.code
+  })
     .then(response => {
       emit('save', response.data);
       toastSuccess('Template created', 'The template has been created successfully.');
@@ -108,30 +109,55 @@ function close() {
 
 <template>
   <div>
+    {{ model }}
     <div class="grid gap-2 py-4">
       <div class="grid items-center grid-cols-4 gap-4">
         <Label
-          for="templatename"
+          for="templateName"
           class="text-right">
           Template Name
+          <span class="text-red-600">*</span>
         </Label>
         <Input
-          v-model="model.templatename"
-          id="templatename"
+          v-model="model.templateName"
+          id="templateName"
+          autocomplete="off"
           class="col-span-3" />
       </div>
 
       <div class="grid items-center grid-cols-4 gap-4">
         <Label
-          for="templateDescription"
+          for="description"
           class="text-right">
           Description
         </Label>
         <Input
-          v-model="model.templateDescription"
-          id="templateDescription"
+          v-model="model.description"
+          id="description"
+          autocomplete="off"
           class="col-span-3" />
       </div>
+    </div>
+    <div
+      class="grid items-center grid-cols-4 col-start-4 gap-4"
+      v-if="errors">
+      <span
+        class="col-span-1 col-start-2 text-red-400"
+        v-if="errors.templateName">
+        {{ errors.templateName[0] }}
+      </span>
+
+      <span
+        class="col-span-1 col-start-2 text-red-400"
+        v-if="errors.description">
+        {{ errors.description[0] }}
+      </span>
+
+      <span
+        class="col-span-1 col-start-2 text-red-400"
+        v-if="errors.code">
+        {{ errors.code[0] }}
+      </span>
     </div>
 
     <div class="flex flex-col">
@@ -155,13 +181,13 @@ function close() {
             <Icon icon="mingcute:download-fill"></Icon>
           </Button>
 
-          <Button
+          <!-- <Button
             variant="ghost"
             class="ml-1"
             @click="showConfigFullScreen()"
             title="Full Screen">
             <Icon icon="ant-design:fullscreen-outlined"></Icon>
-          </Button>
+          </Button> -->
         </div>
         <!-- LEFT BUTTONS -->
 
@@ -218,24 +244,12 @@ function close() {
       <Separator class="relative w-full h-px shrink-0 bg-border"></Separator>
     </div>
 
+    <!-- EDITOR -->
     <div
       class="code-editor__code-pre"
       id="code-editor__code-pre"
       style="height: calc(100vh - 400px)"></div>
-
-    <div class="flex flex-col w-full space-y-2">
-      <span
-        class="text-red-400"
-        v-if="errors.templateDescription">
-        {{ errors.templateDescription[0] }}
-      </span>
-
-      <span
-        class="text-red-400"
-        v-if="errors.templatename">
-        {{ errors.templatename[0] }}
-      </span>
-    </div>
+    <!-- EDITOR -->
 
     <div class="flex justify-end pt-4">
       <Button
