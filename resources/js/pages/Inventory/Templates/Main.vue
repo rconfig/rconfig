@@ -3,12 +3,13 @@ import ActionsMenu from '@/pages/Shared/Table/ActionsMenu.vue';
 import Loading from '@/pages/Shared/Table/Loading.vue';
 import NoResults from '@/pages/Shared/Table/NoResults.vue';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
+import Spinner from '@/pages/Shared/Icon/Spinner.vue';
+import DeviceListPopover from '@/pages/Shared/Popover/DeviceListPopover.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import Spinner from '@/pages/Shared/Icon/Spinner.vue';
 import { onMounted, onUnmounted } from 'vue';
 import { useRowSelection } from '@/composables/useRowSelection';
 import { useTemplates } from '@/pages/Inventory/Templates/useTemplates';
@@ -149,14 +150,17 @@ onUnmounted(() => {
                   class="mr-2">
                   <Badge
                     variant="outline"
-                    class="py-1 hover:bg-rcgray-800">
+                    class="py-1 mt-1 hover:bg-rcgray-800">
                     <router-link :to="device.view_url">{{ device.device_name }}</router-link>
                   </Badge>
                 </span>
                 <span
                   v-if="row.device.length > 8"
                   class="mr-2">
-                  <Badge variant="outline">...</Badge>
+                  <DeviceListPopover
+                    :recordName="row.templateName"
+                    :items="row.device"
+                    displayField="device_name" />
                 </span>
               </TableCell>
               <!-- ACTIONS MENU -->

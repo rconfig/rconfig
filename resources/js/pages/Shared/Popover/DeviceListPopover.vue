@@ -37,7 +37,7 @@ defineProps({
       style="width: 800px">
       <div class="space-y-2">
         <!-- <h4 class="font-medium leading-none">Devices</h4> -->
-        <p class="mb-2 text-sm text-muted-foreground">All devices associated with {{ recordName }}. Showing {{ displayCount }} records</p>
+        <p class="mb-2 text-sm text-muted-foreground">All devices associated with {{ recordName }}. Showing {{ displayCount }} records.</p>
       </div>
       <Badge
         v-for="item in items.slice(0, displayCount)"
