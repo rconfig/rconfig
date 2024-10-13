@@ -7,12 +7,13 @@ import axios from 'axios';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
 import { useTemplatesGithub } from '@/pages/Inventory/Templates/useTemplatesGithub';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
-const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
-const { importTemplates, importingTemplates, getTemplateRepoFolders, hasVendorTemplateOptions, vendorTemplateOptions, vendorOptionSelected, getTemplatesList, getTemplateFileContents, openImportDialog, showFileOptions, listedFiles, hasReadmeFile, fileOptionSelected } = useTemplatesGithub();
+import Spinner from '@/pages/Shared/Icon/Spinner.vue';
+
+const { importingTemplates, getTemplateRepoFolders, vendorOptionSelected, showFileOptions, listedFiles, hasReadmeFile, fileOptionSelected, selectedTemplateCode } = useTemplatesGithub();
 
 const dialogStore = useDialogStore();
-const { openDialog, closeDialog, isDialogOpen } = dialogStore;
-const emit = defineEmits(['save']);
+const { closeDialog, isDialogOpen } = dialogStore;
+const emit = defineEmits(['setTemplateCode']);
 const errors = ref([]);
 const model = ref({});
 
@@ -36,17 +37,7 @@ onUnmounted(() => {
 });
 
 function saveDialog() {
-  let id = props.editId > 0 ? `/${props.editId}` : ''; // determine if we are creating or updating
-  let method = props.editId > 0 ? 'patch' : 'post'; // determine if we are creating or updating
-  axios[method]('/api/vendors' + id, model.value)
-    .then(response => {
-      emit('save', response.data);
-      toastSuccess('Template created', 'The vendor has been created successfully.');
-      closeDialog('DialogTemplateImport');
-    })
-    .catch(error => {
-      errors.value = error.response.data.errors;
-    });
+  emit('setTemplateCode', selectedTemplateCode);
 }
 </script>
 
@@ -72,6 +63,9 @@ function saveDialog() {
             </SelectTrigger>
             <SelectContent position="popper">
               <SelectGroup>
+                <Spinner
+                  :state="importingTemplates"
+                  class="items-center" />
                 <SelectItem
                   v-for="option in vendorTemplateOptions.data"
                   :key="option.name"
@@ -102,7 +96,11 @@ function saveDialog() {
           </Select>
         </div>
       </div>
-      <div class="flex flex-col w-full space-y-2">error</div>
+      <div
+        class="flex flex-col w-full space-y-2 text-sm text-muted-foreground"
+        v-if="fileOptionSelected">
+        CLick apply to load this template into the editor.
+      </div>
       <DialogFooter>
         <Button
           type="close"
@@ -117,29 +115,13 @@ function saveDialog() {
         </Button>
 
         <Button
-          v-if="props.editId === 0"
+          v-if="selectedTemplateCode"
           type="submit"
           class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
           size="sm"
+          @click="saveDialog()"
           variant="primary">
-          Save
-          <div class="pl-2 ml-auto">
-            <kbd class="bxnAJf2">
-              Ctrl&nbsp;
-              <Icon
-                icon="uil:enter"
-                class="" />
-            </kbd>
-          </div>
-        </Button>
-
-        <Button
-          v-if="props.editId > 0"
-          type="submit"
-          class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
-          size="sm"
-          variant="primary">
-          Update
+          Apply
           <div class="pl-2 ml-auto">
             <kbd class="bxnAJf2">
               Ctrl&nbsp;

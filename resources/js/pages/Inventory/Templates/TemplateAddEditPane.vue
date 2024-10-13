@@ -2,51 +2,50 @@
 import * as monaco from 'monaco-editor';
 import TemplateImportDialog from '@/pages/Inventory/Templates/TemplateImportDialog.vue';
 import useCodeEditor from '@/composables/codeEditorFunctions';
+import useTemplateAddEdit from '@/pages/Inventory/Templates/useTemplateAddEdit';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useDialogStore } from '@/stores/dialogActions';
 import { useTemplatesGithub } from '@/pages/Inventory/Templates/useTemplatesGithub';
-import useTemplateAddEdit from '@/pages/Inventory/Templates/useTemplateAddEdit';
-
-import axios from 'axios';
-import { useToaster } from '@/composables/useToaster'; // Import the composable
+import { useToaster } from '@/composables/useToaster';
 
 const props = defineProps({
   editId: Number
 });
 let meditor = null;
+const emit = defineEmits(['save', 'close']);
 
-const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
 const { checkDarkModeIsSet, checkLineNumbersIsSet, checkMiniMapIsSet, checkStickyScrollIsSet, copied, copy, copyPath, darkmode, download, initEditor, lineNumbers, meditorValue, minimap, search, toggleEditorDarkMode, toggleEditorLineNumbers, toggleEditorMinimap, toggleStickyScroll } = useCodeEditor(monaco);
 const { openImportDialog, getTemplateRepoFolders, hasVendorTemplateOptions } = useTemplatesGithub();
-
+const { errors, code, model, getDefaultTemplate, showTemplate, saveDialog, handleKeyDown, fetchTemplateData } = useTemplateAddEdit(props, emit);
 const dialogStore = useDialogStore();
-const { isDialogOpen } = dialogStore;
+const { isDialogOpen, closeDialog } = dialogStore;
 
-const emit = defineEmits(['save', 'close']);
 const toggleStateMultiple = ref([]); //'dark', 'lineNumbers', 'minimap', 'stickyscroll'
 
-const { errors, code, model, getDefaultTemplate, showTemplate, saveDialog, handleKeyDown, fetchTemplateData } = useTemplateAddEdit(props, emit);
-
+// Lifecycle Hooks
 onMounted(() => {
-  checkDarkModeIsSet() === true ? toggleStateMultiple.value.push('dark') : '';
-  checkLineNumbersIsSet() === true ? toggleStateMultiple.value.push('lineNumbers') : '';
-  checkMiniMapIsSet() === true ? toggleStateMultiple.value.push('minimap') : '';
-  checkStickyScrollIsSet() === true ? toggleStateMultiple.value.push('stickyscroll') : '';
+  initializeToggleStates();
   getTemplateRepoFolders();
-
-  meditor = initEditor('code-editor__code-pre', 'yaml');
-
-  if (props.editId === 0) {
-    getDefaultTemplate(meditor);
-  } else {
-    showTemplate(props.editId, meditor, model);
-  }
+  initCodeEditor();
 });
+
+// Methods
+function initializeToggleStates() {
+  if (checkDarkModeIsSet()) toggleStateMultiple.value.push('dark');
+  if (checkLineNumbersIsSet()) toggleStateMultiple.value.push('lineNumbers');
+  if (checkMiniMapIsSet()) toggleStateMultiple.value.push('minimap');
+  if (checkStickyScrollIsSet()) toggleStateMultiple.value.push('stickyscroll');
+}
+
+function initCodeEditor() {
+  meditor = initEditor('code-editor__code-pre', 'yaml');
+  props.editId === 0 ? getDefaultTemplate(meditor) : showTemplate(props.editId, meditor, model);
+}
 
 function close() {
   emit('close');
@@ -54,6 +53,11 @@ function close() {
 
 function handleSave() {
   saveDialog(props.editId, model, meditor, emit, close);
+}
+
+function setTemplateCode(code) {
+  meditor.getModel().setValue(code.value);
+  closeDialog('DialogTemplateImport');
 }
 </script>
 
@@ -269,6 +273,8 @@ function handleSave() {
         </div>
       </Button>
     </div>
-    <TemplateImportDialog v-if="isDialogOpen('DialogTemplateImport')" />
+    <TemplateImportDialog
+      v-if="isDialogOpen('DialogTemplateImport')"
+      @setTemplateCode="setTemplateCode($event)" />
   </div>
 </template>

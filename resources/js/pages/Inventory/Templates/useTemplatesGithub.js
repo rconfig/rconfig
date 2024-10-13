@@ -12,12 +12,13 @@ export function useTemplatesGithub(emit) {
   const importingTemplates = ref(false);
   const hasVendorTemplateOptions = ref(false);
   const vendorTemplateOptions = ref([]);
-  const vendorOptionSelected = ref({});
+  const vendorOptionSelected = ref('');
   const vendorTemplateOptionSelected = ref(null);
   const showFileOptions = ref(false);
   const listedFiles = ref([]);
   const hasReadmeFile = ref(false);
-  const fileOptionSelected = ref(false);
+  const fileOptionSelected = ref('');
+  const selectedTemplateCode = ref('');
 
   function importTemplates() {
     importingTemplates.value = true;
@@ -38,7 +39,7 @@ export function useTemplatesGithub(emit) {
   }
 
   watch(vendorOptionSelected, () => {
-    if (vendorOptionSelected.value !== null) {
+    if (vendorOptionSelected.value !== '') {
       getTemplatesList(vendorOptionSelected.value);
     }
   });
@@ -54,11 +55,13 @@ export function useTemplatesGithub(emit) {
   }
 
   function getTemplateRepoFolders() {
+    importingTemplates.value = true;
     axios
       .get('/api/list-template-repo-folders')
       .then(response => {
         vendorTemplateOptions.value = response.data.data;
         hasVendorTemplateOptions.value = true;
+        importingTemplates.value = false;
       })
       .catch(error => {
         console.log(error);
@@ -67,19 +70,16 @@ export function useTemplatesGithub(emit) {
         } else {
           toastError('Error getting vendor templates');
         }
+        importingTemplates.value = false;
       });
   }
 
   function getTemplatesList(vendorOptionPath) {
-    console.log(vendorOptionPath);
     showFileOptions.value = false;
-    // showVendorTemplateOptions.value = false;
-    // vendorTemplateOptionSelected.value = vendorOptionPath.name;
     hasReadmeFile.value = false;
     axios
       .post('/api/list-repo-folders-contents', { directory: vendorOptionPath })
       .then(response => {
-        // hasListedFiles.value = true;
         listedFiles.value = response.data.data;
         showFileOptions.value = true;
         if (typeof response.data.data.readme !== 'undefined') {
@@ -93,15 +93,10 @@ export function useTemplatesGithub(emit) {
   }
 
   function getTemplateFileContents(fileOptionPath) {
-    // showFileOptions.value = false;
-    // showVendorTemplateOptions.value = false;
-    // fileOptionSelected.value = fileOption.name;
     axios
       .post('/api/get-template-file-contents', { filepath: fileOptionPath })
       .then(response => {
-        console.log('response', response);
-        // meditor.getModel().setValue(response.data.data.data.code);
-        // model.fileName = fileOptionPath.path.split('/').reverse()[0];
+        selectedTemplateCode.value = response.data.data.data.code;
       })
       .catch(error => {
         toastError('Error getting file contents');
@@ -121,6 +116,7 @@ export function useTemplatesGithub(emit) {
     showFileOptions,
     listedFiles,
     hasReadmeFile,
-    fileOptionSelected
+    fileOptionSelected,
+    selectedTemplateCode
   };
 }
