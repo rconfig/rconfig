@@ -1,28 +1,36 @@
 <script setup>
 import ActionsMenu from '@/pages/Shared/Table/ActionsMenu.vue';
+import ConfirmDeleteAlert from '@/pages/Shared/AlertDialog/ConfirmDeleteAlert.vue';
+import DeviceListPopover from '@/pages/Shared/Popover/DeviceListPopover.vue';
 import Loading from '@/pages/Shared/Table/Loading.vue';
 import NoResults from '@/pages/Shared/Table/NoResults.vue';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
 import Spinner from '@/pages/Shared/Icon/Spinner.vue';
-import DeviceListPopover from '@/pages/Shared/Popover/DeviceListPopover.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { eventBus } from '@/composables/eventBus';
 import { onMounted, onUnmounted } from 'vue';
 import { useRowSelection } from '@/composables/useRowSelection';
 import { useTemplates } from '@/pages/Inventory/Templates/useTemplates';
 import { useTemplatesGithub } from '@/pages/Inventory/Templates/useTemplatesGithub';
 
 const emit = defineEmits(['createTemplate', 'updateTemplate']);
-const { templates, isLoading, currentPage, perPage, lastPage, editId, newTemplateModalKey, searchTerm, openDialog, fetchTemplates, createTemplate, updateTemplate, deleteTemplate, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam } = useTemplates(emit);
+const { templates, isLoading, currentPage, perPage, lastPage, editId, newTemplateModalKey, searchTerm, openDialog, fetchTemplates, createTemplate, updateTemplate, deleteTemplate, deleteManyTemplates, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam, showConfirmDelete } = useTemplates(emit);
 const { importTemplates, importingTemplates } = useTemplatesGithub();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(templates);
 
 onMounted(() => {
   fetchTemplates();
   window.addEventListener('keydown', handleKeyDown);
+
+  eventBus.on('deleteManyTemplatesSuccess', () => {
+    selectedRows.value = [];
+    selectAll.value = false;
+    document.getElementById('selectAll').checked = false;
+  });
 });
 
 // Cleanup event listener on unmount
@@ -54,6 +62,7 @@ onUnmounted(() => {
           v-if="selectedRows.length"
           class="px-2 py-1 bg-red-600 hover:bg-red-700 hover:animate-pulse"
           size="md"
+          @click.prevent="showConfirmDelete = true"
           variant="primary">
           Delete Selected {{ selectedRows.length }} Template(s)
         </Button>
@@ -93,6 +102,7 @@ onUnmounted(() => {
               <Checkbox
                 id="selectAll"
                 v-model="selectAll"
+                :checked="selectAll"
                 @click="toggleSelectAll()" />
             </TableHead>
             <TableHead class="w-[5%]">
@@ -188,10 +198,13 @@ onUnmounted(() => {
         @update:perPage="perPage = $event" />
       <!-- END PAGINATION -->
 
-      <!-- <TemplateAddEditDialog
-        @save="handleSave()"
-        :key="newTemplateModalKey"
-        :editId="editId" /> -->
+      <!-- FOR MULTIPLE DELETE -->
+      <ConfirmDeleteAlert
+        :ids="selectedRows"
+        :showConfirmDelete="showConfirmDelete"
+        @close="showConfirmDelete = false"
+        @handleDelete="deleteManyTemplates(selectedRows)" />
+      <!-- FOR MULTIPLE DELETE -->
 
       <Toaster />
     </div>

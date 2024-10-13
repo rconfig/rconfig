@@ -3,6 +3,7 @@ import { ref, watch } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 import { useDialogStore } from '@/stores/dialogActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
+import { eventBus } from '@/composables/eventBus';
 
 export function useTemplates(emit) {
   const currentPage = ref(1);
@@ -16,6 +17,7 @@ export function useTemplates(emit) {
   const lastPage = ref(1);
   const newTemplateModalKey = ref(1);
   const templates = ref([]);
+  const showConfirmDelete = ref(false);
   const { openDialog } = dialogStore;
   const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
 
@@ -59,6 +61,21 @@ export function useTemplates(emit) {
     } catch (error) {
       console.error('Error deleting template:', error);
       toastError('Error', 'Failed to delete template.');
+    }
+  };
+
+  // Delete Many Templates
+  const deleteManyTemplates = async ids => {
+    try {
+      await axios.post('/api/templates/delete-many', { ids });
+      fetchTemplates(); // Refresh templates list after deletion
+      toastSuccess('Templates Deleted', 'The templates have been deleted successfully.');
+      showConfirmDelete.value = false;
+      eventBus.emit('deleteManyTemplatesSuccess');
+    } catch (error) {
+      console.error('Error deleting templates:', error);
+      toastError('Error', 'Failed to delete templates.');
+      showConfirmDelete.value = false;
     }
   };
 
@@ -123,10 +140,12 @@ export function useTemplates(emit) {
     createTemplate,
     updateTemplate,
     deleteTemplate,
+    deleteManyTemplates,
     handleSave,
     handleKeyDown,
     viewEditDialog,
     toggleSort,
-    sortParam
+    sortParam,
+    showConfirmDelete
   };
 }

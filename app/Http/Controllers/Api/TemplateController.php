@@ -90,6 +90,14 @@ class TemplateController extends ApiBaseController
         return $this->successResponse(Str::ucfirst($this->modelname) . ' deleted successfully!');
     }
 
+    public function deleteMany(Request $request)
+    {
+        $ids = $request->input('ids');
+        Template::whereIn('id', $ids)->delete();
+
+        return response()->json(['message' => 'Templates deleted successfully'], 200);
+    }
+
     public function getDefaultTemplate()
     {
         if (File::exists(storage_path() . '/app/rconfig/templates/default.yml')) {
