@@ -25,6 +25,7 @@ onMounted(() => {
 
   eventBus.on('deleteManyTagsSuccess', () => {
     selectedRows.value = [];
+    selectAll.value = false;
   });
 });
 
@@ -61,7 +62,6 @@ onUnmounted(() => {
           variant="primary">
           Delete Selected {{ selectedRows.length }} Tag(s)
         </Button>
-
         <Button
           type="submit"
           class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
@@ -84,6 +84,7 @@ onUnmounted(() => {
               <Checkbox
                 id="selectAll"
                 v-model="selectAll"
+                :checked="selectAll"
                 @click="toggleSelectAll()" />
             </TableHead>
             <TableHead class="w-[5%]">
