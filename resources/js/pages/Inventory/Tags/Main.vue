@@ -1,9 +1,10 @@
 <script setup>
 import ActionsMenu from '@/pages/Shared/Table/ActionsMenu.vue';
+import ConfirmDeleteAlert from '@/pages/Shared/AlertDialog/ConfirmDeleteAlert.vue';
+import DeviceListPopover from '@/pages/Shared/Popover/DeviceListPopover.vue';
 import Loading from '@/pages/Shared/Table/Loading.vue';
 import NoResults from '@/pages/Shared/Table/NoResults.vue';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
-import DeviceListPopover from '@/pages/Shared/Popover/DeviceListPopover.vue';
 import TagAddEditDialog from '@/pages/Inventory/Tags/TagAddEditDialog.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -13,13 +14,18 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { onMounted, onUnmounted } from 'vue';
 import { useRowSelection } from '@/composables/useRowSelection';
 import { useTags } from '@/pages/Inventory/Tags/useTags';
+import { eventBus } from '@/composables/eventBus';
 
-const { editId, tags, currentPage, perPage, searchTerm, lastPage, isLoading, fetchTags, viewEditDialog, createTag, deleteTag, handleSave, handleKeyDown, newTagModalKey, toggleSort, sortParam } = useTags();
+const { editId, tags, currentPage, perPage, searchTerm, lastPage, isLoading, fetchTags, viewEditDialog, createTag, deleteTag, deleteManyTags, handleSave, showConfirmDelete, handleKeyDown, newTagModalKey, toggleSort, sortParam } = useTags();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(tags);
 
 onMounted(() => {
   fetchTags();
   window.addEventListener('keydown', handleKeyDown);
+
+  eventBus.on('deleteManyTagsSuccess', () => {
+    selectedRows.value = [];
+  });
 });
 
 // Cleanup event listener on unmount
@@ -51,6 +57,7 @@ onUnmounted(() => {
           v-if="selectedRows.length"
           class="px-2 py-1 bg-red-600 hover:bg-red-700 hover:animate-pulse"
           size="md"
+          @click.prevent="showConfirmDelete = true"
           variant="primary">
           Delete Selected {{ selectedRows.length }} Tag(s)
         </Button>
@@ -176,6 +183,14 @@ onUnmounted(() => {
         @save="handleSave()"
         :key="newTagModalKey"
         :editId="editId" />
+
+      <!-- FOR MULTIPLE DELETE -->
+      <ConfirmDeleteAlert
+        :ids="selectedRows"
+        :showConfirmDelete="showConfirmDelete"
+        @close="showConfirmDelete = false"
+        @handleDelete="deleteManyTags(selectedRows)" />
+      <!-- FOR MULTIPLE DELETE -->
 
       <Toaster />
     </div>

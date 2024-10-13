@@ -27,6 +27,8 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
     Route::resource('commands', 'CommandController');
     Route::resource('vendors', 'VendorController');
     Route::resource('tags', 'TagController');
+    Route::post('/tags/delete-many', 'TagController@deleteMany');
+
     Route::resource('templates', 'TemplateController');
     Route::get('/import-github-templates', 'TemplateGithubController@import_github_templates');
     Route::get('/test-template-repo-connection', 'TemplateGithubController@test_github_repo_connection');

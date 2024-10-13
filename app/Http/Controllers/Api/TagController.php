@@ -46,4 +46,12 @@ class TagController extends ApiBaseController
     {
         return parent::destroy($id);
     }
+
+    public function deleteMany(Request $request)
+    {
+        $ids = $request->input('ids');
+        Tag::whereIn('id', $ids)->delete();
+
+        return response()->json(['message' => 'Tags deleted successfully'], 200);
+    }
 }

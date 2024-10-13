@@ -3,6 +3,7 @@ import { ref, watch } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 import { useDialogStore } from '@/stores/dialogActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
+import { eventBus } from '@/composables/eventBus';
 
 export function useTags() {
   const currentPage = ref(1);
@@ -16,6 +17,7 @@ export function useTags() {
   const lastPage = ref(1);
   const newTagModalKey = ref(1);
   const tags = ref([]);
+  const showConfirmDelete = ref(false);
   const { openDialog } = dialogStore;
   const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
 
@@ -60,9 +62,26 @@ export function useTags() {
       await axios.delete(`/api/tags/${id}`);
       fetchTags(); // Refresh tags list after deletion
       toastSuccess('Tag Deleted', 'The tag has been deleted successfully.');
+      showConfirmDelete.value = false;
     } catch (error) {
       console.error('Error deleting tag:', error);
       toastError('Error', 'Failed to delete tag.');
+      showConfirmDelete.value = false;
+    }
+  };
+
+  // Delete Many Tags
+  const deleteManyTags = async ids => {
+    try {
+      await axios.post('/api/tags/delete-many', { ids });
+      fetchTags(); // Refresh tags list after deletion
+      toastSuccess('Tags Deleted', 'The tags have been deleted successfully.');
+      showConfirmDelete.value = false;
+      eventBus.emit('deleteManyTagsSuccess');
+    } catch (error) {
+      console.error('Error deleting tags:', error);
+      toastError('Error', 'Failed to delete tags.');
+      showConfirmDelete.value = false;
     }
   };
 
@@ -127,10 +146,12 @@ export function useTags() {
     createTag,
     updateTag,
     deleteTag,
+    deleteManyTags,
     handleSave,
     handleKeyDown,
     viewEditDialog,
     toggleSort,
-    sortParam
+    sortParam,
+    showConfirmDelete
   };
 }
