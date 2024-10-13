@@ -61,4 +61,12 @@ class CommandController extends ApiBaseController
 
         return $this->successResponse(Str::ucfirst($this->modelname) . ' deleted successfully!');
     }
+
+    public function deleteMany(Request $request)
+    {
+        $ids = $request->input('ids');
+        Command::whereIn('id', $ids)->delete();
+
+        return response()->json(['message' => 'Commands deleted successfully'], 200);
+    }
 }

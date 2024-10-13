@@ -1,5 +1,7 @@
 <script setup>
 import ActionsMenu from '@/pages/Shared/Table/ActionsMenu.vue';
+import ConfirmDeleteAlert from '@/pages/Shared/AlertDialog/ConfirmDeleteAlert.vue';
+import CategoryListPopover from '@/pages/Shared/Popover/CategoryListPopover.vue';
 import Loading from '@/pages/Shared/Table/Loading.vue';
 import NoResults from '@/pages/Shared/Table/NoResults.vue';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
@@ -11,14 +13,20 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { onMounted, onUnmounted } from 'vue';
 import { useRowSelection } from '@/composables/useRowSelection';
-import { useCommand } from '@/pages/Inventory/Commands/useCommand';
+import { useCommands } from '@/pages/Inventory/Commands/useCommands';
+import { eventBus } from '@/composables/eventBus';
 
-const { commands, isLoading, currentPage, perPage, lastPage, editId, newCommandModalKey, searchTerm, openDialog, fetchCommand, createCommand, updateCommand, deleteCommand, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam } = useCommand();
+const { editId, commands, currentPage, perPage, searchTerm, lastPage, isLoading, fetchCommands, viewEditDialog, createCommand, deleteCommand, deleteManyCommands, handleSave, showConfirmDelete, handleKeyDown, newCommandModalKey, toggleSort, sortParam } = useCommands();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(commands);
 
 onMounted(() => {
-  fetchCommand();
+  fetchCommands();
   window.addEventListener('keydown', handleKeyDown);
+
+  eventBus.on('deleteManyCommandsSuccess', () => {
+    selectedRows.value = [];
+    selectAll.value = false;
+  });
 });
 
 // Cleanup event listener on unmount
@@ -36,7 +44,7 @@ onUnmounted(() => {
           autocomplete="off"
           data-1p-ignore
           data-lpignore="true"
-          placeholder="Filter command groups..."
+          placeholder="Filter commands..."
           v-model="searchTerm" />
         <Button
           class="ml-2 hover:bg-gray-800"
@@ -50,10 +58,10 @@ onUnmounted(() => {
           v-if="selectedRows.length"
           class="px-2 py-1 bg-red-600 hover:bg-red-700 hover:animate-pulse"
           size="md"
+          @click.prevent="showConfirmDelete = true"
           variant="primary">
           Delete Selected {{ selectedRows.length }} Command(s)
         </Button>
-
         <Button
           type="submit"
           class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
@@ -76,6 +84,7 @@ onUnmounted(() => {
               <Checkbox
                 id="selectAll"
                 v-model="selectAll"
+                :checked="selectAll"
                 @click="toggleSelectAll()" />
             </TableHead>
             <TableHead class="w-[5%]">
@@ -91,9 +100,9 @@ onUnmounted(() => {
               <Button
                 class="flex justify-start w-full p-0 hover:bg-rcgray-800"
                 variant="ghost"
-                @click="toggleSort('categoryName')">
-                <Icon :icon="sortParam === 'categoryName' ? 'lucide:sort-asc' : sortParam === '-categoryName' ? 'lucide:sort-desc' : 'hugeicons:sorting-05'" />
-                <span class="ml-2">Name</span>
+                @click="toggleSort('tagname')">
+                <Icon :icon="sortParam === 'tagname' ? 'lucide:sort-asc' : sortParam === '-tagname' ? 'lucide:sort-desc' : 'hugeicons:sorting-05'" />
+                <span class="ml-2">Command</span>
               </Button>
             </TableHead>
             <TableHead class="w-[20%]">Description</TableHead>
@@ -126,22 +135,24 @@ onUnmounted(() => {
               <TableCell class="text-start">
                 {{ row.description }}
               </TableCell>
-
               <TableCell class="text-start">
                 <span
                   v-for="(category, index) in row.category.slice(0, 8)"
-                  :key="category.category_name"
+                  :key="category.categoryName"
                   class="mr-2">
                   <Badge
                     variant="outline"
-                    class="py-1 hover:bg-rcgray-800">
+                    class="py-1 mt-1 hover:bg-rcgray-800">
                     <router-link :to="category.view_url">{{ category.categoryName }}</router-link>
                   </Badge>
                 </span>
                 <span
                   v-if="row.category.length > 8"
                   class="mr-2">
-                  <Badge variant="outline">...</Badge>
+                  <CategoryListPopover
+                    :recordName="row.command"
+                    :items="row.category"
+                    displayField="categoryName" />
                 </span>
               </TableCell>
               <!-- ACTIONS MENU -->
@@ -173,6 +184,14 @@ onUnmounted(() => {
         @save="handleSave()"
         :key="newCommandModalKey"
         :editId="editId" />
+
+      <!-- FOR MULTIPLE DELETE -->
+      <ConfirmDeleteAlert
+        :ids="selectedRows"
+        :showConfirmDelete="showConfirmDelete"
+        @close="showConfirmDelete = false"
+        @handleDelete="deleteManyCommands(selectedRows)" />
+      <!-- FOR MULTIPLE DELETE -->
 
       <Toaster />
     </div>

@@ -25,6 +25,8 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
     });
     Route::resource('categories', 'CategoryController');
     Route::resource('commands', 'CommandController');
+    Route::post('/commands/delete-many', 'CommandController@deleteMany');
+
     Route::resource('vendors', 'VendorController');
     Route::post('/vendors/delete-many', 'VendorController@deleteMany');
 

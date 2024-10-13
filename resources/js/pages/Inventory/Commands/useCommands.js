@@ -3,8 +3,9 @@ import { ref, watch } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 import { useDialogStore } from '@/stores/dialogActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
+import { eventBus } from '@/composables/eventBus';
 
-export function useCommand() {
+export function useCommands() {
   const currentPage = ref(1);
   const perPage = ref(parseInt(localStorage.getItem('perPage') || '10'));
   const sortParam = ref('-id');
@@ -16,11 +17,12 @@ export function useCommand() {
   const lastPage = ref(1);
   const newCommandModalKey = ref(1);
   const commands = ref([]);
+  const showConfirmDelete = ref(false);
   const { openDialog } = dialogStore;
   const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
 
   // Fetch Commands
-  async function fetchCommand(params = {}) {
+  async function fetchCommands(params = {}) {
     isLoading.value = true;
     try {
       const response = await axios.get('/api/commands', {
@@ -58,11 +60,28 @@ export function useCommand() {
   const deleteCommand = async id => {
     try {
       await axios.delete(`/api/commands/${id}`);
-      fetchCommand(); // Refresh commands list after deletion
-      toastSuccess('Command Deleted', 'The Command Group has been deleted successfully.');
+      fetchCommands(); // Refresh commands list after deletion
+      toastSuccess('Command Deleted', 'The command has been deleted successfully.');
+      showConfirmDelete.value = false;
     } catch (error) {
-      console.error('Error deleting Command Group:', error);
-      toastError('Error', 'Failed to delete Command Group.');
+      console.error('Error deleting command:', error);
+      toastError('Error', 'Failed to delete command.');
+      showConfirmDelete.value = false;
+    }
+  };
+
+  // Delete Many Commands
+  const deleteManyCommands = async ids => {
+    try {
+      await axios.post('/api/commands/delete-many', { ids });
+      fetchCommands(); // Refresh commands list after deletion
+      toastSuccess('Commands Deleted', 'The commands have been deleted successfully.');
+      showConfirmDelete.value = false;
+      eventBus.emit('deleteManyCommandsSuccess');
+    } catch (error) {
+      console.error('Error deleting commands:', error);
+      toastError('Error', 'Failed to delete commands.');
+      showConfirmDelete.value = false;
     }
   };
 
@@ -74,7 +93,7 @@ export function useCommand() {
 
   // Re-render Dialog
   const handleSave = () => {
-    fetchCommand(); // Fetch the updated commands after saving
+    fetchCommands(); // Fetch the updated commands after saving
     newCommandModalKey.value = Math.random(); // Force re-render of the dialog component
   };
 
@@ -86,14 +105,14 @@ export function useCommand() {
   }
 
   const debouncedFilter = useDebounceFn(() => {
-    filters.value[`filter[command]`] = searchTerm.value;
+    filters.value[`filter[commandname]`] = searchTerm.value;
     currentPage.value = 1;
-    fetchCommand();
+    fetchCommands();
   }, 500);
 
   // Watchers for state changes
   watch([currentPage, perPage], () => {
-    fetchCommand();
+    fetchCommands();
   });
 
   watch(searchTerm, () => {
@@ -110,7 +129,7 @@ export function useCommand() {
     } else {
       sortParam.value = field;
     }
-    fetchCommand();
+    fetchCommands();
   }
 
   return {
@@ -123,14 +142,16 @@ export function useCommand() {
     newCommandModalKey,
     searchTerm,
     openDialog,
-    fetchCommand,
+    fetchCommands,
     createCommand,
     updateCommand,
     deleteCommand,
+    deleteManyCommands,
     handleSave,
     handleKeyDown,
     viewEditDialog,
     toggleSort,
-    sortParam
+    sortParam,
+    showConfirmDelete
   };
 }
