@@ -21,8 +21,18 @@ const favoritesStore = useFavoritesStore();
 const externalLinksStore = useExternalLinksStore();
 const externalLinks = ref([]); // This will store the links for this component
 
-const isOpen1 = ref(true);
-const isOpen2 = ref(false);
+// Use localStorage to persist the state of the collapsibles
+const sideNavExtLinksIsOpen = ref(JSON.parse(localStorage.getItem('sideNavExtLinksIsOpen')) ?? true);
+const sideNavFavLinksIsOpen = ref(JSON.parse(localStorage.getItem('sideNavFavLinksIsOpen')) ?? true);
+
+watch(sideNavExtLinksIsOpen, newVal => {
+  localStorage.setItem('sideNavExtLinksIsOpen', JSON.stringify(newVal));
+});
+
+watch(sideNavFavLinksIsOpen, newVal => {
+  localStorage.setItem('sideNavFavLinksIsOpen', JSON.stringify(newVal));
+});
+
 const svgIshoveringClose = ref(false);
 const panelStore = usePanelStore(); // Access the panel store
 const panelElement = ref(null);
@@ -307,7 +317,7 @@ const removeExternalLink = async name => {
                 </router-link>
 
                 <Collapsible
-                  v-model:open="isOpen1"
+                  v-model:open="sideNavExtLinksIsOpen"
                   class="w-full mt-4">
                   <div class="flex items-center justify-between">
                     <CollapsibleTrigger as-child>
@@ -323,10 +333,10 @@ const removeExternalLink = async name => {
                             data-state="open">
                             <Icon
                               icon="fluent:chevron-right-28-filled"
-                              v-if="!isOpen1" />
+                              v-if="!sideNavExtLinksIsOpen" />
                             <Icon
                               icon="fluent:chevron-down-48-filled"
-                              v-if="isOpen1" />
+                              v-if="sideNavExtLinksIsOpen" />
                             <div
                               class="ml-2 text-left"
                               data-truncate="false"
@@ -410,35 +420,37 @@ const removeExternalLink = async name => {
                 </Collapsible>
 
                 <Collapsible
-                  v-model:open="isOpen2"
+                  v-model:open="sideNavFavLinksIsOpen"
                   class="w-full mb-4">
                   <div class="flex items-center justify-between">
                     <CollapsibleTrigger as-child>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        class="pb-2 pl-0">
-                        <div
-                          class="flex items-center cursor-pointer"
-                          type="button"
-                          aria-expanded="true"
-                          data-state="open">
-                          <Icon
-                            icon="fluent:chevron-right-28-filled"
-                            v-if="!isOpen2" />
-                          <Icon
-                            icon="fluent:chevron-down-48-filled"
-                            v-if="isOpen2" />
+                      <div class="flex items-center w-full">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          class="w-full pl-0 pr-4">
                           <div
-                            class="ml-2 text-left"
-                            data-truncate="false"
-                            data-numeric="false"
-                            data-uppercase="false"
-                            style="color: rgb(134, 136, 141)">
-                            Favorites
+                            class="flex items-center w-full cursor-pointer"
+                            type="button"
+                            aria-expanded="true"
+                            data-state="open">
+                            <Icon
+                              icon="fluent:chevron-right-28-filled"
+                              v-if="!sideNavFavLinksIsOpen" />
+                            <Icon
+                              icon="fluent:chevron-down-48-filled"
+                              v-if="sideNavFavLinksIsOpen" />
+                            <div
+                              class="ml-2 text-left"
+                              data-truncate="false"
+                              data-numeric="false"
+                              data-uppercase="false"
+                              style="color: rgb(134, 136, 141)">
+                              Favorites
+                            </div>
                           </div>
-                        </div>
-                      </Button>
+                        </Button>
+                      </div>
                     </CollapsibleTrigger>
                   </div>
                   <CollapsibleContent>
