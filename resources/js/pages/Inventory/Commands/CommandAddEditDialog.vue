@@ -48,8 +48,8 @@ function saveDialog() {
   axios[method]('/api/commands' + id, model.value)
     .then(response => {
       emit('save', response.data);
-      toastSuccess('Tag created', 'The command has been created successfully.');
-      closeDialog('DialogNewTag');
+      toastSuccess('Command created', 'The command has been created successfully.');
+      closeDialog('DialogNewCommand');
     })
     .catch(error => {
       errors.value = error.response.data.errors;
@@ -58,17 +58,17 @@ function saveDialog() {
 </script>
 
 <template>
-  <Dialog :open="isDialogOpen('DialogNewTag')">
+  <Dialog :open="isDialogOpen('DialogNewCommand')">
     <DialogTrigger as-child>
       <!-- <Button variant="outline">Edit Profile</Button> -->
     </DialogTrigger>
     <DialogContent
-      class="sm:max-w-[425px]"
-      @escapeKeyDown="closeDialog('DialogNewTag')"
-      @pointerDownOutside="closeDialog('DialogNewTag')"
-      @closeClicked="closeDialog('DialogNewTag')">
+      class="sm:max-w-fit"
+      @escapeKeyDown="closeDialog('DialogNewCommand')"
+      @pointerDownOutside="closeDialog('DialogNewCommand')"
+      @closeClicked="closeDialog('DialogNewCommand')">
       <DialogHeader>
-        <DialogTitle>{{ editId > 0 ? 'Edit' : 'Add' }} Tag {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</DialogTitle>
+        <DialogTitle>{{ editId > 0 ? 'Edit' : 'Add' }} Command {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</DialogTitle>
         <DialogDescription>Make changes to your command here. Click {{ editId > 0 ? 'update' : 'save' }} when you're done.</DialogDescription>
       </DialogHeader>
       <div class="grid gap-2 py-4">
@@ -76,7 +76,7 @@ function saveDialog() {
           <Label
             for="command"
             class="text-right">
-            Tag Name
+            Command Name
           </Label>
           <Input
             v-model="model.command"
@@ -114,7 +114,7 @@ function saveDialog() {
           type="close"
           variant="outline"
           class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse"
-          @click="closeDialog('DialogNewTag')"
+          @click="closeDialog('DialogNewCommand')"
           size="sm">
           Cancel
           <div class="pl-2 ml-auto">

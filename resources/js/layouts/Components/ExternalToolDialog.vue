@@ -60,7 +60,7 @@ const submitLink = () => {
           class="ml-2 mr-1 cursor-pointer text-muted-foreground hover:text-white" />
       </DialogTrigger>
       <DialogContent
-        class="sm:max-w-[425px]"
+        class="sm:max-w-fit"
         @escapeKeyDown="closeDialog()"
         @pointerDownOutside="closeDialog()"
         @closeClicked="closeDialog()">
