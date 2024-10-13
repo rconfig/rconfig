@@ -3,6 +3,7 @@ import ActionsMenu from '@/pages/Shared/Table/ActionsMenu.vue';
 import Loading from '@/pages/Shared/Table/Loading.vue';
 import NoResults from '@/pages/Shared/Table/NoResults.vue';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
+import DeviceListPopover from '@/pages/Shared/Popover/DeviceListPopover.vue';
 import TagAddEditDialog from '@/pages/Inventory/Tags/TagAddEditDialog.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -133,14 +134,17 @@ onUnmounted(() => {
                   class="mr-2">
                   <Badge
                     variant="outline"
-                    class="py-1 hover:bg-rcgray-800">
+                    class="py-1 mt-1 hover:bg-rcgray-800">
                     <router-link :to="device.view_url">{{ device.device_name }}</router-link>
                   </Badge>
                 </span>
                 <span
                   v-if="row.device.length > 8"
                   class="mr-2">
-                  <Badge variant="outline">...</Badge>
+                  <DeviceListPopover
+                    :recordName="row.tagname"
+                    :items="row.device"
+                    displayField="device_name" />
                 </span>
               </TableCell>
               <!-- ACTIONS MENU -->
