@@ -47,6 +47,7 @@
         "highlight.js": "^11.6.0",
         "lucide-react": "^0.446.0",
         "lucide-vue-next": "^0.446.0",
+        "mitt": "^3.0.1",
         "monaco-editor": "^0.52.0",
         "monaco-editor-webpack-plugin": "^7.0.1",
         "pinia": "^2.2.4",
