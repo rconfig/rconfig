@@ -46,4 +46,12 @@ class VendorController extends ApiBaseController
     {
         return parent::destroy($id);
     }
+
+    public function deleteMany(Request $request)
+    {
+        $ids = $request->input('ids');
+        Vendor::whereIn('id', $ids)->delete();
+
+        return response()->json(['message' => 'Vendors deleted successfully'], 200);
+    }
 }

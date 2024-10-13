@@ -3,6 +3,7 @@ import { ref, watch } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 import { useDialogStore } from '@/stores/dialogActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
+import { eventBus } from '@/composables/eventBus';
 
 export function useVendors() {
   const currentPage = ref(1);
@@ -16,6 +17,7 @@ export function useVendors() {
   const lastPage = ref(1);
   const newVendorModalKey = ref(1);
   const vendors = ref([]);
+  const showConfirmDelete = ref(false);
   const { openDialog } = dialogStore;
   const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
 
@@ -63,6 +65,21 @@ export function useVendors() {
     } catch (error) {
       console.error('Error deleting vendor:', error);
       toastError('Error', 'Failed to delete vendor.');
+    }
+  };
+
+  // Delete Many Vendors
+  const deleteManyVendors = async ids => {
+    try {
+      await axios.post('/api/vendors/delete-many', { ids });
+      fetchVendors(); // Refresh vendors list after deletion
+      toastSuccess('Vendors Deleted', 'The vendors have been deleted successfully.');
+      showConfirmDelete.value = false;
+      eventBus.emit('deleteManyVendorsSuccess');
+    } catch (error) {
+      console.error('Error deleting vendors:', error);
+      toastError('Error', 'Failed to delete vendors.');
+      showConfirmDelete.value = false;
     }
   };
 
@@ -127,10 +144,12 @@ export function useVendors() {
     createVendor,
     updateVendor,
     deleteVendor,
+    deleteManyVendors,
     handleSave,
     handleKeyDown,
     viewEditDialog,
     toggleSort,
-    sortParam
+    sortParam,
+    showConfirmDelete
   };
 }

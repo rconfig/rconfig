@@ -1,25 +1,33 @@
 <script setup>
 import ActionsMenu from '@/pages/Shared/Table/ActionsMenu.vue';
+import ConfirmDeleteAlert from '@/pages/Shared/AlertDialog/ConfirmDeleteAlert.vue';
+import DeviceListPopover from '@/pages/Shared/Popover/DeviceListPopover.vue';
 import Loading from '@/pages/Shared/Table/Loading.vue';
 import NoResults from '@/pages/Shared/Table/NoResults.vue';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
 import VendorAddEditDialog from '@/pages/Inventory/Vendors/VendorAddEditDialog.vue';
-import DeviceListPopover from '@/pages/Shared/Popover/DeviceListPopover.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { eventBus } from '@/composables/eventBus';
 import { onMounted, onUnmounted } from 'vue';
 import { useRowSelection } from '@/composables/useRowSelection';
 import { useVendors } from '@/pages/Inventory/Vendors/useVendors';
 
-const { editId, vendors, currentPage, perPage, searchTerm, lastPage, isLoading, fetchVendors, viewEditDialog, createVendor, deleteVendor, handleSave, handleKeyDown, newVendorModalKey, toggleSort, sortParam } = useVendors();
+const { editId, vendors, currentPage, perPage, searchTerm, lastPage, isLoading, fetchVendors, viewEditDialog, createVendor, deleteVendor, deleteManyVendors, handleSave, handleKeyDown, newVendorModalKey, toggleSort, sortParam, showConfirmDelete } = useVendors();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(vendors);
 
 onMounted(() => {
   fetchVendors();
   window.addEventListener('keydown', handleKeyDown);
+
+  eventBus.on('deleteManyVendorsSuccess', () => {
+    selectedRows.value = [];
+    selectAll.value = false;
+    document.getElementById('selectAll').checked = false;
+  });
 });
 
 // Cleanup event listener on unmount
@@ -51,8 +59,9 @@ onUnmounted(() => {
           v-if="selectedRows.length"
           class="px-2 py-1 bg-red-600 hover:bg-red-700 hover:animate-pulse"
           size="md"
+          @click.prevent="showConfirmDelete = true"
           variant="primary">
-          Delete Selected {{ selectedRows.length }} Vendor(s)
+          Delete Selected {{ selectedRows.length }} Tag(s)
         </Button>
 
         <Button
@@ -77,6 +86,7 @@ onUnmounted(() => {
               <Checkbox
                 id="selectAll"
                 v-model="selectAll"
+                :checked="selectAll"
                 @click="toggleSelectAll()" />
             </TableHead>
             <TableHead class="w-[5%]">
@@ -174,6 +184,13 @@ onUnmounted(() => {
         :key="newVendorModalKey"
         :editId="editId" />
 
+      <!-- FOR MULTIPLE DELETE -->
+      <ConfirmDeleteAlert
+        :ids="selectedRows"
+        :showConfirmDelete="showConfirmDelete"
+        @close="showConfirmDelete = false"
+        @handleDelete="deleteManyVendors(selectedRows)" />
+      <!-- FOR MULTIPLE DELETE -->
       <Toaster />
     </div>
   </div>

@@ -26,10 +26,14 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
     Route::resource('categories', 'CategoryController');
     Route::resource('commands', 'CommandController');
     Route::resource('vendors', 'VendorController');
+    Route::post('/vendors/delete-many', 'VendorController@deleteMany');
+
     Route::resource('tags', 'TagController');
     Route::post('/tags/delete-many', 'TagController@deleteMany');
 
     Route::resource('templates', 'TemplateController');
+    Route::post('/templates/delete-many', 'TemplateController@deleteMany');
+
     Route::get('/import-github-templates', 'TemplateGithubController@import_github_templates');
     Route::get('/test-template-repo-connection', 'TemplateGithubController@test_github_repo_connection');
     Route::get('/list-template-repo-folders', 'TemplateGithubController@list_template_repo_folders');
