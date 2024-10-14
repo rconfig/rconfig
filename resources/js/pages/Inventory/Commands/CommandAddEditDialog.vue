@@ -88,6 +88,7 @@ function saveDialog() {
             for="command"
             class="text-right">
             Command Name
+            <span class="text-red-400">*</span>
           </Label>
           <Input
             v-model="model.command"

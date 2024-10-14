@@ -19,7 +19,6 @@ class StoreCommandRequest extends FormRequest
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'command' => 'required|min:3|unique:commands|max:255',
-                'description' => 'required',
                 'categoryArray' => 'required|array|min:1',
             ];
         }
@@ -27,7 +26,6 @@ class StoreCommandRequest extends FormRequest
         if ($this->getMethod() == 'PATCH') {
             $rules = [
                 'command' => 'required|min:3|max:255',
-                'description' => 'required',
                 'categoryArray' => 'required|array|min:1',
             ];
         }

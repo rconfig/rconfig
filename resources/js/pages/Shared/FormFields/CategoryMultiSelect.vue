@@ -51,7 +51,6 @@ function selectItem(item) {
   searchTerm.value = '';
   selectedCats.value.push(item.value);
   emit('update:modelValue', selectedCats.value);
-  console.log(selectedCats.value);
 }
 
 function deleteItem(item) {
