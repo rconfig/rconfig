@@ -37,7 +37,7 @@ class CommandController extends ApiBaseController
 
         $model->Category()->attach($request->categoryArray);
 
-        return $this->successResponse(Str::ucfirst($this->modelname) . ' created successfully!');
+        return $this->successResponse(Str::ucfirst($this->modelname) . ' created successfully!', ['id' => $model->id]);
     }
 
     public function show($id, $relationship = null, $withCount = null)
@@ -50,7 +50,7 @@ class CommandController extends ApiBaseController
         $model = parent::updateResource($id, $request->toDTO()->toArray(), 1);
         $model->Category()->sync($request->categoryArray);
 
-        return $this->successResponse(Str::ucfirst($this->modelname) . ' edited successfully!');
+        return $this->successResponse(Str::ucfirst($this->modelname) . ' edited successfully!', ['id' => $model->id]);
     }
 
     public function destroy($id, $return = 0)

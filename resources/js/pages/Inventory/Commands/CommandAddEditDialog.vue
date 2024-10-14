@@ -1,5 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
+import CategoryMultiSelect from '@/pages/Shared/FormFields/CategoryMultiSelect.vue';
+import Spinner from '@/pages/Shared/Icon/Spinner.vue';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -13,9 +15,11 @@ const dialogStore = useDialogStore();
 const { openDialog, closeDialog, isDialogOpen } = dialogStore;
 const emit = defineEmits(['save']);
 const errors = ref([]);
+const isLoading = ref(false);
 const model = ref({
   command: '',
-  description: ''
+  description: '',
+  categoryArray: []
 });
 
 const props = defineProps({
@@ -30,9 +34,12 @@ function handleKeyDown(event) {
 
 onMounted(() => {
   if (props.editId > 0) {
+    isLoading.value = true;
     axios.get(`/api/commands/${props.editId}`).then(response => {
       model.value = response.data;
+      model.value.categoryArray = response.data.category.map(cat => cat.id);
     });
+    isLoading.value = false;
   }
 
   window.addEventListener('keydown', handleKeyDown);
@@ -71,7 +78,11 @@ function saveDialog() {
         <DialogTitle>{{ editId > 0 ? 'Edit' : 'Add' }} Command {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</DialogTitle>
         <DialogDescription>Make changes to your command here. Click {{ editId > 0 ? 'update' : 'save' }} when you're done.</DialogDescription>
       </DialogHeader>
-      <div class="grid gap-2 py-4">
+
+      <Spinner :state="isLoading" />
+      <div
+        class="grid gap-2 py-4"
+        v-if="!isLoading">
         <div class="grid items-center grid-cols-4 gap-4">
           <Label
             for="command"
@@ -95,7 +106,19 @@ function saveDialog() {
             id="description"
             class="col-span-3" />
         </div>
+        <div class="grid items-center grid-cols-4 gap-4">
+          <Label
+            for="description"
+            class="text-right">
+            Command Groups
+          </Label>
+          <CategoryMultiSelect
+            @update:modelValue="model.categoryArray = $event"
+            :inboundCats="model.category" />
+        </div>
+        {{ model.categoryArray }}
       </div>
+
       <div class="flex flex-col w-full space-y-2">
         <span
           class="text-red-400"
@@ -107,6 +130,12 @@ function saveDialog() {
           class="text-red-400"
           v-if="errors.command">
           {{ errors.command[0] }}
+        </span>
+
+        <span
+          class="text-red-400"
+          v-if="errors.categoryArray">
+          {{ errors.categoryArray[0] }}
         </span>
       </div>
       <DialogFooter>

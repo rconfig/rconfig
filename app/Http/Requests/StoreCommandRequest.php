@@ -7,35 +7,13 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCommandRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
+
     public function authorize()
     {
         return auth()->check(); // returning true if user is logged in
     }
 
-    /**
-     * Prepare the data for validation.
-     *
-     * @return void
-     */
-    protected function prepareForValidation()
-    {
-        if (isset($this->request->all()['categoryArray'])) {
-            $this->merge([
-                'categoryArray' => collect($this->request->all()['categoryArray'])->pluck('id')->toArray(),
-            ]);
-        }
-    }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         if ($this->getMethod() == 'POST') {
@@ -57,11 +35,6 @@ class StoreCommandRequest extends FormRequest
         return $rules;
     }
 
-    /**
-     * Build and return a DTO.
-     *
-     * @return StoreCommandDTO
-     */
     public function toDTO(): StoreCommandDTO
     {
         return new StoreCommandDTO([
