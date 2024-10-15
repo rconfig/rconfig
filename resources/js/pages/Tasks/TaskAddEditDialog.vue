@@ -1,11 +1,17 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useDialogStore } from '@/stores/dialogActions';
-import { Button } from '@/components/ui/button';
+import NavPanel from '@/pages/Tasks/WizardPanels/NavPanel.vue';
+import Step1 from '@/pages/Tasks/WizardPanels/Step1.vue';
+import Step2 from '@/pages/Tasks/WizardPanels/Step2.vue';
+import Step3 from '@/pages/Tasks/WizardPanels/Step3.vue';
+import Step4 from '@/pages/Tasks/WizardPanels/Step4.vue';
+import Step5 from '@/pages/Tasks/WizardPanels/Step5.vue';
 import axios from 'axios';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Icon } from '@iconify/vue';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
+import { ref, onMounted, onUnmounted } from 'vue';
+import { useDialogStore } from '@/stores/dialogActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
 const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
 
@@ -16,8 +22,11 @@ const roles = ref([]);
 const errors = ref([]);
 const model = ref({
   task_name: '',
-  task_desc: ''
+  task_desc: '',
+  task_command: ''
 });
+
+const activeStep = ref(1);
 
 const props = defineProps({
   editId: Number
@@ -56,6 +65,65 @@ function saveDialog() {
       errors.value = error.response.data.errors;
     });
 }
+
+function prevPage() {
+  activeStep.value--;
+}
+
+function nextPage() {
+  console.log(model.value.task_command);
+  errors.value = '';
+  if (activeStep.value === 1 && (!model.value.task_command || model.value.task_command === '')) {
+    errors.value = 'Please select a task type';
+    return;
+  }
+
+  if (activeStep.value === 2 && model.value.task_name === '') {
+    errors.value = 'Please enter a task name';
+    return;
+  }
+
+  // if (activeStep.value === 2 && model.value.task_desc === '') {
+  //   errors.value = 'Please enter a task description';
+  //   return;
+  // }
+  activeStep.value++;
+
+  // if (wizard.currentPage === 2 && model.task_name === '') {
+  //   errors.value = 'Please enter a task name';
+  //   return;
+  // }
+  // if (wizard.currentPage === 2 && model.task_desc === '') {
+  //   errors.value = 'Please enter a task description';
+  //   return;
+  // }
+
+  // if (wizard.currentPage === 3 && model.task_command === 'rconfig:download-device' && model.device.length === 0) {
+  //   errors.value = 'Please choose one or more devices';
+  //   return;
+  // }
+  // if (wizard.currentPage === 3 && model.task_command === 'rconfig:download-category' && model.category.length === 0) {
+  //   errors.value = 'Please choose one or more categories';
+  //   return;
+  // }
+
+  // if (wizard.currentPage === 3 && model.task_command === 'rconfig:download-tag' && model.tag.length === 0) {
+  //   errors.value = 'Please choose one or more tags';
+  //   return;
+  // }
+
+  // if (wizard.currentPage === 4 && model.task_cron === '') {
+  //   errors.value = 'Please enter schedule values';
+  //   return;
+  // }
+  // errors.value = '';
+
+  // if (wizard.currentPage === 5) {
+  //   // saveModels();
+  // } else {
+  //   wizard.currentPage++;
+  // }
+}
 </script>
 
 <template>
@@ -64,52 +132,83 @@ function saveDialog() {
       <!-- <Button variant="outline">Edit Profile</Button> -->
     </DialogTrigger>
     <DialogContent
-      class="sm:max-w-fit"
+      class="max-w-4xl gap-0 p-0"
       @escapeKeyDown="closeDialog('DialogNewTask')"
       @pointerDownOutside="closeDialog('DialogNewTask')"
       @closeClicked="closeDialog('DialogNewTask')">
-      <DialogHeader>
-        <DialogTitle>{{ editId > 0 ? 'Edit' : 'Add' }} Task {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</DialogTitle>
-        <DialogDescription>Make changes to your tag here. Click {{ editId > 0 ? 'update' : 'save' }} when you're done.</DialogDescription>
+      <DialogHeader class="rc-dialog-header">
+        <DialogTitle class="text-sm text-rcgray-200">
+          <div class="flex items-center">
+            <Icon icon="catppuccin:esbuild" />
+            <span class="ml-2">{{ editId > 0 ? 'Edit' : 'Add' }} Task {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</span>
+          </div>
+        </DialogTitle>
+        <!-- <DialogDescription>Make changes to your tag here. Click {{ editId > 0 ? 'update' : 'save' }} when you're done.</DialogDescription> -->
       </DialogHeader>
-      <div class="grid gap-2 py-4">
-        <div class="grid items-center grid-cols-4 gap-4">
-          <Label
-            for="task_name"
-            class="text-right">
-            Task Name
-          </Label>
-          <Input
-            v-model="model.task_name"
-            id="task_name"
-            class="col-span-3" />
-        </div>
+      <ResizablePanelGroup
+        direction="horizontal"
+        class="p-4">
+        <ResizablePanel
+          :default-size="25"
+          :max-size="25"
+          :min-size="25"
+          collapsible
+          :collapsed-size="25"
+          ref="panelElement"
+          class="">
+          <NavPanel :currentStep="activeStep" />
+        </ResizablePanel>
+        <ResizableHandle />
+        <ResizablePanel class="px-4">
+          <Step1
+            v-if="activeStep === 1"
+            :model="model" />
+          <Step2
+            v-if="activeStep === 2"
+            :model="model" />
+          <Step3
+            @itemChecked=""
+            v-if="activeStep === 3" />
+          <Step4
+            @itemChecked=""
+            v-if="activeStep === 4" />
+          <Step5
+            @itemChecked=""
+            v-if="activeStep === 5" />
+        </ResizablePanel>
+      </ResizablePanelGroup>
+      <div class="w-full py-2 border-t border-b">
+        <pre> {{ model }}</pre>
 
-        <div class="grid items-center grid-cols-4 gap-4">
-          <Label
-            for="task_desc"
-            class="text-right">
-            Description
-          </Label>
-          <Input
-            v-model="model.task_desc"
-            id="task_desc"
-            class="col-span-3" />
+        <div
+          class="flex items-center px-2"
+          :class="errors.length > 0 ? 'justify-between' : 'justify-end'">
+          <div
+            v-if="errors.length"
+            class="text-sm text-red-500">
+            {{ errors }}
+          </div>
+
+          <div class="flex">
+            <Button
+              :disabled="activeStep === 1"
+              @click.prevent="prevPage()"
+              class="px-2 py-1 text-sm bg-gray-600 hover:bg-gray-700 hover:animate-pulse"
+              size="sm">
+              Previous
+            </Button>
+            <Button
+              :disabled="activeStep === 5"
+              @click.prevent="nextPage()"
+              class="px-2 py-1 ml-2 text-sm bg-gray-600 hover:bg-gray-700 hover:animate-pulse"
+              size="sm">
+              Next
+            </Button>
+          </div>
         </div>
       </div>
-      <div class="flex flex-col w-full space-y-2">
-        <span
-          class="text-red-400"
-          v-if="errors.task_desc">
-          {{ errors.task_desc[0] }}
-        </span>
-        <span
-          class="text-red-400"
-          v-if="errors.task_name">
-          {{ errors.task_name[0] }}
-        </span>
-      </div>
-      <DialogFooter>
+
+      <DialogFooter class="rc-dialog-footer bg-rcgray-800">
         <Button
           type="close"
           variant="outline"

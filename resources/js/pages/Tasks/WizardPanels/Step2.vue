@@ -1,0 +1,41 @@
+<script setup>
+import { ref, defineEmits } from 'vue';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+
+defineProps({
+  model: Object
+});
+</script>
+
+<template>
+  <div>
+    <h3 class="mb-5 text-lg font-medium text-gray-900 dark:text-white">Enter task details</h3>
+    <div class="grid gap-2 p-4">
+      <div class="grid items-center grid-cols-4 gap-4">
+        <Label
+          for="task_name"
+          class="text-right">
+          Task Name
+          <span class="text-red-500">*</span>
+        </Label>
+        <Input
+          v-model="model.task_name"
+          id="task_name"
+          class="col-span-3" />
+      </div>
+
+      <div class="grid items-center grid-cols-4 gap-4">
+        <Label
+          for="task_desc"
+          class="text-right">
+          Description
+        </Label>
+        <Input
+          v-model="model.task_desc"
+          id="task_desc"
+          class="col-span-3" />
+      </div>
+    </div>
+  </div>
+</template>
