@@ -23,7 +23,10 @@ const errors = ref([]);
 const model = ref({
   task_name: '',
   task_desc: '',
-  task_command: ''
+  task_command: '',
+  category: [],
+  download_report_notify: true,
+  verbose_download_report_notify: false
 });
 
 const activeStep = ref(1);
@@ -167,14 +170,10 @@ function nextPage() {
             v-if="activeStep === 2"
             :model="model" />
           <Step3
-            @itemChecked=""
+            :model="model"
             v-if="activeStep === 3" />
-          <Step4
-            @itemChecked=""
-            v-if="activeStep === 4" />
-          <Step5
-            @itemChecked=""
-            v-if="activeStep === 5" />
+          <Step4 v-if="activeStep === 4" />
+          <Step5 v-if="activeStep === 5" />
         </ResizablePanel>
       </ResizablePanelGroup>
       <div class="w-full py-2 border-t border-b">
