@@ -83,15 +83,20 @@ function saveDialog() {
       <!-- <Button variant="outline">Edit Profile</Button> -->
     </DialogTrigger>
     <DialogContent
-      class="sm:max-w-fit"
+      class="p-0 sm:max-w-fit"
       @escapeKeyDown="closeDialog('DialogNewUser')"
       @pointerDownOutside="closeDialog('DialogNewUser')"
       @closeClicked="closeDialog('DialogNewUser')">
-      <DialogHeader>
-        <DialogTitle>{{ editId > 0 ? 'Edit' : 'Add' }} User {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</DialogTitle>
-        <DialogDescription>Make changes to your tag here. Click {{ editId > 0 ? 'update' : 'save' }} when you're done.</DialogDescription>
+      <DialogHeader class="rc-dialog-header">
+        <DialogTitle class="text-sm text-rcgray-200">
+          <div class="flex items-center">
+            <Icon icon="carbon:user-settings" />
+            <span class="ml-2">{{ editId > 0 ? 'Edit' : 'Add' }} User {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</span>
+          </div>
+        </DialogTitle>
+        <!-- <DialogDescription>Make changes to your tag here. Click {{ editId > 0 ? 'update' : 'save' }} when you're done.</DialogDescription> -->
       </DialogHeader>
-      <div class="grid gap-2 pt-4">
+      <div class="grid gap-2 p-4">
         <div class="grid items-center grid-cols-4 gap-4">
           <Label
             for="name"
@@ -104,6 +109,11 @@ function saveDialog() {
             id="name"
             class="col-span-3"
             autocomplete="off" />
+          <span
+            class="col-start-2 -mt-4 text-sm text-red-400"
+            v-if="errors.name">
+            {{ errors.name[0] }}
+          </span>
         </div>
         <div class="grid items-center grid-cols-4 gap-4">
           <Label
@@ -115,6 +125,11 @@ function saveDialog() {
             v-model="model.username"
             id="username"
             class="col-span-3" />
+          <span
+            class="col-start-2 -mt-4 text-sm text-red-400"
+            v-if="errors.username">
+            {{ errors.username[0] }}
+          </span>
         </div>
 
         <div class="grid items-center grid-cols-4 gap-4">
@@ -129,6 +144,11 @@ function saveDialog() {
             id="email"
             type="email"
             class="col-span-3" />
+          <span
+            class="col-start-2 -mt-4 text-sm text-red-400"
+            v-if="errors.email">
+            {{ errors.email[0] }}
+          </span>
         </div>
 
         <div class="grid items-center grid-cols-4 gap-4">
@@ -143,6 +163,11 @@ function saveDialog() {
             v-model="model.password"
             id="password"
             class="col-span-3" />
+          <span
+            class="col-start-2 -mt-4 text-sm text-red-400"
+            v-if="errors.password && editId === 0">
+            {{ errors.password[0] }}
+          </span>
         </div>
 
         <div class="grid items-center grid-cols-4 gap-4">
@@ -157,6 +182,16 @@ function saveDialog() {
             v-model="model.repeat_password"
             id="repeat_password"
             class="col-span-3" />
+          <span
+            class="col-start-2 -mt-4 text-sm text-red-400"
+            v-if="errors.repeat_password && editId === 0">
+            {{ errors.repeat_password[0] }}
+          </span>
+          <span
+            class="col-start-2 -mt-4 text-sm text-green-400"
+            v-if="successMessage && editId === 0">
+            {{ successMessage }}
+          </span>
         </div>
 
         <div class="grid items-center grid-cols-4 gap-4">
@@ -179,39 +214,8 @@ function saveDialog() {
           </Select>
         </div>
       </div>
-      <div class="flex flex-col w-full p-2 space-y-2">
-        <span
-          class="text-red-400"
-          v-if="errors.name">
-          {{ errors.name[0] }}
-        </span>
-        <span
-          class="text-red-400"
-          v-if="errors.email">
-          {{ errors.email[0] }}
-        </span>
-        <span
-          class="text-red-400"
-          v-if="errors.username">
-          {{ errors.username[0] }}
-        </span>
-        <span
-          class="text-red-400"
-          v-if="errors.password && editId === 0">
-          {{ errors.password[0] }}
-        </span>
-        <span
-          class="text-red-400"
-          v-if="errors.repeat_password && editId === 0">
-          {{ errors.repeat_password[0] }}
-        </span>
-        <span
-          class="text-green-400"
-          v-if="successMessage">
-          {{ successMessage }}
-        </span>
-      </div>
-      <DialogFooter>
+
+      <DialogFooter class="rc-dialog-footer bg-rcgray-800">
         <Button
           type="close"
           variant="outline"
