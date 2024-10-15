@@ -1,12 +1,13 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import axios from 'axios';
+import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useDialogStore } from '@/stores/dialogActions';
-import { Button } from '@/components/ui/button';
-import axios from 'axios';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
+
 const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
 
 const dialogStore = useDialogStore();
@@ -15,8 +16,8 @@ const emit = defineEmits(['save']);
 const roles = ref([]);
 const errors = ref([]);
 const model = ref({
-  tagname: '',
-  tagDescription: ''
+  categoryName: '',
+  categoryDescription: ''
 });
 
 const props = defineProps({
@@ -31,7 +32,7 @@ function handleKeyDown(event) {
 
 onMounted(() => {
   if (props.editId > 0) {
-    axios.get(`/api/tags/${props.editId}`).then(response => {
+    axios.get(`/api/categories/${props.editId}`).then(response => {
       model.value = response.data;
     });
   }
@@ -46,11 +47,11 @@ onUnmounted(() => {
 function saveDialog() {
   let id = props.editId > 0 ? `/${props.editId}` : ''; // determine if we are creating or updating
   let method = props.editId > 0 ? 'patch' : 'post'; // determine if we are creating or updating
-  axios[method]('/api/tags' + id, model.value)
+  axios[method]('/api/categories' + id, model.value)
     .then(response => {
       emit('save', response.data);
-      toastSuccess('Tag created', 'The tag has been created successfully.');
-      closeDialog('DialogNewTag');
+      toastSuccess('Command Group created', 'The tag has been created successfully.');
+      closeDialog('DialogNewCommandGroups');
     })
     .catch(error => {
       errors.value = error.response.data.errors;
@@ -59,55 +60,55 @@ function saveDialog() {
 </script>
 
 <template>
-  <Dialog :open="isDialogOpen('DialogNewTag')">
+  <Dialog :open="isDialogOpen('DialogNewCommandGroups')">
     <DialogTrigger as-child>
       <!-- <Button variant="outline">Edit Profile</Button> -->
     </DialogTrigger>
     <DialogContent
       class="sm:max-w-fit"
-      @escapeKeyDown="closeDialog('DialogNewTag')"
-      @pointerDownOutside="closeDialog('DialogNewTag')"
-      @closeClicked="closeDialog('DialogNewTag')">
+      @escapeKeyDown="closeDialog('DialogNewCommandGroups')"
+      @pointerDownOutside="closeDialog('DialogNewCommandGroups')"
+      @closeClicked="closeDialog('DialogNewCommandGroups')">
       <DialogHeader>
-        <DialogTitle>{{ editId > 0 ? 'Edit' : 'Add' }} Tag {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</DialogTitle>
-        <DialogDescription>Make changes to your tag here. Click {{ editId > 0 ? 'update' : 'save' }} when you're done.</DialogDescription>
+        <DialogTitle>{{ editId > 0 ? 'Edit' : 'Add' }} Command Group {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</DialogTitle>
+        <DialogDescription>Make changes to your command group here. Click {{ editId > 0 ? 'update' : 'save' }} when you're done.</DialogDescription>
       </DialogHeader>
       <div class="grid gap-2 py-4">
         <div class="grid items-center grid-cols-4 gap-4">
           <Label
-            for="tagname"
+            for="categoryName"
             class="text-right">
-            Tag Name
+            Name
           </Label>
           <Input
-            v-model="model.tagname"
-            id="tagname"
+            v-model="model.categoryName"
+            id="categoryName"
             class="col-span-3" />
         </div>
 
         <div class="grid items-center grid-cols-4 gap-4">
           <Label
-            for="tagDescription"
+            for="categoryDescription"
             class="text-right">
             Description
           </Label>
           <Input
-            v-model="model.tagDescription"
-            id="tagDescription"
+            v-model="model.categoryDescription"
+            id="categoryDescription"
             class="col-span-3" />
         </div>
       </div>
       <div class="flex flex-col w-full space-y-2">
         <span
           class="text-red-400"
-          v-if="errors.tagDescription">
-          {{ errors.tagDescription[0] }}
+          v-if="errors.categoryDescription">
+          {{ errors.categoryDescription[0] }}
         </span>
 
         <span
           class="text-red-400"
-          v-if="errors.tagname">
-          {{ errors.tagname[0] }}
+          v-if="errors.categoryName">
+          {{ errors.categoryName[0] }}
         </span>
       </div>
       <DialogFooter>
@@ -115,7 +116,7 @@ function saveDialog() {
           type="close"
           variant="outline"
           class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse"
-          @click="closeDialog('DialogNewTag')"
+          @click="closeDialog('DialogNewCommandGroups')"
           size="sm">
           Cancel
           <div class="pl-2 ml-auto">

@@ -47,4 +47,12 @@ class CategoryController extends ApiBaseController
     {
         return parent::destroy($id);
     }
+
+    public function deleteMany(Request $request)
+    {
+        $ids = $request->input('ids');
+        $this->model::whereIn('id', $ids)->delete();
+
+        return response()->json(['message' => 'Command groups deleted successfully'], 200);
+    }
 }

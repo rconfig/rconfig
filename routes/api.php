@@ -24,6 +24,8 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
         Route::get('/all-device-names', 'DeviceController@allDeviceNames');
     });
     Route::resource('categories', 'CategoryController');
+    Route::post('/categories/delete-many', 'CategoryController@deleteMany');
+
     Route::resource('commands', 'CommandController');
     Route::post('/commands/delete-many', 'CommandController@deleteMany');
 
