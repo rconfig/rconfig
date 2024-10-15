@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import { DialogClose, DialogContent, DialogOverlay, DialogPortal, useForwardPropsEmits } from 'radix-vue';
 import { Cross2Icon } from '@radix-icons/vue';
+import { Icon } from '@iconify/vue';
 import { cn } from '@/lib/utils';
 
 const props = defineProps({
@@ -34,7 +35,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
       <DialogClose
         class="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
         @click="$emit('closeClicked')">
-        <Cross2Icon class="w-4 h-4" />
+        <Cross2Icon class="w-3 h-3" />
         <span class="sr-only">Close</span>
       </DialogClose>
     </DialogContent>
