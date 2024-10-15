@@ -117,7 +117,6 @@ function saveDialog() {
             @update:modelValue="model.categoryArray = $event"
             :inboundCats="model.category" />
         </div>
-        {{ model.categoryArray }}
       </div>
 
       <div class="flex flex-col w-full space-y-2">
