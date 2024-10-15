@@ -89,7 +89,7 @@ function fetchCategories() {
       class="w-full">
       <ComboboxAnchor as-child>
         <ComboboxInput
-          placeholder="Command Group..."
+          placeholder="Select a Command Group..."
           as-child>
           <TagsInputInput
             class="w-full px-3"
