@@ -1,9 +1,9 @@
 <script setup>
 import CategoryMultiSelect from '@/pages/Shared/FormFields/CategoryMultiSelect.vue';
-import { FormControl, FormDescription, FormField, FormItem, FormLabel } from '@/components/ui/form';
-import { Switch } from '@/components/ui/switch';
+import DeviceMultiSelect from '@/pages/Shared/FormFields/DeviceMultiSelect.vue';
+import TagMultiSelect from '@/pages/Shared/FormFields/TagMultiSelect.vue';
 import { Label } from '@/components/ui/label';
-
+import { Switch } from '@/components/ui/switch';
 import { ref, defineEmits } from 'vue';
 
 defineProps({
@@ -15,10 +15,25 @@ defineProps({
   <div>
     <h3 class="mb-5 text-lg font-medium text-gray-900 dark:text-white">Task Configuration</h3>
 
-    <CategoryMultiSelect
-      v-if="model.task_command === 'categories'"
-      @update:modelValue="model.categoryArray = $event"
-      :inboundCats="model.category" />
+    <div class="grid items-center grid-cols-4 gap-4">
+      <Label
+        for="description"
+        class="text-right">
+        Command Groups
+      </Label>
+
+      <DeviceMultiSelect
+        v-if="model.task_command === 'rconfig:download-device'"
+        v-model="model.device" />
+
+      <CategoryMultiSelect
+        v-if="model.task_command === 'rconfig:download-category'"
+        v-model="model.category" />
+
+      <TagMultiSelect
+        v-if="model.task_command === 'rconfig:download-tag'"
+        v-model="model.tag" />
+    </div>
 
     <div>
       <h3 class="mt-4 mb-2 text-sm font-medium">Task Email Settings</h3>

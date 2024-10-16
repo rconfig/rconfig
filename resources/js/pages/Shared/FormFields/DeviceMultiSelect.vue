@@ -1,119 +1,149 @@
 <script setup lang="ts">
 import axios from 'axios';
 import { computed, onMounted, ref, watch } from 'vue';
-import { ComboboxAnchor, ComboboxContent, ComboboxInput, ComboboxPortal, ComboboxRoot } from 'radix-vue';
-import { CommandEmpty, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
-import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input';
-// NOTES:
-// - This component is used in the CommandAddEditDialog.vue component as reference
-// - This component is used to select multiple devices
-// - fetchDevices is called onMounted to fetch all devices from the API
-// - selectItem is called when a device is selected and emitted
-// - the parent must implement the 'update:modelValue = $event' to receive the selected devices as a flat array of device ids
-// - the parent must pass the inbound devices as an array of full device objects
-// - The 'inboundDevices' prop is used to pass the inbound devices and is flatted to an array of device ids within the component
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 const emit = defineEmits(['update:modelValue']);
-const devices = [];
+const categories = ref([]);
 const modelValue = ref<string[]>([]);
 const open = ref(false);
 const searchTerm = ref('');
-const selectedDevices = ref([]);
+const selectedCats = ref([]);
 
-const filteredFrameworks = computed(() => devices.filter(i => !modelValue.value.includes(i.label)));
+const filteredCategories = computed(() => {
+  return categories.value.filter(
+    cat => cat.categoryName.toLowerCase().includes(searchTerm.value.toLowerCase()) && !selectedCats.value.some(selectedCat => selectedCat.id === cat.id) // Prevent displaying already selected items
+  );
+});
 
 const props = defineProps({
-  inboundDevices: {
-    type: Array, // array of full device objects
-    default: []
+  modelValue: {
+    type: Array,
+    required: true
   }
 });
 
-onMounted(() => {
-  fetchDevices();
-});
-
-// watch inboundDevices
+// Watch for changes to the prop and update internalModel
 watch(
-  () => props.inboundDevices,
-  newVal => {
-    if (newVal.length > 0) {
-      selectedDevices.value = newVal.map(item => item.id);
-      modelValue.value = newVal.map(item => item.device_name);
-    }
+  () => props.modelValue,
+  newValue => {
+    selectedCats.value = newValue;
   }
 );
 
+onMounted(() => {
+  fetchCategories();
+});
+
 function selectItem(item) {
-  // item is the whole object label and value
-  modelValue.value.push(item.label);
+  // Add selected item to selectedCats and emit updated list
+  selectedCats.value.push(item);
   open.value = false;
   searchTerm.value = '';
-  selectedDevices.value.push(item.value);
-  emit('update:modelValue', selectedDevices.value);
+  // remove item from filteredCategories
+  const itemIndex = filteredCategories.value.findIndex(cat => cat.categoryName === item.categoryName);
+  if (itemIndex !== -1) {
+    filteredCategories.value.splice(itemIndex, 1);
+  }
+  emit('update:modelValue', selectedCats.value);
 }
 
-function deleteItem(item) {
-  // item is the label of the device
-  modelValue.value = modelValue.value.filter(i => i !== item);
-  selectedDevices.value = selectedDevices.value.filter(i => i !== devices.find(c => c.label === item).value);
-  emit('update:modelValue', selectedDevices);
+function deleteItem(itemName) {
+  // Remove item from selectedCats and emit updated list
+  const itemIndex = selectedCats.value.findIndex(cat => cat.categoryName === itemName);
+  if (itemIndex !== -1) {
+    selectedCats.value.splice(itemIndex, 1);
+  }
+  emit('update:modelValue', selectedCats.value);
 }
 
-function fetchDevices() {
-  axios.get('/api/devices/?perPage=10000').then(response => {
-    const fetchedDevices = response.data.data.map(device => ({
-      value: device.id,
-      label: device.device_name
-    }));
-    devices.push(...fetchedDevices);
+function fetchCategories() {
+  axios.get('/api/categories/?perPage=10000').then(response => {
+    categories.value = response.data.data;
   });
 }
 </script>
 
 <template>
-  <TagsInput class="gap-0 px-0 min-w-96">
-    <div class="flex flex-wrap items-center gap-2 px-3">
-      <TagsInputItem
-        v-for="item in modelValue"
-        :key="item"
-        :value="item">
-        <TagsInputItemText></TagsInputItemText>
-        <TagsInputItemDelete @click.prevent="deleteItem(item)" />
-      </TagsInputItem>
-    </div>
-    <ComboboxRoot
-      v-model="modelValue"
-      v-model:open="open"
-      v-model:searchTerm="searchTerm"
-      class="w-full">
-      <ComboboxAnchor as-child>
-        <ComboboxInput
-          placeholder="Select a Device..."
-          as-child>
-          <TagsInputInput
-            class="w-full px-3"
-            :class="modelValue.length > 0 ? 'mt-2' : ''"
-            @keydown.enter.prevent />
-        </ComboboxInput>
-      </ComboboxAnchor>
+  <!-- DIV FOR RENDERING THE BADGE COLOR CLASSES -->
+  <Popover>
+    <div class="hidden text-yellow-200 text-teal-100 bg-yellow-700 bg-teal-700 border-yellow-500 border-teal-500 bg-stone-700 text-stone-200 border-stone-500 bg-lime-700 text-lime-200 border-lime-500 bg-sky-700 text-sky-100 border-sky-500 bg-violet-700 text-violet-200 border-violet-500 bg-fuchsia-700 text-fuchsia-200 border-fuchsia-500"></div>
+    <PopoverTrigger class="col-span-3">
+      <Button
+        variant="ghost"
+        class="flex flex-wrap items-start justify-start w-full p-1 pl-2 whitespace-normal border h-fit">
+        {{ selectedCats && selectedCats.length === 0 ? 'Select categories' : '' }}
+        <span
+          v-for="cat in selectedCats"
+          :key="cat.id"
+          class="relative my-1 group">
+          <span
+            :class="cat.badgeColor ? cat.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'"
+            class="flex items-center text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border">
+            {{ cat.categoryName }}
 
-      <ComboboxContent>
-        <CommandList
-          position="popper"
-          class="overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 w-[--radix-popper-anchor-width] rounded-md mt-2 border bg-popover text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
-          <CommandEmpty>No devices found</CommandEmpty>
-          <CommandGroup>
-            <CommandItem
-              v-for="item in filteredFrameworks"
-              :key="item.value"
-              :value="item.label"
-              @select.prevent="selectItem(item)">
-              {{ item.label }}
-            </CommandItem>
-          </CommandGroup>
-        </CommandList>
-      </ComboboxContent>
-    </ComboboxRoot>
-  </TagsInput>
+            <Icon
+              icon="si:close-line"
+              class="ml-1 cursor-pointer hover:text-white"
+              @click.stop="deleteItem(cat.categoryName)" />
+          </span>
+        </span>
+      </Button>
+    </PopoverTrigger>
+    <PopoverContent
+      side="bottom"
+      align="start"
+      class="col-span-3 p-0">
+      <div class="relative items-center w-full">
+        <Input
+          id="search"
+          type="text"
+          v-model="searchTerm"
+          placeholder="Search..."
+          class="pl-10 border-none fo5us:outline-none focus:ring-0 text-muted-foreground font-inter" />
+        <span class="absolute inset-y-0 flex items-center justify-center px-2 start-0">
+          <Icon
+            icon="weui:search-outlined"
+            class="size-6 text-muted-foreground" />
+        </span>
+      </div>
+      <Separator />
+
+      <ScrollArea class="h-64">
+        <div class="py-1">
+          <div
+            v-for="cat in filteredCategories"
+            :key="cat.id"
+            class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600"
+            @click="selectItem(cat)">
+            <span
+              data-size="20"
+              class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border"
+              :class="cat.badgeColor ? cat.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'">
+              <span data-size="20">
+                {{ cat.categoryName }}
+              </span>
+            </span>
+          </div>
+        </div>
+      </ScrollArea>
+
+      <Separator />
+
+      <div class="p-1 border-5">
+        <Button
+          variant="ghost"
+          class="justify-start w-full p-1">
+          <Icon
+            icon="octicon:plus-16"
+            class="w-3 h-3 mt-1 mr-2 text-muted-foreground" />
+          <span>Create new record</span>
+        </Button>
+      </div>
+    </PopoverContent>
+  </Popover>
 </template>

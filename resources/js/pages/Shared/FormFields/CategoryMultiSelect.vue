@@ -14,17 +14,17 @@ const open = ref(false);
 const searchTerm = ref('');
 const selectedCats = ref([]);
 
-const filteredCategories = computed(() => {
-  return categories.value.filter(
-    cat => cat.categoryName.toLowerCase().includes(searchTerm.value.toLowerCase()) && !selectedCats.value.some(selectedCat => selectedCat.id === cat.id) // Prevent displaying already selected items
-  );
-});
-
 const props = defineProps({
   modelValue: {
     type: Array,
     required: true
   }
+});
+
+const filteredCategories = computed(() => {
+  return categories.value.filter(
+    cat => cat.categoryName.toLowerCase().includes(searchTerm.value.toLowerCase()) && !selectedCats.value.some(selectedCat => selectedCat.id === cat.id) // Prevent displaying already selected items
+  );
 });
 
 // Watch for changes to the prop and update internalModel
@@ -37,6 +37,10 @@ watch(
 
 onMounted(() => {
   fetchCategories();
+
+  if (props.modelValue && props.modelValue.length > 0) {
+    selectedCats.value = props.modelValue;
+  }
 });
 
 function selectItem(item) {

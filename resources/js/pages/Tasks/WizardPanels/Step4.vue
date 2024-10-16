@@ -1,106 +1,65 @@
 <script setup>
-import { ref, defineEmits } from 'vue';
+import { ref, onMounted, watch, watchEffect } from 'vue';
+import Step4CronForm from '@/pages/Tasks/WizardPanels/Step4CronForm.vue';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
+import cronstrue from 'cronstrue';
 
-const selectedValue = ref(null);
-const emit = defineEmits(['itemChecked']);
+const props = defineProps({
+  model: Object
+});
 
-defineProps({});
+const cronExampleArray = ref(null);
+const cronToHuman = ref('');
 
-const handleCheck = value => {
-  selectedValue.value = value;
-  emit('itemChecked', value);
-};
+onMounted(() => {
+  if (props.model.task_cron != '') {
+    cronExampleArray.value = props.model.task_cron;
+  }
+});
+
+watch(cronExampleArray, (newVal, oldVal) => {
+  var newValarray = newVal.split(' ');
+  props.model.task_cron = newValarray;
+});
+
+watchEffect(() => {
+  if (props.model.task_cron) {
+    cronToHuman.value = cronstrue.toString(props.model.task_cron.join(' '));
+  }
+});
 </script>
 
 <template>
   <div>
-    STEP4
-    <h3 class="mb-5 text-lg font-medium text-gray-900 dark:text-white">Select a task type</h3>
-    <ul class="grid w-full gap-4 md:grid-cols-1">
-      <li class="text-sm">
-        <input
-          type="radio"
-          id="devices"
-          name="hosting"
-          value="devices"
-          class="hidden peer"
-          @change="handleCheck('devices')" />
-        <label
-          for="devices"
-          class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-rcgray-900 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-rcgray-800 dark:hover:bg-gray-700">
-          <div class="block">
-            <div class="flex items-center w-full font-semibold">
-              <Icon icon="fluent-color:org-16" />
-              <span class="ml-1">Devices</span>
-            </div>
-            <div class="w-full">Select one or many devices to backup</div>
-          </div>
-          <Icon
-            v-if="selectedValue === 'devices'"
-            icon="solar:check-circle-broken"
-            class="w-8 h-8 text-green-500" />
-          <Icon
-            v-else
-            icon="uil:arrow-right"
-            class="w-8 h-8 text-blue-500 hover:animate-ping" />
-        </label>
-      </li>
-      <li class="text-sm">
-        <input
-          type="radio"
-          id="categories"
-          name="hosting"
-          value="categories"
-          class="hidden peer"
-          @change="handleCheck('categories')" />
-        <label
-          for="categories"
-          class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-rcgray-900 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-rcgray-800 dark:hover:bg-gray-700">
-          <div class="block">
-            <div class="flex items-center w-full font-semibold">
-              <Icon icon="fluent-color:search-visual-24" />
-              <span class="ml-1">Command Groups</span>
-            </div>
-            <div class="w-full">Select one or many command groups to backup</div>
-          </div>
-          <Icon
-            v-if="selectedValue === 'categories'"
-            icon="solar:check-circle-broken"
-            class="w-8 h-8 text-green-500" />
-          <Icon
-            v-else
-            icon="uil:arrow-right"
-            class="w-8 h-8 text-blue-500 hover:animate-ping" />
-        </label>
-      </li>
-      <li class="text-sm">
-        <input
-          type="radio"
-          id="tags"
-          name="hosting"
-          value="tags"
-          class="hidden peer"
-          @change="handleCheck('tags')" />
-        <label
-          for="tags"
-          class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-rcgray-900 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-rcgray-800 dark:hover:bg-gray-700">
-          <div class="block">
-            <div class="flex items-center w-full font-semibold">
-              <Icon icon="fluent-emoji:keycap-hashtag" />
-              <span class="ml-1">Tags</span>
-            </div>
-            <div class="w-full">Select one or many tags to backup</div>
-          </div>
-          <Icon
-            v-if="selectedValue === 'tags'"
-            icon="solar:check-circle-broken"
-            class="w-8 h-8 text-green-500" />
-          <Icon
-            v-else
-            icon="uil:arrow-right"
-            class="w-8 h-8 text-blue-500 hover:animate-ping" />
-        </label>
-      </li>
-    </ul>
+    <h3 class="mb-5 text-lg font-medium text-gray-900 dark:text-white">Select a task schedule</h3>
+
+    <div class="grid w-full max-w-sm items-center gap-1.5">
+      <Label for="picture">Example CRONs</Label>
+      {{ model.task_cron }} - {{ cronExampleArray }}
+      <Select v-model="cronExampleArray">
+        <SelectTrigger class="w-full">
+          <SelectValue placeholder="Select an example cron option.." />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>-- Select an option --</SelectLabel>
+            <SelectItem value="* * * * *">Every minute (* * * * *)</SelectItem>
+            <SelectItem value="*/5 * * * *">Every 5 minutes (*/5 * * * *)</SelectItem>
+            <SelectItem value="0,30 * * * *">Twice an hour (0,30 * * * *)</SelectItem>
+            <SelectItem value="0 * * * *">Once an hour (0 * * * *)</SelectItem>
+            <SelectItem value="0 0,12 * * *">Twice a day (0 0,12 * * *)</SelectItem>
+            <SelectItem value="0 0 * * *">Once a day (0 0 * * *)</SelectItem>
+            <SelectItem value="0 0 * * 0">Once a week (0 0 * * 0)</SelectItem>
+            <SelectItem value="0 0 1,15 * *">1st and 15th (0 0 1,15 * *)</SelectItem>
+            <SelectItem value="0 0 1 * *">Once a month (0 0 1 * *)</SelectItem>
+            <SelectItem value="0 0 1 1 *">Once a year (0 0 1 1 *)</SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+      <span class="mb-4 text-muted-foreground">{{ cronToHuman }}</span>
+    </div>
+    <Step4CronForm :cronProp="model.task_cron" />
   </div>
 </template>

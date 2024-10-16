@@ -25,8 +25,11 @@ const model = ref({
   task_desc: '',
   task_command: '',
   category: [],
+  tag: [],
+  device: [],
   download_report_notify: true,
-  verbose_download_report_notify: false
+  verbose_download_report_notify: false,
+  task_cron: ''
 });
 
 const activeStep = ref(1);
@@ -74,7 +77,6 @@ function prevPage() {
 }
 
 function nextPage() {
-  console.log(model.value.task_command);
   errors.value = '';
   if (activeStep.value === 1 && (!model.value.task_command || model.value.task_command === '')) {
     errors.value = 'Please select a task type';
@@ -86,34 +88,22 @@ function nextPage() {
     return;
   }
 
-  // if (activeStep.value === 2 && model.value.task_desc === '') {
-  //   errors.value = 'Please enter a task description';
-  //   return;
-  // }
-  activeStep.value++;
-
-  // if (wizard.currentPage === 2 && model.task_name === '') {
-  //   errors.value = 'Please enter a task name';
-  //   return;
-  // }
-  // if (wizard.currentPage === 2 && model.task_desc === '') {
-  //   errors.value = 'Please enter a task description';
-  //   return;
-  // }
-
-  // if (wizard.currentPage === 3 && model.task_command === 'rconfig:download-device' && model.device.length === 0) {
+  // if (activeStep.value === 3 && model.value.task_command === 'rconfig:download-device' && model.value.device.length === 0) {
   //   errors.value = 'Please choose one or more devices';
   //   return;
   // }
-  // if (wizard.currentPage === 3 && model.task_command === 'rconfig:download-category' && model.category.length === 0) {
-  //   errors.value = 'Please choose one or more categories';
-  //   return;
-  // }
 
-  // if (wizard.currentPage === 3 && model.task_command === 'rconfig:download-tag' && model.tag.length === 0) {
+  if (activeStep.value === 3 && model.value.task_command === 'rconfig:download-category' && (!model.value.category || model.value.category.length === 0)) {
+    errors.value = 'Please choose one or more categories';
+    return;
+  }
+
+  // if (activeStep.value === 3 && model.value.task_command === 'rconfig:download-tag' && model.value.tag.length === 0) {
   //   errors.value = 'Please choose one or more tags';
   //   return;
   // }
+
+  activeStep.value++;
 
   // if (wizard.currentPage === 4 && model.task_cron === '') {
   //   errors.value = 'Please enter schedule values';
@@ -172,12 +162,16 @@ function nextPage() {
           <Step3
             :model="model"
             v-if="activeStep === 3" />
-          <Step4 v-if="activeStep === 4" />
-          <Step5 v-if="activeStep === 5" />
+          <Step4
+            :model="model"
+            v-if="activeStep === 4" />
+          <Step5
+            :model="model"
+            v-if="activeStep === 5" />
         </ResizablePanel>
       </ResizablePanelGroup>
       <div class="w-full py-2 border-t border-b">
-        <pre> {{ model }}</pre>
+        <!-- {{ model }} -->
 
         <div
           class="flex items-center px-2"
@@ -187,19 +181,20 @@ function nextPage() {
             class="text-sm text-red-500">
             {{ errors }}
           </div>
-
           <div class="flex">
             <Button
               :disabled="activeStep === 1"
               @click.prevent="prevPage()"
-              class="px-2 py-1 text-sm bg-gray-600 hover:bg-gray-700 hover:animate-pulse"
+              variant="outline"
+              class="px-2 py-1 text-sm hover:animate-pulse"
               size="sm">
               Previous
             </Button>
             <Button
               :disabled="activeStep === 5"
               @click.prevent="nextPage()"
-              class="px-2 py-1 ml-2 text-sm bg-gray-600 hover:bg-gray-700 hover:animate-pulse"
+              variant="outline"
+              class="px-2 py-1 ml-2 text-sm hover:animate-pulse"
               size="sm">
               Next
             </Button>

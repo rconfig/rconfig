@@ -10,6 +10,10 @@ const props = defineProps({
 const handleCheck = value => {
   selectedValue.value = value;
   props.model.task_command = value;
+  // remove these properties when the task type is changed
+  delete props.model.category;
+  delete props.model.tag;
+  delete props.model.device;
 };
 
 onMounted(() => {
@@ -30,7 +34,7 @@ onMounted(() => {
           name="hosting"
           value="devices"
           class="hidden peer"
-          @change="handleCheck('devices')" />
+          @change="handleCheck('rconfig:download-device')" />
         <label
           for="devices"
           class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-rcgray-900 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-rcgray-800 dark:hover:bg-gray-700">
@@ -42,7 +46,7 @@ onMounted(() => {
             <div class="w-full">Select one or many devices to backup</div>
           </div>
           <Icon
-            v-if="selectedValue === 'devices'"
+            v-if="selectedValue === 'rconfig:download-device'"
             icon="solar:check-circle-broken"
             class="w-8 h-8 text-green-500" />
           <Icon
@@ -58,7 +62,7 @@ onMounted(() => {
           name="hosting"
           value="categories"
           class="hidden peer"
-          @change="handleCheck('categories')" />
+          @change="handleCheck('rconfig:download-category')" />
         <label
           for="categories"
           class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-rcgray-900 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-rcgray-800 dark:hover:bg-gray-700">
@@ -70,7 +74,7 @@ onMounted(() => {
             <div class="w-full">Select one or many command groups to backup</div>
           </div>
           <Icon
-            v-if="selectedValue === 'categories'"
+            v-if="selectedValue === 'rconfig:download-category'"
             icon="solar:check-circle-broken"
             class="w-8 h-8 text-green-500" />
           <Icon
@@ -86,7 +90,7 @@ onMounted(() => {
           name="hosting"
           value="tags"
           class="hidden peer"
-          @change="handleCheck('tags')" />
+          @change="handleCheck('rconfig:download-tag')" />
         <label
           for="tags"
           class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-rcgray-900 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-rcgray-800 dark:hover:bg-gray-700">
@@ -98,7 +102,7 @@ onMounted(() => {
             <div class="w-full">Select one or many tags to backup</div>
           </div>
           <Icon
-            v-if="selectedValue === 'tags'"
+            v-if="selectedValue === 'rconfig:download-tag'"
             icon="solar:check-circle-broken"
             class="w-8 h-8 text-green-500" />
           <Icon
