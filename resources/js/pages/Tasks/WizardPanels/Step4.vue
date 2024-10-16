@@ -38,10 +38,10 @@ watchEffect(() => {
     <div class="grid w-full max-w-xl items-center gap-1.5">
       <Label for="picture">Example CRONs</Label>
       <Select v-model="cronExampleArray">
-        <SelectTrigger class="w-full">
+        <SelectTrigger class="w-full focus:outline-none focus:ring-0">
           <SelectValue placeholder="Select an example cron option.." />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent class="">
           <SelectGroup>
             <SelectLabel>-- Select an option --</SelectLabel>
             <SelectItem value="* * * * *">Every minute (* * * * *)</SelectItem>

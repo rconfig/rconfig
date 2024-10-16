@@ -16,7 +16,7 @@ const selectedCats = ref([]);
 
 const filteredCategories = computed(() => {
   return tags.value.filter(
-    tag => tag.tagName.toLowerCase().includes(searchTerm.value.toLowerCase()) && !selectedCats.value.some(selectedCat => selectedCat.id === tag.id) // Prevent displaying already selected items
+    tag => tag.tagname.toLowerCase().includes(searchTerm.value.toLowerCase()) && !selectedCats.value.some(selectedCat => selectedCat.id === tag.id) // Prevent displaying already selected items
   );
 });
 
@@ -45,7 +45,7 @@ function selectItem(item) {
   open.value = false;
   searchTerm.value = '';
   // remove item from filteredCategories
-  const itemIndex = filteredCategories.value.findIndex(tag => tag.tagName === item.tagName);
+  const itemIndex = filteredCategories.value.findIndex(tag => tag.tagname === item.tagname);
   if (itemIndex !== -1) {
     filteredCategories.value.splice(itemIndex, 1);
   }
@@ -54,7 +54,7 @@ function selectItem(item) {
 
 function deleteItem(itemName) {
   // Remove item from selectedCats and emit updated list
-  const itemIndex = selectedCats.value.findIndex(tag => tag.tagName === itemName);
+  const itemIndex = selectedCats.value.findIndex(tag => tag.tagname === itemName);
   if (itemIndex !== -1) {
     selectedCats.value.splice(itemIndex, 1);
   }
@@ -82,12 +82,12 @@ function fetchCategories() {
           <span
             :class="tag.badgeColor ? tag.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'"
             class="flex items-center text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border">
-            {{ tag.tagName }}
+            {{ tag.tagname }}
 
             <Icon
               icon="si:close-line"
               class="ml-1 cursor-pointer hover:text-white"
-              @click.stop="deleteItem(tag.tagName)" />
+              @click.stop="deleteItem(tag.tagname)" />
           </span>
         </span>
       </Button>
@@ -102,7 +102,7 @@ function fetchCategories() {
           type="text"
           v-model="searchTerm"
           placeholder="Search..."
-          class="pl-10 border-none fo5us:outline-none focus:ring-0 text-muted-foreground font-inter" />
+          class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter" />
         <span class="absolute inset-y-0 flex items-center justify-center px-2 start-0">
           <Icon
             icon="weui:search-outlined"
@@ -123,7 +123,7 @@ function fetchCategories() {
               class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border"
               :class="tag.badgeColor ? tag.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'">
               <span data-size="20">
-                {{ tag.tagName }}
+                {{ tag.tagname }}
               </span>
             </span>
           </div>

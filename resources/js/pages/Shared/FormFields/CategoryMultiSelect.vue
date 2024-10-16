@@ -108,7 +108,7 @@ function fetchCategories() {
           type="text"
           v-model="searchTerm"
           placeholder="Search..."
-          class="pl-10 border-none fo5us:outline-none focus:ring-0 text-muted-foreground font-inter" />
+          class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter" />
         <span class="absolute inset-y-0 flex items-center justify-center px-2 start-0">
           <Icon
             icon="weui:search-outlined"

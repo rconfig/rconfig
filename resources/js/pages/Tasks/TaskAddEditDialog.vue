@@ -94,27 +94,27 @@ function nextPage() {
     return;
   }
 
-  // if (activeStep.value === 3 && model.value.task_command === 'rconfig:download-device' && model.value.device.length === 0) {
-  //   errors.value = 'Please choose one or more devices';
-  //   return;
-  // }
+  if (activeStep.value === 3 && model.value.task_command === 'rconfig:download-device' && (!model.value.device || model.value.device.length === 0)) {
+    errors.value = 'Please choose one or more devices';
+    return;
+  }
 
   if (activeStep.value === 3 && model.value.task_command === 'rconfig:download-category' && (!model.value.category || model.value.category.length === 0)) {
     errors.value = 'Please choose one or more categories';
     return;
   }
 
-  // if (activeStep.value === 3 && model.value.task_command === 'rconfig:download-tag' && model.value.tag.length === 0) {
-  //   errors.value = 'Please choose one or more tags';
-  //   return;
-  // }
+  if (activeStep.value === 3 && model.value.task_command === 'rconfig:download-tag' && (!model.value.tag || model.value.tag.length === 0)) {
+    errors.value = 'Please choose one or more tags';
+    return;
+  }
 
-  activeStep.value++;
-
-  if (wizard.currentPage === 4 && model.task_cron === '') {
+  if (activeStep.value === 4 && model.value.task_cron === '') {
     errors.value = 'Please enter schedule values';
     return;
   }
+
+  activeStep.value++;
 
   // if (wizard.currentPage === 5) {
   //   // saveModels();

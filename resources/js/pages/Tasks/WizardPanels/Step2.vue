@@ -22,7 +22,8 @@ defineProps({
         <Input
           v-model="model.task_name"
           id="task_name"
-          class="col-span-3" />
+          autocomplete="off"
+          class="col-span-3 focus:outline-none focus-visible:ring-0" />
       </div>
 
       <div class="grid items-center grid-cols-4 gap-4">
@@ -34,7 +35,8 @@ defineProps({
         <Input
           v-model="model.task_desc"
           id="task_desc"
-          class="col-span-3" />
+          autocomplete="off"
+          class="col-span-3 focus:outline-none focus-visible:ring-0" />
       </div>
     </div>
   </div>

@@ -69,12 +69,12 @@ watchEffect(() => {
         Select Minute
       </Label>
       <Input
-        class="w-1/4"
+        class="w-1/4 focus:outline-none focus-visible:ring-0"
         v-model="cronReturnArray.minute" />
       <Select
         v-model="cronReturnArray.minute"
         class="w-1/2">
-        <SelectTrigger class="w-full">
+        <SelectTrigger class="w-full focus:outline-none focus:ring-0">
           <SelectValue placeholder="Select an example cron option.." />
         </SelectTrigger>
         <SelectContent>
@@ -169,12 +169,12 @@ watchEffect(() => {
         Select Hour
       </Label>
       <Input
-        class="w-1/4"
+        class="w-1/4 focus:outline-none focus-visible:ring-0"
         v-model="cronReturnArray.hour" />
       <Select
         v-model="cronReturnArray.hour"
         class="w-1/2">
-        <SelectTrigger class="w-full">
+        <SelectTrigger class="w-full focus:outline-none focus:ring-0">
           <SelectValue placeholder="Select an example cron option.." />
         </SelectTrigger>
         <SelectContent>
@@ -233,12 +233,12 @@ watchEffect(() => {
         Select Day
       </Label>
       <Input
-        class="w-1/4"
+        class="w-1/4 focus:outline-none focus-visible:ring-0"
         v-model="cronReturnArray.day" />
       <Select
         v-model="cronReturnArray.day"
         class="w-1/2">
-        <SelectTrigger class="w-full">
+        <SelectTrigger class="w-full focus:outline-none focus:ring-0">
           <SelectValue placeholder="Select an example cron option.." />
         </SelectTrigger>
         <SelectContent>
@@ -301,12 +301,12 @@ watchEffect(() => {
         Select Day
       </Label>
       <Input
-        class="w-1/4"
+        class="w-1/4 focus:outline-none focus-visible:ring-0"
         v-model="cronReturnArray.month" />
       <Select
         v-model="cronReturnArray.month"
         class="w-1/2">
-        <SelectTrigger class="w-full">
+        <SelectTrigger class="w-full focus:outline-none focus:ring-0">
           <SelectValue placeholder="Select an example cron option.." />
         </SelectTrigger>
         <SelectContent>
@@ -351,12 +351,12 @@ watchEffect(() => {
         Select Day
       </Label>
       <Input
-        class="w-1/4"
+        class="w-1/4 focus:outline-none focus-visible:ring-0"
         v-model="cronReturnArray.weekday" />
       <Select
         v-model="cronReturnArray.weekday"
         class="w-1/2">
-        <SelectTrigger class="w-full">
+        <SelectTrigger class="w-full focus:outline-none focus:ring-0">
           <SelectValue placeholder="Select an example cron option.." />
         </SelectTrigger>
         <SelectContent>
