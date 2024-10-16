@@ -1,97 +1,68 @@
 <script setup>
-import { reactive, watchEffect, toRefs } from 'vue';
+import { reactive, watchEffect, toRefs, watch, ref } from 'vue';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { defineProps } from 'vue';
+
+const emit = defineEmits(['update:modelValue']);
 
 const props = defineProps({
-  cronProp: {
-    type: Array
+  modelValue: {
+    type: Array,
+    required: true
   }
 });
 
-const errors = reactive({
-  minute: '',
-  hour: '',
-  day: '',
-  month: '',
-  weekday: ''
-});
+const errors = ref('');
+
 const cronReturnArray = reactive({
-  minute: props.cronProp[0] ? props.cronProp[0] : '*',
-  hour: props.cronProp[1] ? props.cronProp[1] : '*',
-  day: props.cronProp[2] ? props.cronProp[2] : '*',
-  month: props.cronProp[3] ? props.cronProp[3] : '*',
-  weekday: props.cronProp[4] ? props.cronProp[4] : '*'
-});
-
-function onChangeMin() {
-  if (!cronReturnArray.minute) {
-    errors.minute = 'Minute is required';
-  } else {
-    props.cronProp[0] = cronReturnArray.minute;
-    errors.minute = '';
-  }
-}
-function onChangeHour() {
-  if (!cronReturnArray.hour) {
-    errors.hour = 'Hour is required';
-  } else {
-    props.cronProp[1] = cronReturnArray.hour;
-    errors.hour = '';
-  }
-}
-function onChangeDay() {
-  if (!cronReturnArray.day) {
-    errors.day = 'Day is required';
-  } else {
-    props.cronProp[2] = cronReturnArray.day;
-    errors.day = '';
-  }
-}
-function onChangeMonth() {
-  if (!cronReturnArray.month) {
-    errors.month = 'Month is required';
-  } else {
-    props.cronProp[3] = cronReturnArray.month;
-    errors.month = '';
-  }
-}
-function onChangeWeekday() {
-  if (!cronReturnArray.weekday) {
-    errors.weekday = 'Weekday is required';
-  } else {
-    props.cronProp[4] = cronReturnArray.weekday;
-    errors.weekday = '';
-  }
-}
-
-watchEffect(() => {
-  cronReturnArray.minute = props.cronProp[0];
-  cronReturnArray.hour = props.cronProp[1];
-  cronReturnArray.day = props.cronProp[2];
-  cronReturnArray.month = props.cronProp[3];
-  cronReturnArray.weekday = props.cronProp[4];
-  errors.minute = '';
-  errors.hour = '';
-  errors.day = '';
-  errors.month = '';
-  errors.weekday = '';
+  minute: props.modelValue[0] ? props.modelValue[0] : '*',
+  hour: props.modelValue[1] ? props.modelValue[1] : '*',
+  day: props.modelValue[2] ? props.modelValue[2] : '*',
+  month: props.modelValue[3] ? props.modelValue[3] : '*',
+  weekday: props.modelValue[4] ? props.modelValue[4] : '*'
 });
 
 const { minute, hour, day, month, weekday } = toRefs(cronReturnArray);
+
+watch(
+  () => [cronReturnArray.minute, cronReturnArray.hour, cronReturnArray.day, cronReturnArray.month, cronReturnArray.weekday],
+  newValue => {
+    if (newValue[0] === '' || newValue[1] === '' || newValue[2] === '' || newValue[3] === '' || newValue[4] === '') {
+      errors.value = 'All fields are required';
+      return;
+    }
+    props.modelValue = newValue;
+    console.log('newValue', [cronReturnArray.minute, cronReturnArray.hour, cronReturnArray.day, cronReturnArray.month, cronReturnArray.weekday]);
+    // console.log('props.modelValue', props.modelValue);
+    updateParentModel();
+  }
+);
+
+function updateParentModel() {
+  emit('update:modelValue', [cronReturnArray.minute, cronReturnArray.hour, cronReturnArray.day, cronReturnArray.month, cronReturnArray.weekday]);
+}
+
+watchEffect(() => {
+  cronReturnArray.minute = props.modelValue[0];
+  cronReturnArray.hour = props.modelValue[1];
+  cronReturnArray.day = props.modelValue[2];
+  cronReturnArray.month = props.modelValue[3];
+  cronReturnArray.weekday = props.modelValue[4];
+  errors.value = '';
+});
 </script>
 
 <template>
   <div>
-    <div>errors: {{ errors }}</div>
-    <div>Selections: {{ minute }}</div>
-    <div>cronReturnArray: {{ cronReturnArray }}</div>
+    <div class="text-red-500">
+      {{ errors }}
+    </div>
+
     <br />
 
     <!--MINUTES-->
-    <div class="flex w-full max-w-sm items-center gap-1.5">
+    <div class="flex w-full max-w-xl items-center gap-1.5">
       <Label
         class="w-1/4"
         for="picture">
@@ -99,10 +70,9 @@ const { minute, hour, day, month, weekday } = toRefs(cronReturnArray);
       </Label>
       <Input
         class="w-1/4"
-        v-model="minute"
-        @change="onChangeMin" />
+        v-model="cronReturnArray.minute" />
       <Select
-        v-model="minute"
+        v-model="cronReturnArray.minute"
         class="w-1/2">
         <SelectTrigger class="w-full">
           <SelectValue placeholder="Select an example cron option.." />
@@ -112,7 +82,7 @@ const { minute, hour, day, month, weekday } = toRefs(cronReturnArray);
             <SelectLabel
               class="text-muted-foreground"
               value="--">
-              -- Select an SelectItem --
+              -- Select an option --
             </SelectLabel>
             <SelectItem value="*">Every minute (*)</SelectItem>
             <SelectItem value="*/2">Every other minute (*/2)</SelectItem>
@@ -192,6 +162,232 @@ const { minute, hour, day, month, weekday } = toRefs(cronReturnArray);
     <!--MINUTES-->
 
     <!--HOURS-->
+    <div class="flex w-full max-w-xl items-center gap-1.5">
+      <Label
+        class="w-1/4"
+        for="picture">
+        Select Hour
+      </Label>
+      <Input
+        class="w-1/4"
+        v-model="cronReturnArray.hour" />
+      <Select
+        v-model="cronReturnArray.hour"
+        class="w-1/2">
+        <SelectTrigger class="w-full">
+          <SelectValue placeholder="Select an example cron option.." />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel
+              class="text-muted-foreground"
+              value="--">
+              -- Select an option --
+            </SelectLabel>
+            <SelectItem value="*">Every hour (*)</SelectItem>
+            <SelectItem value="*/2">Every other hour (*/2)</SelectItem>
+            <SelectItem value="*/3">Every 3 hours (*/3)</SelectItem>
+            <SelectItem value="*/4">Every 4 hours (*/4)</SelectItem>
+            <SelectItem value="*/6">Every 6 hours (*/6)</SelectItem>
+            <SelectItem value="0,12">Every 12 hours (0,12)</SelectItem>
+            <SelectLabel
+              class="text-muted-foreground"
+              value="--">
+              -- Hours --
+            </SelectLabel>
+            <SelectItem value="0">12:00 a.m. midnight (0)</SelectItem>
+            <SelectItem value="1">1:00 a.m. (1)</SelectItem>
+            <SelectItem value="2">2:00 a.m. (2)</SelectItem>
+            <SelectItem value="3">3:00 a.m. (3)</SelectItem>
+            <SelectItem value="4">4:00 a.m. (4)</SelectItem>
+            <SelectItem value="5">5:00 a.m. (5)</SelectItem>
+            <SelectItem value="6">6:00 a.m. (6)</SelectItem>
+            <SelectItem value="7">7:00 a.m. (7)</SelectItem>
+            <SelectItem value="8">8:00 a.m. (8)</SelectItem>
+            <SelectItem value="9">9:00 a.m. (9)</SelectItem>
+            <SelectItem value="10">10:00 a.m. (10)</SelectItem>
+            <SelectItem value="11">11:00 a.m. (11)</SelectItem>
+            <SelectItem value="12">12:00 p.m. noon (12)</SelectItem>
+            <SelectItem value="13">1:00 p.m. (13)</SelectItem>
+            <SelectItem value="14">2:00 p.m. (14)</SelectItem>
+            <SelectItem value="15">3:00 p.m. (15)</SelectItem>
+            <SelectItem value="16">4:00 p.m. (16)</SelectItem>
+            <SelectItem value="17">5:00 p.m. (17)</SelectItem>
+            <SelectItem value="18">6:00 p.m. (18)</SelectItem>
+            <SelectItem value="19">7:00 p.m. (19)</SelectItem>
+            <SelectItem value="20">8:00 p.m. (20)</SelectItem>
+            <SelectItem value="21">9:00 p.m. (21)</SelectItem>
+            <SelectItem value="22">10:00 p.m. (22)</SelectItem>
+            <SelectItem value="23">11:00 p.m. (23)</SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </div>
     <!--HOURS-->
+
+    <!--DAYS-->
+    <div class="flex w-full max-w-xl items-center gap-1.5">
+      <Label
+        class="w-1/4"
+        for="picture">
+        Select Day
+      </Label>
+      <Input
+        class="w-1/4"
+        v-model="cronReturnArray.day" />
+      <Select
+        v-model="cronReturnArray.day"
+        class="w-1/2">
+        <SelectTrigger class="w-full">
+          <SelectValue placeholder="Select an example cron option.." />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel
+              class="text-muted-foreground"
+              value="--">
+              -- Select an option --
+            </SelectLabel>
+            <SelectItem value="*">Every day (*)</SelectItem>
+            <SelectItem value="*/2">Every other day (*/2)</SelectItem>
+            <SelectItem value="1,15">1st and 15th (1,15)</SelectItem>
+            <SelectLabel
+              class="text-muted-foreground"
+              value="--">
+              -- Days --
+            </SelectLabel>
+            <SelectItem value="1">1st (1)</SelectItem>
+            <SelectItem value="2">2nd (2)</SelectItem>
+            <SelectItem value="3">3rd (3)</SelectItem>
+            <SelectItem value="4">4th (4)</SelectItem>
+            <SelectItem value="5">5th (5)</SelectItem>
+            <SelectItem value="6">6th (6)</SelectItem>
+            <SelectItem value="7">7th (7)</SelectItem>
+            <SelectItem value="8">8th (8)</SelectItem>
+            <SelectItem value="9">9th (9)</SelectItem>
+            <SelectItem value="10">10th (10)</SelectItem>
+            <SelectItem value="11">11th (11)</SelectItem>
+            <SelectItem value="12">12th (12)</SelectItem>
+            <SelectItem value="13">13th (13)</SelectItem>
+            <SelectItem value="14">14th (14)</SelectItem>
+            <SelectItem value="15">15th (15)</SelectItem>
+            <SelectItem value="16">16th (16)</SelectItem>
+            <SelectItem value="17">17th (17)</SelectItem>
+            <SelectItem value="18">18th (18)</SelectItem>
+            <SelectItem value="19">19th (19)</SelectItem>
+            <SelectItem value="20">20th (20)</SelectItem>
+            <SelectItem value="21">21st (21)</SelectItem>
+            <SelectItem value="22">22nd (22)</SelectItem>
+            <SelectItem value="23">23rd (23)</SelectItem>
+            <SelectItem value="24">24th (24)</SelectItem>
+            <SelectItem value="25">25th (25)</SelectItem>
+            <SelectItem value="26">26th (26)</SelectItem>
+            <SelectItem value="27">27th (27)</SelectItem>
+            <SelectItem value="28">28th (28)</SelectItem>
+            <SelectItem value="29">29th (29)</SelectItem>
+            <SelectItem value="30">30th (30)</SelectItem>
+            <SelectItem value="31">31st (31)</SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </div>
+    <!--DAYS-->
+
+    <!--MONTHS-->
+    <div class="flex w-full max-w-xl items-center gap-1.5">
+      <Label
+        class="w-1/4"
+        for="picture">
+        Select Day
+      </Label>
+      <Input
+        class="w-1/4"
+        v-model="cronReturnArray.month" />
+      <Select
+        v-model="cronReturnArray.month"
+        class="w-1/2">
+        <SelectTrigger class="w-full">
+          <SelectValue placeholder="Select an example cron option.." />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel
+              class="text-muted-foreground"
+              value="--">
+              -- Select an option --
+            </SelectLabel>
+            <SelectItem value="*">Every month (*)</SelectItem>
+            <SelectItem value="*/2">Every other month (*/2)</SelectItem>
+            <SelectItem value="*/4">Every 3 months (*/4)</SelectItem>
+            <SelectItem value="1,7">Every 6 months (1,7)</SelectItem>
+            <SelectLabel
+              class="text-muted-foreground"
+              value="--">
+              -- Months --
+            </SelectLabel>
+            <SelectItem value="1">January (1)</SelectItem>
+            <SelectItem value="2">February (2)</SelectItem>
+            <SelectItem value="3">March (3)</SelectItem>
+            <SelectItem value="4">April (4)</SelectItem>
+            <SelectItem value="5">May (5)</SelectItem>
+            <SelectItem value="6">June (6)</SelectItem>
+            <SelectItem value="7">July (7)</SelectItem>
+            <SelectItem value="8">August (8)</SelectItem>
+            <SelectItem value="9">September (9)</SelectItem>
+            <SelectItem value="10">October (10)</SelectItem>
+            <SelectItem value="11">November (11)</SelectItem>
+            <SelectItem value="12">December (12)</SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </div>
+    <!--MONTHS-->
+
+    <!--WEEKDAYS-->
+    <div class="flex w-full max-w-xl items-center gap-1.5">
+      <Label
+        class="w-1/4"
+        for="picture">
+        Select Day
+      </Label>
+      <Input
+        class="w-1/4"
+        v-model="cronReturnArray.weekday" />
+      <Select
+        v-model="cronReturnArray.weekday"
+        class="w-1/2">
+        <SelectTrigger class="w-full">
+          <SelectValue placeholder="Select an example cron option.." />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel
+              class="text-muted-foreground"
+              value="--">
+              -- Select an option --
+            </SelectLabel>
+            <SelectItem value="*">Every weekday (*)</SelectItem>
+            <SelectItem value="1-5">Mon thru Fri (1-5)</SelectItem>
+            <SelectItem value="0,6">Sat and Sun (6,0)</SelectItem>
+            <SelectItem value="1,3,5">Mon, Wed, Fri (1,3,5)</SelectItem>
+            <SelectItem value="2,4">Tues, Thurs (2,4)</SelectItem>
+            <SelectItem value="2,5">Tues, Fri (2,5)</SelectItem>
+            <SelectLabel
+              class="text-muted-foreground"
+              value="--">
+              -- Weekday --
+            </SelectLabel>
+            <SelectItem value="0">Sunday (0)</SelectItem>
+            <SelectItem value="1">Monday (1)</SelectItem>
+            <SelectItem value="2">Tuesday (2)</SelectItem>
+            <SelectItem value="3">Wednesday (3)</SelectItem>
+            <SelectItem value="4">Thursday (4)</SelectItem>
+            <SelectItem value="5">Friday (5)</SelectItem>
+            <SelectItem value="6">Saturday (6)</SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </div>
+    <!--WEEKDAYS-->
   </div>
 </template>

@@ -15,7 +15,7 @@ const cronToHuman = ref('');
 
 onMounted(() => {
   if (props.model.task_cron != '') {
-    cronExampleArray.value = props.model.task_cron;
+    cronExampleArray.value = props.model.task_cron.join(' ');
   }
 });
 
@@ -35,9 +35,8 @@ watchEffect(() => {
   <div>
     <h3 class="mb-5 text-lg font-medium text-gray-900 dark:text-white">Select a task schedule</h3>
 
-    <div class="grid w-full max-w-sm items-center gap-1.5">
+    <div class="grid w-full max-w-xl items-center gap-1.5">
       <Label for="picture">Example CRONs</Label>
-      {{ model.task_cron }} - {{ cronExampleArray }}
       <Select v-model="cronExampleArray">
         <SelectTrigger class="w-full">
           <SelectValue placeholder="Select an example cron option.." />
@@ -58,8 +57,16 @@ watchEffect(() => {
           </SelectGroup>
         </SelectContent>
       </Select>
-      <span class="mb-4 text-muted-foreground">{{ cronToHuman }}</span>
+      <span class="mb-0 text-muted-foreground">
+        {{ cronToHuman }} &nbsp;
+        <span
+          class="mb-4 text-muted-foreground"
+          v-if="model.task_cron">
+          ({{ model.task_cron.join(' ') }})
+        </span>
+      </span>
     </div>
-    <Step4CronForm :cronProp="model.task_cron" />
+    <br />
+    <Step4CronForm v-model="model.task_cron" />
   </div>
 </template>
