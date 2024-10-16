@@ -10,11 +10,32 @@ const props = defineProps({
 const handleCheck = value => {
   selectedValue.value = value;
   props.model.task_command = value;
+  setTaskType(value);
   // remove these properties when the task type is changed
   delete props.model.category;
   delete props.model.tag;
   delete props.model.device;
 };
+
+function setTaskType(value) {
+  switch (value) {
+    case 'rconfig:download-device':
+      props.model.task_devices = 1;
+      props.model.task_tags = 0;
+      props.model.task_categories = 0;
+      break;
+    case 'rconfig:download-category':
+      props.model.task_categories = 1;
+      props.model.task_devices = 0;
+      props.model.task_tags = 0;
+      break;
+    case 'rconfig:download-tag':
+      props.model.task_tags = 1;
+      props.model.task_devices = 0;
+      props.model.task_categories = 0;
+      break;
+  }
+}
 
 onMounted(() => {
   if (props.model.task_command) {

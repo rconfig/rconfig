@@ -15,11 +15,21 @@ defineProps({
   <div>
     <h3 class="mb-5 text-lg font-medium text-gray-900 dark:text-white">Task Configuration</h3>
 
-    <div class="grid items-center grid-cols-4 gap-4">
+    <div class="grid w-full items-center gap-1.5">
       <Label
         for="description"
-        class="text-right">
+        v-if="model.task_command === 'rconfig:download-device'">
+        Devices
+      </Label>
+      <Label
+        for="description"
+        v-if="model.task_command === 'rconfig:download-category'">
         Command Groups
+      </Label>
+      <Label
+        for="description"
+        v-if="model.task_command === 'rconfig:download-tag'">
+        Tags
       </Label>
 
       <DeviceMultiSelect

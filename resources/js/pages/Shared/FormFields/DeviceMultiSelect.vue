@@ -8,15 +8,15 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
 const emit = defineEmits(['update:modelValue']);
-const categories = ref([]);
+const devices = ref([]);
 const modelValue = ref<string[]>([]);
 const open = ref(false);
 const searchTerm = ref('');
 const selectedCats = ref([]);
 
 const filteredCategories = computed(() => {
-  return categories.value.filter(
-    cat => cat.categoryName.toLowerCase().includes(searchTerm.value.toLowerCase()) && !selectedCats.value.some(selectedCat => selectedCat.id === cat.id) // Prevent displaying already selected items
+  return devices.value.filter(
+    dev => dev.device_name.toLowerCase().includes(searchTerm.value.toLowerCase()) && !selectedCats.value.some(selectedCat => selectedCat.id === dev.id) // Prevent displaying already selected items
   );
 });
 
@@ -45,7 +45,7 @@ function selectItem(item) {
   open.value = false;
   searchTerm.value = '';
   // remove item from filteredCategories
-  const itemIndex = filteredCategories.value.findIndex(cat => cat.categoryName === item.categoryName);
+  const itemIndex = filteredCategories.value.findIndex(dev => dev.device_name === item.device_name);
   if (itemIndex !== -1) {
     filteredCategories.value.splice(itemIndex, 1);
   }
@@ -54,7 +54,7 @@ function selectItem(item) {
 
 function deleteItem(itemName) {
   // Remove item from selectedCats and emit updated list
-  const itemIndex = selectedCats.value.findIndex(cat => cat.categoryName === itemName);
+  const itemIndex = selectedCats.value.findIndex(dev => dev.device_name === itemName);
   if (itemIndex !== -1) {
     selectedCats.value.splice(itemIndex, 1);
   }
@@ -62,34 +62,32 @@ function deleteItem(itemName) {
 }
 
 function fetchCategories() {
-  axios.get('/api/categories/?perPage=10000').then(response => {
-    categories.value = response.data.data;
+  axios.get('/api/devices/?perPage=10000').then(response => {
+    devices.value = response.data.data;
   });
 }
 </script>
 
 <template>
-  <!-- DIV FOR RENDERING THE BADGE COLOR CLASSES -->
   <Popover>
-    <div class="hidden text-yellow-200 text-teal-100 bg-yellow-700 bg-teal-700 border-yellow-500 border-teal-500 bg-stone-700 text-stone-200 border-stone-500 bg-lime-700 text-lime-200 border-lime-500 bg-sky-700 text-sky-100 border-sky-500 bg-violet-700 text-violet-200 border-violet-500 bg-fuchsia-700 text-fuchsia-200 border-fuchsia-500"></div>
-    <PopoverTrigger class="col-span-3">
+    <PopoverTrigger class="w-full">
       <Button
         variant="ghost"
         class="flex flex-wrap items-start justify-start w-full p-1 pl-2 whitespace-normal border h-fit">
-        {{ selectedCats && selectedCats.length === 0 ? 'Select categories' : '' }}
+        {{ selectedCats && selectedCats.length === 0 ? 'Select devices' : '' }}
         <span
-          v-for="cat in selectedCats"
-          :key="cat.id"
+          v-for="dev in selectedCats"
+          :key="dev.id"
           class="relative my-1 group">
           <span
-            :class="cat.badgeColor ? cat.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'"
+            :class="dev.badgeColor ? dev.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'"
             class="flex items-center text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border">
-            {{ cat.categoryName }}
+            {{ dev.device_name }}
 
             <Icon
               icon="si:close-line"
               class="ml-1 cursor-pointer hover:text-white"
-              @click.stop="deleteItem(cat.categoryName)" />
+              @click.stop="deleteItem(dev.device_name)" />
           </span>
         </span>
       </Button>
@@ -116,16 +114,16 @@ function fetchCategories() {
       <ScrollArea class="h-64">
         <div class="py-1">
           <div
-            v-for="cat in filteredCategories"
-            :key="cat.id"
+            v-for="dev in filteredCategories"
+            :key="dev.id"
             class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600"
-            @click="selectItem(cat)">
+            @click="selectItem(dev)">
             <span
               data-size="20"
               class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border"
-              :class="cat.badgeColor ? cat.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'">
+              :class="dev.badgeColor ? dev.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'">
               <span data-size="20">
-                {{ cat.categoryName }}
+                {{ dev.device_name }}
               </span>
             </span>
           </div>

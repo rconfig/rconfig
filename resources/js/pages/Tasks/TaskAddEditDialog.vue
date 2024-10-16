@@ -6,8 +6,10 @@ import Step3 from '@/pages/Tasks/WizardPanels/Step3.vue';
 import Step4 from '@/pages/Tasks/WizardPanels/Step4.vue';
 import Step5 from '@/pages/Tasks/WizardPanels/Step5.vue';
 import axios from 'axios';
+import ConfirmCloseAlert from '@/pages/Shared/AlertDialog/ConfirmCloseAlert.vue';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogScrollContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Icon } from '@iconify/vue';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { ref, onMounted, onUnmounted } from 'vue';
@@ -18,18 +20,22 @@ const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useT
 const dialogStore = useDialogStore();
 const { openDialog, closeDialog, isDialogOpen } = dialogStore;
 const emit = defineEmits(['save']);
-const roles = ref([]);
+const showConfirmCloseAlert = ref(false);
 const errors = ref([]);
 const model = ref({
   task_name: '',
   task_desc: '',
   task_command: '',
-  category: [],
-  tag: [],
-  device: [],
+  task_categories: 0,
+  task_devices: 0,
+  task_tags: 0,
+  is_system: 0,
   download_report_notify: true,
   verbose_download_report_notify: false,
-  task_cron: ''
+  task_cron: ['*', '*', '*', '*', '*'],
+  device: [],
+  category: [],
+  tag: []
 });
 
 const activeStep = ref(1);
@@ -105,17 +111,26 @@ function nextPage() {
 
   activeStep.value++;
 
-  // if (wizard.currentPage === 4 && model.task_cron === '') {
-  //   errors.value = 'Please enter schedule values';
-  //   return;
-  // }
-  // errors.value = '';
+  if (wizard.currentPage === 4 && model.task_cron === '') {
+    errors.value = 'Please enter schedule values';
+    return;
+  }
 
   // if (wizard.currentPage === 5) {
   //   // saveModels();
   // } else {
   //   wizard.currentPage++;
   // }
+}
+function confirmCloseWizardOpen() {
+  showConfirmCloseAlert.value = true;
+}
+function cancelCloseWizard() {
+  showConfirmCloseAlert.value = false;
+}
+function confirmCloseWizard() {
+  showConfirmCloseAlert.value = false;
+  closeDialog('DialogNewTask');
 }
 </script>
 
@@ -125,9 +140,10 @@ function nextPage() {
       <!-- <Button variant="outline">Edit Profile</Button> -->
     </DialogTrigger>
     <DialogContent
-      class="max-w-4xl gap-0 p-0"
+      @interactOutside="confirmCloseWizardOpen()"
+      @pointerDownOutside="confirmCloseWizardOpen()"
+      class="max-w-4xl gap-0 p-0 m-4 bg-rcgray-900"
       @escapeKeyDown="closeDialog('DialogNewTask')"
-      @pointerDownOutside="closeDialog('DialogNewTask')"
       @closeClicked="closeDialog('DialogNewTask')">
       <DialogHeader class="rc-dialog-header">
         <DialogTitle class="text-sm text-rcgray-200">
@@ -152,27 +168,27 @@ function nextPage() {
           <NavPanel :currentStep="activeStep" />
         </ResizablePanel>
         <ResizableHandle />
-        <ResizablePanel class="px-4">
-          <Step1
-            v-if="activeStep === 1"
-            :model="model" />
-          <Step2
-            v-if="activeStep === 2"
-            :model="model" />
-          <Step3
-            :model="model"
-            v-if="activeStep === 3" />
-          <Step4
-            :model="model"
-            v-if="activeStep === 4" />
-          <Step5
-            :model="model"
-            v-if="activeStep === 5" />
+        <ResizablePanel class="max-h-[80vh]">
+          <ScrollArea class="h-full px-4 border border-none rounded-md">
+            <Step1
+              v-if="activeStep === 1"
+              :model="model" />
+            <Step2
+              v-if="activeStep === 2"
+              :model="model" />
+            <Step3
+              :model="model"
+              v-if="activeStep === 3" />
+            <Step4
+              :model="model"
+              v-if="activeStep === 4" />
+            <Step5
+              :model="model"
+              v-if="activeStep === 5" />
+          </ScrollArea>
         </ResizablePanel>
       </ResizablePanelGroup>
       <div class="w-full py-2 border-t border-b">
-        <!-- {{ model }} -->
-
         <div
           class="flex items-center px-2"
           :class="errors.length > 0 ? 'justify-between' : 'justify-end'">
@@ -207,7 +223,7 @@ function nextPage() {
           type="close"
           variant="outline"
           class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse"
-          @click="closeDialog('DialogNewTask')"
+          @click="confirmCloseWizardOpen()"
           size="sm">
           Cancel
           <div class="pl-2 ml-auto">
@@ -253,4 +269,8 @@ function nextPage() {
       </DialogFooter>
     </DialogContent>
   </Dialog>
+  <ConfirmCloseAlert
+    :showConfirmCloseAlert="showConfirmCloseAlert"
+    @handleClose="cancelCloseWizard"
+    @handleConfirm="confirmCloseWizard" />
 </template>
