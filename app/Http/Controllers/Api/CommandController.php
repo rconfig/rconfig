@@ -35,7 +35,7 @@ class CommandController extends ApiBaseController
     {
         $model = parent::storeResource($request->toDTO()->toArray(), 1);
 
-        $model->Category()->attach($request->categoryArray);
+        $model->Category()->attach(collect($request->category)->pluck('id'));
 
         return $this->successResponse(Str::ucfirst($this->modelname) . ' created successfully!', ['id' => $model->id]);
     }
@@ -48,7 +48,7 @@ class CommandController extends ApiBaseController
     public function update($id, StoreCommandRequest $request)
     {
         $model = parent::updateResource($id, $request->toDTO()->toArray(), 1);
-        $model->Category()->sync($request->categoryArray);
+        $model->Category()->sync(collect($request->category)->pluck('id'));
 
         return $this->successResponse(Str::ucfirst($this->modelname) . ' edited successfully!', ['id' => $model->id]);
     }

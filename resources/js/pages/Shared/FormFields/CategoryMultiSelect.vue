@@ -21,11 +21,19 @@ const filteredCategories = computed(() => {
 });
 
 const props = defineProps({
-  inboundCats: {
+  modelValue: {
     type: Array,
-    default: []
+    required: true
   }
 });
+
+// Watch for changes to the prop and update internalModel
+watch(
+  () => props.modelValue,
+  newValue => {
+    selectedCats.value = newValue;
+  }
+);
 
 onMounted(() => {
   fetchCategories();
@@ -61,20 +69,23 @@ function fetchCategories() {
 </script>
 
 <template>
+  <!-- DIV FOR RENDERING THE BADGE COLOR CLASSES -->
   <Popover>
+    <div class="hidden text-yellow-200 text-teal-100 bg-yellow-700 bg-teal-700 border-yellow-500 border-teal-500 bg-stone-700 text-stone-200 border-stone-500 bg-lime-700 text-lime-200 border-lime-500 bg-sky-700 text-sky-100 border-sky-500 bg-violet-700 text-violet-200 border-violet-500 bg-fuchsia-700 text-fuchsia-200 border-fuchsia-500"></div>
     <PopoverTrigger class="col-span-3">
       <Button
         variant="ghost"
-        class="flex flex-wrap items-start justify-start w-full p-1 whitespace-normal border h-fit">
+        class="flex flex-wrap items-start justify-start w-full p-1 pl-2 whitespace-normal border h-fit">
         {{ selectedCats && selectedCats.length === 0 ? 'Select categories' : '' }}
         <span
           v-for="cat in selectedCats"
           :key="cat.id"
           class="relative my-1 group">
           <span
-            :style="{ backgroundColor: cat.badgeColor ? cat.badgeColor : '#313337' }"
-            class="flex items-center bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl dark:bg-gray-700 dark:text-gray-300">
+            :class="cat.badgeColor ? cat.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'"
+            class="flex items-center text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border">
             {{ cat.categoryName }}
+
             <Icon
               icon="si:close-line"
               class="ml-1 cursor-pointer hover:text-white"
@@ -93,7 +104,7 @@ function fetchCategories() {
           type="text"
           v-model="searchTerm"
           placeholder="Search..."
-          class="pl-10 border-none focus:outline-none focus:ring-0 text-muted-foreground font-inter" />
+          class="pl-10 border-none fo5us:outline-none focus:ring-0 text-muted-foreground font-inter" />
         <span class="absolute inset-y-0 flex items-center justify-center px-2 start-0">
           <Icon
             icon="weui:search-outlined"
@@ -111,8 +122,8 @@ function fetchCategories() {
             @click="selectItem(cat)">
             <span
               data-size="20"
-              class="cursor-default bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl dark:bg-gray-700 dark:text-gray-300"
-              :style="{ backgroundColor: cat.badgeColor ? cat.badgeColor : '#313337' }">
+              class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border"
+              :class="cat.badgeColor ? cat.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'">
               <span data-size="20">
                 {{ cat.categoryName }}
               </span>
@@ -123,10 +134,10 @@ function fetchCategories() {
 
       <Separator />
 
-      <div class="p-1 border-t">
+      <div class="p-1 border-5">
         <Button
           variant="ghost"
-          class="justify-start w-full">
+          class="justify-start w-full p-1">
           <Icon
             icon="octicon:plus-16"
             class="w-3 h-3 mt-1 mr-2 text-muted-foreground" />

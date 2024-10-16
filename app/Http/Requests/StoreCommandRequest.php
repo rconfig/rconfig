@@ -13,20 +13,19 @@ class StoreCommandRequest extends FormRequest
         return auth()->check(); // returning true if user is logged in
     }
 
-
     public function rules()
     {
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'command' => 'required|min:3|unique:commands|max:255',
-                'categoryArray' => 'required|array|min:1',
+                'category' => 'required|array|min:1',
             ];
         }
 
         if ($this->getMethod() == 'PATCH') {
             $rules = [
                 'command' => 'required|min:3|max:255',
-                'categoryArray' => 'required|array|min:1',
+                'category' => 'required|array|min:1',
             ];
         }
 
@@ -38,7 +37,7 @@ class StoreCommandRequest extends FormRequest
         return new StoreCommandDTO([
             'command' => $this->command,
             'description' => $this->description,
-            // 'categoryArray' => $this->categoryArray,
+            'category' => $this->category,
         ]);
     }
 }

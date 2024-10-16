@@ -18,7 +18,7 @@ class Category extends BaseModel
     protected function viewUrl(): Attribute
     {
         return Attribute::make(
-            get: fn () => '/categories',
+            get: fn() => '/categories',
         );
     }
 

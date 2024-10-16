@@ -19,7 +19,7 @@ const isLoading = ref(false);
 const model = ref({
   command: '',
   description: '',
-  categoryArray: []
+  category: []
 });
 
 const props = defineProps({
@@ -113,9 +113,7 @@ function saveDialog() {
             class="text-right">
             Command Groups
           </Label>
-          <CategoryMultiSelect
-            @update:modelValue="model.categoryArray = $event"
-            :inboundCats="model.category" />
+          <CategoryMultiSelect v-model="model.category" />
         </div>
       </div>
 
@@ -134,8 +132,8 @@ function saveDialog() {
 
         <span
           class="text-red-400"
-          v-if="errors.categoryArray">
-          {{ errors.categoryArray[0] }}
+          v-if="errors.category">
+          {{ errors.category[0] }}
         </span>
       </div>
       <DialogFooter>
