@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { Separator } from '@/components/ui/separator';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useSystemSettingsBanner } from '@/pages/Settings/Forms/useSystemSettingsBanner';
@@ -17,13 +16,14 @@ onMounted(() => {
 
 <template>
   <div class="grid w-full max-w-full items-center gap-1.5">
-    <Label for="picture">Banner</Label>
+    <h3 class="mb-4 text-2xl font-semibold leading-7 tracking-tight font-inter">Banner</h3>
+
     <Textarea
       :placeholder="banner || 'Enter your banner here...'"
       v-model="banner" />
     <p class="text-sm text-muted-foreground">The standard banner to display on the login page.</p>
 
-    <div class="flex jap-2 ustify-end">
+    <div class="flex justify-end jap-2">
       <Button
         variant="outline"
         class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"

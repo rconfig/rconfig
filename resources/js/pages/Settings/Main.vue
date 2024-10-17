@@ -33,6 +33,7 @@ onMounted(() => {
           @nav="setForm($event)"
           :activeForm="activeForm" />
       </aside>
+
       <div class="flex-1">
         <div class="space-y-6">
           <transition
