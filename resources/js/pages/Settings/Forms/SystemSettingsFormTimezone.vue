@@ -12,7 +12,7 @@ const { popoverState, changeTimezone, currentTimezone, searchTerm, filteredTimez
 
 <template>
   <div class="grid w-full max-w-full items-center gap-1.5">
-    <h3 class="mb-2 text-2xl font-semibold leading-7 tracking-tight font-inter">System Timezone:</h3>
+    <h3 class="mb-2 text-2xl font-semibold leading-7 tracking-tight font-inter">Timezone</h3>
 
     <div class="grid w-full max-w-full items-center gap-1.5">
       <Popover :open="popoverState">
@@ -76,7 +76,7 @@ const { popoverState, changeTimezone, currentTimezone, searchTerm, filteredTimez
             </Button> -->
           </div>
         </PopoverContent>
-        <span class="text-xs text-muted-foreground">Current timezone: {{ currentTimezone }}</span>
+        <span class="text-sm text-muted-foreground">Current timezone: {{ currentTimezone }}</span>
       </Popover>
     </div>
 
