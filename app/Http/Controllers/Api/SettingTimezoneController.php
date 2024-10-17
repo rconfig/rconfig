@@ -19,30 +19,17 @@ class SettingTimezoneController extends ApiBaseController
         return require 'timezone_list.php';
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Setting  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id, $relationship = null, $withCount = null)
     {
         return parent::show($id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Setting  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update($id, StoreSettingsTimezoneRequest $request)
     {
         $timezone = str_replace('/', '\/\\', $request->timezone);
-        Artisan::call('env:set TIMEZONE="'.$timezone.'"');
+        Artisan::call('env:set TIMEZONE="' . $timezone . '"');
         if (! App()->environment('testing')) {
-            Artisan::call('config:cache'); // cannot to a config:cache when testing
+            Artisan::call('config:cache'); // cannot to a config:cache when testing. This causes a full page reload on the front end
         }
 
         return parent::updateResource($id, $request->toDTO()->toArray());
