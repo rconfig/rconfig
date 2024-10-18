@@ -76,7 +76,11 @@ const { popoverState, changeTimezone, currentTimezone, searchTerm, filteredTimez
             </Button> -->
           </div>
         </PopoverContent>
-        <span class="text-sm text-muted-foreground">Current timezone: {{ currentTimezone }}</span>
+        <span class="w-full text-sm text-muted-foreground">
+          Current timezone: {{ currentTimezone }}
+          <br />
+          <span class="w-full text-sm text-warning">Selecting a new timezone will cause a full page reload, wait for a second...</span>
+        </span>
       </Popover>
     </div>
 
