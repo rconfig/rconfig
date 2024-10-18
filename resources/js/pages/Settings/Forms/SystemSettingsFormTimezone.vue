@@ -13,6 +13,7 @@ const { popoverState, changeTimezone, currentTimezone, searchTerm, filteredTimez
 <template>
   <div class="grid w-full max-w-full items-center gap-1.5">
     <h3 class="mb-2 text-2xl font-semibold leading-7 tracking-tight font-inter">Timezone</h3>
+    <span class="w-full text-sm text-muted-foreground">Current timezone: {{ currentTimezone }}</span>
 
     <div class="grid w-full max-w-full items-center gap-1.5">
       <Popover :open="popoverState">
@@ -78,8 +79,6 @@ const { popoverState, changeTimezone, currentTimezone, searchTerm, filteredTimez
           </div>
         </PopoverContent>
         <span class="w-full text-sm text-muted-foreground">
-          Current timezone: {{ currentTimezone }}
-          <br />
           <span class="w-full text-sm text-warning">Selecting a new timezone will cause a full page reload, wait for a second...</span>
         </span>
       </Popover>

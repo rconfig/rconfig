@@ -10,12 +10,10 @@ export function useSystemSettingsBanner() {
     axios
       .get('/api/settings/banner/1')
       .then(response => {
-        // handle success
         banner.value = response.data.login_banner;
-        toastSuccess('Success', 'Banner loaded successfully');
+        // toastSuccess('Success', 'Banner loaded successfully');
       })
       .catch(error => {
-        // handle error
         console.log(error.response);
         toastError('Error', 'Failed to load banner');
       });
@@ -27,11 +25,9 @@ export function useSystemSettingsBanner() {
         login_banner: banner.value
       })
       .then(response => {
-        // handle success
         toastSuccess('Success', 'Banner saved successfully');
       })
       .catch(error => {
-        // handle error
         console.log(error);
         toastError('Error', 'Failed to save banner');
       });

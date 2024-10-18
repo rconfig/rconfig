@@ -13,8 +13,8 @@ const props = defineProps({});
 <template>
   <div class="grid w-full max-w-full items-center gap-1.5">
     <h3 class="mb-2 text-2xl font-semibold leading-7 tracking-tight font-inter">Email</h3>
-
     <p class="text-sm text-muted-foreground">Configure the email settings for the system notifications.</p>
+
     <div class="grid gap-2 py-4">
       <div class="grid items-center grid-cols-4 gap-4">
         <Label
@@ -156,7 +156,7 @@ const props = defineProps({});
       <div class="flex justify-end jap-2">
         <Button
           variant="outline"
-          class="px-2 py-1 ml-2 text-sm bg-rcgray-900 hover:bg-rcgray-800 hover:animate-pulse"
+          class="px-2 py-1 ml-2 text-sm bg-rcgray-900 hover:bg-rcgray-800"
           @click.prevent="testEmail('email')"
           size="sm">
           <Spinner :state="test1Loading" />
@@ -168,7 +168,7 @@ const props = defineProps({});
         </Button>
         <Button
           variant="outline"
-          class="px-2 py-1 ml-2 text-sm bg-rcgray-900 hover:bg-rcgray-800 hover:animate-pulse"
+          class="px-2 py-1 ml-2 text-sm bg-rcgray-900 hover:bg-rcgray-800"
           @click.prevent="testEmail('notification')"
           size="sm">
           <Spinner :state="test2Loading" />
@@ -182,17 +182,10 @@ const props = defineProps({});
       <div class="flex justify-end jap-2">
         <Button
           variant="outline"
-          class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+          class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700"
           @click.prevent="updateEmail()"
           size="sm">
           Save
-        </Button>
-
-        <Button
-          variant="outline"
-          class="px-2 py-1 ml-2 text-sm bg-rcgray-900 hover:bg-rcgray-800 hover:animate-pulse"
-          size="sm">
-          Reset
         </Button>
       </div>
     </div>

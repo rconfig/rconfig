@@ -17,11 +17,11 @@ onMounted(() => {
 <template>
   <div class="grid w-full max-w-full items-center gap-1.5">
     <h3 class="mb-4 text-2xl font-semibold leading-7 tracking-tight font-inter">Banner</h3>
+    <p class="text-sm text-muted-foreground">The standard banner to display on the login page.</p>
 
     <Textarea
       :placeholder="banner || 'Enter your banner here...'"
       v-model="banner" />
-    <p class="text-sm text-muted-foreground">The standard banner to display on the login page.</p>
 
     <div class="flex justify-end jap-2">
       <Button
