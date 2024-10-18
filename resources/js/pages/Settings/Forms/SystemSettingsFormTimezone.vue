@@ -69,7 +69,8 @@ const { popoverState, changeTimezone, currentTimezone, searchTerm, filteredTimez
             <!-- <Button
               variant="ghost"
               class="justify-start w-full p-1">
-              <Icon
+              <Iconnrd
+              
                 icon="octicon:plus-16"
                 class="w-3 h-3 mt-1 mr-2 text-muted-foreground" />
               <span>Create new record</span>

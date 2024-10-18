@@ -169,3 +169,13 @@
   padding-top: 0.5rem; /* 8px */
   padding-bottom: 0.5rem; /* 8px */
 }
+
+.fade-leave-active,
+.fade-enter-active {
+  transition: opacity 0.5s;
+}
+
+.fade-leave-to,
+.fade-enter-from {
+  opacity: 0;
+}

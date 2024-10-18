@@ -3,9 +3,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { ref } from 'vue';
+import Spinner from '@/pages/Shared/Icon/Spinner.vue';
 import { useSystemSettingsEmail } from '@/pages/Settings/Forms/useSystemSettingsEmail';
-const { settings } = useSystemSettingsEmail();
+const { settings, test1Loading, test2Loading, testEmail, updateEmail } = useSystemSettingsEmail();
 
 const props = defineProps({});
 </script>
@@ -39,6 +39,7 @@ const props = defineProps({});
         </Label>
         <Input
           id="mail_port"
+          type="number"
           v-model="settings.mail_port"
           autocomplete="off"
           class="col-span-3" />
@@ -128,20 +129,6 @@ const props = defineProps({});
 
           <div class="grid items-center grid-cols-4 gap-4">
             <Label
-              for="mail_driver"
-              class="text-right">
-              Mail Driver
-              <span class="text-red-600">*</span>
-            </Label>
-            <Input
-              id="mail_driver"
-              v-model="settings.mail_driver"
-              autocomplete="off"
-              class="col-span-3" />
-          </div>
-
-          <div class="grid items-center grid-cols-4 gap-4">
-            <Label
               for="mail_encryption"
               class="text-right">
               Mail Encryption
@@ -165,47 +152,50 @@ const props = defineProps({});
       </transition>
     </div>
 
-    <div class="flex justify-end jap-2">
-      <Button
-        variant="outline"
-        class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
-        size="sm">
-        Save
-      </Button>
+    <div class="flex justify-between">
+      <div class="flex justify-end jap-2">
+        <Button
+          variant="outline"
+          class="px-2 py-1 ml-2 text-sm bg-rcgray-900 hover:bg-rcgray-800 hover:animate-pulse"
+          @click.prevent="testEmail('email')"
+          size="sm">
+          <Spinner :state="test1Loading" />
+          <Icon
+            v-if="!test1Loading"
+            icon="fluent-color:mail-multiple-32"
+            class="w-4 h-4 mr-2" />
+          Send Test Email
+        </Button>
+        <Button
+          variant="outline"
+          class="px-2 py-1 ml-2 text-sm bg-rcgray-900 hover:bg-rcgray-800 hover:animate-pulse"
+          @click.prevent="testEmail('notification')"
+          size="sm">
+          <Spinner :state="test2Loading" />
+          <Icon
+            v-if="!test2Loading"
+            icon="fluent-color:alert-32"
+            class="w-4 h-4 mr-2" />
+          Send Test Notification
+        </Button>
+      </div>
+      <div class="flex justify-end jap-2">
+        <Button
+          variant="outline"
+          class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+          @click.prevent="updateEmail()"
+          size="sm">
+          Save
+        </Button>
 
-      <Button
-        variant="outline"
-        class="px-2 py-1 ml-2 text-sm bg-rcgray-900 hover:bg-rcgray-800 hover:animate-pulse"
-        size="sm">
-        Reset
-      </Button>
+        <Button
+          variant="outline"
+          class="px-2 py-1 ml-2 text-sm bg-rcgray-900 hover:bg-rcgray-800 hover:animate-pulse"
+          size="sm">
+          Reset
+        </Button>
+      </div>
     </div>
   </div>
   <Separator class="my-6" />
-
-  <pre>{{ settings }}</pre>
 </template>
-
-<!-- 
-"mail_host": "devmailer.rconfig.com",
-"mail_port": 1025,
-"mail_from_email": "admin@rconfig.com",
-"mail_to_email": "admin@domain.com",
-"mail_authcheck": 1,
-"mail_username": null,
-"mail_password": false,
-"mail_driver": "smtp",
-"mail_encryption": "tls", 
--->
-
-<style scoped>
-.fade-leave-active,
-.fade-enter-active {
-  transition: opacity 0.5s;
-}
-
-.fade-leave-to,
-.fade-enter-from {
-  opacity: 0;
-}
-</style>

@@ -21,25 +21,12 @@ class SettingEmailController extends ApiBaseController
         $this->model = $model;
         $this->modelname = $modelname;
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Setting  $id
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function show($id, $relationship = null, $withCount = null)
     {
         return parent::show($id);
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Setting  $id
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function update($id, StoreSettingsEmailRequest $request)
     {
         parent::updateResource($id, $request->toDTO()->toArray(), 1);

@@ -62,7 +62,7 @@ class StoreSettingsEmailRequest extends FormRequest
     {
         return new StoreSettingsEmailDTO([
             'mail_host' => $this->mail_host,
-            'mail_port' => $this->mail_port,
+            'mail_port' => (int) $this->mail_port,
             'mail_from_email' => $this->mail_from_email,
             'mail_to_email' => $this->mail_to_email,
             'mail_authcheck' => $this->mail_authcheck,
