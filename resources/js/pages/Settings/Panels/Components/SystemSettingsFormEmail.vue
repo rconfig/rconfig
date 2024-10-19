@@ -4,7 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import Spinner from '@/pages/Shared/Icon/Spinner.vue';
-import { useSystemSettingsEmail } from '@/pages/Settings/Panels/useSystemSettingsEmail';
+import { useSystemSettingsEmail } from '@/pages/Settings/Panels/Components/useSystemSettingsEmail';
 const { settings, test1Loading, test2Loading, testEmail, updateEmail } = useSystemSettingsEmail();
 
 const props = defineProps({});

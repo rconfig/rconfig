@@ -88,6 +88,8 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
     Route::get('/license-info', 'LicenseInfoController@index');
 
     Route::resource('activitylogs', 'ActivityLogController')->only(['index', 'show', 'destroy']);
+    Route::post('/activitylogs/delete-many', 'ActivityLogController@deleteMany');
+
     Route::prefix('activitylogs')->group(function () {
         Route::get('last5/{deviceid}', 'ActivityLogController@getLast5');
         Route::get('device-stats/{deviceid}', 'ActivityLogController@showStatsByDeviceId');

@@ -7,6 +7,7 @@ use App\Traits\RespondsWithHttpStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class ActivityLogController extends ApiBaseController
 {
@@ -18,46 +19,28 @@ class ActivityLogController extends ApiBaseController
         $this->modelname = $modelname;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request, $searchCols = null, $relationship = null, $withCount = null)
     {
-        $searchCols = ['description', 'log_name'];
 
-        return response()->json(parent::index($request, $searchCols));
+        $response = QueryBuilder::for(ActivityLog::class)
+            ->allowedFilters(['description'])
+            ->defaultSort('-id')
+            ->allowedSorts('id', 'log_name')
+            ->paginate((int) $request->perPage);
+
+        return response()->json($response);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ActivityLog  $tag
-     * @return \Illuminate\Http\Response
-     */
     public function show($id, $relationship = null, $withCount = null)
     {
         return parent::show($id);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ActivityLog  $tag
-     * @return \Illuminate\Http\Response
-     */
     public function getLast5($id)
     {
         return ActivityLog::where('device_id', $id)->latest()->take(5)->get();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ActivityLog  $tag
-     * @return \Illuminate\Http\Response
-     */
     public function showStatsByDeviceId($id)
     {
         return DB::table('activity_log')
@@ -77,16 +60,18 @@ class ActivityLogController extends ApiBaseController
         return $this->successResponse('Logs cleared successfully!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id, $return = 0)
     {
         $model = parent::destroy($id, 1);
 
         return $this->successResponse(Str::ucfirst($this->modelname) . ' deleted successfully!');
+    }
+
+    public function deleteMany(Request $request)
+    {
+        $ids = $request->input('ids');
+        ActivityLog::whereIn('id', $ids)->delete();
+
+        return response()->json(['message' => 'Logs deleted successfully'], 200);
     }
 }

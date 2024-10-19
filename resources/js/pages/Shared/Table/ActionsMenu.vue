@@ -12,6 +12,10 @@ defineProps({
   rowData: {
     type: Object,
     required: true
+  },
+  showEditBtn: {
+    type: Boolean,
+    default: true
   }
 });
 
@@ -44,6 +48,7 @@ function handleDelete() {
         align="end"
         side="bottom">
         <DropdownMenuItem
+          v-if="showEditBtn"
           class="cursor-pointer hover:bg-rcgray-800"
           @click="handleEdit">
           <span>Edit</span>
@@ -51,7 +56,7 @@ function handleDelete() {
             <Icon icon="fluent-color:text-edit-style-16" />
           </DropdownMenuShortcut>
         </DropdownMenuItem>
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator v-if="showEditBtn" />
         <DropdownMenuItem
           class="cursor-pointer hover:bg-rcgray-800"
           @click="showAlert">
