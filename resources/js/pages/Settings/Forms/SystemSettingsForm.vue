@@ -5,8 +5,8 @@ import SystemSettingsFormEmail from '@/pages/Settings/Forms/SystemSettingsFormEm
 </script>
 
 <template>
-  <div class="flex justify-center">
-    <div class="flex flex-col items-center w-1/2 gap-4">
+  <div class="flex justify-center w-full">
+    <div class="flex flex-col items-center w-full gap-4 md:w-1/2">
       <SystemSettingsFormTimezone />
       <SystemSettingsFormBanner />
       <SystemSettingsFormEmail />

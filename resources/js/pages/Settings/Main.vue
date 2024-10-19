@@ -1,18 +1,10 @@
 <script setup>
-import { onMounted } from 'vue';
 import { useSettings } from '@/pages/Settings/useSettings';
 import SidebarNav from '@/pages/Settings/SidebarNav.vue';
 import { Separator } from '@/components/ui/separator';
+import Loading from '@/pages/Shared/Loading.vue';
 
 const { activeForm, setForm, formComponents, activeFormComponent } = useSettings();
-
-onMounted(() => {
-  // Retrieve the selected form from localStorage
-  const form = localStorage.getItem('activeForm');
-  if (form) {
-    activeForm.value = form;
-  }
-});
 </script>
 
 <template>
@@ -30,16 +22,20 @@ onMounted(() => {
     <div class="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
       <aside class="lg:w-[10%]">
         <SidebarNav
+          v-if="activeForm"
           @nav="setForm($event)"
           :activeForm="activeForm" />
       </aside>
 
       <div class="flex-1">
-        <div class="space-y-6">
+        <div class="flex items-center justify-center space-y-6">
+          <Loading v-if="!activeForm" />
+
           <transition
             name="fade"
             mode="out-in">
             <component
+              v-if="activeForm"
               :is="activeFormComponent"
               :key="activeForm" />
           </transition>
@@ -49,7 +45,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style>
+<style scoped>
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s ease;
