@@ -10,6 +10,13 @@ const { licenseInfo } = useAbout();
   <div class="flex justify-center w-full">
     <div class="flex flex-col items-center w-full gap-4 md:w-1/2">
       <div class="grid w-full max-w-full items-center gap-1.5">
+        <div class="flex justify-start w-full mb-8">
+          <img
+            src="/images/new/white/hex_logo_white_horizontal_256_TM.png"
+            alt="rConfig Logo"
+            class="w-full max-w-xs" />
+        </div>
+
         <h3 class="mb-4 text-2xl font-semibold leading-7 tracking-tight font-inter">About rConfig</h3>
         <p class="text-sm">rConfig is a powerful and user-friendly network configuration management tool designed to help you efficiently manage and automate your network devices. Stay organized, save time, and ensure consistency across your network infrastructure with rConfig.</p>
 
