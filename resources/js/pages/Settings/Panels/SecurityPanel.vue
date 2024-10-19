@@ -46,7 +46,7 @@ import { Separator } from '@/components/ui/separator';
           <div class="w-3/4">
             <div><strong>Your Data, Your Responsibility:</strong></div>
             <div class="text-sm text-gray-500 dark:text-gray-400">All data managed by rConfig is stored on *your* systems. rConfig does not and will never store, host, or transmit any of your data.</div>
-            <div class="text-sm text-gray-500 dark:text-gray-400">Please ensure your own security controls are properly configured to reflect this.</div>
+            <div class="text-sm text-gray-500 dark:text-gray-400">Please ensure your own network and server security controls are properly configured to reflect this.</div>
           </div>
         </div>
 
