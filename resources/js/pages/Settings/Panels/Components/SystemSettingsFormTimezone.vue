@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
-import { useSystemSettingsTimezone } from '@/pages/Settings/Forms/useSystemSettingsTimezone';
+import { useSystemSettingsTimezone } from '@/pages/Settings/Panels/useSystemSettingsTimezone';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';

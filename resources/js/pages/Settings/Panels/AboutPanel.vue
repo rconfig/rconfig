@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { Separator } from '@/components/ui/separator';
-import { useAbout } from '@/pages/Settings/Forms/useAbout';
+import { useAbout } from '@/pages/Settings/Panels/useAbout';
 
 const { licenseInfo } = useAbout();
 </script>

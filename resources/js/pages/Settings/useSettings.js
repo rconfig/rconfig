@@ -1,21 +1,21 @@
 import axios from 'axios';
 import { ref, computed, onMounted } from 'vue';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
-import SystemSettingsForm from '@/pages/Settings/Forms/SystemSettingsForm.vue';
-import SecurityForm from '@/pages/Settings/Forms/SecurityForm.vue';
-import AboutForm from '@/pages/Settings/Forms/AboutForm.vue';
-import LogsForm from '@/pages/Settings/Forms/LogsForm.vue';
-import UpgradeForm from '@/pages/Settings/Forms/UpgradeForm.vue';
+import SystemSettingsPanel from '@/pages/Settings/Panels/SystemSettingsPanel.vue';
+import SecurityPanel from '@/pages/Settings/Panels/SecurityPanel.vue';
+import AboutPanel from '@/pages/Settings/Panels/AboutPanel.vue';
+import LogsPanel from '@/pages/Settings/Panels/LogsPanel.vue';
+import UpgradePanel from '@/pages/Settings/Panels/UpgradePanel.vue';
 
 export function useSettings() {
   const activeForm = ref(null);
 
   const formComponents = {
-    '/settings/system': SystemSettingsForm,
-    '/settings/security': SecurityForm,
-    '/settings/about': AboutForm,
-    '/settings/logs': LogsForm,
-    '/settings/upgrade': UpgradeForm
+    '/settings/system': SystemSettingsPanel,
+    '/settings/security': SecurityPanel,
+    '/settings/about': AboutPanel,
+    '/settings/logs': LogsPanel,
+    '/settings/upgrade': UpgradePanel
   };
 
   function setForm(e) {

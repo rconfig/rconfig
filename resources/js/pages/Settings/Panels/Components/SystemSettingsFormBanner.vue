@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { ref, onMounted } from 'vue';
-import { useSystemSettingsBanner } from '@/pages/Settings/Forms/useSystemSettingsBanner';
+import { useSystemSettingsBanner } from '@/pages/Settings/Panels/useSystemSettingsBanner';
 
 const { banner, getLoginBanner, saveBanner, resetBanner } = useSystemSettingsBanner();
 
