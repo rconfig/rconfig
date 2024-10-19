@@ -145,7 +145,7 @@ import { Icon } from '@iconify/vue';
                 type="button"
                 href="https://www.rconfig.com/demo-request"
                 target="_blank"
-                class="m-0 outline-none border-none no-underline relative flex shrink-0 grow-0 items-center justify-center opacity-100 cursor-pointer gap-1.5 w-full bg-[#266DF0] p-1 rounded-lg shadow-[inset_0_0_0_1px_rgba(244,245,246,0.1)] transition-colors transition-shadow duration-200">
+                class="m-0 outline-none border-none no-underline relative flex shrink-0 grow-0 items-center justify-center opacity-100 cursor-pointer gap-1.5 w-full bg-blue-600 p-1 rounded-lg shadow-[inset_0_0_0_1px_rgba(244,245,246,0.1)] hover:bg-blue-500">
                 <div class="inline-block align-bottom overflow-hidden text-ellipsis whitespace-nowrap text-[14px] leading-5 font-medium tracking-[-0.02em] text-[#EEEFF1]">Upgrade to Pro</div>
               </a>
               <div class="flex flex-col items-start justify-start w-full gap-2">
@@ -239,7 +239,7 @@ import { Icon } from '@iconify/vue';
                 type="button"
                 href="https://www.rconfig.com/demo-request"
                 target="_blank"
-                class="m-0 outline-none border-none no-underline relative flex shrink-0 grow-0 items-center justify-center opacity-100 cursor-pointer gap-1.5 w-full bg-[#266DF0] p-1 rounded-lg shadow-[inset_0_0_0_1px_rgba(244,245,246,0.1)] transition-colors transition-shadow duration-200">
+                class="m-0 outline-none border-none no-underline relative flex shrink-0 grow-0 items-center justify-center opacity-100 cursor-pointer gap-1.5 w-full bg-blue-600 p-1 rounded-lg shadow-[inset_0_0_0_1px_rgba(244,245,246,0.1)] hover:bg-blue-500">
                 <div class="inline-block align-bottom overflow-hidden text-ellipsis whitespace-nowrap text-[14px] leading-5 font-medium tracking-[-0.02em] text-[#EEEFF1]">Talk to sales</div>
               </a>
               <div class="flex flex-col items-start justify-start w-full gap-2">
