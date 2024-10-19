@@ -15,12 +15,12 @@ const sidebarNavItems = [
     href: '/settings/security'
   },
   {
-    title: 'About',
-    href: '/settings/about'
-  },
-  {
     title: 'Logs',
     href: '/settings/logs'
+  },
+  {
+    title: 'About',
+    href: '/settings/about'
   },
   {
     title: 'Upgrade',
