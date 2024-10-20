@@ -39,6 +39,7 @@ export function useSettings() {
 
   function setComponent() {
     // if the path is specific, load the component
+    console.log(route.path);
     if (Object.keys(formComponents).includes(route.path)) {
       settingsActivePane.value = route.path;
       return;

@@ -36,6 +36,13 @@ const routes = [
     }
   },
   {
+    path: '/settings/about',
+    name: 'settings-about',
+    component: () => import('@/pages/Settings/Main.vue'),
+    props: { about: true },
+    beforeEnter: guardMyroute
+  },
+  {
     path: '/settings/upgrade',
     name: 'settings-upgrade',
     component: () => import('@/pages/Settings/Main.vue'),

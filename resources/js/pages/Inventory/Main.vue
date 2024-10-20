@@ -24,12 +24,12 @@ const route = useRoute();
 const router = useRouter();
 
 const viewItems = [
-  { id: 'devices', label: 'Devices', icon: 'DeviceIcon', isFavorite: ref(false), route: 'devices' },
-  { id: 'commandgroups', label: 'Command Groups', icon: 'CommandGroupIcon', isFavorite: ref(false), route: 'commandgroups' },
-  { id: 'commands', label: 'Commands', icon: 'CommandsIcon', isFavorite: ref(false), route: 'commands' },
-  { id: 'templates', label: 'Templates', icon: 'TemplateIcon', isFavorite: ref(false), route: 'templates' },
-  { id: 'vendors', label: 'Vendors', icon: 'VendorIcon', isFavorite: ref(false), route: 'vendors' },
-  { id: 'tags', label: 'Tags', icon: 'TagIcon', isFavorite: ref(false), route: 'tags' }
+  { id: 'devices', label: 'Devices', icon: 'DeviceIcon', isFavorite: ref(false), route: '/devices' },
+  { id: 'commandgroups', label: 'Command Groups', icon: 'CommandGroupIcon', isFavorite: ref(false), route: '/commandgroups' },
+  { id: 'commands', label: 'Commands', icon: 'CommandsIcon', isFavorite: ref(false), route: '/commands' },
+  { id: 'templates', label: 'Templates', icon: 'TemplateIcon', isFavorite: ref(false), route: '/templates' },
+  { id: 'vendors', label: 'Vendors', icon: 'VendorIcon', isFavorite: ref(false), route: '/vendors' },
+  { id: 'tags', label: 'Tags', icon: 'TagIcon', isFavorite: ref(false), route: '/tags' }
 ];
 
 onMounted(() => {

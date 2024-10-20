@@ -11,9 +11,7 @@ const { settingsActivePane, setForm, formComponents, settingsActivePaneComponent
   <div class="pb-16 pl-10 space-y-6 md:block">
     <div class="space-y-0.5">
       <h2 class="flex items-center space-x-2 text-2xl font-bold tracking-tight">
-        <Icon
-          icon="catppuccin:env"
-          class="w-6 h-6" />
+        <SettingsIcon class="w-8 h-8" />
         <span>Settings</span>
       </h2>
       <p class="text-muted-foreground">Manage your account settings and set e-mail preferences.</p>

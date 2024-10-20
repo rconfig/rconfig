@@ -20,7 +20,7 @@
                 <resizable-panel id="topnav" :default-size="90">
 
                     <div class="flex flex-col">
-                        <navigation-top :title="$route.name"></navigation-top>
+                        <navigation-top></navigation-top>
 
                         <!-- Page Content -->
                         <router-view :key="$route.fullPath"></router-view>

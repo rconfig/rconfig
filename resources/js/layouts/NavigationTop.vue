@@ -1,15 +1,17 @@
 <script setup>
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ref, computed } from 'vue';
 import { useColorMode } from '@vueuse/core';
 import { usePanelStore } from '@/stores/panelStore'; // Import the Pinia store
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const svgIshoveringOpen = ref(false);
 const mode = useColorMode();
 const panelStore = usePanelStore(); // Access the panel store
 const route = useRoute();
+const router = useRouter();
 
 defineProps({
   panelRef: {
@@ -30,47 +32,31 @@ function collapsePanel() {
 const breadcrumbs = computed(() => {
   return route.meta.breadcrumb || [];
 });
+
+function toggleTheme() {
+  if (mode.value === 'light') {
+    mode.value = 'dark';
+  } else if (mode.value === 'dark') {
+    mode.value = 'light';
+  }
+}
+
+function navToUpgrade() {
+  router.push({ name: 'settings-about' });
+}
+
+function logout() {
+  console.log('logout');
+  axios
+    .post('/logout')
+    .then(response => {
+      window.location.href = '/login';
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
 </script>
-
-<style scoped>
-.top-nav-div {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 8px;
-}
-/* open nav icon */
-.dbUOim[data-hovering='false'] {
-  transform: translateX(-6px) scale(0.9);
-  opacity: 0;
-}
-
-.dbUOim {
-  transition:
-    transform 200ms ease 0s,
-    opacity 120ms ease 0s;
-}
-
-.ekwKMA[data-hovering='false'] {
-  transform: translateX(-6px);
-}
-
-.ekwKMA {
-  transition: all 200ms ease 0s;
-}
-
-.hxMVRj[data-hovering='false'] {
-  transform: translateX(-4px);
-  opacity: 0;
-}
-
-.hxMVRj {
-  transition:
-    transform 200ms ease 0s,
-    opacity 120ms ease 0s;
-}
-</style>
 
 <template>
   <nav class="dark:bg-rcgray-900">
@@ -101,28 +87,28 @@ const breadcrumbs = computed(() => {
               d="M7.2 15.2252L7.2 2.72522H8.4L8.4 15.2252H7.2Z"
               fill="#86888D"
               :data-hovering="svgIshoveringOpen"
-              class="sc-jFGlJG dbUOim"></path>
+              class="nav-state-icon"></path>
             <path
               fill-rule="evenodd"
               clip-rule="evenodd"
               d="M12.1757 6.55086C12.41 6.31654 12.7899 6.31654 13.0243 6.55086L14.8243 8.35085C14.9368 8.46338 15 8.61599 15 8.77512C15 8.93425 14.9368 9.08686 14.8243 9.19938L13.0243 10.9994C12.7899 11.2337 12.41 11.2337 12.1757 10.9994C11.9414 10.7651 11.9414 10.3852 12.1757 10.1509L12.9515 9.37512H9.89999C9.56862 9.37512 9.29999 9.10649 9.29999 8.77512C9.29999 8.44375 9.56862 8.17512 9.89999 8.17512H12.9515L12.1757 7.39939C11.9414 7.16507 11.9414 6.78517 12.1757 6.55086Z"
               fill="#86888D"
               :data-hovering="svgIshoveringOpen"
-              class="sc-kZbWFF ekwKMA"></path>
+              class="nav-state-icon2"></path>
             <path
               fill-rule="evenodd"
               clip-rule="evenodd"
               d="M3.375 5.42544C3.375 5.09407 3.64363 4.82544 3.975 4.82544H5.325C5.65637 4.82544 5.925 5.09407 5.925 5.42544C5.925 5.75681 5.65637 6.02544 5.325 6.02544H3.975C3.64363 6.02544 3.375 5.75681 3.375 5.42544Z"
               fill="#86888D"
               :data-hovering="svgIshoveringOpen"
-              class="sc-egvMOQ hxMVRj"></path>
+              class="nav-state-icon3"></path>
             <path
               fill-rule="evenodd"
               clip-rule="evenodd"
               d="M3.375 7.67434C3.375 7.34297 3.64363 7.07434 3.975 7.07434H5.325C5.65637 7.07434 5.925 7.34297 5.925 7.67434C5.925 8.00571 5.65637 8.27434 5.325 8.27434H3.975C3.64363 8.27434 3.375 8.00571 3.375 7.67434Z"
               fill="#86888D"
               :data-hovering="svgIshoveringOpen"
-              class="sc-egvMOQ hxMVRj"></path>
+              class="nav-state-icon3"></path>
           </svg>
         </button>
 
@@ -148,35 +134,48 @@ const breadcrumbs = computed(() => {
       </div>
 
       <div class="mt-1 top-nav-div">
-        <Button variant="ghost">
-          <Icon
-            icon="carbon:help"
-            class="absolute h-[1.2rem] w-[1.2rem]" />
-        </Button>
-        <Button variant="ghost">
-          <Icon
-            icon="carbon:search"
-            class="absolute h-[1.2rem] w-[1.2rem]" />
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger as-child>
+              <Button
+                :class="mode === 'dark' ? 'hover:bg-rcgray-600' : 'hover:bg-rcgray-300'"
+                @click="navToUpgrade()"
+                variant="ghost">
+                <Icon
+                  icon="carbon:help"
+                  class="absolute h-[1.2rem] w-[1.2rem]" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>About</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger as-child>
-            <Button variant="ghost">
-              <Icon
-                icon="radix-icons:moon"
-                class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Icon
-                icon="radix-icons:sun"
-                class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              <span class="sr-only">Toggle theme</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem @click="mode = 'light'">Light</DropdownMenuItem>
-            <DropdownMenuItem @click="mode = 'dark'">Dark</DropdownMenuItem>
-            <DropdownMenuItem @click="mode = 'auto'">System</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger as-child>
+              <Button
+                variant="ghost"
+                :class="mode === 'dark' ? 'hover:bg-rcgray-600' : 'hover:bg-rcgray-300'"
+                @click="toggleTheme()">
+                <Transition name="fade">
+                  <Icon
+                    v-if="mode === 'light'"
+                    icon="radix-icons:moon"
+                    class="absolute h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                  <Icon
+                    v-else-if="mode === 'dark'"
+                    icon="radix-icons:sun"
+                    class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                </Transition>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{{ mode === 'dark' ? 'Switch to light theme' : 'Switch to dark theme' }}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
 
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
@@ -187,17 +186,26 @@ const breadcrumbs = computed(() => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Billing</DropdownMenuItem>
-            <DropdownMenuItem>Team</DropdownMenuItem>
-            <DropdownMenuItem class="cursor-pointer hover:bg-gray-800">
+            <!-- <DropdownMenuLabel>My Account</DropdownMenuLabel> -->
+            <!-- <DropdownMenuSeparator /> -->
+            <DropdownMenuItem class="p-0 cursor-pointer hover:bg-gray-800">
               <router-link
-                href="/logout"
-                method="post">
-                Sign out
+                type="button"
+                variant="ghost"
+                :to="'/settings/users/' + $userId"
+                class="flex items-center py-2 ml-2">
+                <UserIcon class="mr-2" />
+                My Account
               </router-link>
+            </DropdownMenuItem>
+            <DropdownMenuItem class="p-0 cursor-pointer hover:bg-gray-800">
+              <Button
+                variant="ghost"
+                class="flex justify-start w-full py-1 pl-2"
+                @click.prevent="logout()">
+                <LogoutIcon class="mr-2" />
+                Sign out
+              </Button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -205,3 +213,43 @@ const breadcrumbs = computed(() => {
     </div>
   </nav>
 </template>
+
+<style scoped>
+.top-nav-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.nav-state-icon[data-hovering='false'] {
+  transform: translateX(-6px) scale(0.9);
+  opacity: 0;
+}
+
+.nav-state-icon {
+  transition:
+    transform 200ms ease 0s,
+    opacity 120ms ease 0s;
+}
+
+.nav-state-icon2[data-hovering='false'] {
+  transform: translateX(-6px);
+}
+
+.nav-state-icon2 {
+  transition: all 200ms ease 0s;
+}
+
+.nav-state-icon3[data-hovering='false'] {
+  transform: translateX(-4px);
+  opacity: 0;
+}
+
+.nav-state-icon3 {
+  transition:
+    transform 200ms ease 0s,
+    opacity 120ms ease 0s;
+}
+</style>
