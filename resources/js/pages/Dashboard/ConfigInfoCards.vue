@@ -22,9 +22,7 @@ defineProps({
     <Card class="border shadow rounded-xl bg-card text-card-foreground">
       <CardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
         <CardTitle class="text-sm font-medium">Device count</CardTitle>
-        <Icon
-          icon="devicon:networkx"
-          class="w-4 h-4 text-muted-foreground" />
+        <InventoryIcon />
       </CardHeader>
       <CardContent>
         <div v-if="configinfo.data">
