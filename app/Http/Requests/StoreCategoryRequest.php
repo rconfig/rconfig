@@ -51,6 +51,7 @@ class StoreCategoryRequest extends FormRequest
         return new StoreCategoryDTO([
             'categoryName' => $this->categoryName,
             'categoryDescription' => $this->categoryDescription,
+            'badgeColor' => $this->badgeColor ?? null,
         ]);
     }
 }

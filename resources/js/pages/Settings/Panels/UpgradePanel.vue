@@ -8,9 +8,6 @@ import { Icon } from '@iconify/vue';
   <div class="flex justify-center w-full">
     <div class="flex flex-col items-center w-full gap-4 md:w-3/4">
       <div class="grid w-full max-w-full items-center gap-1.5">
-        <h3 class="mb-2 text-2xl font-semibold leading-7 tracking-tight font-inter">Unlock enterrpise features</h3>
-        <p class="text-sm text-muted-foreground">Discover the perfect plan tailored to your needs. Whether you're a hobbyist, a growing business, or a large enterprise, we have the right features to help you succeed.</p>
-
         <div class="flex flex-col items-center pt-8 xl:flex-row">
           <div class="flex flex-col items-center mb-16 text-center lg:flex-grow xl:w-1/2 xl:pr-16 md:items-start md:text-left md:mb-0">
             <h1 class="mb-4 text-3xl font-medium title-font sm:text-4xl">Unlock the Full Power of rConfig</h1>

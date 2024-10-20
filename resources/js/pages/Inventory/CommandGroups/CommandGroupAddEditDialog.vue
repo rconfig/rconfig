@@ -1,5 +1,6 @@
 <script setup>
 import axios from 'axios';
+import BadgeColorSelector from '@/pages/Inventory/CommandGroups/BadgeColorSelector.vue';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -17,7 +18,8 @@ const roles = ref([]);
 const errors = ref([]);
 const model = ref({
   categoryName: '',
-  categoryDescription: ''
+  categoryDescription: '',
+  badgeColor: {}
 });
 
 const props = defineProps({
@@ -96,6 +98,15 @@ function saveDialog() {
             v-model="model.categoryDescription"
             id="categoryDescription"
             class="col-span-3" />
+        </div>
+
+        <div class="grid items-center grid-cols-4 gap-4">
+          <Label
+            for="categoryDescription"
+            class="text-right">
+            Color
+          </Label>
+          <BadgeColorSelector v-model="model.badgeColor" />
         </div>
       </div>
       <div class="flex flex-col w-full space-y-2">

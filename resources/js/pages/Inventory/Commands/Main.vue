@@ -142,6 +142,7 @@ onUnmounted(() => {
                   class="mr-2">
                   <Badge
                     variant="outline"
+                    :class="category.badgeColor ? category.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'"
                     class="py-1 mt-1 hover:bg-rcgray-800">
                     <router-link :to="category.view_url">{{ category.categoryName }}</router-link>
                   </Badge>
