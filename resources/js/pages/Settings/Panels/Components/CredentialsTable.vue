@@ -11,7 +11,7 @@ import { onMounted } from 'vue';
 import { useCredentials } from '@/pages/Settings/Panels/Components/useCredentials';
 import { useRowSelection } from '@/composables/useRowSelection';
 
-const { editId, currentPage, createCred, handleSave, deleteCredential, deleteManyCredentials, fetchCreds, newCredModalKey, filters, isLoading, lastPage, creds, perPage, searchTerm, showConfirmDelete, sortParam, toggleSort } = useCredentials();
+const { editId, currentPage, createCred, handleSave, deleteCredential, deleteManyCredentials, newCredModalKey, isLoading, lastPage, creds, perPage, searchTerm, showConfirmDelete, sortParam, toggleSort } = useCredentials();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(creds);
 
 const props = defineProps({});

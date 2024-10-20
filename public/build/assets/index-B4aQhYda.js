@@ -1,4 +1,4 @@
-import{V as B,ah as J}from"./app-DqVK3TKP.js";var M={exports:{}};/*!
+import{V as B,ah as J}from"./app-DKbtG6QL.js";var M={exports:{}};/*!
  * clipboard.js v2.0.11
  * https://clipboardjs.com/
  *
