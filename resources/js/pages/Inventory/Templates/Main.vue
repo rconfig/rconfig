@@ -84,7 +84,7 @@ onUnmounted(() => {
           variant="primary">
           New Template
           <div class="pl-2 ml-auto">
-            <kbd class="bxnAJf2">ALT N</kbd>
+            <kbd class="rc-kdb-class2">ALT N</kbd>
           </div>
         </Button>
       </div>

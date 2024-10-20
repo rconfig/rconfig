@@ -68,7 +68,7 @@ onUnmounted(() => {
           variant="primary">
           New Vendor
           <div class="pl-2 ml-auto">
-            <kbd class="bxnAJf2">ALT N</kbd>
+            <kbd class="rc-kdb-class2">ALT N</kbd>
           </div>
         </Button>
       </div>

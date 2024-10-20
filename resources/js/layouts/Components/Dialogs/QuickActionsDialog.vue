@@ -29,14 +29,14 @@ onMounted(() => {
       <Button
         id="quickActionsBtn"
         variant="outline"
-        class="border-rcgray-600 hover:bg-rcgray-800 izeqKn"
+        class="border-rcgray-600 hover:bg-rcgray-800 m-0 outline-none border-none no-underline flex items-center flex-shrink-0 overflow-hidden rounded-lg shadow-inner shadow-[0_0_0_1px_rgb(49,51,55)] bg-[#1b1d21] h-7 p-[4px_6px] gap-1.5 relative transition-[background] flex-grow"
         data-full-width="true">
         <Icon
           icon="carbon:table-shortcut"
           class="" />
-        <div class="iaiJhj">Quick Actions</div>
+        <div class="font-inter tracking-[-0.02em] font-medium leading-[20px] text-[14px] text-[#9fa1a7]">Quick Actions</div>
         <div class="ml-auto">
-          <kbd class="bxnAJf">CtrlK</kbd>
+          <kbd class="rc-kdb-class">CtrlK</kbd>
         </div>
       </Button>
     </DialogTrigger>

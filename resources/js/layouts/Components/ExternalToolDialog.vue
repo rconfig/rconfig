@@ -151,7 +151,7 @@ const submitLink = () => {
             size="sm">
             Cancel
             <div class="pl-2 ml-auto">
-              <kbd class="bxnAJf">ESC</kbd>
+              <kbd class="rc-kdb-class">ESC</kbd>
             </div>
           </Button>
 
@@ -163,7 +163,7 @@ const submitLink = () => {
             variant="primary">
             Add Link
             <div class="pl-2 ml-auto">
-              <kbd class="bxnAJf2">
+              <kbd class="rc-kdb-class2">
                 Ctrl&nbsp;
                 <Icon
                   icon="uil:enter"

@@ -30,9 +30,9 @@ onMounted(() => {
       <Button
         id="quickSearchBtn"
         variant="outline"
-        class="border-rcgray-600 hover:bg-rcgray-800 izeqKn">
+        class="border-rcgray-600 hover:bg-rcgray-800 m-0 outline-none border-none no-underline flex items-center flex-shrink-0 overflow-hidden rounded-lg shadow-inner shadow-[0_0_0_1px_rgb(49,51,55)] bg-[#1b1d21] h-7 p-[4px_6px] gap-1.5 relative transition-[background]">
         <Icon icon="carbon:search" />
-        <div class="ml-auto"><kbd class="bxnAJf">/</kbd></div>
+        <div class="ml-auto"><kbd class="rc-kdb-class">/</kbd></div>
       </Button>
     </DialogTrigger>
     <DialogContent class="sm:max-w-[80dvh] grid-rows-[auto_minmax(0,1fr)_auto] p-0 max-h-[90dvh]">
@@ -53,54 +53,3 @@ onMounted(() => {
     </DialogContent>
   </Dialog>
 </template>
-
-<style>
-.izeqKn[data-full-width='true'] {
-  flex: 1 1 0%;
-}
-.izeqKn {
-  margin: 0px;
-  outline: none;
-  border: none;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  overflow: hidden;
-  border-radius: 8px;
-  box-shadow: rgb(49, 51, 55) 0px 0px 0px 1px inset;
-  background: rgb(27, 29, 33);
-  height: 28px;
-  padding: 4px 6px;
-  gap: 6px;
-  position: relative;
-  transition: background 140ms;
-}
-.iaiJhj {
-  font-family: Inter;
-  letter-spacing: -0.02em;
-  font-weight: 500;
-  line-height: 20px;
-  font-size: 14px;
-  color: rgb(159, 161, 167);
-}
-.bxnAJf {
-  color: rgb(134, 136, 141);
-  box-shadow: rgb(55, 57, 62) 0px 0px 0px 1px inset;
-  font-size: 11px;
-  border-radius: 6px;
-  height: 20px;
-  padding-left: 4px;
-  padding-right: 4px;
-  font-family: Inter;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  font-weight: normal;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  text-align: center;
-  line-height: 1;
-}
-</style>

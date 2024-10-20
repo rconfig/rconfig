@@ -116,7 +116,7 @@ function saveDialog() {
           size="sm">
           Cancel
           <div class="pl-2 ml-auto">
-            <kbd class="bxnAJf">ESC</kbd>
+            <kbd class="rc-kdb-class">ESC</kbd>
           </div>
         </Button>
 
@@ -129,7 +129,7 @@ function saveDialog() {
           variant="primary">
           Save
           <div class="pl-2 ml-auto">
-            <kbd class="bxnAJf2">
+            <kbd class="rc-kdb-class2">
               Ctrl&nbsp;
               <Icon
                 icon="uil:enter"
@@ -147,7 +147,7 @@ function saveDialog() {
           variant="primary">
           Update
           <div class="pl-2 ml-auto">
-            <kbd class="bxnAJf2">
+            <kbd class="rc-kdb-class2">
               Ctrl&nbsp;
               <Icon
                 icon="uil:enter"
