@@ -4,7 +4,6 @@ import QuickActions from '@/layouts/Components/QuickActions.vue';
 import SheetHelp from '@/layouts/Components/SheetHelp.vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ResizablePanel } from '@/components/ui/resizable';
 import { ref, onMounted, onUnmounted, inject, watch } from 'vue';
 import { useExternalLinksStore } from '@/stores/externalLinksStore';
 import { useFavoritesStore } from '@/stores/favorites';

@@ -8,7 +8,6 @@ import Step4 from '@/pages/Tasks/WizardPanels/Step4.vue';
 import Step5 from '@/pages/Tasks/WizardPanels/Step5.vue';
 import axios from 'axios';
 import { Dialog, DialogContent, DialogScrollContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useDialogStore } from '@/stores/dialogActions';

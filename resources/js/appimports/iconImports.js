@@ -10,11 +10,11 @@ import SettingsIcon from '@/pages/Shared/Icon/SettingsIcon.vue';
 import SysLogViewerIcon from '@/pages/Shared/Icon/SysLogViewerIcon.vue';
 import SysQueueManagerIcon from '@/pages/Shared/Icon/SysQueueManagerIcon.vue';
 import ExternalLinkIcon from '@/pages/Shared/Icon/ExternalLinkIcon.vue';
-import DeviceIcon from './pages/Shared/Icon/DeviceIcon.vue';
-import CommandGroupIcon from './pages/Shared/Icon/CommandGroupIcon.vue';
-import CommandsIcon from './pages/Shared/Icon/CommandsIcon.vue';
-import TemplateIcon from './pages/Shared/Icon/TemplateIcon.vue';
-import VendorIcon from './pages/Shared/Icon/VendorIcon.vue';
-import TagIcon from './pages/Shared/Icon/TagIcon.vue';
+import DeviceIcon from '@/pages/Shared/Icon/DeviceIcon.vue';
+import CommandGroupIcon from '@/pages/Shared/Icon/CommandGroupIcon.vue';
+import CommandsIcon from '@/pages/Shared/Icon/CommandsIcon.vue';
+import TemplateIcon from '@/pages/Shared/Icon/TemplateIcon.vue';
+import VendorIcon from '@/pages/Shared/Icon/VendorIcon.vue';
+import TagIcon from '@/pages/Shared/Icon/TagIcon.vue';
 
 export { Icon, UserIcon, NotificationIcon, DashboardIcon, InventoryIcon, TasksIcon, ConfigToolsIcon, SettingsIcon, SysLogViewerIcon, SysQueueManagerIcon, ExternalLinkIcon, DeviceIcon, CommandGroupIcon, CommandsIcon, TemplateIcon, VendorIcon, TagIcon };
