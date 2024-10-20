@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import axios from 'axios';
-import { computed, onMounted, ref, watch } from 'vue';
+import { ref } from 'vue';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 
 const emit = defineEmits(['update:modelValue']);
 const selectedColor = ref({});

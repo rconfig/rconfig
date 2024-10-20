@@ -1,13 +1,12 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { useDialogStore } from '@/stores/dialogActions';
-import { Button } from '@/components/ui/button';
-import axios from 'axios';
-import { useToaster } from '@/composables/useToaster'; // Import the composable
-import { useTemplatesGithub } from '@/pages/Inventory/Templates/useTemplatesGithub';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Spinner from '@/pages/Shared/Icon/Spinner.vue';
+import axios from 'axios';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ref, onMounted, onUnmounted } from 'vue';
+import { useDialogStore } from '@/stores/dialogActions';
+import { useTemplatesGithub } from '@/pages/Inventory/Templates/useTemplatesGithub';
+import { useToaster } from '@/composables/useToaster'; // Import the composable
 
 const { importingTemplates, getTemplateRepoFolders, vendorOptionSelected, showFileOptions, listedFiles, hasReadmeFile, fileOptionSelected, selectedTemplateCode } = useTemplatesGithub();
 

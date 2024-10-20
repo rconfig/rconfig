@@ -1,10 +1,8 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+
 import { useDialogStore } from '@/stores/dialogActions';
-import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import axios from 'axios';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
@@ -90,7 +88,7 @@ function saveDialog() {
       <DialogHeader class="rc-dialog-header">
         <DialogTitle class="text-sm text-rcgray-200">
           <div class="flex items-center">
-            <Icon icon="carbon:user-settings" />
+            <UserIcon />
             <span class="ml-2">{{ editId > 0 ? 'Edit' : 'Add' }} User {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</span>
           </div>
         </DialogTitle>

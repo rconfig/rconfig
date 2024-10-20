@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from 'vue';
 import { Separator } from '@/components/ui/separator';
-import { Icon } from '@iconify/vue';
 </script>
 
 <template>

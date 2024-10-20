@@ -1,18 +1,17 @@
 <script setup>
-import Devices from '@/pages/Inventory/Devices/Main.vue';
-import CommandGroups from '@/pages/Inventory/CommandGroups/Main.vue';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import AddEditPane from '@/layouts/AddEditPane.vue';
 import Command from '@/pages/Inventory/Commands/Main.vue';
+import CommandGroups from '@/pages/Inventory/CommandGroups/Main.vue';
+import Devices from '@/pages/Inventory/Devices/Main.vue';
+import Tags from '@/pages/Inventory/Tags/Main.vue';
 import Template from '@/pages/Inventory/Templates/Main.vue';
 import TemplateAddEditPane from '@/pages/Inventory/Templates/TemplateAddEditPane.vue';
-import Tags from '@/pages/Inventory/Tags/Main.vue';
 import Vendors from '@/pages/Inventory/Vendors/Main.vue';
-import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ref, onMounted } from 'vue';
 import { useFavoritesStore } from '@/stores/favorites';
 import { useRoute, useRouter } from 'vue-router'; // Import the useRoute from Vue Router
-import AddEditPane from '@/layouts/AddEditPane.vue';
 
 defineProps({});
 
@@ -25,12 +24,12 @@ const route = useRoute();
 const router = useRouter();
 
 const viewItems = [
-  { id: 'devices', label: 'Devices', icon: 'fluent-color:org-16', isFavorite: ref(false), route: 'devices' },
-  { id: 'commandgroups', label: 'Command Groups', icon: 'fluent-color:search-visual-24', isFavorite: ref(false), route: 'commandgroups' },
-  { id: 'commands', label: 'Commands', icon: 'fluent-color:text-edit-style-16', isFavorite: ref(false), route: 'commands' },
-  { id: 'templates', label: 'Templates', icon: 'fluent-color:code-block-32', isFavorite: ref(false), route: 'templates' },
-  { id: 'vendors', label: 'Vendors', icon: 'fluent-color:apps-16', isFavorite: ref(false), route: 'vendors' },
-  { id: 'tags', label: 'Tags', icon: 'fluent-emoji:keycap-hashtag', isFavorite: ref(false), route: 'tags' }
+  { id: 'devices', label: 'Devices', icon: 'DeviceIcon', isFavorite: ref(false), route: 'devices' },
+  { id: 'commandgroups', label: 'Command Groups', icon: 'CommandGroupIcon', isFavorite: ref(false), route: 'commandgroups' },
+  { id: 'commands', label: 'Commands', icon: 'CommandsIcon', isFavorite: ref(false), route: 'commands' },
+  { id: 'templates', label: 'Templates', icon: 'TemplateIcon', isFavorite: ref(false), route: 'templates' },
+  { id: 'vendors', label: 'Vendors', icon: 'VendorIcon', isFavorite: ref(false), route: 'vendors' },
+  { id: 'tags', label: 'Tags', icon: 'TagIcon', isFavorite: ref(false), route: 'tags' }
 ];
 
 onMounted(() => {
@@ -105,7 +104,7 @@ function closeAddEditPane() {
           </Button>
         </DropdownMenuTrigger>
         <div class="flex items-center gap-2 mr-4">
-          <Icon :icon="viewItems.find(item => item.id === currentView)?.icon || ''" />
+          <component :is="viewItems.find(item => item.id === currentView)?.icon || ''" />
           {{ viewItems.find(item => item.id === currentView)?.label || '' }}
         </div>
 
@@ -118,7 +117,7 @@ function closeAddEditPane() {
               :key="item.id"
               @click="changeView(item.id)">
               <span class="flex items-center gap-2">
-                <Icon :icon="item.icon" />
+                <component :is="item.icon" />
                 {{ item.label }}
               </span>
               <TooltipProvider>

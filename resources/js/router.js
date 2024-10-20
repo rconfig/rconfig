@@ -40,14 +40,7 @@ const routes = [
     name: 'settings-upgrade',
     component: () => import('@/pages/Settings/Main.vue'),
     props: { upgrade: true },
-    beforeEnter: guardMyroute,
-    meta: {
-      breadcrumb: [
-        { label: 'Home', link: '/' },
-        { label: 'Settings', link: '/settings' },
-        { label: 'Upgrade', link: '/settings/upgrade' }
-      ]
-    }
+    beforeEnter: guardMyroute
   },
   {
     path: '/settings/users/:userId?',

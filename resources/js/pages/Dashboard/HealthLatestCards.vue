@@ -1,8 +1,6 @@
 <script setup>
 import { ref } from 'vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Icon } from '@iconify/vue';
 
 const hoverIcons = ref({});
 const activeIcons = ref({});

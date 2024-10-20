@@ -1,11 +1,8 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useDialogStore } from '@/stores/dialogActions';
-import { Button } from '@/components/ui/button';
 import axios from 'axios';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { ref, onMounted, onUnmounted } from 'vue';
+import { useDialogStore } from '@/stores/dialogActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
 const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
 

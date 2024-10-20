@@ -2,8 +2,6 @@
 const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
 import QuickActions from '@/layouts/Components/QuickActions.vue';
 import SheetHelp from '@/layouts/Components/SheetHelp.vue';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ResizablePanel } from '@/components/ui/resizable';
@@ -14,7 +12,7 @@ import { usePanelStore } from '../stores/panelStore'; // Import the Pinia store
 import { useSheetStore } from '@/stores/sheetActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
 import ExternalToolDialog from '@/layouts/Components/ExternalToolDialog.vue';
-import { useRoute, useRouter } from 'vue-router'; // Import the useRoute from Vue Router
+import { useRouter } from 'vue-router'; // Import the useRoute from Vue Router
 
 const userid = inject('userid');
 const router = useRouter();
@@ -257,64 +255,50 @@ const removeExternalLink = async name => {
                   to="/notifications"
                   class="transition ease-in-out delay-50 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
                   :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'notifications' }">
-                  <Icon
-                    icon="carbon:notification"
-                    class="text-rcgray-400" />
+                  <NotificationIcon />
                   <div class="p-1 ml-2 text-left text-gray-200"><div>Notifications</div></div>
                 </router-link>
                 <router-link
                   to="/"
                   class="transition ease-in-out delay-50 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
                   :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'Home' }">
-                  <Icon
-                    icon="carbon:home"
-                    class="text-rcgray-400" />
+                  <DashboardIcon />
                   <div class="p-1 ml-2 text-left text-gray-200"><div>Dashboard</div></div>
                 </router-link>
-
                 <router-link
                   to="/inventory"
                   class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
                   :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'inventory' }">
-                  <Icon
-                    icon="catppuccin:webpack"
-                    class="text-rcgray-400" />
+                  <InventoryIcon />
                   <div class="p-1 ml-2 text-left text-gray-200"><div>Inventory</div></div>
                 </router-link>
                 <router-link
                   to="/tasks"
                   class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
                   :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'tasks' }">
-                  <Icon
-                    icon="catppuccin:esbuild"
-                    class="text-rcgray-400" />
+                  <TasksIcon />
                   <div class="p-1 ml-2 text-left text-gray-200"><div>Tasks</div></div>
                 </router-link>
                 <router-link
                   to="/settings/users"
                   class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
                   :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'users' }">
-                  <Icon
-                    icon="carbon:user-settings"
-                    class="text-rcgray-400" />
+                  <UserIcon />
                   <div class="p-1 ml-2 text-left text-gray-200"><div>Users</div></div>
                 </router-link>
                 <router-link
                   to="/settings/users"
                   class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
                   :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'configtools' }">
-                  <Icon
-                    icon="catppuccin:eslint"
-                    class="text-rcgray-400" />
+                  <ConfigToolsIcon />
                   <div class="p-1 ml-2 text-left text-gray-200"><div>Config Tools</div></div>
                 </router-link>
                 <router-link
                   to="/settings"
                   class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
                   :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'settings' }">
-                  <Icon
-                    icon="catppuccin:env"
-                    class="text-rcgray-400" />
+                  <SettingsIcon />
+
                   <div class="p-1 ml-2 text-left text-gray-200"><div>Settings</div></div>
                 </router-link>
 
@@ -361,9 +345,7 @@ const removeExternalLink = async name => {
                         to="/log-viewer"
                         target="_blank"
                         class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1">
-                        <Icon
-                          icon="twemoji:page-facing-up"
-                          class="text-rcgray-400" />
+                        <SysLogViewerIcon />
                         <div class="flex items-center justify-between w-full p-1 ml-2 text-left text-gray-200">
                           <div>System Log Viewer</div>
                           <Icon
@@ -375,9 +357,7 @@ const removeExternalLink = async name => {
                         to="/horizon/dashboard"
                         target="_blank"
                         class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1">
-                        <Icon
-                          icon="catppuccin:folder-queue"
-                          class="text-rcgray-400" />
+                        <SysQueueManagerIcon />
                         <div class="flex items-center justify-between w-full p-1 ml-2 text-left text-gray-200">
                           <div>System Queue Manager</div>
                           <Icon
@@ -386,9 +366,7 @@ const removeExternalLink = async name => {
                         </div>
                       </router-link>
                       <div class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1">
-                        <Icon
-                          icon="ph:hexagon-duotone"
-                          class="text-rcgray-400" />
+                        <ExternalLinkIcon />
                         <a
                           href="https://www.rconfig.com"
                           target="_blank"
@@ -468,9 +446,7 @@ const removeExternalLink = async name => {
                         :to="item.route"
                         class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
                         :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === item.route }">
-                        <Icon
-                          :icon="item.icon"
-                          class="text-rcgray-400" />
+                        <component :is="item.icon" />
                         <div class="p-1 ml-2 text-left text-gray-200">
                           <div>{{ item.label }}</div>
                         </div>

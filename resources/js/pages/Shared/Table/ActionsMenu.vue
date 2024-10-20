@@ -1,8 +1,6 @@
 <script setup>
 import ConfirmDeleteAlert from '@/pages/Shared/AlertDialog/ConfirmDeleteAlert.vue';
-import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Icon } from '@iconify/vue';
 import { ref } from 'vue';
 
 const showConfirmDelete = ref(false);

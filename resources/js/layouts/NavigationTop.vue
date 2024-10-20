@@ -1,8 +1,6 @@
 <script setup>
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
-import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
-import { Icon } from '@iconify/vue';
 import { ref, computed } from 'vue';
 import { useColorMode } from '@vueuse/core';
 import { usePanelStore } from '@/stores/panelStore'; // Import the Pinia store

@@ -3,16 +3,11 @@ import * as monaco from 'monaco-editor';
 import TemplateImportDialog from '@/pages/Inventory/Templates/TemplateImportDialog.vue';
 import useCodeEditor from '@/composables/codeEditorFunctions';
 import useTemplateAddEdit from '@/pages/Inventory/Templates/useTemplateAddEdit';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { ref, onMounted } from 'vue';
 import { useDialogStore } from '@/stores/dialogActions';
 import { useTemplatesGithub } from '@/pages/Inventory/Templates/useTemplatesGithub';
 import { useToaster } from '@/composables/useToaster';
-
 const props = defineProps({
   editId: Number
 });

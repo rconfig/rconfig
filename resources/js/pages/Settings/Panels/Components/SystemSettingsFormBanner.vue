@@ -1,7 +1,4 @@
 <script setup>
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { Textarea } from '@/components/ui/textarea';
 import { ref, onMounted } from 'vue';
 import { useSystemSettingsBanner } from '@/pages/Settings/Panels/Components/useSystemSettingsBanner';
 

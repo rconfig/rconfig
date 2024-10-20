@@ -1,7 +1,5 @@
 <script setup>
 import { computed } from 'vue';
-import { Button } from '@/components/ui/button';
-import { Icon } from '@iconify/vue';
 import QuickActionsDialog from '@/layouts/Components/Dialogs/QuickActionsDialog.vue';
 import QuickSearchDialog from '@/layouts/Components/Dialogs/QuickSearchDialog.vue';
 

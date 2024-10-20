@@ -1,4 +1,5 @@
 <script setup>
+import ConfirmCloseAlert from '@/pages/Shared/AlertDialog/ConfirmCloseAlert.vue';
 import NavPanel from '@/pages/Tasks/WizardPanels/NavPanel.vue';
 import Step1 from '@/pages/Tasks/WizardPanels/Step1.vue';
 import Step2 from '@/pages/Tasks/WizardPanels/Step2.vue';
@@ -6,12 +7,9 @@ import Step3 from '@/pages/Tasks/WizardPanels/Step3.vue';
 import Step4 from '@/pages/Tasks/WizardPanels/Step4.vue';
 import Step5 from '@/pages/Tasks/WizardPanels/Step5.vue';
 import axios from 'axios';
-import ConfirmCloseAlert from '@/pages/Shared/AlertDialog/ConfirmCloseAlert.vue';
-import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogScrollContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Icon } from '@iconify/vue';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useDialogStore } from '@/stores/dialogActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable

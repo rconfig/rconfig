@@ -61,7 +61,7 @@ onMounted(() => {
           class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-rcgray-900 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-rcgray-800 dark:hover:bg-gray-700">
           <div class="block">
             <div class="flex items-center w-full font-semibold">
-              <Icon icon="fluent-color:org-16" />
+              <DeviceIcon />
               <span class="ml-1">Devices</span>
             </div>
             <div class="w-full">Select one or many devices to backup</div>
@@ -89,7 +89,7 @@ onMounted(() => {
           class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-rcgray-900 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-rcgray-800 dark:hover:bg-gray-700">
           <div class="block">
             <div class="flex items-center w-full font-semibold">
-              <Icon icon="fluent-color:search-visual-24" />
+              <CommandGroupIcon />
               <span class="ml-1">Command Groups</span>
             </div>
             <div class="w-full">Select one or many command groups to backup</div>
@@ -117,7 +117,7 @@ onMounted(() => {
           class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-rcgray-900 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-rcgray-800 dark:hover:bg-gray-700">
           <div class="block">
             <div class="flex items-center w-full font-semibold">
-              <Icon icon="fluent-emoji:keycap-hashtag" />
+              <TagIcon />
               <span class="ml-1">Tags</span>
             </div>
             <div class="w-full">Select one or many tags to backup</div>

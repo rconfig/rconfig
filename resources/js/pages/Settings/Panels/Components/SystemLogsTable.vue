@@ -6,9 +6,6 @@ import ConfirmDeleteAlert from '@/pages/Shared/AlertDialog/ConfirmDeleteAlert.vu
 import Loading from '@/pages/Shared/Table/Loading.vue';
 import NoResults from '@/pages/Shared/Table/NoResults.vue';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useRowSelection } from '@/composables/useRowSelection';
 import { eventBus } from '@/composables/eventBus';

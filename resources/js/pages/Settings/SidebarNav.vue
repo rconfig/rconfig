@@ -1,6 +1,4 @@
 <script setup>
-import { Button } from '@/components/ui/button';
-
 const props = defineProps({
   settingsActivePane: String
 });

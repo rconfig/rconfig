@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuShortcut } from '@/components/ui/dropdown-menu';
-import { Icon } from '@iconify/vue';
 
 const props = defineProps({
   currentPage: Number,
