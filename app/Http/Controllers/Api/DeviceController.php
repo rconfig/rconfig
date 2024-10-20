@@ -8,6 +8,7 @@ use App\Models\Device;
 use App\Traits\RespondsWithHttpStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class DeviceController extends ApiBaseController
@@ -27,7 +28,13 @@ class DeviceController extends ApiBaseController
         $result = QueryBuilder::for(Device::class)
             ->with(['vendor', 'category',  'category.command', 'tag', 'template', 'lastConfig'])
             ->withCount(['config_good', 'config_bad', 'config_unknown'])
-            ->allowedFilters($searchCols)
+            ->allowedFilters([
+                AllowedFilter::custom('q', new FilterMultipleFields, 'id, device_name, device_ip'),
+                AllowedFilter::exact('category', 'category.id'),
+                AllowedFilter::exact('vendor', 'vendor.id'),
+                AllowedFilter::exact('tag', 'tag.id'),
+                AllowedFilter::exact('status'),
+            ])
             ->defaultSort('-id')
             ->allowedSorts('id', 'device_name', 'device_ip', 'device_model')
             ->paginate((int) $request->perPage);

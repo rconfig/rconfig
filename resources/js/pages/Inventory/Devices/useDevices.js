@@ -86,7 +86,7 @@ export function useDevices() {
   }
 
   const debouncedFilter = useDebounceFn(() => {
-    filters.value[`filter[devicename]`] = searchTerm.value;
+    filters.value[`filter[q]`] = searchTerm.value;
     currentPage.value = 1;
     fetchDevices();
   }, 500);

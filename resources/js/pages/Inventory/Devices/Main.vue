@@ -4,6 +4,7 @@ import Loading from '@/pages/Shared/Table/Loading.vue';
 import NoResults from '@/pages/Shared/Table/NoResults.vue';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
 import DeviceAddEditDialog from '@/pages/Inventory/Devices/DeviceAddEditDialog.vue';
+import TagListPopover from '@/pages/Shared/Popover/TagListPopover.vue';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { onMounted, onUnmounted } from 'vue';
 import { useRowSelection } from '@/composables/useRowSelection';
@@ -28,11 +29,9 @@ onUnmounted(() => {
     <div class="flex items-center justify-between p-4">
       <div class="flex items-center">
         <Input
-          class="max-w-sm ml-4"
+          class="ml-2 min-w-32 lg:min-w-60"
           autocomplete="off"
-          data-1p-ignore
-          data-lpignore="true"
-          placeholder="Filter devices..."
+          placeholder="Filter devices by ID, name or IP..."
           v-model="searchTerm" />
         <Button
           class="ml-2 hover:bg-gray-800"
@@ -92,8 +91,13 @@ onUnmounted(() => {
                 <span class="ml-2">Name</span>
               </Button>
             </TableHead>
-            <TableHead class="w-[20%]">device_ip</TableHead>
-            <TableHead class="w-[40%]">Devices</TableHead>
+            <TableHead class="w-[10%]">IP Address</TableHead>
+            <TableHead class="w-[10%]">Vendor</TableHead>
+            <TableHead class="w-[10%]">Model</TableHead>
+            <TableHead class="w-[10%]">Config Count</TableHead>
+            <TableHead class="w-[10%]">Config Failures</TableHead>
+            <TableHead class="w-[10%]">Last Config</TableHead>
+            <TableHead class="w-[10%]">Tags</TableHead>
             <TableHead class="w-[10%]">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -122,7 +126,44 @@ onUnmounted(() => {
               <TableCell class="text-start">
                 {{ row.device_ip }}
               </TableCell>
-              <TableCell class="text-start"></TableCell>
+              <TableCell class="text-start">
+                <span v-if="row.vendor.length > 0">{{ row.vendor[0].vendorName }}</span>
+                <span v-else>--</span>
+              </TableCell>
+              <TableCell class="text-start">
+                {{ row.device_model }}
+              </TableCell>
+              <TableCell class="text-start">
+                {{ row.config_good_count }}
+              </TableCell>
+              <TableCell class="text-start">
+                <span v-if="row.config_bad_count">{{ row.config_bad_count }}</span>
+                <span v-else>--</span>
+              </TableCell>
+              <TableCell class="text-start">
+                <span v-if="row.last_config">{{ new Date(row.last_config.created_at).toLocaleString() }}</span>
+                <span v-else>--</span>
+              </TableCell>
+              <TableCell class="text-start">
+                <span
+                  v-for="(tag, index) in row.tag.slice(0, 3)"
+                  :key="tag.tagname"
+                  class="mr-2">
+                  <Badge
+                    variant="outline"
+                    class="py-1 mt-1 hover:bg-rcgray-800">
+                    <router-link :to="tag.view_url">{{ tag.tagname }}</router-link>
+                  </Badge>
+                </span>
+                <span
+                  v-if="row.tag.length > 3"
+                  class="mr-2">
+                  <TagListPopover
+                    :recordName="row.device_name"
+                    :items="row.tag"
+                    displayField="tagname" />
+                </span>
+              </TableCell>
               <!-- ACTIONS MENU -->
               <TableCell class="text-start">
                 <ActionsMenu
