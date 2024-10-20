@@ -1,0 +1,1 @@
+import{aJ as l,X as r}from"./app-DiXg3fjT.js";const g=l("dialog",()=>{const e=r({});function i(o){e[o]=!0}function t(o){e[o]=!1}function n(o){e[o]=!e[o]}function a(o){return e[o]||!1}return{dialogs:e,openDialog:i,closeDialog:t,toggleDialog:n,isDialogOpen:a}});export{g as u};
