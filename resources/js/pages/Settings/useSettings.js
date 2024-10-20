@@ -6,9 +6,12 @@ import SecurityPanel from '@/pages/Settings/Panels/SecurityPanel.vue';
 import AboutPanel from '@/pages/Settings/Panels/AboutPanel.vue';
 import LogsPanel from '@/pages/Settings/Panels/LogsPanel.vue';
 import UpgradePanel from '@/pages/Settings/Panels/UpgradePanel.vue';
+import { useRoute } from 'vue-router'; // Import the useRoute from Vue Router
 
 export function useSettings() {
-  const activeForm = ref(null);
+  const settingsActivePane = ref(null);
+  const route = useRoute();
+  const path = ref(route.path);
 
   const formComponents = {
     '/settings/system': SystemSettingsPanel,
@@ -19,31 +22,42 @@ export function useSettings() {
   };
 
   function setForm(e) {
-    activeForm.value = e;
+    settingsActivePane.value = e;
 
     // Store the selected form in localStorage
-    localStorage.setItem('activeForm', e);
+    localStorage.setItem('settingsActivePane', e);
   }
 
-  // Define the mapping between `activeForm` value and the component to render.
-  const activeFormComponent = computed(() => {
-    return formComponents[activeForm.value] || null;
+  // Define the mapping between `settingsActivePane` value and the component to render.
+  const settingsActivePaneComponent = computed(() => {
+    return formComponents[settingsActivePane.value] || null;
   });
 
   onMounted(() => {
-    // Retrieve the selected form from localStorage
-    const form = localStorage.getItem('activeForm');
-    if (form) {
-      activeForm.value = form;
-    } else {
-      activeForm.value = '/settings/system';
-    }
+    setComponent();
   });
 
+  function setComponent() {
+    // if the path is specific, load the component
+    if (Object.keys(formComponents).includes(route.path)) {
+      settingsActivePane.value = route.path;
+      return;
+    }
+
+    // if the path is not specific, load the users last active pane
+    const LastUserActivePane = localStorage.getItem('settingsActivePane');
+
+    if (LastUserActivePane) {
+      settingsActivePane.value = LastUserActivePane;
+    } else {
+      settingsActivePane.value = '/settings/system';
+    }
+  }
+
   return {
-    activeForm,
+    settingsActivePane,
     setForm,
     formComponents,
-    activeFormComponent
+    settingsActivePaneComponent
   };
 }

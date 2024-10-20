@@ -35,6 +35,33 @@ const routes = [
       ]
     }
   },
+  {
+    path: '/settings/upgrade',
+    name: 'settings-upgrade',
+    component: () => import('@/pages/Settings/Main.vue'),
+    props: { upgrade: true },
+    beforeEnter: guardMyroute,
+    meta: {
+      breadcrumb: [
+        { label: 'Home', link: '/' },
+        { label: 'Settings', link: '/settings' },
+        { label: 'Upgrade', link: '/settings/upgrade' }
+      ]
+    }
+  },
+  {
+    path: '/settings/users/:userId?',
+    name: 'users',
+    component: () => import('./pages/Users/Main.vue'),
+    beforeEnter: guardMyroute,
+    meta: {
+      breadcrumb: [
+        { label: 'Home', link: '/' },
+        { label: 'Users', link: '/users' }
+      ]
+    }
+  },
+
   // working above
 
   // See chat gpt on how to implement breadcrum with dyanmic routes using meta data
@@ -54,7 +81,6 @@ const routes = [
 
   // Settings
 
-  { path: '/settings/users/:userId?', name: 'users', component: () => import('./pages/Users/Main.vue'), beforeEnter: guardMyroute },
   // { path: '/settings/activitylog', name: 'activitylog', component: () => import('./views/ActivityLog.vue'), beforeEnter: guardMyroute },
 
   /* PAGENOTFOUND */

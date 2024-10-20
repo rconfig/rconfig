@@ -81,7 +81,7 @@ function closeAddEditPane() {
       v-if="addEditPane"
       @close="closeAddEditPane()">
       <template #default>
-        <div class="p-4 px-8 ">
+        <div class="p-4 px-8">
           <TemplateAddEditPane
             v-if="addEditPane === 'template'"
             :editId="addEditPaneEditId"

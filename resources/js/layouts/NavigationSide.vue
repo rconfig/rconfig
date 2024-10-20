@@ -14,8 +14,10 @@ import { usePanelStore } from '../stores/panelStore'; // Import the Pinia store
 import { useSheetStore } from '@/stores/sheetActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
 import ExternalToolDialog from '@/layouts/Components/ExternalToolDialog.vue';
+import { useRoute, useRouter } from 'vue-router'; // Import the useRoute from Vue Router
 
 const userid = inject('userid');
+const router = useRouter();
 
 const favoritesStore = useFavoritesStore();
 const externalLinksStore = useExternalLinksStore();
@@ -72,8 +74,8 @@ function setHoveringClose(state) {
   svgIshoveringClose.value = state;
 }
 
-const goToRconfig = () => {
-  window.open('https://rconfig.com', '_blank');
+const navToSettingsUpgrade = () => {
+  router.push({ name: 'settings-upgrade' });
 };
 
 onUnmounted(() => {
@@ -309,7 +311,7 @@ const removeExternalLink = async name => {
                 <router-link
                   to="/settings"
                   class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
-                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.path.includes('settings') }">
+                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'settings' }">
                   <Icon
                     icon="catppuccin:env"
                     class="text-rcgray-400" />
@@ -489,7 +491,7 @@ const removeExternalLink = async name => {
                 <Button
                   size="sm"
                   class="w-full py-2 hover:bg-rcgray-300 hover:animate-pulse"
-                  @click="goToRconfig()">
+                  @click="navToSettingsUpgrade()">
                   Upgrade
                 </Button>
               </CardContent>

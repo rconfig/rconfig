@@ -4,7 +4,7 @@ import SidebarNav from '@/pages/Settings/SidebarNav.vue';
 import { Separator } from '@/components/ui/separator';
 import Loading from '@/pages/Shared/Loading.vue';
 
-const { activeForm, setForm, formComponents, activeFormComponent } = useSettings();
+const { settingsActivePane, setForm, formComponents, settingsActivePaneComponent } = useSettings();
 </script>
 
 <template>
@@ -22,22 +22,22 @@ const { activeForm, setForm, formComponents, activeFormComponent } = useSettings
     <div class="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
       <aside class="lg:w-[10%]">
         <SidebarNav
-          v-if="activeForm"
+          v-if="settingsActivePane"
           @nav="setForm($event)"
-          :activeForm="activeForm" />
+          :settingsActivePane="settingsActivePane" />
       </aside>
 
       <div class="flex-1">
         <div class="flex items-center justify-center space-y-6">
-          <Loading v-if="!activeForm" />
+          <Loading v-if="!settingsActivePane" />
 
           <transition
             name="fade"
             mode="out-in">
             <component
-              v-if="activeForm"
-              :is="activeFormComponent"
-              :key="activeForm" />
+              v-if="settingsActivePane"
+              :is="settingsActivePaneComponent"
+              :key="settingsActivePane" />
           </transition>
         </div>
       </div>

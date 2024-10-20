@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 
 const props = defineProps({
-  activeForm: String
+  settingsActivePane: String
 });
 
 const sidebarNavItems = [
@@ -41,7 +41,7 @@ function navTo(href) {
       :key="item.title"
       @click="navTo(item.href)"
       variant="ghost"
-      :class="[activeForm === item.href ? '  bg-rcgray-600' : 'text-rcgray-300']"
+      :class="[settingsActivePane === item.href ? '  bg-rcgray-600' : 'text-rcgray-300']"
       class="inline-flex items-center justify-start w-full px-4 py-2 text-sm font-medium text-left transition-colors rounded-md whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:text-accent-foreground h-9 hover:bg-rcgray-800">
       {{ item.title }}
     </Button>
