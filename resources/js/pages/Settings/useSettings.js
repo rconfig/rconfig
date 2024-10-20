@@ -2,6 +2,7 @@ import axios from 'axios';
 import { ref, computed, onMounted } from 'vue';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
 import SystemSettingsPanel from '@/pages/Settings/Panels/SystemSettingsPanel.vue';
+import CredentialsPanel from '@/pages/Settings/Panels/CredentialsPanel.vue';
 import SecurityPanel from '@/pages/Settings/Panels/SecurityPanel.vue';
 import AboutPanel from '@/pages/Settings/Panels/AboutPanel.vue';
 import LogsPanel from '@/pages/Settings/Panels/LogsPanel.vue';
@@ -15,6 +16,7 @@ export function useSettings() {
 
   const formComponents = {
     '/settings/system': SystemSettingsPanel,
+    '/settings/credentials': CredentialsPanel,
     '/settings/security': SecurityPanel,
     '/settings/about': AboutPanel,
     '/settings/logs': LogsPanel,
@@ -39,7 +41,6 @@ export function useSettings() {
 
   function setComponent() {
     // if the path is specific, load the component
-    console.log(route.path);
     if (Object.keys(formComponents).includes(route.path)) {
       settingsActivePane.value = route.path;
       return;

@@ -9,6 +9,10 @@ const sidebarNavItems = [
     href: '/settings/system'
   },
   {
+    title: 'Credentials',
+    href: '/settings/credentials'
+  },
+  {
     title: 'Security',
     href: '/settings/security'
   },

@@ -14,7 +14,7 @@ const { settingsActivePane, setForm, formComponents, settingsActivePaneComponent
         <SettingsIcon class="w-8 h-8" />
         <span>Settings</span>
       </h2>
-      <p class="text-muted-foreground">Manage your account settings and set e-mail preferences.</p>
+      <p class="text-muted-foreground">Manage your application settings and preferences</p>
     </div>
     <Separator class="my-6" />
     <div class="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">

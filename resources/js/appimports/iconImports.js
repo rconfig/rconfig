@@ -17,5 +17,6 @@ import TemplateIcon from '@/pages/Shared/Icon/TemplateIcon.vue';
 import VendorIcon from '@/pages/Shared/Icon/VendorIcon.vue';
 import TagIcon from '@/pages/Shared/Icon/TagIcon.vue';
 import LogoutIcon from '@/pages/Shared/Icon/LogoutIcon.vue';
+import CredentialsIcon from '@/pages/Shared/Icon/CredentialsIcon.vue';
 
-export { Icon, UserIcon, NotificationIcon, DashboardIcon, InventoryIcon, TasksIcon, ConfigToolsIcon, SettingsIcon, SysLogViewerIcon, SysQueueManagerIcon, ExternalLinkIcon, DeviceIcon, CommandGroupIcon, CommandsIcon, TemplateIcon, VendorIcon, TagIcon, LogoutIcon };
+export { Icon, UserIcon, NotificationIcon, DashboardIcon, InventoryIcon, TasksIcon, ConfigToolsIcon, SettingsIcon, SysLogViewerIcon, SysQueueManagerIcon, ExternalLinkIcon, DeviceIcon, CommandGroupIcon, CommandsIcon, TemplateIcon, VendorIcon, TagIcon, LogoutIcon, CredentialsIcon };

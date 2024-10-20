@@ -103,4 +103,6 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
     });
 
     Route::resource('users', 'UserController');
+    Route::resource('device-credentials', 'DeviceCredentialsController');
+    Route::post('/device-credentials/delete-many', 'DeviceCredentialsController@deleteMany');
 });

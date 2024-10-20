@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\EncryptStringCast;
+use App\Models\DeviceCredentials;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -40,7 +41,7 @@ class Device extends BaseModel
     protected function viewUrl(): Attribute
     {
         return Attribute::make(
-            get: fn () => '/device/view/' . $this->id,
+            get: fn() => '/device/view/' . $this->id,
         );
     }
 
@@ -75,6 +76,12 @@ class Device extends BaseModel
     {
         return $this->belongsToMany('App\Models\Template');
     }
+
+    public function deviceCred()
+    {
+        return $this->belongsTo(DeviceCredentials::class,  'device_cred_id', 'id');
+    }
+
 
     public function lastConfig()
     {
