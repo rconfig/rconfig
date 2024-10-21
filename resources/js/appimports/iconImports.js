@@ -18,5 +18,9 @@ import VendorIcon from '@/pages/Shared/Icon/VendorIcon.vue';
 import TagIcon from '@/pages/Shared/Icon/TagIcon.vue';
 import LogoutIcon from '@/pages/Shared/Icon/LogoutIcon.vue';
 import CredentialsIcon from '@/pages/Shared/Icon/CredentialsIcon.vue';
+import StatusGreenIcon from '@/pages/Shared/Icon/StatusGreenIcon.vue';
+import StatusRedIcon from '@/pages/Shared/Icon/StatusRedIcon.vue';
+import StatusYellowIcon from '@/pages/Shared/Icon/StatusYellowIcon.vue';
+import StatusGrayIcon from '@/pages/Shared/Icon/StatusGrayIcon.vue';
 
-export { Icon, UserIcon, NotificationIcon, DashboardIcon, InventoryIcon, TasksIcon, ConfigToolsIcon, SettingsIcon, SysLogViewerIcon, SysQueueManagerIcon, ExternalLinkIcon, DeviceIcon, CommandGroupIcon, CommandsIcon, TemplateIcon, VendorIcon, TagIcon, LogoutIcon, CredentialsIcon };
+export { Icon, StatusGreenIcon, StatusRedIcon, StatusYellowIcon, StatusGrayIcon, UserIcon, NotificationIcon, DashboardIcon, InventoryIcon, TasksIcon, ConfigToolsIcon, SettingsIcon, SysLogViewerIcon, SysQueueManagerIcon, ExternalLinkIcon, DeviceIcon, CommandGroupIcon, CommandsIcon, TemplateIcon, VendorIcon, TagIcon, LogoutIcon, CredentialsIcon };

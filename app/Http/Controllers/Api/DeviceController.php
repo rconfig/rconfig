@@ -36,7 +36,7 @@ class DeviceController extends ApiBaseController
                 AllowedFilter::exact('status'),
             ])
             ->defaultSort('-id')
-            ->allowedSorts('id', 'device_name', 'device_ip', 'device_model')
+            ->allowedSorts('id', 'device_name', 'device_ip', 'status')
             ->paginate((int) $request->perPage);
 
         // return $item;

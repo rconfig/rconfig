@@ -11,10 +11,8 @@ import { onMounted, onUnmounted, ref } from 'vue';
 import { useRowSelection } from '@/composables/useRowSelection';
 import { useDevices } from '@/pages/Inventory/Devices/useDevices';
 
-const { editId, devices, currentPage, perPage, searchTerm, lastPage, isLoading, fetchDevices, viewEditDialog, createDevice, deleteDevice, handleSave, handleKeyDown, newDeviceModalKey, toggleSort, sortParam } = useDevices();
+const { editId, filterStatus, devices, currentPage, perPage, searchTerm, lastPage, isLoading, fetchDevices, viewEditDialog, createDevice, deleteDevice, handleSave, handleKeyDown, newDeviceModalKey, toggleSort, sortParam } = useDevices();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(devices);
-
-const filterStatus = ref([]);
 
 onMounted(() => {
   fetchDevices();
@@ -72,8 +70,6 @@ onUnmounted(() => {
     </div>
 
     <div class="px-6">
-      {{ filterStatus }}
-
       <Table>
         <TableHeader>
           <TableRow>
@@ -90,6 +86,15 @@ onUnmounted(() => {
                 @click="toggleSort('id')">
                 <Icon :icon="sortParam === 'id' ? 'lucide:sort-asc' : sortParam === '-id' ? 'lucide:sort-desc' : 'hugeicons:sorting-05'" />
                 <span class="ml-2">ID</span>
+              </Button>
+            </TableHead>
+            <TableHead class="w-[2%]">
+              <Button
+                class="flex justify-start w-full p-0 hover:bg-rcgray-800"
+                variant="ghost"
+                @click="toggleSort('status')">
+                <Icon :icon="sortParam === 'status' ? 'lucide:sort-asc' : sortParam === '-status' ? 'lucide:sort-desc' : 'hugeicons:sorting-05'" />
+                <span class="ml-2"></span>
               </Button>
             </TableHead>
             <TableHead class="w-[20%]">
@@ -129,6 +134,12 @@ onUnmounted(() => {
               </TableCell>
               <TableCell class="text-start">
                 {{ row.id }}
+              </TableCell>
+              <TableCell class="text-start">
+                <StatusRedIcon v-if="row.status === 0" />
+                <StatusGreenIcon v-if="row.status === 1" />
+                <StatusYellowIcon v-if="row.status === 2" />
+                <StatusGrayIcon v-if="row.status === 100" />
               </TableCell>
               <TableCell class="text-start">
                 {{ row.device_name }}

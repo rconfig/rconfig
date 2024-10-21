@@ -64,8 +64,12 @@ function selectItem(item) {
     <PopoverTrigger>
       <Button
         variant="ghost"
-        class="flex items-center justify-center w-full p-1 px-2 border rounded-xl whitespace-nowrap h-fit">
-        <template v-if="selectedStatus && selectedStatus.length === 0">Select status</template>
+        class="flex items-center justify-center w-full px-2 py-1 border rounded-xl whitespace-nowrap h-fit bg-rcgray-700 text-rcgray-400">
+        <Icon
+          icon="material-symbols-light:signal-wifi-statusbar-not-connected-rounded"
+          class="mr-2" />
+
+        <template v-if="selectedStatus && selectedStatus.length === 0">Filter status</template>
         <template v-else>
           <span
             class="text-sm font-light"
@@ -101,7 +105,7 @@ function selectItem(item) {
           </div>
         </div>
       </ScrollArea>
-      <Separator />
+      <!-- <Separator />
 
       <div class="flex justify-between gap-4 p-2 border-5">
         <Button
@@ -114,7 +118,7 @@ function selectItem(item) {
           class="h-6 px-4 text-sm bg-blue-600 hover:bg-blue-500">
           <span>Apply</span>
         </Button>
-      </div>
+      </div> -->
     </PopoverContent>
   </Popover>
 </template>

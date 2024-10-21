@@ -16,6 +16,8 @@ export function useDevices() {
   const lastPage = ref(1);
   const newDeviceModalKey = ref(1);
   const devices = ref([]);
+  const filterStatus = ref([]);
+
   const { openDialog } = dialogStore;
   const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
 
@@ -104,6 +106,20 @@ export function useDevices() {
     localStorage.setItem('perPage', newVal.toString());
   });
 
+  watch(
+    filterStatus,
+    (newVal, oldVal) => {
+      if (newVal && newVal.length > 0) {
+        const ids = newVal.map(item => item.id);
+        filters.value[`filter[status]`] = ids.join(',');
+      } else {
+        delete filters.value[`filter[status]`];
+      }
+      fetchDevices();
+    },
+    { deep: true }
+  );
+
   function toggleSort(field) {
     if (sortParam.value === field) {
       sortParam.value = `-${field}`;
@@ -115,6 +131,7 @@ export function useDevices() {
 
   return {
     devices,
+    filterStatus,
     isLoading,
     currentPage,
     perPage,
