@@ -69,7 +69,7 @@ function selectItem(item) {
           icon="material-symbols-light:signal-wifi-statusbar-not-connected-rounded"
           class="mr-2" />
 
-        <template v-if="selectedStatus && selectedStatus.length === 0">Filter status</template>
+        <template v-if="selectedStatus && selectedStatus.length === 0">Status</template>
         <template v-else>
           <span
             class="text-sm font-light"

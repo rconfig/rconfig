@@ -44,6 +44,7 @@ onUnmounted(() => {
           orientation="vertical"
           class="relative w-px h-6 mx-4 shrink-0 bg-border" />
 
+        <span class="mr-2 text-muted-foreground">Filters:</span>
         <StatusFilter v-model="filterStatus" />
       </div>
       <div class="flex">
