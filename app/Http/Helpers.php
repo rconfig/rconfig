@@ -101,6 +101,14 @@ function formatSize($bytes)
     return round($bytes, 2) . ' ' . $types[$i];
 }
 
+
+function ping($host)
+{
+    exec(sprintf('ping -c 1 -W 5 %s', escapeshellarg($host)), $res, $rval);
+
+    return $rval === 0;
+}
+
 function dir_size($directory)
 {
     $size = 0;

@@ -68,6 +68,30 @@ export function useDevices() {
     }
   };
 
+  // Disable Device
+  const disableDevice = async id => {
+    try {
+      await axios.get(`/api/device/disable/${id}`);
+      fetchDevices(); // Refresh devices list after disabling
+      toastSuccess('Device Disabled', 'The device has been disabled successfully.');
+    } catch (error) {
+      console.error('Error disabling device:', error);
+      toastError('Error', 'Failed to disable device.');
+    }
+  };
+
+  // Enable Device
+  const enableDevice = async id => {
+    try {
+      await axios.get(`/api/device/enable/${id}`);
+      fetchDevices(); // Refresh devices list after disabling
+      toastSuccess('Device Enabled', 'The device has been disabled successfully.');
+    } catch (error) {
+      console.error('Error enabling device:', error);
+      toastError('Error', 'Failed to enabled device.');
+    }
+  };
+
   const viewEditDialog = id => {
     editId.value = id;
     newDeviceModalKey.value = Math.random(); // Force re-render of the dialog component
@@ -144,6 +168,8 @@ export function useDevices() {
     createDevice,
     updateDevice,
     deleteDevice,
+    disableDevice,
+    enableDevice,
     handleSave,
     handleKeyDown,
     viewEditDialog,

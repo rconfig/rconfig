@@ -1,5 +1,5 @@
 <script setup>
-import ActionsMenu from '@/pages/Shared/Table/ActionsMenu.vue';
+import ActionsMenuDevices from '@/pages/Shared/Table/ActionsMenuDevices.vue';
 import Loading from '@/pages/Shared/Table/Loading.vue';
 import NoResults from '@/pages/Shared/Table/NoResults.vue';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
@@ -11,7 +11,7 @@ import { onMounted, onUnmounted, ref } from 'vue';
 import { useRowSelection } from '@/composables/useRowSelection';
 import { useDevices } from '@/pages/Inventory/Devices/useDevices';
 
-const { editId, filterStatus, devices, currentPage, perPage, searchTerm, lastPage, isLoading, fetchDevices, viewEditDialog, createDevice, deleteDevice, handleSave, handleKeyDown, newDeviceModalKey, toggleSort, sortParam } = useDevices();
+const { editId, filterStatus, devices, currentPage, perPage, searchTerm, lastPage, isLoading, fetchDevices, viewEditDialog, createDevice, deleteDevice, disableDevice, enableDevice, handleSave, handleKeyDown, newDeviceModalKey, toggleSort, sortParam } = useDevices();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(devices);
 
 onMounted(() => {
@@ -188,8 +188,10 @@ onUnmounted(() => {
               </TableCell>
               <!-- ACTIONS MENU -->
               <TableCell class="text-start">
-                <ActionsMenu
+                <ActionsMenuDevices
                   :rowData="row"
+                  @onEnable="enableDevice(row.id)"
+                  @onDisable="disableDevice(row.id)"
                   @onEdit="viewEditDialog(row.id)"
                   @onDelete="deleteDevice(row.id)" />
               </TableCell>

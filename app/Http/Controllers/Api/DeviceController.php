@@ -105,4 +105,33 @@ class DeviceController extends ApiBaseController
 
         return $this->successResponse('All Device Names!', $collection);
     }
+
+
+    public function disable($id)
+    {
+
+        $model = Device::findOrFail($id);
+        $model->status = 100;
+        $model->save();
+
+        return $this->successResponse(Str::ucfirst($this->modelname) . ' disabled successfully!', ['id' => $model->id]);
+    }
+
+    public function enable($id)
+    {
+
+        $model = Device::findOrFail($id);
+
+        // ping device
+        $ping = ping($model->device_ip);
+        if (! $ping) {
+            $model->status = 0;
+        } else {
+            $model->status = 1;
+        }
+
+        $model->save();
+
+        return $this->successResponse(Str::ucfirst($this->modelname) . ' enabled successfully!', ['id' => $model->id]);
+    }
 }
