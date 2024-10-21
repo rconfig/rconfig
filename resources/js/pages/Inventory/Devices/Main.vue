@@ -5,13 +5,16 @@ import NoResults from '@/pages/Shared/Table/NoResults.vue';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
 import DeviceAddEditDialog from '@/pages/Inventory/Devices/DeviceAddEditDialog.vue';
 import TagListPopover from '@/pages/Shared/Popover/TagListPopover.vue';
+import StatusFilter from '@/pages/Inventory/Devices/Filters/StatusFilter.vue';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { useRowSelection } from '@/composables/useRowSelection';
 import { useDevices } from '@/pages/Inventory/Devices/useDevices';
 
 const { editId, devices, currentPage, perPage, searchTerm, lastPage, isLoading, fetchDevices, viewEditDialog, createDevice, deleteDevice, handleSave, handleKeyDown, newDeviceModalKey, toggleSort, sortParam } = useDevices();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(devices);
+
+const filterStatus = ref([]);
 
 onMounted(() => {
   fetchDevices();
@@ -39,6 +42,11 @@ onUnmounted(() => {
           @click="searchTerm = ''">
           Clear Filter
         </Button>
+        <Separator
+          orientation="vertical"
+          class="relative w-px h-6 mx-4 shrink-0 bg-border" />
+
+        <StatusFilter v-model="filterStatus" />
       </div>
       <div class="flex">
         <Button
@@ -64,6 +72,8 @@ onUnmounted(() => {
     </div>
 
     <div class="px-6">
+      {{ filterStatus }}
+
       <Table>
         <TableHeader>
           <TableRow>
