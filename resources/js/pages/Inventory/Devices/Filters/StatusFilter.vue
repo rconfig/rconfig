@@ -74,7 +74,7 @@ function selectItem(item) {
           <span
             class="text-sm font-light"
             v-if="selectedStatus.length > 0">
-            Status equals
+            Status
             <strong class="text-sm font-semibold">{{ selectedStatus.length }} selected</strong>
           </span>
         </template>

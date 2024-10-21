@@ -91,6 +91,14 @@ class DeviceController extends ApiBaseController
         return $this->successResponse(Str::ucfirst($this->modelname) . ' deleted successfully!');
     }
 
+    public function deleteMany(Request $request)
+    {
+        $ids = $request->input('ids');
+        $this->model::whereIn('id', $ids)->delete();
+
+        return response()->json(['message' => 'Devices deleted successfully'], 200);
+    }
+
     public function getDeviceModels()
     {
         $collection = Device::select('device_model')->whereNotNull('device_model')->groupBy('device_model')->get();

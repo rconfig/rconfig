@@ -3,12 +3,12 @@ import axios from 'axios';
 import { onMounted, ref, watch, computed } from 'vue';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import CommandGroupIcon from '@/pages/Shared/Icon/CommandGroupIcon.vue';
+import TagIcon from '@/pages/Shared/Icon/TagIcon.vue';
 
 const emit = defineEmits(['update:modelValue']);
 const options = ref([]);
 const open = ref(false);
-const selectedCats = ref([]);
+const selectedTags = ref([]);
 const searchTerm = ref('');
 const allSelected = ref(false);
 
@@ -20,15 +20,15 @@ const props = defineProps({
 });
 
 onMounted(() => {
-  fetchCategories();
+  fetchTags();
 });
 
 // Watch for changes to the prop and update internalModel
 watch(
   () => props.modelValue,
   newValue => {
-    selectedCats.value = newValue;
-    allSelected.value = selectedCats.value.length === options.value.length;
+    selectedTags.value = newValue;
+    allSelected.value = selectedTags.value.length === options.value.length;
   }
 );
 
@@ -37,40 +37,40 @@ function selectItem(item) {
     // If 'All' is selected, toggle selection state
     if (allSelected.value) {
       // If all items are already selected, remove all
-      selectedCats.value = [];
+      selectedTags.value = [];
       allSelected.value = false;
     } else {
       // Select all items
-      selectedCats.value = [...options.value];
+      selectedTags.value = [...options.value];
       allSelected.value = true;
     }
   } else {
-    const existingIndex = selectedCats.value.findIndex(tag => tag.id === item.id);
+    const existingIndex = selectedTags.value.findIndex(tag => tag.id === item.id);
     if (existingIndex !== -1) {
       // If item exists, remove it
-      selectedCats.value.splice(existingIndex, 1);
+      selectedTags.value.splice(existingIndex, 1);
       allSelected.value = false;
     } else {
       // If item does not exist, add it
-      selectedCats.value.push(item);
-      if (selectedCats.value.length === options.value.length) {
+      selectedTags.value.push(item);
+      if (selectedTags.value.length === options.value.length) {
         allSelected.value = true;
       }
     }
   }
   open.value = false;
-  emit('update:modelValue', selectedCats.value);
+  emit('update:modelValue', selectedTags.value);
 }
 
-function fetchCategories() {
-  axios.get('/api/categories/?perPage=10000').then(response => {
+function fetchTags() {
+  axios.get('/api/tags/?perPage=10000').then(response => {
     options.value = response.data.data;
   });
 }
 
-const filteredCategories = computed(() => {
+const filteredTags = computed(() => {
   return options.value.filter(
-    cat => cat.categoryName.toLowerCase().includes(searchTerm.value.toLowerCase()) // Prevent displaying already selected items
+    tag => tag.tagname.toLowerCase().includes(searchTerm.value.toLowerCase()) // Prevent displaying already selected items
   );
 });
 </script>
@@ -81,15 +81,15 @@ const filteredCategories = computed(() => {
       <Button
         variant="ghost"
         class="flex items-center justify-center w-full px-2 py-1 border rounded-xl whitespace-nowrap h-fit bg-rcgray-700 text-rcgray-400">
-        <CommandGroupIcon class="mr-2" />
+        <TagIcon class="mr-2" />
 
-        <template v-if="selectedCats && selectedCats.length === 0">Command Group</template>
+        <template v-if="selectedTags && selectedTags.length === 0">Tags</template>
         <template v-else>
           <span
             class="text-sm font-light"
-            v-if="selectedCats.length > 0">
-            Command Group
-            <strong class="text-sm font-semibold">{{ selectedCats.length }} selected</strong>
+            v-if="selectedTags.length > 0">
+            Tag
+            <strong class="text-sm font-semibold">{{ selectedTags.length }} selected</strong>
           </span>
         </template>
       </Button>
@@ -115,19 +115,19 @@ const filteredCategories = computed(() => {
       <ScrollArea class="h-44">
         <div class="py-1">
           <div
-            v-for="option in filteredCategories"
+            v-for="option in filteredTags"
             :key="option.id"
             class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600"
             @click="selectItem(option)">
             <input
               type="checkbox"
-              :checked="selectedCats.some(cat => cat.id === option.id)"
+              :checked="selectedTags.some(tag => tag.id === option.id)"
               class="mr-2" />
             <span
               data-size="20"
               class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5">
               <span data-size="20">
-                {{ option.categoryName }}
+                {{ option.tagname }}
               </span>
             </span>
           </div>

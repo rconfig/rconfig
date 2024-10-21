@@ -18,6 +18,8 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
 
     /* DEVICES ROUTES */
     Route::resource('devices', 'DeviceController');
+    Route::post('/devices/delete-many', 'DeviceController@deleteMany');
+
     Route::prefix('device')->group(function () {
         Route::post('/download-now', 'ConfigActionsController@downloadNow');
         Route::post('/purge-failed-configs', 'ConfigActionsController@purgeFailed');
@@ -25,6 +27,7 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
         Route::get('/disable/{id}', 'DeviceController@disable');
         Route::get('/enable/{id}', 'DeviceController@enable');
     });
+
     Route::resource('categories', 'CategoryController');
     Route::post('/categories/delete-many', 'CategoryController@deleteMany');
 

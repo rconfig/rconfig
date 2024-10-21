@@ -6,17 +6,28 @@ import Pagination from '@/pages/Shared/Table/Pagination.vue';
 import DeviceAddEditDialog from '@/pages/Inventory/Devices/DeviceAddEditDialog.vue';
 import TagListPopover from '@/pages/Shared/Popover/TagListPopover.vue';
 import StatusFilter from '@/pages/Inventory/Devices/Filters/StatusFilter.vue';
+import CategoryFilter from '@/pages/Inventory/Devices/Filters/CategoryFilter.vue';
+import TagFilter from '@/pages/Inventory/Devices/Filters/TagFilter.vue';
+import VendorFilter from '@/pages/Inventory/Devices/Filters/VendorFilter.vue';
+import ClearFilters from '@/pages/Inventory/Devices/Filters/ClearFilters.vue';
+import ConfirmDeleteAlert from '@/pages/Shared/AlertDialog/ConfirmDeleteAlert.vue';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { onMounted, onUnmounted, ref } from 'vue';
 import { useRowSelection } from '@/composables/useRowSelection';
 import { useDevices } from '@/pages/Inventory/Devices/useDevices';
+import { eventBus } from '@/composables/eventBus';
 
-const { editId, filterStatus, devices, currentPage, perPage, searchTerm, lastPage, isLoading, fetchDevices, viewEditDialog, createDevice, deleteDevice, disableDevice, enableDevice, handleSave, handleKeyDown, newDeviceModalKey, toggleSort, sortParam } = useDevices();
+const { devices, filterStatus, filterCategories, filterTags, filterVendor, clearFilters, deleteManyDevices, showConfirmDelete, isLoading, currentPage, perPage, lastPage, editId, newDeviceModalKey, searchTerm, openDialog, fetchDevices, createDevice, updateDevice, deleteDevice, disableDevice, enableDevice, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam } = useDevices();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(devices);
 
 onMounted(() => {
   fetchDevices();
   window.addEventListener('keydown', handleKeyDown);
+
+  eventBus.on('deleteManyDevicesSuccess', () => {
+    selectedRows.value = [];
+    selectAll.value = false;
+  });
 });
 
 // Cleanup event listener on unmount
@@ -34,24 +45,32 @@ onUnmounted(() => {
           autocomplete="off"
           placeholder="Filter devices by ID, name or IP..."
           v-model="searchTerm" />
-        <Button
-          class="ml-2 hover:bg-gray-800"
-          variant="outline"
-          @click="searchTerm = ''">
-          Clear Filter
-        </Button>
+
         <Separator
           orientation="vertical"
           class="relative w-px h-6 mx-4 shrink-0 bg-border" />
 
         <span class="mr-2 text-muted-foreground">Filters:</span>
-        <StatusFilter v-model="filterStatus" />
+        <!-- FILTERS -->
+
+        <div class="flex gap-2">
+          <CategoryFilter v-model="filterCategories" />
+          <TagFilter v-model="filterTags" />
+          <VendorFilter v-model="filterVendor" />
+          <StatusFilter v-model="filterStatus" />
+          <ClearFilters
+            v-if="searchTerm || filterCategories.length || filterTags.length || filterVendor.length || filterStatus.length"
+            @update:model-value="clearFilters" />
+        </div>
+
+        <!-- FILTERS -->
       </div>
       <div class="flex">
         <Button
           v-if="selectedRows.length"
           class="px-2 py-1 bg-red-600 hover:bg-red-700 hover:animate-pulse"
           size="md"
+          @click.prevent="showConfirmDelete = true"
           variant="primary">
           Delete Selected {{ selectedRows.length }} Device(s)
         </Button>
@@ -78,6 +97,7 @@ onUnmounted(() => {
               <Checkbox
                 id="selectAll"
                 v-model="selectAll"
+                :checked="selectAll"
                 @click="toggleSelectAll()" />
             </TableHead>
             <TableHead class="w-[5%]">
@@ -108,6 +128,7 @@ onUnmounted(() => {
               </Button>
             </TableHead>
             <TableHead class="w-[10%]">IP Address</TableHead>
+            <TableHead class="w-[10%]">C'Group</TableHead>
             <TableHead class="w-[10%]">Vendor</TableHead>
             <TableHead class="w-[10%]">Model</TableHead>
             <TableHead class="w-[10%]">Config Count</TableHead>
@@ -147,6 +168,10 @@ onUnmounted(() => {
               </TableCell>
               <TableCell class="text-start">
                 {{ row.device_ip }}
+              </TableCell>
+              <TableCell class="text-start">
+                <span v-if="row.category.length > 0">{{ row.category[0].categoryName }}</span>
+                <span v-else>--</span>
               </TableCell>
               <TableCell class="text-start">
                 <span v-if="row.vendor.length > 0">{{ row.vendor[0].vendorName }}</span>
@@ -217,6 +242,14 @@ onUnmounted(() => {
         @save="handleSave()"
         :key="newDeviceModalKey"
         :editId="editId" />
+
+      <!-- FOR MULTIPLE DELETE -->
+      <ConfirmDeleteAlert
+        :ids="selectedRows"
+        :showConfirmDelete="showConfirmDelete"
+        @close="showConfirmDelete = false"
+        @handleDelete="deleteManyDevices(selectedRows)" />
+      <!-- FOR MULTIPLE DELETE -->
 
       <Toaster />
     </div>

@@ -3,6 +3,7 @@ import { ref, watch } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 import { useDialogStore } from '@/stores/dialogActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
+import { eventBus } from '@/composables/eventBus';
 
 export function useDevices() {
   const currentPage = ref(1);
@@ -16,7 +17,11 @@ export function useDevices() {
   const lastPage = ref(1);
   const newDeviceModalKey = ref(1);
   const devices = ref([]);
+  const showConfirmDelete = ref(false);
   const filterStatus = ref([]);
+  const filterCategories = ref([]);
+  const filterTags = ref([]);
+  const filterVendor = ref([]);
 
   const { openDialog } = dialogStore;
   const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
@@ -65,6 +70,21 @@ export function useDevices() {
     } catch (error) {
       console.error('Error deleting device:', error);
       toastError('Error', 'Failed to delete device.');
+    }
+  };
+
+  // Delete Many Devices
+  const deleteManyDevices = async ids => {
+    try {
+      await axios.post('/api/devices/delete-many', { ids });
+      fetchDevices(); // Refresh tags list after deletion
+      toastSuccess('Devices Deleted', 'The tags have been deleted successfully.');
+      showConfirmDelete.value = false;
+      eventBus.emit('deleteManyDevicesSuccess');
+    } catch (error) {
+      console.error('Error deleting tags:', error);
+      toastError('Error', 'Failed to delete devices.');
+      showConfirmDelete.value = false;
     }
   };
 
@@ -144,6 +164,48 @@ export function useDevices() {
     { deep: true }
   );
 
+  watch(
+    filterCategories,
+    (newVal, oldVal) => {
+      if (newVal && newVal.length > 0) {
+        const ids = newVal.map(item => item.id);
+        filters.value[`filter[category]`] = ids.join(',');
+      } else {
+        delete filters.value[`filter[category]`];
+      }
+      fetchDevices();
+    },
+    { deep: true }
+  );
+
+  watch(
+    filterTags,
+    (newVal, oldVal) => {
+      if (newVal && newVal.length > 0) {
+        const ids = newVal.map(item => item.id);
+        filters.value[`filter[tag]`] = ids.join(',');
+      } else {
+        delete filters.value[`filter[tag]`];
+      }
+      fetchDevices();
+    },
+    { deep: true }
+  );
+
+  watch(
+    filterVendor,
+    (newVal, oldVal) => {
+      if (newVal && newVal.length > 0) {
+        const ids = newVal.map(item => item.id);
+        filters.value[`filter[vendor]`] = ids.join(',');
+      } else {
+        delete filters.value[`filter[vendor]`];
+      }
+      fetchDevices();
+    },
+    { deep: true }
+  );
+
   function toggleSort(field) {
     if (sortParam.value === field) {
       sortParam.value = `-${field}`;
@@ -153,15 +215,31 @@ export function useDevices() {
     fetchDevices();
   }
 
+  function clearFilters() {
+    filters.value = {};
+    filterStatus.value = [];
+    filterCategories.value = [];
+    filterTags.value = [];
+    filterVendor.value = [];
+    searchTerm.value = '';
+    fetchDevices();
+  }
+
   return {
     devices,
     filterStatus,
+    filterCategories,
+    filterTags,
+    filterVendor,
+    clearFilters,
     isLoading,
     currentPage,
     perPage,
     lastPage,
     editId,
     newDeviceModalKey,
+    deleteManyDevices,
+    showConfirmDelete,
     searchTerm,
     openDialog,
     fetchDevices,
