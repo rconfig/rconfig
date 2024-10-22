@@ -5,6 +5,7 @@ import CredentialsAddEditDialog from '@/pages/Settings/Panels/Components/Credent
 import Loading from '@/pages/Shared/Table/Loading.vue';
 import NoResults from '@/pages/Shared/Table/NoResults.vue';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
+import DeviceListPopover from '@/pages/Shared/Popover/DeviceListPopover.vue';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { eventBus } from '@/composables/eventBus';
 import { onMounted } from 'vue';
@@ -95,6 +96,7 @@ onMounted(() => {
               </Button>
             </TableHead>
             <TableHead class="w-[30%]">Description</TableHead>
+            <TableHead class="w-[30%]">Devices</TableHead>
             <TableHead class="w-[10%]">Created</TableHead>
             <TableHead class="w-[10%]">Actions</TableHead>
           </TableRow>
@@ -123,6 +125,26 @@ onMounted(() => {
               </TableCell>
               <TableCell class="text-start">
                 {{ row.cred_description }}
+              </TableCell>
+              <TableCell class="text-start">
+                <span
+                  v-for="(device, index) in row.device.slice(0, 4)"
+                  :key="device.device_name"
+                  class="mr-2">
+                  <Badge
+                    variant="outline"
+                    class="py-1 mt-1 hover:bg-rcgray-800">
+                    <router-link :to="device.view_url">{{ device.device_name }}</router-link>
+                  </Badge>
+                </span>
+                <span
+                  v-if="row.device.length > 4"
+                  class="mr-2">
+                  <DeviceListPopover
+                    :recordName="row.device_name"
+                    :items="row.device"
+                    displayField="device_name" />
+                </span>
               </TableCell>
               <TableCell class="text-start">
                 {{ new Date(row.created_at).toLocaleString() }}
