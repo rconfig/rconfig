@@ -70,7 +70,10 @@ function fetchCategories() {
     <PopoverTrigger class="col-span-3">
       <Button
         variant="ghost"
-        class="flex flex-wrap items-start justify-start w-full p-1 pl-2 whitespace-normal border h-fit">
+        class="flex flex-wrap items-start justify-start w-full pl-2 whitespace-normal border h-fit"
+        :style="selectedCats.length === 0 ? 'padding: 0.45rem' : 'padding: 0.2rem'">
+        <!-- Padding is 0.45rem to match Inputs and adjustment when adding tags -->
+
         {{ selectedCats && selectedCats.length === 0 ? 'Select tags' : '' }}
         <span
           v-for="tag in selectedCats"

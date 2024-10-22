@@ -1,58 +1,19 @@
 <script setup>
-import axios from 'axios';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ref, onMounted, onUnmounted } from 'vue';
 import { useDialogStore } from '@/stores/dialogActions';
-import { useToaster } from '@/composables/useToaster'; // Import the composable
-
-const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
-const dialogStore = useDialogStore();
-const { openDialog, closeDialog, isDialogOpen } = dialogStore;
-const emit = defineEmits(['save']);
-const roles = ref([]);
-const errors = ref([]);
-const model = ref({
-  devicename: '',
-  deviceDescription: ''
-});
+import { ScrollArea } from '@/components/ui/scroll-area';
+import HelpPopover from '@/pages/Shared/Popover/HelpPopover.vue';
+import CategoryMultiSelect from '@/pages/Shared/FormFields/CategoryMultiSelect.vue';
+import TagMultiSelect from '@/pages/Shared/FormFields/TagMultiSelect.vue';
+import { useAddEditDevices } from '@/pages/Inventory/Devices/useAddEditDevices';
 
 const props = defineProps({
   editId: Number
 });
 
-function handleKeyDown(event) {
-  if (event.ctrlKey && event.key === 'Enter') {
-    saveDialog();
-  }
-}
-
-onMounted(() => {
-  if (props.editId > 0) {
-    axios.get(`/api/devices/${props.editId}`).then(response => {
-      model.value = response.data;
-    });
-  }
-
-  window.addEventListener('keydown', handleKeyDown);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('keydown', handleKeyDown);
-});
-
-function saveDialog() {
-  let id = props.editId > 0 ? `/${props.editId}` : ''; // determine if we are creating or updating
-  let method = props.editId > 0 ? 'patch' : 'post'; // determine if we are creating or updating
-  axios[method]('/api/devices' + id, model.value)
-    .then(response => {
-      emit('save', response.data);
-      toastSuccess('Device created', 'The device has been created successfully.');
-      closeDialog('DialogNewDevice');
-    })
-    .catch(error => {
-      errors.value = error.response.data.errors;
-    });
-}
+const { model, saveDialog, errors } = useAddEditDevices(props.editId);
+const dialogStore = useDialogStore();
+const { closeDialog, isDialogOpen } = dialogStore;
 </script>
 
 <template>
@@ -61,53 +22,249 @@ function saveDialog() {
       <!-- <Button variant="outline">Edit Profile</Button> -->
     </DialogTrigger>
     <DialogContent
-      class="sm:max-w-fit"
+      class="p-0 sm:max-w-7xl"
       @escapeKeyDown="closeDialog('DialogNewDevice')"
       @pointerDownOutside="closeDialog('DialogNewDevice')"
       @closeClicked="closeDialog('DialogNewDevice')">
-      <DialogHeader>
-        <DialogTitle>{{ editId > 0 ? 'Edit' : 'Add' }} Device {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</DialogTitle>
-        <DialogDescription>Make changes to your device here. Click {{ editId > 0 ? 'update' : 'save' }} when you're done.</DialogDescription>
+      <DialogHeader class="rc-dialog-header">
+        <DialogTitle class="text-sm text-rcgray-200">
+          <div class="flex items-center">
+            <DeviceIcon />
+            <span class="ml-2">{{ editId > 0 ? 'Edit' : 'Add' }} Device {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</span>
+            <span v-if="model.device_name">
+              : &nbsp;
+              <span class="text-muted-foreground">{{ model.device_name }}</span>
+            </span>
+          </div>
+        </DialogTitle>
       </DialogHeader>
-      <div class="grid gap-2 py-4">
-        <div class="grid items-center grid-cols-4 gap-4">
-          <Label
-            for="devicename"
-            class="text-right">
-            Device Name
-          </Label>
-          <Input
-            v-model="model.devicename"
-            id="devicename"
-            class="col-span-3" />
-        </div>
 
-        <div class="grid items-center grid-cols-4 gap-4">
-          <Label
-            for="deviceDescription"
-            class="text-right">
-            Description
-          </Label>
-          <Input
-            v-model="model.deviceDescription"
-            id="deviceDescription"
-            class="col-span-3" />
-        </div>
-      </div>
-      <div class="flex flex-col w-full space-y-2">
-        <span
-          class="text-red-400"
-          v-if="errors.deviceDescription">
-          {{ errors.deviceDescription[0] }}
-        </span>
+      <ScrollArea class="h-96 xl:h-auto">
+        <div class="grid grid-cols-1 gap-6 p-4 lg:grid-cols-2">
+          <!-- Column 1 -->
+          <div class="flex flex-col col-span-1">
+            <h3 class="mb-4 text-lg font-light">Device Information</h3>
+            <Label
+              for="device_name"
+              class="mb-1 text-muted-foreground">
+              Device Name
+            </Label>
+            <Input
+              v-model="model.device_name"
+              id="device_name"
+              class="w-full" />
+            <span
+              class="text-red-400"
+              v-if="errors.device_name">
+              {{ errors.device_name[0] }}
+            </span>
 
-        <span
-          class="text-red-400"
-          v-if="errors.devicename">
-          {{ errors.devicename[0] }}
-        </span>
-      </div>
-      <DialogFooter>
+            <div class="flex flex-row space-x-4">
+              <div class="flex flex-col w-1/2">
+                <Label
+                  for="deviceIP"
+                  class="mt-4 mb-1 text-muted-foreground">
+                  Device IP
+                </Label>
+                <Input
+                  v-model="model.deviceIP"
+                  id="deviceIP"
+                  class="w-full" />
+                <span
+                  class="text-red-400"
+                  v-if="errors.deviceIP">
+                  {{ errors.deviceIP[0] }}
+                </span>
+              </div>
+
+              <div class="flex flex-col w-1/2">
+                <Label
+                  for="devicePort"
+                  class="mt-4 mb-1 text-muted-foreground">
+                  Device Port
+                  <HelpPopover
+                    title="Device Port"
+                    content="Set the connection port specific to this device. it overrides the value set in the connection template. Leave empty otherwise." />
+                </Label>
+                <Input
+                  v-model="model.devicePort"
+                  id="devicePort"
+                  class="w-full" />
+                <span
+                  class="text-red-400"
+                  v-if="errors.devicePort">
+                  {{ errors.devicePort[0] }}
+                </span>
+              </div>
+            </div>
+
+            <Label
+              for="vector"
+              class="mt-4 mb-1 text-muted-foreground">
+              Vendor
+            </Label>
+            <Input
+              v-model="model.vendor"
+              id="vendor"
+              class="w-full" />
+            <span
+              class="text-red-400"
+              v-if="errors.vendor">
+              {{ errors.vendor[0] }}
+            </span>
+
+            <Label
+              for="category"
+              class="mt-4 mb-1 text-muted-foreground">
+              Category
+            </Label>
+            <CategoryMultiSelect
+              v-model="model.category"
+              id="category"
+              :singleSelect="true"
+              class="w-full" />
+
+            <span
+              class="text-red-400"
+              v-if="errors.category">
+              {{ errors.category[0] }}
+            </span>
+
+            <Label
+              for="model"
+              class="mt-4 mb-1 text-muted-foreground">
+              Model
+            </Label>
+            <Input
+              v-model="model.model"
+              id="model"
+              class="w-full" />
+            <span
+              class="text-red-400"
+              v-if="errors.model">
+              {{ errors.model[0] }}
+            </span>
+
+            <Label
+              for="tags"
+              class="mt-4 mb-1 text-muted-foreground">
+              Tags
+            </Label>
+            <TagMultiSelect
+              v-model="model.tags"
+              id="tags"
+              class="w-full" />
+            <span
+              class="text-red-400"
+              v-if="errors.tags">
+              {{ errors.tags[0] }}
+            </span>
+          </div>
+
+          <!-- Column 2 -->
+          <div class="flex flex-col col-span-1">
+            <h3 class="mb-4 text-lg font-light">Connection Information</h3>
+
+            <Label
+              for="device_username"
+              class="mb-1 text-muted-foreground">
+              Description
+            </Label>
+            <Input
+              v-model="model.device_username"
+              id="device_username"
+              class="w-full" />
+            <span
+              class="text-red-400"
+              v-if="errors.device_username">
+              {{ errors.device_username[0] }}
+            </span>
+
+            <Label
+              for="device_password"
+              class="mt-4 mb-1 text-muted-foreground">
+              Device Password
+            </Label>
+            <Input
+              v-model="model.device_password"
+              id="device_password"
+              class="w-full" />
+            <span
+              class="text-red-400"
+              v-if="errors.device_password">
+              {{ errors.device_password[0] }}
+            </span>
+
+            <Label
+              for="device_enable_password"
+              class="mt-4 mb-1 text-muted-foreground">
+              Device Enable Password
+            </Label>
+            <Input
+              v-model="model.device_enable_password"
+              id="device_enable_password"
+              class="w-full" />
+            <span
+              class="text-red-400"
+              v-if="errors.device_enable_password">
+              {{ errors.device_enable_password[0] }}
+            </span>
+
+            <Label
+              for="template"
+              class="mt-4 mb-1 text-muted-foreground">
+              Template
+            </Label>
+            <Input
+              v-model="model.template"
+              id="template"
+              class="w-full" />
+            <span
+              class="text-red-400"
+              v-if="errors.template">
+              {{ errors.template[0] }}
+            </span>
+
+            <Label
+              for="main_prompt"
+              class="mt-4 mb-1 text-muted-foreground">
+              Main Prompt
+            </Label>
+            <Input
+              v-model="model.main_prompt"
+              id="main_prompt"
+              class="w-full" />
+            <span
+              class="text-red-400"
+              v-if="errors.main_prompt">
+              {{ errors.main_prompt[0] }}
+            </span>
+
+            <Label
+              for="enable_prompt"
+              class="mt-4 mb-1 text-muted-foreground">
+              Enable Prompt
+            </Label>
+            <Input
+              v-model="model.enable_prompt"
+              id="enable_prompt"
+              class="w-full" />
+            <span
+              class="text-red-400"
+              v-if="errors.enable_prompt">
+              {{ errors.enable_prompt[0] }}
+            </span>
+          </div>
+
+          <!-- Column 3 -->
+          <!-- <div class="flex flex-col col-span-1">
+            Roles & Security
+          </div> -->
+        </div>
+      </ScrollArea>
+
+      <DialogFooter class="rc-dialog-footer bg-rcgray-800">
+        {{ model }}
         <Button
           type="close"
           variant="outline"

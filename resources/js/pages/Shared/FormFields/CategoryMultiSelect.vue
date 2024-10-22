@@ -15,6 +15,10 @@ const props = defineProps({
   modelValue: {
     type: Array,
     required: true
+  },
+  singleSelect: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -41,15 +45,15 @@ onMounted(() => {
 });
 
 function selectItem(item) {
-  // Add selected item to selectedCats and emit updated list
-  selectedCats.value.push(item);
+  if (props.singleSelect) {
+    // If singleSelect is true, replace the selected item
+    selectedCats.value = [item];
+  } else {
+    // Add selected item to selectedCats
+    selectedCats.value.push(item);
+  }
   open.value = false;
   searchTerm.value = '';
-  // remove item from filteredCategories
-  const itemIndex = filteredCategories.value.findIndex(cat => cat.categoryName === item.categoryName);
-  if (itemIndex !== -1) {
-    filteredCategories.value.splice(itemIndex, 1);
-  }
   emit('update:modelValue', selectedCats.value);
 }
 
@@ -76,7 +80,9 @@ function fetchCategories() {
     <PopoverTrigger class="col-span-3">
       <Button
         variant="ghost"
-        class="flex flex-wrap items-start justify-start w-full p-1 pl-2 whitespace-normal border h-fit">
+        class="flex flex-wrap items-start justify-start w-full pl-2 whitespace-normal border h-fit"
+        :style="selectedCats.length === 0 ? 'padding: 0.45rem' : 'padding: 0.2rem'">
+        <!-- Padding is 0.45rem to match Inputs and adjustment when adding cats -->
         {{ selectedCats && selectedCats.length === 0 ? 'Select categories' : '' }}
         <span
           v-for="cat in selectedCats"
