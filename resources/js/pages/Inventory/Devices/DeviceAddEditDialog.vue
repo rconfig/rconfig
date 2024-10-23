@@ -4,7 +4,10 @@ import { useDialogStore } from '@/stores/dialogActions';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import HelpPopover from '@/pages/Shared/Popover/HelpPopover.vue';
 import CategoryMultiSelect from '@/pages/Shared/FormFields/CategoryMultiSelect.vue';
+import DeviceModelMultiSelect from '@/pages/Shared/FormFields/DeviceModelMultiSelect.vue';
+import VendorMultiSelect from '@/pages/Shared/FormFields/VendorMultiSelect.vue';
 import TagMultiSelect from '@/pages/Shared/FormFields/TagMultiSelect.vue';
+import TemplateMultiSelect from '@/pages/Shared/FormFields/TemplateMultiSelect.vue';
 import { useAddEditDevices } from '@/pages/Inventory/Devices/useAddEditDevices';
 
 const props = defineProps({
@@ -48,10 +51,12 @@ const { closeDialog, isDialogOpen } = dialogStore;
               for="device_name"
               class="mb-1 text-muted-foreground">
               Device Name
+              <span class="text-red-400">*</span>
             </Label>
             <Input
               v-model="model.device_name"
               id="device_name"
+              autocomplete="off"
               class="w-full" />
             <span
               class="text-red-400"
@@ -62,24 +67,26 @@ const { closeDialog, isDialogOpen } = dialogStore;
             <div class="flex flex-row space-x-4">
               <div class="flex flex-col w-1/2">
                 <Label
-                  for="deviceIP"
+                  for="device_ip"
                   class="mt-4 mb-1 text-muted-foreground">
                   Device IP
+                  <span class="text-red-400">*</span>
                 </Label>
                 <Input
-                  v-model="model.deviceIP"
-                  id="deviceIP"
+                  v-model="model.device_ip"
+                  id="device_ip"
+                  autocomplete="off"
                   class="w-full" />
                 <span
                   class="text-red-400"
-                  v-if="errors.deviceIP">
-                  {{ errors.deviceIP[0] }}
+                  v-if="errors.device_ip">
+                  {{ errors.device_ip[0] }}
                 </span>
               </div>
 
               <div class="flex flex-col w-1/2">
                 <Label
-                  for="devicePort"
+                  for="device_port_override"
                   class="mt-4 mb-1 text-muted-foreground">
                   Device Port
                   <HelpPopover
@@ -87,14 +94,10 @@ const { closeDialog, isDialogOpen } = dialogStore;
                     content="Set the connection port specific to this device. it overrides the value set in the connection template. Leave empty otherwise." />
                 </Label>
                 <Input
-                  v-model="model.devicePort"
-                  id="devicePort"
+                  v-model="model.device_port_override"
+                  id="device_port_override"
+                  autocomplete="off"
                   class="w-full" />
-                <span
-                  class="text-red-400"
-                  v-if="errors.devicePort">
-                  {{ errors.devicePort[0] }}
-                </span>
               </div>
             </div>
 
@@ -102,62 +105,69 @@ const { closeDialog, isDialogOpen } = dialogStore;
               for="vector"
               class="mt-4 mb-1 text-muted-foreground">
               Vendor
+              <span class="text-red-400">*</span>
             </Label>
-            <Input
-              v-model="model.vendor"
-              id="vendor"
+            <VendorMultiSelect
+              :singleSelect="true"
+              v-model="model.device_vendor"
+              id="device_vendor"
               class="w-full" />
             <span
               class="text-red-400"
-              v-if="errors.vendor">
-              {{ errors.vendor[0] }}
+              v-if="errors.device_vendor">
+              {{ errors.device_vendor[0] }}
             </span>
 
             <Label
-              for="category"
+              for="device_category_id"
               class="mt-4 mb-1 text-muted-foreground">
               Category
+              <span class="text-red-400">*</span>
             </Label>
             <CategoryMultiSelect
-              v-model="model.category"
-              id="category"
+              v-model="model.selectedCategoryArray"
+              id="selectedCategoryArray"
               :singleSelect="true"
               class="w-full" />
 
             <span
               class="text-red-400"
-              v-if="errors.category">
-              {{ errors.category[0] }}
+              v-if="errors.device_category_id">
+              {{ errors.device_category_id[0] }}
             </span>
 
             <Label
-              for="model"
+              for="device_model"
               class="mt-4 mb-1 text-muted-foreground">
               Model
+              <span class="text-red-400">*</span>
             </Label>
-            <Input
-              v-model="model.model"
-              id="model"
+
+            <DeviceModelMultiSelect
+              :singleSelect="true"
+              v-model="model.device_model"
+              id="device_model"
               class="w-full" />
             <span
               class="text-red-400"
-              v-if="errors.model">
-              {{ errors.model[0] }}
+              v-if="errors.device_model">
+              {{ errors.device_model[0] }}
             </span>
 
             <Label
-              for="tags"
+              for="device_tags"
               class="mt-4 mb-1 text-muted-foreground">
               Tags
+              <span class="text-red-400">*</span>
             </Label>
             <TagMultiSelect
-              v-model="model.tags"
-              id="tags"
+              v-model="model.device_tags"
+              id="device_tags"
               class="w-full" />
             <span
               class="text-red-400"
-              v-if="errors.tags">
-              {{ errors.tags[0] }}
+              v-if="errors.device_tags">
+              {{ errors.device_tags[0] }}
             </span>
           </div>
 
@@ -168,11 +178,13 @@ const { closeDialog, isDialogOpen } = dialogStore;
             <Label
               for="device_username"
               class="mb-1 text-muted-foreground">
-              Description
+              Username
+              <span class="text-red-400">*</span>
             </Label>
             <Input
               v-model="model.device_username"
               id="device_username"
+              autocomplete="off"
               class="w-full" />
             <span
               class="text-red-400"
@@ -184,10 +196,12 @@ const { closeDialog, isDialogOpen } = dialogStore;
               for="device_password"
               class="mt-4 mb-1 text-muted-foreground">
               Device Password
+              <span class="text-red-400">*</span>
             </Label>
             <Input
               v-model="model.device_password"
               id="device_password"
+              autocomplete="off"
               class="w-full" />
             <span
               class="text-red-400"
@@ -203,6 +217,7 @@ const { closeDialog, isDialogOpen } = dialogStore;
             <Input
               v-model="model.device_enable_password"
               id="device_enable_password"
+              autocomplete="off"
               class="w-full" />
             <span
               class="text-red-400"
@@ -211,24 +226,29 @@ const { closeDialog, isDialogOpen } = dialogStore;
             </span>
 
             <Label
-              for="template"
+              for="device_template"
               class="mt-4 mb-1 text-muted-foreground">
               Template
+              <span class="text-red-400">*</span>
             </Label>
-            <Input
-              v-model="model.template"
-              id="template"
+            <TemplateMultiSelect
+              :singleSelect="true"
+              v-model="model.device_template"
+              id="device_template"
               class="w-full" />
             <span
               class="text-red-400"
-              v-if="errors.template">
-              {{ errors.template[0] }}
+              v-if="errors.device_template">
+              {{ errors.device_template[0] }}
             </span>
 
             <Label
               for="main_prompt"
               class="mt-4 mb-1 text-muted-foreground">
               Main Prompt
+              <HelpPopover
+                title="Device Main Prompt"
+                content="This is the 'Privileged EXEC' prompt. You will run show commands from this prompt and you can access configure mode. Usually 'router1#'" />
             </Label>
             <Input
               v-model="model.main_prompt"
@@ -239,12 +259,15 @@ const { closeDialog, isDialogOpen } = dialogStore;
               v-if="errors.main_prompt">
               {{ errors.main_prompt[0] }}
             </span>
-
             <Label
               for="enable_prompt"
               class="mt-4 mb-1 text-muted-foreground">
               Enable Prompt
+              <HelpPopover
+                title="Device Main Prompt"
+                content=" This is the 'User EXEC' prompt. The first level of access prompt. Usually 'router1>'" />
             </Label>
+
             <Input
               v-model="model.enable_prompt"
               id="enable_prompt"
@@ -265,6 +288,8 @@ const { closeDialog, isDialogOpen } = dialogStore;
 
       <DialogFooter class="rc-dialog-footer bg-rcgray-800">
         {{ model }}
+        <br />
+        {{ errors }}
         <Button
           type="close"
           variant="outline"

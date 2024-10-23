@@ -5,11 +5,11 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 const emit = defineEmits(['update:modelValue']);
-const categories = ref([]);
+const templates = ref([]);
 const modelValue = ref<string[]>([]);
 const open = ref(false);
 const searchTerm = ref('');
-const selectedCats = ref([]);
+const selectedTemplates = ref([]);
 
 const props = defineProps({
   modelValue: {
@@ -22,9 +22,9 @@ const props = defineProps({
   }
 });
 
-const filteredCategories = computed(() => {
-  return categories.value.filter(
-    cat => cat.categoryName.toLowerCase().includes(searchTerm.value.toLowerCase()) && !selectedCats.value.some(selectedCat => selectedCat.id === cat.id) // Prevent displaying already selected items
+const filteredVendors = computed(() => {
+  return templates.value.filter(
+    template => template.templateName.toLowerCase().includes(searchTerm.value.toLowerCase()) && !selectedTemplates.value.some(selectedTemplate => selectedTemplate.id === template.id) // Prevent displaying already selected items
   );
 });
 
@@ -32,43 +32,43 @@ const filteredCategories = computed(() => {
 watch(
   () => props.modelValue,
   newValue => {
-    selectedCats.value = newValue;
+    selectedTemplates.value = newValue;
   }
 );
 
 onMounted(() => {
-  fetchCategories();
+  fetchVendors();
 
   if (props.modelValue && props.modelValue.length > 0) {
-    selectedCats.value = props.modelValue;
+    selectedTemplates.value = props.modelValue;
   }
 });
 
 function selectItem(item) {
   if (props.singleSelect) {
     // If singleSelect is true, replace the selected item
-    selectedCats.value = [item];
+    selectedTemplates.value = [item];
   } else {
-    // Add selected item to selectedCats
-    selectedCats.value.push(item);
+    // Add selected item to selectedTemplates
+    selectedTemplates.value.push(item);
   }
   open.value = false;
   searchTerm.value = '';
-  emit('update:modelValue', selectedCats.value);
+  emit('update:modelValue', selectedTemplates.value);
 }
 
 function deleteItem(itemName) {
-  // Remove item from selectedCats and emit updated list
-  const itemIndex = selectedCats.value.findIndex(cat => cat.categoryName === itemName);
+  // Remove item from selectedTemplates and emit updated list
+  const itemIndex = selectedTemplates.value.findIndex(template => template.templateName === itemName);
   if (itemIndex !== -1) {
-    selectedCats.value.splice(itemIndex, 1);
+    selectedTemplates.value.splice(itemIndex, 1);
   }
-  emit('update:modelValue', selectedCats.value);
+  emit('update:modelValue', selectedTemplates.value);
 }
 
-function fetchCategories() {
-  axios.get('/api/categories/?perPage=10000').then(response => {
-    categories.value = response.data.data;
+function fetchVendors() {
+  axios.get('/api/templates/?perPage=10000').then(response => {
+    templates.value = response.data.data;
   });
 }
 </script>
@@ -76,28 +76,25 @@ function fetchCategories() {
 <template>
   <!-- DIV FOR RENDERING THE BADGE COLOR CLASSES -->
   <Popover>
-    <div class="hidden text-yellow-200 text-teal-100 bg-yellow-700 bg-teal-700 border-yellow-500 border-teal-500 bg-stone-700 text-stone-200 border-stone-500 bg-lime-700 text-lime-200 border-lime-500 bg-sky-700 text-sky-100 border-sky-500 bg-violet-700 text-violet-200 border-violet-500 bg-fuchsia-700 text-fuchsia-200 border-fuchsia-500"></div>
     <PopoverTrigger class="col-span-3">
       <Button
         variant="ghost"
         class="flex flex-wrap items-start justify-start w-full pl-2 whitespace-normal border h-fit"
-        :class="selectedCats.length === 0 ? 'text-muted-foreground' : ' '"
-        :style="selectedCats.length === 0 ? 'padding: 0.45rem' : 'padding: 0.2rem'">
-        <!-- Padding is 0.45rem to match Inputs and adjustment when adding cats -->
-        {{ selectedCats && selectedCats.length === 0 ? 'Select categories' : '' }}
+        :class="selectedTemplates.length === 0 ? 'text-muted-foreground' : ' '"
+        :style="selectedTemplates.length === 0 ? 'padding: 0.45rem' : 'padding: 0.2rem'">
+        <!-- Padding is 0.45rem to match Inputs and adjustment when adding templates -->
+        {{ selectedTemplates && selectedTemplates.length === 0 ? 'Select templates' : '' }}
         <span
-          v-for="cat in selectedCats"
-          :key="cat.id"
+          v-for="template in selectedTemplates"
+          :key="template.id"
           class="relative my-1 group">
-          <span
-            :class="cat.badgeColor ? cat.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'"
-            class="flex items-center text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border">
-            {{ cat.categoryName }}
+          <span class="flex items-center text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border">
+            {{ template.templateName }}
 
             <Icon
               icon="si:close-line"
               class="ml-1 cursor-pointer hover:text-white"
-              @click.stop="deleteItem(cat.categoryName)" />
+              @click.stop="deleteItem(template.templateName)" />
           </span>
         </span>
       </Button>
@@ -125,16 +122,15 @@ function fetchCategories() {
       <ScrollArea class="h-64">
         <div class="py-1">
           <div
-            v-for="cat in filteredCategories"
-            :key="cat.id"
+            v-for="template in filteredVendors"
+            :key="template.id"
             class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600"
-            @click="selectItem(cat)">
+            @click="selectItem(template)">
             <span
               data-size="20"
-              class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border"
-              :class="cat.badgeColor ? cat.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'">
+              class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5">
               <span data-size="20">
-                {{ cat.categoryName }}
+                {{ template.templateName }}
               </span>
             </span>
           </div>

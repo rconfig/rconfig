@@ -9,11 +9,11 @@ const devices = ref([]);
 const modelValue = ref<string[]>([]);
 const open = ref(false);
 const searchTerm = ref('');
-const selectedCats = ref([]);
+const selectedDevs = ref([]);
 
 const filteredCategories = computed(() => {
   return devices.value.filter(
-    dev => dev.device_name.toLowerCase().includes(searchTerm.value.toLowerCase()) && !selectedCats.value.some(selectedCat => selectedCat.id === dev.id) // Prevent displaying already selected items
+    dev => dev.device_name.toLowerCase().includes(searchTerm.value.toLowerCase()) && !selectedDevs.value.some(selectedCat => selectedCat.id === dev.id) // Prevent displaying already selected items
   );
 });
 
@@ -28,7 +28,7 @@ const props = defineProps({
 watch(
   () => props.modelValue,
   newValue => {
-    selectedCats.value = newValue;
+    selectedDevs.value = newValue;
   }
 );
 
@@ -37,8 +37,8 @@ onMounted(() => {
 });
 
 function selectItem(item) {
-  // Add selected item to selectedCats and emit updated list
-  selectedCats.value.push(item);
+  // Add selected item to selectedDevs and emit updated list
+  selectedDevs.value.push(item);
   open.value = false;
   searchTerm.value = '';
   // remove item from filteredCategories
@@ -46,16 +46,16 @@ function selectItem(item) {
   if (itemIndex !== -1) {
     filteredCategories.value.splice(itemIndex, 1);
   }
-  emit('update:modelValue', selectedCats.value);
+  emit('update:modelValue', selectedDevs.value);
 }
 
 function deleteItem(itemName) {
-  // Remove item from selectedCats and emit updated list
-  const itemIndex = selectedCats.value.findIndex(dev => dev.device_name === itemName);
+  // Remove item from selectedDevs and emit updated list
+  const itemIndex = selectedDevs.value.findIndex(dev => dev.device_name === itemName);
   if (itemIndex !== -1) {
-    selectedCats.value.splice(itemIndex, 1);
+    selectedDevs.value.splice(itemIndex, 1);
   }
-  emit('update:modelValue', selectedCats.value);
+  emit('update:modelValue', selectedDevs.value);
 }
 
 function fetchCategories() {
@@ -70,10 +70,11 @@ function fetchCategories() {
     <PopoverTrigger class="w-full">
       <Button
         variant="ghost"
-        class="flex flex-wrap items-start justify-start w-full p-1 pl-2 whitespace-normal border h-fit">
-        {{ selectedCats && selectedCats.length === 0 ? 'Select devices' : '' }}
+        class="flex flex-wrap items-start justify-start w-full p-1 pl-2 whitespace-normal border h-fit"
+        :class="selectedDevs.length === 0 ? 'text-muted-foreground' : ' '">
+        {{ selectedDevs && selectedDevs.length === 0 ? 'Select devices' : '' }}
         <span
-          v-for="dev in selectedCats"
+          v-for="dev in selectedDevs"
           :key="dev.id"
           class="relative my-1 group">
           <span
@@ -98,6 +99,7 @@ function fetchCategories() {
           id="search"
           type="text"
           v-model="searchTerm"
+          autocomplete="off"
           placeholder="Search..."
           class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter" />
         <span class="absolute inset-y-0 flex items-center justify-center px-2 start-0">

@@ -10,14 +10,15 @@ export function useAddEditDevices(editId) {
     device_name: '',
     device_ip: '',
     device_port_override: '',
-    device_vendor: '',
+    device_vendor: [],
     device_model: '',
-    device_category_id: '',
-    device_tags: '',
+    selectedCategoryArray: [],
+    device_category_id: 0,
+    device_tags: [],
     device_username: '',
     device_password: '',
     device_enable_password: '',
-    device_template: '',
+    device_template: [],
     device_main_prompt: '',
     device_enable_prompt: ''
   });
@@ -43,6 +44,10 @@ export function useAddEditDevices(editId) {
   }
 
   function saveDialog() {
+    if (model.value.selectedCategoryArray.length > 0) {
+      model.value.device_category_id = model.value.selectedCategoryArray[0].id;
+    }
+
     let id = editId > 0 ? `/${editId}` : ''; // determine if we are creating or updating
     let method = editId > 0 ? 'patch' : 'post'; // determine if we are creating or updating
     axios[method]('/api/devices' + id, model.value)

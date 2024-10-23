@@ -37,6 +37,9 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
     Route::resource('vendors', 'VendorController');
     Route::post('/vendors/delete-many', 'VendorController@deleteMany');
 
+    Route::resource('device-models', 'DeviceModelsController');
+    Route::post('/device-models/delete-many', 'DeviceModelsController@deleteMany');
+
     Route::resource('tags', 'TagController');
     Route::post('/tags/delete-many', 'TagController@deleteMany');
 

@@ -66,7 +66,7 @@ function saveDialog() {
   axios[method]('/api/users' + id, model.value)
     .then(response => {
       emit('save', response.data);
-      toastSuccess('User created', 'The tag has been created successfully.');
+      toastSuccess('User created', 'The user has been created successfully.');
       closeDialog('DialogNewUser');
     })
     .catch(error => {

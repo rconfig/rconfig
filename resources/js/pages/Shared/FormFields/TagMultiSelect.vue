@@ -9,11 +9,11 @@ const tags = ref([]);
 const modelValue = ref<string[]>([]);
 const open = ref(false);
 const searchTerm = ref('');
-const selectedCats = ref([]);
+const selectedTags = ref([]);
 
 const filteredCategories = computed(() => {
   return tags.value.filter(
-    tag => tag.tagname.toLowerCase().includes(searchTerm.value.toLowerCase()) && !selectedCats.value.some(selectedCat => selectedCat.id === tag.id) // Prevent displaying already selected items
+    tag => tag.tagname.toLowerCase().includes(searchTerm.value.toLowerCase()) && !selectedTags.value.some(selectedCat => selectedCat.id === tag.id) // Prevent displaying already selected items
   );
 });
 
@@ -28,7 +28,7 @@ const props = defineProps({
 watch(
   () => props.modelValue,
   newValue => {
-    selectedCats.value = newValue;
+    selectedTags.value = newValue;
   }
 );
 
@@ -37,8 +37,8 @@ onMounted(() => {
 });
 
 function selectItem(item) {
-  // Add selected item to selectedCats and emit updated list
-  selectedCats.value.push(item);
+  // Add selected item to selectedTags and emit updated list
+  selectedTags.value.push(item);
   open.value = false;
   searchTerm.value = '';
   // remove item from filteredCategories
@@ -46,16 +46,16 @@ function selectItem(item) {
   if (itemIndex !== -1) {
     filteredCategories.value.splice(itemIndex, 1);
   }
-  emit('update:modelValue', selectedCats.value);
+  emit('update:modelValue', selectedTags.value);
 }
 
 function deleteItem(itemName) {
-  // Remove item from selectedCats and emit updated list
-  const itemIndex = selectedCats.value.findIndex(tag => tag.tagname === itemName);
+  // Remove item from selectedTags and emit updated list
+  const itemIndex = selectedTags.value.findIndex(tag => tag.tagname === itemName);
   if (itemIndex !== -1) {
-    selectedCats.value.splice(itemIndex, 1);
+    selectedTags.value.splice(itemIndex, 1);
   }
-  emit('update:modelValue', selectedCats.value);
+  emit('update:modelValue', selectedTags.value);
 }
 
 function fetchCategories() {
@@ -71,12 +71,13 @@ function fetchCategories() {
       <Button
         variant="ghost"
         class="flex flex-wrap items-start justify-start w-full pl-2 whitespace-normal border h-fit"
-        :style="selectedCats.length === 0 ? 'padding: 0.45rem' : 'padding: 0.2rem'">
+        :class="selectedTags.length === 0 ? 'text-muted-foreground' : ' '"
+        :style="selectedTags.length === 0 ? 'padding: 0.45rem' : 'padding: 0.2rem'">
         <!-- Padding is 0.45rem to match Inputs and adjustment when adding tags -->
 
-        {{ selectedCats && selectedCats.length === 0 ? 'Select tags' : '' }}
+        {{ selectedTags && selectedTags.length === 0 ? 'Select tags' : '' }}
         <span
-          v-for="tag in selectedCats"
+          v-for="tag in selectedTags"
           :key="tag.id"
           class="relative my-1 group">
           <span
@@ -101,6 +102,7 @@ function fetchCategories() {
           id="search"
           type="text"
           v-model="searchTerm"
+          autocomplete="off"
           placeholder="Search..."
           class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter" />
         <span class="absolute inset-y-0 flex items-center justify-center px-2 start-0">
