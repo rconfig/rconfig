@@ -1,29 +1,28 @@
 {
-  "_CategoryMultiSelect.vue_vue_type_script_setup_true_lang-CaMNwmzu.js": {
-    "file": "assets/CategoryMultiSelect.vue_vue_type_script_setup_true_lang-CaMNwmzu.js",
-    "name": "CategoryMultiSelect.vue_vue_type_script_setup_true_lang",
+  "_DeviceListPopover-tcZUFkxP.js": {
+    "file": "assets/DeviceListPopover-tcZUFkxP.js",
+    "name": "DeviceListPopover",
     "imports": [
       "resources/js/app.js",
-      "_PopoverContent-C-_E_Jg2.js",
-      "_ScrollArea-BLyOok4o.js"
+      "_PopoverContent-DTcdNUWX.js"
     ]
   },
   "_Main-!~{004}~.js": {
     "file": "assets/Main-B4m28A1i.css",
     "src": "_Main-!~{004}~.js"
   },
-  "_Main-Ce6uecm8.js": {
-    "file": "assets/Main-Ce6uecm8.js",
+  "_Main-LGAxkuzy.js": {
+    "file": "assets/Main-LGAxkuzy.js",
     "name": "Main",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_SelectScrollDownButton-Dk70VVbL.js",
-      "_PopoverContent-C-_E_Jg2.js",
-      "_CategoryMultiSelect.vue_vue_type_script_setup_true_lang-CaMNwmzu.js",
-      "_eventBus-B2Ud-BO1.js",
-      "_ScrollArea-BLyOok4o.js",
-      "_index-BAdhlD3x.js"
+      "_SelectScrollDownButton-DC3VG2_0.js",
+      "_PopoverContent-DTcdNUWX.js",
+      "_TagMultiSelect.vue_vue_type_script_setup_true_lang-DtHYq8V5.js",
+      "_DeviceListPopover-tcZUFkxP.js",
+      "_ScrollArea-BHCI-IZ4.js",
+      "_index-DHJpu_kR.js"
     ],
     "dynamicImports": [
       "node_modules/monaco-editor/esm/vs/basic-languages/abap/abap.js",
@@ -127,43 +126,45 @@
       "assets/codicon-DCmgc-ay.ttf"
     ]
   },
-  "_PopoverContent-C-_E_Jg2.js": {
-    "file": "assets/PopoverContent-C-_E_Jg2.js",
+  "_PopoverContent-DTcdNUWX.js": {
+    "file": "assets/PopoverContent-DTcdNUWX.js",
     "name": "PopoverContent",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_ScrollArea-BLyOok4o.js": {
-    "file": "assets/ScrollArea-BLyOok4o.js",
+  "_ScrollArea-BHCI-IZ4.js": {
+    "file": "assets/ScrollArea-BHCI-IZ4.js",
     "name": "ScrollArea",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_SelectLabel-DLFqwVIu.js": {
-    "file": "assets/SelectLabel-DLFqwVIu.js",
+  "_SelectLabel-Bk-fcUvN.js": {
+    "file": "assets/SelectLabel-Bk-fcUvN.js",
     "name": "SelectLabel",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_SelectScrollDownButton-Dk70VVbL.js": {
-    "file": "assets/SelectScrollDownButton-Dk70VVbL.js",
+  "_SelectScrollDownButton-DC3VG2_0.js": {
+    "file": "assets/SelectScrollDownButton-DC3VG2_0.js",
     "name": "SelectScrollDownButton",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_eventBus-B2Ud-BO1.js": {
-    "file": "assets/eventBus-B2Ud-BO1.js",
-    "name": "eventBus",
+  "_TagMultiSelect.vue_vue_type_script_setup_true_lang-DtHYq8V5.js": {
+    "file": "assets/TagMultiSelect.vue_vue_type_script_setup_true_lang-DtHYq8V5.js",
+    "name": "TagMultiSelect.vue_vue_type_script_setup_true_lang",
     "imports": [
-      "resources/js/app.js"
+      "resources/js/app.js",
+      "_PopoverContent-DTcdNUWX.js",
+      "_ScrollArea-BHCI-IZ4.js"
     ]
   },
-  "_index-BAdhlD3x.js": {
-    "file": "assets/index-BAdhlD3x.js",
+  "_index-DHJpu_kR.js": {
+    "file": "assets/index-DHJpu_kR.js",
     "name": "index",
     "imports": [
       "resources/js/app.js"
@@ -282,22 +283,22 @@
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/freemarker2/freemarker2.js": {
-    "file": "assets/freemarker2-dfnv1u6d.js",
+    "file": "assets/freemarker2-YHiBkliw.js",
     "name": "freemarker2",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/freemarker2/freemarker2.js",
     "isDynamicEntry": true,
     "imports": [
-      "_Main-Ce6uecm8.js",
+      "_Main-LGAxkuzy.js",
       "resources/js/app.js",
-      "_SelectScrollDownButton-Dk70VVbL.js",
-      "_PopoverContent-C-_E_Jg2.js",
-      "_CategoryMultiSelect.vue_vue_type_script_setup_true_lang-CaMNwmzu.js",
-      "_ScrollArea-BLyOok4o.js",
-      "_eventBus-B2Ud-BO1.js",
-      "_index-BAdhlD3x.js"
+      "_SelectScrollDownButton-DC3VG2_0.js",
+      "_PopoverContent-DTcdNUWX.js",
+      "_TagMultiSelect.vue_vue_type_script_setup_true_lang-DtHYq8V5.js",
+      "_ScrollArea-BHCI-IZ4.js",
+      "_DeviceListPopover-tcZUFkxP.js",
+      "_index-DHJpu_kR.js"
     ],
     "css": [
-      "assets/global-BvWb3kWE.css"
+      "assets/global-DJe_qlTu.css"
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/fsharp/fsharp.js": {
@@ -319,22 +320,22 @@
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/handlebars/handlebars.js": {
-    "file": "assets/handlebars-Zja0hC_t.js",
+    "file": "assets/handlebars-CaN5YiqF.js",
     "name": "handlebars",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/handlebars/handlebars.js",
     "isDynamicEntry": true,
     "imports": [
-      "_Main-Ce6uecm8.js",
+      "_Main-LGAxkuzy.js",
       "resources/js/app.js",
-      "_SelectScrollDownButton-Dk70VVbL.js",
-      "_PopoverContent-C-_E_Jg2.js",
-      "_CategoryMultiSelect.vue_vue_type_script_setup_true_lang-CaMNwmzu.js",
-      "_ScrollArea-BLyOok4o.js",
-      "_eventBus-B2Ud-BO1.js",
-      "_index-BAdhlD3x.js"
+      "_SelectScrollDownButton-DC3VG2_0.js",
+      "_PopoverContent-DTcdNUWX.js",
+      "_TagMultiSelect.vue_vue_type_script_setup_true_lang-DtHYq8V5.js",
+      "_ScrollArea-BHCI-IZ4.js",
+      "_DeviceListPopover-tcZUFkxP.js",
+      "_index-DHJpu_kR.js"
     ],
     "css": [
-      "assets/global-BvWb3kWE.css"
+      "assets/global-DJe_qlTu.css"
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/hcl/hcl.js": {
@@ -344,22 +345,22 @@
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/html/html.js": {
-    "file": "assets/html-DJ47ALGF.js",
+    "file": "assets/html-BFH5r9FX.js",
     "name": "html",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/html/html.js",
     "isDynamicEntry": true,
     "imports": [
-      "_Main-Ce6uecm8.js",
+      "_Main-LGAxkuzy.js",
       "resources/js/app.js",
-      "_SelectScrollDownButton-Dk70VVbL.js",
-      "_PopoverContent-C-_E_Jg2.js",
-      "_CategoryMultiSelect.vue_vue_type_script_setup_true_lang-CaMNwmzu.js",
-      "_ScrollArea-BLyOok4o.js",
-      "_eventBus-B2Ud-BO1.js",
-      "_index-BAdhlD3x.js"
+      "_SelectScrollDownButton-DC3VG2_0.js",
+      "_PopoverContent-DTcdNUWX.js",
+      "_TagMultiSelect.vue_vue_type_script_setup_true_lang-DtHYq8V5.js",
+      "_ScrollArea-BHCI-IZ4.js",
+      "_DeviceListPopover-tcZUFkxP.js",
+      "_index-DHJpu_kR.js"
     ],
     "css": [
-      "assets/global-BvWb3kWE.css"
+      "assets/global-DJe_qlTu.css"
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/ini/ini.js": {
@@ -375,23 +376,23 @@
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/javascript/javascript.js": {
-    "file": "assets/javascript-BdEDdz9o.js",
+    "file": "assets/javascript-DcU4VXY_.js",
     "name": "javascript",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/javascript/javascript.js",
     "isDynamicEntry": true,
     "imports": [
       "node_modules/monaco-editor/esm/vs/basic-languages/typescript/typescript.js",
-      "_Main-Ce6uecm8.js",
+      "_Main-LGAxkuzy.js",
       "resources/js/app.js",
-      "_SelectScrollDownButton-Dk70VVbL.js",
-      "_PopoverContent-C-_E_Jg2.js",
-      "_CategoryMultiSelect.vue_vue_type_script_setup_true_lang-CaMNwmzu.js",
-      "_ScrollArea-BLyOok4o.js",
-      "_eventBus-B2Ud-BO1.js",
-      "_index-BAdhlD3x.js"
+      "_SelectScrollDownButton-DC3VG2_0.js",
+      "_PopoverContent-DTcdNUWX.js",
+      "_TagMultiSelect.vue_vue_type_script_setup_true_lang-DtHYq8V5.js",
+      "_ScrollArea-BHCI-IZ4.js",
+      "_DeviceListPopover-tcZUFkxP.js",
+      "_index-DHJpu_kR.js"
     ],
     "css": [
-      "assets/global-BvWb3kWE.css"
+      "assets/global-DJe_qlTu.css"
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/julia/julia.js": {
@@ -419,22 +420,22 @@
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/liquid/liquid.js": {
-    "file": "assets/liquid-C0scACZz.js",
+    "file": "assets/liquid-Cu0c8lFH.js",
     "name": "liquid",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/liquid/liquid.js",
     "isDynamicEntry": true,
     "imports": [
-      "_Main-Ce6uecm8.js",
+      "_Main-LGAxkuzy.js",
       "resources/js/app.js",
-      "_SelectScrollDownButton-Dk70VVbL.js",
-      "_PopoverContent-C-_E_Jg2.js",
-      "_CategoryMultiSelect.vue_vue_type_script_setup_true_lang-CaMNwmzu.js",
-      "_ScrollArea-BLyOok4o.js",
-      "_eventBus-B2Ud-BO1.js",
-      "_index-BAdhlD3x.js"
+      "_SelectScrollDownButton-DC3VG2_0.js",
+      "_PopoverContent-DTcdNUWX.js",
+      "_TagMultiSelect.vue_vue_type_script_setup_true_lang-DtHYq8V5.js",
+      "_ScrollArea-BHCI-IZ4.js",
+      "_DeviceListPopover-tcZUFkxP.js",
+      "_index-DHJpu_kR.js"
     ],
     "css": [
-      "assets/global-BvWb3kWE.css"
+      "assets/global-DJe_qlTu.css"
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/lua/lua.js": {
@@ -456,22 +457,22 @@
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/mdx/mdx.js": {
-    "file": "assets/mdx-Cm-eWPVi.js",
+    "file": "assets/mdx-CDWs03A2.js",
     "name": "mdx",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/mdx/mdx.js",
     "isDynamicEntry": true,
     "imports": [
-      "_Main-Ce6uecm8.js",
+      "_Main-LGAxkuzy.js",
       "resources/js/app.js",
-      "_SelectScrollDownButton-Dk70VVbL.js",
-      "_PopoverContent-C-_E_Jg2.js",
-      "_CategoryMultiSelect.vue_vue_type_script_setup_true_lang-CaMNwmzu.js",
-      "_ScrollArea-BLyOok4o.js",
-      "_eventBus-B2Ud-BO1.js",
-      "_index-BAdhlD3x.js"
+      "_SelectScrollDownButton-DC3VG2_0.js",
+      "_PopoverContent-DTcdNUWX.js",
+      "_TagMultiSelect.vue_vue_type_script_setup_true_lang-DtHYq8V5.js",
+      "_ScrollArea-BHCI-IZ4.js",
+      "_DeviceListPopover-tcZUFkxP.js",
+      "_index-DHJpu_kR.js"
     ],
     "css": [
-      "assets/global-BvWb3kWE.css"
+      "assets/global-DJe_qlTu.css"
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/mips/mips.js": {
@@ -565,22 +566,22 @@
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/python/python.js": {
-    "file": "assets/python-CGs74Gt1.js",
+    "file": "assets/python-B_xu0Sn8.js",
     "name": "python",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/python/python.js",
     "isDynamicEntry": true,
     "imports": [
-      "_Main-Ce6uecm8.js",
+      "_Main-LGAxkuzy.js",
       "resources/js/app.js",
-      "_SelectScrollDownButton-Dk70VVbL.js",
-      "_PopoverContent-C-_E_Jg2.js",
-      "_CategoryMultiSelect.vue_vue_type_script_setup_true_lang-CaMNwmzu.js",
-      "_ScrollArea-BLyOok4o.js",
-      "_eventBus-B2Ud-BO1.js",
-      "_index-BAdhlD3x.js"
+      "_SelectScrollDownButton-DC3VG2_0.js",
+      "_PopoverContent-DTcdNUWX.js",
+      "_TagMultiSelect.vue_vue_type_script_setup_true_lang-DtHYq8V5.js",
+      "_ScrollArea-BHCI-IZ4.js",
+      "_DeviceListPopover-tcZUFkxP.js",
+      "_index-DHJpu_kR.js"
     ],
     "css": [
-      "assets/global-BvWb3kWE.css"
+      "assets/global-DJe_qlTu.css"
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/qsharp/qsharp.js": {
@@ -596,22 +597,22 @@
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/razor/razor.js": {
-    "file": "assets/razor-D5KTVNPL.js",
+    "file": "assets/razor-DVBBgfbN.js",
     "name": "razor",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/razor/razor.js",
     "isDynamicEntry": true,
     "imports": [
-      "_Main-Ce6uecm8.js",
+      "_Main-LGAxkuzy.js",
       "resources/js/app.js",
-      "_SelectScrollDownButton-Dk70VVbL.js",
-      "_PopoverContent-C-_E_Jg2.js",
-      "_CategoryMultiSelect.vue_vue_type_script_setup_true_lang-CaMNwmzu.js",
-      "_ScrollArea-BLyOok4o.js",
-      "_eventBus-B2Ud-BO1.js",
-      "_index-BAdhlD3x.js"
+      "_SelectScrollDownButton-DC3VG2_0.js",
+      "_PopoverContent-DTcdNUWX.js",
+      "_TagMultiSelect.vue_vue_type_script_setup_true_lang-DtHYq8V5.js",
+      "_ScrollArea-BHCI-IZ4.js",
+      "_DeviceListPopover-tcZUFkxP.js",
+      "_index-DHJpu_kR.js"
     ],
     "css": [
-      "assets/global-BvWb3kWE.css"
+      "assets/global-DJe_qlTu.css"
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/redis/redis.js": {
@@ -729,22 +730,22 @@
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/typescript/typescript.js": {
-    "file": "assets/typescript-hgik0zfu.js",
+    "file": "assets/typescript-DSOc8KWi.js",
     "name": "typescript",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/typescript/typescript.js",
     "isDynamicEntry": true,
     "imports": [
-      "_Main-Ce6uecm8.js",
+      "_Main-LGAxkuzy.js",
       "resources/js/app.js",
-      "_SelectScrollDownButton-Dk70VVbL.js",
-      "_PopoverContent-C-_E_Jg2.js",
-      "_CategoryMultiSelect.vue_vue_type_script_setup_true_lang-CaMNwmzu.js",
-      "_ScrollArea-BLyOok4o.js",
-      "_eventBus-B2Ud-BO1.js",
-      "_index-BAdhlD3x.js"
+      "_SelectScrollDownButton-DC3VG2_0.js",
+      "_PopoverContent-DTcdNUWX.js",
+      "_TagMultiSelect.vue_vue_type_script_setup_true_lang-DtHYq8V5.js",
+      "_ScrollArea-BHCI-IZ4.js",
+      "_DeviceListPopover-tcZUFkxP.js",
+      "_index-DHJpu_kR.js"
     ],
     "css": [
-      "assets/global-BvWb3kWE.css"
+      "assets/global-DJe_qlTu.css"
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/typespec/typespec.js": {
@@ -766,121 +767,121 @@
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/xml/xml.js": {
-    "file": "assets/xml-B0_-2hMQ.js",
+    "file": "assets/xml-0wmjWIMB.js",
     "name": "xml",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/xml/xml.js",
     "isDynamicEntry": true,
     "imports": [
-      "_Main-Ce6uecm8.js",
+      "_Main-LGAxkuzy.js",
       "resources/js/app.js",
-      "_SelectScrollDownButton-Dk70VVbL.js",
-      "_PopoverContent-C-_E_Jg2.js",
-      "_CategoryMultiSelect.vue_vue_type_script_setup_true_lang-CaMNwmzu.js",
-      "_ScrollArea-BLyOok4o.js",
-      "_eventBus-B2Ud-BO1.js",
-      "_index-BAdhlD3x.js"
+      "_SelectScrollDownButton-DC3VG2_0.js",
+      "_PopoverContent-DTcdNUWX.js",
+      "_TagMultiSelect.vue_vue_type_script_setup_true_lang-DtHYq8V5.js",
+      "_ScrollArea-BHCI-IZ4.js",
+      "_DeviceListPopover-tcZUFkxP.js",
+      "_index-DHJpu_kR.js"
     ],
     "css": [
-      "assets/global-BvWb3kWE.css"
+      "assets/global-DJe_qlTu.css"
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/yaml/yaml.js": {
-    "file": "assets/yaml-CcyFmM0d.js",
+    "file": "assets/yaml-CLKZ299P.js",
     "name": "yaml",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/yaml/yaml.js",
     "isDynamicEntry": true,
     "imports": [
-      "_Main-Ce6uecm8.js",
+      "_Main-LGAxkuzy.js",
       "resources/js/app.js",
-      "_SelectScrollDownButton-Dk70VVbL.js",
-      "_PopoverContent-C-_E_Jg2.js",
-      "_CategoryMultiSelect.vue_vue_type_script_setup_true_lang-CaMNwmzu.js",
-      "_ScrollArea-BLyOok4o.js",
-      "_eventBus-B2Ud-BO1.js",
-      "_index-BAdhlD3x.js"
+      "_SelectScrollDownButton-DC3VG2_0.js",
+      "_PopoverContent-DTcdNUWX.js",
+      "_TagMultiSelect.vue_vue_type_script_setup_true_lang-DtHYq8V5.js",
+      "_ScrollArea-BHCI-IZ4.js",
+      "_DeviceListPopover-tcZUFkxP.js",
+      "_index-DHJpu_kR.js"
     ],
     "css": [
-      "assets/global-BvWb3kWE.css"
+      "assets/global-DJe_qlTu.css"
     ]
   },
   "node_modules/monaco-editor/esm/vs/language/css/cssMode.js": {
-    "file": "assets/cssMode-DUctR_SJ.js",
+    "file": "assets/cssMode-BLUqBrUY.js",
     "name": "cssMode",
     "src": "node_modules/monaco-editor/esm/vs/language/css/cssMode.js",
     "isDynamicEntry": true,
     "imports": [
-      "_Main-Ce6uecm8.js",
+      "_Main-LGAxkuzy.js",
       "resources/js/app.js",
-      "_SelectScrollDownButton-Dk70VVbL.js",
-      "_PopoverContent-C-_E_Jg2.js",
-      "_CategoryMultiSelect.vue_vue_type_script_setup_true_lang-CaMNwmzu.js",
-      "_ScrollArea-BLyOok4o.js",
-      "_eventBus-B2Ud-BO1.js",
-      "_index-BAdhlD3x.js"
+      "_SelectScrollDownButton-DC3VG2_0.js",
+      "_PopoverContent-DTcdNUWX.js",
+      "_TagMultiSelect.vue_vue_type_script_setup_true_lang-DtHYq8V5.js",
+      "_ScrollArea-BHCI-IZ4.js",
+      "_DeviceListPopover-tcZUFkxP.js",
+      "_index-DHJpu_kR.js"
     ],
     "css": [
-      "assets/global-BvWb3kWE.css"
+      "assets/global-DJe_qlTu.css"
     ]
   },
   "node_modules/monaco-editor/esm/vs/language/html/htmlMode.js": {
-    "file": "assets/htmlMode-Cn2EzJmh.js",
+    "file": "assets/htmlMode-BK5SCGVu.js",
     "name": "htmlMode",
     "src": "node_modules/monaco-editor/esm/vs/language/html/htmlMode.js",
     "isDynamicEntry": true,
     "imports": [
-      "_Main-Ce6uecm8.js",
+      "_Main-LGAxkuzy.js",
       "resources/js/app.js",
-      "_SelectScrollDownButton-Dk70VVbL.js",
-      "_PopoverContent-C-_E_Jg2.js",
-      "_CategoryMultiSelect.vue_vue_type_script_setup_true_lang-CaMNwmzu.js",
-      "_ScrollArea-BLyOok4o.js",
-      "_eventBus-B2Ud-BO1.js",
-      "_index-BAdhlD3x.js"
+      "_SelectScrollDownButton-DC3VG2_0.js",
+      "_PopoverContent-DTcdNUWX.js",
+      "_TagMultiSelect.vue_vue_type_script_setup_true_lang-DtHYq8V5.js",
+      "_ScrollArea-BHCI-IZ4.js",
+      "_DeviceListPopover-tcZUFkxP.js",
+      "_index-DHJpu_kR.js"
     ],
     "css": [
-      "assets/global-BvWb3kWE.css"
+      "assets/global-DJe_qlTu.css"
     ]
   },
   "node_modules/monaco-editor/esm/vs/language/json/jsonMode.js": {
-    "file": "assets/jsonMode-BwyYVg-f.js",
+    "file": "assets/jsonMode-DKyrBSGw.js",
     "name": "jsonMode",
     "src": "node_modules/monaco-editor/esm/vs/language/json/jsonMode.js",
     "isDynamicEntry": true,
     "imports": [
-      "_Main-Ce6uecm8.js",
+      "_Main-LGAxkuzy.js",
       "resources/js/app.js",
-      "_SelectScrollDownButton-Dk70VVbL.js",
-      "_PopoverContent-C-_E_Jg2.js",
-      "_CategoryMultiSelect.vue_vue_type_script_setup_true_lang-CaMNwmzu.js",
-      "_ScrollArea-BLyOok4o.js",
-      "_eventBus-B2Ud-BO1.js",
-      "_index-BAdhlD3x.js"
+      "_SelectScrollDownButton-DC3VG2_0.js",
+      "_PopoverContent-DTcdNUWX.js",
+      "_TagMultiSelect.vue_vue_type_script_setup_true_lang-DtHYq8V5.js",
+      "_ScrollArea-BHCI-IZ4.js",
+      "_DeviceListPopover-tcZUFkxP.js",
+      "_index-DHJpu_kR.js"
     ],
     "css": [
-      "assets/global-BvWb3kWE.css"
+      "assets/global-DJe_qlTu.css"
     ]
   },
   "node_modules/monaco-editor/esm/vs/language/typescript/tsMode.js": {
-    "file": "assets/tsMode-C_xGH3Da.js",
+    "file": "assets/tsMode-Cpxd8wZD.js",
     "name": "tsMode",
     "src": "node_modules/monaco-editor/esm/vs/language/typescript/tsMode.js",
     "isDynamicEntry": true,
     "imports": [
-      "_Main-Ce6uecm8.js",
+      "_Main-LGAxkuzy.js",
       "resources/js/app.js",
-      "_SelectScrollDownButton-Dk70VVbL.js",
-      "_PopoverContent-C-_E_Jg2.js",
-      "_CategoryMultiSelect.vue_vue_type_script_setup_true_lang-CaMNwmzu.js",
-      "_ScrollArea-BLyOok4o.js",
-      "_eventBus-B2Ud-BO1.js",
-      "_index-BAdhlD3x.js"
+      "_SelectScrollDownButton-DC3VG2_0.js",
+      "_PopoverContent-DTcdNUWX.js",
+      "_TagMultiSelect.vue_vue_type_script_setup_true_lang-DtHYq8V5.js",
+      "_ScrollArea-BHCI-IZ4.js",
+      "_DeviceListPopover-tcZUFkxP.js",
+      "_index-DHJpu_kR.js"
     ],
     "css": [
-      "assets/global-BvWb3kWE.css"
+      "assets/global-DJe_qlTu.css"
     ]
   },
   "resources/css/global.css": {
-    "file": "assets/global-BvWb3kWE.css",
+    "file": "assets/global-DJe_qlTu.css",
     "src": "resources/css/global.css",
     "isEntry": true
   },
@@ -913,21 +914,21 @@
     "src": "resources/images/login_background/rconfig_msp_992@2x.png"
   },
   "resources/js/app.js": {
-    "file": "assets/app-TTnvB57g.js",
+    "file": "assets/app-yK89S5lP.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "dynamicImports": [
       "resources/js/pages/Dashboard/Main.vue",
       "resources/js/pages/Dashboard/Main.vue",
-      "_Main-Ce6uecm8.js",
-      "_Main-Ce6uecm8.js",
-      "_Main-Ce6uecm8.js",
-      "_Main-Ce6uecm8.js",
-      "_Main-Ce6uecm8.js",
-      "_Main-Ce6uecm8.js",
-      "_Main-Ce6uecm8.js",
-      "_Main-Ce6uecm8.js",
+      "_Main-LGAxkuzy.js",
+      "_Main-LGAxkuzy.js",
+      "_Main-LGAxkuzy.js",
+      "_Main-LGAxkuzy.js",
+      "_Main-LGAxkuzy.js",
+      "_Main-LGAxkuzy.js",
+      "_Main-LGAxkuzy.js",
+      "_Main-LGAxkuzy.js",
       "resources/js/pages/Tasks/Main.vue",
       "resources/js/pages/Settings/Main.vue",
       "resources/js/pages/Settings/Main.vue",
@@ -937,7 +938,7 @@
     ],
     "css": [
       "assets/app-124Ag7Li.css",
-      "assets/global-BvWb3kWE.css"
+      "assets/global-DJe_qlTu.css"
     ],
     "assets": [
       "assets/rconfig_msp_576-BrMGLpCo.png",
@@ -950,41 +951,41 @@
     ]
   },
   "resources/js/pages/Dashboard/Main.vue": {
-    "file": "assets/Main-Bwcngaml.js",
+    "file": "assets/Main-BNZ3XUWi.js",
     "name": "Main",
     "src": "resources/js/pages/Dashboard/Main.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_index-BAdhlD3x.js",
-      "_PopoverContent-C-_E_Jg2.js"
+      "_index-DHJpu_kR.js",
+      "_PopoverContent-DTcdNUWX.js"
     ],
     "css": [
       "assets/Main-D8PzUCYE.css",
-      "assets/global-BvWb3kWE.css"
+      "assets/global-DJe_qlTu.css"
     ]
   },
   "resources/js/pages/Settings/Main.vue": {
-    "file": "assets/Main-_J3K_RzO.js",
+    "file": "assets/Main-Bxg5HJmG.js",
     "name": "Main",
     "src": "resources/js/pages/Settings/Main.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_PopoverContent-C-_E_Jg2.js",
-      "_ScrollArea-BLyOok4o.js",
-      "_SelectScrollDownButton-Dk70VVbL.js",
-      "_SelectLabel-DLFqwVIu.js",
-      "_eventBus-B2Ud-BO1.js",
-      "_index-BAdhlD3x.js"
+      "_PopoverContent-DTcdNUWX.js",
+      "_ScrollArea-BHCI-IZ4.js",
+      "_SelectScrollDownButton-DC3VG2_0.js",
+      "_SelectLabel-Bk-fcUvN.js",
+      "_DeviceListPopover-tcZUFkxP.js",
+      "_index-DHJpu_kR.js"
     ],
     "css": [
       "assets/Main-aAyI2RDM.css",
-      "assets/global-BvWb3kWE.css"
+      "assets/global-DJe_qlTu.css"
     ]
   },
   "resources/js/pages/Shared/PageNotFound.vue": {
-    "file": "assets/PageNotFound-mc8razOo.js",
+    "file": "assets/PageNotFound-DgwY71RU.js",
     "name": "PageNotFound",
     "src": "resources/js/pages/Shared/PageNotFound.vue",
     "isDynamicEntry": true,
@@ -992,37 +993,37 @@
       "resources/js/app.js"
     ],
     "css": [
-      "assets/global-BvWb3kWE.css"
+      "assets/global-DJe_qlTu.css"
     ]
   },
   "resources/js/pages/Tasks/Main.vue": {
-    "file": "assets/Main-etmStdDA.js",
+    "file": "assets/Main-n7RKuF5k.js",
     "name": "Main",
     "src": "resources/js/pages/Tasks/Main.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_SelectScrollDownButton-Dk70VVbL.js",
-      "_CategoryMultiSelect.vue_vue_type_script_setup_true_lang-CaMNwmzu.js",
-      "_PopoverContent-C-_E_Jg2.js",
-      "_ScrollArea-BLyOok4o.js",
-      "_SelectLabel-DLFqwVIu.js"
+      "_SelectScrollDownButton-DC3VG2_0.js",
+      "_TagMultiSelect.vue_vue_type_script_setup_true_lang-DtHYq8V5.js",
+      "_PopoverContent-DTcdNUWX.js",
+      "_ScrollArea-BHCI-IZ4.js",
+      "_SelectLabel-Bk-fcUvN.js"
     ],
     "css": [
-      "assets/global-BvWb3kWE.css"
+      "assets/global-DJe_qlTu.css"
     ]
   },
   "resources/js/pages/Users/Main.vue": {
-    "file": "assets/Main-qlZtKYiz.js",
+    "file": "assets/Main-B9YRUTl5.js",
     "name": "Main",
     "src": "resources/js/pages/Users/Main.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_SelectScrollDownButton-Dk70VVbL.js"
+      "_SelectScrollDownButton-DC3VG2_0.js"
     ],
     "css": [
-      "assets/global-BvWb3kWE.css"
+      "assets/global-DJe_qlTu.css"
     ]
   }
 }
