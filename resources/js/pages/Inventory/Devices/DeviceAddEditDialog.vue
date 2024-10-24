@@ -18,6 +18,11 @@ const props = defineProps({
 const { model, saveDialog, errors } = useAddEditDevices(props.editId);
 const dialogStore = useDialogStore();
 const { closeDialog, isDialogOpen } = dialogStore;
+
+function generatePrompts() {
+  model.value.device_main_prompt = model.value.device_name + '#';
+  model.value.device_enable_prompt = model.value.device_name + '>';
+}
 </script>
 
 <template>
@@ -251,13 +256,13 @@ const { closeDialog, isDialogOpen } = dialogStore;
                 content="This is the 'Privileged EXEC' prompt. You will run show commands from this prompt and you can access configure mode. Usually 'router1#'" />
             </Label>
             <Input
-              v-model="model.main_prompt"
-              id="main_prompt"
+              v-model="model.device_main_prompt"
+              id="device_main_prompt"
               class="w-full" />
             <span
               class="text-red-400"
-              v-if="errors.main_prompt">
-              {{ errors.main_prompt[0] }}
+              v-if="errors.device_main_prompt">
+              {{ errors.device_main_prompt[0] }}
             </span>
             <Label
               for="enable_prompt"
@@ -269,13 +274,24 @@ const { closeDialog, isDialogOpen } = dialogStore;
             </Label>
 
             <Input
-              v-model="model.enable_prompt"
-              id="enable_prompt"
+              v-model="model.device_enable_prompt"
+              id="device_enable_prompt"
               class="w-full" />
+
+            <button
+              class="flex items-center p-2 text-sm text-left rounded-lg pf-c-button pf-m-link pf-m-inline hover:bg-rcgray-800 max-w-fit text-muted-foreground hover:text-gray-200"
+              type="button"
+              @click="generatePrompts()">
+              <Icon
+                icon="material-symbols:flash-auto"
+                class="w-4 h-4 mr-1" />
+              Auto generate prompts from device name
+            </button>
+
             <span
               class="text-red-400"
-              v-if="errors.enable_prompt">
-              {{ errors.enable_prompt[0] }}
+              v-if="errors.device_enable_prompt">
+              {{ errors.device_enable_prompt[0] }}
             </span>
           </div>
 
