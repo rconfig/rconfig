@@ -2,6 +2,7 @@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useDialogStore } from '@/stores/dialogActions';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { InputPassword } from '@/components/ui/input-password';
 import HelpPopover from '@/pages/Shared/Popover/HelpPopover.vue';
 import CategoryMultiSelect from '@/pages/Shared/FormFields/CategoryMultiSelect.vue';
 import DeviceModelMultiSelect from '@/pages/Shared/FormFields/DeviceModelMultiSelect.vue';
@@ -96,6 +97,7 @@ const { closeDialog, isDialogOpen } = dialogStore;
                 <Input
                   v-model="model.device_port_override"
                   id="device_port_override"
+                  type="number"
                   autocomplete="off"
                   class="w-full" />
               </div>
@@ -184,7 +186,7 @@ const { closeDialog, isDialogOpen } = dialogStore;
             <Input
               v-model="model.device_username"
               id="device_username"
-              autocomplete="off"
+              autocomplete="current-password"
               class="w-full" />
             <span
               class="text-red-400"
@@ -198,10 +200,9 @@ const { closeDialog, isDialogOpen } = dialogStore;
               Device Password
               <span class="text-red-400">*</span>
             </Label>
-            <Input
+            <InputPassword
               v-model="model.device_password"
               id="device_password"
-              autocomplete="off"
               class="w-full" />
             <span
               class="text-red-400"
@@ -214,10 +215,9 @@ const { closeDialog, isDialogOpen } = dialogStore;
               class="mt-4 mb-1 text-muted-foreground">
               Device Enable Password
             </Label>
-            <Input
+            <InputPassword
               v-model="model.device_enable_password"
               id="device_enable_password"
-              autocomplete="off"
               class="w-full" />
             <span
               class="text-red-400"
