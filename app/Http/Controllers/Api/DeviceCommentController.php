@@ -7,6 +7,7 @@ use App\Http\Requests\StoreDeviceCommentRequest;
 use App\Http\Requests\UpdateDeviceCommentRequest;
 use App\Models\DeviceComment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class DeviceCommentController extends ApiBaseController
 {
@@ -19,9 +20,13 @@ class DeviceCommentController extends ApiBaseController
     public function index(Request $request, $searchCols = null, $relationship = null, $withCount = null) {}
 
 
-    public function store(StoreDeviceCommentRequest $request)
+    public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $data['user_id'] = auth()->user()->id;
+        $comment = DeviceComment::create($data);
+
+        return $this->successResponse(Str::ucfirst($this->modelname) . ' edited successfully!', ['id' => $comment->id]);
     }
 
     public function show($deviceid, $relationship = null, $withCount = null)
@@ -44,7 +49,7 @@ class DeviceCommentController extends ApiBaseController
         //
     }
 
-    public function update(UpdateDeviceCommentRequest $request, DeviceComment $deviceComment)
+    public function update(Request $request, DeviceComment $deviceComment)
     {
         //
     }

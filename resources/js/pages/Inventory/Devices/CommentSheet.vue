@@ -1,10 +1,9 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { useSheetStore } from '@/stores/sheetActions';
 import Loading from '@/pages/Shared/Loading.vue';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 const props = defineProps({
   deviceId: {
@@ -16,10 +15,12 @@ const props = defineProps({
     required: true
   }
 });
+
 const sheetStore = useSheetStore();
 const { openSheet, closeSheet, isSheetOpen } = sheetStore;
 const comments = ref([]);
 const isLoading = ref(false);
+const hasAddedComment = ref(false);
 
 onMounted(() => {
   if (isSheetOpen('DeviceCommentSheet')) {
@@ -37,25 +38,53 @@ function getComments() {
     })
     .catch(error => {
       console.error(error);
+      isLoading.value = false;
     });
 }
+
 function viewDevice(deviceId) {
   closeSheet('DeviceCommentSheet');
   router.push({ name: 'device', params: { id: deviceId } });
+}
+
+function addComment() {
+  if (!hasAddedComment.value) {
+    comments.value.unshift({
+      user: { name: 'New User' },
+      created_at: new Date().toISOString(),
+      comment: '',
+      is_open: true,
+      isEditable: true
+    });
+    hasAddedComment.value = true;
+  }
+}
+
+function saveComment(index) {
+  comments.value[index].isEditable = false;
+  axios
+    .post(`/api/device/comments`, {
+      comment: comments.value[index].comment,
+      device_id: props.deviceId
+    })
+    .then(response => {
+      // Add code here to update the comment with the response data if needed
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  // Add code here to persist the comment changes to the backend if needed
 }
 </script>
 
 <template>
   <Sheet :open="isSheetOpen('DeviceCommentSheet')">
-    <!-- <SheetTrigger></SheetTrigger> -->
     <SheetContent
       class="h-[96vh] m-6 rounded-lg border"
       @escapeKeyDown="closeSheet('DeviceCommentSheet')"
       @pointerDownOutside="closeSheet('DeviceCommentSheet')"
       @closeClicked="closeSheet('DeviceCommentSheet')">
       <Loading v-if="isLoading" />
-
-      <br />
       <SheetHeader v-if="!isLoading">
         <SheetTitle>Comments</SheetTitle>
         <SheetDescription>
@@ -66,30 +95,61 @@ function viewDevice(deviceId) {
             @click="viewDevice(deviceId)">
             <span class="border-b">{{ deviceName }}</span>
           </Button>
+          <Button
+            variant="ghost"
+            class="float-right"
+            @click="addComment">
+            <Icon icon="icon-park:add-one"></Icon>
+          </Button>
         </SheetDescription>
       </SheetHeader>
       <transition name="fade">
         <div v-if="!isLoading">
-          <div class="mt-4">
-            <Card v-for="comment in comments">
-              <CardHeader class="p-2 pt-0 md:p-4">
+          <div class="mt-4 space-y-4">
+            <Card
+              v-for="(comment, index) in comments"
+              :key="index">
+              <CardHeader class="p-2">
                 <CardTitle>
-                  <div class="flex justify-between">
-                    <span>{{ comment.user.name }}</span>
-                    <span class="text-sm text-muted-foreground">{{ new Date(comment.created_at).toLocaleString() }}</span>
-                  </div>
+                  <span>{{ comment.user.name }}</span>
                 </CardTitle>
-                <CardDescription>{{ comment.comment }}</CardDescription>
+                <CardDescription></CardDescription>
               </CardHeader>
-              <CardContent class="flex justify-end p-2 pt-0 md:p-4 md:pt-0">
-                <Button
-                  v-if="comment.is_open"
-                  size="sm"
-                  variant="ghost"
-                  class="py-2">
-                  <Icon icon="solar:check-circle-broken"></Icon>
-                </Button>
+              <CardContent class="flex justify-end px-2 py-0">
+                <Textarea
+                  v-if="comment.isEditable"
+                  v-model="comment.comment"
+                  rows="1"
+                  class="mt-2" />
+                <Textarea
+                  v-else
+                  class="border-none"
+                  v-model="comment.comment"
+                  disabled></Textarea>
               </CardContent>
+              <CardFooter class="flex justify-between px-2 py-1">
+                <div class="text-sm text-muted-foreground">{{ new Date(comment.created_at).toLocaleString() }}</div>
+                <div>
+                  <Button
+                    v-if="comment.isEditable"
+                    @click="saveComment(index)"
+                    variant="outline"
+                    size="sm"
+                    class="">
+                    Save
+                  </Button>
+                  <div v-if="!comment.isEditable">
+                    <Button
+                      title="Resolve Comment"
+                      v-if="comment.is_open"
+                      size="sm"
+                      variant="ghost"
+                      class="py-2">
+                      <Icon icon="solar:check-circle-broken"></Icon>
+                    </Button>
+                  </div>
+                </div>
+              </CardFooter>
             </Card>
           </div>
         </div>
