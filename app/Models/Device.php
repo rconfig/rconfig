@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\EncryptStringCast;
+use App\Models\DeviceComment;
 use App\Models\DeviceCredentials;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -75,6 +76,11 @@ class Device extends BaseModel
     public function template()
     {
         return $this->belongsToMany('App\Models\Template');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(DeviceComment::class);
     }
 
     public function deviceCred()

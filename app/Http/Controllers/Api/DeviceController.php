@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\StoreDeviceRequest;
 use App\Jobs\DownloadConfigNow;
 use App\Models\Device;
+use App\Models\DeviceComment;
 use App\Traits\RespondsWithHttpStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -26,7 +27,7 @@ class DeviceController extends ApiBaseController
         $searchCols = ['id', 'device_name', 'device_ip', 'device_model'];
 
         $result = QueryBuilder::for(Device::class)
-            ->with(['vendor', 'category',  'category.command', 'tag', 'template', 'lastConfig'])
+            ->with(['vendor', 'category',  'category.command', 'tag', 'template', 'lastConfig', 'comments'])
             ->withCount(['config_good', 'config_bad', 'config_unknown'])
             ->allowedFilters([
                 AllowedFilter::custom('q', new FilterMultipleFields, 'id, device_name, device_ip'),
@@ -62,10 +63,16 @@ class DeviceController extends ApiBaseController
 
     public function show($id, $relationship = null, $withCount = null)
     {
-        sleep(1);
         $results = parent::show($id, ['vendor', 'category',  'category.command', 'tag', 'template', 'lastConfig'], ['config_good', 'config_bad', 'config_unknown']);
 
         return $results;
+    }
+
+    public function commentsByDeviceId($deviceid)
+    {
+        $results = DeviceComment::where('device_id', $deviceid)->with('user')->get();
+
+        return response()->json($results);
     }
 
     public function update($id, StoreDeviceRequest $request)

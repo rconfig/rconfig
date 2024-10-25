@@ -10,15 +10,22 @@ import CategoryFilter from '@/pages/Inventory/Devices/Filters/CategoryFilter.vue
 import TagFilter from '@/pages/Inventory/Devices/Filters/TagFilter.vue';
 import VendorFilter from '@/pages/Inventory/Devices/Filters/VendorFilter.vue';
 import ClearFilters from '@/pages/Inventory/Devices/Filters/ClearFilters.vue';
+import CommentSheet from '@/pages/Inventory/Devices/CommentSheet.vue';
 import ConfirmDeleteAlert from '@/pages/Shared/AlertDialog/ConfirmDeleteAlert.vue';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { onMounted, onUnmounted, ref } from 'vue';
 import { useRowSelection } from '@/composables/useRowSelection';
 import { useDevices } from '@/pages/Inventory/Devices/useDevices';
 import { eventBus } from '@/composables/eventBus';
+import { useSheetStore } from '@/stores/sheetActions';
 
 const { devices, filterStatus, filterCategories, filterTags, filterVendor, clearFilters, deleteManyDevices, showConfirmDelete, isLoading, currentPage, perPage, lastPage, editId, newDeviceModalKey, searchTerm, openDialog, fetchDevices, createDevice, updateDevice, deleteDevice, disableDevice, enableDevice, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam } = useDevices();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(devices);
+const sheetStore = useSheetStore();
+const { openSheet, closeSheet, isSheetOpen } = sheetStore;
+const commentsDeviceId = ref(null);
+const commentsDeviceName = ref('');
+const commentSheetKey = ref(0);
 
 onMounted(() => {
   fetchDevices();
@@ -34,6 +41,13 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('keydown', handleKeyDown);
 });
+
+function openComments(id) {
+  commentSheetKey.value += 1;
+  commentsDeviceId.value = id;
+  commentsDeviceName.value = devices.value.data.find(device => device.id === id).device_name;
+  openSheet('DeviceCommentSheet');
+}
 </script>
 
 <template>
@@ -164,7 +178,25 @@ onUnmounted(() => {
                 <StatusGrayIcon v-if="row.status === 100" />
               </TableCell>
               <TableCell class="text-start">
-                {{ row.device_name }}
+                <div class="flex justify-between">
+                  <Button
+                    class="px-2 py-0 hover:bg-rcgray-800 rounded-xl"
+                    variant="ghost"
+                    @click="viewEditDialog(row.id)">
+                    <span class="border-b">{{ row.device_name }}</span>
+                  </Button>
+                  <Button
+                    class="px-2 py-0 hover:bg-rcgray-800 rounded-xl text-muted-foreground"
+                    variant="ghost"
+                    @click="openComments(row.id)">
+                    <Icon icon="vaadin:comments-o"></Icon>
+                    <span
+                      class="ml-2"
+                      v-if="row.comments.length > 0">
+                      {{ row.comments.length }}
+                    </span>
+                  </Button>
+                </div>
               </TableCell>
               <TableCell class="text-start">
                 {{ row.device_ip }}
@@ -250,6 +282,11 @@ onUnmounted(() => {
         @close="showConfirmDelete = false"
         @handleDelete="deleteManyDevices(selectedRows)" />
       <!-- FOR MULTIPLE DELETE -->
+
+      <CommentSheet
+        :deviceId="commentsDeviceId"
+        :deviceName="commentsDeviceName"
+        :key="commentSheetKey" />
 
       <Toaster />
     </div>
