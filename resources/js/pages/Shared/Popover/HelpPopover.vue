@@ -20,6 +20,7 @@ const props = defineProps({
   <Popover>
     <PopoverTrigger as-child>
       <Button
+        tabindex="-1"
         variant="ghost"
         class="h-0 p-0 m-0 ml-1">
         <Icon icon="formkit:help" />

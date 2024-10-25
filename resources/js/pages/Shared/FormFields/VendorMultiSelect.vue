@@ -40,7 +40,7 @@ onMounted(() => {
   fetchVendors();
 
   if (props.modelValue && props.modelValue.length > 0) {
-    selectedVendors.value = props.modelValue;
+    selectedVendors.value.push(...props.modelValue);
   }
 });
 

@@ -61,14 +61,15 @@ function handleEnable() {
         align="end"
         side="bottom">
         <DropdownMenuItem
-          v-if="rowData.status != 100"
+          v-if="showEditBtn"
           class="cursor-pointer hover:bg-rcgray-800"
-          @click="showDisableConfirm">
-          <span>Disable</span>
+          @click="handleEdit">
+          <span>Edit</span>
           <DropdownMenuShortcut>
-            <Icon icon="emojione-v1:down-arrow" />
+            <Icon icon="fluent-color:text-edit-style-16" />
           </DropdownMenuShortcut>
         </DropdownMenuItem>
+        <DropdownMenuSeparator v-if="showEditBtn" />
         <DropdownMenuItem
           v-if="rowData.status === 100"
           class="cursor-pointer hover:bg-rcgray-800"
@@ -79,15 +80,14 @@ function handleEnable() {
           </DropdownMenuShortcut>
         </DropdownMenuItem>
         <DropdownMenuItem
-          v-if="showEditBtn"
+          v-if="rowData.status != 100"
           class="cursor-pointer hover:bg-rcgray-800"
-          @click="handleEdit">
-          <span>Edit</span>
+          @click="showDisableConfirm">
+          <span>Disable</span>
           <DropdownMenuShortcut>
-            <Icon icon="fluent-color:text-edit-style-16" />
+            <Icon icon="emojione-v1:down-arrow" />
           </DropdownMenuShortcut>
         </DropdownMenuItem>
-        <DropdownMenuSeparator v-if="showEditBtn" />
         <DropdownMenuItem
           class="cursor-pointer hover:bg-rcgray-800"
           @click="showAlert">

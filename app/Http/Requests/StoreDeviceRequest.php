@@ -9,21 +9,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreDeviceRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
+
     public function authorize()
     {
         return auth()->check(); // returning true if user is logged in
     }
 
-    /**
-     * Prepare the data for validation.
-     *
-     * @return void
-     */
     protected function prepareForValidation()
     {
         if (isset($this->request->all()['device_tags'])) {
@@ -31,13 +22,23 @@ class StoreDeviceRequest extends FormRequest
                 'device_tags' => collect($this->request->all()['device_tags'])->pluck('id'),
             ]);
         }
+
+        if (isset($this->request->all()['device_template'])) {
+            $this->merge([
+                'device_template' => collect($this->request->all()['device_template'])->pluck('id'),
+            ]);
+        }
+
+        if (isset($this->request->all()['device_vendor'])) {
+            $this->merge([
+                'device_vendor' => collect($this->request->all()['device_vendor'])->pluck('id'),
+            ]);
+        }
+
+        unset($this->request->all()['selectedCategoryArray']);
+        unset($this->request->all()['selectedModelArray']);
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         // dd($this->request);
@@ -60,7 +61,7 @@ class StoreDeviceRequest extends FormRequest
 
         if ($this->getMethod() == 'PATCH') {
             $rules = [
-                'device_name' => 'required|min:5|max:255|alpha_dash',
+                'device_name' => 'required|min:5|max:255|regex:/^\S*$/u',
                 'device_ip' => new DeviceIpIsValid,
                 'device_port_override' => 'nullable|integer|min:1|max:65535',
                 'device_vendor' => 'required',

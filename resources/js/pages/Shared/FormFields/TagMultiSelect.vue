@@ -34,6 +34,10 @@ watch(
 
 onMounted(() => {
   fetchCategories();
+
+  if (props.modelValue && props.modelValue.length > 0) {
+    selectedTags.value.push(...props.modelValue);
+  }
 });
 
 function selectItem(item) {

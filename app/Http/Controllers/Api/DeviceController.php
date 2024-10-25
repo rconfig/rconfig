@@ -47,6 +47,7 @@ class DeviceController extends ApiBaseController
 
     public function store(StoreDeviceRequest $request)
     {
+
         $model = parent::storeResource($request->toDTO()->toArray(), 1);
 
         $model->Tag()->attach($request->device_tags);
@@ -54,13 +55,14 @@ class DeviceController extends ApiBaseController
         $model->Category()->attach($request->device_category_id);
         $model->Template()->attach($request->device_template);
 
-        $this->dispatch(new DownloadConfigNow($model->id));
+        $this->dispatch(new DownloadConfigNow($model->id))->onQueue('ManualDownloadQueue');
 
         return $this->successResponse(Str::ucfirst($this->modelname) . ' created successfully!', ['id' => $model->id]);
     }
 
     public function show($id, $relationship = null, $withCount = null)
     {
+        sleep(1);
         $results = parent::show($id, ['vendor', 'category',  'category.command', 'tag', 'template', 'lastConfig'], ['config_good', 'config_bad', 'config_unknown']);
 
         return $results;

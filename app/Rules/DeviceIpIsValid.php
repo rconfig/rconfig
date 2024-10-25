@@ -2,51 +2,25 @@
 
 namespace App\Rules;
 
-use Illuminate\Contracts\Validation\Rule;
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
 
-class DeviceIpIsValid implements Rule
+class DeviceIpIsValid implements ValidationRule
 {
-    /**
-     * Create a new rule instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        //
-    }
-
-    /**
-     * Determine if the validation rule passes.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function passes($attribute, $value)
-    {
-        if ($value == null) {
-            return false;
+        // Ensure the value is not null or empty
+        if (is_null($value) || trim($value) === '') {
+            $fail('The :attribute is required.');
+            return;
         }
 
-        if (filter_var($value, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME)) {
-            return true;
+        // Trim the value for validation
+        $value = trim($value);
+
+        // Check if the value is a valid IP address or a valid FQDN/Hostname
+        if (!filter_var($value, FILTER_VALIDATE_IP) && !filter_var($value, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME)) {
+            $fail('The :attribute must be a valid IP address or FQDN/Hostname.');
         }
-
-        if (filter_var($value, FILTER_VALIDATE_IP)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Get the validation error message.
-     *
-     * @return string
-     */
-    public function message()
-    {
-        return 'The device ip must be a valid ip or FQDN/ Hostname.';
     }
 }
