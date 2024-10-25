@@ -184,24 +184,56 @@ return [
 
     'environments' => [
         'production' => [
-            'supervisor-1' => [
+            'HorizonOne' => [
                 'connection' => 'redis',
-                'queue' => ['default', 'downloadqueue', 'lastqueue'],
+                'queue' => ['PolicyCompliance', 'rConfigDefault'],
                 'balance' => 'auto',
-                'processes' => 10,
+                'minProcesses' => (int) env('HORIZON_MIN_PROCESS', 1),
+                'maxProcesses' => (int) env('HORIZON_DEFAULT_MAX_PROCESS', 5),
+                'balanceMaxShift' => 1,
+                'balanceCooldown' => 3,
+                'autoScalingStrategy' => 'time',
                 'tries' => 1,
-                'timeout' => env('HORIZON_PROD_TIMEOUT', 60),
+                'timeout' => (int) env('HORIZON_PROD_TIMEOUT', 60),
+            ],
+            'HorizonTwo' => [
+                'connection' => 'redis',
+                'queue' => ['TaskDownloadQueue', 'TaskSnippetQueue', 'ManualDownloadQueue'],
+                'balance' => 'auto',
+                'minProcesses' => (int) env('HORIZON_MIN_PROCESS', 1),
+                'maxProcesses' => (int) env('HORIZON_MAX_PROCESS', 5),
+                'balanceMaxShift' => 1,
+                'balanceCooldown' => 3,
+                'tries' => 1,
+                'timeout' => 86400, // 1 day
             ],
         ],
 
         'local' => [
-            'supervisor-1' => [
+            'HorizonOne' => [
                 'connection' => 'redis',
-                'queue' => ['default', 'downloadqueue', 'lastqueue'],
+                // 'queue' => ['default', 'policy-compliance', 'lastqueue'],
+                'queue' => ['PolicyCompliance', 'rConfigDefault'],
                 'balance' => 'auto',
-                'processes' => 3,
+                'minProcesses' => (int) env('HORIZON_MIN_PROCESS', 1),
+                'maxProcesses' => (int) env('HORIZON_MAX_PROCESS', 5),
+                'balanceMaxShift' => 1,
+                'balanceCooldown' => 3,
+                'autoScalingStrategy' => 'time',
                 'tries' => 1,
-                'timeout' => env('HORIZON_LOCAL_TIMEOUT', 60),
+                'timeout' => (int) env('HORIZON_PROD_TIMEOUT', 60),
+            ],
+            'HorizonTwo' => [
+                'connection' => 'redis',
+                // 'queue' => ['downloadqueue'],
+                'queue' => ['TaskDownloadQueue', 'TaskSnippetQueue', 'ManualDownloadQueue'],
+                'balance' => 'auto',
+                'minProcesses' => (int) env('HORIZON_MIN_PROCESS', 1),
+                'maxProcesses' => (int) env('HORIZON_MAX_PROCESS', 5),
+                'balanceMaxShift' => 1,
+                'balanceCooldown' => 3,
+                'tries' => 1,
+                'timeout' => 86400, // 1 day
             ],
         ],
     ],
