@@ -9,9 +9,10 @@ import DeviceLatestEventsPanel from '@/pages/Inventory/Devices/DeviceView/Device
 import Loading from '@/pages/Shared/Loading.vue';
 import useCodeEditor from '@/composables/codeEditorFunctions';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { useDeviceViewPane } from '@/pages/Inventory/Devices/DeviceView/useDeviceViewPane';
 import { useDialogStore } from '@/stores/dialogActions';
+import { useFavoritesStore } from '@/stores/favorites';
 
 const props = defineProps({
   editId: Number
@@ -28,6 +29,15 @@ const toggleStateMultiple = ref([]); //'dark', 'lineNumbers', 'minimap', 'sticky
 
 const leftNavSelected = ref('details');
 const mainNavSelected = ref('notifications');
+const favoritesStore = useFavoritesStore();
+
+const favoriteItem = ref({
+  id: props.editId,
+  label: '',
+  icon: 'NetworkDeviceIcon',
+  isFavorite: false,
+  route: '/devices/view/' + props.editId
+});
 
 // Lifecycle Hooks
 onMounted(() => {
@@ -40,7 +50,25 @@ onMounted(() => {
       onEsc();
     }
   });
+
+  if (deviceData) {
+    [...favoritesStore.favorites].forEach(favorite => {
+      if (favorite.id === props.editId) {
+        favoriteItem.value.isFavorite = true;
+      }
+    });
+  }
 });
+
+function addToFavorites() {
+  if (deviceData) {
+    favoriteItem.value.id = deviceData.value.id;
+    favoriteItem.value.label = deviceData.value.device_name;
+    favoriteItem.value.route = `/devices/view/${deviceData.value.id}`;
+    favoriteItem.value.isFavorite = !favoriteItem.value.isFavorite;
+    favoritesStore.toggleFavorite(favoriteItem.value);
+  }
+}
 
 onUnmounted(() => {
   window.removeEventListener('keydown', e => {
@@ -109,9 +137,14 @@ function selectMainNavView(viewName) {
         <span class="text-lg font-semibold text-blue-400 font-inter">{{ deviceData.device_name }}</span>
         <Button
           variant="ghost"
-          class="h-8 py-1 ml-2"
-          @click="handleSave()">
-          <StarSelected class="text-muted-foreground" />
+          class="h-8 px-2 py-1.5 h-7 ml-2"
+          @click="addToFavorites()">
+          <StarUnselected
+            class="text-muted-foreground"
+            v-if="!favoriteItem.isFavorite" />
+          <StarSelected
+            class="text-muted-foreground"
+            v-if="favoriteItem.isFavorite" />
         </Button>
       </div>
       <div class="flex items-center">

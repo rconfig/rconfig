@@ -25,5 +25,6 @@ import StatusGrayIcon from '@/pages/Shared/Icon/StatusGrayIcon.vue';
 import StarSelected from '@/pages/Shared/Icon/StarSelected.vue';
 import StarUnselected from '@/pages/Shared/Icon/StarUnselected.vue';
 import CommentAddIcon from '@/pages/Shared/Icon/CommentAddIcon.vue';
+import NetworkDeviceIcon from '@/pages/Shared/Icon/NetworkDeviceIcon.vue';
 
-export { Icon, StatusGreenIcon, StatusRedIcon, StatusYellowIcon, StatusGrayIcon, UserIcon, NotificationIcon, DashboardIcon, InventoryIcon, TasksIcon, ConfigToolsIcon, SettingsIcon, SysLogViewerIcon, SysQueueManagerIcon, ExternalLinkIcon, DeviceIcon, CommandGroupIcon, CommandsIcon, TemplateIcon, VendorIcon, TagIcon, LogoutIcon, CredentialsIcon, StarSelected, StarUnselected, CommentAddIcon };
+export { Icon, StatusGreenIcon, StatusRedIcon, StatusYellowIcon, StatusGrayIcon, UserIcon, NotificationIcon, DashboardIcon, InventoryIcon, TasksIcon, ConfigToolsIcon, SettingsIcon, SysLogViewerIcon, SysQueueManagerIcon, ExternalLinkIcon, DeviceIcon, CommandGroupIcon, CommandsIcon, TemplateIcon, VendorIcon, TagIcon, LogoutIcon, CredentialsIcon, StarSelected, StarUnselected, CommentAddIcon, NetworkDeviceIcon };

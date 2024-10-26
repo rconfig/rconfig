@@ -15,7 +15,7 @@ const panelContentName = ref(null);
 const props = defineProps({});
 
 onMounted(() => {
-  pandelId.value = route.params.id;
+  pandelId.value = parseInt(route.params.id, 10);
   panelContentName.value = route.name;
 });
 

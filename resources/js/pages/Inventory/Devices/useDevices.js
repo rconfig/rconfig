@@ -228,7 +228,7 @@ export function useDevices() {
   }
 
   function viewDeviceDetailsPane(id) {
-    router.push({ name: 'devicesview', params: { id } });
+    router.push({ name: 'devicesview', params: { id: parseInt(id) } });
   }
 
   return {

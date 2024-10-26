@@ -16,7 +16,7 @@ onMounted(() => {
 function getDeviceNotifications() {
   isLoading.value = true;
   axios
-    .get('/api/activitylogs/last5/' + props.deviceId)
+    .get('/api/activitylogs/last5/' + parseInt(props.deviceId))
     .then(response => {
       // handle success
       notificationResults.value = response.data;
