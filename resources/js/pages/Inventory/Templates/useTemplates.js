@@ -48,8 +48,8 @@ export function useTemplates(emit) {
     emit('createTemplate', { id: editId, type: 'template' });
   }
 
-  function updateTemplate(editId) {
-    emit('updateTemplate', { id: editId, type: 'template' });
+  function viewTemplateDetailsPane(editId) {
+    emit('viewTemplateDetailsPane', { id: editId, type: 'template' });
   }
 
   // Delete Template
@@ -138,7 +138,7 @@ export function useTemplates(emit) {
     openDialog,
     fetchTemplates,
     createTemplate,
-    updateTemplate,
+    viewTemplateDetailsPane,
     deleteTemplate,
     deleteManyTemplates,
     handleSave,

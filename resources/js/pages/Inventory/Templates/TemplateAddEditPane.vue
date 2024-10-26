@@ -4,10 +4,9 @@ import TemplateImportDialog from '@/pages/Inventory/Templates/TemplateImportDial
 import useCodeEditor from '@/composables/codeEditorFunctions';
 import useTemplateAddEdit from '@/pages/Inventory/Templates/useTemplateAddEdit';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useDialogStore } from '@/stores/dialogActions';
 import { useTemplatesGithub } from '@/pages/Inventory/Templates/useTemplatesGithub';
-import { useToaster } from '@/composables/useToaster';
 const props = defineProps({
   editId: Number
 });
@@ -27,6 +26,20 @@ onMounted(() => {
   initializeToggleStates();
   getTemplateRepoFolders();
   initCodeEditor();
+
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      onEsc();
+    }
+  });
+});
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      onEsc();
+    }
+  });
 });
 
 // Methods
@@ -46,6 +59,10 @@ function close() {
   emit('close');
 }
 
+function onEsc() {
+  close();
+}
+
 function handleSave() {
   saveDialog(props.editId, model, meditor, emit, close);
 }
@@ -57,7 +74,7 @@ function setTemplateCode(code) {
 </script>
 
 <template>
-  <div>
+  <div class="p-4 px-8">
     <div class="grid gap-2 py-4">
       <div class="grid items-center grid-cols-4 gap-4">
         <Label

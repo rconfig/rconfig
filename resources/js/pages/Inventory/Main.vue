@@ -4,6 +4,7 @@ import AddEditPane from '@/layouts/AddEditPane.vue';
 import Command from '@/pages/Inventory/Commands/Main.vue';
 import CommandGroups from '@/pages/Inventory/CommandGroups/Main.vue';
 import Devices from '@/pages/Inventory/Devices/Main.vue';
+import DeviceViewPane from '@/pages/Inventory/Devices/DeviceView/DeviceViewPane.vue';
 import Tags from '@/pages/Inventory/Tags/Main.vue';
 import Template from '@/pages/Inventory/Templates/Main.vue';
 import TemplateAddEditPane from '@/pages/Inventory/Templates/TemplateAddEditPane.vue';
@@ -80,12 +81,19 @@ function closeAddEditPane() {
       v-if="addEditPane"
       @close="closeAddEditPane()">
       <template #default>
-        <div class="p-4 px-8">
+        <transition name="fade">
           <TemplateAddEditPane
             v-if="addEditPane === 'template'"
             :editId="addEditPaneEditId"
             @close="closeAddEditPane" />
-        </div>
+        </transition>
+
+        <transition name="fade">
+          <DeviceViewPane
+            v-if="addEditPane === 'device'"
+            :editId="addEditPaneEditId"
+            @close="closeAddEditPane" />
+        </transition>
       </template>
     </AddEditPane>
 
@@ -124,7 +132,8 @@ function closeAddEditPane() {
                 <Tooltip>
                   <TooltipTrigger as-child>
                     <DropdownMenuShortcut @click.stop.prevent="toggleFavorite(item.id)">
-                      <Icon :icon="item.isFavorite.value ? 'fluent-emoji:star' : 'ph:star-bold'" />
+                      <StarUnselected v-if="!item.isFavorite.value" />
+                      <StarSelected v-if="item.isFavorite.value" />
                     </DropdownMenuShortcut>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -139,28 +148,17 @@ function closeAddEditPane() {
     </div>
 
     <div v-if="!addEditPane">
-      <Devices v-if="currentView === 'devices'"></Devices>
+      <Devices
+        v-if="currentView === 'devices'"
+        @viewDeviceDetailsPane="launchAddEdit($event)"></Devices>
       <CommandGroups v-if="currentView === 'commandgroups'"></CommandGroups>
       <Command v-if="currentView === 'commands'"></Command>
       <Template
         v-if="currentView === 'templates'"
         @createTemplate="launchAddEdit($event)"
-        @updateTemplate="launchAddEdit($event)"></Template>
+        @viewTemplateDetailsPane="launchAddEdit($event)"></Template>
       <Vendors v-if="currentView === 'vendors'"></Vendors>
       <Tags v-if="currentView === 'tags'"></Tags>
     </div>
   </main>
 </template>
-
-<style scoped>
-.topRow {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding-left: 20px;
-  padding-right: 20px;
-  height: 48px;
-}
-</style>

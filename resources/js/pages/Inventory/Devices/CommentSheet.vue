@@ -99,7 +99,7 @@ function saveComment(index) {
             variant="ghost"
             class="float-right"
             @click="addComment">
-            <Icon icon="icon-park:add-one"></Icon>
+            <CommentAddIcon class="text-muted-foreground" />
           </Button>
         </SheetDescription>
       </SheetHeader>

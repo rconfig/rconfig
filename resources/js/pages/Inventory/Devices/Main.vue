@@ -19,7 +19,9 @@ import { useDevices } from '@/pages/Inventory/Devices/useDevices';
 import { eventBus } from '@/composables/eventBus';
 import { useSheetStore } from '@/stores/sheetActions';
 
-const { devices, filterStatus, filterCategories, filterTags, filterVendor, clearFilters, deleteManyDevices, showConfirmDelete, isLoading, currentPage, perPage, lastPage, editId, newDeviceModalKey, searchTerm, openDialog, fetchDevices, createDevice, updateDevice, deleteDevice, disableDevice, enableDevice, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam } = useDevices();
+const emit = defineEmits(['viewDeviceDetailsPane']);
+
+const { devices, filterStatus, filterCategories, filterTags, filterVendor, clearFilters, deleteManyDevices, showConfirmDelete, isLoading, currentPage, perPage, lastPage, editId, newDeviceModalKey, searchTerm, viewDeviceDetailsPane, fetchDevices, createDevice, updateDevice, deleteDevice, disableDevice, enableDevice, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam } = useDevices(emit);
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(devices);
 const sheetStore = useSheetStore();
 const { openSheet, closeSheet, isSheetOpen } = sheetStore;
@@ -182,7 +184,7 @@ function openComments(id) {
                   <Button
                     class="px-2 py-0 hover:bg-rcgray-800 rounded-xl"
                     variant="ghost"
-                    @click="viewEditDialog(row.id)">
+                    @click="viewDeviceDetailsPane(row.id)">
                     <span class="border-b">{{ row.device_name }}</span>
                   </Button>
                   <Button

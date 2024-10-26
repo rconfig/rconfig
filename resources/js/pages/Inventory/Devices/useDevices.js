@@ -5,7 +5,7 @@ import { useDialogStore } from '@/stores/dialogActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
 import { eventBus } from '@/composables/eventBus';
 
-export function useDevices() {
+export function useDevices(emit) {
   const currentPage = ref(1);
   const perPage = ref(parseInt(localStorage.getItem('perPage') || '10'));
   const sortParam = ref('-id');
@@ -225,6 +225,10 @@ export function useDevices() {
     fetchDevices();
   }
 
+  function viewDeviceDetailsPane(id) {
+    emit('viewDeviceDetailsPane', { id: id, type: 'device' });
+  }
+
   return {
     devices,
     filterStatus,
@@ -241,7 +245,7 @@ export function useDevices() {
     deleteManyDevices,
     showConfirmDelete,
     searchTerm,
-    openDialog,
+    viewDeviceDetailsPane,
     fetchDevices,
     createDevice,
     updateDevice,

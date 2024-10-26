@@ -38,8 +38,7 @@ class DeviceCommentController extends ApiBaseController
 
     public function commentsByDeviceId($devieid)
     {
-        sleep(1);
-        $comments = DeviceComment::where('device_id', $devieid)->with('user')->get();
+         $comments = DeviceComment::where('device_id', $devieid)->with('user')->get();
         return response()->json($comments);
     }
 

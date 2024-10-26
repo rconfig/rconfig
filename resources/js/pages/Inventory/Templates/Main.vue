@@ -13,8 +13,8 @@ import { useRowSelection } from '@/composables/useRowSelection';
 import { useTemplates } from '@/pages/Inventory/Templates/useTemplates';
 import { useTemplatesGithub } from '@/pages/Inventory/Templates/useTemplatesGithub';
 
-const emit = defineEmits(['createTemplate', 'updateTemplate']);
-const { templates, isLoading, currentPage, perPage, lastPage, editId, newTemplateModalKey, searchTerm, openDialog, fetchTemplates, createTemplate, updateTemplate, deleteTemplate, deleteManyTemplates, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam, showConfirmDelete } = useTemplates(emit);
+const emit = defineEmits(['createTemplate', 'viewTemplateDetailsPane']);
+const { templates, isLoading, currentPage, perPage, lastPage, editId, newTemplateModalKey, searchTerm, openDialog, fetchTemplates, createTemplate, viewTemplateDetailsPane, deleteTemplate, deleteManyTemplates, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam, showConfirmDelete } = useTemplates(emit);
 const { importTemplates, importingTemplates } = useTemplatesGithub();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(templates);
 
@@ -144,7 +144,12 @@ onUnmounted(() => {
                 {{ row.id }}
               </TableCell>
               <TableCell class="text-start">
-                {{ row.templateName }}
+                <Button
+                  class="px-2 py-0 text-sm hover:bg-rcgray-800 rounded-xl"
+                  variant="ghost"
+                  @click="viewTemplateDetailsPane(row.id)">
+                  <span class="border-b">{{ row.templateName }}</span>
+                </Button>
               </TableCell>
               <TableCell class="text-start">
                 {{ row.description }}
@@ -173,7 +178,7 @@ onUnmounted(() => {
               <TableCell class="text-start">
                 <ActionsMenu
                   :rowData="row"
-                  @onEdit="updateTemplate(row.id)"
+                  @onEdit="viewTemplateDetailsPane(row.id)"
                   @onDelete="deleteTemplate(row.id)" />
               </TableCell>
               <!-- ACTIONS MENU -->
