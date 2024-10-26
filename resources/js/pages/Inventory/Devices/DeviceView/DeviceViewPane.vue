@@ -86,7 +86,7 @@ const { addToFavorites, appDirPath, closeNav, copyDebug, deviceData, downloadNow
             @selectLeftNavView="selectLeftNavView"
             :selectedNav="leftNavSelected" />
           <DeviceViewConfigStatusPanel
-            class="p-2 mb-4"
+            class="p-2 mt-2"
             v-if="leftNavSelected === 'details'"
             :isLoading="isLoading"
             :deviceData="deviceData" />

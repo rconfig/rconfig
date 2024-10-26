@@ -42,9 +42,9 @@ function refresh() {
         </div>
         <transition name="fade">
           <div
-            class="grid gap-3"
+            class="grid gap-2 text-sm"
             v-if="!isLoading && deviceData">
-            <dl class="grid gap-3">
+            <dl class="grid gap-2">
               <div class="flex items-center justify-between">
                 <dt class="flex items-center gap-1 text-muted-foreground">
                   <Icon

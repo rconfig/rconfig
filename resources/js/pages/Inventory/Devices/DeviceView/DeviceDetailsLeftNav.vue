@@ -61,7 +61,8 @@ function closeNav() {
         Details
       </Button>
       <Button
-        :class="['h-8', 'ml-2', selectedNav === 'comments' ? 'bg-rcgray-700 border' : '']"
+        :class="[selectedNav === 'comments' ? 'bg-rcgray-700 border' : '']"
+        class="h-8"
         variant="ghost"
         @click="event => selectNav('comments', event.target)"
         data-nav="comments">

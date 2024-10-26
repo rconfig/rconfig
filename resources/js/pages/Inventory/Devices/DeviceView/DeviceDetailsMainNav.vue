@@ -74,7 +74,8 @@ watch(
           Notifications
         </Button>
         <Button
-          :class="['h-8', 'ml-2', selectedNav === 'configs' ? 'bg-rcgray-700 border' : '']"
+          :class="[selectedNav === 'configs' ? 'bg-rcgray-700 border' : '']"
+          class="h-8"
           variant="ghost"
           @click="event => selectNav('configs', event.target)"
           data-nav="configs">
