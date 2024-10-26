@@ -184,3 +184,75 @@
   padding-right: 20px;
   height: 48px;
 }
+
+/* close nav icon */
+
+.nav-icon[data-hovering='true'] {
+  transform: translateX(-6px) scale(0.9);
+  opacity: 0;
+}
+
+.nav-icon {
+  transition:
+    transform 200ms ease 0s,
+    opacity 120ms ease 0s;
+}
+
+.nac-icon-xform[data-hovering='true'] {
+  transform: translateX(-4px);
+  opacity: 0;
+}
+
+.nac-icon-xform {
+  transition:
+    transform 200ms ease 0s,
+    opacity 120ms ease 0s;
+}
+
+.nav-icon-form-2[data-hovering='true'] {
+  transform: translate(0px);
+  opacity: 1;
+}
+
+.nav-icon-form-2 {
+  transition: all 200ms ease 0s;
+}
+
+.top-nav-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.nav-state-icon[data-hovering='false'] {
+  transform: translateX(-6px) scale(0.9);
+  opacity: 0;
+}
+
+.nav-state-icon {
+  transition:
+    transform 200ms ease 0s,
+    opacity 120ms ease 0s;
+}
+
+.nav-state-icon2[data-hovering='false'] {
+  transform: translateX(-6px);
+}
+
+.nav-state-icon2 {
+  transition: all 200ms ease 0s;
+}
+
+.nav-state-icon3[data-hovering='false'] {
+  transform: translateX(-4px);
+  opacity: 0;
+}
+
+.nav-state-icon3 {
+  transition:
+    transform 200ms ease 0s,
+    opacity 120ms ease 0s;
+}
+/* close nav icon */

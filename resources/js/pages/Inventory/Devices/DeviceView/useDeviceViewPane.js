@@ -2,6 +2,7 @@ import axios from 'axios';
 import useClipboard from 'vue-clipboard3';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useFavoritesStore } from '@/stores/favorites';
+import { usePanelStore } from '@/stores/panelStore'; // Import the Pinia store
 import { useToaster } from '@/composables/useToaster'; // Import the composable
 
 export function useDeviceViewPane(props) {
@@ -12,6 +13,8 @@ export function useDeviceViewPane(props) {
   const isLoading = ref(false);
   const leftNavSelected = ref('details');
   const mainNavSelected = ref('notifications');
+  const panelElement2 = ref(null);
+  const panelStore = usePanelStore(); // Access the panel store
   const { toClipboard } = useClipboard();
   const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
 
@@ -26,6 +29,8 @@ export function useDeviceViewPane(props) {
   onMounted(() => {
     fetchDevice(props.editId);
     getAppDirPath();
+
+    panelStore.panelRef2 = panelElement2.value;
 
     window.addEventListener('keydown', e => {
       if (e.key === 'Escape') {
@@ -148,9 +153,14 @@ export function useDeviceViewPane(props) {
     }, 2000);
   }
 
+  function closeNav() {
+    panelElement2?.value.isCollapsed ? panelElement2?.value.expand() : panelElement2?.value.collapse();
+  }
+
   return {
     addToFavorites,
     appDirPath,
+    closeNav,
     copyDebug,
     deviceData,
     downloadNow,
@@ -159,6 +169,7 @@ export function useDeviceViewPane(props) {
     isLoading,
     leftNavSelected,
     mainNavSelected,
+    panelElement2,
     selectLeftNavView,
     selectMainNavView
   };

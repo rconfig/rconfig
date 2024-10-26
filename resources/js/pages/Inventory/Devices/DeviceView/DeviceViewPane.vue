@@ -9,14 +9,13 @@ import DeviceViewPaneDropdown from '@/pages/Inventory/Devices/DeviceView/DeviceV
 import Loading from '@/pages/Shared/Loading.vue';
 import Spinner from '@/pages/Shared/Icon/Spinner.vue';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ref } from 'vue';
 import { useDeviceViewPane } from '@/pages/Inventory/Devices/DeviceView/useDeviceViewPane';
 
 const props = defineProps({
   editId: Number
 });
 
-const { addToFavorites, appDirPath, copyDebug, deviceData, downloadNow, downloadStatus, favoriteItem, isLoading, leftNavSelected, mainNavSelected, selectLeftNavView, selectMainNavView } = useDeviceViewPane(props);
+const { addToFavorites, appDirPath, closeNav, copyDebug, deviceData, downloadNow, downloadStatus, favoriteItem, isLoading, leftNavSelected, mainNavSelected, panelElement2, selectLeftNavView, selectMainNavView } = useDeviceViewPane(props);
 </script>
 
 <template>
@@ -80,9 +79,10 @@ const { addToFavorites, appDirPath, copyDebug, deviceData, downloadNow, download
           :min-size="10"
           collapsible
           :collapsed-size="0"
-          ref="panelElement"
+          ref="panelElement2"
           class="min-h-[100vh]">
           <DeviceDetailsLeftNav
+            @closeNav="closeNav"
             @selectLeftNavView="selectLeftNavView"
             :selectedNav="leftNavSelected" />
           <DeviceViewConfigStatusPanel

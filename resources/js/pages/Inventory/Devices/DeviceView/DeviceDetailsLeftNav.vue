@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, nextTick, defineProps, defineEmits } from 'vue';
+import NavCloseButton from '@/pages/Shared/NavCloseButton.vue';
 
 const selectedNav = ref(null);
 const selectedButtonRef = ref(null);
@@ -46,35 +47,39 @@ function closeNav() {
 </script>
 
 <template>
-  <div class="relative flex items-start p-2 pt-1 pb-2 mb-4 border-b">
-    <Button
-      :class="['h-8', selectedNav === 'details' ? 'bg-rcgray-700 border' : '', 'mr-2']"
-      variant="ghost"
-      @click="event => selectNav('details', event.target)"
-      ref="detailsButton"
-      data-nav="details">
-      <Icon
-        icon="ooui:view-details-ltr"
-        class="mr-2" />
-      Details
-    </Button>
-    <Button
-      :class="['h-8', 'ml-2', selectedNav === 'comments' ? 'bg-rcgray-700 border' : '']"
-      variant="ghost"
-      @click="event => selectNav('comments', event.target)"
-      data-nav="comments">
-      <Icon
-        icon="vaadin:comments-o"
-        class="mr-2" />
-      Comments
-    </Button>
-    <div
-      v-if="selectedNav"
-      class="absolute bottom-0 h-0.5 bg-blue-500"
-      :style="bottomBorderStyle"></div>
+  <div class="relative flex items-center justify-between border-b">
+    <div class="relative flex items-start p-2 pt-1 mb-1">
+      <Button
+        :class="['h-8', selectedNav === 'details' ? 'bg-rcgray-700 border' : '', 'mr-2']"
+        variant="ghost"
+        @click="event => selectNav('details', event.target)"
+        ref="detailsButton"
+        data-nav="details">
+        <Icon
+          icon="ooui:view-details-ltr"
+          class="mr-2" />
+        Details
+      </Button>
+      <Button
+        :class="['h-8', 'ml-2', selectedNav === 'comments' ? 'bg-rcgray-700 border' : '']"
+        variant="ghost"
+        @click="event => selectNav('comments', event.target)"
+        data-nav="comments">
+        <Icon
+          icon="vaadin:comments-o"
+          class="mr-2" />
+        Comments
+      </Button>
+      <div
+        v-if="selectedNav"
+        class="absolute bottom-0 h-0.5 bg-blue-500"
+        :style="bottomBorderStyle"></div>
+    </div>
 
-    <!-- Close Button -->
-    <Button
+    <NavCloseButton
+      class="mr-2"
+      @close="closeNav()" />
+    <!-- <Button
       class="h-8 ml-auto"
       variant="ghost"
       @click="closeNav"
@@ -83,6 +88,6 @@ function closeNav() {
         icon="mdi:close"
         class="mr-2" />
       Close
-    </Button>
+    </Button> -->
   </div>
 </template>

@@ -1,9 +1,12 @@
 <script setup>
-import { ref, onMounted, nextTick, defineProps, defineEmits } from 'vue';
+import { ref, onMounted, nextTick, defineProps, defineEmits, watch } from 'vue';
+import NavOpenButton from '@/pages/Shared/NavOpenButton.vue'; // Import the NavOpenButton component
+import { usePanelStore } from '@/stores/panelStore'; // Import the Pinia store
 
 const selectedNav = ref(null);
 const selectedButtonRef = ref(null);
 const bottomBorderStyle = ref({});
+const panelStore = usePanelStore(); // Access the panel store
 const props = defineProps({
   selectedNav: String
 });
@@ -40,61 +43,65 @@ function updateBottomBorder() {
   });
 }
 
-function closeNav() {
-  emit('closeNav'); // Emit the close event
+function openNav() {
+  panelStore.panelRef2?.isCollapsed ? panelStore.panelRef2?.expand() : panelStore.panelRef2?.collapse();
 }
+watch(
+  () => panelStore.panelRef2?.isCollapsed,
+  () => {
+    updateBottomBorder();
+  }
+);
 </script>
 
 <template>
-  <div class="relative flex items-end pt-1 pb-2 mb-4 border-b">
-    <Button
-      :class="['h-8', selectedNav === 'notifications' ? 'bg-rcgray-700 border' : '', 'mr-2']"
-      variant="ghost"
-      @click="event => selectNav('notifications', event.target)"
-      ref="notificationsButton"
-      data-nav="notifications">
-      <Icon
-        icon="ooui:view-details-ltr"
-        class="mr-2" />
-      Notifications
-    </Button>
-    <Button
-      :class="['h-8', 'ml-2', selectedNav === 'configs' ? 'bg-rcgray-700 border' : '']"
-      variant="ghost"
-      @click="event => selectNav('configs', event.target)"
-      data-nav="configs">
-      <Icon
-        icon="vaadin:comments-o"
-        class="mr-2" />
-      Configs
-    </Button>
-    <div
-      v-if="selectedNav"
-      class="absolute bottom-0 h-0.5 bg-blue-500"
-      :style="bottomBorderStyle"></div>
+  <div class="relative flex items-center w-full border-b">
+    <NavOpenButton
+      @openNav="openNav()"
+      :navPanelBtnState="panelStore.panelRef2?.isCollapsed" />
 
-    <h3
-      class="gap-2 ml-auto mr-4 text-lg font-semibold tracking-tight group"
-      v-if="selectedNav === 'notifications'">
-      Device Latest Events
-    </h3>
+    <div class="flex justify-between w-full mb-0">
+      <div>
+        <Button
+          :class="['h-8', selectedNav === 'notifications' ? 'bg-rcgray-700 border' : '', 'mr-2']"
+          variant="ghost"
+          @click="event => selectNav('notifications', event.target)"
+          ref="notificationsButton"
+          data-nav="notifications">
+          <Icon
+            icon="ooui:view-details-ltr"
+            class="mr-2" />
+          Notifications
+        </Button>
+        <Button
+          :class="['h-8', 'ml-2', selectedNav === 'configs' ? 'bg-rcgray-700 border' : '']"
+          variant="ghost"
+          @click="event => selectNav('configs', event.target)"
+          data-nav="configs">
+          <Icon
+            icon="vaadin:comments-o"
+            class="mr-2" />
+          Configs
+        </Button>
+      </div>
+      <div>
+        <h3
+          class="gap-2 ml-auto mr-4 text-lg font-semibold tracking-tight group"
+          v-if="selectedNav === 'notifications'">
+          Device Latest Events
+        </h3>
 
-    <h3
-      class="gap-2 ml-auto mr-4 text-lg font-semibold tracking-tight group"
-      v-if="selectedNav === 'configs'">
-      Latest Configurations
-    </h3>
+        <h3
+          class="gap-2 ml-auto mr-4 text-lg font-semibold tracking-tight group"
+          v-if="selectedNav === 'configs'">
+          Latest Configurations
+        </h3>
+      </div>
 
-    <!-- Close Button -->
-    <!-- <Button
-      class="h-8 ml-auto"
-      variant="ghost"
-      @click="closeNav"
-      title="Close">
-      <Icon
-        icon="mdi:close"
-        class="mr-2" />
-      Close
-    </Button> -->
+      <div
+        v-if="selectedNav"
+        class="absolute bottom-0 h-0.5 bg-blue-500"
+        :style="bottomBorderStyle"></div>
+    </div>
   </div>
 </template>
