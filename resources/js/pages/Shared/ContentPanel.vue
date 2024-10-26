@@ -71,7 +71,9 @@ function close() {
       <div class="flex justify-end">
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
-            <Button variant="ghost">
+            <Button
+              variant="ghost"
+              class="h-8 ml-2">
               <Icon
                 icon="radix-icons:dots-vertical"
                 class="" />

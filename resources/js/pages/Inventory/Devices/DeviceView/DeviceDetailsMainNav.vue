@@ -74,13 +74,13 @@ function closeNav() {
       :style="bottomBorderStyle"></div>
 
     <h3
-      class="gap-2 ml-auto text-lg font-semibold tracking-tight group"
+      class="gap-2 ml-auto mr-4 text-lg font-semibold tracking-tight group"
       v-if="selectedNav === 'notifications'">
       Device Latest Events
     </h3>
 
     <h3
-      class="gap-2 ml-auto text-lg font-semibold tracking-tight group"
+      class="gap-2 ml-auto mr-4 text-lg font-semibold tracking-tight group"
       v-if="selectedNav === 'configs'">
       Latest Configurations
     </h3>

@@ -93,6 +93,7 @@ export function useDeviceViewPane(props) {
     deviceData,
     favoriteItem,
     isLoading,
+    leftNavSelected,
     mainNavSelected,
     selectLeftNavView,
     selectMainNavView

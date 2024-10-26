@@ -5,6 +5,7 @@ import DeviceLatestEventsPanel from '@/pages/Inventory/Devices/DeviceView/Device
 import DeviceViewCommentsPanel from '@/pages/Inventory/Devices/DeviceView/DeviceViewCommentsPanel.vue';
 import DeviceViewConfigStatusPanel from '@/pages/Inventory/Devices/DeviceView/DeviceViewConfigStatusPanel.vue';
 import DeviceViewDetailsPanel from '@/pages/Inventory/Devices/DeviceView/DeviceViewDetailsPanel.vue';
+import DeviceViewPaneDropdown from '@/pages/Inventory/Devices/DeviceView/DeviceViewPaneDropdown.vue';
 import Loading from '@/pages/Shared/Loading.vue';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ref } from 'vue';
@@ -14,12 +15,12 @@ const props = defineProps({
   editId: Number
 });
 
-const { addToFavorites, deviceData, favoriteItem, isLoading, mainNavSelected, selectLeftNavView, selectMainNavView } = useDeviceViewPane(props);
+const { addToFavorites, deviceData, favoriteItem, isLoading, leftNavSelected, mainNavSelected, selectLeftNavView, selectMainNavView } = useDeviceViewPane(props);
 </script>
 
 <template>
   <main class="flex flex-col flex-1 gap-2 dark:bg-rcgray-900">
-    <div class="flex justify-between border-b topRow">
+    <div class="flex flex-row items-center justify-between h-12 gap-3 pl-4 pr-2 border-b">
       <div
         class="flex items-center"
         v-if="deviceData">
@@ -38,54 +39,24 @@ const { addToFavorites, deviceData, favoriteItem, isLoading, mainNavSelected, se
       </div>
       <div class="flex items-center">
         <Button
-          class="w-full h-8 ml-2"
+          class="h-8 ml-2"
           variant="outline">
           <Icon
             icon="lucide:code-xml"
             class="mr-2" />
           Copy Debug
         </Button>
-        <Button
-          class="w-full h-8 ml-2"
-          variant="outline">
-          <Icon
-            icon="fluent-mdl2:configuration-solid"
-            class="mr-2" />
-          View Configs
-        </Button>
 
         <Button
-          class="w-full h-8 ml-2"
+          class="h-8 ml-2"
           variant="outline">
           <Icon
             icon="catppuccin:folder-download-open"
             class="mr-2" />
           Download Now
         </Button>
-        <Button
-          class="w-full h-8 ml-2"
-          variant="outline">
-          <Icon
-            icon="fa6-solid:clone"
-            class="mr-2" />
-          Clone Device
-        </Button>
-        <Button
-          class="w-full h-8 ml-2"
-          variant="outline">
-          <Icon
-            icon="icon-park-twotone:delete-five"
-            class="mr-2" />
-          Purge Failed Configs
-        </Button>
-        <Button
-          class="w-full h-8 ml-2"
-          variant="outline">
-          <Icon
-            icon="icon-park-twotone:delete-five"
-            class="mr-2" />
-          Edit Device
-        </Button>
+
+        <DeviceViewPaneDropdown />
       </div>
     </div>
 
