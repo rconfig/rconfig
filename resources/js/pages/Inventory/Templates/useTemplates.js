@@ -4,6 +4,7 @@ import { useDebounceFn } from '@vueuse/core';
 import { useDialogStore } from '@/stores/dialogActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
 import { eventBus } from '@/composables/eventBus';
+import { useRoute, useRouter } from 'vue-router'; // Import the useRoute from Vue Router
 
 export function useTemplates(emit) {
   const currentPage = ref(1);
@@ -18,6 +19,7 @@ export function useTemplates(emit) {
   const newTemplateModalKey = ref(1);
   const templates = ref([]);
   const showConfirmDelete = ref(false);
+  const router = useRouter();
   const { openDialog } = dialogStore;
   const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
 
@@ -49,7 +51,7 @@ export function useTemplates(emit) {
   }
 
   function viewTemplateDetailsPane(editId) {
-    emit('viewTemplateDetailsPane', { id: editId, type: 'template' });
+    router.push({ name: 'templatesview', params: { id: editId } });
   }
 
   // Delete Template

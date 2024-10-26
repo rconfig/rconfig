@@ -1,13 +1,10 @@
 <script setup>
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import AddEditPane from '@/layouts/AddEditPane.vue';
 import Command from '@/pages/Inventory/Commands/Main.vue';
 import CommandGroups from '@/pages/Inventory/CommandGroups/Main.vue';
 import Devices from '@/pages/Inventory/Devices/Main.vue';
-import DeviceViewPane from '@/pages/Inventory/Devices/DeviceView/DeviceViewPane.vue';
 import Tags from '@/pages/Inventory/Tags/Main.vue';
 import Template from '@/pages/Inventory/Templates/Main.vue';
-import TemplateAddEditPane from '@/pages/Inventory/Templates/TemplateAddEditPane.vue';
 import Vendors from '@/pages/Inventory/Vendors/Main.vue';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ref, onMounted } from 'vue';
@@ -37,8 +34,10 @@ onMounted(() => {
   if (route.params.view) {
     changeView(route.params.view);
   } // Set currentView if path is not Inventory
-  else if (!route.path.includes('inventory')) {
-    changeView(route.name);
+  else if (route.name === 'devicesview') {
+    changeView(route.name); // If route starts with /devices, load the devices component
+  } else if (!route.path.includes('inventory')) {
+    changeView(route.name); // loads the current view based on the route name
   }
 
   viewItems.forEach(item => {
@@ -74,29 +73,6 @@ function closeAddEditPane() {
 
 <template>
   <main class="flex flex-col flex-1 gap-2 dark:bg-rcgray-900">
-    <AddEditPane
-      :key="addEditPaneKey"
-      :editId="addEditPaneEditId"
-      :name="addEditPane"
-      v-if="addEditPane"
-      @close="closeAddEditPane()">
-      <template #default>
-        <transition name="fade">
-          <TemplateAddEditPane
-            v-if="addEditPane === 'template'"
-            :editId="addEditPaneEditId"
-            @close="closeAddEditPane" />
-        </transition>
-
-        <transition name="fade">
-          <DeviceViewPane
-            v-if="addEditPane === 'device'"
-            :editId="addEditPaneEditId"
-            @close="closeAddEditPane" />
-        </transition>
-      </template>
-    </AddEditPane>
-
     <div
       class="border-t border-b topRow"
       v-if="addEditPane === null">
@@ -149,7 +125,7 @@ function closeAddEditPane() {
 
     <div v-if="!addEditPane">
       <Devices
-        v-if="currentView === 'devices'"
+        v-if="currentView === 'devices' || currentView === 'devicesview'"
         @viewDeviceDetailsPane="launchAddEdit($event)"></Devices>
       <CommandGroups v-if="currentView === 'commandgroups'"></CommandGroups>
       <Command v-if="currentView === 'commands'"></Command>

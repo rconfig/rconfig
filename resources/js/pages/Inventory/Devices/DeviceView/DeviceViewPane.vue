@@ -101,10 +101,12 @@ function selectMainNavView(viewName) {
 </script>
 
 <template>
-  <div>
+  <main class="flex flex-col flex-1 gap-2 dark:bg-rcgray-900">
     <div class="flex justify-between border-b topRow">
-      <div class="flex items-center">
-        <span>NAME</span>
+      <div
+        class="flex items-center"
+        v-if="deviceData">
+        <span class="text-lg font-semibold text-blue-400 font-inter">{{ deviceData.device_name }}</span>
         <Button
           variant="ghost"
           class="h-8 py-1 ml-2"
@@ -228,5 +230,5 @@ function selectMainNavView(viewName) {
       style="height: calc(100vh - 450px)"></div> -->
       <!-- EDITOR -->
     </div>
-  </div>
+  </main>
 </template>

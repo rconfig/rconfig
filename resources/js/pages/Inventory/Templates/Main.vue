@@ -13,7 +13,7 @@ import { useRowSelection } from '@/composables/useRowSelection';
 import { useTemplates } from '@/pages/Inventory/Templates/useTemplates';
 import { useTemplatesGithub } from '@/pages/Inventory/Templates/useTemplatesGithub';
 
-const emit = defineEmits(['createTemplate', 'viewTemplateDetailsPane']);
+const emit = defineEmits(['createTemplate']);
 const { templates, isLoading, currentPage, perPage, lastPage, editId, newTemplateModalKey, searchTerm, openDialog, fetchTemplates, createTemplate, viewTemplateDetailsPane, deleteTemplate, deleteManyTemplates, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam, showConfirmDelete } = useTemplates(emit);
 const { importTemplates, importingTemplates } = useTemplatesGithub();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(templates);

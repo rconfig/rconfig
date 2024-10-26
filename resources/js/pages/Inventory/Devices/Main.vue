@@ -19,9 +19,7 @@ import { useDevices } from '@/pages/Inventory/Devices/useDevices';
 import { eventBus } from '@/composables/eventBus';
 import { useSheetStore } from '@/stores/sheetActions';
 
-const emit = defineEmits(['viewDeviceDetailsPane']);
-
-const { devices, filterStatus, filterCategories, filterTags, filterVendor, clearFilters, deleteManyDevices, showConfirmDelete, isLoading, currentPage, perPage, lastPage, editId, newDeviceModalKey, searchTerm, viewDeviceDetailsPane, fetchDevices, createDevice, updateDevice, deleteDevice, disableDevice, enableDevice, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam } = useDevices(emit);
+const { devices, filterStatus, filterCategories, filterTags, filterVendor, clearFilters, deleteManyDevices, showConfirmDelete, isLoading, currentPage, perPage, lastPage, editId, newDeviceModalKey, searchTerm, viewDeviceDetailsPane, fetchDevices, createDevice, updateDevice, deleteDevice, disableDevice, enableDevice, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam } = useDevices();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(devices);
 const sheetStore = useSheetStore();
 const { openSheet, closeSheet, isSheetOpen } = sheetStore;

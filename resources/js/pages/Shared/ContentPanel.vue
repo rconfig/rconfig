@@ -1,14 +1,44 @@
 <script setup>
-import { ref } from 'vue';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import DeviceViewPane from '@/pages/Inventory/Devices/DeviceView/DeviceViewPane.vue';
+import TemplateAddEditPane from '@/pages/Inventory/Templates/TemplateAddEditPane.vue';
 
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router'; // Import the useRoute from Vue Router
+
+const route = useRoute();
+const router = useRouter();
 const emit = defineEmits(['close']);
-defineProps({
-  editId: Number,
-  name: String
+const pandelId = ref(0);
+const panelContentName = ref(null);
+
+const props = defineProps({});
+
+onMounted(() => {
+  pandelId.value = route.params.id;
+  panelContentName.value = route.name;
 });
 
+function closeDeviceViewPanel() {
+  panelContentName.value = null;
+  console.log(panelContentName);
+  router.push({ name: 'devices' });
+}
+
+function closeTemplateViewPanel() {
+  panelContentName.value = null;
+  console.log(panelContentName);
+  router.push({ name: 'templates' });
+}
+
 function close() {
+  if (panelContentName.value === 'devicesview') {
+    closeDeviceViewPanel();
+  }
+
+  if (panelContentName.value === 'templatesview') {
+    closeTemplateViewPanel();
+  }
   emit('close');
 }
 </script>
@@ -27,7 +57,16 @@ function close() {
           icon="mingcute:close-line"
           class="hover:animate-pulse" />
       </Button>
-      <h2 class="items-center content-center text-muted-foreground">{{ editId === 0 ? 'Add' : 'Edit' }} {{ name }} {{ editId === 0 ? '' : '(' + editId + ')' }}</h2>
+      <h2
+        class="items-center content-center text-muted-foreground"
+        v-if="panelContentName === 'devicesview'">
+        Device ID: {{ pandelId === 0 ? '' : pandelId }}
+      </h2>
+      <h2
+        class="items-center content-center text-muted-foreground"
+        v-if="panelContentName === 'templatesview'">
+        {{ pandelId === 0 ? 'Add' : 'Edit' }} {{ pandelId === 0 ? '' : '(' + pandelId + ')' }}
+      </h2>
 
       <div class="flex justify-end">
         <DropdownMenu>
@@ -62,6 +101,18 @@ function close() {
         </DropdownMenu>
       </div>
     </div>
-    <slot name="default"></slot>
+    <transition name="fade">
+      <TemplateAddEditPane
+        v-if="panelContentName === 'templatesview'"
+        :editId="pandelId"
+        @close="closeTemplateViewPanel()" />
+    </transition>
+
+    <transition name="fade">
+      <DeviceViewPane
+        v-if="panelContentName === 'devicesview'"
+        :editId="pandelId"
+        @close="closeDeviceViewPanel()" />
+    </transition>
   </div>
 </template>

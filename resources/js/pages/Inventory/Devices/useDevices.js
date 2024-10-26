@@ -4,8 +4,9 @@ import { useDebounceFn } from '@vueuse/core';
 import { useDialogStore } from '@/stores/dialogActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
 import { eventBus } from '@/composables/eventBus';
+import { useRoute, useRouter } from 'vue-router'; // Import the useRoute from Vue Router
 
-export function useDevices(emit) {
+export function useDevices() {
   const currentPage = ref(1);
   const perPage = ref(parseInt(localStorage.getItem('perPage') || '10'));
   const sortParam = ref('-id');
@@ -22,6 +23,7 @@ export function useDevices(emit) {
   const filterCategories = ref([]);
   const filterTags = ref([]);
   const filterVendor = ref([]);
+  const router = useRouter();
 
   const { openDialog } = dialogStore;
   const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
@@ -226,7 +228,7 @@ export function useDevices(emit) {
   }
 
   function viewDeviceDetailsPane(id) {
-    emit('viewDeviceDetailsPane', { id: id, type: 'device' });
+    router.push({ name: 'devicesview', params: { id } });
   }
 
   return {
