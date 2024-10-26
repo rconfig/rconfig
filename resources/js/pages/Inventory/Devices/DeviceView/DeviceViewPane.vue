@@ -1,131 +1,20 @@
 <script setup>
-import * as monaco from 'monaco-editor';
 import DeviceDetailsLeftNav from '@/pages/Inventory/Devices/DeviceView/DeviceDetailsLeftNav.vue';
 import DeviceDetailsMainNav from '@/pages/Inventory/Devices/DeviceView/DeviceDetailsMainNav.vue';
+import DeviceLatestEventsPanel from '@/pages/Inventory/Devices/DeviceView/DeviceLatestEventsPanel.vue';
+import DeviceViewCommentsPanel from '@/pages/Inventory/Devices/DeviceView/DeviceViewCommentsPanel.vue';
 import DeviceViewConfigStatusPanel from '@/pages/Inventory/Devices/DeviceView/DeviceViewConfigStatusPanel.vue';
 import DeviceViewDetailsPanel from '@/pages/Inventory/Devices/DeviceView/DeviceViewDetailsPanel.vue';
-import DeviceViewCommentsPanel from '@/pages/Inventory/Devices/DeviceView/DeviceViewCommentsPanel.vue';
-import DeviceLatestEventsPanel from '@/pages/Inventory/Devices/DeviceView/DeviceLatestEventsPanel.vue';
 import Loading from '@/pages/Shared/Loading.vue';
-import useCodeEditor from '@/composables/codeEditorFunctions';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { ref } from 'vue';
 import { useDeviceViewPane } from '@/pages/Inventory/Devices/DeviceView/useDeviceViewPane';
-import { useDialogStore } from '@/stores/dialogActions';
-import { useFavoritesStore } from '@/stores/favorites';
 
 const props = defineProps({
   editId: Number
 });
 
-let meditor = null;
-const emit = defineEmits(['save', 'close']);
-
-// const { checkDarkModeIsSet, checkLineNumbersIsSet, checkMiniMapIsSet, checkStickyScrollIsSet, copied, copy, copyPath, darkmode, download, initEditor, lineNumbers, meditorValue, minimap, search, toggleEditorDarkMode, toggleEditorLineNumbers, toggleEditorMinimap, toggleStickyScroll } = useCodeEditor(monaco);
-const { isLoading, deviceData } = useDeviceViewPane(props, emit);
-const dialogStore = useDialogStore();
-const { isDialogOpen, closeDialog } = dialogStore;
-const toggleStateMultiple = ref([]); //'dark', 'lineNumbers', 'minimap', 'stickyscroll'
-
-const leftNavSelected = ref('details');
-const mainNavSelected = ref('notifications');
-const favoritesStore = useFavoritesStore();
-
-const favoriteItem = ref({
-  id: props.editId,
-  label: '',
-  icon: 'NetworkDeviceIcon',
-  isFavorite: false,
-  route: '/devices/view/' + props.editId
-});
-
-// Lifecycle Hooks
-onMounted(() => {
-  // initializeToggleStates();
-  // getTemplateRepoFolders();
-  // initCodeEditor();
-
-  window.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      onEsc();
-    }
-  });
-
-  if (deviceData) {
-    [...favoritesStore.favorites].forEach(favorite => {
-      if (favorite.id === props.editId) {
-        favoriteItem.value.isFavorite = true;
-      }
-    });
-  }
-});
-
-function addToFavorites() {
-  if (deviceData) {
-    favoriteItem.value.id = deviceData.value.id;
-    favoriteItem.value.label = deviceData.value.device_name;
-    favoriteItem.value.route = `/devices/view/${deviceData.value.id}`;
-    favoriteItem.value.isFavorite = !favoriteItem.value.isFavorite;
-    favoritesStore.toggleFavorite(favoriteItem.value);
-  }
-}
-
-onUnmounted(() => {
-  window.removeEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      onEsc();
-    }
-  });
-});
-
-// Methods
-function initializeToggleStates() {
-  if (checkDarkModeIsSet()) toggleStateMultiple.value.push('dark');
-  if (checkLineNumbersIsSet()) toggleStateMultiple.value.push('lineNumbers');
-  if (checkMiniMapIsSet()) toggleStateMultiple.value.push('minimap');
-  if (checkStickyScrollIsSet()) toggleStateMultiple.value.push('stickyscroll');
-}
-
-function initCodeEditor() {
-  meditor = initEditor('code-editor__code-pre', 'yaml');
-  props.editId === 0 ? getDefaultTemplate(meditor) : showTemplate(props.editId, meditor, model);
-}
-
-function close() {
-  emit('close');
-}
-
-function onEsc() {
-  close();
-}
-
-function handleSave() {
-  saveDialog(props.editId, model, meditor, emit, close);
-}
-
-function setTemplateCode(code) {
-  meditor.getModel().setValue(code.value);
-  closeDialog('DialogTemplateImport');
-}
-
-function selectLeftNavView(viewName) {
-  if (viewName === 'details') {
-    leftNavSelected.value = 'details';
-  } else if (viewName === 'comments') {
-    leftNavSelected.value = 'comments';
-  } else {
-    leftNavSelected.value = 'details';
-  }
-}
-function selectMainNavView(viewName) {
-  if (viewName === 'notifications') {
-    mainNavSelected.value = 'notifications';
-  } else if (viewName === 'configs') {
-    mainNavSelected.value = 'configs';
-  } else {
-    mainNavSelected.value = 'notifications';
-  }
-}
+const { addToFavorites, deviceData, favoriteItem, isLoading, mainNavSelected, selectLeftNavView, selectMainNavView } = useDeviceViewPane(props);
 </script>
 
 <template>
