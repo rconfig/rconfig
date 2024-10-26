@@ -7,6 +7,7 @@ import DeviceViewConfigStatusPanel from '@/pages/Inventory/Devices/DeviceView/De
 import DeviceViewDetailsPanel from '@/pages/Inventory/Devices/DeviceView/DeviceViewDetailsPanel.vue';
 import DeviceViewPaneDropdown from '@/pages/Inventory/Devices/DeviceView/DeviceViewPaneDropdown.vue';
 import Loading from '@/pages/Shared/Loading.vue';
+import Spinner from '@/pages/Shared/Icon/Spinner.vue';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ref } from 'vue';
 import { useDeviceViewPane } from '@/pages/Inventory/Devices/DeviceView/useDeviceViewPane';
@@ -15,7 +16,7 @@ const props = defineProps({
   editId: Number
 });
 
-const { addToFavorites, deviceData, favoriteItem, isLoading, leftNavSelected, mainNavSelected, selectLeftNavView, selectMainNavView } = useDeviceViewPane(props);
+const { addToFavorites, appDirPath, copyDebug, deviceData, downloadNow, downloadStatus, favoriteItem, isLoading, leftNavSelected, mainNavSelected, selectLeftNavView, selectMainNavView } = useDeviceViewPane(props);
 </script>
 
 <template>
@@ -40,20 +41,29 @@ const { addToFavorites, deviceData, favoriteItem, isLoading, leftNavSelected, ma
       <div class="flex items-center">
         <Button
           class="h-8 ml-2"
+          @click="copyDebug('cd ' + appDirPath + ' && php artisan rconfig:download-device ' + props.editId + ' -d')"
           variant="outline">
           <Icon
             icon="lucide:code-xml"
             class="mr-2" />
           Copy Debug
         </Button>
-
         <Button
           class="h-8 ml-2"
+          @click="downloadNow()"
           variant="outline">
+          <Spinner :state="downloadStatus" />
+          <span
+            v-if="downloadStatus"
+            class="text-muted-foreground"
+            style="word-wrap: normal">
+            {{ downloadStatus }}
+          </span>
           <Icon
+            v-if="!downloadStatus"
             icon="catppuccin:folder-download-open"
             class="mr-2" />
-          Download Now
+          <span v-if="!downloadStatus">Download Now</span>
         </Button>
 
         <DeviceViewPaneDropdown />

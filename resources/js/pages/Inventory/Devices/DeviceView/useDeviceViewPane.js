@@ -1,13 +1,19 @@
 import axios from 'axios';
+import useClipboard from 'vue-clipboard3';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useFavoritesStore } from '@/stores/favorites';
+import { useToaster } from '@/composables/useToaster'; // Import the composable
 
 export function useDeviceViewPane(props) {
+  const appDirPath = ref(false);
+  const deviceData = ref(null);
+  const downloadStatus = ref(null);
   const favoritesStore = useFavoritesStore();
   const isLoading = ref(false);
-  const deviceData = ref(null);
   const leftNavSelected = ref('details');
   const mainNavSelected = ref('notifications');
+  const { toClipboard } = useClipboard();
+  const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
 
   const favoriteItem = ref({
     id: props.editId,
@@ -19,6 +25,7 @@ export function useDeviceViewPane(props) {
 
   onMounted(() => {
     fetchDevice(props.editId);
+    getAppDirPath();
 
     window.addEventListener('keydown', e => {
       if (e.key === 'Escape') {
@@ -42,6 +49,12 @@ export function useDeviceViewPane(props) {
       }
     });
   });
+
+  function getAppDirPath() {
+    axios.get('/api/app-dir-path').then(response => {
+      appDirPath.value = response.data;
+    });
+  }
 
   function fetchDevice(id) {
     isLoading.value = true;
@@ -88,9 +101,60 @@ export function useDeviceViewPane(props) {
     close();
   }
 
+  function copyDebug(value) {
+    try {
+      toClipboard(value);
+      toastSuccess('Copied', 'Debug command copied to clipboard');
+    } catch (error) {
+      toastError('Error', 'Failed to copy Debug command to clipboard');
+    }
+  }
+
+  function downloadNow() {
+    downloadStatus.value = 'Downloading...';
+
+    toastSuccess('Download Queued', 'Download started for device ' + deviceData.value.device_name);
+
+    axios
+      .post('/api/device/download-now', {
+        device_id: deviceData.value.id
+      })
+      .then(response => {
+        downloadStatus.value = 'Queued...';
+        toastSuccess('Download Started', 'Download job for ' + deviceData.value.device_name + ' was pushed to the queue.');
+        checkTrackedJobStatus();
+      })
+      .catch(error => {
+        downloadStatus.value = 'Queued...';
+        toastError('Error', 'Failed to start download job for ' + deviceData.value.device_name);
+        console.error('Error starting download job:', error);
+      });
+  }
+
+  function checkTrackedJobStatus() {
+    const interval = setInterval(function () {
+      axios.get('/api/tracked-jobs/' + deviceData.value.id).then(response => {
+        downloadStatus.value = response.data.data.status;
+      });
+
+      if (downloadStatus.value === 'finished') {
+        // console.log('checkTrackedJobStatus finished');
+        toastSuccess('Download Finished', 'Download finished for device ' + deviceData.value.device_name);
+        clearInterval(interval); // thanks @Luca D'Amico
+        setTimeout(() => {
+          downloadStatus.value = null;
+        }, 3000);
+      }
+    }, 2000);
+  }
+
   return {
     addToFavorites,
+    appDirPath,
+    copyDebug,
     deviceData,
+    downloadNow,
+    downloadStatus,
     favoriteItem,
     isLoading,
     leftNavSelected,
