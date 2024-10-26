@@ -33,13 +33,15 @@ const props = defineProps({
             <Icon
               icon="formkit:datetime"
               class="w-4 h-4 mr-2 opacity-70" />
-            <span class="text-xs text-muted-foreground">Event Date: {{ log.created_at }}</span>
+            <span class="text-xs text-muted-foreground">Event Date: {{ new Date(log.created_at).toLocaleString() }}</span>
             <Button
               class="h-6 p-1 ml-auto"
               variant="ghost"
               title="copy raw data"
               @click="copy(log.id, log)">
-              <Icon :icon="activeCopyIcon[log.id] ? 'material-symbols:check-circle-outline' : 'material-symbols:content-copy-outline'" />
+              <Icon
+                :icon="activeCopyIcon[log.id] ? 'material-symbols:check-circle-outline' : 'material-symbols:content-copy-outline'"
+                :class="activeCopyIcon[log.id] ? 'text-green-500' : ''" />
             </Button>
           </div>
         </div>

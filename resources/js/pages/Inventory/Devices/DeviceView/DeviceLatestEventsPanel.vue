@@ -76,11 +76,15 @@ function getDeviceNotifications() {
                 </p>
                 <div class="flex items-center justify-between">
                   <p class="text-muted-foreground">{{ new Date(notification.created_at).toLocaleString() }}</p>
-                  <DeviceNotificationHoverCard :log="notification">
+                  <DeviceNotificationHoverCard :notification="notification">
                     <Button
+                      title="View Raw Data"
+                      alt="View Raw Data"
                       variant="outline"
                       class="h-6 px-2 text-sm text-muted-foreground">
-                      View
+                      <Icon
+                        icon="tabler:list-details"
+                        class="w-4 h-4" />
                     </Button>
                   </DeviceNotificationHoverCard>
                 </div>
