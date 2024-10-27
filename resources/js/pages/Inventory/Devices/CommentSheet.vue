@@ -1,9 +1,9 @@
 <script setup>
-import { onMounted, ref } from 'vue';
-import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { useSheetStore } from '@/stores/sheetActions';
 import Loading from '@/pages/Shared/Loading.vue';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { onMounted, ref } from 'vue';
+import { useDeviceComments } from './useDeviceComments';
 
 const props = defineProps({
   deviceId: {
@@ -16,65 +16,7 @@ const props = defineProps({
   }
 });
 
-const sheetStore = useSheetStore();
-const { openSheet, closeSheet, isSheetOpen } = sheetStore;
-const comments = ref([]);
-const isLoading = ref(false);
-const hasAddedComment = ref(false);
-
-onMounted(() => {
-  if (isSheetOpen('DeviceCommentSheet')) {
-    getComments();
-  }
-});
-
-function getComments() {
-  isLoading.value = true;
-  axios
-    .get(`/api/device-comments/${props.deviceId}`)
-    .then(response => {
-      comments.value = response.data;
-      isLoading.value = false;
-    })
-    .catch(error => {
-      console.error(error);
-      isLoading.value = false;
-    });
-}
-
-function viewDevice(deviceId) {
-  closeSheet('DeviceCommentSheet');
-  router.push({ name: 'device', params: { id: deviceId } });
-}
-
-function addComment() {
-  if (!hasAddedComment.value) {
-    comments.value.unshift({
-      user: { name: 'New User' },
-      created_at: new Date().toISOString(),
-      comment: '',
-      is_open: true,
-      isEditable: true
-    });
-    hasAddedComment.value = true;
-  }
-}
-
-function saveComment(index) {
-  comments.value[index].isEditable = false;
-  axios
-    .post(`/api/device/comments`, {
-      comment: comments.value[index].comment,
-      device_id: props.deviceId
-    })
-    .then(response => {
-      // Add code here to update the comment with the response data if needed
-    })
-    .catch(error => {
-      console.error(error);
-    });
-  // Add code here to persist the comment changes to the backend if needed
-}
+const { comments, isLoading, addComment, saveComment, viewDevice, isSheetOpen, closeSheet } = useDeviceComments(props);
 </script>
 
 <template>
