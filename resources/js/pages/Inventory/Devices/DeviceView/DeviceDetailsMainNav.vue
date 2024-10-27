@@ -14,9 +14,12 @@ const props = defineProps({
 const emit = defineEmits(['selectMainNavView', 'closeNav']);
 
 onMounted(() => {
-  selectedNav.value = props.selectedNav;
+  // Check localStorage for saved navigation item
+  const savedNav = localStorage.getItem('DeviceDetailsMainNav');
+  selectedNav.value = savedNav || props.selectedNav;
+
   nextTick(() => {
-    const initialButton = document.querySelector(`[data-nav='${props.selectedNav}']`);
+    const initialButton = document.querySelector(`[data-nav='${selectedNav.value}']`);
     if (initialButton) {
       selectedButtonRef.value = initialButton;
       updateBottomBorder();
@@ -29,6 +32,9 @@ function selectNav(navItem, buttonElement) {
   selectedButtonRef.value = buttonElement;
   updateBottomBorder();
   emit('selectMainNavView', navItem); // Emit the selected option
+
+  // Save the selected navigation item to localStorage
+  localStorage.setItem('DeviceDetailsMainNav', navItem);
 }
 
 function updateBottomBorder() {

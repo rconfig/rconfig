@@ -45,6 +45,8 @@ export function useDeviceViewPane(props) {
         }
       });
     }
+
+    mainNavSelected.value = localStorage.getItem('DeviceDetailsMainNav' || 'notifications');
   });
 
   onUnmounted(() => {

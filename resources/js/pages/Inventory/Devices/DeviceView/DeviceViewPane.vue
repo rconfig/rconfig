@@ -113,7 +113,7 @@ const { addToFavorites, appDirPath, closeNav, copyDebug, deviceData, downloadNow
             <DeviceDetailsMainNav
               class="p-2"
               @selectMainNavView="selectMainNavView"
-              :selectedNav="mainNavSelected" />
+              :selectedNav="mainNavSelected.value" />
 
             <DeviceLatestEventsPanel
               v-if="!isLoading && mainNavSelected === 'notifications'"
@@ -121,7 +121,7 @@ const { addToFavorites, appDirPath, closeNav, copyDebug, deviceData, downloadNow
               style="height: 60vh"
               :deviceId="editId" />
 
-            <div v-if="!isLoading && mainNavSelected === 'configs'">Configs</div>
+            <div v-if="!isLoading && mainNavSelected === 'configs'">Configs Pane</div>
           </ScrollArea>
         </ResizablePanel>
       </ResizablePanelGroup>
