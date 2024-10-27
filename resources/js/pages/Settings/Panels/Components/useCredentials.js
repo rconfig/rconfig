@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { eventBus } from '@/composables/eventBus';
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, inject } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 import { useDialogStore } from '@/stores/dialogActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
@@ -21,6 +21,7 @@ export function useCredentials() {
   const searchTerm = ref('');
   const showConfirmDelete = ref(false);
   const sortParam = ref('-id');
+  const formatters = inject('formatters');
 
   onMounted(() => {
     fetchCreds();
@@ -117,16 +118,17 @@ export function useCredentials() {
   }
 
   return {
-    editId,
-    currentPage,
     createCred,
-    handleSave,
+    creds,
+    currentPage,
     deleteCredential,
     deleteManyCredentials,
-    newCredModalKey,
+    editId,
+    formatters,
+    handleSave,
     isLoading,
     lastPage,
-    creds,
+    newCredModalKey,
     perPage,
     searchTerm,
     showConfirmDelete,

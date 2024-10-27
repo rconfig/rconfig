@@ -1,10 +1,11 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, inject } from 'vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import useClipboard from 'vue-clipboard3';
 
 const isLoading = ref(false);
 const comments = ref([]);
+const formatters = inject('formatters');
 
 const props = defineProps({
   isLoading: Boolean,
@@ -70,7 +71,7 @@ function getComments() {
               class="grid gap-3"
               v-for="comment in comments">
               <div class="flex items-center justify-between">
-                <dt class="text-muted-foreground">{{ new Date(comment.created_at).toLocaleString() }}</dt>
+                <dt class="text-muted-foreground">{{ formatters.formatTime(comment.created_at) }}</dt>
                 <dd class="flex items-center gap-2">{{ comment.comment }}</dd>
               </div>
             </dl>

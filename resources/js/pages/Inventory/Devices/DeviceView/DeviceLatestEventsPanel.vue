@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, inject } from 'vue';
 import DeviceNotificationHoverCard from '@/pages/Inventory/Devices/DeviceView/DeviceNotificationHoverCard.vue';
 
 const props = defineProps({
@@ -8,6 +8,7 @@ const props = defineProps({
 
 const notificationResults = ref([]);
 const isLoading = ref(false);
+const formatters = inject('formatters');
 
 onMounted(() => {
   getDeviceNotifications();
@@ -75,7 +76,7 @@ function getDeviceNotifications() {
                   {{ notification.description }}
                 </p>
                 <div class="flex items-center justify-between">
-                  <p class="text-muted-foreground">{{ new Date(notification.created_at).toLocaleString() }}</p>
+                  <p class="text-muted-foreground">{{ formatters.formatTime(notification.created_at) }}</p>
                   <DeviceNotificationHoverCard :notification="notification">
                     <Button
                       title="View Raw Data"

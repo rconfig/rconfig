@@ -1,8 +1,10 @@
 <script setup>
+import { inject } from 'vue';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { useCopy } from '@/composables/useCopy';
 
 const { copy, activeCopyIcon } = useCopy();
+const formatters = inject('formatters');
 
 const props = defineProps({
   notification: {
@@ -33,7 +35,7 @@ const props = defineProps({
             <Icon
               icon="formkit:datetime"
               class="w-4 h-4 mr-2 opacity-70" />
-            <span class="text-xs text-muted-foreground">Event Date: {{ new Date(notification.created_at).toLocaleString() }}</span>
+            <span class="text-xs text-muted-foreground">Event Date: {{ formatters.formatTime(notification.created_at) }}</span>
             <Button
               class="h-6 p-1 ml-auto"
               variant="ghost"

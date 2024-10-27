@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { eventBus } from '@/composables/eventBus';
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, inject } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
 
@@ -16,6 +16,7 @@ export function useSystemLogs() {
   const searchTerm = ref('');
   const showConfirmDelete = ref(false);
   const sortParam = ref('-id');
+  const formatters = inject('formatters');
 
   onMounted(() => {
     fetchLogs();
@@ -105,6 +106,7 @@ export function useSystemLogs() {
     deleteManyLogs,
     fetchLogs,
     filters,
+    formatters,
     isLoading,
     lastPage,
     logs,

@@ -12,7 +12,7 @@ import { onMounted } from 'vue';
 import { useCredentials } from '@/pages/Settings/Panels/Components/useCredentials';
 import { useRowSelection } from '@/composables/useRowSelection';
 
-const { editId, currentPage, createCred, handleSave, deleteCredential, deleteManyCredentials, newCredModalKey, isLoading, lastPage, creds, perPage, searchTerm, showConfirmDelete, sortParam, toggleSort } = useCredentials();
+const { createCred, creds, currentPage, deleteCredential, deleteManyCredentials, editId, formatters, handleSave, isLoading, lastPage, newCredModalKey, perPage, searchTerm, showConfirmDelete, sortParam, toggleSort } = useCredentials();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(creds);
 
 const props = defineProps({});
@@ -147,7 +147,7 @@ onMounted(() => {
                 </span>
               </TableCell>
               <TableCell class="text-start">
-                {{ new Date(row.created_at).toLocaleString() }}
+                {{ formatters.formatTime(row.created_at) }}
               </TableCell>
               <!-- ACTIONS MENU -->
               <TableCell class="text-start">

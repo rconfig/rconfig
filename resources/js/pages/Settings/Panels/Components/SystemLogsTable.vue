@@ -11,7 +11,7 @@ import { useRowSelection } from '@/composables/useRowSelection';
 import { eventBus } from '@/composables/eventBus';
 import SystemLogsTableHoverCard from '@/pages/Settings/Panels/Components/SystemLogsTableHoverCard.vue';
 
-const { currentPage, deleteLog, deleteManyLogs, fetchactivitylogs, filters, isLoading, lastPage, logs, perPage, searchTerm, showConfirmDelete, sortParam, toggleSort } = useSystemLogs();
+const { currentPage, deleteLog, deleteManyLogs, fetchLogs, filters, formatters, isLoading, lastPage, logs, perPage, searchTerm, showConfirmDelete, sortParam, toggleSort } = useSystemLogs();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(logs);
 
 const props = defineProps({});
@@ -160,7 +160,7 @@ onMounted(() => {
                 {{ row.description }}
               </TableCell>
               <TableCell class="text-start">
-                {{ new Date(row.created_at).toLocaleString() }}
+                {{ formatters.formatTime(row.created_at) }}
               </TableCell>
               <!-- ACTIONS MENU -->
               <TableCell class="text-start">

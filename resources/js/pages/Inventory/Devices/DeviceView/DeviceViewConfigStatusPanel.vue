@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import useClipboard from 'vue-clipboard3';
 
@@ -7,6 +7,7 @@ const hoverIcons = ref({});
 const activeIcons = ref({});
 const { toClipboard } = useClipboard();
 const emit = defineEmits(['refresh']);
+const formatters = inject('formatters');
 
 defineProps({
   isLoading: Boolean,
@@ -75,7 +76,7 @@ function refresh() {
                     class="text-indigo-400" />
                   Last Download
                 </dt>
-                <dd class="flex items-center gap-2">{{ new Date(deviceData.last_config).toLocaleString() }}</dd>
+                <dd class="flex items-center gap-2">{{ formatters.formatTime(deviceData.last_config) }}</dd>
               </div>
             </dl>
           </div>
