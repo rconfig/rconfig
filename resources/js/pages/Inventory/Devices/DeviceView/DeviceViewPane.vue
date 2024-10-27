@@ -2,6 +2,7 @@
 import DeviceDetailsLeftNav from '@/pages/Inventory/Devices/DeviceView/DeviceDetailsLeftNav.vue';
 import DeviceDetailsMainNav from '@/pages/Inventory/Devices/DeviceView/DeviceDetailsMainNav.vue';
 import DeviceLatestEventsPanel from '@/pages/Inventory/Devices/DeviceView/DeviceLatestEventsPanel.vue';
+import DeviceConfigsViewPanel from '@/pages/Inventory/Devices/DeviceView/DeviceConfigsViewPanel.vue';
 import DeviceViewCommentsPanel from '@/pages/Inventory/Devices/DeviceView/DeviceViewCommentsPanel.vue';
 import DeviceViewConfigStatusPanel from '@/pages/Inventory/Devices/DeviceView/DeviceViewConfigStatusPanel.vue';
 import DeviceViewDetailsPanel from '@/pages/Inventory/Devices/DeviceView/DeviceViewDetailsPanel.vue';
@@ -121,7 +122,11 @@ const { addToFavorites, appDirPath, closeNav, copyDebug, deviceData, downloadNow
               style="height: 60vh"
               :deviceId="editId" />
 
-            <div v-if="!isLoading && mainNavSelected === 'configs'">Configs Pane</div>
+            <DeviceConfigsViewPanel
+              class="p-2"
+              v-if="!isLoading && mainNavSelected === 'configs'"
+              :deviceId="editId"
+              style="height: 60vh" />
           </ScrollArea>
         </ResizablePanel>
       </ResizablePanelGroup>

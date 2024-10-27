@@ -1,3 +1,5 @@
 <template>
-  <Icon icon="fluent-emoji:green-circle" />
+  <Icon
+    icon="icon-park-twotone:check-one"
+    class="text-green-500" />
 </template>

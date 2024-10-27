@@ -19,7 +19,7 @@ import { useDevices } from '@/pages/Inventory/Devices/useDevices';
 import { eventBus } from '@/composables/eventBus';
 import { useSheetStore } from '@/stores/sheetActions';
 
-const { devices, filterStatus, filterCategories, filterTags, filterVendor, clearFilters, deleteManyDevices, showConfirmDelete, isLoading, currentPage, perPage, lastPage, editId, newDeviceModalKey, searchTerm, viewDeviceDetailsPane, fetchDevices, createDevice, updateDevice, deleteDevice, disableDevice, enableDevice, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam } = useDevices();
+const { clearFilters, createDevice, currentPage, deleteDevice, deleteManyDevices, devices, disableDevice, editId, enableDevice, fetchDevices, filterCategories, filterStatus, filterTags, filterVendor, formatters, handleKeyDown, handleSave, isLoading, lastPage, newDeviceModalKey, perPage, searchTerm, showConfirmDelete, sortParam, toggleSort, updateDevice, viewDeviceDetailsPane, viewEditDialog } = useDevices();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(devices);
 const sheetStore = useSheetStore();
 const { openSheet, closeSheet, isSheetOpen } = sheetStore;
@@ -220,7 +220,7 @@ function openComments(id) {
                 <span v-else>--</span>
               </TableCell>
               <TableCell class="text-start">
-                <span v-if="row.last_config">{{ new Date(row.last_config.created_at).toLocaleString() }}</span>
+                <span v-if="row.last_config">{{ formatters.formatTime(row.last_config.created_at) }}</span>
                 <span v-else>--</span>
               </TableCell>
               <TableCell class="text-start">

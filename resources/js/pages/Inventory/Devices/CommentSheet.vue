@@ -16,7 +16,7 @@ const props = defineProps({
   }
 });
 
-const { comments, isLoading, addComment, saveComment, viewDevice, isSheetOpen, closeSheet } = useDeviceComments(props);
+const { addComment, closeSheet, comments, formatters, isLoading, isSheetOpen, saveComment, viewDevice } = useDeviceComments(props);
 </script>
 
 <template>
@@ -70,7 +70,7 @@ const { comments, isLoading, addComment, saveComment, viewDevice, isSheetOpen, c
                   disabled></Textarea>
               </CardContent>
               <CardFooter class="flex justify-between px-2 py-1">
-                <div class="text-sm text-muted-foreground">{{ new Date(comment.created_at).toLocaleString() }}</div>
+                <div class="text-sm text-muted-foreground">{{ formatters.formatTime(comment.created_at) }}</div>
                 <div>
                   <Button
                     v-if="comment.isEditable"

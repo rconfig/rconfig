@@ -1,3 +1,3 @@
 <template>
-  <Icon icon="fluent-emoji:yellow-circle" />
+  <Icon icon="fluent-color:warning-48" />
 </template>

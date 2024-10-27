@@ -10,6 +10,7 @@ import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import { registerComponents } from './appimports/registerComponents';
 import { setupGlobalProperties } from './appimports/globalProperties';
 import { setupPlugins } from './appimports/setupPlugins';
+import { useFormatters } from './composables/useFormatters'; // Import the composable
 
 const app = createApp({});
 
@@ -27,6 +28,11 @@ applyStoredTheme();
 // Setup global properties
 setupGlobalProperties(app);
 
+// Use the formatters composable and make it globally accessible
+const formatters = useFormatters();
+app.config.globalProperties.$formatters = formatters;
+
+app.provide('formatters', formatters);
 app.provide('useremail', app.config.globalProperties.$userEmail);
 app.provide('userid', app.config.globalProperties.$userId);
 app.provide('timezone', app.config.globalProperties.$timezone);

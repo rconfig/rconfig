@@ -1,11 +1,11 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import DeviceNotificationHoverCard from '@/pages/Inventory/Devices/DeviceView/DeviceNotificationHoverCard.vue';
 
 const props = defineProps({
   deviceId: Number
 });
+
 const notificationResults = ref([]);
 const isLoading = ref(false);
 

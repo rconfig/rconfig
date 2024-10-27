@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ref, watch } from 'vue';
+import { ref, watch, inject } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 import { useDialogStore } from '@/stores/dialogActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
@@ -24,6 +24,7 @@ export function useDevices() {
   const filterTags = ref([]);
   const filterVendor = ref([]);
   const router = useRouter();
+  const formatters = inject('formatters');
 
   const { openDialog } = dialogStore;
   const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
@@ -232,32 +233,33 @@ export function useDevices() {
   }
 
   return {
+    clearFilters,
+    createDevice,
+    currentPage,
+    deleteDevice,
+    deleteManyDevices,
     devices,
-    filterStatus,
+    disableDevice,
+    editId,
+    enableDevice,
+    fetchDevices,
     filterCategories,
+    filterStatus,
     filterTags,
     filterVendor,
-    clearFilters,
-    isLoading,
-    currentPage,
-    perPage,
-    lastPage,
-    editId,
-    newDeviceModalKey,
-    deleteManyDevices,
-    showConfirmDelete,
-    searchTerm,
-    viewDeviceDetailsPane,
-    fetchDevices,
-    createDevice,
-    updateDevice,
-    deleteDevice,
-    disableDevice,
-    enableDevice,
-    handleSave,
+    formatters,
     handleKeyDown,
-    viewEditDialog,
+    handleSave,
+    isLoading,
+    lastPage,
+    newDeviceModalKey,
+    perPage,
+    searchTerm,
+    showConfirmDelete,
+    sortParam,
     toggleSort,
-    sortParam
+    updateDevice,
+    viewDeviceDetailsPane,
+    viewEditDialog
   };
 }

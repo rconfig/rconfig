@@ -47,10 +47,8 @@ function refresh() {
             <dl class="grid gap-2">
               <div class="flex items-center justify-between">
                 <dt class="flex items-center gap-1 text-muted-foreground">
-                  <Icon
-                    icon="icon-park-twotone:check-one"
-                    class="text-green-500" />
-                  Good Configs
+                  <StatusGreenIcon />
+                  > Good Configs
                 </dt>
                 <dd class="flex items-center gap-2">
                   {{ deviceData.config_good_count }}
@@ -58,16 +56,14 @@ function refresh() {
               </div>
               <div class="flex items-center justify-between">
                 <dt class="flex items-center gap-1 text-muted-foreground">
-                  <Icon
-                    icon="fluent:error-circle-20-filled"
-                    class="text-red-500" />
+                  <StatusRedIcon />
                   Failed Configs
                 </dt>
                 <dd class="flex items-center gap-2">{{ deviceData.config_bad_count }}</dd>
               </div>
               <div class="flex items-center justify-between">
                 <dt class="flex items-center gap-1 text-muted-foreground">
-                  <Icon icon="fluent-color:warning-48" />
+                  <StatusYellowIcon />
                   Unknown Configs
                 </dt>
                 <dd class="flex items-center gap-2">{{ deviceData.config_unknown_count }}</dd>

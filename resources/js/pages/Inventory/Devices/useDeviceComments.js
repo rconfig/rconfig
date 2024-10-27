@@ -1,4 +1,4 @@
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, inject } from 'vue';
 import { useSheetStore } from '@/stores/sheetActions';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
@@ -10,6 +10,7 @@ export function useDeviceComments(props) {
   const isLoading = ref(false);
   const hasAddedComment = ref(false);
   const router = useRouter();
+  const formatters = inject('formatters');
 
   onMounted(() => {
     if (isSheetOpen('DeviceCommentSheet')) {
@@ -66,12 +67,13 @@ export function useDeviceComments(props) {
   }
 
   return {
-    comments,
-    isLoading,
     addComment,
-    saveComment,
-    viewDevice,
+    closeSheet,
+    comments,
+    formatters,
+    isLoading,
     isSheetOpen,
-    closeSheet
+    saveComment,
+    viewDevice
   };
 }
