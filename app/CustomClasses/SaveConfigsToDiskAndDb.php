@@ -31,7 +31,7 @@ class SaveConfigsToDiskAndDb
     {
         $savedFileInfo = null;
         $device_category = Category::where('id', $this->devicerecord['device_category_id'])->pluck('categoryName')->first();
-        $duration = $this->devicerecord['end_time']->diffInSeconds($this->devicerecord['start_time']);
+        $duration = $this->devicerecord['start_time']->diffInSeconds($this->devicerecord['end_time']);
 
         if ($this->configsArray != 0) {
             $fileops =

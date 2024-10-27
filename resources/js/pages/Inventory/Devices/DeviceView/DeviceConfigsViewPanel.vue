@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, inject } from 'vue';
-import DeviceNotificationHoverCard from '@/pages/Inventory/Devices/DeviceView/DeviceNotificationHoverCard.vue';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const props = defineProps({
@@ -95,11 +95,43 @@ function refreshConfigs() {
               <TableCell>{{ formatters.formatFileSize(row.config_filesize) }}</TableCell>
               <TableCell>{{ formatters.formatTime(row.created_at) }}</TableCell>
               <TableCell>
-                <StatusGreenIcon v-if="row.download_status === 1" />
                 <StatusRedIcon v-if="row.download_status === 0" />
+                <StatusGreenIcon v-if="row.download_status === 1" />
                 <StatusYellowIcon v-if="row.download_status === 2" />
               </TableCell>
-              <TableCell>Peek | View</TableCell>
+              <TableCell class="flex items-center">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger as-child>
+                      <Button
+                        variant="ghost"
+                        class="">
+                        <Icon
+                          icon="lets-icons:view-alt-fill"
+                          class="size-6 text-muted-foreground hover:text-blue-500" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent class="text-white bg-rcgray-800">
+                      <p>Peek Config</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger as-child>
+                      <Button variant="ghost">
+                        <Icon
+                          icon="hugeicons:file-view"
+                          class="size-5 text-muted-foreground hover:text-blue-500" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent class="text-white bg-rcgray-800">
+                      <p>Open Config</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>

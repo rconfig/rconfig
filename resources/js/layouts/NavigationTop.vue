@@ -98,7 +98,7 @@ function openNav() {
                   class="absolute h-[1.2rem] w-[1.2rem]" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent class="text-white bg-rcgray-800">
               <p>About</p>
             </TooltipContent>
           </Tooltip>
@@ -123,7 +123,7 @@ function openNav() {
                 </Transition>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent class="text-white bg-rcgray-800">
               <p>{{ mode === 'dark' ? 'Switch to light theme' : 'Switch to dark theme' }}</p>
             </TooltipContent>
           </Tooltip>
