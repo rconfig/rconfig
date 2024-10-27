@@ -21,7 +21,6 @@ function getComments() {
     .get(`/api/device-comments/${props.deviceId}`)
     .then(response => {
       comments.value = response.data;
-      console.log(comments.value);
       isLoading.value = false;
     })
     .catch(error => {
