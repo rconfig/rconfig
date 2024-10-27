@@ -1,7 +1,7 @@
 <script setup>
-import { ref } from 'vue';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import useClipboard from 'vue-clipboard3';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { ref } from 'vue';
 
 const hoverIcons = ref({});
 const activeIcons = ref({});
@@ -10,7 +10,7 @@ const emit = defineEmits(['refresh']);
 
 const copy = async (key, value) => {
   try {
-    await toClipboard(JSON.stringify(value));
+    await toClipboard(value);
     activeIcons.value[key] = true;
     setTimeout(() => {
       activeIcons.value[key] = false;

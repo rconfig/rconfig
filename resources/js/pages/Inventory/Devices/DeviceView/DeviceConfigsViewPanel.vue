@@ -1,11 +1,15 @@
 <script setup>
-import { ref, onMounted, inject } from 'vue';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import PeekConfigDialog from '@/pages/Shared/Dialogs/PeekConfigDialog.vue';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { ref, onMounted, inject } from 'vue';
+import { useDialogStore } from '@/stores/dialogActions';
 
 const props = defineProps({
   deviceId: Number
 });
+const dialogStore = useDialogStore();
+const { openDialog, closeDialog, isDialogOpen } = dialogStore;
 
 const latestConfigs = ref({});
 const isLoading = ref(false);
@@ -73,8 +77,6 @@ function refreshConfigs() {
       <div
         class="mt-6 space-y-4"
         v-if="!isLoading">
-        <div v-if="!isLoading">{{ latestConfigs }}</div>
-
         <Table>
           <TableHeader>
             <TableRow>
@@ -105,7 +107,7 @@ function refreshConfigs() {
                     <TooltipTrigger as-child>
                       <Button
                         variant="ghost"
-                        class="">
+                        @click="openDialog('peek-config-dialog-' + row.id)">
                         <Icon
                           icon="lets-icons:view-alt-fill"
                           class="size-6 text-muted-foreground hover:text-blue-500" />
@@ -131,6 +133,10 @@ function refreshConfigs() {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
+
+                <PeekConfigDialog
+                  :editId="row.id"
+                  v-if="isDialogOpen('peek-config-dialog-' + row.id)"></PeekConfigDialog>
               </TableCell>
             </TableRow>
           </TableBody>

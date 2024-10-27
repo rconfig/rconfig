@@ -52,9 +52,9 @@ class ConfigController extends ApiBaseController
 
         if (File::exists($model->config_location)) {
             File::delete($model->config_location);
-            $logmsg = 'Config File : '.$model->config_location.' was deleted';
+            $logmsg = 'Config File : ' . $model->config_location . ' was deleted';
         } else {
-            $logmsg = 'Unable to find file from path: '.$model->config_location;
+            $logmsg = 'Unable to find file from path: ' . $model->config_location;
             $this->failureResponse($logmsg);
         }
 
@@ -120,7 +120,7 @@ class ConfigController extends ApiBaseController
                 'config_location' => $config_location,
             ];
 
-            return $this->successResponse('Success', $result['content']);
+            return $this->successResponse('Success', $result);
         } else {
             return $this->failureResponse('No config file found');
         }
