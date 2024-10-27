@@ -14,7 +14,7 @@ const fileLocation = ref('');
 const hoverIcons = ref({});
 const isLoading = ref(true);
 const processedCode = ref('');
-const selectedLanguage = ref(localStorage.getItem('selectedLanguage') || 'bash');
+const selectedLanguage = ref(localStorage.getItem('selectedLanguage') || 'language-plaintext');
 const { closeDialog, isDialogOpen } = dialogStore;
 const { toClipboard } = useClipboard();
 const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
@@ -40,7 +40,7 @@ function showConfig() {
       processedCode.value = response.data.data.content;
       fileLocation.value = response.data.data.config_location;
       //   processedCode.value = processedCode.value.replace(/(\/\/.*)/g, '<span class="polcomment">$1</span>').replace(/(\#\[[^\]]+\])/g, '<span class="polmethod">$1</span>');
-      selectedLanguage.value = localStorage.getItem('selectedPeekLanguage') || 'bash';
+      selectedLanguage.value = localStorage.getItem('selectedPeekLanguage') || 'language-plaintext';
       isLoading.value = false;
     })
     .catch(error => {
