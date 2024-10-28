@@ -1,0 +1,1 @@
+import{N as n,o,c as r,an as t,n as c,e as l,a8 as p}from"./app-CIFZInuD.js";const i=n({__name:"CardFooter",props:{class:{}},setup(e){const s=e;return(a,m)=>(o(),r("div",{class:c(l(p)("flex items-center p-6 pt-0",s.class))},[t(a.$slots,"default")],2))}});export{i as _};
