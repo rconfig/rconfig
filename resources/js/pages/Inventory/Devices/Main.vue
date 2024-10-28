@@ -1,22 +1,22 @@
 <script setup>
 import ActionsMenuDevices from '@/pages/Shared/Table/ActionsMenuDevices.vue';
+import CategoryFilter from '@/pages/Inventory/Devices/Filters/CategoryFilter.vue';
+import ClearFilters from '@/pages/Shared/Filters/ClearFilters.vue';
+import CommentSheet from '@/pages/Inventory/Devices/CommentSheet.vue';
+import ConfirmDeleteAlert from '@/pages/Shared/AlertDialog/ConfirmDeleteAlert.vue';
+import DeviceAddEditDialog from '@/pages/Inventory/Devices/DeviceAddEditDialog.vue';
 import Loading from '@/pages/Shared/Table/Loading.vue';
 import NoResults from '@/pages/Shared/Table/NoResults.vue';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
-import DeviceAddEditDialog from '@/pages/Inventory/Devices/DeviceAddEditDialog.vue';
-import TagListPopover from '@/pages/Shared/Popover/TagListPopover.vue';
 import StatusFilter from '@/pages/Inventory/Devices/Filters/StatusFilter.vue';
-import CategoryFilter from '@/pages/Inventory/Devices/Filters/CategoryFilter.vue';
 import TagFilter from '@/pages/Inventory/Devices/Filters/TagFilter.vue';
+import TagListPopover from '@/pages/Shared/Popover/TagListPopover.vue';
 import VendorFilter from '@/pages/Inventory/Devices/Filters/VendorFilter.vue';
-import ClearFilters from '@/pages/Inventory/Devices/Filters/ClearFilters.vue';
-import CommentSheet from '@/pages/Inventory/Devices/CommentSheet.vue';
-import ConfirmDeleteAlert from '@/pages/Shared/AlertDialog/ConfirmDeleteAlert.vue';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { onMounted, onUnmounted, ref } from 'vue';
-import { useRowSelection } from '@/composables/useRowSelection';
-import { useDevices } from '@/pages/Inventory/Devices/useDevices';
 import { eventBus } from '@/composables/eventBus';
+import { onMounted, onUnmounted, ref } from 'vue';
+import { useDevices } from '@/pages/Inventory/Devices/useDevices';
+import { useRowSelection } from '@/composables/useRowSelection';
 import { useSheetStore } from '@/stores/sheetActions';
 
 const { clearFilters, createDevice, currentPage, deleteDevice, deleteManyDevices, devices, disableDevice, editId, enableDevice, fetchDevices, filterCategories, filterStatus, filterTags, filterVendor, formatters, handleKeyDown, handleSave, isLoading, lastPage, newDeviceModalKey, perPage, searchTerm, showConfirmDelete, sortParam, toggleSort, updateDevice, viewDeviceDetailsPane, viewEditDialog } = useDevices();

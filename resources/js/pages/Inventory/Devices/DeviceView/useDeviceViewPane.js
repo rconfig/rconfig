@@ -23,7 +23,7 @@ export function useDeviceViewPane(props) {
     label: '',
     icon: 'NetworkDeviceIcon',
     isFavorite: false,
-    route: '/devices/view/' + props.editId
+    route: '/device/view/' + props.editId
   });
 
   onMounted(() => {
@@ -75,7 +75,7 @@ export function useDeviceViewPane(props) {
     if (deviceData) {
       favoriteItem.value.id = deviceData.value.id;
       favoriteItem.value.label = deviceData.value.device_name;
-      favoriteItem.value.route = `/devices/view/${deviceData.value.id}`;
+      favoriteItem.value.route = `/device/view/${deviceData.value.id}`;
       favoriteItem.value.isFavorite = !favoriteItem.value.isFavorite;
       favoritesStore.toggleFavorite(favoriteItem.value);
     }
