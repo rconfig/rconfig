@@ -1,5 +1,6 @@
 <script setup>
 import PeekConfigDialog from '@/pages/Shared/Dialogs/PeekConfigDialog.vue';
+import StatusGreenIcon from '@/pages/Shared/Icon/StatusGreenIcon.vue';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ref, onMounted, inject } from 'vue';
@@ -49,8 +50,11 @@ function emitToggleView() {
   <div>
     <div class="p-2 overflow-none">
       <div class="flex flex-row items-center justify-start gap-2 pt-1">
-        <span class="inline-flex flex-row items-center h-[20px] rounded-md px-1.5 py-0.5 gap-1 shadow-[inset_0_0_0_1px_rgb(69,71,74)] bg-[#313337]">
-          <span class="flex-[0_1_auto] min-w-0 overflow-hidden text-ellipsis whitespace-nowrap inline-flex line-clamp-1">Last Config Downloads</span>
+        <span class="inline-flex flex-row items-center h-[24px] rounded-md px-1.5 gap-1 shadow-[inset_0_0_0_1px_rgb(69,71,74)] bg-[#313337]">
+          <span class="flex-[0_1_auto] min-w-0 overflow-hidden text-ellipsis whitespace-nowrap inline-flex line-clamp-1 items-center">
+            <StatusGreenIcon class="mr-2" />
+            Lasted Good Config Downloads
+          </span>
         </span>
         <span class="flex-1 bg-[rgb(49,51,55)] bg-[rgb(49,51,55)] flex-shrink-0 h-px w-full"></span>
         <Button

@@ -18,7 +18,6 @@ const toggleView = view => {
 
 <template>
   <div>
-    {{ activeView }}
     <transition
       name="fade"
       mode="out-in">

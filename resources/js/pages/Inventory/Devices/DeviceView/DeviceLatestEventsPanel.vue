@@ -34,7 +34,7 @@ function getDeviceNotifications() {
   <div>
     <div class="p-2 overflow-none">
       <div class="flex flex-row items-center justify-start gap-2 pt-1">
-        <span class="inline-flex flex-row items-center h-[20px] rounded-md px-1.5 py-0.5 gap-1 shadow-[inset_0_0_0_1px_rgb(69,71,74)] bg-[#313337]">
+        <span class="inline-flex flex-row items-center h-[24px] rounded-md px-1.5 gap-1 shadow-[inset_0_0_0_1px_rgb(69,71,74)] bg-[#313337]">
           <span class="flex-[0_1_auto] min-w-0 overflow-hidden text-ellipsis whitespace-nowrap inline-flex line-clamp-1">Last 5 Events</span>
         </span>
         <span class="flex-[1_1_100%] bg-[#313337] flex flex-shrink-0 h-px w-full"></span>

@@ -256,3 +256,155 @@
     opacity 120ms ease 0s;
 }
 /* close nav icon */
+
+._RayContainer_4d1mx_34[data-chat-started='false'] {
+  animation: 0.25s linear 0s 1 _fade-in_4d1mx_1;
+}
+
+._RayContainer_4d1mx_34[data-theme='light'] {
+  --gradient-opacity: 0.5;
+}
+
+._RayContainer_4d1mx_34[data-theme='light'][data-chat-started='true'] {
+  opacity: 0.5;
+}
+
+._RayContainer_4d1mx_34 ._LightRay_4d1mx_56 {
+  position: absolute;
+  border-radius: 100%;
+  background: var(--ray-gradient);
+}
+
+._RayContainer_4d1mx_34 ._RayOne_4d1mx_61 {
+  width: 480px;
+  height: 680px;
+  transform: rotate(80deg);
+  top: -540px;
+  left: 250px;
+  filter: blur(110px);
+}
+
+._RayContainer_4d1mx_34 ._RayTwo_4d1mx_69 {
+  width: 110px;
+  height: 400px;
+  transform: rotate(-20deg);
+  top: -280px;
+  left: 350px;
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+  filter: blur(60px);
+}
+
+._RayContainer_4d1mx_34 ._RayThree_4d1mx_79 {
+  width: 400px;
+  height: 370px;
+  top: -350px;
+  left: 200px;
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+  filter: blur(21px);
+}
+
+._RayContainer_4d1mx_34 ._RayFour_4d1mx_88 {
+  position: absolute;
+  width: 330px;
+  height: 370px;
+  top: -330px;
+  left: 50px;
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+  filter: blur(21px);
+}
+
+._RayContainer_4d1mx_34 ._RayFive_4d1mx_98 {
+  position: absolute;
+  width: 110px;
+  height: 400px;
+  transform: rotate(-40deg);
+  top: -280px;
+  left: -10px;
+  mix-blend-mode: overlay;
+  opacity: 0.8;
+  filter: blur(60px);
+}
+
+._RayContainer_4d1mx_34 ._LightRay_4d1mx_56 {
+  position: absolute;
+  border-radius: 100%;
+  background: var(--ray-gradient);
+}
+
+._RayContainer_4d1mx_34 ._RayOne_4d1mx_61 {
+  width: 480px;
+  height: 680px;
+  transform: rotate(80deg);
+  top: -540px;
+  left: 250px;
+  filter: blur(110px);
+}
+
+._RayContainer_4d1mx_34 ._RayTwo_4d1mx_69 {
+  width: 110px;
+  height: 400px;
+  transform: rotate(-20deg);
+  top: -280px;
+  left: 350px;
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+  filter: blur(60px);
+}
+
+._RayContainer_4d1mx_34 ._RayThree_4d1mx_79 {
+  width: 400px;
+  height: 370px;
+  top: -350px;
+  left: 200px;
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+  filter: blur(21px);
+}
+
+._RayContainer_4d1mx_34 ._RayFour_4d1mx_88 {
+  position: absolute;
+  width: 330px;
+  height: 370px;
+  top: -330px;
+  left: 50px;
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+  filter: blur(21px);
+}
+
+._RayContainer_4d1mx_34 ._RayFive_4d1mx_98 {
+  position: absolute;
+  width: 110px;
+  height: 400px;
+  transform: rotate(-40deg);
+  top: -280px;
+  left: -10px;
+  mix-blend-mode: overlay;
+  opacity: 0.8;
+  filter: blur(60px);
+}
+
+@keyframes _fade-in_4d1mx_1 {
+  0% {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes _fade-and-move-in_4d1mx_1 {
+  0% {
+    opacity: 0;
+    transform: translateY(var(--translate-y, 10px));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
