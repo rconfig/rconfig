@@ -1,5 +1,4 @@
 import '../css/global.css';
-import '../css/login_background.css';
 import './appimports/bootstrap';
 import 'highlight.js/styles/base16/tomorrow-night.css';
 import * as Icons from './appimports/iconImports';
