@@ -1,1 +1,0 @@
-import{N as r,S as c,o as p,q as l,at as m,e as a,a8 as u,aX as d}from"./app-CIFZInuD.js";const i=r({__name:"DropdownMenuSeparator",props:{asChild:{type:Boolean},as:{},class:{}},setup(o){const s=o,t=c(()=>{const{class:n,...e}=s;return e});return(n,e)=>(p(),l(a(d),m(t.value,{class:a(u)("-mx-1 my-1 h-px bg-muted",s.class)}),null,16,["class"]))}});export{i as _};
