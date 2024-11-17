@@ -111,6 +111,7 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
         Route::get('/get-external-links/{id}', 'UserController@getExternalLinks');
         Route::post('/remove-external-link/', 'UserController@removeExternalLink');
     });
+    Route::get('/onboarding/steps', 'UserOnboardingController@getSteps');
 
     Route::resource('users', 'UserController');
     Route::resource('device-credentials', 'DeviceCredentialsController');

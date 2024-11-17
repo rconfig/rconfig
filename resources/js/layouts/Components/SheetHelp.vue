@@ -1,8 +1,9 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useSheetStore } from '@/stores/sheetActions';
+import SheetHelpOnboardingSteps from './SheetHelpOnboardingSteps.vue';
 
 defineProps({});
 const sheetStore = useSheetStore();
@@ -22,10 +23,8 @@ const { openSheet, closeSheet, isSheetOpen } = sheetStore;
         <SheetDescription>Popular Topics (show all)</SheetDescription>
       </SheetHeader>
       <div class="grid gap-4 py-4">Rows of help cards</div>
-      <div class="grid gap-4 py-4">
-        Getting started
-        <div><Badge class="flex bg-green-600 text-slate-50">90%</Badge></div>
-      </div>
+
+      <SheetHelpOnboardingSteps />
       <div class="p-4 mt-auto">
         <Card>
           <CardHeader class="p-2 pt-0 md:p-4">

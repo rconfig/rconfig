@@ -34,6 +34,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'external_links' => 'array',
+        'onboarding_status' => 'array',
     ];
 
     //Make it available in the json response
