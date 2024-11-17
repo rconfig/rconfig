@@ -11,9 +11,31 @@ import { Separator } from '@/components/ui/separator';
         <p class="text-sm text-muted-foreground">Information on rConfig Security parameters</p>
 
         <div class="flex items-start gap-4 mt-6">
-          <Icon
-            icon="fxemoji:lock"
-            class="w-12 h-12 mr-8" />
+          <!-- <Icon
+            icon="catppuccin:codeowners"
+            class="w-12 h-12 mr-8"
+            color="red" /> 
+            ICON Below is catppuccin:codeowner with red color-->
+
+          <svg
+            class="w-12 h-12 mr-8"
+            xmlns="http://www.w3.org/2000/svg"
+            width="1em"
+            height="1em"
+            viewBox="0 0 16 16">
+            <g
+              fill="none"
+              stroke="#fff47a"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="m8.01 1.5l5.728 1.774C15.25 11.154 9.813 14.5 7.984 14.5s-7.281-3.357-5.7-11.226zM8 8.5v2z" />
+              <circle
+                cx="8"
+                cy="7"
+                r="1.5" />
+            </g>
+          </svg>
+
           <div class="w-3/4">
             <div><strong>Encryption of Stored Credentials:</strong></div>
             <div class="text-sm text-gray-500 dark:text-gray-400">
@@ -41,7 +63,7 @@ import { Separator } from '@/components/ui/separator';
 
         <div class="flex items-start gap-4 mt-6">
           <Icon
-            icon="fluent-color:shield-checkmark-48"
+            icon="catppuccin:cargo-lock"
             class="w-12 h-12 mr-8" />
           <div class="w-3/4">
             <div><strong>Your Data, Your Responsibility:</strong></div>
