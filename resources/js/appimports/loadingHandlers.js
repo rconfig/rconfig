@@ -17,7 +17,6 @@ export function handleMainContentLoadingState() {
   const state = {
     isMainContentLoading: true
   };
-  console.log('main content loading state:', state.isMainContentLoading);
 
   if (state.isMainContentLoading) {
     const loadingTime = Math.floor(Math.random() * (1500 - 500 + 1)) + 500; // Random time between 500ms and 1500ms

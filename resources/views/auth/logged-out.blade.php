@@ -1,35 +1,28 @@
 @extends('auth.layouts.app')
 
 @section('content')
-    <x-auth-background-image class="max-w-2xl">
-    </x-auth-background-image>
-    <div class="pf-c-login">
-        <div class="pf-c-login__container">
-            <header class="pf-c-login__header">
-                <img class="pf-c-brand" src="/images/new/white/hex_logo_white_horizontal_96.png" alt="rConfig Logo" />
-            </header>
-            <main class="pf-c-login__main">
-                <header class="pf-c-login__main-header">
-                    <h1 class="pf-c-title pf-m-3xl">You have been logged out of the system due to inactivity!</h1>
-                    <p class="pf-c-login__main-header-desc">Click the link below to log back in.</p>
+    <div id="auth-loading-container" class="flex items-center justify-center h-screen ">
+        <loggout-loading></loggout-loading>
+    </div>
 
-                </header>
-                <div class="pf-c-login__main-body">
+    <div id="auth-main-content" class="hidden bg-rcgray-900">
+        <div class="flex items-center justify-center h-screen ">
 
+            <div class="flex w-full max-w-5xl mx-32 space-x-8">
+                <div class="flex items-center justify-center w-1/2 rounded-lg h-1/2">
+                    <h2 class="text-3xl font-bold text-white">
+                        <logged-out-component></logged-out-component>
+
+                    </h2>
                 </div>
-                <footer class="pf-c-login__main-footer">
+                <div class="flex items-center justify-center w-1/2 rounded-lg h-1/2">
+                    <h2 class="text-3xl font-bold text-white">
+                        <img class="" src="/images/new/white/hex_logo_white_horizontal_96.png" alt="rConfig Logo" />
 
-                    <div class="pf-c-login__main-footer-band">
-
-                        <p class="pf-c-login__main-footer-band-item">
-                            <a href="/login">{{ __('generic.log_in') }}</a>
-                        </p>
-                    </div>
-                </footer>
-            </main>
-            <x-auth-footer-section class="max-w-2xl">
-            </x-auth-footer-section>
-
+                    </h2>
+                </div>
+            </div>
         </div>
+
     </div>
 @endsection

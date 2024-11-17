@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 /* AUTHENTICATION */
 
-Auth::routes();
+Auth::routes(['register' => false]);
 Route::get('/logged-out', [App\Http\Controllers\Auth\LoginController::class, 'showLoggedOut']);
 
 Route::group(['middleware' => 'auth'], function () {
