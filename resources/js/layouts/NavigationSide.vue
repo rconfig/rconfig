@@ -139,7 +139,7 @@ function closeNav() {
   <resizable-panel
     id="nav-panel-1"
     :default-size="17"
-    :max-size="17"
+    :max-size="30"
     :min-size="10"
     collapsible
     :collapsed-size="0"
