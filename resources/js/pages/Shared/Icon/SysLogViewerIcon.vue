@@ -1,5 +1,5 @@
 <template>
   <Icon
-    icon="catppuccin:mjml"
+    icon="catppuccin:folder-server-open"
     class="text-rcgray-400" />
 </template>
