@@ -34,6 +34,11 @@ const handleLogin = async () => {
     isLoading.value = false;
   }
 };
+
+// Forgot password function
+const forgotPassword = () => {
+  window.location.href = '/password/reset';
+};
 </script>
 
 <template>
@@ -67,6 +72,7 @@ const handleLogin = async () => {
               <a
                 tabindex="-1"
                 href="#"
+                @click.prevent="() => forgotPassword()"
                 class="inline-block ml-auto text-sm font-light underline">
                 Forgot your password?
               </a>
