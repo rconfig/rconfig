@@ -162,7 +162,7 @@ const props = defineProps({});
           <Spinner :state="test1Loading" />
           <Icon
             v-if="!test1Loading"
-            icon="fluent-color:mail-multiple-32"
+            icon="fxemoji:envelope"
             class="w-4 h-4 mr-2" />
           Send Test Email
         </Button>
