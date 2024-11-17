@@ -73,14 +73,14 @@ const goToLogin = () => {
           <Button
             :disabled="isLoading"
             type="submit"
-            class="w-full">
+            class="w-full hover:bg-rcgray-300">
             {{ isLoading ? 'Sending...' : 'Send Password Reset Link' }}
           </Button>
           <div class="mt-4 text-sm text-center">
             <a
               href="#"
               @click.prevent="goToLogin"
-              class="underline">
+              class="inline-block ml-auto text-sm font-light underline hover:text-blue-400">
               Back to login
             </a>
           </div>

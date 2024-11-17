@@ -73,7 +73,7 @@ const forgotPassword = () => {
                 tabindex="-1"
                 href="#"
                 @click.prevent="() => forgotPassword()"
-                class="inline-block ml-auto text-sm font-light underline">
+                class="inline-block ml-auto text-sm font-light underline hover:text-blue-400">
                 Forgot your password?
               </a>
             </div>
@@ -88,7 +88,7 @@ const forgotPassword = () => {
           <Button
             :disabled="isLoading"
             type="submit"
-            class="w-full">
+            class="w-full hover:bg-rcgray-300">
             {{ isLoading ? 'Logging in...' : 'Login' }}
           </Button>
           <!-- <Button

@@ -1,1 +1,0 @@
-import{N as t,S as c,o as p,q as l,av as m,e as a,a9 as u,aZ as d}from"./app-DLQKgLyV.js";const i=t({__name:"DropdownMenuSeparator",props:{asChild:{type:Boolean},as:{},class:{}},setup(o){const s=o,n=c(()=>{const{class:r,...e}=s;return e});return(r,e)=>(p(),l(a(d),m(n.value,{class:a(u)("-mx-1 my-1 h-px bg-muted",s.class)}),null,16,["class"]))}});export{i as _};
