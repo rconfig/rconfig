@@ -49,7 +49,7 @@ import { Separator } from '@/components/ui/separator';
               laravel file regularly. Losing it could result in data loss or access issues.
             </div>
             <div class="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
-              <Icon icon="logos:laravel" />
+              <Icon icon="catppuccin:laravel" />
               <a
                 href="https://laravel.com/docs/11.x/configuration"
                 target="_blank"

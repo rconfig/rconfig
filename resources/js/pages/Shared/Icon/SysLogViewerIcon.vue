@@ -1,5 +1,5 @@
 <template>
   <Icon
-    icon="twemoji:page-facing-up"
+    icon="catppuccin:mjml"
     class="text-rcgray-400" />
 </template>

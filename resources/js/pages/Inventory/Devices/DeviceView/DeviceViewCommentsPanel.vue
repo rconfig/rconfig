@@ -80,7 +80,7 @@ function getComments() {
       </CardContent>
       <CardFooter class="flex flex-row items-center px-6 py-3 border-t bg-muted/50">
         <div class="flex items-center gap-2 text-xs text-muted-foreground">
-          <Icon icon="logos:laravel" />
+          <Icon icon="catppuccin:laravel" />
           Total Comments: {{ comments.length }}
         </div>
       </CardFooter>
