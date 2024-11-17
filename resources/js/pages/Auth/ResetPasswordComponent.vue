@@ -89,7 +89,7 @@ const goToLogin = () => {
               id="email"
               type="email"
               class="text-base font-light"
-              placeholder="m@example.com"
+              placeholder="email@domain.com"
               required />
           </div>
           <div class="grid gap-2">

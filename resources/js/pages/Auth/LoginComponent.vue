@@ -63,7 +63,7 @@ const forgotPassword = () => {
               id="username"
               type="username"
               class="text-base font-light"
-              placeholder="m@example.com"
+              placeholder="email@domain.com"
               required />
           </div>
           <div class="grid gap-2">

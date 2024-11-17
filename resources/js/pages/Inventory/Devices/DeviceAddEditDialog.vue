@@ -49,14 +49,14 @@ const { isLoading, model, saveDialog, errors, isDialogOpen, generatePrompts, sho
 
         <transition name="fade">
           <div
-            class="grid grid-cols-1 gap-6 p-4 lg:grid-cols-2"
+            class="grid grid-cols-1 gap-6 px-4 lg:grid-cols-2"
             v-if="!isLoading">
             <!-- Column 1 -->
             <div class="flex flex-col col-span-1">
-              <h3 class="mb-4 text-lg font-light">Device Information</h3>
+              <h3 class="text-lg font-semibold border-b">Device Information</h3>
               <Label
                 for="device_name"
-                class="mb-1 text-muted-foreground">
+                class="mt-4 mb-1 font-light">
                 Device Name
                 <span class="text-red-400">*</span>
               </Label>
@@ -75,7 +75,7 @@ const { isLoading, model, saveDialog, errors, isDialogOpen, generatePrompts, sho
                 <div class="flex flex-col w-1/2">
                   <Label
                     for="device_ip"
-                    class="mt-4 mb-1 text-muted-foreground">
+                    class="mt-4 mb-1 font-light">
                     Device IP
                     <span class="text-red-400">*</span>
                   </Label>
@@ -94,7 +94,7 @@ const { isLoading, model, saveDialog, errors, isDialogOpen, generatePrompts, sho
                 <div class="flex flex-col w-1/2">
                   <Label
                     for="device_port_override"
-                    class="mt-4 mb-1 text-muted-foreground">
+                    class="mt-4 mb-1 font-light">
                     Device Port
                     <HelpPopover
                       title="Device Port"
@@ -111,7 +111,7 @@ const { isLoading, model, saveDialog, errors, isDialogOpen, generatePrompts, sho
 
               <Label
                 for="vector"
-                class="mt-4 mb-1 text-muted-foreground">
+                class="mt-4 mb-1 font-light">
                 Vendor
                 <span class="text-red-400">*</span>
               </Label>
@@ -128,7 +128,7 @@ const { isLoading, model, saveDialog, errors, isDialogOpen, generatePrompts, sho
 
               <Label
                 for="device_category_id"
-                class="mt-4 mb-1 text-muted-foreground">
+                class="mt-4 mb-1 font-light">
                 Category
                 <span class="text-red-400">*</span>
               </Label>
@@ -146,7 +146,7 @@ const { isLoading, model, saveDialog, errors, isDialogOpen, generatePrompts, sho
 
               <Label
                 for="device_model"
-                class="mt-4 mb-1 text-muted-foreground">
+                class="mt-4 mb-1 font-light">
                 Model
                 <span class="text-red-400">*</span>
               </Label>
@@ -164,7 +164,7 @@ const { isLoading, model, saveDialog, errors, isDialogOpen, generatePrompts, sho
 
               <Label
                 for="device_tags"
-                class="mt-4 mb-1 text-muted-foreground">
+                class="mt-4 mb-1 font-light">
                 Tags
                 <span class="text-red-400">*</span>
               </Label>
@@ -181,11 +181,11 @@ const { isLoading, model, saveDialog, errors, isDialogOpen, generatePrompts, sho
 
             <!-- Column 2 -->
             <div class="flex flex-col col-span-1">
-              <h3 class="mb-4 text-lg font-light">Connection Information</h3>
+              <h3 class="text-lg font-semibold border-b">Connection Information</h3>
 
               <Label
                 for="device_username"
-                class="mb-1 text-muted-foreground">
+                class="mt-4 mb-1 font-light">
                 Username
                 <span class="text-red-400">*</span>
               </Label>
@@ -202,7 +202,7 @@ const { isLoading, model, saveDialog, errors, isDialogOpen, generatePrompts, sho
 
               <Label
                 for="device_password"
-                class="mt-4 mb-1 text-muted-foreground">
+                class="mt-4 mb-1 font-light">
                 Device Password
                 <span class="text-red-400">*</span>
               </Label>
@@ -218,7 +218,7 @@ const { isLoading, model, saveDialog, errors, isDialogOpen, generatePrompts, sho
 
               <Label
                 for="device_enable_password"
-                class="mt-4 mb-1 text-muted-foreground">
+                class="mt-4 mb-1 font-light">
                 Device Enable Password
               </Label>
               <InputPassword
@@ -233,7 +233,7 @@ const { isLoading, model, saveDialog, errors, isDialogOpen, generatePrompts, sho
 
               <Label
                 for="device_template"
-                class="mt-4 mb-1 text-muted-foreground">
+                class="mt-4 mb-1 font-light">
                 Template
                 <span class="text-red-400">*</span>
               </Label>
@@ -250,7 +250,7 @@ const { isLoading, model, saveDialog, errors, isDialogOpen, generatePrompts, sho
 
               <Label
                 for="main_prompt"
-                class="mt-4 mb-1 text-muted-foreground">
+                class="mt-4 mb-1 font-light">
                 Main Prompt
                 <HelpPopover
                   title="Device Main Prompt"
@@ -268,7 +268,7 @@ const { isLoading, model, saveDialog, errors, isDialogOpen, generatePrompts, sho
               </span>
               <Label
                 for="enable_prompt"
-                class="mt-4 mb-1 text-muted-foreground">
+                class="mt-4 mb-1 font-light">
                 Enable Prompt
                 <HelpPopover
                   title="Device Main Prompt"
