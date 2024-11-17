@@ -24,7 +24,6 @@ export function handleMainContentLoadingState() {
       document.getElementById('main-loading-container').classList.add('hidden');
       document.getElementById('main-content').classList.remove('hidden');
       state.isMainContentLoading = false;
-      console.log('main content loading state:', state.isMainContentLoading);
     }, loadingTime);
   }
 }
