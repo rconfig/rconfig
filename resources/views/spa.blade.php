@@ -7,7 +7,11 @@
 
 <body contenteditable="false">
     <div id="app" tabindex="-1" id="ws-router" style="outline: none;">
-        <div class="min-h-screen bg-gray-100 dark:bg-rcgray-800">
+        <div id="main-loading-container" class="flex items-center justify-center h-screen">
+            <main-loading></main-loading>
+        </div>
+
+        <div id="main-content" class="min-h-screen bg-gray-100 dark:bg-rcgray-800">
 
             <resizable-panel-group id="nav-group-1" direction="horizontal" class="max-w-[100vw] rounded-lg border dark:bg-rcgray-900" auto-save-id="any-id" :default-size="['10%', '90%']">
 

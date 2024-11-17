@@ -11,6 +11,7 @@ import { registerComponents } from './appimports/registerComponents';
 import { setupGlobalProperties } from './appimports/globalProperties';
 import { setupPlugins } from './appimports/setupPlugins';
 import { useFormatters } from './composables/useFormatters'; // Import the composable
+import { handleLoginLoadingState, handleMainContentLoadingState } from './appimports/loadingHandlers'; // Import the loading handlers
 
 const app = createApp({});
 
@@ -40,19 +41,8 @@ app.provide('timezone', app.config.globalProperties.$timezone);
 
 const vm = app.mount('#app');
 
-function handleLoadingState() {
-  const state = {
-    isLoading: true
-  };
-
-  if (state.isLoading) {
-    const loadingTime = Math.floor(Math.random() * (1500 - 300 + 1)) + 300; // Random time between 300ms and 1500ms
-    setTimeout(function () {
-      document.getElementById('auth-loading-container').classList.add('hidden');
-      document.getElementById('auth-main-content').classList.remove('hidden');
-      state.isLoading = false;
-    }, loadingTime);
-  }
-}
-
-document.addEventListener('DOMContentLoaded', handleLoadingState);
+// Attach loading handlers
+document.addEventListener('DOMContentLoaded', () => {
+  handleLoginLoadingState(); // Existing login spinner logic
+  handleMainContentLoadingState(); // New main content spinner logic
+});

@@ -1,7 +1,7 @@
 @extends('auth.layouts.app')
 
 @section('content')
-    <div id="auth-loading-container" class="flex items-center justify-center h-screen">
+    <div id="auth-loading-container" class="flex items-center justify-center h-screen ">
         <auth-loading></auth-loading>
     </div>
 

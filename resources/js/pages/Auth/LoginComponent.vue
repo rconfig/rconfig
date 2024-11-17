@@ -28,9 +28,9 @@ const handleLogin = async () => {
       // Redirect to the intended page after successful login
       window.location.href = '/dashboard';
     }
+    isLoading.value = false;
   } catch (error) {
     errorMessage.value = 'Login failed. Please check your credentials.';
-  } finally {
     isLoading.value = false;
   }
 };
@@ -40,12 +40,12 @@ const handleLogin = async () => {
   <Card class="max-w-sm mx-auto bg-rcgray-900">
     <CardHeader>
       <CardTitle class="text-2xl">Login</CardTitle>
-      <CardDescription class="text-base font-light font-inter">Enter your username below to login to your account</CardDescription>
+      <CardDescription class="text-base font-light">Enter your username below to login to your account</CardDescription>
     </CardHeader>
     <CardContent>
       <div
         v-if="errorMessage"
-        class="mb-4 text-base font-light text-red-500 font-inter">
+        class="mb-4 text-base font-light text-red-500">
         {{ errorMessage }}
       </div>
       <form @submit.prevent="handleLogin">
@@ -57,7 +57,7 @@ const handleLogin = async () => {
               v-model="username"
               id="username"
               type="username"
-              class="text-base font-light font-inter"
+              class="text-base font-light"
               placeholder="m@example.com"
               required />
           </div>
@@ -67,14 +67,14 @@ const handleLogin = async () => {
               <a
                 tabindex="-1"
                 href="#"
-                class="inline-block ml-auto text-sm font-light underline font-inter">
+                class="inline-block ml-auto text-sm font-light underline">
                 Forgot your password?
               </a>
             </div>
             <Input
               tabindex="1"
               v-model="password"
-              class="text-base font-light font-inter"
+              class="text-base font-light"
               id="password"
               type="password"
               required />
