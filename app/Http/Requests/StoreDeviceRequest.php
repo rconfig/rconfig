@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\DataTransferObjects\StoreDeviceDTO;
 use App\Rules\CategoryHasCommands;
+use App\Rules\DeviceCredIdIsValid;
 use App\Rules\DeviceIpIsValid;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -48,12 +49,11 @@ class StoreDeviceRequest extends FormRequest
                 'device_ip' => new DeviceIpIsValid,
                 'device_port_override' => 'nullable|integer|min:1|max:65535',
                 'device_vendor' => 'required',
+                'device_cred_id' => new DeviceCredIdIsValid,
                 'device_model' => 'required|max:255|min:2',
                 'device_category_id' => 'required|max:255',
                 'device_category_id' => new CategoryHasCommands,
                 'device_tags' => 'required',
-                'device_username' => 'required|max:255|min:2',
-                'device_password' => 'required|min:2',
                 'device_template' => 'required',
                 'device_main_prompt' => 'required',
             ];
@@ -63,17 +63,15 @@ class StoreDeviceRequest extends FormRequest
             $rules = [
                 'device_name' => 'required|min:5|max:255|regex:/^\S*$/u',
                 'device_ip' => new DeviceIpIsValid,
-                'device_port_override' => 'nullable|integer|min:1|max:65535',
+                'device_port_override' => 'nullable',
                 'device_vendor' => 'required',
+                'device_cred_id' => new DeviceCredIdIsValid,
                 'device_model' => 'required|max:255|min:2',
                 'device_category_id' => 'required|max:255',
                 'device_category_id' => new CategoryHasCommands,
                 'device_tags' => 'required|max:255',
-                'device_username' => 'required|max:255|min:2',
-                'device_password' => 'required|min:2',
                 'device_template' => 'required',
                 'device_main_prompt' => 'required',
-                'device_enable_prompt' => '',
             ];
         }
 

@@ -1,5 +1,7 @@
 <script setup>
+import { ref, watch } from 'vue';
 import CategoryMultiSelect from '@/pages/Shared/FormFields/CategoryMultiSelect.vue';
+import CredentialsMultiSelect from '@/pages/Shared/FormFields/CredentialsMultiSelect.vue';
 import ConfirmCloseAlert from '@/pages/Shared/AlertDialog/ConfirmCloseAlert.vue';
 import DeviceModelMultiSelect from '@/pages/Shared/FormFields/DeviceModelMultiSelect.vue';
 import HelpPopover from '@/pages/Shared/Popover/HelpPopover.vue';
@@ -16,8 +18,20 @@ const props = defineProps({
   editId: Number
 });
 const emit = defineEmits(['save', 'close']);
-
 const { isLoading, model, saveDialog, errors, isDialogOpen, generatePrompts, showConfirmCloseAlert, showConfirmCloseDialog, cancelCloseDialog, confirmCloseDialog } = useAddEditDevices(props.editId, emit);
+
+function updateDeviceCredFields(cred) {
+  if (cred[0].length === 0) {
+    model.value.device_cred = [];
+    model.value.device_cred_id = 0;
+    return;
+  }
+  model.value.device_cred = cred;
+  model.value.device_cred_id = cred[0].id;
+  model.value.device_username = cred[0].cred_username;
+  model.value.device_password = '';
+  model.value.device_enable_password = '';
+}
 </script>
 
 <template>
@@ -188,12 +202,25 @@ const { isLoading, model, saveDialog, errors, isDialogOpen, generatePrompts, sho
                 class="mt-4 mb-1 font-light">
                 Username
                 <span class="text-red-400">*</span>
+                <span
+                  class="text-sm text-muted-foreground"
+                  v-if="model.device_cred_id != 0">
+                  - Credential set selected
+                </span>
               </Label>
-              <Input
-                v-model="model.device_username"
-                id="device_username"
-                autocomplete="current-password"
-                class="w-full" />
+              <div class="flex w-full max-w-full items-center gap-1.5">
+                <Input
+                  :disabled="model.device_cred_id != 0"
+                  v-model="model.device_username"
+                  id="device_username"
+                  autocomplete="current-password"
+                  class="flex-grow w-2/3" />
+                <CredentialsMultiSelect
+                  :modelValue="model.device_cred"
+                  @update:modelValue="updateDeviceCredFields($event)"
+                  :singleSelect="true"
+                  class="w-full" />
+              </div>
               <span
                 class="text-red-400"
                 v-if="errors.device_username">
@@ -201,12 +228,14 @@ const { isLoading, model, saveDialog, errors, isDialogOpen, generatePrompts, sho
               </span>
 
               <Label
+                v-if="model.device_cred_id === 0"
                 for="device_password"
                 class="mt-4 mb-1 font-light">
                 Device Password
                 <span class="text-red-400">*</span>
               </Label>
               <InputPassword
+                v-if="model.device_cred_id === 0"
                 v-model="model.device_password"
                 id="device_password"
                 class="w-full" />
@@ -217,11 +246,13 @@ const { isLoading, model, saveDialog, errors, isDialogOpen, generatePrompts, sho
               </span>
 
               <Label
+                v-if="model.device_cred_id === 0"
                 for="device_enable_password"
                 class="mt-4 mb-1 font-light">
                 Device Enable Password
               </Label>
               <InputPassword
+                v-if="model.device_cred_id === 0"
                 v-model="model.device_enable_password"
                 id="device_enable_password"
                 class="w-full" />

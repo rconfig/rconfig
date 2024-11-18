@@ -16,6 +16,8 @@ export function useAddEditDevices(editId, emit) {
     device_name: '',
     device_ip: '',
     device_port_override: '',
+    device_cred_id: 0,
+    device_cred: [],
     device_vendor: [],
     device_model: '',
     selectedCategoryArray: [],
@@ -37,6 +39,8 @@ export function useAddEditDevices(editId, emit) {
         model.value.device_name = response.data.device_name;
         model.value.device_ip = response.data.device_ip;
         model.value.device_port_override = response.data.device_port_override;
+        model.value.device_cred_id = response.data.device_cred_id;
+        model.value.device_cred.push(response.data.device_cred);
         model.value.device_vendor.push(response.data.vendor[0]);
         model.value.device_model = response.data.device_model;
         model.value.selectedCategoryArray.push(response.data.category[0]);
