@@ -1,3 +1,3 @@
 <template>
-  <Icon icon="mdi:table-network" />
+  <Icon icon="mdi:console-network-outline" />
 </template>
