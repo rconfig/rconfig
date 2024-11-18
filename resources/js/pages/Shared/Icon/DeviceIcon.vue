@@ -3,8 +3,7 @@ import { ref } from 'vue';
 
 const props = defineProps({
   class: {
-    type: String,
-    required: true
+    type: String
   }
 });
 </script>

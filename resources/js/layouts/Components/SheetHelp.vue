@@ -1,11 +1,12 @@
 <script setup>
-import { ref, computed } from 'vue';
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useSheetStore } from '@/stores/sheetActions';
-import SheetHelpTopics from './SheetHelpTopics.vue';
 import SheetHelpOnboardingSteps from './SheetHelpOnboardingSteps.vue';
+import SheetHelpTopics from './SheetHelpTopics.vue';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router'; // Import the useRoute from Vue Router
+import { useSheetStore } from '@/stores/sheetActions';
 
 defineProps({});
 const router = useRouter();
@@ -20,39 +21,39 @@ const navToSettingsUpgrade = () => {
 
 <template>
   <Sheet :open="isSheetOpen('SheetHelp')">
-    <!-- <SheetTrigger></SheetTrigger> -->
     <SheetContent
-      class="h-[96vh] m-4 rounded-lg border flex flex-col justify-between p-0"
+      class="h-[96vh] m-4 rounded-lg border flex flex-col p-0"
       @escapeKeyDown="closeSheet('SheetHelp')"
       @pointerDownOutside="closeSheet('SheetHelp')"
       @closeClicked="closeSheet('SheetHelp')">
-      <div class="p-6">
-        <SheetHeader>
-          <SheetTitle>Help</SheetTitle>
-          <!-- <SheetDescription>Popular Topics (show all)</SheetDescription> -->
-        </SheetHeader>
+      <ScrollArea class="flex-1 overflow-auto">
+        <div class="p-6">
+          <SheetHeader>
+            <SheetTitle>Help</SheetTitle>
+          </SheetHeader>
 
-        <SheetHelpTopics />
-        <SheetHelpOnboardingSteps />
-        <div class="mt-8">
-          <Card>
-            <CardHeader class="p-2 pt-0 md:p-4">
-              <CardTitle>Upgrade to Pro</CardTitle>
-              <CardDescription>Unlock all features and get unlimited access to our support team.</CardDescription>
-            </CardHeader>
-            <CardContent class="p-2 pt-0 md:p-4 md:pt-0">
-              <Button
-                size="sm"
-                class="w-full py-2 hover:bg-rcgray-300 hover:animate-pulse"
-                @click="navToSettingsUpgrade()">
-                Upgrade
-              </Button>
-            </CardContent>
-          </Card>
+          <SheetHelpTopics />
+          <SheetHelpOnboardingSteps />
+          <div class="mt-8">
+            <Card>
+              <CardHeader class="p-2 pt-0 md:p-4">
+                <CardTitle>Upgrade to Pro</CardTitle>
+                <CardDescription>Unlock all features and get unlimited access to our support team.</CardDescription>
+              </CardHeader>
+              <CardContent class="p-2 pt-0 md:p-4 md:pt-0">
+                <Button
+                  size="sm"
+                  class="w-full py-2 hover:bg-rcgray-300 hover:animate-pulse"
+                  @click="navToSettingsUpgrade()">
+                  Upgrade
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         </div>
-      </div>
+      </ScrollArea>
 
-      <SheetFooter class="py-4 mt-auto border-t">
+      <SheetFooter class="py-4 border-t">
         <div class="flex-1">
           <div class="mx-2 hover:transition-all">
             <nav class="grid items-start px-2 text-sm font-medium lg:px-4">

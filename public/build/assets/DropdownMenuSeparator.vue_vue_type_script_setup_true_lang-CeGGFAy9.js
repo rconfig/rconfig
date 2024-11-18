@@ -1,0 +1,1 @@
+import{S as t,v as c,o as p,q as l,y as m,e as a,z as u,aU as d}from"./app-fY3sLAf_.js";const i=t({__name:"DropdownMenuSeparator",props:{asChild:{type:Boolean},as:{},class:{}},setup(o){const s=o,n=c(()=>{const{class:r,...e}=s;return e});return(r,e)=>(p(),l(a(d),m(n.value,{class:a(u)("-mx-1 my-1 h-px bg-muted",s.class)}),null,16,["class"]))}});export{i as _};

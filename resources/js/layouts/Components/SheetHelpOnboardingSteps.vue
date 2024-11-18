@@ -29,7 +29,6 @@ const completedPercentage = computed(() => {
   const stepValues = Object.values(steps.value); // Get an array of values from the object
   if (stepValues.length === 0) return 0; // Handle the case where no steps exist
   const completedSteps = stepValues.filter(completed => completed.status).length; // Count completed steps
-  console.log(completedSteps);
 
   return Math.round((completedSteps / stepValues.length) * 20) * 5; // Calculate the percentage and round to the nearest 5
 });

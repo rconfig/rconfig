@@ -61,37 +61,35 @@ function markAsRead(itemId) {
         View Docs
       </Badge>
     </div>
-    <Card class="space-y-2">
-      <button
-        @click="openItem(item)"
-        v-for="item of items"
-        :key="item.id"
-        class="flex items-start justify-between gap-2 p-3 text-sm text-left transition-all border rounded-lg hover:bg-accent">
-        <div class="">
-          <component
-            :is="item.icon"
-            :class="item.iconClass" />
-        </div>
-        <div>
-          <div class="flex flex-col w-full gap-1">
-            <div class="flex items-center">
-              <div class="flex items-center gap-2">
-                <div class="font-semibold">
-                  {{ item.name }}
-                </div>
-              </div>
-              <div class="ml-auto text-xs text-muted-foreground">
-                <span
-                  v-if="!item.read"
-                  class="flex w-2 h-2 bg-blue-600 rounded-full" />
+    <button
+      @click="openItem(item)"
+      v-for="item of items"
+      :key="item.id"
+      class="flex items-start justify-between gap-2 p-3 text-sm text-left transition-all border rounded-lg hover:bg-accent">
+      <div class="">
+        <component
+          :is="item.icon"
+          :class="item.iconClass" />
+      </div>
+      <div>
+        <div class="flex flex-col w-full gap-1">
+          <div class="flex items-center">
+            <div class="flex items-center gap-2">
+              <div class="font-semibold">
+                {{ item.name }}
               </div>
             </div>
-          </div>
-          <div class="text-xs line-clamp-2 text-muted-foreground">
-            {{ item.text.substring(0, 300) }}
+            <div class="ml-auto text-xs text-muted-foreground">
+              <span
+                v-if="!item.read"
+                class="flex w-2 h-2 bg-blue-600 rounded-full" />
+            </div>
           </div>
         </div>
-      </button>
-    </Card>
+        <div class="text-xs line-clamp-2 text-muted-foreground">
+          {{ item.text.substring(0, 300) }}
+        </div>
+      </div>
+    </button>
   </div>
 </template>
