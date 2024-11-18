@@ -49,7 +49,7 @@ function refresh() {
               <div class="flex items-center justify-between">
                 <dt class="flex items-center gap-1 text-muted-foreground">
                   <StatusGreenIcon />
-                  > Good Configs
+                  Good Configs
                 </dt>
                 <dd class="flex items-center gap-2">
                   {{ deviceData.config_good_count }}
