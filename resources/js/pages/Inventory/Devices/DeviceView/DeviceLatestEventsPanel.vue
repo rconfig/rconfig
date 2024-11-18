@@ -82,9 +82,9 @@ function getDeviceNotifications() {
                       title="View Raw Data"
                       alt="View Raw Data"
                       variant="outline"
-                      class="h-6 px-2 text-sm text-muted-foreground">
+                      class="h-4 px-1 text-sm text-muted-foreground">
                       <Icon
-                        icon="tabler:list-details"
+                        icon="lets-icons:view-duotone-line"
                         class="w-4 h-4" />
                     </Button>
                   </DeviceNotificationHoverCard>
