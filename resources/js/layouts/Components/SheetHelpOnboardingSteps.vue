@@ -43,14 +43,14 @@ onMounted(fetchSteps);
     <div class="flex justify-between">
       <span class="font-semibold">Getting started</span>
 
-      <Badge class="flex justify-end bg-emerald-800 text-slate-50 min-w-fit">{{ completedPercentage }}% Completed</Badge>
+      <Badge class="flex justify-end border border-emerald-700 bg-emerald-800 hover:bg-emerald-800 text-slate-50 min-w-fit">{{ completedPercentage }}% Completed</Badge>
     </div>
     <Card>
       <ul class="mx-2 mt-2">
         <li
           v-for="(step, index) in steps"
           :key="step">
-          <label class="flex items-center mb-2">
+          <label class="flex items-center">
             <div class="flex items-center justify-center w-8 h-8 rounded-full bg-rcgray-800 shrink-0 grow-0">
               <UserIcon v-if="index === 'create_new_user'" />
               <CommandsIcon v-if="index === 'add_command'" />

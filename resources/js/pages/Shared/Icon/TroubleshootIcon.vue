@@ -11,6 +11,6 @@ const props = defineProps({
 
 <template>
   <Icon
-    icon="fluent-color:org-16"
+    icon="ph:gps-fix-duotone"
     :class="class" />
 </template>
