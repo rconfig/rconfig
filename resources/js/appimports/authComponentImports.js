@@ -7,4 +7,4 @@ import { default as AuthLoading } from '@/pages/Shared/AuthLoading.vue';
 import { default as MainLoading } from '@/pages/Shared/Loading.vue';
 import { default as LoggoutLoading } from '@/pages/Shared/LoggoutLoading.vue';
 
-export { LoginComponent, LoggedOutComponent, EmailPasswordComponent, ResetPasswordComponent, AuthLoading, LoggoutLoading };
+export { LoginComponent, LoggedOutComponent, EmailPasswordComponent, ResetPasswordComponent, AuthLoading, LoggoutLoading, MainLoading };

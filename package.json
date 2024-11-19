@@ -1,8 +1,8 @@
 {
     "private": true,
     "scripts": {
-        "dev": "vite",
-        "build": "vite build --config vite.config.js"
+        "dev": "vite --host --config vite.dev.config.js",
+        "build": "vite build --config vite.prod.config.js"
     },
     "devDependencies": {
         "@iconify/vue": "^4.1.2",
@@ -22,7 +22,7 @@
         "vue-loader": "^17.0.0"
     },
     "name": "rconfig6",
-    "description": "<p align=\"center\"><a href=\"https://laravel.com\" target=\"_blank\"><img src=\"https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg\" width=\"400\"></a></p>",
+    "description": "<p align=\"center\"><a href=\"https://www.rconfig.com\" target=\"_blank\"><img src=\"https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg\" width=\"400\"></a></p>",
     "version": "1.0.0",
     "main": "webpack.mix.js",
     "directories": {

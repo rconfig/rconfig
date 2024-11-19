@@ -1,15 +1,20 @@
-import { defineConfig } from 'vite';
+import autoprefixer from 'autoprefixer';
+import fs from 'fs';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
+import { defineConfig } from 'vite';
 import tailwindcss from 'tailwindcss';
 
 export default defineConfig({
-  base: '',
   server: {
     host: '0.0.0.0',
-    port: 3500,
+    port: 3600,
     hmr: {
-      host: 'localhost'
+      host: 'lyra.rconfig.com'
+    },
+    https: {
+      key: fs.readFileSync(`/etc/letsencrypt/live/lyra.rconfig.com/privkey.pem`),
+      cert: fs.readFileSync(`/etc/letsencrypt/live/lyra.rconfig.com/fullchain.pem`)
     }
   },
   resolve: {
@@ -36,7 +41,10 @@ export default defineConfig({
   },
   css: {
     postcss: {
-      plugins: [tailwindcss]
+      plugins: [
+        tailwindcss,
+        autoprefixer({}) // add options if needed
+      ]
     }
   }
 });
