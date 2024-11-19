@@ -1,8 +1,6 @@
 <script setup>
-import useClipboard from 'vue-clipboard3';
 import DeviceViewPane from '@/pages/Inventory/Devices/DeviceView/DeviceViewPane.vue';
 import TemplateAddEditPane from '@/pages/Inventory/Templates/TemplateAddEditPane.vue';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router'; // Import the useRoute from Vue Router
 import { useToaster } from '@/composables/useToaster'; // Import the composable
@@ -12,8 +10,6 @@ const router = useRouter();
 const emit = defineEmits(['close']);
 const pandelId = ref(0);
 const panelContentName = ref(null);
-const { toClipboard } = useClipboard();
-const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
 
 const props = defineProps({});
 
@@ -44,16 +40,6 @@ function close() {
   }
   emit('close');
 }
-
-function copyId(value) {
-  try {
-    // does not work on HTTP
-    toClipboard(value);
-    toastSuccess('Copied', 'Copied Record ID to clipboard');
-  } catch (error) {
-    toastError('Error', 'Unable to copy Record ID to clipboard');
-  }
-}
 </script>
 
 <template>
@@ -82,40 +68,7 @@ function copyId(value) {
       </h2>
 
       <div class="flex justify-end">
-        <DropdownMenu>
-          <DropdownMenuTrigger as-child>
-            <Button
-              variant="ghost"
-              class="h-8 ml-2">
-              <Icon
-                icon="radix-icons:dots-vertical"
-                class="" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              @click="copyId(pandelId)"
-              class="hover:cursor-pointer hover:bg-rcgray-600">
-              <Icon
-                icon="mdi:content-copy"
-                class="mr-2" />
-              Copy Record ID: {{ pandelId }}
-            </DropdownMenuItem>
-            <!-- <DropdownMenuItem>
-            <Icon
-              icon="mdi:star-outline"
-              class="mr-2" />
-            Add to Favorites
-          </DropdownMenuItem> -->
-            <DropdownMenuSeparator />
-            <DropdownMenuItem class="text-red-500">
-              <Icon
-                icon="mdi:trash-can-outline"
-                class="mr-2" />
-              Delete Record
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <!-- EMPTY -->
       </div>
     </div>
     <transition name="fade">
