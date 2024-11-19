@@ -39,7 +39,9 @@ watch(
 onMounted(() => {
   fetchVendors();
 
-  if (props.modelValue && props.modelValue.length > 0) {
+  if (props.modelValue[0] && props.modelValue[0].length > 0) {
+    console.log('props.modelValue', props.modelValue);
+
     selectedTemplates.value = props.modelValue;
   }
 });
