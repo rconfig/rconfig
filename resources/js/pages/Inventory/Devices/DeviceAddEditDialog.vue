@@ -21,7 +21,8 @@ const emit = defineEmits(['save', 'close']);
 const { isLoading, model, saveDialog, errors, isDialogOpen, generatePrompts, showConfirmCloseAlert, showConfirmCloseDialog, cancelCloseDialog, confirmCloseDialog } = useAddEditDevices(props.editId, emit);
 
 function updateDeviceCredFields(cred) {
-  if (cred[0].length === 0) {
+  console.log(cred.length);
+  if (cred.length === 0) {
     model.value.device_cred = [];
     model.value.device_cred_id = 0;
     return;
