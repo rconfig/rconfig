@@ -39,7 +39,7 @@ watch(
 onMounted(() => {
   fetchCredentials();
 
-  if (props.modelValue[0] && props.modelValue[0].length > 0) {
+  if (props.modelValue[0] != null) {
     selectedCreds.value = props.modelValue;
   } else {
     selectedCreds.value = [];
