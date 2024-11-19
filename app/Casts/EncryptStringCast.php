@@ -13,6 +13,11 @@ class EncryptStringCast implements CastsAttributes
     public function get($model, string $key, $value, array $attributes)
     {
         $value = !empty($value) ? Crypt::decryptString($value) : null;
+        // If $value is null, skip further checks and return null
+        if (is_null($value)) {
+            return null;
+        }
+
         // check if $value is spaces
         if (trim($value) === '') {
             $value = null;
