@@ -45,11 +45,6 @@ export function useTemplates(emit) {
     }
   }
 
-  // Create useTemplate
-  function createTemplate(editId) {
-    emit('createTemplate', { id: editId, type: 'template' });
-  }
-
   function viewTemplateDetailsPane(editId) {
     router.push({ name: 'templatesview', params: { id: editId } });
   }
@@ -139,7 +134,6 @@ export function useTemplates(emit) {
     searchTerm,
     openDialog,
     fetchTemplates,
-    createTemplate,
     viewTemplateDetailsPane,
     deleteTemplate,
     deleteManyTemplates,

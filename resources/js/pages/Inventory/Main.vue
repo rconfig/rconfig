@@ -13,9 +13,6 @@ import { useRoute, useRouter } from 'vue-router'; // Import the useRoute from Vu
 
 defineProps({});
 
-const addEditPane = ref(null);
-const addEditPaneEditId = ref(0);
-const addEditPaneKey = ref(1);
 const favoritesStore = useFavoritesStore();
 const currentView = ref(localStorage.getItem('inventorySelectedView') || 'devices');
 const route = useRoute();
@@ -58,24 +55,11 @@ function toggleFavorite(viewId) {
     favoritesStore.toggleFavorite(viewItem);
   }
 }
-
-function launchAddEdit(e) {
-  addEditPane.value = e.type;
-  addEditPaneEditId.value = e.id;
-  addEditPaneKey.value += 1;
-}
-
-function closeAddEditPane() {
-  addEditPane.value = null;
-  addEditPaneKey.value += 1;
-}
 </script>
 
 <template>
   <main class="flex flex-col flex-1 gap-2 dark:bg-rcgray-900">
-    <div
-      class="border-t border-b topRow"
-      v-if="addEditPane === null">
+    <div class="border-t border-b topRow">
       <DropdownMenu>
         <DropdownMenuTrigger
           as-child
@@ -123,16 +107,11 @@ function closeAddEditPane() {
       </DropdownMenu>
     </div>
 
-    <div v-if="!addEditPane">
-      <Devices
-        v-if="currentView === 'devices' || currentView === 'devicesview'"
-        @viewDeviceDetailsPane="launchAddEdit($event)"></Devices>
+    <div>
+      <Devices v-if="currentView === 'devices' || currentView === 'devicesview'"></Devices>
       <CommandGroups v-if="currentView === 'commandgroups'"></CommandGroups>
       <Command v-if="currentView === 'commands'"></Command>
-      <Template
-        v-if="currentView === 'templates'"
-        @createTemplate="launchAddEdit($event)"
-        @viewTemplateDetailsPane="launchAddEdit($event)"></Template>
+      <Template v-if="currentView === 'templates'"></Template>
       <Vendors v-if="currentView === 'vendors'"></Vendors>
       <Tags v-if="currentView === 'tags'"></Tags>
     </div>

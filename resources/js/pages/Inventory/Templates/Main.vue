@@ -13,8 +13,7 @@ import { useRowSelection } from '@/composables/useRowSelection';
 import { useTemplates } from '@/pages/Inventory/Templates/useTemplates';
 import { useTemplatesGithub } from '@/pages/Inventory/Templates/useTemplatesGithub';
 
-const emit = defineEmits(['createTemplate']);
-const { templates, isLoading, currentPage, perPage, lastPage, editId, newTemplateModalKey, searchTerm, openDialog, fetchTemplates, createTemplate, viewTemplateDetailsPane, deleteTemplate, deleteManyTemplates, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam, showConfirmDelete } = useTemplates(emit);
+const { templates, isLoading, currentPage, perPage, lastPage, editId, newTemplateModalKey, searchTerm, openDialog, fetchTemplates, viewTemplateDetailsPane, deleteTemplate, deleteManyTemplates, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam, showConfirmDelete } = useTemplates();
 const { importTemplates, importingTemplates } = useTemplatesGithub();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(templates);
 
@@ -80,7 +79,7 @@ onUnmounted(() => {
           type="submit"
           class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
           size="sm"
-          @click.prevent="createTemplate(editId)"
+          @click.prevent="viewTemplateDetailsPane(0)"
           variant="primary">
           New Template
           <div class="pl-2 ml-auto">
