@@ -95,6 +95,8 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
         Route::get('/test-notification', 'SettingEmailController@TestMailNotifications');
     });
 
+    Route::resource('/notifications', 'NotificationsController')->only(['index', 'update']);
+
     Route::get('/license-info', 'LicenseInfoController@index');
 
     Route::resource('activitylogs', 'ActivityLogController')->only(['index', 'show', 'destroy']);

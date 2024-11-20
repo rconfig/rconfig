@@ -13,6 +13,7 @@ import { usePanelStore } from '../stores/panelStore'; // Import the Pinia store
 import { useRouter } from 'vue-router'; // Import the useRoute from Vue Router
 import { useSheetStore } from '@/stores/sheetActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
+import NotificationsPopover from '@/layouts/Components/NotificationsPopover.vue';
 
 const userid = inject('userid');
 const router = useRouter();
@@ -38,6 +39,7 @@ const panelElement = ref(null);
 const sheetStore = useSheetStore();
 const { openSheet, closeSheet, isSheetOpen } = sheetStore;
 const externalLinksDialogKey = ref(0);
+const notificationsLength = ref(0);
 
 defineProps({});
 
@@ -133,6 +135,10 @@ const removeExternalLink = async name => {
 function closeNav() {
   panelElement?.value.isCollapsed ? panelElement?.value.expand() : panelElement?.value.collapse();
 }
+
+function notificationsCount(count) {
+  notificationsLength.value = count;
+}
 </script>
 
 <template>
@@ -169,13 +175,20 @@ function closeNav() {
 
             <div class="mx-2 hover:transition-all">
               <nav class="grid items-start px-2 text-sm font-medium lg:px-4">
-                <router-link
-                  to="/notifications"
-                  class="transition ease-in-out delay-50 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
-                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'notifications' }">
-                  <NotificationIcon />
-                  <div class="p-1 ml-2 text-left text-gray-200"><div>Notifications</div></div>
-                </router-link>
+                <NotificationsPopover @notificationsLength="notificationsCount($event)">
+                  <div class="cursor-pointer transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md hover:bg-rcgray-600 pl-1">
+                    <NotificationIcon />
+                    <div class="flex justify-between w-full p-1 ml-2 text-gray-200">
+                      <span>Notifications</span>
+                      <span
+                        class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-1 py-0.5 rounded-lg dark:bg-blue-900 dark:text-blue-300"
+                        v-if="notificationsLength > 0">
+                        {{ notificationsLength }}
+                      </span>
+                    </div>
+                  </div>
+                </NotificationsPopover>
+
                 <router-link
                   to="/"
                   class="transition ease-in-out delay-50 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"

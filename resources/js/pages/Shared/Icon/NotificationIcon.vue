@@ -1,5 +1,5 @@
 <template>
   <Icon
-    icon="carbon:notification"
+    icon="catppuccin:zap"
     class="text-rcgray-400" />
 </template>
