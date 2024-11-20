@@ -38,7 +38,7 @@ https://github.com/mohammadain/laravel-docker-cron/blob/master/Dockerfile -->
 
 [![Tests](https://github.com/eliashaeussler/typo3-badges/actions/workflows/tests.yaml/badge.svg)](https://github.com/eliashaeussler/typo3-badges/actions/workflows/tests.yaml)
 [![License](https://img.shields.io/github/license/eliashaeussler/typo3-badges)](LICENSE) [![Made with Node](https://img.shields.io/badge/dynamic/json?label=node&query=%24.engines%5B%22node%22%5D&url=https%3A%2F%2Fraw.githubusercontent.com%2FMichaelCurrin%2Fbadge-generator%2Fmaster%2Fpackage.json)](https://nodejs.org 'Go to Node.js homepage')
-[![PHP Version Require](http://poser.pugx.org/pugx/badge-poser/require/php)](https://packagist.org/packages/pugx/badge-poser)
+[![PHP Version Require](https://poser.pugx.org/pugx/badge-poser/require/php)](https://packagist.org/packages/pugx/badge-poser)
 
  <img src="https://img.shields.io/badge/-Vue3-4FC08D?logo=vue.js&logoColor=white&style=flat"/>
  <img src="https://img.shields.io/badge/-Laravel-FF2D20?logo=laravel&logoColor=white&style=flat"/>
@@ -65,7 +65,7 @@ Supported OS
 - RHEL Linux 8/9+
 - CentOS Linux 8/9+
 - Ubuntu 20.04+
-- Docker (Linux)(not yet ready)
+- **Now run rConfig v6 in a Docker container!** [rconfig6docker repository](https://github.com/rconfig/rconfig6docker)
 
 rConfig v6 core is completely free, you do not need an API key from rConfig to download and use this version. Please follow the instructions below to get started.
 
@@ -295,6 +295,44 @@ Username: admin@domain.com
 Password: admin
 
 Check out our docs [v6docs.rconfig.com](https://v6docs.rconfig.com) to learn more.
+
+<!-- Docker Option -->
+
+<a name="docker"></a>
+
+## Running rConfig v6 in Docker
+
+We are excited to announce that you can now run **rConfig v6** in a Docker container! This new option simplifies the installation and setup process, providing an isolated environment for running rConfig v6 without the need for extensive system configurations.
+
+For detailed instructions on setting up rConfig v6 in Docker, visit the [rconfig6docker repository](https://github.com/rconfig/rconfig6docker). 
+
+### Benefits of Docker for rConfig v6
+- **Easy Setup**: Quickly deploy rConfig v6 with minimal configuration.
+- **Isolation**: Run rConfig v6 in a clean and isolated containerized environment.
+- **Portability**: Easily move or replicate your rConfig v6 setup across different systems.
+- **Consistency**: Ensure that rConfig v6 behaves the same across different machines and environments.
+
+### Quick Start
+To run rConfig v6 in Docker, follow these steps:
+
+1. Clone the `rconfig6docker` repository:
+    ```bash
+    git clone https://github.com/rconfig/rconfig6docker.git
+    ```
+
+2. Navigate to the cloned directory:
+    ```bash
+    cd rconfig6docker
+    ```
+
+3. Build and start the Docker container:
+    ```bash
+    docker-compose up -d
+    ```
+
+4. Access rConfig v6 by navigating to `http://localhost:8080` in your browser.
+
+For more advanced configuration options, check out the [rconfig6docker documentation](https://github.com/rconfig/rconfig6docker).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
