@@ -104,19 +104,19 @@ export function useTemplatesGithub(emit) {
   }
 
   return {
+    fileOptionSelected,
+    getTemplateFileContents,
+    getTemplateRepoFolders,
+    getTemplatesList,
+    hasReadmeFile,
+    hasVendorTemplateOptions,
     importTemplates,
     importingTemplates,
-    getTemplateRepoFolders,
-    hasVendorTemplateOptions,
-    vendorTemplateOptions,
-    vendorOptionSelected,
-    getTemplatesList,
-    getTemplateFileContents,
-    openImportDialog,
-    showFileOptions,
     listedFiles,
-    hasReadmeFile,
-    fileOptionSelected,
-    selectedTemplateCode
+    openImportDialog,
+    selectedTemplateCode,
+    showFileOptions,
+    vendorOptionSelected,
+    vendorTemplateOptions
   };
 }
