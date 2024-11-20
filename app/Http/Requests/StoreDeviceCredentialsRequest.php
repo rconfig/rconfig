@@ -25,7 +25,9 @@ class StoreDeviceCredentialsRequest extends FormRequest
 
         if ($this->getMethod() == 'PATCH') {
             $rules = [
-                'command' => 'required|min:3|max:255',
+                'cred_name' => 'required|min:3|max:255',
+                'cred_username' => 'required|min:3|max:255',
+                'cred_password' => 'required|min:3|max:255',
             ];
         }
 

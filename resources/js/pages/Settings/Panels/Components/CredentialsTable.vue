@@ -12,7 +12,7 @@ import { onMounted } from 'vue';
 import { useCredentials } from '@/pages/Settings/Panels/Components/useCredentials';
 import { useRowSelection } from '@/composables/useRowSelection';
 
-const { createCred, creds, currentPage, deleteCredential, deleteManyCredentials, editId, formatters, handleSave, isLoading, lastPage, newCredModalKey, perPage, searchTerm, showConfirmDelete, sortParam, toggleSort } = useCredentials();
+const { createCred, editCred, creds, currentPage, deleteCredential, deleteManyCredentials, editId, formatters, handleSave, isLoading, lastPage, newCredModalKey, perPage, searchTerm, showConfirmDelete, sortParam, toggleSort } = useCredentials();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(creds);
 
 const props = defineProps({});
@@ -121,7 +121,12 @@ onMounted(() => {
                 {{ row.id }}
               </TableCell>
               <TableCell class="text-start">
-                {{ row.cred_name }}
+                <Button
+                  class="px-2 py-0 text-sm hover:bg-rcgray-800 rounded-xl"
+                  variant="ghost"
+                  @click="editCred(row.id)">
+                  <span class="border-b">{{ row.cred_name }}</span>
+                </Button>
               </TableCell>
               <TableCell class="text-start">
                 {{ row.cred_description }}
@@ -152,7 +157,8 @@ onMounted(() => {
               <!-- ACTIONS MENU -->
               <TableCell class="text-start">
                 <ActionsMenu
-                  :showEditBtn="false"
+                  :showEditBtn="true"
+                  @onEdit="editCred(row.id)"
                   :rowData="row"
                   @onDelete="deleteCredential(row.id)" />
               </TableCell>

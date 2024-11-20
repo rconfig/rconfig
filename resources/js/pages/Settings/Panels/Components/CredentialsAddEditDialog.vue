@@ -1,6 +1,7 @@
 <script setup>
 import axios from 'axios';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { InputPassword } from '@/components/ui/input-password';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useDialogStore } from '@/stores/dialogActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
@@ -126,17 +127,15 @@ function saveDialog() {
 
         <div class="grid items-center grid-cols-4 gap-4">
           <Label
-            for="cred_password"
+            for="cred_enable_password"
             class="text-right">
             Password
             <span class="text-red-400">*</span>
           </Label>
-          <Input
+          <InputPassword
             v-model="model.cred_password"
             id="cred_password"
-            type="password"
-            class="col-span-3"
-            autocomplete="off" />
+            mainDivClass="col-span-3" />
           <span
             class="col-span-2 col-start-2 -mt-4 text-sm text-red-400"
             v-if="errors.cred_password">
@@ -150,11 +149,10 @@ function saveDialog() {
             class="text-right">
             Enable Password
           </Label>
-          <Input
+          <InputPassword
             v-model="model.cred_enable_password"
             id="cred_enable_password"
-            type="password"
-            class="col-span-3" />
+            mainDivClass="col-span-3" />
         </div>
       </div>
 

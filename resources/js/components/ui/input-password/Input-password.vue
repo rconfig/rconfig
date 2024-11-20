@@ -8,6 +8,7 @@ const props = defineProps<{
   defaultValue?: string | number;
   modelValue?: string | number;
   class?: HTMLAttributes['class'];
+  mainDivClass?: HTMLAttributes['mainclass'];
   id?: string;
 }>();
 
@@ -23,7 +24,7 @@ const showPassword = ref(false);
 </script>
 
 <template>
-  <div class="relative">
+  <div :class="cn('relative', props.mainDivClass)">
     <input
       :id="props.id"
       v-model="modelValue"

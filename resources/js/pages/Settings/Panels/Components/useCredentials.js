@@ -48,9 +48,16 @@ export function useCredentials() {
     }
   }
 
-  // Create Tag
+  // Create Cred
   const createCred = async => {
     editId.value = 0;
+    newCredModalKey.value = Math.random(); // Force re-render of the dialog component
+    openDialog('DialogNewCred');
+  };
+
+  // Edit Cred
+  const editCred = id => {
+    editId.value = id;
     newCredModalKey.value = Math.random(); // Force re-render of the dialog component
     openDialog('DialogNewCred');
   };
@@ -74,7 +81,7 @@ export function useCredentials() {
     }
   };
 
-  // Delete Many Tags
+  // Delete Many Creds
   const deleteManyCredentials = async ids => {
     try {
       await axios.post('/api/device-credentials/delete-many', { ids });
@@ -119,6 +126,7 @@ export function useCredentials() {
 
   return {
     createCred,
+    editCred,
     creds,
     currentPage,
     deleteCredential,
