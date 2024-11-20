@@ -8,7 +8,7 @@ import { useDialogStore } from '@/stores/dialogActions';
 import { useTemplatesGithub } from '@/pages/Inventory/Templates/useTemplatesGithub';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
 
-const { importingTemplates, getTemplateRepoFolders, vendorOptionSelected, showFileOptions, listedFiles, hasReadmeFile, fileOptionSelected, selectedTemplateCode } = useTemplatesGithub();
+const { importTemplates, importingTemplates, getTemplateRepoFolders, hasVendorTemplateOptions, vendorTemplateOptions, vendorOptionSelected, getTemplatesList, getTemplateFileContents, openImportDialog, showFileOptions, listedFiles, hasReadmeFile, fileOptionSelected, selectedTemplateCode } = useTemplatesGithub();
 
 const dialogStore = useDialogStore();
 const { closeDialog, isDialogOpen } = dialogStore;
