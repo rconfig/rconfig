@@ -16,14 +16,12 @@ class rconfigTagListTest extends TestCase
         parent::setUp();
     }
 
-    /** @test */
-    public function it_has_rconfigTagList_command()
+    public function test_it_has_rconfigTagList_command()
     {
         $this->assertTrue(class_exists(\App\Console\Commands\rconfigTagList::class));
     }
 
-    /** @test */
-    public function list_tags_command()
+    public function test_list_tags_command()
     {
         Artisan::call('rconfig:list-tags');
         $result = Artisan::output();

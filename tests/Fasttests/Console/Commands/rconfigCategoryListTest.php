@@ -16,14 +16,12 @@ class rconfigCategoryListTest extends TestCase
         parent::setUp();
     }
 
-    /** @test */
-    public function it_has_rconfigCategoryList_command()
+    public function test_it_has_rconfigCategoryList_command()
     {
         $this->assertTrue(class_exists(\App\Console\Commands\rconfigCatList::class));
     }
 
-    /** @test */
-    public function list_category_command()
+    public function test_list_category_command()
     {
         Artisan::call('rconfig:list-categories');
         $result = Artisan::output();

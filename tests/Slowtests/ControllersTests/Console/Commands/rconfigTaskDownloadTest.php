@@ -42,8 +42,7 @@ class rconfigTaskDownloadTest extends TestCase
         $this->actingAs($this->user, 'api');
     }
 
-    /** @test */
-    public function task_was_not_found()
+    public function test_task_was_not_found()
     {
         Artisan::call('rconfig:download-task 2123123');
         $result = Artisan::output();
@@ -54,8 +53,7 @@ class rconfigTaskDownloadTest extends TestCase
         $this->assertStringContainsString($arr[2], 'No task records returned. Download will now terminate!');
     }
 
-    /** @test */
-    public function the_task_was_found_and_routers_task_has_devices()
+    public function test_the_task_was_found_and_routers_task_has_devices()
     {
         $taskrecords = (new GetAndCheckTaskIds([555555, 666666, 777777]))->GetTaskRecords(); // 555555 = DevTask1  & 666666 = DevTask2  which are seeded categories
 
@@ -65,8 +63,7 @@ class rconfigTaskDownloadTest extends TestCase
         $this->assertGreaterThan(0, $taskrecords[2]->category->count());
     }
 
-    /** @test */
-    public function the_test_task_5555555_has_two_devices()
+    public function test_the_test_task_5555555_has_two_devices()
     {
         $taskrecords = (new GetAndCheckTaskIds([555555, 666666, 777777]))->GetTaskRecords(); // 555555 = DevTask1  & 666666 = DevTask2  which are seeded categories
 
@@ -74,11 +71,7 @@ class rconfigTaskDownloadTest extends TestCase
         $this->assertCount(2, $taskrecords[0]->device);
     }
 
-    /**
-     * @test
-     * @group slow-tests
-     */
-    public function the_test_task_5555555_has_two_devices_and_can_download_both_of_them()
+    public function test_the_test_task_5555555_has_two_devices_and_can_download_both_of_them()
     {
         Artisan::call('rconfig:download-task 555555 -d');
         $result = Artisan::output();
@@ -106,8 +99,7 @@ class rconfigTaskDownloadTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function the_test_task_666666_has_one_tag()
+    public function test_the_test_task_666666_has_one_tag()
     {
         $taskrecords = (new GetAndCheckTaskIds([555555, 666666, 777777]))->GetTaskRecords(); // 555555 = DevTask1  & 666666 = DevTask2  which are seeded categories
         $this->assertCount(3, $taskrecords);
@@ -116,8 +108,7 @@ class rconfigTaskDownloadTest extends TestCase
         $tagrecords = (new GetAndCheckTagIds([1001, 1002, 1003]))->GetTagRecords();
     }
 
-    /** @test */
-    public function the_test_task_666666_has_one_tag_and_the_tag_has_one_device()
+    public function test_the_test_task_666666_has_one_tag_and_the_tag_has_one_device()
     {
         $taskrecords = (new GetAndCheckTaskIds([555555, 666666, 777777]))->GetTaskRecords(); // 555555 = DevTask1  & 666666 = DevTask2  which are seeded categories
 
@@ -129,11 +120,7 @@ class rconfigTaskDownloadTest extends TestCase
         $this->assertCount(1, $tagrecords[0]->device);
     }
 
-    /**
-     * @test
-     * @group slow-tests
-     */
-    public function the_test_task_666666_has_one_devices_and_can_download_it()
+    public function test_the_test_task_666666_has_one_devices_and_can_download_it()
     {
         Artisan::call('rconfig:download-task 666666 -d');
         $result = Artisan::output();
@@ -160,11 +147,7 @@ class rconfigTaskDownloadTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     * @group slow-tests
-     */
-    public function the_test_task_666666_has_one_devices_and_can_download_it_and_a_report_is_created()
+    public function test_the_test_task_666666_has_one_devices_and_can_download_it_and_a_report_is_created()
     {
         // $this->markTestSkipped('Can only run this test manually - must be revisited.');
 
@@ -214,8 +197,7 @@ class rconfigTaskDownloadTest extends TestCase
         File::delete($filepath);
     }
 
-    /** @test */
-    public function the_test_task_7777777_has_three_categories()
+    public function test_the_test_task_7777777_has_three_categories()
     {
         $taskrecords = (new GetAndCheckTaskIds([555555, 666666, 777777]))->GetTaskRecords(); // 555555 = DevTask1  & 666666 = DevTask2  which are seeded categories
 
@@ -223,8 +205,7 @@ class rconfigTaskDownloadTest extends TestCase
         $this->assertCount(3, $taskrecords[2]->category);
     }
 
-    /** @test */
-    public function the_test_task_7777777_has_three_categories_and_x_devices_per_category()
+    public function test_the_test_task_7777777_has_three_categories_and_x_devices_per_category()
     {
         $taskrecords = (new GetAndCheckTaskIds([555555, 666666, 777777]))->GetTaskRecords(); // 555555 = DevTask1  & 666666 = DevTask2  which are seeded categories
 
@@ -240,11 +221,7 @@ class rconfigTaskDownloadTest extends TestCase
         $this->assertCount(0, $categoryrecords[2]->device);
     }
 
-    /**
-     * @test
-     * @group slow-tests
-     */
-    public function the_test_task_777777_has_four_devices_and_can_download_them()
+    public function test_the_test_task_777777_has_four_devices_and_can_download_them()
     {
         Artisan::call('rconfig:download-task 777777 -d');
         $result = Artisan::output();
@@ -279,11 +256,7 @@ class rconfigTaskDownloadTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     * @group slow-tests
-     */
-    public function the_test_task_888888_has_one_device_and_cannot_download_and_sends_task_complete_notification_as_configured()
+    public function test_the_test_task_888888_has_one_device_and_cannot_download_and_sends_task_complete_notification_as_configured()
     {
         // test Task completion notification for given task
         \Queue::fake();
@@ -339,11 +312,7 @@ class rconfigTaskDownloadTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     * @group slow-tests
-     */
-    public function the_test_task_888888_has_one_device_and_cannot_download_and_send_failure_report_notify_as_configured()
+    public function test_the_test_task_888888_has_one_device_and_cannot_download_and_send_failure_report_notify_as_configured()
     {
         \Queue::fake();
         // configure failure report only

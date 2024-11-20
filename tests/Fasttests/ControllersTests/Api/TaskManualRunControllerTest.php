@@ -39,8 +39,7 @@ class TaskManualRunControllerTest extends TestCase
         Redis::flushall();
     }
 
-    /** @test */
-    public function can_run_a_download_device_task_manually_and_notification_sent()
+    public function test_can_run_a_download_device_task_manually_and_notification_sent()
     {
         Notification::fake();
         Notification::assertNothingSent();
@@ -88,8 +87,7 @@ class TaskManualRunControllerTest extends TestCase
         return $property;
     }
 
-    /** @test */
-    public function run_manual_task_test_backup_run_fails_with_fake_id()
+    public function test_run_manual_task_test_backup_run_fails_with_fake_id()
     {
         Queue::fake();
         Queue::assertNothingPushed();
@@ -106,8 +104,7 @@ class TaskManualRunControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function test_task_logging_for_downloads()
+    public function test_test_task_logging_for_downloads()
     {
         config(['queue.default' => 'redis']);
 
@@ -157,8 +154,7 @@ class TaskManualRunControllerTest extends TestCase
         });
     }
 
-    /** @test */
-    public function task_complete_notification_job_sent()
+    public function test_task_complete_notification_job_sent()
     {
         Queue::fake();
 
@@ -166,8 +162,7 @@ class TaskManualRunControllerTest extends TestCase
         Queue::assertPushed(\App\Jobs\TaskCompleteNotificationJob::class);
     }
 
-    /** @test */
-    public function mail_task_complete_notification_sent_to_all_users()
+    public function test_mail_task_complete_notification_sent_to_all_users()
     {
         Notification::fake();
         Notification::assertNothingSent();
@@ -184,8 +179,7 @@ class TaskManualRunControllerTest extends TestCase
         );
     }
 
-    /** @test */
-    public function mail_task_complete_notification_sent_to_all_users_and_recipients()
+    public function test_mail_task_complete_notification_sent_to_all_users_and_recipients()
     {
         Notification::fake();
         Notification::assertNothingSent();
@@ -218,8 +212,7 @@ class TaskManualRunControllerTest extends TestCase
         );
     }
 
-    /** @test */
-    public function mail_task_complete_notification_sent_to_all_users_and_recipients_is_empty()
+    public function test_mail_task_complete_notification_sent_to_all_users_and_recipients_is_empty()
     {
         Notification::fake();
         Notification::assertNothingSent();

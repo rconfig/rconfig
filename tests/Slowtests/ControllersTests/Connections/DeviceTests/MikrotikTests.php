@@ -23,8 +23,7 @@ class MikrotikTests extends TestCase
         $this->template_filename = 'mikrotek-ssh-noenable.yml';
     }
 
-    /** @test */
-    public function check_that_mikrotik_in_db()
+    public function test_check_that_mikrotik_in_db()
     {
         $this->assertDatabaseHas('devices', [
             'device_name' => 'mikrotik',
@@ -47,23 +46,20 @@ class MikrotikTests extends TestCase
         ]);
     }
 
-    /** @test */
-    public function can_read_template()
+    public function test_can_read_template()
     {
         $contents = File::get(templates_path() . $this->template_filename);
         $this->assertStringContainsString('name: "MikroTek SSH nnoenable"', $contents);
     }
 
-    /** @test */
-    public function device_has_commands()
+    public function test_device_has_commands()
     {
         $devicerecord = (new DeviceRecordPrepare($this->device))->DeviceRecordToArray();
 
         $this->assertGreaterThan(0, count($devicerecord['commands']));
     }
 
-    /** @test */
-    public function download_device_config()
+    public function test_download_device_config()
     {
         $this->log_message_during_test(substr(strrchr(__CLASS__, '\\'), 1) . '/' . __FUNCTION__, 'This test will take over 25 seconds to complete.');
 

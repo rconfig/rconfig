@@ -24,8 +24,7 @@ class ActivityLogControllerTest extends TestCase
         $this->actingAs($this->user, 'api');
     }
 
-    /** @test */
-    public function get_all_logs()
+    public function test_get_all_logs()
     {
         for ($i = 0; $i < 100; $i++) {
             activity()->log($this->faker->sentence());
@@ -36,8 +35,7 @@ class ActivityLogControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function create_log_entry()
+    public function test_create_log_entry()
     {
         $log = activity()->log($this->faker->sentence());
 
@@ -46,8 +44,7 @@ class ActivityLogControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function show_single_log_entry()
+    public function test_show_single_log_entry()
     {
         $log = activity()->log($this->faker->sentence());
 
@@ -58,8 +55,7 @@ class ActivityLogControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function test_logIt_helper_function()
+    public function test_test_logIt_helper_function()
     {
         // logIt($class, $function, $log_name, $description, $event_type, $device_name = null, $device_id = null, $connection_category = null, $connection_ids = null );
         $logMsg = $this->faker->sentence;
@@ -69,8 +65,7 @@ class ActivityLogControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function get_last5_logs_by_deviceid()
+    public function test_get_last5_logs_by_deviceid()
     {
         $device_name = $this->faker->name;
         $device_id = $this->faker->randomDigit;
@@ -88,8 +83,7 @@ class ActivityLogControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function get_log_stats_by_deviceid()
+    public function test_get_log_stats_by_deviceid()
     {
         $device_name = $this->faker->name;
         $device_id = $this->faker->randomDigit;
@@ -103,8 +97,7 @@ class ActivityLogControllerTest extends TestCase
     }
 
 
-    /** @test */
-    public function clear_logs_by_deviceid()
+    public function test_clear_logs_by_deviceid()
     {
         $device_name = $this->faker->name;
         $device_id = $this->faker->randomDigit;
@@ -123,8 +116,7 @@ class ActivityLogControllerTest extends TestCase
         $response->assertStatus(200);
         $this->assertCount(0, $response->json());
     }
-    /** @test */
-    public function delete_log_entry()
+    public function test_delete_log_entry()
     {
         $descr = $this->faker->sentence;
         activityLogIt(__CLASS__, __FUNCTION__, 'info', $descr, 'downloader');
@@ -138,8 +130,7 @@ class ActivityLogControllerTest extends TestCase
         $this->assertDatabaseMissing('activity_log', ['id' => $log->id]);
     }
 
-    /** @test */
-    public function does_archive_log_records_by_count()
+    public function test_does_archive_log_records_by_count()
     {
         ActivityLog::truncate();
 
@@ -181,8 +172,7 @@ class ActivityLogControllerTest extends TestCase
         $this->assertCount(521, ActivityLog::all());
     }
 
-    /** @test */
-    public function does_archive_log_records_by_age()
+    public function test_does_archive_log_records_by_age()
     {
         for ($i = 0; $i < 480; $i++) {
             activity()->log($this->faker->sentence());

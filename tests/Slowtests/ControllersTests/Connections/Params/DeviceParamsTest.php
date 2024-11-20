@@ -18,8 +18,7 @@ class DeviceParamsTest extends TestCase
         $this->device = Device::where('id', 1001)->first();
     }
 
-    /** @test */
-    public function returns_formatted_device_params_object()
+     public function test_returns_formatted_device_params_object()
     {
         $device_params = new DeviceParams($this->device->toArray());
         $result = $device_params->getAllDeviceParams();

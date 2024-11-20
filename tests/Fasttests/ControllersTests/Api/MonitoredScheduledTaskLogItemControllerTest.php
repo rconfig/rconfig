@@ -15,8 +15,7 @@ class MonitoredScheduledTaskLogItemControllerTest extends TestCase
         $this->actingAs($this->user, 'api');
     }
 
-    /** @test */
-    public function show_single_taskLogItem()
+    public function test_show_single_taskLogItem()
     {
         \App\Models\MonitoredScheduledTasks::factory()->create(['task_id' => 555555]);
         \App\Models\MonitoredScheduledTasks::factory()->create(['task_id' => 444444]);
@@ -44,8 +43,7 @@ class MonitoredScheduledTaskLogItemControllerTest extends TestCase
         $this->assertEquals(15, count($response['data']));
     }
 
-    /** @test */
-    public function get_all_taskLogItem()
+    public function test_get_all_taskLogItem()
     {
         \App\Models\MonitoredScheduledTasks::factory()->create(['task_id' => 444444]);
 

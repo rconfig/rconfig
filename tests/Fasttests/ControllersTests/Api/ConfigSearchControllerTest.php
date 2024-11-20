@@ -18,8 +18,7 @@ class ConfigSearchControllerTest extends TestCase
         $this->actingAs($this->user, 'api');
     }
 
-    /** @test */
-    public function a_search_requires_a_category()
+    public function test_a_search_requires_a_category()
     {
         $response = $this->json('post', '/api/configs/search', ['category' => null]);
 
@@ -28,8 +27,7 @@ class ConfigSearchControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function a_search_requires_a_search_string()
+    public function test_a_search_requires_a_search_string()
     {
         $response = $this->json('post', '/api/configs/search', ['search_string' => null]);
 
@@ -38,8 +36,7 @@ class ConfigSearchControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function a_search_requires_a_line_count()
+    public function test_a_search_requires_a_line_count()
     {
         $response = $this->json('post', '/api/configs/search', ['line_count' => null]);
 
@@ -48,8 +45,7 @@ class ConfigSearchControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function search_fails_on_incorrect_category_value()
+    public function test_search_fails_on_incorrect_category_value()
     {
         $response = $this->json('post', '/api/configs/search', ['category' => 'sss', 'search_string' => 'null', 'line_count' => '0']);
 
@@ -58,8 +54,7 @@ class ConfigSearchControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    /** @test */
-    public function search_returns_valid_result_globalsearch()
+    public function test_search_returns_valid_result_globalsearch()
     {
         $this->assertDatabaseHas('categories', ['id' => 1]);
         $response = $this->post('/api/configs/search', ['category' => 1, 'search_string' => 'snmp', 'line_count' => '0', 'latestOnly' => false]);
@@ -67,8 +62,7 @@ class ConfigSearchControllerTest extends TestCase
         $this->assertStringContainsString(' snmp-server host 1.1.1.1 TESTCOMMUNITY10', $response->getContent());
     }
 
-    /** @test */
-    public function search_returns_valid_result_latestOnly()
+    public function test_search_returns_valid_result_latestOnly()
     {
         Config::truncate();
         $this->fakeConfigInserts();
@@ -82,8 +76,7 @@ class ConfigSearchControllerTest extends TestCase
         Config::truncate();
     }
 
-    /** @test */
-    public function can_search_and_return_single_line_result_correctly()
+    public function test_can_search_and_return_single_line_result_correctly()
     {
         Config::truncate();
         $this->fakeConfigInserts();
@@ -95,8 +88,7 @@ class ConfigSearchControllerTest extends TestCase
         Config::truncate();
     }
 
-    /** @test */
-    public function can_search_and_return_multi_line_result_correctly()
+    public function test_can_search_and_return_multi_line_result_correctly()
     {
         Config::truncate();
         $this->fakeConfigInserts();

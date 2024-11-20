@@ -38,8 +38,7 @@ class rconfigCatDownloadTest extends TestCase
         $this->device1_params_object = $device1_params->getAllDeviceParams();
     }
 
-    /** @test */
-    public function category_was_not_found()
+    public function test_category_was_not_found()
     {
         Artisan::call('rconfig:download-category 2123123');
         $result = Artisan::output();
@@ -49,8 +48,7 @@ class rconfigCatDownloadTest extends TestCase
         $this->assertStringContainsString($arr[1], 'No category records returned. Download will now terminate!');
     }
 
-    /** @test */
-    public function category_did_not_contain_devices()
+    public function test_category_did_not_contain_devices()
     {
         Artisan::call('rconfig:download-category 1010');
         $result = Artisan::output();
@@ -60,20 +58,15 @@ class rconfigCatDownloadTest extends TestCase
         $this->assertStringContainsString($arr[1], 'No devices returned for this category with ID: 1010. Downloader will try next category in the list, or terminate!');
     }
 
-    /** @test */
-    public function the_category_was_found_and_routers_category_has_devices()
+    public function test_the_category_was_found_and_routers_category_has_devices()
     {
         $categoryrecords = (new GetAndCheckCategoryIds([1, 2]))->GetCategoryRecords(); // 1 = routers & 2 = switches which are seeded categories
 
         $this->assertCount(2, $categoryrecords);
         $this->assertGreaterThan(1, $categoryrecords[0]->device->count());
     }
-
-    /**
-     * @test
-     * @group slow-tests
-     */
-    public function full_telnet_and_SSH_download_for_given_categories()
+ 
+    public function test_full_telnet_and_SSH_download_for_given_categories()
     {
         $this->log_message_during_test(substr(strrchr(__CLASS__, "\\"), 1) . '/' . __FUNCTION__, 'This test will take around 20 seconds to complete.');
 

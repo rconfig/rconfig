@@ -20,8 +20,7 @@ class ConfigActionsControllerTest extends TestCase
         $this->actingAs($this->user, 'api');
     }
 
-    /** @test */
-    public function start_download_now_test()
+    public function test_start_download_now_test()
     {
         $response = $this->json('post', '/api/device/download-now', ['device_id' => 1001]);
         $response->assertStatus(200);
@@ -34,8 +33,7 @@ class ConfigActionsControllerTest extends TestCase
         $this->assertStringContainsString('ipv6 address 2001:BB6:788A:8000:6273:5CFF:FED9:4C01/64', $fileContents);
     }
 
-    /** @test */
-    public function purge_failed_config()
+    public function test_purge_failed_config()
     {
         Config::truncate();
         $configs = Config::factory(50)->create(['device_id' => 1001, 'type' => 'device_download', 'download_status' => 1]);

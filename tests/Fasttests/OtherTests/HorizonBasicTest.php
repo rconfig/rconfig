@@ -14,8 +14,7 @@ class HorizonBasicTest extends TestCase
         parent::setUp();
     }
 
-    /** @test */
-    public function horizon_dashboard_accessible()
+    public function test_horizon_dashboard_accessible()
     {
         $user = User::factory()->create(['role' => 'Admin']);
 
@@ -25,8 +24,7 @@ class HorizonBasicTest extends TestCase
         $this->assertStringContainsString('<title>Horizon - rConfig6 - Network Configuration Management</title>', $response->getContent());
     }
 
-    /** @test */
-    public function horizon_timeout_value_can_be_changed()
+    public function test_horizon_timeout_value_can_be_changed()
     {
         // clear the config cache
         // dd(config('horizon.environments.production.supervisor-1.timeout'));
@@ -53,8 +51,7 @@ class HorizonBasicTest extends TestCase
         $this->assertStringContainsString('HORIZON_PROD_TIMEOUT=60', $envExample);
     }
 
-    /** @test */
-    public function env_example_has_env_timeout_values()
+    public function test_env_example_has_env_timeout_values()
     {
         $envExample = file_get_contents(base_path('.env.example'));
         $this->assertStringContainsString('HORIZON_LOCAL_TIMEOUT=60', $envExample);

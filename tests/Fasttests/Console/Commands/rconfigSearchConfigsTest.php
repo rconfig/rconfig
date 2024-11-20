@@ -11,14 +11,12 @@ class rconfigSearchConfigsTest extends TestCase
 
     protected $output;
 
-    /** @test */
-    public function it_has_rconfigSearchConfigs_command()
+    public function test_it_has_rconfigSearchConfigs_command()
     {
         $this->assertTrue(class_exists(\App\Console\Commands\rconfigSearchConfigs::class));
     }
 
-    /** @test */
-    public function command_has_required_help_information()
+    public function test_command_has_required_help_information()
     {
         Artisan::call('rconfig:search-configs -h');
         $result = Artisan::output();
@@ -27,8 +25,7 @@ class rconfigSearchConfigsTest extends TestCase
         $this->assertStringContainsString($arr[8], '  SearchString          The search string. If searching multiple words, wrap in double-quotes.');
     }
 
-    /** @test */
-    public function command_squawks_on_missing_args()
+    public function test_command_squawks_on_missing_args()
     {
         try {
             Artisan::call('rconfig:search-configs');
@@ -40,8 +37,7 @@ class rconfigSearchConfigsTest extends TestCase
         }
     }
 
-    /** @test */
-    public function command_squawks_on_too_many_args()
+    public function test_command_squawks_on_too_many_args()
     {
         try {
             Artisan::call('rconfig:search-configs routers sh ip address');
@@ -53,24 +49,21 @@ class rconfigSearchConfigsTest extends TestCase
         }
     }
 
-    /** @test */
-    public function command_squawks_on_invalid_category()
+    public function test_command_squawks_on_invalid_category()
     {
         Artisan::call('rconfig:search-configs ascasc string');
         $arr = explode("\n", Artisan::output());
         $this->assertStringContainsString('ascasc" is an invalid category!', $arr[0]);
     }
 
-    /** @test */
-    public function command_squawks_on_invalid_lines_type()
+    public function test_command_squawks_on_invalid_lines_type()
     {
         Artisan::call('rconfig:search-configs Routers string --lines=xxx');
         $arr = explode("\n", Artisan::output());
         $this->assertStringContainsString('Invalid lines input', ($arr[0]));
     }
 
-    /** @test */
-    public function search_files_no_result_returned()
+    public function test_search_files_no_result_returned()
     {
         Artisan::call('rconfig:search-configs Routers string --lines=0');
         $arr = explode("\n", Artisan::output());
@@ -78,8 +71,7 @@ class rconfigSearchConfigsTest extends TestCase
         $this->assertCount(2, $arr);
     }
 
-    /** @test */
-    public function search_files_result_returned()
+    public function test_search_files_result_returned()
     {
         Artisan::call('rconfig:search-configs Routers snmp --lines=0');
         $arr = explode("\n", Artisan::output());

@@ -18,20 +18,17 @@ class RunningProcessTest extends TestCase
         $this->actingAs($this->user);
     }
 
-    /** @test */
-    public function check_supervisord_is_running()
+    public function test_check_supervisord_is_running()
     {
         $this->assertTrue($this->processExists('supervisord'));
     }
 
-    /** @test */
-    public function check_redis_is_running()
+    public function test_check_redis_is_running()
     {
         $this->assertTrue($this->processExists('redis'));
     }
 
-    /** @test */
-    public function check_supervisord_is_running_horizon()
+    public function test_check_supervisord_is_running_horizon()
     {
         exec('supervisorctl status', $result);
         $expectedResult = 'horizon';
