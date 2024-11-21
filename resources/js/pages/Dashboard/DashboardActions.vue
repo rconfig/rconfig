@@ -18,7 +18,7 @@ const toggleMenu = () => {
 
 <template>
   <div class="border-t border-b topRow">
-    <header class="sticky top-0 flex items-center h-12 gap-4 px-8">
+    <header class="sticky top-0 flex items-center w-full h-12 gap-4 pl-0 pr-4">
       <!-- Hamburger Icon Button for Small Screens -->
 
       <Popover>
