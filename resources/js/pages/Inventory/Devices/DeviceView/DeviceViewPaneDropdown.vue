@@ -1,10 +1,9 @@
 <script setup>
-import ConfirmDeleteAlert from '@/pages/Shared/AlertDialog/ConfirmDeleteAlert.vue';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ref } from 'vue';
 
 const showConfirmDelete = ref(false);
-const emits = defineEmits(['onEdit', 'onDelete']);
+const emits = defineEmits(['openDeviceEdit', 'onDelete']);
 
 defineProps({
   showEditBtn: {
@@ -24,6 +23,10 @@ function showAlert() {
 function handleDelete() {
   emits('onDelete');
   showConfirmDelete.value = false;
+}
+
+function openDeviceEdit() {
+  emits('openDeviceEdit');
 }
 </script>
 
@@ -46,7 +49,7 @@ function handleDelete() {
         <DropdownMenuItem
           v-if="showEditBtn"
           class="cursor-pointer hover:bg-rcgray-600"
-          @click="handleEdit">
+          @click="openDeviceEdit()">
           <span>Edit Device</span>
           <DropdownMenuShortcut>
             <Icon icon="fluent-color:text-edit-style-16" />

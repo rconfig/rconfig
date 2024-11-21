@@ -4,6 +4,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { useFavoritesStore } from '@/stores/favorites';
 import { usePanelStore } from '@/stores/panelStore'; // Import the Pinia store
 import { useToaster } from '@/composables/useToaster'; // Import the composable
+import { useDialogStore } from '@/stores/dialogActions';
 
 export function useDeviceViewPane(props, emit) {
   const appDirPath = ref(false);
@@ -17,6 +18,8 @@ export function useDeviceViewPane(props, emit) {
   const panelStore = usePanelStore(); // Access the panel store
   const { toClipboard } = useClipboard();
   const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
+  const dialogStore = useDialogStore();
+  const { openDialog } = dialogStore;
 
   const favoriteItem = ref({
     id: props.editId,
@@ -168,6 +171,7 @@ export function useDeviceViewPane(props, emit) {
     downloadNow,
     downloadStatus,
     favoriteItem,
+    fetchDevice,
     isLoading,
     leftNavSelected,
     mainNavSelected,

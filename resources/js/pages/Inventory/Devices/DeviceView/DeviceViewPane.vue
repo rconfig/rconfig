@@ -1,8 +1,9 @@
 <script setup>
+import DeviceAddEditDialog from '@/pages/Inventory/Devices/DeviceAddEditDialog.vue';
+import DeviceConfigsViewPanel from '@/pages/Inventory/Devices/DeviceView/DeviceConfigsViewPanel.vue';
 import DeviceDetailsLeftNav from '@/pages/Inventory/Devices/DeviceView/DeviceDetailsLeftNav.vue';
 import DeviceDetailsMainNav from '@/pages/Inventory/Devices/DeviceView/DeviceDetailsMainNav.vue';
 import DeviceLatestEventsPanel from '@/pages/Inventory/Devices/DeviceView/DeviceLatestEventsPanel.vue';
-import DeviceConfigsViewPanel from '@/pages/Inventory/Devices/DeviceView/DeviceConfigsViewPanel.vue';
 import DeviceViewCommentsPanel from '@/pages/Inventory/Devices/DeviceView/DeviceViewCommentsPanel.vue';
 import DeviceViewConfigStatusPanel from '@/pages/Inventory/Devices/DeviceView/DeviceViewConfigStatusPanel.vue';
 import DeviceViewDetailsPanel from '@/pages/Inventory/Devices/DeviceView/DeviceViewDetailsPanel.vue';
@@ -11,13 +12,16 @@ import Loading from '@/pages/Shared/Loading.vue';
 import Spinner from '@/pages/Shared/Icon/Spinner.vue';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useDeviceViewPane } from '@/pages/Inventory/Devices/DeviceView/useDeviceViewPane';
+import { useDevices } from '@/pages/Inventory/Devices/useDevices';
+
 const emit = defineEmits(['close']);
 
 const props = defineProps({
   editId: Number
 });
 
-const { addToFavorites, appDirPath, closeNav, copyDebug, deviceData, downloadNow, downloadStatus, favoriteItem, isLoading, leftNavSelected, mainNavSelected, panelElement2, selectLeftNavView, selectMainNavView } = useDeviceViewPane(props, emit);
+const { addToFavorites, appDirPath, closeNav, copyDebug, deviceData, downloadNow, downloadStatus, favoriteItem, fetchDevice, isLoading, leftNavSelected, mainNavSelected, panelElement2, selectLeftNavView, selectMainNavView } = useDeviceViewPane(props, emit);
+const { handleSave, viewEditDialog } = useDevices();
 </script>
 
 <template>
@@ -67,7 +71,7 @@ const { addToFavorites, appDirPath, closeNav, copyDebug, deviceData, downloadNow
           <span v-if="!downloadStatus">Download Now</span>
         </Button>
 
-        <DeviceViewPaneDropdown />
+        <DeviceViewPaneDropdown @openDeviceEdit="viewEditDialog(editId)" />
       </div>
     </div>
 
@@ -138,6 +142,12 @@ const { addToFavorites, appDirPath, closeNav, copyDebug, deviceData, downloadNow
       id="code-editor__code-pre"
       style="height: calc(100vh - 450px)"></div> -->
       <!-- EDITOR -->
+      <DeviceAddEditDialog
+        @save="
+          handleSave();
+          fetchDevice(editId);
+        "
+        :editId="editId" />
     </div>
   </main>
 </template>
