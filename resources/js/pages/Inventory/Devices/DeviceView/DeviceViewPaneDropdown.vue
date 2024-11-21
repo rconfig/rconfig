@@ -3,7 +3,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { ref } from 'vue';
 
 const showConfirmDelete = ref(false);
-const emits = defineEmits(['openDeviceEdit', 'onDelete']);
+const emits = defineEmits(['openDeviceEdit', 'viewConfigs']);
 
 defineProps({
   showEditBtn: {
@@ -55,15 +55,6 @@ function openDeviceEdit() {
             <Icon icon="fluent-color:text-edit-style-16" />
           </DropdownMenuShortcut>
         </DropdownMenuItem>
-        <DropdownMenuItem
-          v-if="showEditBtn"
-          class="cursor-pointer hover:bg-rcgray-600">
-          <span>View Configs</span>
-          <DropdownMenuShortcut>
-            <Icon icon="fluent-mdl2:configuration-solid" />
-          </DropdownMenuShortcut>
-        </DropdownMenuItem>
-
         <DropdownMenuItem
           v-if="showEditBtn"
           class="cursor-pointer hover:bg-rcgray-600">

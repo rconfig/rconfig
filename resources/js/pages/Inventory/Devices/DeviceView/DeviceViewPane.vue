@@ -70,7 +70,6 @@ const { handleSave, viewEditDialog } = useDevices();
             class="mr-2" />
           <span v-if="!downloadStatus">Download Now</span>
         </Button>
-
         <DeviceViewPaneDropdown @openDeviceEdit="viewEditDialog(editId)" />
       </div>
     </div>
@@ -119,7 +118,7 @@ const { handleSave, viewEditDialog } = useDevices();
             <DeviceDetailsMainNav
               class="p-2"
               @selectMainNavView="selectMainNavView"
-              :selectedNav="mainNavSelected.value" />
+              :selectedNav="mainNavSelected" />
 
             <DeviceLatestEventsPanel
               v-if="!isLoading && mainNavSelected === 'notifications'"
