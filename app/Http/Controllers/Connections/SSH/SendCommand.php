@@ -25,22 +25,36 @@ class SendCommand
 
     public function sendShowCommand($command)
     {
-        if ($this->connectionObj->sshPrivKey) {
-            return $this->connectionObj->connection->exec($command);
-        } else {
 
-            if ($this->connectionObj->AnsiHost === 'yes') {
-                return $this->ansiShowCommand($command);
-            }
-
-            if ($this->connectionObj->isMikrotik === 'yes') {
-                // need to remove prompt. Mikrotik does not respond well to having a prompt configured. See the mikrotik function in the console rconfig:test command
-                $this->connectionObj->devicePrompt = '';
-                $this->data = $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
-            }
-
-            return $this->standardShowCommand($command);
+        if ($this->connectionObj->sshPrivKey && $this->connectionObj->isNonInteractiveMode) {
+            return $this->execShowCommand($command);
         }
+
+        if ($this->connectionObj->sshPrivKey) {
+            return $this->ansiShowCommand($command);
+        }
+
+        if ($this->connectionObj->isNonInteractiveMode) {
+            return $this->execShowCommand($command);
+        }
+
+        if ($this->connectionObj->AnsiHost === 'yes') {
+            return $this->ansiShowCommand($command);
+        }
+
+        if ($this->connectionObj->isMikrotik === 'yes') {
+            // need to remove prompt. Mikrotik does not respond well to having a prompt configured. See the mikrotik function in the console rconfig:test command
+            $this->connectionObj->devicePrompt = '';
+            $this->data = $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
+        }
+
+        return $this->standardShowCommand($command);
+    }
+
+    private function execShowCommand($command)
+    {
+        // we have a valid login here, we don't need any prompt reading anymore. So we can do an ssh->exec and return the result...
+        return $this->data = $this->send->sendStringExec($command);
     }
 
     private function ansiShowCommand($command)

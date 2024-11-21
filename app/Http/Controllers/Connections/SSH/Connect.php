@@ -20,6 +20,7 @@ class Connect
     public $timeout;
     public $protocol;
     public $port;
+    public $isNonInteractiveMode;
 
     /* AUTH */
     public $sshInteractive;
@@ -75,6 +76,7 @@ class Connect
         $this->timeout = $deviceParamsObject->connect['timeout'];
         $this->protocol = $deviceParamsObject->connect['protocol'];
         $this->port = $deviceParamsObject->deviceparams['device_port_override'] ?? $deviceParamsObject->connect['port'];
+        $this->isNonInteractiveMode = $deviceParamsObject->connect['isNonInteractiveMode'] ?? null;
         /* AUTH */
         $this->sshInteractive = $deviceParamsObject->auth['sshInteractive'] ?? null;
         $this->usernamePrompt = $deviceParamsObject->auth['username'];
