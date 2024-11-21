@@ -33,7 +33,6 @@ class ConfigActionsController extends ApiBaseController
         return $this->successResponse('Download started');
     }
 
-
     public function purgeFailed(Request $request)
     {
 
