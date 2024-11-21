@@ -101,7 +101,7 @@ function close() {
     <transition name="fade">
       <ConfigViewPane
         v-if="panelContentName === 'configsview'"
-        :editId="pandelId"
+        :configId="pandelId"
         @close="closeConfigViewPanel()" />
     </transition>
   </div>

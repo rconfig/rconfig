@@ -7,14 +7,13 @@ import { useToaster } from '@/composables/useToaster'; // Import the composable
 export function useConfigViewPane(props) {
   const configData = ref(null);
   const isLoading = ref(false);
-  const mainNavSelected = ref('notifications');
   const panelElement2 = ref(null);
   const panelStore = usePanelStore(); // Access the panel store
   const { toClipboard } = useClipboard();
   const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
 
   onMounted(() => {
-    fetchConfig(props.editId);
+    fetchConfig();
 
     panelStore.panelRef2 = panelElement2.value;
 
@@ -33,12 +32,17 @@ export function useConfigViewPane(props) {
     });
   });
 
-  function fetchConfig(id) {
-    isLoading.value = true;
-    axios.get(`/api/configs/${id}`).then(response => {
-      configData.value = response.data;
-      isLoading.value = false;
-    });
+  function fetchConfig() {
+    axios
+      .get(`/api/configs/${props.configId}`)
+      .then(response => {
+        configData.value = response.data;
+        isLoading.value = false;
+      })
+      .catch(error => {
+        console.error(error);
+        toastError('Error', 'Something went wrong - could not retrieve the configuration from the file system!');
+      });
   }
 
   function close() {
