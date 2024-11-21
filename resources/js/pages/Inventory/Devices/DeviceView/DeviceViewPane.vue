@@ -22,11 +22,14 @@ const props = defineProps({
 });
 
 const { addToFavorites, appDirPath, closeNav, copyDebug, deviceData, downloadNow, downloadStatus, favoriteItem, fetchDevice, isLoading, leftNavSelected, mainNavSelected, panelElement2, selectLeftNavView, selectMainNavView } = useDeviceViewPane(props, emit);
-const { handleSave, viewEditDialog, showConfirmDelete, deleteDevice } = useDevices();
+const { handleSave, viewEditDialog, showConfirmDelete, deleteDevice, purgeDeviceConfigs } = useDevices();
 
-function handleDelete() {
+function handleDropdownDelete() {
   deleteDevice(props.editId);
   emit('close');
+}
+function handleDropDownPurge() {
+  purgeDeviceConfigs(props.editId);
 }
 </script>
 
@@ -77,6 +80,7 @@ function handleDelete() {
           <span v-if="!downloadStatus">Download Now</span>
         </Button>
         <DeviceViewPaneDropdown
+          @onPurge="handleDropDownPurge()"
           @openDeviceEdit="viewEditDialog(editId)"
           @onDelete="showConfirmDelete = true" />
       </div>
@@ -161,7 +165,7 @@ function handleDelete() {
         :ids="[editId]"
         :showConfirmDelete="showConfirmDelete"
         @close="showConfirmDelete = false"
-        @handleDelete="handleDelete()" />
+        @handleDelete="handleDropdownDelete()" />
     </div>
   </main>
 </template>

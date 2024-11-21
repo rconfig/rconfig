@@ -65,6 +65,22 @@ export function useDevices() {
   }
 
   // Delete Device
+  function purgeDeviceConfigs(id) {
+    console.log('Purge device configs:', id);
+    axios
+      .post('/api/device/purge-failed-configs', {
+        device_id: id
+      })
+      .then(response => {
+        toastSuccess('Device Configurations Purged', 'The device failed configurations purge jobs has been successfully sent to the queue.');
+      })
+      .catch(error => {
+        console.error('Error Purge device configs:', error);
+        toastError('Error', 'Failed to purge device configurations.');
+      });
+  }
+
+  // Delete Device
   const deleteDevice = async id => {
     try {
       await axios.delete(`/api/devices/${id}`);
@@ -254,6 +270,7 @@ export function useDevices() {
     lastPage,
     newDeviceModalKey,
     perPage,
+    purgeDeviceConfigs,
     searchTerm,
     showConfirmDelete,
     sortParam,

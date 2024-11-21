@@ -2,7 +2,7 @@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ref } from 'vue';
 
-const emits = defineEmits(['openDeviceEdit', 'onDelete']);
+const emits = defineEmits(['openDeviceEdit', 'onDelete', 'onPurge']);
 
 defineProps({
   showEditBtn: {
@@ -17,6 +17,10 @@ function handleDelete() {
 
 function openDeviceEdit() {
   emits('openDeviceEdit');
+}
+
+function onPurge() {
+  emits('onPurge');
 }
 </script>
 
@@ -55,7 +59,8 @@ function openDeviceEdit() {
         </DropdownMenuItem>
         <DropdownMenuItem
           v-if="showEditBtn"
-          class="cursor-pointer hover:bg-rcgray-600">
+          class="cursor-pointer hover:bg-rcgray-600"
+          @click="onPurge()">
           <span>Purge Failed Configs</span>
           <DropdownMenuShortcut>
             <Icon icon="icon-park-twotone:delete-five" />

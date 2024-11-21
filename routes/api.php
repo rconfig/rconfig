@@ -28,6 +28,7 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
         Route::get('/enable/{id}', 'DeviceController@enable');
         Route::resource('comments', 'DeviceCommentController');
     });
+
     Route::get('device-comments/{deviceid}', 'DeviceCommentController@commentsByDeviceId');
 
     Route::resource('categories', 'CategoryController');
