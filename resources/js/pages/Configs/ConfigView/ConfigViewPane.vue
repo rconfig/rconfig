@@ -5,12 +5,13 @@ import DeviceViewPaneDropdown from '@/pages/Inventory/Devices/DeviceView/DeviceV
 import Loading from '@/pages/Shared/Loading.vue';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useConfigViewPane } from '@/pages/Configs/ConfigView/useConfigViewPane';
+const emit = defineEmits(['close']);
 
 const props = defineProps({
   configId: Number
 });
 
-const { closeNav, configData, isLoading, panelElement2 } = useConfigViewPane(props);
+const { configData, isLoading, panelElement2 } = useConfigViewPane(props, emit);
 </script>
 
 <template>

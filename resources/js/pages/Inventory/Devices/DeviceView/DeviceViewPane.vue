@@ -11,12 +11,13 @@ import Loading from '@/pages/Shared/Loading.vue';
 import Spinner from '@/pages/Shared/Icon/Spinner.vue';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useDeviceViewPane } from '@/pages/Inventory/Devices/DeviceView/useDeviceViewPane';
+const emit = defineEmits(['close']);
 
 const props = defineProps({
   editId: Number
 });
 
-const { addToFavorites, appDirPath, closeNav, copyDebug, deviceData, downloadNow, downloadStatus, favoriteItem, isLoading, leftNavSelected, mainNavSelected, panelElement2, selectLeftNavView, selectMainNavView } = useDeviceViewPane(props);
+const { addToFavorites, appDirPath, closeNav, copyDebug, deviceData, downloadNow, downloadStatus, favoriteItem, isLoading, leftNavSelected, mainNavSelected, panelElement2, selectLeftNavView, selectMainNavView } = useDeviceViewPane(props, emit);
 </script>
 
 <template>

@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ref, onMounted, inject } from 'vue';
 import { useDialogStore } from '@/stores/dialogActions';
+import { useRoute, useRouter } from 'vue-router'; // Import the useRoute from Vue Router
 
 const emit = defineEmits(['toggle-view']);
 
@@ -17,6 +18,7 @@ const { openDialog, closeDialog, isDialogOpen } = dialogStore;
 const latestConfigs = ref({});
 const isLoading = ref(false);
 const formatters = inject('formatters');
+const router = useRouter();
 
 onMounted(() => {
   refreshConfigs();
@@ -44,6 +46,10 @@ function refreshConfigs() {
 function emitToggleView() {
   emit('toggle-view', 'all');
 }
+
+function viewDetailsPane(configId) {
+  router.push({ name: 'configsview', params: { id: parseInt(configId) }, query: { ref: 'devicesview', refId: props.deviceId } });
+}
 </script>
 
 <template>
@@ -53,7 +59,7 @@ function emitToggleView() {
         <span class="inline-flex flex-row items-center h-[24px] rounded-md px-1.5 gap-1 shadow-[inset_0_0_0_1px_rgb(69,71,74)] bg-[#313337]">
           <span class="flex-[0_1_auto] min-w-0 overflow-hidden text-ellipsis whitespace-nowrap inline-flex line-clamp-1 items-center">
             <StatusGreenIcon class="mr-2" />
-            Lasted Good Config Downloads
+            Latest Good Config Downloads
           </span>
         </span>
         <span class="flex-1 bg-[rgb(49,51,55)] bg-[rgb(49,51,55)] flex-shrink-0 h-px w-full"></span>
@@ -103,8 +109,15 @@ function emitToggleView() {
             <TableRow v-for="row in latestConfigs">
               <TableCell>1</TableCell>
               <TableCell>{{ row.command }}</TableCell>
-              <TableCell>{{ row.config_filename }}</TableCell>
-              <TableCell>{{ formatters.formatFileSize(row.config_filesize) }}</TableCell>
+              <TableCell>
+                <Button
+                  class="px-2 py-0 hover:bg-rcgray-800 rounded-xl"
+                  variant="ghost"
+                  @click="viewDetailsPane(row.id)">
+                  <span class="border-b">{{ row.config_filename }}</span>
+                </Button>
+              </TableCell>
+              <TableCell>{{ row.config_filesize ? formatters.formatFileSize(row.config_filesize) : '' }}</TableCell>
               <TableCell>{{ formatters.formatTime(row.created_at) }}</TableCell>
               <TableCell>
                 <StatusRedIcon v-if="row.download_status === 0" />
@@ -132,7 +145,9 @@ function emitToggleView() {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger as-child>
-                      <Button variant="ghost">
+                      <Button
+                        variant="ghost"
+                        @click="viewDetailsPane(row.id)">
                         <Icon
                           icon="hugeicons:file-view"
                           class="size-5 text-muted-foreground hover:text-blue-500" />

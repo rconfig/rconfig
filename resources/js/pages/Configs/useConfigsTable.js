@@ -203,7 +203,7 @@ export function useConfigsTable(props) {
   }
 
   function viewDetailsPane(id) {
-    router.push({ name: 'configsview', params: { id: parseInt(id) } });
+    router.push({ name: 'configsview', params: { id: parseInt(id) }, query: { ref: 'configs' } });
   }
 
   return {

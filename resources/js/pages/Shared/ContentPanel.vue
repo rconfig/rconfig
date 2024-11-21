@@ -11,12 +11,14 @@ const router = useRouter();
 const emit = defineEmits(['close']);
 const pandelId = ref(0);
 const panelContentName = ref(null);
+const referringPage = ref(null);
 
 const props = defineProps({});
 
 onMounted(() => {
   pandelId.value = parseInt(route.params.id, 10);
   panelContentName.value = route.name;
+  referringPage.value = route.query.ref || null;
 });
 
 function closeDeviceViewPanel() {
@@ -31,7 +33,16 @@ function closeTemplateViewPanel() {
 
 function closeConfigViewPanel() {
   panelContentName.value = null;
-  router.push({ name: 'configs' });
+  if (referringPage.value) {
+    // Navigate back to the referring page with or without the ID
+    const navigationParams = route.query.refId ? { name: route.query.ref, params: { id: route.query.refId } } : { name: route.query.ref };
+
+    // Navigate back to the referring page with or without the ID
+    router.push(navigationParams);
+  } else {
+    // Default fallback, if no referring page is set
+    router.push({ name: 'configs' });
+  }
 }
 
 function close() {

@@ -5,7 +5,7 @@ import { useFavoritesStore } from '@/stores/favorites';
 import { usePanelStore } from '@/stores/panelStore'; // Import the Pinia store
 import { useToaster } from '@/composables/useToaster'; // Import the composable
 
-export function useDeviceViewPane(props) {
+export function useDeviceViewPane(props, emit) {
   const appDirPath = ref(false);
   const deviceData = ref(null);
   const downloadStatus = ref(null);

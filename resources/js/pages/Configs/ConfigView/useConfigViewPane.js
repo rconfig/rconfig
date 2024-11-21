@@ -4,7 +4,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { usePanelStore } from '@/stores/panelStore'; // Import the Pinia store
 import { useToaster } from '@/composables/useToaster'; // Import the composable
 
-export function useConfigViewPane(props) {
+export function useConfigViewPane(props, emit) {
   const configData = ref(null);
   const isLoading = ref(false);
   const panelElement2 = ref(null);
@@ -53,12 +53,7 @@ export function useConfigViewPane(props) {
     close();
   }
 
-  function closeNav() {
-    panelElement2?.value.isCollapsed ? panelElement2?.value.expand() : panelElement2?.value.collapse();
-  }
-
   return {
-    closeNav,
     configData,
     isLoading,
     panelElement2
