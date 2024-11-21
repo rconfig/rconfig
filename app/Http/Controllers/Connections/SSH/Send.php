@@ -15,4 +15,9 @@ class Send
     {
         return $this->connectionObj->connection->write($command . "\r");
     }
+
+    public function sendStringExec($command)
+    {
+        return $this->connectionObj->connection->exec($command . "\r");
+    }
 }
