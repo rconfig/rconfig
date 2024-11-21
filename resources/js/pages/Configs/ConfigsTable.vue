@@ -20,7 +20,7 @@ const props = defineProps({
     default: 0
   }
 });
-const { filterCommand, configs, filterStatus, isLoading, currentPage, perPage, lastPage, editId, clearFilters, formatters, searchTerm, openDialog, isDialogOpen, getTabledata, createConfig, updateConfig, deleteConfig, deleteManyConfigs, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam, showConfirmDelete } = useConfigsTable(props);
+const { viewDetailsPane, filterCommand, configs, filterStatus, isLoading, currentPage, perPage, lastPage, editId, clearFilters, formatters, searchTerm, openDialog, isDialogOpen, getTabledata, createConfig, updateConfig, deleteConfig, deleteManyConfigs, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam, showConfirmDelete } = useConfigsTable(props);
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(configs);
 
 onMounted(() => {
@@ -112,7 +112,7 @@ onUnmounted(() => {
                 variant="ghost"
                 @click="toggleSort('device_name')">
                 <Icon :icon="sortParam === 'device_name' ? 'lucide:sort-asc' : sortParam === '-device_name' ? 'lucide:sort-desc' : 'hugeicons:sorting-05'" />
-                <span class="ml-2">Name</span>
+                <span class="ml-2">Filename</span>
               </Button>
             </TableHead>
             <TableHead class="w-[15%]">
@@ -124,10 +124,10 @@ onUnmounted(() => {
                 <span class="ml-2">Command</span>
               </Button>
             </TableHead>
-            <TableHead class="w-[10%]">config_filesize</TableHead>
-            <TableHead class="w-[10%]">config_filename</TableHead>
-            <TableHead class="w-[10%]">downloaded</TableHead>
-            <TableHead class="w-[10%]">Actions</TableHead>
+            <TableHead class="w-[10%]">Device Name</TableHead>
+            <TableHead class="w-[10%]">Filesize</TableHead>
+            <TableHead class="w-[10%]">Downloaded</TableHead>
+            <TableHead class="w-[10%]"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -156,16 +156,21 @@ onUnmounted(() => {
                 <StatusGrayIcon v-if="row.download_status === 100" />
               </TableCell>
               <TableCell class="text-start">
-                {{ row.device_name }}
+                <Button
+                  class="px-2 py-0 hover:bg-rcgray-800 rounded-xl"
+                  variant="ghost"
+                  @click="viewDetailsPane(row.id)">
+                  <span class="border-b">{{ row.config_filename }}</span>
+                </Button>
               </TableCell>
               <TableCell class="text-start">
                 {{ row.command }}
               </TableCell>
               <TableCell class="text-start">
-                {{ row.config_filename }}
+                {{ row.device_name }}
               </TableCell>
               <TableCell class="text-start">
-                {{ row.config_filesize }}
+                {{ row.config_filesize ? formatters.formatFileSize(row.config_filesize) : '' }}
               </TableCell>
               <TableCell class="text-start">
                 {{ formatters.formatTime(row.created_at) }}

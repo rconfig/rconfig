@@ -200,7 +200,12 @@ export function useConfigsTable(props) {
     getTabledata();
   }
 
+  function viewDetailsPane(id) {
+    router.push({ name: 'configsview', params: { id: parseInt(id) } });
+  }
+
   return {
+    viewDetailsPane,
     clearFilters,
     filterStatus,
     filterCommand,
