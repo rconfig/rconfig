@@ -1,5 +1,6 @@
 <script setup>
 import DeviceAddEditDialog from '@/pages/Inventory/Devices/DeviceAddEditDialog.vue';
+import ConfirmDeleteAlert from '@/pages/Shared/AlertDialog/ConfirmDeleteAlert.vue';
 import DeviceConfigsViewPanel from '@/pages/Inventory/Devices/DeviceView/DeviceConfigsViewPanel.vue';
 import DeviceDetailsLeftNav from '@/pages/Inventory/Devices/DeviceView/DeviceDetailsLeftNav.vue';
 import DeviceDetailsMainNav from '@/pages/Inventory/Devices/DeviceView/DeviceDetailsMainNav.vue';
@@ -21,7 +22,12 @@ const props = defineProps({
 });
 
 const { addToFavorites, appDirPath, closeNav, copyDebug, deviceData, downloadNow, downloadStatus, favoriteItem, fetchDevice, isLoading, leftNavSelected, mainNavSelected, panelElement2, selectLeftNavView, selectMainNavView } = useDeviceViewPane(props, emit);
-const { handleSave, viewEditDialog } = useDevices();
+const { handleSave, viewEditDialog, showConfirmDelete, deleteDevice } = useDevices();
+
+function handleDelete() {
+  deleteDevice(props.editId);
+  emit('close');
+}
 </script>
 
 <template>
@@ -70,7 +76,9 @@ const { handleSave, viewEditDialog } = useDevices();
             class="mr-2" />
           <span v-if="!downloadStatus">Download Now</span>
         </Button>
-        <DeviceViewPaneDropdown @openDeviceEdit="viewEditDialog(editId)" />
+        <DeviceViewPaneDropdown
+          @openDeviceEdit="viewEditDialog(editId)"
+          @onDelete="showConfirmDelete = true" />
       </div>
     </div>
 
@@ -147,6 +155,13 @@ const { handleSave, viewEditDialog } = useDevices();
           fetchDevice(editId);
         "
         :editId="editId" />
+
+      <!-- FOR MULTIPLE DELETE -->
+      <ConfirmDeleteAlert
+        :ids="[editId]"
+        :showConfirmDelete="showConfirmDelete"
+        @close="showConfirmDelete = false"
+        @handleDelete="handleDelete()" />
     </div>
   </main>
 </template>

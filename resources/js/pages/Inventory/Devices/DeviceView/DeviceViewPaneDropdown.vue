@@ -2,8 +2,7 @@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ref } from 'vue';
 
-const showConfirmDelete = ref(false);
-const emits = defineEmits(['openDeviceEdit', 'viewConfigs']);
+const emits = defineEmits(['openDeviceEdit', 'onDelete']);
 
 defineProps({
   showEditBtn: {
@@ -12,17 +11,8 @@ defineProps({
   }
 });
 
-function handleEdit() {
-  emits('onEdit');
-}
-
-function showAlert() {
-  showConfirmDelete.value = true;
-}
-
 function handleDelete() {
   emits('onDelete');
-  showConfirmDelete.value = false;
 }
 
 function openDeviceEdit() {
@@ -75,7 +65,7 @@ function openDeviceEdit() {
         <DropdownMenuSeparator v-if="showEditBtn" />
         <DropdownMenuItem
           class="cursor-pointer hover:bg-rcgray-600"
-          @click="showAlert">
+          @click="handleDelete()">
           <span class="text-red-400">Delete</span>
           <DropdownMenuShortcut>
             <Icon icon="flat-color-icons:full-trash" />
