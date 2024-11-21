@@ -69,7 +69,6 @@ function selectItem(item) {
 function fetchCommand() {
   axios.get(`/api/configs/distinct-commands/${props.deviceId}/?perPage=10000`).then(response => {
     options.value = response.data.data;
-    console.log(options.value);
   });
 }
 

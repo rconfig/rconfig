@@ -198,7 +198,9 @@ onUnmounted(() => {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger as-child>
-                        <Button variant="ghost">
+                        <Button
+                          variant="ghost"
+                          @click="viewDetailsPane(row.id)">
                           <Icon
                             icon="hugeicons:file-view"
                             class="size-5 text-muted-foreground hover:text-blue-500" />

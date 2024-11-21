@@ -4,6 +4,7 @@ import { useDebounceFn } from '@vueuse/core';
 import { useDialogStore } from '@/stores/dialogActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
 import { eventBus } from '@/composables/eventBus';
+import { useRoute, useRouter } from 'vue-router'; // Import the useRoute from Vue Router
 
 export function useConfigsTable(props) {
   const currentPage = ref(1);
@@ -20,6 +21,7 @@ export function useConfigsTable(props) {
   const showConfirmDelete = ref(false);
   const filterStatus = ref([]);
   const filterCommand = ref([]);
+  const router = useRouter();
 
   const { openDialog, isDialogOpen } = dialogStore;
   const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications

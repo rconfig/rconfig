@@ -17,9 +17,18 @@ export function useFormatters() {
     return new Date(timestamp).toLocaleString();
   }
 
+  function formatDuration(starttime, endtime) {
+    const start = new Date(starttime);
+    const end = new Date(endtime);
+    const diff = end - start;
+    const seconds = Math.floor(diff / 1000);
+    return `${seconds} seconds`;
+  }
+
   return {
     formatFileSize,
     formatTime,
+    formatDuration,
     uppercase
   };
 }

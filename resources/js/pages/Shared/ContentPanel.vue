@@ -1,5 +1,6 @@
 <script setup>
 import DeviceViewPane from '@/pages/Inventory/Devices/DeviceView/DeviceViewPane.vue';
+import ConfigViewPane from '@/pages/Configs/ConfigView/ConfigViewPane.vue';
 import TemplateAddEditPane from '@/pages/Inventory/Templates/TemplateAddEditPane.vue';
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router'; // Import the useRoute from Vue Router
@@ -20,14 +21,17 @@ onMounted(() => {
 
 function closeDeviceViewPanel() {
   panelContentName.value = null;
-  console.log(panelContentName);
   router.push({ name: 'devices' });
 }
 
 function closeTemplateViewPanel() {
   panelContentName.value = null;
-  console.log(panelContentName);
   router.push({ name: 'templates' });
+}
+
+function closeConfigViewPanel() {
+  panelContentName.value = null;
+  router.push({ name: 'configs' });
 }
 
 function close() {
@@ -37,6 +41,10 @@ function close() {
 
   if (panelContentName.value === 'templatesview') {
     closeTemplateViewPanel();
+  }
+
+  if (panelContentName.value === 'configsview') {
+    closeConfigViewPanel();
   }
   emit('close');
 }
@@ -64,7 +72,12 @@ function close() {
       <h2
         class="items-center content-center text-muted-foreground"
         v-if="panelContentName === 'templatesview'">
-        {{ pandelId === 0 ? 'Add' : 'Edit' }} {{ pandelId === 0 ? '' : '(' + pandelId + ')' }}
+        {{ pandelId === 0 ? 'Add Template' : 'Edit Template' }} {{ pandelId === 0 ? '' : '(' + pandelId + ')' }}
+      </h2>
+      <h2
+        class="items-center content-center text-muted-foreground"
+        v-if="panelContentName === 'configsview'">
+        {{ pandelId === 0 ? 'Add Config' : 'View Config' }} {{ pandelId === 0 ? '' : '(' + pandelId + ')' }}
       </h2>
 
       <div class="flex justify-end">
@@ -83,6 +96,13 @@ function close() {
         v-if="panelContentName === 'devicesview'"
         :editId="pandelId"
         @close="closeDeviceViewPanel()" />
+    </transition>
+
+    <transition name="fade">
+      <ConfigViewPane
+        v-if="panelContentName === 'configsview'"
+        :editId="pandelId"
+        @close="closeConfigViewPanel()" />
     </transition>
   </div>
 </template>
