@@ -5,12 +5,7 @@ import { useToaster } from '@/composables/useToaster';
 export default function useConfigViewMainPanel(props) {
   const { toastSuccess, toastError } = useToaster();
   const errors = ref([]);
-  const code = ref('');
-  const model = ref({
-    code: '',
-    templateName: '',
-    description: ''
-  });
+  const config_location = ref('');
 
   function getDefaultEditorCode(meditor) {
     meditor.updateOptions({
@@ -24,6 +19,7 @@ export default function useConfigViewMainPanel(props) {
       .get('/api/configs/view-config/' + configId)
       .then(response => {
         // handle success
+        config_location.value = response.data.data.config_location;
         meditor.getModel().setValue(response.data.data.content);
       })
       .catch(error => {
@@ -51,8 +47,7 @@ export default function useConfigViewMainPanel(props) {
 
   return {
     errors,
-    code,
-    model,
+    config_location,
     getDefaultEditorCode,
     showConfiguration,
     handleKeyDown

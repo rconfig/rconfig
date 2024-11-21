@@ -12,7 +12,7 @@ const props = defineProps({
 let meditor = null;
 
 const { checkDarkModeIsSet, checkLineNumbersIsSet, checkMiniMapIsSet, checkStickyScrollIsSet, copied, copy, copyPath, darkmode, download, initEditor, lineNumbers, meditorValue, minimap, search, toggleEditorDarkMode, toggleEditorLineNumbers, toggleEditorMinimap, toggleStickyScroll } = useCodeEditor(monaco);
-const { errors, code, getDefaultEditorCode, showConfiguration, saveDialog, handleKeyDown } = useConfigViewMainPanel(props);
+const { errors, getDefaultEditorCode, showConfiguration, saveDialog, config_location } = useConfigViewMainPanel(props);
 
 const isLoading = ref(false);
 const toggleStateMultiple = ref([]); //'dark', 'lineNumbers', 'minimap', 'stickyscroll'
@@ -40,13 +40,6 @@ function initCodeEditor() {
 <template>
   <div>
     <div class="p-2 overflow-none">
-      <!-- <div class="flex flex-row items-center justify-start gap-2 pt-1">
-        <span class="inline-flex flex-row items-center h-[24px] rounded-md px-1.5 gap-1 shadow-[inset_0_0_0_1px_rgb(69,71,74)] bg-[#313337]">
-          <span class="flex-[0_1_auto] min-w-0 overflow-hidden text-ellipsis whitespace-nowrap inline-flex line-clamp-1">Last 5 Events</span>
-        </span>
-        <span class="flex-[1_1_100%] bg-[#313337] flex flex-shrink-0 h-px w-full"></span>
-      </div> -->
-
       <div
         class="mt-4 space-y-2"
         v-if="isLoading">
@@ -73,26 +66,25 @@ function initCodeEditor() {
               <div>
                 <Button
                   variant="ghost"
+                  @click="copyPath(config_location)"
+                  title="copy path">
+                  <Icon icon="lucide-lab:copy-file-path"></Icon>
+                </Button>
+
+                <Button
+                  variant="ghost"
                   @click="copy"
-                  title="copy">
+                  title="copy content">
                   <Icon icon="mdi:content-copy"></Icon>
                 </Button>
 
                 <Button
                   variant="ghost"
                   class="ml-1"
-                  @click="download(model.fileName)"
+                  @click="download(config_location)"
                   title="download">
                   <Icon icon="mingcute:download-fill"></Icon>
                 </Button>
-
-                <!-- <Button
-            variant="ghost"
-            class="ml-1"
-            @click="showConfigFullScreen()"
-            title="Full Screen">
-            <Icon icon="ant-design:fullscreen-outlined"></Icon>
-          </Button> -->
               </div>
               <!-- LEFT BUTTONS -->
 
@@ -129,14 +121,15 @@ function initCodeEditor() {
                       icon="tabler:map-2"
                       class="w-4 h-4" />
                   </ToggleGroupItem>
-                  <ToggleGroupItem
+                  <!-- <ToggleGroupItem
+                   disabled for configs as it is not needed
                     value="stickyscroll"
                     title="Sticky Scroll"
                     @click="toggleStickyScroll()">
                     <Icon
                       icon="clarity:scroll-outline-alerted"
                       class="w-4 h-4" />
-                  </ToggleGroupItem>
+                  </ToggleGroupItem> -->
                 </ToggleGroup>
               </div>
               <!-- RIGHT BUTTONS -->
