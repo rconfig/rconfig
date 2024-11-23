@@ -6,13 +6,14 @@ import Loading from '@/pages/Shared/Table/Loading.vue';
 import NoResults from '@/pages/Shared/Table/NoResults.vue';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
 import SystemLogsTableHoverCard from '@/pages/Settings/Panels/Components/SystemLogsTableHoverCard.vue';
+import SystemLogsTableSeverityFilter from '@/pages/Settings/Panels/Components/SystemLogsTableSeverityFilter.vue';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { eventBus } from '@/composables/eventBus';
 import { onMounted } from 'vue';
 import { useRowSelection } from '@/composables/useRowSelection';
 import { useSystemLogs } from '@/pages/Settings/Panels/Components/useSystemLogs';
 
-const { currentPage, deleteLog, deleteManyLogs, fetchLogs, filters, formatters, isLoading, lastPage, logs, perPage, searchTerm, showConfirmDelete, sortParam, toggleSort } = useSystemLogs();
+const { clearFilters, currentPage, deleteLog, deleteManyLogs, fetchLogs, filterSeverity, formatters, isLoading, lastPage, logs, perPage, searchTerm, showConfirmDelete, sortParam, toggleSort } = useSystemLogs();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(logs);
 
 const props = defineProps({});
@@ -36,9 +37,21 @@ onMounted(() => {
           data-lpignore="true"
           placeholder="Filter logs..."
           v-model="searchTerm" />
-        <ClearFilters
-          v-if="searchTerm"
-          @update:model-value="searchTerm = ''" />
+
+        <Separator
+          orientation="vertical"
+          class="relative w-px h-6 mx-4 shrink-0 bg-border" />
+
+        <span class="mr-2 text-muted-foreground">Filters:</span>
+        <!-- FILTERS -->
+
+        <div class="flex gap-2">
+          <SystemLogsTableSeverityFilter v-model="filterSeverity" />
+
+          <ClearFilters
+            v-if="searchTerm || filterSeverity.length"
+            @update:model-value="clearFilters" />
+        </div>
       </div>
       <div class="flex">
         <Button
@@ -78,7 +91,7 @@ onMounted(() => {
                 variant="ghost"
                 @click="toggleSort('log_name')">
                 <Icon :icon="sortParam === 'log_name' ? 'lucide:sort-asc' : sortParam === '-log_name' ? 'lucide:sort-desc' : 'hugeicons:sorting-05'" />
-                <span class="ml-2">Name</span>
+                <span class="ml-2">Severity</span>
               </Button>
             </TableHead>
             <TableHead class="w-[50%]">Description</TableHead>

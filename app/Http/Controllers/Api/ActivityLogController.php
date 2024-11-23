@@ -23,9 +23,10 @@ class ActivityLogController extends ApiBaseController
     {
 
         $response = QueryBuilder::for(ActivityLog::class)
-            ->allowedFilters(['description'])
+            ->allowedFilters(['description', 'log_name'])
             ->defaultSort('-id')
             ->allowedSorts('id', 'log_name')
+
             ->paginate((int) $request->perPage);
 
         return response()->json($response);

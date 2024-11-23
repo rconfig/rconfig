@@ -17,6 +17,7 @@ export function useSystemLogs() {
   const showConfirmDelete = ref(false);
   const sortParam = ref('-id');
   const formatters = inject('formatters');
+  const filterSeverity = ref([]);
 
   onMounted(() => {
     fetchLogs();
@@ -42,6 +43,21 @@ export function useSystemLogs() {
       isLoading.value = false;
     }
   }
+
+  watch(
+    filterSeverity,
+    (newVal, oldVal) => {
+      console.log('Filter severity:', newVal);
+      if (newVal && newVal.length > 0) {
+        const names = newVal.map(item => item.name);
+        filters.value[`filter[log_name]`] = names.join(',');
+      } else {
+        delete filters.value[`filter[log_name]`];
+      }
+      fetchLogs();
+    },
+    { deep: true }
+  );
 
   // Delete Log
   const deleteLog = async id => {
@@ -100,12 +116,21 @@ export function useSystemLogs() {
     fetchLogs();
   }
 
+  function clearFilters() {
+    filters.value = {};
+    filterSeverity.value = [];
+    searchTerm.value = '';
+    fetchLogs();
+  }
+
   return {
+    clearFilters,
     currentPage,
     deleteLog,
     deleteManyLogs,
     fetchLogs,
     filters,
+    filterSeverity,
     formatters,
     isLoading,
     lastPage,
