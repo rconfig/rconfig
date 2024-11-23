@@ -1,5 +1,6 @@
 <script setup>
 import ActionsMenu from '@/pages/Shared/Table/ActionsMenu.vue';
+import ClearFilters from '@/pages/Shared/Filters/ClearFilters.vue';
 import ConfirmDeleteAlert from '@/pages/Shared/AlertDialog/ConfirmDeleteAlert.vue';
 import DeviceListPopover from '@/pages/Shared/Popover/DeviceListPopover.vue';
 import Loading from '@/pages/Shared/Table/Loading.vue';
@@ -36,18 +37,15 @@ onUnmounted(() => {
     <div class="flex items-center justify-between p-4">
       <div class="flex items-center">
         <Input
-          class="max-w-sm ml-4"
+          class="max-w-sm ml-4 mr-2"
           autocomplete="off"
           data-1p-ignore
           data-lpignore="true"
           placeholder="Filter tags..."
           v-model="searchTerm" />
-        <Button
-          class="ml-2 hover:bg-gray-800"
-          variant="outline"
-          @click="searchTerm = ''">
-          Clear Filter
-        </Button>
+        <ClearFilters
+          v-if="searchTerm"
+          @update:model-value="searchTerm = ''" />
       </div>
       <div class="flex">
         <Button

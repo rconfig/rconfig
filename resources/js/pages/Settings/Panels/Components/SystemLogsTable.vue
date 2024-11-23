@@ -1,15 +1,16 @@
 <script setup>
-import { onMounted } from 'vue';
-import { useSystemLogs } from '@/pages/Settings/Panels/Components/useSystemLogs';
 import ActionsMenu from '@/pages/Shared/Table/ActionsMenu.vue';
+import ClearFilters from '@/pages/Shared/Filters/ClearFilters.vue';
 import ConfirmDeleteAlert from '@/pages/Shared/AlertDialog/ConfirmDeleteAlert.vue';
 import Loading from '@/pages/Shared/Table/Loading.vue';
 import NoResults from '@/pages/Shared/Table/NoResults.vue';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useRowSelection } from '@/composables/useRowSelection';
-import { eventBus } from '@/composables/eventBus';
 import SystemLogsTableHoverCard from '@/pages/Settings/Panels/Components/SystemLogsTableHoverCard.vue';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { eventBus } from '@/composables/eventBus';
+import { onMounted } from 'vue';
+import { useRowSelection } from '@/composables/useRowSelection';
+import { useSystemLogs } from '@/pages/Settings/Panels/Components/useSystemLogs';
 
 const { currentPage, deleteLog, deleteManyLogs, fetchLogs, filters, formatters, isLoading, lastPage, logs, perPage, searchTerm, showConfirmDelete, sortParam, toggleSort } = useSystemLogs();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(logs);
@@ -29,18 +30,15 @@ onMounted(() => {
     <div class="flex items-center justify-between p-4">
       <div class="flex items-center">
         <Input
-          class="max-w-sm ml-4"
+          class="max-w-sm ml-4 mr-2"
           autocomplete="off"
           data-1p-ignore
           data-lpignore="true"
-          placeholder="Filter tags..."
+          placeholder="Filter logs..."
           v-model="searchTerm" />
-        <Button
-          class="ml-2 hover:bg-gray-800"
-          variant="outline"
-          @click="searchTerm = ''">
-          Clear Filter
-        </Button>
+        <ClearFilters
+          v-if="searchTerm"
+          @update:model-value="searchTerm = ''" />
       </div>
       <div class="flex">
         <Button
