@@ -5,7 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import Loading from '@/pages/Shared/Table/Loading.vue';
 import { EmitFlags } from 'typescript';
 
-const emit = defineEmits(['hasNotifications']);
+const emit = defineEmits(['hasNotifications', 'notificationsLength']);
 const props = defineProps({});
 const isLoading = ref(true);
 const notifications = ref([]);

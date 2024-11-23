@@ -23,7 +23,7 @@ const { clearFilters, createDevice, currentPage, deleteDevice, deleteManyDevices
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(devices);
 const sheetStore = useSheetStore();
 const { openSheet, closeSheet, isSheetOpen } = sheetStore;
-const commentsDeviceId = ref(null);
+const commentsDeviceId = ref(0);
 const commentsDeviceName = ref('');
 const commentSheetKey = ref(0);
 const isClone = ref(false);
@@ -254,6 +254,7 @@ function openComments(id) {
                   @onEdit="viewEditDialog(row.id)"
                   @onDelete="deleteDevice(row.id)" />
               </TableCell>
+
               <!-- ACTIONS MENU -->
             </TableRow>
           </template>

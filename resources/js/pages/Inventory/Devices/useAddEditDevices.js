@@ -33,8 +33,6 @@ export function useAddEditDevices(editId, emit, isClone) {
   });
 
   onMounted(() => {
-    console.log('editId', editId);
-    console.log('isClone', isClone);
     if (editId > 0) {
       isLoading.value = true;
       axios.get(`/api/devices/${editId}`).then(response => {
