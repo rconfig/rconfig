@@ -6,15 +6,22 @@ import Pagination from '@/pages/Shared/Table/Pagination.vue';
 import UserAddEditDialog from '@/pages/Users/UserAddEditDialog.vue';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { onMounted, onUnmounted } from 'vue';
+import { useRoute } from 'vue-router'; // Import useRoute for accessing route parameters
 import { useRowSelection } from '@/composables/useRowSelection';
 import { useUsers } from '@/pages/Users/useUsers';
 
 const { editId, users, currentPage, perPage, searchTerm, lastPage, isLoading, fetchUsers, viewEditDialog, createUser, deleteUser, handleSave, handleKeyDown, newUserModalKey, toggleSort, sortParam } = useUsers();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(users);
+const route = useRoute(); // Get route instance
 
 onMounted(() => {
   fetchUsers();
   window.addEventListener('keydown', handleKeyDown);
+
+  // Check router param to open UserAddEditDialog
+  if (route.params.userId && parseInt(route.params.userId, 10) > 0) {
+    viewEditDialog(route.params.userId);
+  }
 });
 
 // Cleanup event listener on unmount

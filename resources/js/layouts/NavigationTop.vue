@@ -147,7 +147,7 @@ function openNav() {
                 :to="'/settings/users/' + $userId"
                 class="flex items-center py-2 ml-2">
                 <UserIcon class="mr-2" />
-                My Account
+                My Profile
               </router-link>
             </DropdownMenuItem>
             <DropdownMenuItem class="p-0 cursor-pointer hover:bg-gray-800">
