@@ -1,9 +1,7 @@
 <script setup>
-import { ref } from 'vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-
-const test = ref(false);
+import { useRouter } from 'vue-router'; // Import the useRoute from Vue Router
 
 defineProps({
   configinfo: {
@@ -15,11 +13,31 @@ defineProps({
     required: true
   }
 });
+
+const router = useRouter();
+
+function openDevices() {
+  router.push({ name: 'devices' });
+}
+
+function downDevices() {
+  router.push({ name: 'devices', query: { statusId: 0 } });
+}
+
+function openConfigs() {
+  router.push({ name: 'configs' });
+}
+
+function openFailedConfigs() {
+  router.push({ name: 'configs', query: { statusId: 0 } });
+}
 </script>
 
 <template>
   <div class="grid gap-2 p-8 sm:gap-4 md:grid-cols-2 xl:gap-8 lg:grid-cols-4">
-    <Card class="border shadow rounded-xl bg-card text-card-foreground">
+    <Card
+      class="border shadow rounded-xl bg-card text-card-foreground hover:bg-rcgray-900 hover:cursor-pointer hover:shadow-blue-500/5 hover:shadow-xl"
+      @click="openDevices()">
       <CardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
         <CardTitle class="text-sm font-medium">Device count</CardTitle>
         <InventoryIcon />
@@ -43,7 +61,9 @@ defineProps({
         </div>
       </CardContent>
     </Card>
-    <Card>
+    <Card
+      class="border shadow rounded-xl bg-card text-card-foreground hover:bg-rcgray-900 hover:cursor-pointer hover:shadow-blue-500/5 hover:shadow-xl"
+      @click="downDevices()">
       <CardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
         <CardTitle class="text-sm font-medium">Devices down</CardTitle>
         <Icon
@@ -67,7 +87,9 @@ defineProps({
         </div>
       </CardContent>
     </Card>
-    <Card>
+    <Card
+      class="border shadow rounded-xl bg-card text-card-foreground hover:bg-rcgray-900 hover:cursor-pointer hover:shadow-blue-500/5 hover:shadow-xl"
+      @click="openConfigs()">
       <CardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
         <CardTitle class="text-sm font-medium">Total configs</CardTitle>
         <Icon
@@ -90,7 +112,9 @@ defineProps({
         </div>
       </CardContent>
     </Card>
-    <Card>
+    <Card
+      class="border shadow rounded-xl bg-card text-card-foreground hover:bg-rcgray-900 hover:cursor-pointer hover:shadow-blue-500/5 hover:shadow-xl"
+      @click="openFailedConfigs()">
       <CardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
         <CardTitle class="text-sm font-medium">Failed configs</CardTitle>
         <Icon

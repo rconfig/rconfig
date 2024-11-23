@@ -7,7 +7,18 @@ const routes = [
   { path: '/commandgroups', name: 'commandgroups', component: () => import('@/pages/Inventory/Main.vue') },
   { path: '/devices', name: 'devices', component: () => import('@/pages/Inventory/Main.vue') },
   { path: '/device/view/:id', name: 'devicesview', component: () => import('@/pages/Shared/ContentPanel.vue'), props: true },
-  { path: '/configs', name: 'configs', component: () => import('@/pages/Configs/Main.vue'), props: true },
+  {
+    path: '/configs',
+    name: 'configs',
+    component: () => import('@/pages/Configs/Main.vue'),
+    props: true,
+    meta: {
+      breadcrumb: [
+        { label: 'Home', link: '/' },
+        { label: 'Configs', link: '/configs' }
+      ]
+    }
+  },
   { path: '/configs/view/:id', name: 'configsview', component: () => import('@/pages/Shared/ContentPanel.vue'), props: true },
   { path: '/tags', name: 'tags', component: () => import('@/pages/Inventory/Main.vue') },
   { path: '/vendors', name: 'vendors', component: () => import('@/pages/Inventory/Main.vue') },

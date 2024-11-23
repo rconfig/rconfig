@@ -32,6 +32,12 @@ export function useDevices() {
   // Fetch Devices
   async function fetchDevices(params = {}) {
     isLoading.value = true;
+    // check for filterstatus
+    if (filterStatus.value.length > 0) {
+      const ids = filterStatus.value.map(item => item.id);
+      filters.value[`filter[status]`] = ids.join(',');
+    }
+
     try {
       const response = await axios.get('/api/devices', {
         params: {
@@ -172,6 +178,7 @@ export function useDevices() {
   watch(
     filterStatus,
     (newVal, oldVal) => {
+      console.log('Filter status:', newVal);
       if (newVal && newVal.length > 0) {
         const ids = newVal.map(item => item.id);
         filters.value[`filter[status]`] = ids.join(',');

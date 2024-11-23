@@ -18,12 +18,20 @@ const props = defineProps({
   configsId: {
     type: Number,
     default: 0
+  },
+  statusId: {
+    type: Number,
+    default: 0
   }
 });
 const { viewDetailsPane, filterCommand, configs, filterStatus, isLoading, currentPage, perPage, lastPage, editId, clearFilters, formatters, searchTerm, openDialog, isDialogOpen, getTabledata, createConfig, updateConfig, deleteConfig, deleteManyConfigs, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam, showConfirmDelete } = useConfigsTable(props);
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(configs);
 
 onMounted(() => {
+  if (props.statusId) {
+    filterStatus.value = [{ id: props.statusId }];
+  }
+
   getTabledata();
 
   window.addEventListener('keydown', handleKeyDown);

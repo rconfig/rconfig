@@ -29,6 +29,12 @@ export function useConfigsTable(props) {
 
   // Fetch Configs
   function getTabledata() {
+    // check for filterstatus
+    if (filterStatus.value.length > 0) {
+      const ids = filterStatus.value.map(item => item.id);
+      filters.value[`filter[download_status]`] = ids.join(',');
+    }
+
     if (props.configsId === 0) {
       fetchAllConfigs();
     } else {

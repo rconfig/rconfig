@@ -19,6 +19,13 @@ import { useDevices } from '@/pages/Inventory/Devices/useDevices';
 import { useRowSelection } from '@/composables/useRowSelection';
 import { useSheetStore } from '@/stores/sheetActions';
 
+const props = defineProps({
+  statusId: {
+    type: Number,
+    required: false
+  }
+});
+
 const { clearFilters, createDevice, currentPage, deleteDevice, deleteManyDevices, devices, disableDevice, editId, enableDevice, fetchDevices, filterCategories, filterStatus, filterTags, filterVendor, formatters, handleKeyDown, handleSave, isLoading, lastPage, newDeviceModalKey, perPage, searchTerm, showConfirmDelete, sortParam, toggleSort, updateDevice, viewDeviceDetailsPane, viewEditDialog } = useDevices();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(devices);
 const sheetStore = useSheetStore();
@@ -27,9 +34,15 @@ const commentsDeviceId = ref(0);
 const commentsDeviceName = ref('');
 const commentSheetKey = ref(0);
 const isClone = ref(false);
+const route = useRoute(); // Get route instance
 
 onMounted(() => {
+  if (route.query.statusId) {
+    filterStatus.value = [{ id: parseInt(route.query.statusId) }];
+  }
+
   fetchDevices();
+
   window.addEventListener('keydown', handleKeyDown);
 
   eventBus.on('deleteManyDevicesSuccess', () => {

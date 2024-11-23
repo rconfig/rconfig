@@ -37,6 +37,12 @@ onMounted(() => {
     changeView(route.name); // loads the current view based on the route name
   }
 
+  // Preserve query params
+  const queryParams = route.query;
+  if (Object.keys(queryParams).length > 0) {
+    router.push({ name: currentView.value, query: queryParams });
+  }
+
   viewItems.forEach(item => {
     item.isFavorite.value = favoritesStore.isFavorite(item.id);
   });
