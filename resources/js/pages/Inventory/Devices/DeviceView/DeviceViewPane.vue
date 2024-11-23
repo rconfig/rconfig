@@ -14,6 +14,7 @@ import Spinner from '@/pages/Shared/Icon/Spinner.vue';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useDeviceViewPane } from '@/pages/Inventory/Devices/DeviceView/useDeviceViewPane';
 import { useDevices } from '@/pages/Inventory/Devices/useDevices';
+import { ref } from 'vue';
 
 const emit = defineEmits(['close']);
 
@@ -22,7 +23,8 @@ const props = defineProps({
 });
 
 const { addToFavorites, appDirPath, closeNav, copyDebug, deviceData, downloadNow, downloadStatus, favoriteItem, fetchDevice, isLoading, leftNavSelected, mainNavSelected, panelElement2, selectLeftNavView, selectMainNavView } = useDeviceViewPane(props, emit);
-const { handleSave, viewEditDialog, showConfirmDelete, deleteDevice, purgeDeviceConfigs } = useDevices();
+const { handleSave, viewEditDialog, showConfirmDelete, deleteDevice, purgeDeviceConfigs, newDeviceModalKey } = useDevices();
+const isClone = ref(false);
 
 function handleDropdownDelete() {
   deleteDevice(props.editId);
@@ -82,6 +84,7 @@ function handleDropDownPurge() {
         <DeviceViewPaneDropdown
           @onPurge="handleDropDownPurge()"
           @openDeviceEdit="viewEditDialog(editId)"
+          @openDeviceClone="viewEditDialog(editId), (isClone = true)"
           @onDelete="showConfirmDelete = true" />
       </div>
     </div>
@@ -154,10 +157,13 @@ function handleDropDownPurge() {
       style="height: calc(100vh - 450px)"></div> -->
       <!-- EDITOR -->
       <DeviceAddEditDialog
+        :key="newDeviceModalKey"
+        @close="isClone = false"
         @save="
           handleSave();
           fetchDevice(editId);
         "
+        :isClone="isClone"
         :editId="editId" />
 
       <!-- FOR MULTIPLE DELETE -->

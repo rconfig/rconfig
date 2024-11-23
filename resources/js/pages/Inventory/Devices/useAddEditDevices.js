@@ -3,7 +3,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
 import { useDialogStore } from '@/stores/dialogActions';
 
-export function useAddEditDevices(editId, emit) {
+export function useAddEditDevices(editId, emit, isClone) {
   const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
   const dialogStore = useDialogStore();
   const { closeDialog, isDialogOpen } = dialogStore;
@@ -33,11 +33,17 @@ export function useAddEditDevices(editId, emit) {
   });
 
   onMounted(() => {
+    console.log('editId', editId);
+    console.log('isClone', isClone);
     if (editId > 0) {
       isLoading.value = true;
       axios.get(`/api/devices/${editId}`).then(response => {
         model.value.device_name = response.data.device_name;
         model.value.device_ip = response.data.device_ip;
+        if (isClone === true) {
+          model.value.device_name = response.data.device_name + '-Clone';
+          model.value.device_ip = response.data.device_ip + '-Clone';
+        }
         model.value.device_port_override = response.data.device_port_override;
         model.value.device_cred_id = response.data.device_cred_id;
         model.value.device_cred.push(response.data.device_cred);
@@ -82,6 +88,12 @@ export function useAddEditDevices(editId, emit) {
 
     let id = editId > 0 ? `/${editId}` : ''; // determine if we are creating or updating
     let method = editId > 0 ? 'patch' : 'post'; // determine if we are creating or updating
+
+    if (isClone === true) {
+      id = '';
+      method = 'post';
+      console.log('id', id);
+    }
     axios[method]('/api/devices' + id, model.value)
       .then(response => {
         emit('save', response.data);
@@ -112,6 +124,7 @@ export function useAddEditDevices(editId, emit) {
 
   function confirmCloseDialog() {
     showConfirmCloseAlert.value = false;
+    emit('close');
     closeDialog('DialogNewDevice');
   }
 

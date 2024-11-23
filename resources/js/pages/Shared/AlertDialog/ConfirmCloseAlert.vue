@@ -46,12 +46,12 @@ function handleClose() {
       </AlertDialogHeader>
       <AlertDialogFooter>
         <AlertDialogCancel
-          class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse"
+          class="h-8 px-2 py-0 text-sm hover:bg-gray-700 hover:animate-pulse"
           @cancel="handleClose()">
           Cancel
         </AlertDialogCancel>
         <AlertDialogAction
-          class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse"
+          class="h-8 px-2 py-0 text-sm hover:bg-gray-700 hover:animate-pulse"
           @action="handleConfirm()">
           Continue
           <div class="pl-2 ml-auto">

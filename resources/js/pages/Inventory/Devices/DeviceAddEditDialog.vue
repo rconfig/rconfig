@@ -15,10 +15,14 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAddEditDevices } from '@/pages/Inventory/Devices/useAddEditDevices';
 
 const props = defineProps({
-  editId: Number
+  editId: Number,
+  isClone: {
+    type: Boolean,
+    default: false
+  }
 });
 const emit = defineEmits(['save', 'close']);
-const { isLoading, model, saveDialog, errors, isDialogOpen, generatePrompts, showConfirmCloseAlert, showConfirmCloseDialog, cancelCloseDialog, confirmCloseDialog } = useAddEditDevices(props.editId, emit);
+const { isLoading, model, saveDialog, errors, isDialogOpen, generatePrompts, showConfirmCloseAlert, showConfirmCloseDialog, cancelCloseDialog, confirmCloseDialog } = useAddEditDevices(props.editId, emit, props.isClone);
 
 function updateDeviceCredFields(cred) {
   if (cred.length === 0) {
@@ -49,7 +53,10 @@ function updateDeviceCredFields(cred) {
         <DialogTitle class="text-sm text-rcgray-200">
           <div class="flex items-center">
             <DeviceIcon />
-            <span class="ml-2">{{ editId > 0 ? 'Edit' : 'Add' }} Device {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</span>
+            <span class="ml-2">
+              {{ editId === 0 ? (!isClone ? 'Add' : '') : isClone ? 'Clone' : 'Edit' }} Device
+              <span v-if="editId > 0 && !isClone">(ID: {{ editId }})</span>
+            </span>
             <span v-if="model.device_name">
               : &nbsp;
               <span class="text-muted-foreground">{{ model.device_name }}</span>
@@ -350,7 +357,7 @@ function updateDeviceCredFields(cred) {
         </Button>
 
         <Button
-          v-if="props.editId === 0"
+          v-if="props.editId === 0 || props.isClone"
           type="submit"
           class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
           size="sm"
@@ -368,7 +375,7 @@ function updateDeviceCredFields(cred) {
         </Button>
 
         <Button
-          v-if="props.editId > 0"
+          v-if="props.editId > 0 && !props.isClone"
           type="submit"
           class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
           size="sm"

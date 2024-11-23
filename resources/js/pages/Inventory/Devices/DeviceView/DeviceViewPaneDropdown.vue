@@ -2,7 +2,7 @@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ref } from 'vue';
 
-const emits = defineEmits(['openDeviceEdit', 'onDelete', 'onPurge']);
+const emits = defineEmits(['openDeviceEdit', 'onDelete', 'onPurge', 'openDeviceClone']);
 
 defineProps({
   showEditBtn: {
@@ -17,6 +17,10 @@ function handleDelete() {
 
 function openDeviceEdit() {
   emits('openDeviceEdit');
+}
+
+function openDeviceClone() {
+  emits('openDeviceClone');
 }
 
 function onPurge() {
@@ -51,7 +55,8 @@ function onPurge() {
         </DropdownMenuItem>
         <DropdownMenuItem
           v-if="showEditBtn"
-          class="cursor-pointer hover:bg-rcgray-600">
+          class="cursor-pointer hover:bg-rcgray-600"
+          @click="openDeviceClone()">
           <span>Clone Device</span>
           <DropdownMenuShortcut>
             <Icon icon="fa6-solid:clone" />

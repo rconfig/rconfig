@@ -7,7 +7,7 @@ import { ref } from 'vue';
 const showConfirmDelete = ref(false);
 const showConfirmDisable = ref(false);
 
-const emits = defineEmits(['onEdit', 'onDelete', 'onDisable']);
+const emits = defineEmits(['onEdit', 'onDelete', 'onDisable', 'onClone']);
 
 defineProps({
   rowData: {
@@ -22,6 +22,10 @@ defineProps({
 
 function handleEdit() {
   emits('onEdit');
+}
+
+function handleClone() {
+  emits('onClone');
 }
 
 function showAlert() {
@@ -69,6 +73,15 @@ function handleEnable() {
             <Icon icon="fluent-color:text-edit-style-16" />
           </DropdownMenuShortcut>
         </DropdownMenuItem>
+        <DropdownMenuItem
+          v-if="showEditBtn"
+          class="cursor-pointer hover:bg-rcgray-800"
+          @click="handleClone">
+          <span>Clone</span>
+          <DropdownMenuShortcut>
+            <Icon icon="material-symbols:content-copy-outline" />
+          </DropdownMenuShortcut>
+        </DropdownMenuItem>
         <DropdownMenuSeparator v-if="showEditBtn" />
         <DropdownMenuItem
           v-if="rowData.status === 100"
@@ -109,6 +122,6 @@ function handleEnable() {
       :ids="[rowData.id]"
       :showConfirmDelete="showConfirmDelete"
       @close="showConfirmDelete = false"
-      @handleDelete="handleDisable" />
+      @handleDelete="handleDelete" />
   </div>
 </template>

@@ -26,6 +26,7 @@ const { openSheet, closeSheet, isSheetOpen } = sheetStore;
 const commentsDeviceId = ref(null);
 const commentsDeviceName = ref('');
 const commentSheetKey = ref(0);
+const isClone = ref(false);
 
 onMounted(() => {
   fetchDevices();
@@ -248,6 +249,7 @@ function openComments(id) {
                 <ActionsMenuDevices
                   :rowData="row"
                   @onEnable="enableDevice(row.id)"
+                  @onClone="viewEditDialog(row.id), (isClone = true)"
                   @onDisable="disableDevice(row.id)"
                   @onEdit="viewEditDialog(row.id)"
                   @onDelete="deleteDevice(row.id)" />
@@ -272,8 +274,10 @@ function openComments(id) {
 
       <DeviceAddEditDialog
         @save="handleSave()"
+        @close="isClone = false"
         :key="newDeviceModalKey"
-        :editId="editId" />
+        :editId="editId"
+        :isClone="isClone" />
 
       <!-- FOR MULTIPLE DELETE -->
       <ConfirmDeleteAlert
