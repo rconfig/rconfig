@@ -105,7 +105,7 @@ export function useCommands() {
   }
 
   const debouncedFilter = useDebounceFn(() => {
-    filters.value[`filter[commandname]`] = searchTerm.value;
+    filters.value[`filter[command]`] = searchTerm.value;
     currentPage.value = 1;
     fetchCommands();
   }, 500);
