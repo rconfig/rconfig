@@ -10,22 +10,22 @@ defineProps({
   }
 });
 
-// add onMOunted to close on ESC
+// add onMounted to close on ESC or confirm on Spacebar
+function handleKeyDown(e) {
+  if (e.key === 'Escape') {
+    handleClose();
+  } else if (e.key === ' ') {
+    handleConfirm();
+  }
+}
+
 onMounted(() => {
-  window.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      handleClose();
-    }
-  });
+  window.addEventListener('keydown', handleKeyDown);
 });
 
 // Cleanup event listener on unmount
 onUnmounted(() => {
-  window.removeEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      handleClose();
-    }
-  });
+  window.removeEventListener('keydown', handleKeyDown);
 });
 
 function handleConfirm() {
@@ -45,8 +45,19 @@ function handleClose() {
         <AlertDialogDescription>Confirming will close the previous dialog box and result in unsaved changes.</AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>
-        <AlertDialogCancel @cancel="handleClose()">Cancel</AlertDialogCancel>
-        <AlertDialogAction @action="handleConfirm()">Continue</AlertDialogAction>
+        <AlertDialogCancel
+          class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse"
+          @cancel="handleClose()">
+          Cancel
+        </AlertDialogCancel>
+        <AlertDialogAction
+          class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse"
+          @action="handleConfirm()">
+          Continue
+          <div class="pl-2 ml-auto">
+            <kbd class="rc-kdb-class">SPC</kbd>
+          </div>
+        </AlertDialogAction>
       </AlertDialogFooter>
     </AlertDialogContent>
   </AlertDialog>
