@@ -34,6 +34,8 @@ onUnmounted(() => {
 
 <template>
   <div class="flex flex-col h-full gap-1 text-center">
+    <div class="hidden text-yellow-200 text-teal-100 bg-yellow-700 bg-teal-700 border-yellow-500 border-teal-500 bg-stone-700 text-stone-200 border-stone-500 bg-lime-700 text-lime-200 border-lime-500 bg-sky-700 text-sky-100 border-sky-500 bg-violet-700 text-violet-200 border-violet-500 bg-fuchsia-700 text-fuchsia-200 border-fuchsia-500"></div>
+
     <div class="flex items-center justify-between p-4">
       <div class="flex items-center">
         <Input
@@ -124,7 +126,11 @@ onUnmounted(() => {
                 {{ row.id }}
               </TableCell>
               <TableCell class="text-start">
-                {{ row.categoryName }}
+                <span
+                  :class="row.badgeColor ? row.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'"
+                  class="w-fit flex items-center text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border">
+                  {{ row.categoryName }}
+                </span>
               </TableCell>
               <TableCell class="text-start">
                 {{ row.categoryDescription }}

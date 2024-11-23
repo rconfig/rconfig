@@ -26,7 +26,7 @@ function getNotifications() {
     })
     .then(response => {
       notifications.value = response.data.data;
-      emit('notificationsLength', notifications.value.length);
+      emit('notificationsLength', response.data.total);
       isLoading.value = false;
     })
     .catch(error => {
