@@ -1,10 +1,15 @@
 <script setup lang="ts">
+import CommandGroupAddEditDialog from '@/pages/Inventory/CommandGroups/CommandGroupAddEditDialog.vue';
 import axios from 'axios';
-import { computed, onMounted, ref, watch } from 'vue';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { computed, onMounted, ref, watch } from 'vue';
+import { useCommandGroups } from '@/pages/Inventory/CommandGroups/useCommandGroups';
 
 const emit = defineEmits(['update:modelValue']);
+
+const { newCommandGroupsModalKey, handleSave, viewEditDialog } = useCommandGroups();
+
 const categories = ref([]);
 const modelValue = ref<string[]>([]);
 const open = ref(false);
@@ -28,6 +33,14 @@ const filteredCategories = computed(() => {
   );
 });
 
+onMounted(() => {
+  fetchCategories();
+
+  if (props.modelValue && props.modelValue.length > 0) {
+    selectedCats.value = props.modelValue;
+  }
+});
+
 // Watch for changes to the prop and update internalModel
 watch(
   () => props.modelValue,
@@ -36,12 +49,9 @@ watch(
   }
 );
 
-onMounted(() => {
+watch(newCommandGroupsModalKey, () => {
+  // if the add new category dialog is closed, fetch categories again
   fetchCategories();
-
-  if (props.modelValue && props.modelValue.length > 0) {
-    selectedCats.value = props.modelValue;
-  }
 });
 
 function selectItem(item) {
@@ -146,6 +156,7 @@ function fetchCategories() {
       <div class="p-1 border-5">
         <Button
           variant="ghost"
+          @click="viewEditDialog(0)"
           class="justify-start w-full p-1">
           <Icon
             icon="octicon:plus-16"
@@ -154,5 +165,10 @@ function fetchCategories() {
         </Button>
       </div>
     </PopoverContent>
+
+    <CommandGroupAddEditDialog
+      @save="handleSave()"
+      :key="newCommandGroupsModalKey"
+      :editId="0" />
   </Popover>
 </template>

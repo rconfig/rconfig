@@ -18,6 +18,7 @@ import { onMounted, onUnmounted, ref } from 'vue';
 import { useDevices } from '@/pages/Inventory/Devices/useDevices';
 import { useRowSelection } from '@/composables/useRowSelection';
 import { useSheetStore } from '@/stores/sheetActions';
+import { useRoute } from 'vue-router';
 
 const props = defineProps({
   statusId: {

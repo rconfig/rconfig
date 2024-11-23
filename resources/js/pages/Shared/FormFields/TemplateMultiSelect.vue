@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import ConfirmCloseAlert from '@/pages/Shared/AlertDialog/ConfirmCloseAlert.vue';
 import axios from 'axios';
-import { computed, onMounted, ref, watch } from 'vue';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { computed, onMounted, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
+import { useConfirmCloseAlert } from '@/pages/Shared/AlertDialog/useConfirmCloseAlert';
 
 const emit = defineEmits(['update:modelValue']);
 const templates = ref([]);
@@ -10,6 +14,8 @@ const modelValue = ref<string[]>([]);
 const open = ref(false);
 const searchTerm = ref('');
 const selectedTemplates = ref([]);
+const router = useRouter();
+const { showConfirmCloseAlert, showConfirmCloseDialog, cancelCloseDialog, confirmCloseDialog } = useConfirmCloseAlert();
 
 const props = defineProps({
   modelValue: {
@@ -72,6 +78,10 @@ function fetchVendors() {
   axios.get('/api/templates/?perPage=10000').then(response => {
     templates.value = response.data.data;
   });
+}
+
+function navToTemplates() {
+  router.push({ path: '/templates/view/0' });
 }
 </script>
 
@@ -144,13 +154,32 @@ function fetchVendors() {
       <div class="p-1 border-5">
         <Button
           variant="ghost"
+          @click="showConfirmCloseDialog()"
           class="justify-start w-full p-1">
           <Icon
             icon="octicon:plus-16"
             class="w-3 h-3 mt-1 mr-2 text-muted-foreground" />
           <span>Create new record</span>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger as-child>
+                <Icon
+                  icon="pajamas:issue-new"
+                  class="w-3 h-3 mt-1 ml-auto text-muted-foreground" />
+              </TooltipTrigger>
+              <TooltipContent class="text-white bg-rcgray-800">
+                <p>Navigate to new template page</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </Button>
       </div>
     </PopoverContent>
+
+    <ConfirmCloseAlert
+      :showConfirmCloseAlert="showConfirmCloseAlert"
+      @handleClose="cancelCloseDialog"
+      @handleConfirm="navToTemplates()" />
   </Popover>
 </template>

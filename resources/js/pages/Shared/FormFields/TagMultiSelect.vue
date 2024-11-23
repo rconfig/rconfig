@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import axios from 'axios';
+import TagAddEditDialog from '@/pages/Inventory/Tags/TagAddEditDialog.vue';
 import { computed, onMounted, ref, watch } from 'vue';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useTags } from '@/pages/Inventory/Tags/useTags';
 
 const emit = defineEmits(['update:modelValue']);
 const tags = ref([]);
@@ -11,7 +13,9 @@ const open = ref(false);
 const searchTerm = ref('');
 const selectedTags = ref([]);
 
-const filteredCategories = computed(() => {
+const { newTagModalKey, createTag, handleSave } = useTags();
+
+const filteredTags = computed(() => {
   return tags.value.filter(
     tag => tag.tagname.toLowerCase().includes(searchTerm.value.toLowerCase()) && !selectedTags.value.some(selectedCat => selectedCat.id === tag.id) // Prevent displaying already selected items
   );
@@ -24,6 +28,14 @@ const props = defineProps({
   }
 });
 
+onMounted(() => {
+  fetchTags();
+
+  if (props.modelValue && props.modelValue.length > 0) {
+    selectedTags.value.push(...props.modelValue);
+  }
+});
+
 // Watch for changes to the prop and update internalModel
 watch(
   () => props.modelValue,
@@ -32,12 +44,9 @@ watch(
   }
 );
 
-onMounted(() => {
-  fetchCategories();
-
-  if (props.modelValue && props.modelValue.length > 0) {
-    selectedTags.value.push(...props.modelValue);
-  }
+watch(newTagModalKey, () => {
+  // if the add new category dialog is closed, fetch Tags again
+  fetchTags();
 });
 
 function selectItem(item) {
@@ -45,10 +54,10 @@ function selectItem(item) {
   selectedTags.value.push(item);
   open.value = false;
   searchTerm.value = '';
-  // remove item from filteredCategories
-  const itemIndex = filteredCategories.value.findIndex(tag => tag.tagname === item.tagname);
+  // remove item from filteredTags
+  const itemIndex = filteredTags.value.findIndex(tag => tag.tagname === item.tagname);
   if (itemIndex !== -1) {
-    filteredCategories.value.splice(itemIndex, 1);
+    filteredTags.value.splice(itemIndex, 1);
   }
   emit('update:modelValue', selectedTags.value);
 }
@@ -62,7 +71,7 @@ function deleteItem(itemName) {
   emit('update:modelValue', selectedTags.value);
 }
 
-function fetchCategories() {
+function fetchTags() {
   axios.get('/api/tags/?perPage=10000').then(response => {
     tags.value = response.data.data;
   });
@@ -120,7 +129,7 @@ function fetchCategories() {
       <ScrollArea class="h-64">
         <div class="py-1">
           <div
-            v-for="tag in filteredCategories"
+            v-for="tag in filteredTags"
             :key="tag.id"
             class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600"
             @click="selectItem(tag)">
@@ -141,6 +150,7 @@ function fetchCategories() {
       <div class="p-1 border-5">
         <Button
           variant="ghost"
+          @click.prevent="createTag()"
           class="justify-start w-full p-1">
           <Icon
             icon="octicon:plus-16"
@@ -149,5 +159,10 @@ function fetchCategories() {
         </Button>
       </div>
     </PopoverContent>
+
+    <TagAddEditDialog
+      @save="handleSave()"
+      :key="newTagModalKey"
+      :editId="0" />
   </Popover>
 </template>

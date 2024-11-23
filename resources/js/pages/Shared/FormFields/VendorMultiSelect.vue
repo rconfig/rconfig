@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import axios from 'axios';
+import VendorAddEditDialog from '@/pages/Inventory/Vendors/VendorAddEditDialog.vue';
 import { computed, onMounted, ref, watch } from 'vue';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useVendors } from '@/pages/Inventory/Vendors/useVendors';
 
 const emit = defineEmits(['update:modelValue']);
 const vendors = ref([]);
@@ -10,6 +12,7 @@ const modelValue = ref<string[]>([]);
 const open = ref(false);
 const searchTerm = ref('');
 const selectedVendors = ref([]);
+const { createVendor, newVendorModalKey, handleSave } = useVendors();
 
 const props = defineProps({
   modelValue: {
@@ -28,6 +31,14 @@ const filteredVendors = computed(() => {
   );
 });
 
+onMounted(() => {
+  fetchVendors();
+
+  if (props.modelValue && props.modelValue.length > 0) {
+    selectedVendors.value.push(...props.modelValue);
+  }
+});
+
 // Watch for changes to the prop and update internalModel
 watch(
   () => props.modelValue,
@@ -36,12 +47,9 @@ watch(
   }
 );
 
-onMounted(() => {
+watch(newVendorModalKey, () => {
+  // if the add new category dialog is closed, fetch categories again
   fetchVendors();
-
-  if (props.modelValue && props.modelValue.length > 0) {
-    selectedVendors.value.push(...props.modelValue);
-  }
 });
 
 function selectItem(item) {
@@ -141,6 +149,7 @@ function fetchVendors() {
       <div class="p-1 border-5">
         <Button
           variant="ghost"
+          @click="createVendor()"
           class="justify-start w-full p-1">
           <Icon
             icon="octicon:plus-16"
@@ -149,5 +158,10 @@ function fetchVendors() {
         </Button>
       </div>
     </PopoverContent>
+
+    <VendorAddEditDialog
+      @save="handleSave()"
+      :key="newVendorModalKey"
+      :editId="0" />
   </Popover>
 </template>

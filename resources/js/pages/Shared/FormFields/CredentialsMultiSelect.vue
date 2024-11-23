@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import CredentialsAddEditDialog from '@/pages/Settings/Panels/Components/CredentialsAddEditDialog.vue';
 import axios from 'axios';
-import { computed, onMounted, ref, watch } from 'vue';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { computed, onMounted, ref, watch } from 'vue';
+import { useCredentials } from '@/pages/Settings/Panels/Components/useCredentials';
 
 const emit = defineEmits(['update:modelValue']);
 const credentials = ref([]);
@@ -10,6 +12,8 @@ const modelValue = ref<string[]>([]);
 const open = ref(false);
 const searchTerm = ref('');
 const selectedCreds = ref([]);
+
+const { createCred, newCredModalKey, handleSave } = useCredentials();
 
 const props = defineProps({
   modelValue: {
@@ -28,14 +32,6 @@ const filteredCredentials = computed(() => {
   );
 });
 
-// Watch for changes to the prop and update internalModel
-watch(
-  () => props.modelValue,
-  newValue => {
-    selectedCreds.value = newValue;
-  }
-);
-
 onMounted(() => {
   fetchCredentials();
 
@@ -44,6 +40,19 @@ onMounted(() => {
   } else {
     selectedCreds.value = [];
   }
+});
+
+// Watch for changes to the prop and update internalModel
+watch(
+  () => props.modelValue,
+  newValue => {
+    selectedCreds.value = newValue;
+  }
+);
+
+watch(newCredModalKey, () => {
+  // if the add new category dialog is closed, fetch Tags again
+  fetchCredentials();
 });
 
 function selectItem(item) {
@@ -148,6 +157,7 @@ function fetchCredentials() {
       <div class="p-1 border-5">
         <Button
           variant="ghost"
+          @click="createCred"
           class="justify-start w-full p-1">
           <Icon
             icon="octicon:plus-16"
@@ -156,5 +166,10 @@ function fetchCredentials() {
         </Button>
       </div>
     </PopoverContent>
+
+    <CredentialsAddEditDialog
+      @save="handleSave()"
+      :key="newCredModalKey"
+      :editId="0" />
   </Popover>
 </template>

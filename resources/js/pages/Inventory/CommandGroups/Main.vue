@@ -62,7 +62,7 @@ onUnmounted(() => {
           size="sm"
           @click.prevent="createCommandGroup"
           variant="primary">
-          New CommandGroup
+          New Command Group
           <div class="pl-2 ml-auto">
             <kbd class="rc-kdb-class2">ALT N</kbd>
           </div>
