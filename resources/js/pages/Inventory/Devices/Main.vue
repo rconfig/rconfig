@@ -14,11 +14,11 @@ import TagListPopover from '@/pages/Shared/Popover/TagListPopover.vue';
 import VendorFilter from '@/pages/Inventory/Devices/Filters/VendorFilter.vue';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { eventBus } from '@/composables/eventBus';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue';
 import { useDevices } from '@/pages/Inventory/Devices/useDevices';
 import { useRowSelection } from '@/composables/useRowSelection';
 import { useSheetStore } from '@/stores/sheetActions';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const props = defineProps({
   statusId: {
@@ -36,6 +36,7 @@ const commentsDeviceName = ref('');
 const commentSheetKey = ref(0);
 const isClone = ref(false);
 const route = useRoute(); // Get route instance
+const router = useRouter();
 
 onMounted(() => {
   if (route.query.statusId) {
@@ -51,6 +52,22 @@ onMounted(() => {
     selectAll.value = false;
   });
 });
+
+watch(
+  () => route.query, // Watch the query parameters for any changes
+  async newQuery => {
+    if (newQuery.openDeviceDialog) {
+      // Check if the 'openDeviceDialog' parameter is present in the query to determine if the dialog should be opened
+      createDevice(); // Call the 'createDevice' function to programmatically open the device creation dialog
+
+      await nextTick(); // Use nextTick to ensure that all DOM updates are complete before proceeding, allowing the UI changes to fully render before modifying the route
+
+      const { openDeviceDialog, ...remainingQuery } = newQuery; // Destructure the query object to remove 'openDeviceDialog' while retaining other parameters
+      router.replace({ query: remainingQuery }, undefined, { replace: true }); // Use 'router.replace' to remove the 'openDeviceDialog' parameter without adding a new history entry, preventing unintended re-triggers of the dialog
+    }
+  },
+  { immediate: true } // The 'immediate' option ensures the watcher runs immediately on initialization to handle any query parameters already present when the component loads
+);
 
 // Cleanup event listener on unmount
 onUnmounted(() => {
@@ -108,7 +125,7 @@ function openComments(id) {
           type="submit"
           class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
           size="sm"
-          @click.prevent="createDevice"
+          @click.prevent="createDevice()"
           variant="primary">
           New Device
           <div class="pl-2 ml-auto">

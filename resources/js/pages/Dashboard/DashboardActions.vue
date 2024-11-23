@@ -2,9 +2,11 @@
 import { ref } from 'vue';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useToaster } from '@/composables/useToaster'; // Import the composable
 
 // State to track the visibility of the mobile menu
 const isMenuOpen = ref(false);
+const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
 
 const props = defineProps({
   licenseInfo: Object
@@ -14,6 +16,19 @@ const props = defineProps({
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
 };
+
+function purgeFailedConfigs() {
+  axios
+    .post('/api/device/purge-failed-configs', {
+      device_id: '--all'
+    })
+    .then(response => {
+      toastSuccess('Purge Job Started', 'The purge job has been started successfully.');
+    })
+    .catch(error => {
+      toastError('Purge Job Failed', 'The purge job has failed to start.');
+    });
+}
 </script>
 
 <template>
@@ -37,22 +52,23 @@ const toggleMenu = () => {
           align="start">
           <div class="grid gap-4">
             <nav class="flex-col text-sm font-medium md:flex md:flex-row md:items-center md:text-sm">
-              <a
-                href="#"
+              <router-link
+                :to="{ name: 'inventory', params: { view: 'devices' }, query: { openDeviceDialog: true } }"
                 class="flex items-center gap-2 px-4 py-2 font-semibold rounded-md text-md hover:bg-rcgray-800">
                 <Icon
                   icon="fluent-color:add-circle-28"
                   class="" />
                 <span>Create New Device</span>
-              </a>
-              <a
+              </router-link>
+              <router-link
+                :to="{ name: 'inventory', params: { view: 'devices' } }"
                 href="#"
                 class="flex items-center gap-2 px-4 py-2 font-semibold rounded-md text-md hover:bg-rcgray-800">
                 <Icon
                   icon="fluent-color:apps-24"
                   class="" />
                 View Devices
-              </a>
+              </router-link>
               <a
                 href="#"
                 class="flex items-center gap-2 px-4 py-2 font-semibold rounded-md text-md hover:bg-rcgray-800">
@@ -62,7 +78,7 @@ const toggleMenu = () => {
                 Search Configs
               </a>
               <a
-                href="#"
+                @click="purgeFailedConfigs()"
                 class="flex items-center gap-2 px-4 py-2 font-semibold rounded-md text-md hover:bg-rcgray-800">
                 <Icon
                   icon="flat-color-icons:delete-database"
@@ -79,14 +95,14 @@ const toggleMenu = () => {
         <nav
           :class="{ hidden: !isMenuOpen, flex: isMenuOpen }"
           class="flex-col hidden font-medium text-md md:flex md:flex-row md:items-center md:text-sm">
-          <a
-            href="#"
+          <router-link
+            :to="{ name: 'inventory', params: { view: 'devices' }, query: { openDeviceDialog: true } }"
             class="flex items-center gap-2 px-4 py-2 font-semibold rounded-md text-md hover:bg-rcgray-800">
             <Icon
               icon="fluent-color:add-circle-28"
               class="" />
             <span>Create New Device</span>
-          </a>
+          </router-link>
 
           <router-link
             :to="{ name: 'inventory', params: { view: 'devices' } }"
@@ -106,7 +122,7 @@ const toggleMenu = () => {
             Search Configs
           </a>
           <a
-            href="#"
+            @click="purgeFailedConfigs()"
             class="flex items-center gap-2 px-4 py-2 font-semibold rounded-md text-md hover:bg-rcgray-800">
             <Icon
               icon="flat-color-icons:delete-database"
