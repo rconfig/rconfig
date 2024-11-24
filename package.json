@@ -21,23 +21,20 @@
         "vue": "^3.5.10",
         "vue-loader": "^17.0.0"
     },
-    "name": "rconfig6",
-    "description": "<p align=\"center\"><a href=\"https://www.rconfig.com\" target=\"_blank\"><img src=\"https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg\" width=\"400\"></a></p>",
+    "name": "rconfig8-core",
+    "description": "<p align=\"center\"><a href=\"https://www.rconfig.com\" target=\"_blank\"> </a></p>",
     "version": "1.0.0",
-    "main": "webpack.mix.js",
     "directories": {
         "test": "tests"
     },
     "keywords": [],
-    "author": "",
+    "author": "Stephen@rconfig.com",
     "license": "ISC",
     "type": "module",
     "dependencies": {
         "@highlightjs/vue-plugin": "^2.1.0",
         "@radix-icons/vue": "^1.0.0",
         "@radix-ui/react-icons": "^1.3.0",
-        "@tanstack/vue-table": "^8.20.5",
-        "@vee-validate/zod": "^4.13.2",
         "@vueuse/core": "^11.1.0",
         "babel-loader": "^9.1.2",
         "class-variance-authority": "^0.7.0",
@@ -49,20 +46,16 @@
         "lucide-vue-next": "^0.460.0",
         "mitt": "^3.0.1",
         "monaco-editor": "^0.52.0",
-        "monaco-editor-webpack-plugin": "^7.0.1",
         "pinia": "^2.2.4",
         "radix-vue": "^1.9.6",
         "react-resizable-panels": "^2.1.4",
         "tailwind-merge": "^2.5.2",
         "tailwindcss-animate": "^1.0.7",
         "typescript": "^5.6.2",
-        "vaul-vue": "^0.2.0",
-        "vee-validate": "^4.13.2",
         "vue-axios": "^3.4.0",
         "vue-columns-resizable": "^0.0.1",
         "vue-router": "^4.0.12",
         "vue-sonner": "^1.2.1",
-        "vue3-highlightjs": "^1.0.5",
-        "zod": "^3.23.8"
+        "vue3-highlightjs": "^1.0.5"
     }
 }
