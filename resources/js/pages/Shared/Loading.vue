@@ -1,8 +1,4 @@
-<script setup>
-import { ref } from 'vue';
-
-defineProps({});
-</script>
+<script setup></script>
 
 <template>
   <div class="flex items-center justify-center text-sm text-muted-foreground">

@@ -16,6 +16,9 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
         Route::get('/health-latest', 'SystemHealthController@healthLatest')->name('api.dashboard.health-latest');
     });
 
+    /* SEARCH ROUTES */
+    Route::get('/search', 'QuickSearchController@search');
+
     /* DEVICES ROUTES */
     Route::resource('devices', 'DeviceController');
     Route::post('/devices/delete-many', 'DeviceController@deleteMany');
