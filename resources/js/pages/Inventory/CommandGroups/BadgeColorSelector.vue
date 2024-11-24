@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import axios from 'axios';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 const emit = defineEmits(['update:modelValue']);
+const props = defineProps({
+  modelValue: String
+});
 const selectedColor = ref({});
 
 const colors = [
@@ -34,6 +36,20 @@ function selectColor(color) {
   selectedColor.value = color;
   emit('update:modelValue', color.bgClass);
 }
+
+// Watch for changes in modelValue and set selectedColor accordingly
+watch(
+  () => props.modelValue,
+  newValue => {
+    const color = colors.find(c => c.bgClass === newValue);
+    if (color) {
+      selectedColor.value = color;
+    } else {
+      selectedColor.value = {};
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <template>

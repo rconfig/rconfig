@@ -13,7 +13,7 @@ import { useRowSelection } from '@/composables/useRowSelection';
 import { useCommandGroups } from '@/pages/Inventory/CommandGroups/useCommandGroups';
 import { eventBus } from '@/composables/eventBus';
 
-const { editId, categories, currentPage, perPage, searchTerm, lastPage, isLoading, fetchCommandGroups, viewEditDialog, createCommandGroup, deleteCommandGroup, deleteManyCommandGroups, handleSave, showConfirmDelete, handleKeyDown, newCommandGroupModalKey, toggleSort, sortParam } = useCommandGroups();
+const { editId, categories, currentPage, perPage, searchTerm, lastPage, isLoading, fetchCommandGroups, viewEditDialog, createCommandGroup, deleteCommandGroup, deleteManyCommandGroups, handleSave, showConfirmDelete, handleKeyDown, newCommandGroupsModalKey, toggleSort, sortParam } = useCommandGroups();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(categories);
 
 onMounted(() => {
@@ -182,7 +182,7 @@ onUnmounted(() => {
 
       <CommandGroupAddEditDialog
         @save="handleSave()"
-        :key="newCommandGroupModalKey"
+        :key="newCommandGroupsModalKey"
         :editId="editId" />
 
       <!-- FOR MULTIPLE DELETE -->
