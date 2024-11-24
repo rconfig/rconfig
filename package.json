@@ -34,7 +34,6 @@
     "type": "module",
     "dependencies": {
         "@highlightjs/vue-plugin": "^2.1.0",
-        "@patternfly/patternfly": "^4.224.5",
         "@radix-icons/vue": "^1.0.0",
         "@radix-ui/react-icons": "^1.3.0",
         "@tanstack/vue-table": "^8.20.5",
@@ -46,8 +45,8 @@
         "cronstrue": "^2.4.0",
         "file-saver": "^2.0.5",
         "highlight.js": "^11.6.0",
-        "lucide-react": "^0.446.0",
-        "lucide-vue-next": "^0.446.0",
+        "lucide-react": "^0.460.0",
+        "lucide-vue-next": "^0.460.0",
         "mitt": "^3.0.1",
         "monaco-editor": "^0.52.0",
         "monaco-editor-webpack-plugin": "^7.0.1",
