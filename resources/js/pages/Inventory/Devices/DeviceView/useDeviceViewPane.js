@@ -1,5 +1,5 @@
 import axios from 'axios';
-import useClipboard from 'vue-clipboard3';
+import { useClipboard } from '@vueuse/core';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useFavoritesStore } from '@/stores/favorites';
 import { usePanelStore } from '@/stores/panelStore'; // Import the Pinia store
@@ -16,7 +16,7 @@ export function useDeviceViewPane(props, emit) {
   const mainNavSelected = ref('notifications');
   const panelElement2 = ref(null);
   const panelStore = usePanelStore(); // Access the panel store
-  const { toClipboard } = useClipboard();
+  const { text, copy, copied, isSupported } = useClipboard();
   const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
   const dialogStore = useDialogStore();
   const { openDialog } = dialogStore;
@@ -113,7 +113,7 @@ export function useDeviceViewPane(props, emit) {
 
   function copyDebug(value) {
     try {
-      toClipboard(value);
+      copy(value);
       toastSuccess('Copied', 'Debug command copied to clipboard');
     } catch (error) {
       toastError('Error', 'Failed to copy Debug command to clipboard');

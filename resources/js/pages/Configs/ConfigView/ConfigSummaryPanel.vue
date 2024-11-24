@@ -1,22 +1,13 @@
 <script setup>
 import { ref, inject } from 'vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import useClipboard from 'vue-clipboard3';
 
-const hoverIcons = ref({});
-const activeIcons = ref({});
-const { toClipboard } = useClipboard();
-const emit = defineEmits(['refresh']);
 const formatters = inject('formatters');
 
 defineProps({
   isLoading: Boolean,
   configData: Object
 });
-
-function refresh() {
-  emit('refresh');
-}
 </script>
 
 <template>

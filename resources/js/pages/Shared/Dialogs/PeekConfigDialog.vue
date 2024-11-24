@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import Loading from '@/pages/Shared/Loading.vue';
 import axios from 'axios';
-import useClipboard from 'vue-clipboard3';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ref, onUnmounted, onMounted, watch } from 'vue';
 import { useDialogStore } from '@/stores/dialogActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
+import { useClipboard } from '@vueuse/core';
 
 const activeIcons = ref({});
 const dialogStore = useDialogStore();
@@ -16,8 +16,8 @@ const isLoading = ref(true);
 const processedCode = ref('');
 const selectedLanguage = ref(localStorage.getItem('selectedLanguage') || 'language-plaintext');
 const { closeDialog, isDialogOpen } = dialogStore;
-const { toClipboard } = useClipboard();
-const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
+const { toastError } = useToaster();
+const { text, copy, copied, isSupported } = useClipboard();
 
 const props = defineProps({
   editId: Number
@@ -72,27 +72,6 @@ const handleMouseLeave = key => {
 function handleClose() {
   closeDialog('peek-config-dialog-' + props.editId);
 }
-
-function copyPath(key, value) {
-  toClipboard(value)
-    .then(() => {
-      activeIcons.value[key] = true;
-      console.log('Copied:', JSON.stringify(value));
-      setTimeout(() => {
-        activeIcons.value[key] = false;
-      }, 1500);
-    })
-    .catch(e => {
-      console.error('Failed to copy:', e);
-    });
-}
-
-// Add a watch for selectedLanguage
-watch(selectedLanguage, (newValue, oldValue) => {
-  console.log(`Language changed from ${oldValue} to ${newValue}`);
-  localStorage.setItem('selectedPeekLanguage', newValue);
-  showConfig();
-});
 </script>
 
 <template>
@@ -130,12 +109,12 @@ watch(selectedLanguage, (newValue, oldValue) => {
             <div class="flex items-center">
               Path: {{ fileLocation }}
               <Icon
-                :icon="activeIcons['fileLocation'] ? 'material-symbols:check-circle-outline' : hoverIcons['fileLocation'] ? 'material-symbols:content-copy' : 'material-symbols:content-copy-outline'"
-                :class="activeIcons['fileLocation'] ? 'text-green-500' : 'text-gray-500'"
+                :icon="copied ? 'material-symbols:check-circle-outline' : !copied ? 'material-symbols:content-copy' : 'material-symbols:content-copy-outline'"
+                :class="copied ? 'text-green-500' : 'text-gray-500'"
                 class="ml-2 cursor-pointer hover:text-gray-700"
                 @mouseover="handleMouseOver('fileLocation')"
                 @mouseleave="handleMouseLeave('fileLocation')"
-                @click="copyPath('fileLocation', fileLocation)" />
+                @click="copy(fileLocation)" />
             </div>
           </div>
         </DialogDescription>

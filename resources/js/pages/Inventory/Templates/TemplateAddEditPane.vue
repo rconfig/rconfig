@@ -13,7 +13,7 @@ const props = defineProps({
 let meditor = null;
 const emit = defineEmits(['save', 'close']);
 
-const { checkDarkModeIsSet, checkLineNumbersIsSet, checkMiniMapIsSet, checkStickyScrollIsSet, copied, copy, copyPath, darkmode, download, initEditor, lineNumbers, meditorValue, minimap, search, toggleEditorDarkMode, toggleEditorLineNumbers, toggleEditorMinimap, toggleStickyScroll } = useCodeEditor(monaco);
+const { checkDarkModeIsSet, checkLineNumbersIsSet, checkMiniMapIsSet, checkStickyScrollIsSet, copied, copyItem, copyPath, darkmode, download, initEditor, lineNumbers, meditorValue, minimap, search, toggleEditorDarkMode, toggleEditorLineNumbers, toggleEditorMinimap, toggleStickyScroll } = useCodeEditor(monaco);
 const { openImportDialog, getTemplateRepoFolders, hasVendorTemplateOptions } = useTemplatesGithub();
 const { errors, code, model, getDefaultTemplate, showTemplate, saveDialog, handleKeyDown, fetchTemplateData } = useTemplateAddEdit(props, emit);
 const dialogStore = useDialogStore();
@@ -153,8 +153,8 @@ function setTemplateCode(code) {
         <div>
           <Button
             variant="ghost"
-            @click="copy"
-            title="copy">
+            @click="copyItem"
+            title="copyItem">
             <Icon icon="mdi:content-copy"></Icon>
           </Button>
 

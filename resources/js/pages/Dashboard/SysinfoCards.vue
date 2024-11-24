@@ -1,16 +1,16 @@
 <script setup>
-import useClipboard from 'vue-clipboard3';
+import { useClipboard } from '@vueuse/core';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { ref } from 'vue';
 
 const hoverIcons = ref({});
 const activeIcons = ref({});
-const { toClipboard } = useClipboard();
+const { text, copy, copied, isSupported } = useClipboard();
 const emit = defineEmits(['refresh']);
 
-const copy = async (key, value) => {
+const copyItem = async (key, value) => {
   try {
-    await toClipboard(value);
+    copy(value);
     activeIcons.value[key] = true;
     setTimeout(() => {
       activeIcons.value[key] = false;
@@ -94,7 +94,7 @@ function refresh() {
                   :icon="activeIcons['OSVersion'] ? 'material-symbols:check-circle-outline' : hoverIcons['OSVersion'] ? 'material-symbols:content-copy' : 'material-symbols:content-copy-outline'"
                   :class="activeIcons['OSVersion'] ? 'text-green-500' : 'text-gray-500'"
                   class="cursor-pointer hover:text-gray-700"
-                  @click="copy('OSVersion', sysinfo.OSVersion)"
+                  @click="copyItem('OSVersion', sysinfo.OSVersion)"
                   @mouseover="handleMouseOver('OSVersion')"
                   @mouseleave="handleMouseLeave('OSVersion')" />
               </dd>
@@ -107,7 +107,7 @@ function refresh() {
                   :icon="activeIcons['localIp'] ? 'material-symbols:check-circle-outline' : hoverIcons['localIp'] ? 'material-symbols:content-copy' : 'material-symbols:content-copy-outline'"
                   :class="activeIcons['localIp'] ? 'text-green-500' : 'text-gray-500'"
                   class="cursor-pointer hover:text-gray-700"
-                  @click="copy('localIp', sysinfo.localIp)"
+                  @click="copyItem('localIp', sysinfo.localIp)"
                   @mouseover="handleMouseOver('localIp')"
                   @mouseleave="handleMouseLeave('localIp')" />
               </dd>
@@ -120,7 +120,7 @@ function refresh() {
                   :icon="activeIcons['PublicIP'] ? 'material-symbols:check-circle-outline' : hoverIcons['PublicIP'] ? 'material-symbols:content-copy' : 'material-symbols:content-copy-outline'"
                   :class="activeIcons['PublicIP'] ? 'text-green-500' : 'text-gray-500'"
                   class="cursor-pointer hover:text-gray-700"
-                  @click="copy('PublicIP', sysinfo.PublicIP)"
+                  @click="copyItem('PublicIP', sysinfo.PublicIP)"
                   @mouseover="handleMouseOver('PublicIP')"
                   @mouseleave="handleMouseLeave('PublicIP')" />
               </dd>
@@ -133,7 +133,7 @@ function refresh() {
                   :icon="activeIcons['ServerName'] ? 'material-symbols:check-circle-outline' : hoverIcons['ServerName'] ? 'material-symbols:content-copy' : 'material-symbols:content-copy-outline'"
                   :class="activeIcons['ServerName'] ? 'text-green-500' : 'text-gray-500'"
                   class="cursor-pointer hover:text-gray-700"
-                  @click="copy('ServerName', sysinfo.ServerName)"
+                  @click="copyItem('ServerName', sysinfo.ServerName)"
                   @mouseover="handleMouseOver('ServerName')"
                   @mouseleave="handleMouseLeave('ServerName')" />
               </dd>
@@ -146,7 +146,7 @@ function refresh() {
                   :icon="activeIcons['PHPVersion'] ? 'material-symbols:check-circle-outline' : hoverIcons['PHPVersion'] ? 'material-symbols:content-copy' : 'material-symbols:content-copy-outline'"
                   :class="activeIcons['PHPVersion'] ? 'text-green-500' : 'text-gray-500'"
                   class="cursor-pointer hover:text-gray-700"
-                  @click="copy('PHPVersion', sysinfo.PHPVersion)"
+                  @click="copyItem('PHPVersion', sysinfo.PHPVersion)"
                   @mouseover="handleMouseOver('PHPVersion')"
                   @mouseleave="handleMouseLeave('PHPVersion')" />
               </dd>
@@ -159,7 +159,7 @@ function refresh() {
                   :icon="activeIcons['RedisVersion'] ? 'material-symbols:check-circle-outline' : hoverIcons['RedisVersion'] ? 'material-symbols:content-copy' : 'material-symbols:content-copy-outline'"
                   :class="activeIcons['RedisVersion'] ? 'text-green-500' : 'text-gray-500'"
                   class="cursor-pointer hover:text-gray-700"
-                  @click="copy('RedisVersion', sysinfo.RedisVersion)"
+                  @click="copyItem('RedisVersion', sysinfo.RedisVersion)"
                   @mouseover="handleMouseOver('RedisVersion')"
                   @mouseleave="handleMouseLeave('RedisVersion')" />
               </dd>
@@ -172,7 +172,7 @@ function refresh() {
                   :icon="activeIcons['MySQLVersion'] ? 'material-symbols:check-circle-outline' : hoverIcons['MySQLVersion'] ? 'material-symbols:content-copy' : 'material-symbols:content-copy-outline'"
                   :class="activeIcons['MySQLVersion'] ? 'text-green-500' : 'text-gray-500'"
                   class="cursor-pointer hover:text-gray-700"
-                  @click="copy('MySQLVersion', sysinfo.MySQLVersion)"
+                  @click="copyItem('MySQLVersion', sysinfo.MySQLVersion)"
                   @mouseover="handleMouseOver('MySQLVersion')"
                   @mouseleave="handleMouseLeave('MySQLVersion')" />
               </dd>

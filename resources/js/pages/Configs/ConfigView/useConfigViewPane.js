@@ -1,5 +1,4 @@
 import axios from 'axios';
-import useClipboard from 'vue-clipboard3';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { usePanelStore } from '@/stores/panelStore'; // Import the Pinia store
 import { useToaster } from '@/composables/useToaster'; // Import the composable
@@ -9,8 +8,7 @@ export function useConfigViewPane(props, emit) {
   const isLoading = ref(false);
   const panelElement2 = ref(null);
   const panelStore = usePanelStore(); // Access the panel store
-  const { toClipboard } = useClipboard();
-  const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
+  const { toastError } = useToaster(); // Using toaster for notifications
 
   onMounted(() => {
     fetchConfig();

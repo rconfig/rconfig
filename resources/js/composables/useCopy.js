@@ -1,13 +1,13 @@
 import { ref } from 'vue';
-import useClipboard from 'vue-clipboard3';
+import { useClipboard } from '@vueuse/core';
 
 export function useCopy() {
-  const { toClipboard } = useClipboard();
+  const { text, copy, copied, isSupported } = useClipboard();
   const activeCopyIcon = ref({});
 
-  const copy = async (key, value) => {
+  const copyItem = async (key, value) => {
     try {
-      await toClipboard(JSON.stringify(value));
+      copy(JSON.stringify(value));
       activeCopyIcon.value[key] = true;
       setTimeout(() => {
         activeCopyIcon.value[key] = false;
@@ -18,7 +18,7 @@ export function useCopy() {
   };
 
   return {
-    copy,
+    copyItem,
     activeCopyIcon
   };
 }

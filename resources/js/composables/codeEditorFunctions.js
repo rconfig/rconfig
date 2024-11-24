@@ -1,4 +1,4 @@
-import useClipboard from 'vue-clipboard3';
+import { useClipboard } from '@vueuse/core';
 import useMonacoDarkmodeTheme from '@/composables/MonacoDarkmodeTheme.js';
 import userConfigPolicyLanguage from '@/composables/rConfigPolicyLanguage.js';
 import userConfigPolicyLanguageAutoComplete from '@/composables/rConfigPolicyLanguageAutoComplete.js';
@@ -6,10 +6,9 @@ import { ref, reactive, inject, onUnmounted } from 'vue';
 import { saveAs } from 'file-saver';
 
 export default function useCodeEditor(monaco) {
-  const copied = ref(false);
   // const createNotification = inject('create-notification');
   const meditorValue = ref(['Loading file...'].join('\n'));
-  const { toClipboard } = useClipboard();
+  const { text, copy, copied, isSupported } = useClipboard();
   let meditor = null;
   let completionItemProvider;
 
@@ -169,30 +168,21 @@ export default function useCodeEditor(monaco) {
     });
   }
 
-  const copy = async value => {
+  const copyItem = async value => {
     try {
       var newValue = typeof value === 'string' ? value : meditor.getValue(); // path is a string, else an object is passed by detault
-      await toClipboard(newValue);
+      await copy(newValue);
       copied.value = true;
       setTimeout(() => {
         copied.value = false;
       }, 3000);
-      // createNotification({
-      //   type: 'success',
-      //   title: 'Copy Success',
-      //   message: 'Content copied to clipboard'
-      // });
     } catch (e) {
-      // createNotification({
-      //   type: 'danger',
-      //   title: 'Error',
-      //   message: e
-      // });
+      console.error('Failed to copy:', e);
     }
   };
 
   const copyPath = async path => {
-    copy(path);
+    copyItem(path);
   };
 
   function download(filename = null) {
@@ -225,7 +215,7 @@ export default function useCodeEditor(monaco) {
     checkMiniMapIsSet,
     checkStickyScrollIsSet,
     copied,
-    copy,
+    copyItem,
     copyPath,
     darkmode,
     download,

@@ -3,7 +3,7 @@ import { inject } from 'vue';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { useCopy } from '@/composables/useCopy';
 
-const { copy, activeCopyIcon } = useCopy();
+const { copyItem, activeCopyIcon } = useCopy();
 const formatters = inject('formatters');
 
 const props = defineProps({
@@ -40,7 +40,7 @@ const props = defineProps({
               class="h-6 p-1 ml-auto"
               variant="ghost"
               title="copy raw data"
-              @click="copy(notification.id, notification)">
+              @click="copyItem(notification.id, notification)">
               <Icon
                 :icon="activeCopyIcon[notification.id] ? 'material-symbols:check-circle-outline' : 'material-symbols:content-copy-outline'"
                 :class="activeCopyIcon[notification.id] ? 'text-green-500' : ''" />

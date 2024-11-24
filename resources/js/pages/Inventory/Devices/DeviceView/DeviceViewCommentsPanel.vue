@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted, inject } from 'vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import useClipboard from 'vue-clipboard3';
 
 const isLoading = ref(false);
 const comments = ref([]);

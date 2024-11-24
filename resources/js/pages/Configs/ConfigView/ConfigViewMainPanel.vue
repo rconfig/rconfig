@@ -11,7 +11,7 @@ const props = defineProps({
 
 let meditor = null;
 
-const { checkDarkModeIsSet, checkLineNumbersIsSet, checkMiniMapIsSet, checkStickyScrollIsSet, copied, copy, copyPath, darkmode, download, initEditor, lineNumbers, meditorValue, minimap, search, toggleEditorDarkMode, toggleEditorLineNumbers, toggleEditorMinimap, toggleStickyScroll } = useCodeEditor(monaco);
+const { checkDarkModeIsSet, checkLineNumbersIsSet, checkMiniMapIsSet, checkStickyScrollIsSet, copied, copyItem, copyPath, darkmode, download, initEditor, lineNumbers, meditorValue, minimap, search, toggleEditorDarkMode, toggleEditorLineNumbers, toggleEditorMinimap, toggleStickyScroll } = useCodeEditor(monaco);
 const { errors, getDefaultEditorCode, showConfiguration, saveDialog, config_location } = useConfigViewMainPanel(props);
 
 const isLoading = ref(false);
@@ -73,7 +73,7 @@ function initCodeEditor() {
 
                 <Button
                   variant="ghost"
-                  @click="copy"
+                  @click="copyItem()"
                   title="copy content">
                   <Icon icon="mdi:content-copy"></Icon>
                 </Button>
