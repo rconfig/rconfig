@@ -60,16 +60,22 @@ function saveDialog() {
       <!-- <Button variant="outline">Edit Profile</Button> -->
     </DialogTrigger>
     <DialogContent
-      class="w-full"
+      class="w-full p-0"
       @escapeKeyDown="closeDialog('DialogNewVendor')"
       @pointerDownOutside="closeDialog('DialogNewVendor')"
       @closeClicked="closeDialog('DialogNewVendor')">
-      <DialogHeader>
-        <DialogTitle>{{ editId > 0 ? 'Edit' : 'Add' }} Vendor {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</DialogTitle>
-        <DialogDescription>Make changes to your vendor here. Click {{ editId > 0 ? 'update' : 'save' }} when you're done.</DialogDescription>
+      <DialogHeader class="rc-dialog-header">
+        <DialogTitle class="text-sm text-rcgray-200">
+          <div class="flex items-center">
+            <CommandsIcon />
+            <span class="ml-2">{{ editId > 0 ? 'Edit' : 'Add' }} Vendor {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</span>
+          </div>
+        </DialogTitle>
+        <!-- <DialogDescription>Make changes to your tag here. Click {{ editId > 0 ? 'update' : 'save' }} when you're done.</DialogDescription> -->
       </DialogHeader>
+
       <div class="grid gap-2 py-4">
-        <div class="grid items-center grid-cols-4 gap-4">
+        <div class="grid items-center grid-cols-4 gap-2">
           <Label
             for="vendorName"
             class="text-right">
@@ -79,16 +85,15 @@ function saveDialog() {
             v-model="model.vendorName"
             id="vendorName"
             class="col-span-3" />
+          <span
+            class="col-span-3 col-start-2 text-sm text-red-400"
+            v-if="errors.vendorName">
+            {{ errors.vendorName[0] }}
+          </span>
         </div>
       </div>
-      <div class="flex flex-col w-full space-y-2">
-        <span
-          class="text-red-400"
-          v-if="errors.vendorName">
-          {{ errors.vendorName[0] }}
-        </span>
-      </div>
-      <DialogFooter>
+
+      <DialogFooter class="rc-dialog-footer bg-rcgray-800">
         <Button
           type="close"
           variant="outline"

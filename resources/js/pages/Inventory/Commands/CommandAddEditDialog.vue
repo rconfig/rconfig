@@ -69,20 +69,25 @@ function saveDialog() {
       <!-- <Button variant="outline">Edit Profile</Button> -->
     </DialogTrigger>
     <DialogContent
-      class="sm:max-w-fit"
+      class="p-0 sm:max-w-fit"
       @escapeKeyDown="closeDialog('DialogNewCommand')"
       @pointerDownOutside="closeDialog('DialogNewCommand')"
       @closeClicked="closeDialog('DialogNewCommand')">
-      <DialogHeader>
-        <DialogTitle>{{ editId > 0 ? 'Edit' : 'Add' }} Command {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</DialogTitle>
-        <DialogDescription>Make changes to your command here. Click {{ editId > 0 ? 'update' : 'save' }} when you're done.</DialogDescription>
+      <DialogHeader class="rc-dialog-header">
+        <DialogTitle class="text-sm text-rcgray-200">
+          <div class="flex items-center">
+            <CommandsIcon />
+            <span class="ml-2">{{ editId > 0 ? 'Edit' : 'Add' }} Command {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</span>
+          </div>
+        </DialogTitle>
+        <!-- <DialogDescription>Make changes to your tag here. Click {{ editId > 0 ? 'update' : 'save' }} when you're done.</DialogDescription> -->
       </DialogHeader>
 
       <Spinner :state="isLoading" />
       <div
-        class="grid gap-2 py-4"
+        class="grid gap-2 p-4"
         v-if="!isLoading">
-        <div class="grid items-center grid-cols-4 gap-4">
+        <div class="grid items-center grid-cols-4 gap-2">
           <Label
             for="command"
             class="text-right">
@@ -93,9 +98,14 @@ function saveDialog() {
             v-model="model.command"
             id="command"
             class="col-span-3" />
+          <span
+            class="col-span-3 col-start-2 text-sm text-red-400"
+            v-if="errors.command">
+            {{ errors.command[0] }}
+          </span>
         </div>
 
-        <div class="grid items-center grid-cols-4 gap-4">
+        <div class="grid items-center grid-cols-4 gap-2">
           <Label
             for="description"
             class="text-right">
@@ -106,36 +116,24 @@ function saveDialog() {
             id="description"
             class="col-span-3" />
         </div>
-        <div class="grid items-center grid-cols-4 gap-4">
+
+        <div class="grid items-center grid-cols-4 gap-2">
           <Label
             for="description"
             class="text-right">
             Command Groups
+            <span class="text-red-400">*</span>
           </Label>
           <CategoryMultiSelect v-model="model.category" />
+          <span
+            class="col-span-3 col-start-2 text-sm text-red-400"
+            v-if="errors.category">
+            {{ errors.category[0] }}
+          </span>
         </div>
       </div>
 
-      <div class="flex flex-col w-full space-y-2">
-        <span
-          class="text-red-400"
-          v-if="errors.description">
-          {{ errors.description[0] }}
-        </span>
-
-        <span
-          class="text-red-400"
-          v-if="errors.command">
-          {{ errors.command[0] }}
-        </span>
-
-        <span
-          class="text-red-400"
-          v-if="errors.category">
-          {{ errors.category[0] }}
-        </span>
-      </div>
-      <DialogFooter>
+      <DialogFooter class="rc-dialog-footer bg-rcgray-800">
         <Button
           type="close"
           variant="outline"

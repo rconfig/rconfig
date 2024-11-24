@@ -124,22 +124,22 @@ function setTemplateCode(code) {
       </div>
     </div>
     <div
-      class="grid items-center grid-cols-4 col-start-4 gap-4"
+      class="grid items-center grid-cols-4 col-start-4 gap-1"
       v-if="errors">
       <span
-        class="col-span-1 col-start-2 text-red-400"
+        class="col-span-1 col-start-2 text-sm text-red-400"
         v-if="errors.templateName">
         {{ errors.templateName[0] }}
       </span>
 
       <span
-        class="col-span-1 col-start-2 text-red-400"
+        class="col-span-1 col-start-2 text-sm text-red-400"
         v-if="errors.description">
         {{ errors.description[0] }}
       </span>
 
       <span
-        class="col-span-1 col-start-2 text-red-400"
+        class="col-span-1 col-start-2 text-sm text-red-400"
         v-if="errors.code">
         {{ errors.code[0] }}
       </span>

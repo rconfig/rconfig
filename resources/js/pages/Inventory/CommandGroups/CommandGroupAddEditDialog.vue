@@ -64,28 +64,39 @@ function saveDialog() {
       <!-- <Button variant="outline">Edit Profile</Button> -->
     </DialogTrigger>
     <DialogContent
-      class="sm:max-w-fit"
+      class="p-0 sm:max-w-fit"
       @escapeKeyDown="closeDialog('DialogNewCommandGroups')"
       @pointerDownOutside="closeDialog('DialogNewCommandGroups')"
       @closeClicked="closeDialog('DialogNewCommandGroups')">
-      <DialogHeader>
-        <DialogTitle>{{ editId > 0 ? 'Edit' : 'Add' }} Command Group {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</DialogTitle>
-        <DialogDescription>Make changes to your command group here. Click {{ editId > 0 ? 'update' : 'save' }} when you're done.</DialogDescription>
+      <DialogHeader class="rc-dialog-header">
+        <DialogTitle class="text-sm text-rcgray-200">
+          <div class="flex items-center">
+            <CommandGroupIcon />
+            <span class="ml-2">{{ editId > 0 ? 'Edit' : 'Add' }} Command Group {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</span>
+          </div>
+        </DialogTitle>
       </DialogHeader>
-      <div class="grid gap-2 py-4">
-        <div class="grid items-center grid-cols-4 gap-4">
+
+      <div class="grid gap-2 p-4">
+        <div class="grid items-center grid-cols-4 gap-2">
           <Label
             for="categoryName"
             class="text-right">
             Name
+            <span class="text-red-400">*</span>
           </Label>
           <Input
             v-model="model.categoryName"
             id="categoryName"
             class="col-span-3" />
+          <span
+            class="col-span-3 col-start-2 text-sm text-red-400"
+            v-if="errors.categoryName">
+            {{ errors.categoryName[0] }}
+          </span>
         </div>
 
-        <div class="grid items-center grid-cols-4 gap-4">
+        <div class="grid items-center grid-cols-4 gap-2">
           <Label
             for="categoryDescription"
             class="text-right">
@@ -95,31 +106,24 @@ function saveDialog() {
             v-model="model.categoryDescription"
             id="categoryDescription"
             class="col-span-3" />
+          <span
+            class="col-span-3 col-start-2 text-sm text-red-400"
+            v-if="errors.categoryDescription">
+            {{ errors.categoryDescription[0] }}
+          </span>
         </div>
 
         <div class="grid items-center grid-cols-4 gap-4">
           <Label
-            for="categoryDescription"
+            for="badgeColor"
             class="text-right">
             Color
           </Label>
           <BadgeColorSelector v-model="model.badgeColor" />
         </div>
       </div>
-      <div class="flex flex-col w-full space-y-2">
-        <span
-          class="text-red-400"
-          v-if="errors.categoryDescription">
-          {{ errors.categoryDescription[0] }}
-        </span>
 
-        <span
-          class="text-red-400"
-          v-if="errors.categoryName">
-          {{ errors.categoryName[0] }}
-        </span>
-      </div>
-      <DialogFooter>
+      <DialogFooter class="rc-dialog-footer bg-rcgray-800">
         <Button
           type="close"
           variant="outline"

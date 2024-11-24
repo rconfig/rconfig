@@ -61,16 +61,22 @@ function saveDialog() {
       <!-- <Button variant="outline">Edit Profile</Button> -->
     </DialogTrigger>
     <DialogContent
-      class="w-full"
+      class="w-full p-0"
       @escapeKeyDown="closeDialog('DialogNewTag')"
       @pointerDownOutside="closeDialog('DialogNewTag')"
       @closeClicked="closeDialog('DialogNewTag')">
-      <DialogHeader>
-        <DialogTitle>{{ editId > 0 ? 'Edit' : 'Add' }} Tag {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</DialogTitle>
-        <DialogDescription>Make changes to your tag here. Click {{ editId > 0 ? 'update' : 'save' }} when you're done.</DialogDescription>
+      <DialogHeader class="rc-dialog-header">
+        <DialogTitle class="text-sm text-rcgray-200">
+          <div class="flex items-center">
+            <CommandsIcon />
+            <span class="ml-2">{{ editId > 0 ? 'Edit' : 'Add' }} Tag {{ editId > 0 ? '(ID: ' + editId + ')' : '' }}</span>
+          </div>
+        </DialogTitle>
+        <!-- <DialogDescription>Make changes to your tag here. Click {{ editId > 0 ? 'update' : 'save' }} when you're done.</DialogDescription> -->
       </DialogHeader>
+
       <div class="grid gap-2 py-4">
-        <div class="grid items-center grid-cols-4 gap-4">
+        <div class="grid items-center grid-cols-4 gap-2">
           <Label
             for="tagname"
             class="text-right">
@@ -80,9 +86,14 @@ function saveDialog() {
             v-model="model.tagname"
             id="tagname"
             class="col-span-3" />
+          <span
+            class="col-span-3 col-start-2 text-sm text-red-400"
+            v-if="errors.tagname">
+            {{ errors.tagname[0] }}
+          </span>
         </div>
 
-        <div class="grid items-center grid-cols-4 gap-4">
+        <div class="grid items-center grid-cols-4 gap-2">
           <Label
             for="tagDescription"
             class="text-right">
@@ -92,22 +103,15 @@ function saveDialog() {
             v-model="model.tagDescription"
             id="tagDescription"
             class="col-span-3" />
+          <span
+            class="col-span-3 col-start-2 text-sm text-red-400"
+            v-if="errors.tagDescription">
+            {{ errors.tagDescription[0] }}
+          </span>
         </div>
       </div>
-      <div class="flex flex-col w-full space-y-2">
-        <span
-          class="text-red-400"
-          v-if="errors.tagDescription">
-          {{ errors.tagDescription[0] }}
-        </span>
 
-        <span
-          class="text-red-400"
-          v-if="errors.tagname">
-          {{ errors.tagname[0] }}
-        </span>
-      </div>
-      <DialogFooter>
+      <DialogFooter class="rc-dialog-footer bg-rcgray-800">
         <Button
           type="close"
           variant="outline"

@@ -93,8 +93,9 @@ function saveDialog() {
         </DialogTitle>
         <!-- <DialogDescription>Make changes to your tag here. Click {{ editId > 0 ? 'update' : 'save' }} when you're done.</DialogDescription> -->
       </DialogHeader>
+
       <div class="grid gap-2 p-4">
-        <div class="grid items-center grid-cols-4 gap-4">
+        <div class="grid items-center grid-cols-4 gap-2">
           <Label
             for="name"
             class="text-right">
@@ -107,12 +108,12 @@ function saveDialog() {
             class="col-span-3"
             autocomplete="off" />
           <span
-            class="col-start-2 -mt-4 text-sm text-red-400"
+            class="col-span-3 col-start-2 text-sm text-red-400"
             v-if="errors.name">
             {{ errors.name[0] }}
           </span>
         </div>
-        <div class="grid items-center grid-cols-4 gap-4">
+        <div class="grid items-center grid-cols-4 gap-2">
           <Label
             for="username"
             class="text-right">
@@ -123,13 +124,13 @@ function saveDialog() {
             id="username"
             class="col-span-3" />
           <span
-            class="col-start-2 -mt-4 text-sm text-red-400"
+            class="col-span-3 col-start-2 text-sm text-red-400"
             v-if="errors.username">
             {{ errors.username[0] }}
           </span>
         </div>
 
-        <div class="grid items-center grid-cols-4 gap-4">
+        <div class="grid items-center grid-cols-4 gap-2">
           <Label
             for="email"
             class="text-right">
@@ -142,13 +143,13 @@ function saveDialog() {
             type="email"
             class="col-span-3" />
           <span
-            class="col-start-2 -mt-4 text-sm text-red-400"
+            class="col-span-3 col-start-2 text-sm text-red-400"
             v-if="errors.email">
             {{ errors.email[0] }}
           </span>
         </div>
 
-        <div class="grid items-center grid-cols-4 gap-4">
+        <div class="grid items-center grid-cols-4 gap-2">
           <Label
             for="password"
             class="text-right">
@@ -161,13 +162,13 @@ function saveDialog() {
             id="password"
             class="col-span-3" />
           <span
-            class="col-start-2 -mt-4 text-sm text-red-400"
+            class="col-span-3 col-start-2 text-sm text-red-400"
             v-if="errors.password && editId === 0">
             {{ errors.password[0] }}
           </span>
         </div>
 
-        <div class="grid items-center grid-cols-4 gap-4">
+        <div class="grid items-center grid-cols-4 gap-2">
           <Label
             for="repeat_password"
             class="text-right">
@@ -180,12 +181,12 @@ function saveDialog() {
             id="repeat_password"
             class="col-span-3" />
           <span
-            class="col-start-2 -mt-4 text-sm text-red-400"
+            class="col-span-3 col-start-2 text-sm text-red-400"
             v-if="errors.repeat_password && editId === 0">
             {{ errors.repeat_password[0] }}
           </span>
           <span
-            class="col-start-2 -mt-4 text-sm text-green-400"
+            class="col-span-3 col-start-2 text-sm text-green-400"
             v-if="successMessage && editId === 0">
             {{ successMessage }}
           </span>
