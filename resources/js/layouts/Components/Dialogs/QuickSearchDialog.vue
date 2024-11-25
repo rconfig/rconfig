@@ -7,7 +7,9 @@ import { onMounted, onUnmounted, ref, nextTick, watch, inject } from 'vue';
 import { useClipboard } from '@vueuse/core';
 import { useDebounceFn } from '@vueuse/core';
 import { useDialogStore } from '@/stores/dialogActions';
+import { useRoute, useRouter } from 'vue-router'; // Import the useRoute from Vue Router
 
+const router = useRouter();
 const dialogStore = useDialogStore();
 const formatters = inject('formatters');
 const hoverIcons = ref({});
@@ -115,6 +117,35 @@ const handleMouseOver = key => {
 const handleMouseLeave = key => {
   hoverIcons.value[key] = false;
 };
+
+function openRecord() {
+  switch (selectedResult.value.type) {
+    case 'device':
+      router.push({ path: '/device/view/' + selectedResult.value.record[0].id });
+      break;
+    case 'category':
+      router.push({ path: '/commandgroups' });
+      break;
+    case 'command':
+      router.push({ path: '/commands' });
+      break;
+    case 'vendor':
+      router.push({ path: '/vendors' });
+      break;
+    case 'template':
+      router.push({ path: '/templates/view/' + selectedResult.value.record[0].id });
+      break;
+    case 'tag':
+      router.push({ path: '/tags' });
+      break;
+    case 'task':
+      router.push({ path: '/tasks' });
+      break;
+    default:
+      console.log('No record selected');
+  }
+  customCloseDialog();
+}
 </script>
 
 <template>
@@ -322,7 +353,7 @@ const handleMouseLeave = key => {
                   </div>
                   <div class="hidden text-xs text-muted-foreground sm:block">
                     <Badge class="flex justify-end px-1 scroll-py-0.5 border border-orange-800 bg-orange-900/30 hover:bg-orange-900/30 text-slate-50 min-w-fit">
-                      <TaskIcon class="w-4 h-4" />
+                      <TasksIcon class="w-4 h-4" />
                       <span class="ml-1 text-rcgray-300">Task</span>
                     </Badge>
                   </div>
@@ -380,9 +411,11 @@ const handleMouseLeave = key => {
         </Button>
 
         <Button
+          v-if="selectedResult.record[0]"
           type="submit"
           class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
           size="sm"
+          @click="openRecord()"
           variant="primary">
           Open Record
           <div class="pl-2 ml-auto">
