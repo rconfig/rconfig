@@ -397,36 +397,47 @@ function openRecord() {
           </transition>
         </div>
       </div>
-      <DialogFooter class="rc-dialog-footer bg-rcgray-800">
-        <Button
-          type="close"
-          variant="outline"
-          class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse"
-          @click="customCloseDialog()"
-          size="sm">
-          Close
-          <div class="pl-2 ml-auto">
-            <kbd class="rc-kdb-class">ESC</kbd>
-          </div>
-        </Button>
+      <DialogFooter class="flex flex-row justify-between gap-2 pt-2 pb-2 pl-3 pr-2 border-t sm:justify-between bg-rcgray-800">
+        <div class="flex items-center text-muted-foreground">
+          <Icon
+            icon="solar:arrow-up-linear"
+            class="border" />
+          <Icon
+            icon="solar:arrow-down-linear"
+            class="mx-1 border" />
+          <span class="pl-2 text-sm">Navigate</span>
+        </div>
+        <div>
+          <Button
+            type="close"
+            variant="outline"
+            class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse"
+            @click="customCloseDialog()"
+            size="sm">
+            Close/
+            <div class="pl-2 ml-auto">
+              <kbd class="rc-kdb-class">ESC</kbd>
+            </div>
+          </Button>
 
-        <Button
-          v-if="selectedResult.record[0]"
-          type="submit"
-          class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
-          size="sm"
-          @click="openRecord()"
-          variant="primary">
-          Open Record
-          <div class="pl-2 ml-auto">
-            <kbd class="rc-kdb-class2">
-              Ctrl&nbsp;
-              <Icon
-                icon="uil:enter"
-                class="" />
-            </kbd>
-          </div>
-        </Button>
+          <Button
+            v-if="selectedResult.record[0]"
+            type="submit"
+            class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+            size="sm"
+            @click="openRecord()"
+            variant="primary">
+            Open Record
+            <div class="pl-2 ml-auto">
+              <kbd class="rc-kdb-class2">
+                Ctrl&nbsp;
+                <Icon
+                  icon="uil:enter"
+                  class="" />
+              </kbd>
+            </div>
+          </Button>
+        </div>
       </DialogFooter>
     </DialogContent>
   </Dialog>

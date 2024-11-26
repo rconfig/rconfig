@@ -150,6 +150,7 @@
   width: 100%;
   border-bottom-width: 1px;
 }
+
 .rc-dialog-footer {
   display: flex;
   flex: 1 1 auto;
