@@ -66,8 +66,8 @@ export function useCommandGroups() {
       if (error.status === 422) {
         toastError('Error', error.response.data.message);
       } else {
-        console.error('Error deleting Command Group:', error);
-        toastError('Error', 'Failed to delete Command Group.');
+        console.error('Error deleting Command:', error);
+        toastError('Error', 'Failed to delete Command.');
       }
     }
   };
@@ -81,9 +81,12 @@ export function useCommandGroups() {
       showConfirmDelete.value = false;
       eventBus.emit('deleteManyCommandGroupsSuccess');
     } catch (error) {
-      console.error('Error deleting command groups:', error);
-      toastError('Error', 'Failed to delete command groups.');
-      showConfirmDelete.value = false;
+      if (error.status === 422) {
+        toastError('Error', error.response.data.message);
+      } else {
+        console.error('Error deleting Commands:', error);
+        toastError('Error', 'Failed to delete Commands.');
+      }
     }
   };
 

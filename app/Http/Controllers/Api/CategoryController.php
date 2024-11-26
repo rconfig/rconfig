@@ -63,8 +63,21 @@ class CategoryController extends ApiBaseController
 
     public function deleteMany(Request $request)
     {
-        $ids = $request->input('ids');
-        $this->model::whereIn('id', $ids)->delete();
+        try {
+            $ids = $request->ids;
+            \DB::beginTransaction();
+            $categories = Category::whereIn('id', $ids)->get();
+
+            // need to run each category through the boot method
+            foreach ($categories as $category) {
+                $category->delete();
+            }
+            \DB::commit();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 422);
+        }
 
         return response()->json(['message' => 'Command groups deleted successfully'], 200);
     }

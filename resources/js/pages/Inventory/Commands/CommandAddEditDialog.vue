@@ -110,6 +110,7 @@ function saveDialog() {
             for="description"
             class="text-right">
             Description
+            <span class="text-red-400">*</span>
           </Label>
           <Input
             v-model="model.description"

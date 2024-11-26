@@ -18,10 +18,10 @@ class Category extends BaseModel
 
         static::deleting(function ($cat) {
             if ($cat->devicesCount() > 0) {
-                throw new \Exception('Cannot delete category with related devices.');
+                throw new \Exception('Cannot delete command group with related devices.');
             }
             if ($cat->command()->count() > 0) {
-                throw new \Exception('Cannot delete category with related commands.');
+                throw new \Exception('Cannot delete command group with related commands.');
             }
         });
     }
@@ -41,7 +41,7 @@ class Category extends BaseModel
 
     public function device()
     {
-        return $this->belongsToMany('App\Models\Device');
+        return $this->belongsToMany('App\Models\Device')->where('status', '!=', 100);
     }
 
     public function command()

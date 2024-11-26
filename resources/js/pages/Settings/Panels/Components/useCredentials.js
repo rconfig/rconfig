@@ -75,9 +75,12 @@ export function useCredentials() {
       toastSuccess('Credential Deleted', 'The credential has been deleted successfully.');
       showConfirmDelete.value = false;
     } catch (error) {
-      console.error('Error deleting credential:', error);
-      toastError('Error', 'Failed to delete credential.');
-      showConfirmDelete.value = false;
+      if (error.status === 422) {
+        toastError('Error', error.response.data.message);
+      } else {
+        console.error('Error deleting Credetnial:', error);
+        toastError('Error', 'Failed to delete Credetnial.');
+      }
     }
   };
 
@@ -90,9 +93,12 @@ export function useCredentials() {
       showConfirmDelete.value = false;
       eventBus.emit('deleteManyCredentialsSuccess');
     } catch (error) {
-      console.error('Error deleting creds:', error);
-      toastError('Error', 'Failed to delete creds.');
-      showConfirmDelete.value = false;
+      if (error.status === 422) {
+        toastError('Error', error.response.data.message);
+      } else {
+        console.error('Error deleting Credential:', error);
+        toastError('Error', 'Failed to delete Credential.');
+      }
     }
   };
 

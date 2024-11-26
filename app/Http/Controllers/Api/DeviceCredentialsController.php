@@ -45,7 +45,20 @@ class DeviceCredentialsController extends ApiBaseController
 
     public function destroy($id, $return = 0)
     {
-        return parent::destroy($id);
+        try {
+            $deviceCredentials = DeviceCredentials::findOrFail($id);
+            $deviceCredentials->delete();
+
+            return response()->json(['message' => 'Device credentials deleted successfully.'], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred.',
+            ], 500); // For other exceptions, use 500
+        }
     }
 
     public function deleteMany(Request $request)
