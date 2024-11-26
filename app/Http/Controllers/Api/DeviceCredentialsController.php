@@ -63,9 +63,22 @@ class DeviceCredentialsController extends ApiBaseController
 
     public function deleteMany(Request $request)
     {
-        $ids = $request->input('ids');
-        $this->model::whereIn('id', $ids)->delete();
+        try {
+            $ids = $request->ids;
+            \DB::beginTransaction();
+            $deviceCredentials = DeviceCredentials::whereIn('id', $ids)->get();
 
-        return response()->json(['message' => 'Command groups deleted successfully'], 200);
+            // need to run each category through the boot method
+            foreach ($deviceCredentials as $deviceCredential) {
+                $deviceCredential->delete();
+            }
+            \DB::commit();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 422);
+        }
+
+        return response()->json(['message' => 'Device credentials deleted successfully'], 200);
     }
 }

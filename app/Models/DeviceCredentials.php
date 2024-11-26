@@ -37,6 +37,6 @@ class DeviceCredentials extends Model
 
     public function device()
     {
-        return $this->hasMany(Device::class, 'device_cred_id');
+        return $this->hasMany(Device::class, 'device_cred_id')->where('status', '!=', 100);
     }
 }

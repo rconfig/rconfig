@@ -78,8 +78,8 @@ export function useCredentials() {
       if (error.status === 422) {
         toastError('Error', error.response.data.message);
       } else {
-        console.error('Error deleting Credetnial:', error);
-        toastError('Error', 'Failed to delete Credetnial.');
+        console.error('Error deleting Credential:', error);
+        toastError('Error', 'Failed to delete Credential.');
       }
     }
   };
@@ -96,9 +96,10 @@ export function useCredentials() {
       if (error.status === 422) {
         toastError('Error', error.response.data.message);
       } else {
-        console.error('Error deleting Credential:', error);
-        toastError('Error', 'Failed to delete Credential.');
+        console.error('Error deleting Credentials:', error);
+        toastError('Error', 'Failed to delete Credentials.');
       }
+      showConfirmDelete.value = false;
     }
   };
 

@@ -46,33 +46,21 @@ class Device extends BaseModel
         );
     }
 
-    /**
-     * Get the vendor record associated with the device.
-     */
     public function vendor()
     {
         return $this->belongsToMany('App\Models\Vendor');
     }
 
-    /**
-     * Get the cat record associated with the device.
-     */
     public function category()
     {
         return $this->belongsToMany('App\Models\Category');
     }
 
-    /**
-     * Get the tag record associated with the device.
-     */
     public function tag()
     {
         return $this->belongsToMany('App\Models\Tag');
     }
 
-    /**
-     * Get the Template record associated with the device.
-     */
     public function template()
     {
         return $this->belongsToMany('App\Models\Template');
@@ -87,7 +75,6 @@ class Device extends BaseModel
     {
         return $this->belongsTo(DeviceCredentials::class,  'device_cred_id', 'id');
     }
-
 
     public function lastConfig()
     {
