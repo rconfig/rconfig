@@ -5,6 +5,7 @@ namespace Tests\Fasttests\ControllersTests\Api;
 use App\Models\Category;
 use App\Models\Command;
 use App\Models\Device;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -15,7 +16,7 @@ class CategoriesControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = \App\Models\User::factory()->create();
+        $this->user = User::factory()->create();
         $this->actingAs($this->user, 'api');
     }
 
@@ -74,7 +75,7 @@ class CategoriesControllerTest extends TestCase
 
     public function test_get_all_categories()
     {
-        $category = \App\Models\Category::factory(100)->create();
+        $category = Category::factory(100)->create();
         $response = $this->get('/api/categories?page=1&perPage=100');
         $this->assertEquals(100, count($response['data']));
         $response->assertStatus(200);
@@ -90,18 +91,18 @@ class CategoriesControllerTest extends TestCase
 
     public function test_create_category()
     {
-        $category = \App\Models\Category::factory()->create();
-        $this->post('/api/categories', $category->toArray());
+        $category = Category::factory()->make();
+        $response = $this->post('/api/categories', $category->toArray());
+        $response->assertStatus(200);
 
         $this->assertDatabaseHas('categories', [
-            'id' => $category->id,
             'categoryName' => $category->categoryName,
         ]);
     }
 
     public function test_edit_category()
     {
-        $category = \App\Models\Category::factory()->create();
+        $category = Category::factory()->create();
 
         $response = $this->json('patch', '/api/categories/' . $category->id, [
             'categoryName' => 'anewcategoryname',
@@ -120,7 +121,7 @@ class CategoriesControllerTest extends TestCase
 
     public function test_delete_category()
     {
-        $category = \App\Models\Category::factory()->create();
+        $category = Category::factory()->create();
 
         $this->delete('/api/categories/' . $category->id);
 

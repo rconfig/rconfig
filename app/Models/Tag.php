@@ -10,34 +10,39 @@ class Tag extends BaseModel
     use HasFactory;
 
     protected $searchableColumns = ['tagname'];
-
     protected $guarded = [];
-
-    //Make it available in the json response
     protected $appends = ['view_url'];
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($tag) {
+
+            if ($tag->devicesCount() > 0 || $tag->devicesCount() === 1) {
+                throw new \Exception('Cannot delete tag set with related devices.');
+            }
+        });
+    }
 
     // view url for search results
     protected function viewUrl(): Attribute
     {
         return Attribute::make(
-            get: fn () => '/tags',
+            get: fn() => '/tags',
         );
     }
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    public function devicesCount()
+    {
+        return $this->belongsToMany('App\Models\Device')->count();
+    }
 
-    /**
-     * Get the tag record associated with the user.
-     */
     public function Device()
     {
-        return $this->belongsToMany('App\Models\Device');
+        return $this->belongsToMany('App\Models\Device')->where('status', '!=', 100);
     }
 }

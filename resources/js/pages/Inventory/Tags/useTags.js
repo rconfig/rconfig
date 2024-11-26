@@ -64,9 +64,12 @@ export function useTags() {
       toastSuccess('Tag Deleted', 'The tag has been deleted successfully.');
       showConfirmDelete.value = false;
     } catch (error) {
-      console.error('Error deleting tag:', error);
-      toastError('Error', 'Failed to delete tag.');
-      showConfirmDelete.value = false;
+      if (error.status === 422) {
+        toastError('Error', error.response.data.message);
+      } else {
+        console.error('Error deleting Tag:', error);
+        toastError('Error', 'Failed to delete Tag.');
+      }
     }
   };
 
@@ -79,9 +82,12 @@ export function useTags() {
       showConfirmDelete.value = false;
       eventBus.emit('deleteManyTagsSuccess');
     } catch (error) {
-      console.error('Error deleting tags:', error);
-      toastError('Error', 'Failed to delete tags.');
-      showConfirmDelete.value = false;
+      if (error.status === 422) {
+        toastError('Error', error.response.data.message);
+      } else {
+        console.error('Error deleting Tags:', error);
+        toastError('Error', 'Failed to delete Tags.');
+      }
     }
   };
 

@@ -44,13 +44,40 @@ class TagController extends ApiBaseController
 
     public function destroy($id, $return = 0)
     {
-        return parent::destroy($id);
+
+        try {
+            $category = Tag::findOrFail($id);
+            $category->delete();
+
+            return response()->json(['message' => 'Tag deleted successfully.'], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred.',
+            ], 500); // For other exceptions, use 500
+        }
     }
 
     public function deleteMany(Request $request)
     {
-        $ids = $request->input('ids');
-        Tag::whereIn('id', $ids)->delete();
+        try {
+            $ids = $request->ids;
+            \DB::beginTransaction();
+            $tag = Tag::whereIn('id', $ids)->get();
+
+            // need to run each category through the boot method
+            foreach ($tag as $category) {
+                $category->delete();
+            }
+            \DB::commit();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 422);
+        }
 
         return response()->json(['message' => 'Tags deleted successfully'], 200);
     }

@@ -13,11 +13,11 @@ class TagFactory extends Factory
      */
     public function definition()
     {
-        $siteCode = 'Site-'.$this->faker->countryISOAlpha3.'-'.$this->faker->randomNumber(5);
+        $siteCode = 'Site-' . $this->faker->countryISOAlpha3 . '-' . $this->faker->randomNumber(5);
 
         return [
             'tagname' => $siteCode,
-            'tagDescription' => 'A demo tag for '.$siteCode,
+            'tagDescription' => 'A demo tag for ' . $siteCode,
         ];
     }
 }
