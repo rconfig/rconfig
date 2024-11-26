@@ -63,8 +63,12 @@ export function useVendors() {
       fetchVendors(); // Refresh vendors list after deletion
       toastSuccess('Vendor Deleted', 'The vendor has been deleted successfully.');
     } catch (error) {
-      console.error('Error deleting vendor:', error);
-      toastError('Error', 'Failed to delete vendor.');
+      if (error.status === 422) {
+        toastError('Error', error.response.data.message);
+      } else {
+        console.error('Error deleting Command:', error);
+        toastError('Error', 'Failed to delete Command.');
+      }
     }
   };
 
@@ -77,8 +81,12 @@ export function useVendors() {
       showConfirmDelete.value = false;
       eventBus.emit('deleteManyVendorsSuccess');
     } catch (error) {
-      console.error('Error deleting vendors:', error);
-      toastError('Error', 'Failed to delete vendors.');
+      if (error.status === 422) {
+        toastError('Error', error.response.data.message);
+      } else {
+        console.error('Error deleting Commands:', error);
+        toastError('Error', 'Failed to delete Commands.');
+      }
       showConfirmDelete.value = false;
     }
   };

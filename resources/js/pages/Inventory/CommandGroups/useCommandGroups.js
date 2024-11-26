@@ -87,6 +87,7 @@ export function useCommandGroups() {
         console.error('Error deleting Commands:', error);
         toastError('Error', 'Failed to delete Commands.');
       }
+      showConfirmDelete.value = false;
     }
   };
 

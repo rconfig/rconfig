@@ -44,13 +44,39 @@ class VendorController extends ApiBaseController
 
     public function destroy($id, $return = 0)
     {
-        return parent::destroy($id);
+        try {
+            $category = Vendor::findOrFail($id);
+            $category->delete();
+
+            return response()->json(['message' => 'Vendor deleted successfully.'], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred.',
+            ], 500); // For other exceptions, use 500
+        }
     }
 
     public function deleteMany(Request $request)
     {
-        $ids = $request->input('ids');
-        Vendor::whereIn('id', $ids)->delete();
+        try {
+            $ids = $request->ids;
+            \DB::beginTransaction();
+            $vendor = Vendor::whereIn('id', $ids)->get();
+
+            // need to run each vendor through the boot method
+            foreach ($vendor as $vendor) {
+                $vendor->delete();
+            }
+            \DB::commit();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 422);
+        }
 
         return response()->json(['message' => 'Vendors deleted successfully'], 200);
     }

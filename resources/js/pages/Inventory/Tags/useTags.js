@@ -88,6 +88,7 @@ export function useTags() {
         console.error('Error deleting Tags:', error);
         toastError('Error', 'Failed to delete Tags.');
       }
+      showConfirmDelete.value = false;
     }
   };
 
