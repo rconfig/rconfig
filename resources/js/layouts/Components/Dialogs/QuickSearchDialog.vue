@@ -155,9 +155,14 @@ function openRecord() {
         @click="customOpenDialog()"
         id="quickSearchBtn"
         variant="outline"
-        class="border-rcgray-600 hover:bg-rcgray-800 m-0 outline-none border-none no-underline flex items-center flex-shrink-0 overflow-hidden rounded-lg shadow-inner shadow-[0_0_0_1px_rgb(49,51,55)] bg-[#1b1d21] h-7 p-[4px_6px] gap-1.5 relative transition-[background]">
+        class="w-full border-rcgray-600 hover:bg-rcgray-800 m-0 outline-none border-none no-underline flex items-center flex-shrink-0 overflow-hidden rounded-lg shadow-inner shadow-[0_0_0_1px_rgb(49,51,55)] bg-[#1b1d21] h-7 p-[4px_6px] gap-1.5 relative transition-[background]"
+        data-full-width="true">
         <Icon icon="carbon:search" />
-        <div class="ml-auto"><kbd class="rc-kdb-class">/</kbd></div>
+
+        <div class="font-inter tracking-[-0.02em] font-medium leading-[20px] text-[14px] text-[#9fa1a7]">Actions & Search</div>
+        <div class="ml-auto">
+          <kbd class="rc-kdb-class">Ctrl /</kbd>
+        </div>
       </Button>
     </DialogTrigger>
     <DialogContent
@@ -191,7 +196,6 @@ function openRecord() {
             :class="selectedResult['record'].length > 0 ? 'w-1/2 border-r' : 'w-full '">
             <!-- Scrollable RECORDS section -->
             <div class="h-full">
-              <div class="w-full py-1 mt-2 text-xs uppercase border-b text-muted-foreground">RESULTS</div>
               <!-- {{ searchResults }} -->
 
               <!-- LOADER -->
@@ -206,9 +210,11 @@ function openRecord() {
               </div>
               <!-- LOADER -->
 
+              <div class="w-full py-1 mt-2 text-xs uppercase text-muted-foreground">SEARCH RESULTS</div>
+
               <!-- DEVICES RESULTS -->
               <div
-                class="flex flex-wrap justify-between w-full gap-1 p-1 border-b border-rcgray-600"
+                class="flex flex-wrap justify-between w-full gap-1 p-1"
                 v-if="searchResults['devices'].length > 0">
                 <div
                   class="flex items-center justify-between w-full px-2 py-1 text-sm cursor-pointer hover:bg-rcgray-800 rounded-xl"
@@ -230,7 +236,7 @@ function openRecord() {
 
               <!-- COMMAND GROUP RESULTS -->
               <div
-                class="flex flex-wrap justify-between w-full gap-1 p-1 border-b border-rcgray-600"
+                class="flex flex-wrap justify-between w-full gap-1 p-1"
                 v-if="searchResults['categories'].length > 0">
                 <div
                   class="flex items-center justify-between w-full px-2 py-1 text-sm cursor-pointer hover:bg-rcgray-800 rounded-xl"
@@ -252,7 +258,7 @@ function openRecord() {
 
               <!-- COMMANDS RESULTS -->
               <div
-                class="flex flex-wrap justify-between w-full gap-1 p-1 border-b border-rcgray-600"
+                class="flex flex-wrap justify-between w-full gap-1 p-1"
                 v-if="searchResults['commands'].length > 0">
                 <div
                   class="flex items-center justify-between w-full px-2 py-1 text-sm cursor-pointer hover:bg-rcgray-800 rounded-xl"
@@ -274,7 +280,7 @@ function openRecord() {
 
               <!-- VENDOR RESULTS -->
               <div
-                class="flex flex-wrap justify-between w-full gap-1 p-1 border-b border-rcgray-600"
+                class="flex flex-wrap justify-between w-full gap-1 p-1"
                 v-if="searchResults['vendors'].length > 0">
                 <div
                   class="flex items-center justify-between w-full px-2 py-1 text-sm cursor-pointer hover:bg-rcgray-800 rounded-xl"
@@ -296,7 +302,7 @@ function openRecord() {
 
               <!-- TEMPLATE RESULTS -->
               <div
-                class="flex flex-wrap justify-between w-full gap-1 p-1 border-b border-rcgray-600"
+                class="flex flex-wrap justify-between w-full gap-1 p-1"
                 v-if="searchResults['templates'].length > 0">
                 <div
                   class="flex items-center justify-between w-full px-2 py-1 text-sm cursor-pointer hover:bg-rcgray-800 rounded-xl"
@@ -318,7 +324,7 @@ function openRecord() {
 
               <!-- TAGS RESULTS -->
               <div
-                class="flex flex-wrap justify-between w-full gap-1 p-1 border-b border-rcgray-600"
+                class="flex flex-wrap justify-between w-full gap-1 p-1"
                 v-if="searchResults['tags'].length > 0">
                 <div
                   class="flex items-center justify-between w-full px-2 py-1 text-sm cursor-pointer hover:bg-rcgray-800 rounded-xl"
@@ -340,7 +346,7 @@ function openRecord() {
 
               <!-- TASKS RESULTS -->
               <div
-                class="flex flex-wrap justify-between w-full gap-1 p-1 border-b border-rcgray-600"
+                class="flex flex-wrap justify-between w-full gap-1 p-1"
                 v-if="searchResults['tasks'].length > 0">
                 <div
                   class="flex items-center justify-between w-full px-2 py-1 text-sm cursor-pointer hover:bg-rcgray-800 rounded-xl"

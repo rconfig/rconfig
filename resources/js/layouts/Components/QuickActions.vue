@@ -1,6 +1,5 @@
 <script setup>
 import { computed } from 'vue';
-import QuickActionsDialog from '@/layouts/Components/Dialogs/QuickActionsDialog.vue';
 import QuickSearchDialog from '@/layouts/Components/Dialogs/QuickSearchDialog.vue';
 
 const props = defineProps({
@@ -16,19 +15,7 @@ const classes = computed(() => {
 </script>
 
 <template>
-  <div class="quick-action-div">
-    <QuickActionsDialog />
+  <div class="flex flex-row items-center justify-start w-full gap-2 px-3 py-2 pb-4">
     <QuickSearchDialog />
   </div>
 </template>
-
-<style scoped>
-.quick-action-div {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 12px 11px;
-}
-</style>
