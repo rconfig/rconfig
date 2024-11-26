@@ -63,8 +63,12 @@ export function useCommandGroups() {
       fetchCommandGroups(); // Refresh categories list after deletion
       toastSuccess('CommandGroups Deleted', 'The Command Group has been deleted successfully.');
     } catch (error) {
-      console.error('Error deleting Command Group:', error);
-      toastError('Error', 'Failed to delete Command Group.');
+      if (error.status === 422) {
+        toastError('Error', error.response.data.message);
+      } else {
+        console.error('Error deleting Command Group:', error);
+        toastError('Error', 'Failed to delete Command Group.');
+      }
     }
   };
 

@@ -10,29 +10,40 @@ class Category extends BaseModel
     use HasFactory;
 
     protected $guarded = [];
-
-    //Make it available in the json response
     protected $appends = ['view_url'];
 
-    // view url for search results
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($cat) {
+            if ($cat->devicesCount() > 0) {
+                throw new \Exception('Cannot delete category with related devices.');
+            }
+            if ($cat->command()->count() > 0) {
+                throw new \Exception('Cannot delete category with related commands.');
+            }
+        });
+    }
+
     protected function viewUrl(): Attribute
     {
+        // view url for search results
         return Attribute::make(
             get: fn() => '/categories',
         );
     }
 
-    /**
-     * Category belongs to many devices
-     */
+    public function devicesCount()
+    {
+        return $this->belongsToMany('App\Models\Device', 'category_device', 'category_id', 'device_id')->count();
+    }
+
     public function device()
     {
         return $this->belongsToMany('App\Models\Device');
     }
 
-    /**
-     * Category belongs to many commands
-     */
     public function command()
     {
         return $this->belongsToMany('App\Models\Command');
