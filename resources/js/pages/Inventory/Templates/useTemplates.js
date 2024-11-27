@@ -56,8 +56,12 @@ export function useTemplates(emit) {
       fetchTemplates(); // Refresh templates list after deletion
       toastSuccess('Template Deleted', 'The template has been deleted successfully.');
     } catch (error) {
-      console.error('Error deleting template:', error);
-      toastError('Error', 'Failed to delete template.');
+      if (error.status === 422) {
+        toastError('Error', error.response.data.message);
+      } else {
+        console.error('Error deleting template:', error);
+        toastError('Error', 'Failed to delete template.');
+      }
     }
   };
 
@@ -70,8 +74,12 @@ export function useTemplates(emit) {
       showConfirmDelete.value = false;
       eventBus.emit('deleteManyTemplatesSuccess');
     } catch (error) {
-      console.error('Error deleting templates:', error);
-      toastError('Error', 'Failed to delete templates.');
+      if (error.status === 422) {
+        toastError('Error', error.response.data.message);
+      } else {
+        console.error('Error deleting Templates:', error);
+        toastError('Error', 'Failed to delete Templates.');
+      }
       showConfirmDelete.value = false;
     }
   };

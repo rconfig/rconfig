@@ -79,21 +79,45 @@ class TemplateController extends ApiBaseController
 
     public function destroy($id, $return = 0)
     {
-        $model = $this->model::find($id);
 
-        if (File::exists(storage_path() . $model->fileName)) {
-            File::delete(storage_path() . $model->fileName);
+        try {
+            $model = $this->model::find($id);
+
+            if (File::exists(storage_path() . $model->fileName)) {
+                File::delete(storage_path() . $model->fileName);
+            }
+
+            $model = tap($model)->delete();
+
+            return $this->successResponse(Str::ucfirst($this->modelname) . ' deleted successfully!');
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred.',
+            ], 500); // For other exceptions, use 500
         }
-
-        $model = tap($model)->delete();
-
-        return $this->successResponse(Str::ucfirst($this->modelname) . ' deleted successfully!');
     }
 
     public function deleteMany(Request $request)
     {
-        $ids = $request->input('ids');
-        Template::whereIn('id', $ids)->delete();
+        try {
+            $ids = $request->ids;
+            \DB::beginTransaction();
+            $templates = Template::whereIn('id', $ids)->get();
+
+            // need to run each category through the boot method
+            foreach ($templates as $template) {
+                $template->delete();
+            }
+            \DB::commit();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 422);
+        }
 
         return response()->json(['message' => 'Templates deleted successfully'], 200);
     }
