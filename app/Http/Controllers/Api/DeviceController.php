@@ -40,9 +40,6 @@ class DeviceController extends ApiBaseController
             ->allowedSorts('id', 'device_name', 'device_ip', 'status')
             ->paginate((int) $request->perPage);
 
-        // return $item;
-        // $result = parent::index($request, $searchCols, ['vendor', 'category',  'category.command', 'tag', 'template', 'lastConfig'], ['config_good', 'config_bad', 'config_unknown']);
-
         return response()->json($result);
     }
 

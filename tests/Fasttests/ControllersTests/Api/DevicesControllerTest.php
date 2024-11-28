@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Command;
 use App\Models\Device;
 use App\Models\Tag;
+use App\Models\Template;
 use App\Models\User;
 use App\Models\Vendor;
 use Illuminate\Support\Facades\DB;
@@ -46,7 +47,7 @@ class DevicesControllerTest extends TestCase
 
     public function test_get_all_devices_with_generic_filter()
     {
-        $response = $this->get('/api/devices?page=1&perPage=100&filter=192.168.1.170');
+        $response = $this->get('/api/devices?page=1&perPage=100&filter[q]=192.168.1.170');
         $response->assertJsonFragment(['device_ip' => '192.168.1.170']);
         $response->assertJsonFragment(['total' => 4]);
         $response->assertStatus(200);
@@ -130,18 +131,8 @@ class DevicesControllerTest extends TestCase
     public function test_a_device_requires_fields()
     {
         $response = $this->json('post', '/api/devices');
-        $response->assertJson(['errors' => true]);
-
-        $this->assertArrayHasKey('device_name', $response['errors']);
-        $this->assertArrayHasKey('device_vendor', $response['errors']);
-        $this->assertArrayHasKey('device_model', $response['errors']);
-        $this->assertArrayHasKey('device_model', $response['errors']);
-        $this->assertArrayHasKey('device_tags', $response['errors']);
-        $this->assertArrayHasKey('device_username', $response['errors']);
-        $this->assertArrayHasKey('device_password', $response['errors']);
-        $this->assertArrayHasKey('device_template', $response['errors']);
-        $this->assertArrayHasKey('device_main_prompt', $response['errors']);
         $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['device_name', 'device_vendor', 'device_model', 'device_tags', 'device_template', 'device_main_prompt']);
     }
 
     public function test_create_device()
@@ -150,8 +141,9 @@ class DevicesControllerTest extends TestCase
         Queue::fake();
 
         $category = Category::factory()->create();
-        $vendor = Vendor::factory()->create();
+        $vendor = Vendor::factory(1)->create();
         $commands = Command::factory(5)->create();
+        $template = Template::factory(1)->create();
         $tags = Tag::factory(3)->create();
 
         foreach ($commands as $command) {
@@ -165,19 +157,23 @@ class DevicesControllerTest extends TestCase
 
         $device = Device::factory()->make([
             'device_category_id' => $category->id,
-            'device_vendor' => $vendor->id,
+            'device_vendor' => $vendor->toArray(),
             'device_tags' => $tags,
+            'device_template' => $template->toArray(),
         ]);
 
         $this->assertDatabaseHas('category_command', [
             'command_id' => $commands[0]->id,
             'category_id' => $device->device_category_id,
         ]);
+
         $this->assertDatabaseMissing('devices', [
             'id' => $device->id,
         ]);
 
         $response = $this->json('post', '/api/devices', $device->toArray());
+        $response->assertStatus(200);
+
         $result = json_decode($response->getContent());
 
         $this->assertDatabaseHas('devices', [
@@ -191,12 +187,17 @@ class DevicesControllerTest extends TestCase
 
         $this->assertDatabaseHas('device_template', [
             'device_id' => $result->data->id,
-            'template_id' => $device->device_template,
+            'template_id' => $device->device_template[0]['id'],
         ]);
 
         $this->assertDatabaseHas('device_tag', [
             'device_id' => $result->data->id,
             'tag_id' => $device->device_tags[0]->id,
+        ]);
+
+        $this->assertDatabaseHas('device_vendor', [
+            'device_id' => $result->data->id,
+            'vendor_id' => $device->device_vendor[0]['id'],
         ]);
 
         Queue::assertPushed(DownloadConfigNow::class);
@@ -205,8 +206,9 @@ class DevicesControllerTest extends TestCase
     public function test_edit_device()
     {
         $category = Category::factory()->create();
-        $vendor = Vendor::factory()->create();
+        $vendor = Vendor::factory(1)->create();
         $commands = Command::factory(5)->create();
+        $template = Template::factory(1)->create();
         $tags = Tag::factory(3)->create();
 
         foreach ($commands as $command) {
@@ -232,10 +234,10 @@ class DevicesControllerTest extends TestCase
             'device_ip' => '12.12.12.12',
             'device_username' => 'stacky',
             'device_password' => $device->device_password,
-            'device_vendor' => $vendor->id,
             'device_model' => $device->device_model,
+            'device_vendor' => $vendor[0]['id'],
             'device_tags' => $tags->pluck('id')->toArray(),
-            'device_template' => $device->device_template,
+            'device_template' => $template[0]['id'],
             'device_main_prompt' => $device->device_main_prompt,
         ]);
 

@@ -14,7 +14,7 @@ class DeviceFactory extends Factory
     public function definition()
     {
         return [
-            'device_name' => 'device'.$this->faker->randomNumber($nbDigits = 9),
+            'device_name' => 'device' . $this->faker->randomNumber($nbDigits = 9),
             'device_ip' => $this->faker->ipv4,
             'device_default_creds_on' => 0,
             'device_username' => $this->faker->userName,
