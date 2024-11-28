@@ -27,28 +27,26 @@ class HorizonBasicTest extends TestCase
     public function test_horizon_timeout_value_can_be_changed()
     {
         // clear the config cache
-        // dd(config('horizon.environments.production.supervisor-1.timeout'));
+        $this->artisan('config:clear');
         $this->artisan('config:cache');
-        // dd(config('horizon.environments.production.supervisor-1.timeout'));
 
-        $this->assertEquals(60, config('horizon.environments.production.supervisor-1.timeout'));
-        $this->assertEquals(60, config('horizon.environments.local.supervisor-1.timeout'));
+        $this->assertEquals(120, config('horizon.environments.production.HorizonOne.timeout'));
+        $this->assertEquals(120, config('horizon.environments.local.HorizonOne.timeout'));
 
         // change the timeout in the env file
+        $this->artisan('env:set HORIZON_LOCAL_TIMEOUT=320');
+        $this->artisan('env:set HORIZON_PROD_TIMEOUT=320');
+
+        $this->artisan('config:cache');
+        $this->assertEquals(320, config('horizon.environments.production.HorizonOne.timeout'));
+        $this->assertEquals(320, config('horizon.environments.local.HorizonOne.timeout'));
+
         $this->artisan('env:set HORIZON_LOCAL_TIMEOUT=120');
         $this->artisan('env:set HORIZON_PROD_TIMEOUT=120');
 
-        $this->artisan('config:cache');
-        // dd(config('horizon.environments.production.supervisor-1.timeout'));
-        $this->assertEquals(120, config('horizon.environments.production.supervisor-1.timeout'));
-        $this->assertEquals(120, config('horizon.environments.local.supervisor-1.timeout'));
-
-        $this->artisan('env:set HORIZON_LOCAL_TIMEOUT=60');
-        $this->artisan('env:set HORIZON_PROD_TIMEOUT=60');
-
         $envExample = file_get_contents(base_path('.env.testing'));
-        $this->assertStringContainsString('HORIZON_LOCAL_TIMEOUT=60', $envExample);
-        $this->assertStringContainsString('HORIZON_PROD_TIMEOUT=60', $envExample);
+        $this->assertStringContainsString('HORIZON_LOCAL_TIMEOUT=120', $envExample);
+        $this->assertStringContainsString('HORIZON_PROD_TIMEOUT=120', $envExample);
     }
 
     public function test_env_example_has_env_timeout_values()
