@@ -1,15 +1,15 @@
 <script setup>
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import Command from '@/pages/Inventory/Commands/Main.vue';
 import CommandGroups from '@/pages/Inventory/CommandGroups/Main.vue';
 import Devices from '@/pages/Inventory/Devices/Main.vue';
 import Tags from '@/pages/Inventory/Tags/Main.vue';
 import Template from '@/pages/Inventory/Templates/Main.vue';
 import Vendors from '@/pages/Inventory/Vendors/Main.vue';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useInventory } from '@/pages/Inventory/useInventory';
 
-const { changeView, currentView, favoritesStore, route, router, toggleFavorite, viewItems } = useInventory();
+const { changeView, currentView, toggleFavorite, viewItems } = useInventory();
 </script>
 
 <template>
