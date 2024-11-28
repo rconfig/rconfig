@@ -57,6 +57,15 @@ function close() {
   if (panelContentName.value === 'configsview') {
     closeConfigViewPanel();
   }
+
+  if (panelContentName.value === 'configsearch') {
+    closeConfigViewPanel();
+  }
+
+  if (panelContentName.value === 'configcompare') {
+    closeConfigViewPanel();
+  }
+
   emit('close');
 }
 </script>
@@ -114,6 +123,22 @@ function close() {
         v-if="panelContentName === 'configsview'"
         :configId="pandelId"
         @close="closeConfigViewPanel()" />
+    </transition>
+
+    <transition name="fade">
+      <ConfigSearch
+        v-if="panelContentName === 'configsearch'"
+        class="flex flex-col items-center justify-center h-full">
+        <h1 class="text-2xl text-muted-foreground">Config Search</h1>
+      </ConfigSearch>
+    </transition>
+
+    <transition name="fade">
+      <ConfigCompare
+        v-if="panelContentName === 'configcompare'"
+        class="flex flex-col items-center justify-center h-full">
+        <h1 class="text-2xl text-muted-foreground">Config Compare</h1>
+      </ConfigCompare>
     </transition>
   </div>
 </template>

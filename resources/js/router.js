@@ -19,6 +19,32 @@ const routes = [
       ]
     }
   },
+  {
+    path: '/config-search',
+    name: 'configsearch',
+    component: () => import('@/pages/Shared/ContentPanel.vue'),
+    props: true,
+    meta: {
+      breadcrumb: [
+        { label: 'Home', link: '/' },
+        { label: 'Configs', link: '/configs' },
+        { label: 'Config Search', link: '/config-search' }
+      ]
+    }
+  },
+  {
+    path: '/config-compare',
+    name: 'configcompare',
+    component: () => import('@/pages/Shared/ContentPanel.vue'),
+    props: true,
+    meta: {
+      breadcrumb: [
+        { label: 'Home', link: '/' },
+        { label: 'Configs', link: '/configs' },
+        { label: 'Config Compare', link: '/config-compare' }
+      ]
+    }
+  },
   { path: '/configs/view/:id', name: 'configsview', component: () => import('@/pages/Shared/ContentPanel.vue'), props: true },
   { path: '/tags', name: 'tags', component: () => import('@/pages/Inventory/Main.vue') },
   { path: '/vendors', name: 'vendors', component: () => import('@/pages/Inventory/Main.vue') },

@@ -2,7 +2,6 @@
 import ConfigsTable from '@/pages/Configs/ConfigsTable.vue';
 import ConfigSearch from '@/pages/Configs/ConfigSearch.vue';
 import ConfigCompare from '@/pages/Configs/ConfigCompare.vue';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useConfigs } from '@/pages/Configs/useConfigs';
 
@@ -68,8 +67,6 @@ const { configsId, statusIdParam, changeView, currentView, bottomBorderStyle, to
         :configsId="configsId"
         :statusId="statusIdParam.statusId"
         v-if="currentView === 'configs'" />
-      <ConfigSearch v-if="currentView === 'configsearch'" />
-      <ConfigCompare v-if="currentView === 'configcompare'" />
     </div>
   </main>
 </template>
