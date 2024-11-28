@@ -21,18 +21,16 @@ class CommandsControllerTest extends TestCase
     public function test_a_command_requires_a_name_and_a_category_array()
     {
         $response = $this->json('post', '/api/commands', ['command' => null]);
-
-        $response->assertJson(['errors' => true]);
-        $response->assertJsonFragment(['command' => ['The command field is required.']]);
-        $response->assertJsonFragment(['categoryArray' => ['The category array field is required.']]);
-        $this->assertArrayHasKey('command', $response['errors']);
         $response->assertStatus(422);
+
+        $response->assertJsonValidationErrors(['command', 'category']);
     }
 
     public function test_show_single_command()
     {
         $command = Command::factory()->create();
-        $response = $this->get('/api/commands/'.$command->id);
+        $response = $this->get('/api/commands/' . $command->id);
+        $response->assertStatus(200);
 
         $response->assertJson(['command' => $command->command]);
     }
@@ -54,7 +52,7 @@ class CommandsControllerTest extends TestCase
             'category_id' => $category->id,
         ]);
 
-        $response = $this->get('/api/commands/'.$command->id);
+        $response = $this->get('/api/commands/' . $command->id);
         // dd($response->getContent());
 
         $response->assertJson(['command' => $command->command]);
@@ -72,7 +70,9 @@ class CommandsControllerTest extends TestCase
 
     public function test_get_all_commands_with_filter()
     {
-        $response = $this->get('/api/commands?page=1&perPage=100&filter=show clock');
+        $response = $this->get('/api/commands?page=1&perPage=100&filter[command]=show clock');
+        $response->assertStatus(200);
+
         $response->assertJsonFragment(['command' => 'show clock']);
         $response->assertJsonFragment(['total' => 1]);
         $response->assertStatus(200);
@@ -87,6 +87,7 @@ class CommandsControllerTest extends TestCase
             'id' => $categories[0]->id,
             'categoryName' => $categories[0]->categoryName,
         ]);
+
         $this->assertDatabaseHas('categories', [
             'id' => $categories[1]->id,
             'categoryName' => $categories[1]->categoryName,
@@ -96,8 +97,10 @@ class CommandsControllerTest extends TestCase
         $response = $this->json('post', '/api/commands', [
             'command' => $command->command,
             'description' => $command->description,
-            'categoryArray' => $categories,
+            'category' => $categories,
         ]);
+        $response->assertStatus(200);
+
         $insertedComand = Command::where('command', $command->command)->first();
 
         $response->assertStatus(200);
@@ -132,7 +135,7 @@ class CommandsControllerTest extends TestCase
         $response = $this->json('post', '/api/commands', [
             'command' => $command->command,
             'description' => $command->description,
-            'categoryArray' => $categories,
+            'category' => $categories,
         ]);
         $insertedComand = Command::where('command', $command->command)->first();
 
@@ -150,15 +153,15 @@ class CommandsControllerTest extends TestCase
 
         $categories2 = Category::factory(3)->create();
         // now apply the update
-        $response = $this->json('PATCH', '/api/commands/'.$insertedComand->id, [
+        $response = $this->json('PATCH', '/api/commands/' . $insertedComand->id, [
             'command' => 'new command',
             'description' => 'new description',
-            'categoryArray' => $categories2,
+            'category' => $categories2,
         ]);
-        $response = $this->json('PATCH', '/api/commands/'.$insertedComand->id, [
+        $response = $this->json('PATCH', '/api/commands/' . $insertedComand->id, [
             'command' => 'a new command name',
             'description' => 'a new description name',
-            'categoryArray' => $categories2,
+            'category' => $categories2,
         ]);
 
         $response->assertStatus(200);
@@ -181,7 +184,7 @@ class CommandsControllerTest extends TestCase
         $command = Command::factory()->create();
         $this->assertDatabaseHas('commands', ['id' => $command->id]);
 
-        $this->delete('/api/commands/'.$command->id);
+        $this->delete('/api/commands/' . $command->id);
 
         $this->assertDatabaseMissing('commands', ['id' => $command->id]);
     }
