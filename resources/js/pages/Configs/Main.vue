@@ -1,15 +1,9 @@
 <script setup>
 import ConfigsTable from '@/pages/Configs/ConfigsTable.vue';
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router'; // Import useRoute for accessing route parameters
+import useConfigs from '@/composables/useConfigs';
 
+const { configsId, statusIdParam } = useConfigs();
 defineProps({});
-
-const route = useRoute();
-const configsId = ref(parseInt(route.params.id) || 0);
-const statusIdParam = ref(route.query || null);
-
-onMounted(() => {});
 </script>
 
 <template>
