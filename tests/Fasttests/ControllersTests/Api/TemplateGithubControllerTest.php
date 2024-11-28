@@ -31,10 +31,7 @@ class TemplateGithubControllerTest extends TestCase
         $response->assertStatus(200)->assertJsonFragment([
             'html_url' => 'https://github.com/rconfig/rConfig-templates/blob/master/.gitignore',
         ]);
-        $response->assertStatus(200)->assertJsonFragment([
-            'msg' => 'Successfully connected to rConfig Templates Github repo',
-        ]);
-        // $json = $response->decodeResponseJson();
+        $response->assertJsonCount(36);
     }
 
     public function test_failed_github_connectivity_test()
