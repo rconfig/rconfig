@@ -1,7 +1,5 @@
 <script setup>
 import ConfigsTable from '@/pages/Configs/ConfigsTable.vue';
-import ConfigSearch from '@/pages/Configs/ConfigSearch.vue';
-import ConfigCompare from '@/pages/Configs/ConfigCompare.vue';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useConfigs } from '@/pages/Configs/useConfigs';
 
@@ -67,6 +65,10 @@ const { configsId, statusIdParam, changeView, currentView, bottomBorderStyle, to
         :configsId="configsId"
         :statusId="statusIdParam.statusId"
         v-if="currentView === 'configs'" />
+      <!-- 
+        // These are rendered in the resources/js/pages/Shared/ContentPanel.vue component
+      <ConfigSearch v-if="currentView === 'configsearch'" />
+      <ConfigCompare v-if="currentView === 'configcompare'" /> -->
     </div>
   </main>
 </template>

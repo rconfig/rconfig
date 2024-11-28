@@ -2,6 +2,8 @@
 import DeviceViewPane from '@/pages/Inventory/Devices/DeviceView/DeviceViewPane.vue';
 import ConfigViewPane from '@/pages/Configs/ConfigView/ConfigViewPane.vue';
 import TemplateAddEditPane from '@/pages/Inventory/Templates/TemplateAddEditPane.vue';
+import ConfigSearch from '@/pages/Configs/ConfigSearch.vue';
+import ConfigCompare from '@/pages/Configs/ConfigCompare.vue';
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router'; // Import the useRoute from Vue Router
 import { useToaster } from '@/composables/useToaster'; // Import the composable
