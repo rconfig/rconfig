@@ -18,8 +18,7 @@ class HorizonBasicTest extends TestCase
     {
         $user = User::factory()->create(['role' => 'Admin']);
 
-        $response = $this->actingAs($user)
-            ->get('horizon');
+        $response = $this->actingAs($user)->get('horizon');
         $response->assertStatus(200);
         $this->assertStringContainsString('<title>Horizon - rConfig6 - Network Configuration Management</title>', $response->getContent());
     }
@@ -52,7 +51,7 @@ class HorizonBasicTest extends TestCase
     public function test_env_example_has_env_timeout_values()
     {
         $envExample = file_get_contents(base_path('.env.example'));
-        $this->assertStringContainsString('HORIZON_LOCAL_TIMEOUT=60', $envExample);
-        $this->assertStringContainsString('HORIZON_PROD_TIMEOUT=60', $envExample);
+        $this->assertStringContainsString('HORIZON_LOCAL_TIMEOUT=120', $envExample);
+        $this->assertStringContainsString('HORIZON_PROD_TIMEOUT=120', $envExample);
     }
 }
