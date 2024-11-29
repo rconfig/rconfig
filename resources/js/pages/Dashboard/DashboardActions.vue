@@ -69,14 +69,14 @@ function purgeFailedConfigs() {
                   class="" />
                 View Devices
               </router-link>
-              <a
-                href="#"
+              <router-link
+                :to="{ name: 'configsearch' }"
                 class="flex items-center gap-2 px-4 py-2 font-semibold rounded-md text-md hover:bg-rcgray-800">
                 <Icon
                   icon="fluent-color:search-visual-16"
                   class="" />
                 Search Configs
-              </a>
+              </router-link>
               <a
                 @click="purgeFailedConfigs()"
                 class="flex items-center gap-2 px-4 py-2 font-semibold rounded-md text-md hover:bg-rcgray-800">
@@ -113,14 +113,14 @@ function purgeFailedConfigs() {
             View Devices
           </router-link>
 
-          <a
-            href="#"
+          <router-link
+            :to="{ name: 'configsearch' }"
             class="flex items-center gap-2 px-4 py-2 font-semibold rounded-md text-md hover:bg-rcgray-800">
             <Icon
               icon="fluent-color:search-visual-16"
               class="" />
             Search Configs
-          </a>
+          </router-link>
           <a
             @click="purgeFailedConfigs()"
             class="flex items-center gap-2 px-4 py-2 font-semibold rounded-md text-md hover:bg-rcgray-800">
