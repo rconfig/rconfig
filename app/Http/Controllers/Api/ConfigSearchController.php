@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\CustomClasses\ConfigSearch;
 use App\Http\Controllers\Controller;
+use App\Services\Config\Search\SearchStrategies\LatestSearchStrategyNew;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -13,41 +14,21 @@ class ConfigSearchController extends Controller
     public function search(Request $request)
     {
         Validator::make($request->all(), [
-            'category' => 'required|exists:categories,id',
-            'line_count' => 'required',
+            // 'device_name' => 'required',
+            // 'device_category' => '',
+            'command' => 'required',
             'search_string' => 'required',
+            // 'lines_before' => 'required',
+            // 'lines_after' => 'required',
+            // 'latest_version_only' => 'required',
+            // 'start_date' => 'required',
+            // 'end_date' => 'required',
+            // 'ignore_case' => 'required',
         ])->validate();
 
-        $searchArr = (new ConfigSearch($request['category'], $request['search_string'], $request['line_count'], isset($request['latestOnly']) ? $request['latestOnly'] : false))->search();
-        $searchArr['search_results'] = $this->recursive($searchArr['search_results']);
 
-        return json_encode($searchArr);
-    }
+        $result = (new LatestSearchStrategyNew())->searchConfigurations($request['device_name'], $request['device_category'], $request['command'], $request['search_string'], $request['lines_before'], $request['lines_after'], $request['latest_version_only'] == 'true' ? true : false, $request['start_date'], $request['end_date'], $request['ignore_case'] == 'true' ? true : false);
 
-    private function recursive($in_array)
-    {
-        $array = [];
-        $tmpArray = [];
-        $k = 0;
-        foreach ($in_array as $key => $value) {
-            if (Str::startsWith($value, '-::')) {
-                if (isset($tmpArray)) {
-                    unset($tmpArray);
-                }
-                $k++;
-                $value = Str::replaceFirst('-::', '', $value);
-                $value = Str::replaceFirst('::-', '', $value);
-                $value = array_reverse(explode('/', $value));
-                $tmpArray[0] = $value;
-            } else {
-                if ($value === '') {
-                    continue;
-                }
-                $tmpArray[] = $value;
-            }
-            $array[$k] = $tmpArray;
-        }
-
-        return $array;
+        return json_encode($result);
     }
 }

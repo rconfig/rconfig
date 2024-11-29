@@ -1,7 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 import Loading from '@/pages/Shared/Loading.vue';
-import FilterCard from '@/pages/Configs/ConfigSearch/FilterCard.vue';
+import ConfigSearchFilterCard from '@/pages/Configs/ConfigSearch/ConfigSearchFilterCard.vue';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const isLoading = ref(false);
 
@@ -22,7 +23,7 @@ const props = defineProps({});
         ref="panelElement2"
         class="min-h-[100vh]">
         <h1 class="m-2 text-sm font-semibold">Filter Options</h1>
-        <FilterCard
+        <ConfigSearchFilterCard
           class="p-2"
           :isLoading="isLoading" />
       </ResizablePanel>

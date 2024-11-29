@@ -1,0 +1,5 @@
+This is a test config file
+Some configuration
+show run
+interface GigabitEthernet0/0
+Another configuration line
