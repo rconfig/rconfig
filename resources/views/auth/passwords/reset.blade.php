@@ -1,7 +1,7 @@
 @extends('auth.layouts.app')
 
 @section('content')
-    <div class=" bg-rcgray-900">
+    <div class="bg-black ">
         <div class="flex items-center justify-center h-screen ">
             <div class="flex w-full max-w-5xl mx-32 space-x-8">
                 <div class="flex items-center justify-center w-1/2 rounded-lg h-1/2">

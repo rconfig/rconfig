@@ -5,7 +5,7 @@
         <loggout-loading></loggout-loading>
     </div>
 
-    <div id="auth-main-content" class="hidden bg-rcgray-900">
+    <div id="auth-main-content" class="hidden bg-black">
         <div class="flex items-center justify-center h-screen ">
 
             <div class="flex w-full max-w-5xl mx-32 space-x-8">

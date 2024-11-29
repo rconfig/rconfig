@@ -4,7 +4,7 @@
     <div id="auth-loading-container" class="flex items-center justify-center h-screen ">
         <auth-loading></auth-loading>
     </div>
-    <div id="auth-main-content" class="hidden bg-rcgray-900">
+    <div id="auth-main-content" class="hidden bg-black">
         <div class="flex items-center justify-center h-screen ">
             <div class="flex w-full max-w-5xl mx-32 space-x-8">
                 <div class="flex items-center justify-center w-1/2 rounded-lg h-1/2">

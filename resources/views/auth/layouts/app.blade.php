@@ -20,7 +20,7 @@
 
 <body>
     <div id="app">
-        <main>
+        <main class="bg-black">
             @yield('content')
         </main>
     </div>
