@@ -10,7 +10,6 @@ import { useClipboard } from '@vueuse/core';
 
 const activeIcons = ref({});
 const dialogStore = useDialogStore();
-const fileLocation = ref('');
 const hoverIcons = ref({});
 const isLoading = ref(true);
 const selectedLanguage = ref(localStorage.getItem('selectedLanguage') || 'language-plaintext');
@@ -58,6 +57,10 @@ function handleKeyDown(event) {
     handleClose();
   }
 }
+
+const fileLocation = computed(() => {
+  return props.record.file;
+});
 
 onUnmounted(() => {
   window.removeEventListener('keydown', handleKeyDown);
