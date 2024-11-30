@@ -131,7 +131,6 @@ onBeforeUnmount(() => {
         class="min-h-[100vh]">
         <h1 class="m-2 text-sm font-semibold">Filter Options</h1>
         <ConfigSearchFilterCard
-          class="p-2"
           :isLoading="isLoading"
           @searchCompleted="onSearchCompleted" />
       </ResizablePanel>

@@ -170,8 +170,8 @@ function search() {
                 id="ignore_case"
                 v-model:checked="model.ignore_case" />
               <label
-                for="terms"
-                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                for="ignore_case"
+                class="text-sm font-medium leading-none cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Ignore Case
               </label>
             </div>
@@ -180,8 +180,8 @@ function search() {
                 id="latest_version_only"
                 v-model:checked="model.latest_version_only" />
               <label
-                for="terms"
-                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                for="latest_version_only"
+                class="text-sm font-medium leading-none cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Latest Version Only
               </label>
             </div>
@@ -224,5 +224,4 @@ function search() {
       </CardFooter>
     </Card>
   </div>
-  <pre>{{ results }}</pre>
 </template>
