@@ -32,6 +32,7 @@ const onSearchCompleted = newFilters => {
   errors.value = [];
   currentPage.value = 0;
   lastPage.value = 1;
+  page.value = 1;
   searchModel.device_name = newFilters.device_name;
   searchModel.command = newFilters.command;
   searchModel.device_category = newFilters.device_category;
@@ -158,10 +159,14 @@ onBeforeUnmount(() => {
               <pre>{{ result }}</pre>
             </div>
 
-            <!-- Sentinel element to trigger fetching more results -->
+            <!-- Notice if end of results reached -->
             <div
-              id="sentinel"
-              class="w-full h-10"></div>
+              v-if="!isFetching && currentPage >= lastPage"
+              class="flex items-center justify-center pb-8 my-8">
+              <hr class="flex-grow mx-8" />
+              <div>No more results to load.</div>
+              <hr class="flex-grow mx-8" />
+            </div>
 
             <!-- Loading more results indicator -->
             <div
