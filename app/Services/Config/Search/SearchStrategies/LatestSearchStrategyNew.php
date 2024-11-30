@@ -96,7 +96,7 @@ class LatestSearchStrategyNew
 
         return [
             'current_page' => $page,
-            'last_page' => ceil($total / $perPage),
+            'last_page' => intdiv($total + $perPage - 1, $perPage),
             'per_page' => $perPage,
             'total' => $total,
             'data' => $pagedMatches,

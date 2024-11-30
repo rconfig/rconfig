@@ -25,7 +25,7 @@ const performSearch = newFilters => {
         :collapsed-size="0"
         ref="panelElement2"
         class="min-h-[100vh]">
-        <h1 class="m-2 text-sm font-semibold">Filter Options</h1>
+        <h1 class="m-2 text-sm font-semibold">Search Options</h1>
 
         <ConfigSearchFilterCard @searchCompleted="performSearch" />
       </ResizablePanel>

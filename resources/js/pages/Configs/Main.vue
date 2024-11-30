@@ -8,7 +8,7 @@ const { configsId, statusIdParam, changeView, currentView, bottomBorderStyle, to
 
 <template>
   <main class="flex flex-col flex-1 gap-2 dark:bg-rcgray-900">
-    <div class="flex flex-row items-center justify-start h-12 gap-3 px-5 border-t border-b">
+    <div class="flex flex-row items-center justify-between h-12 gap-3 px-5 border-t border-b">
       <div class="relative">
         <Button
           class="border"

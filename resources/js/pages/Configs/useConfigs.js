@@ -56,7 +56,6 @@ export function useConfigs() {
 
   function updateBottomBorder(view) {
     const selectedButton = document.querySelector(`[data-nav='${view}']`);
-    console.log(selectedButton);
 
     nextTick(() => {
       if (selectedButton) {

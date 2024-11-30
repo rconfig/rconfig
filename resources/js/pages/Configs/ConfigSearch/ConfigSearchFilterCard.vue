@@ -114,15 +114,29 @@ const { clearAll, commands, model, performSearch, setDates } = useFilterCard(emi
               </label>
             </div>
 
-            <div class="flex items-center mb-4 space-x-4">
-              <Input
-                type="number"
-                id="lines_before"
-                v-model="model.lines_before" />
-              <Input
-                type="number"
-                id="lines_after"
-                v-model="model.lines_after" />
+            <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2">
+              <div class="flex flex-col items-start">
+                <Input
+                  type="number"
+                  id="lines_before"
+                  v-model="model.lines_before" />
+                <Label
+                  for="lines_before"
+                  class="mt-2 text-sm font-medium leading-none cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Lines Before
+                </Label>
+              </div>
+              <div class="flex flex-col items-start">
+                <Input
+                  type="number"
+                  id="lines_after"
+                  v-model="model.lines_after" />
+                <Label
+                  for="lines_after"
+                  class="mt-2 text-sm font-medium leading-none cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Lines After
+                </Label>
+              </div>
             </div>
 
             <div class="flex flex-col items-start w-full space-x-2">
