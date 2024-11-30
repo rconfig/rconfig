@@ -26,6 +26,7 @@ const performSearch = newFilters => {
         ref="panelElement2"
         class="min-h-[100vh]">
         <h1 class="m-2 text-sm font-semibold">Filter Options</h1>
+
         <ConfigSearchFilterCard @searchCompleted="performSearch" />
       </ResizablePanel>
       <ResizableHandle with-handle />
@@ -36,11 +37,6 @@ const performSearch = newFilters => {
 
             <!-- Render search results here -->
             <ConfigSearchResultsTable :filters="filters" />
-            <!-- <div
-              v-for="result in results"
-              :key="result.id">
-              <pre>{{ result }}</pre>
-            </div> -->
           </div>
         </ScrollArea>
       </ResizablePanel>

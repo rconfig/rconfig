@@ -159,7 +159,7 @@ function notificationsCount(count) {
               <img
                 alt="rConfig"
                 class="h-6"
-                src="https://assets.attio.com/cdn-cgi/image/dpr=2,fit=cover,width=26,height=26/https://assets.attio.com/logos/68bac79b-c492-4aff-878b-72b3d19247a2?etag=1715675750052" />
+                src="/images/new/white/blue_light_logo_only.svg" />
               <div class="hidden ml-2 font-semibold text-md lg:block">rConfig</div>
               <!-- Hidden on small screens -->
             </div>
