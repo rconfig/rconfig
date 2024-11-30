@@ -37,9 +37,8 @@ class LatestSearchStrategyNew
             $query->where('command', $command);
         }
 
-        // Paginate the results
-
-        $configs = $query->paginate($perPage, ['*'], 'page', $page);
+        // Get all configs that match the initial criteria
+        $configs = $query->get();
 
         $matches = [];
 
@@ -83,8 +82,6 @@ class LatestSearchStrategyNew
                         'device_category' => $config->device_category,
                         'file' => $filePath,
                         'config_filesize' => $config->config_filesize,
-                        'line_number' => $lineNumber + 1,
-                        'context' => implode("\n", $matchBlock),
                         'config_date' => $config->created_at,
                         'matches' => $fileMatches,  // Grouped matches from this file
                     ];
@@ -92,12 +89,17 @@ class LatestSearchStrategyNew
             }
         }
 
+        // Apply pagination manually to the matches
+        $total = count($matches);
+        $offset = ($page - 1) * $perPage;
+        $pagedMatches = array_slice($matches, $offset, $perPage);
+
         return [
-            'current_page' => $configs->currentPage(),
-            'last_page' => $configs->lastPage(),
-            'per_page' => $configs->perPage(),
-            'total' => $configs->total(),
-            'data' => $matches,
+            'current_page' => $page,
+            'last_page' => ceil($total / $perPage),
+            'per_page' => $perPage,
+            'total' => $total,
+            'data' => $pagedMatches,
         ];
     }
 }

@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ref, onMounted, inject } from 'vue';
 import { useDialogStore } from '@/stores/dialogActions';
-import { useRoute, useRouter } from 'vue-router'; // Import the useRoute from Vue Router
+import { useRouter } from 'vue-router'; // Import the useRoute from Vue Router
 
 const emit = defineEmits(['toggle-view']);
 
