@@ -159,7 +159,7 @@ function notificationsCount(count) {
               <img
                 alt="rConfig"
                 class="h-6"
-                src="/images/new/white/blue_light_logo_only.svg" />
+                src="/images/brand/blue_light_logo_only.svg" />
               <div class="hidden ml-2 font-semibold text-md lg:block">rConfig</div>
               <!-- Hidden on small screens -->
             </div>

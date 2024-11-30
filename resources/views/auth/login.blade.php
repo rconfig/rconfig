@@ -14,7 +14,7 @@
                 </div>
                 <div class="flex items-center justify-center w-1/2 rounded-lg h-1/2">
                     <h2 class="text-3xl font-bold text-white">
-                        <img src="/images/new/white/white_logo_only.svg" alt="rConfig Logo" class="h-48" />
+                        <img src="/images/brand/white_logo_only.svg" alt="rConfig Logo" class="h-48" />
                         <x-auth-footer-section class="max-w-2xl">{{ $login_banner }}
                         </x-auth-footer-section>
                     </h2>

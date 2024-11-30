@@ -30,7 +30,7 @@ import { Separator } from '@/components/ui/separator';
                   <div class="relative flex">
                     <div class="absolute top-0 left-0 flex items-center justify-center w-10 h-10"></div>
                     <img
-                      src="/images/new/white/hex_logo_white_original_48.png"
+                      src="/images/brand/white_logo_only.svg"
                       alt="plus"
                       class="w-10 h-10" />
                   </div>
@@ -122,7 +122,7 @@ import { Separator } from '@/components/ui/separator';
                       data-variant="pro"
                       class="absolute top-0 left-0 flex items-center justify-center w-10 h-10"></div>
                     <img
-                      src="/images/new/blue/hex_logo_blue_48.png"
+                      src="/images/brand/blue_logo_only.svg"
                       alt="professional"
                       class="w-10 h-10" />
                   </div>
@@ -216,7 +216,7 @@ import { Separator } from '@/components/ui/separator';
                       data-variant="enterprise"
                       class="absolute top-0 left-0 flex items-center justify-center w-10 h-10"></div>
                     <img
-                      src=" /images/indigo/hex_logo_indigo_96.png"
+                      src="/images/brand/indigo_logo_only.svg"
                       alt="enterprise"
                       class="w-10 h-10" />
                   </div>
