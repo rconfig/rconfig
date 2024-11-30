@@ -27,6 +27,11 @@ const searchModel = reactive({
 });
 
 const onSearchCompleted = newFilters => {
+  // clear results and errors
+  results.value = [];
+  errors.value = [];
+  currentPage.value = 0;
+  lastPage.value = 1;
   searchModel.device_name = newFilters.device_name;
   searchModel.command = newFilters.command;
   searchModel.device_category = newFilters.device_category;
@@ -43,17 +48,27 @@ const onSearchCompleted = newFilters => {
 
 // Function to handle the API call to fetch more results
 const fetchResults = () => {
-  if (!searchModel.search_string && results.value.length === 0) {
+  if (searchModel.search_string === '') {
     results.value = [];
     return;
   }
+
   if (isFetching.value || currentPage.value >= lastPage.value) return;
 
   isFetching.value = true;
+
   axios
     .post('/api/configs/search', {
+      device_name: searchModel.device_name,
       command: searchModel.command,
+      device_category: searchModel.device_category,
       search_string: searchModel.search_string,
+      lines_before: searchModel.lines_before,
+      lines_after: searchModel.lines_after,
+      ignore_case: searchModel.ignore_case,
+      start_date: searchModel.start_date + ' 00:00:00',
+      end_date: searchModel.end_date + ' 23:59:59',
+      latest_version_only: searchModel.latest_version_only,
       page: page.value,
       per_page: 5
     })
@@ -76,8 +91,9 @@ const fetchResults = () => {
 const handleScroll = () => {
   if (scrollContainer) {
     const scrollBottom = scrollContainer.scrollHeight - scrollContainer.scrollTop - scrollContainer.clientHeight;
-    if (scrollBottom < 200 && !isFetching.value && currentPage.value < lastPage.value) {
-      page.value = currentPage.value + 1;
+
+    if (scrollBottom < 200 && !isFetching.value) {
+      page.value++;
       fetchResults();
     }
   }

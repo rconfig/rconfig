@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, watch } from 'vue';
 import ConfigSearchFilterCardDateRangePicker from '@/pages/Configs/ConfigSearch/ConfigSearchFilterCardDateRangePicker.vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -53,7 +53,8 @@ function clearAll() {
   model.search_string = '';
   model.lines_before = 5;
   model.lines_after = 5;
-  (model.latest_version_only = ref(true)), (model.ignore_case = ref(true));
+  model.latest_version_only = ref(true);
+  model.ignore_case = ref(true);
   model.start_date = '';
   model.end_date = '';
   Object.keys(results).forEach(key => delete results[key]);
