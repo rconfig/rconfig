@@ -105,6 +105,7 @@ export function useResultsTable(props) {
     openDialog,
     perPage,
     results,
+    searchModel,
     updatePerpage,
     viewDetailsPane
   };
