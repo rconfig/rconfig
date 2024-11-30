@@ -4,9 +4,12 @@ import ConfigSearchFilterCardDateRangePicker from '@/pages/Configs/ConfigSearch/
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
+
 defineProps({
   isLoading: Boolean
 });
+
+const emit = defineEmits(['searchCompleted']);
 
 const model = reactive({
   device_name: '',
@@ -23,8 +26,6 @@ const model = reactive({
 const daterange = ref(null);
 const commands = ref([]);
 const results = reactive({});
-const errors = ref([]);
-const searchIsLoading = ref(false);
 
 onMounted(() => {
   // window.addEventListener('wheel', handleScroll, { passive: true });
@@ -55,8 +56,8 @@ function clearAll() {
   (model.latest_version_only = ref(true)), (model.ignore_case = ref(true));
   model.start_date = '';
   model.end_date = '';
-  errors.value = [];
   Object.keys(results).forEach(key => delete results[key]);
+  emit('searchCompleted', model);
 }
 
 function setDates(dateRange) {
@@ -79,31 +80,7 @@ function setDates(dateRange) {
 }
 
 function search() {
-  searchIsLoading.value = true;
-  axios
-    .post('/api/configs/search', {
-      device_name: model.device_name,
-      command: model.command,
-      device_category: model.device_category,
-      search_string: model.search_string,
-      lines_before: model.lines_before,
-      lines_after: model.lines_after,
-      latest_version_only: model.latest_version_only,
-      ignore_case: model.ignore_case,
-      start_date: model.start_date,
-      end_date: model.end_date
-    })
-    .then(response => {
-      Object.assign(results, response.data);
-
-      // scrollToBottom();
-      searchIsLoading.value = false;
-    })
-    .catch(error => {
-      console.log(error);
-      errors.value = error.response.data.errors;
-      searchIsLoading.value = false;
-    });
+  emit('searchCompleted', model);
 }
 </script>
 
@@ -153,12 +130,6 @@ function search() {
               <p class="ml-1 text-xs text-muted-foreground">
                 Required
                 <span class="text-red-400">*</span>
-                <span
-                  class="col-span-3 col-start-2 text-sm text-red-400"
-                  v-if="errors.command">
-                  <br />
-                  {{ errors.command[0] }}
-                </span>
               </p>
             </div>
             <div class="grid items-center">
@@ -171,12 +142,6 @@ function search() {
               <p class="ml-1 text-xs text-muted-foreground">
                 Required
                 <span class="text-red-400">*</span>
-                <span
-                  class="col-span-3 col-start-2 text-sm text-red-400"
-                  v-if="errors.search_string">
-                  <br />
-                  {{ errors.search_string[0] }}
-                </span>
               </p>
             </div>
 

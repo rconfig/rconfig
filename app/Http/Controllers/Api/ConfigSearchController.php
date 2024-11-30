@@ -13,22 +13,32 @@ class ConfigSearchController extends Controller
 {
     public function search(Request $request)
     {
+        // Validate request data
         Validator::make($request->all(), [
-            // 'device_name' => 'required',
-            // 'device_category' => '',
             'command' => 'required',
             'search_string' => 'required',
-            // 'lines_before' => 'required',
-            // 'lines_after' => 'required',
-            // 'latest_version_only' => 'required',
-            // 'start_date' => 'required',
-            // 'end_date' => 'required',
-            // 'ignore_case' => 'required',
         ])->validate();
 
+        // Set pagination parameters
+        $page = $request->input('page', 1); // Default to page 1
+        $perPage = $request->input('per_page', 10); // Default to 10 results per page
 
-        $result = (new LatestSearchStrategyNew())->searchConfigurations($request['device_name'], $request['device_category'], $request['command'], $request['search_string'], $request['lines_before'], $request['lines_after'], $request['latest_version_only'] == 'true' ? true : false, $request['start_date'], $request['end_date'], $request['ignore_case'] == 'true' ? true : false);
+        // Call the search strategy
+        $result = (new LatestSearchStrategyNew())->searchConfigurations(
+            $request['device_name'],
+            $request['device_category'],
+            $request['command'],
+            $request['search_string'],
+            $request['lines_before'],
+            $request['lines_after'],
+            $request['latest_version_only'] == 'true' ? true : false,
+            $request['start_date'],
+            $request['end_date'],
+            $request['ignore_case'] == 'true' ? true : false,
+            $page,
+            $perPage
+        );
 
-        return json_encode($result);
+        return response()->json($result);
     }
 }

@@ -34,7 +34,6 @@ const { configsId, statusIdParam, changeView, currentView, bottomBorderStyle, to
           <ConfigToolsIcon class="mr-2" />
           Compare
         </Button>
-
         <div
           v-if="currentView"
           class="absolute -bottom-1.5 h-0.5 bg-blue-500"

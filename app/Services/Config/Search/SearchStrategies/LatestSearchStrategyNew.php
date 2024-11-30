@@ -13,7 +13,7 @@ class LatestSearchStrategyNew
     public function __construct() {}
 
 
-    function searchConfigurations($deviceName, $deviceCategory, $command, $searchString, $linesBefore = 2, $linesAfter = 2, $latestVersionOnly = true, $startDate = null, $endDate = null, $ignoreCase = true)
+    public function searchConfigurations($deviceName, $deviceCategory, $command, $searchString, $linesBefore = 2, $linesAfter = 2, $latestVersionOnly = true, $startDate = null, $endDate = null, $ignoreCase = true, $page = 1, $perPage = 10)
     {
         // Query builder for configs
         $query = DB::table('configs')
@@ -21,16 +21,9 @@ class LatestSearchStrategyNew
             ->where('device_category', 'like', "%$deviceCategory%");
 
         // Filter for latest version
-        // if ($latestVersionOnly) {
-        //     // only take records with the latest created_at timestamp
-        //     $query->select('device_id', DB::raw('max(created_at) as created_at'))
-        //         ->groupBy('device_id');
-        //     $query = DB::table('configs')
-        //         ->joinSub($query, 'latest_configs', function ($join) {
-        //             $join->on('configs.device_id', '=', 'latest_configs.device_id')
-        //                 ->on('configs.created_at', '=', 'latest_configs.created_at');
-        //         });
-        // }
+        if ($latestVersionOnly) {
+            $query->where('latest_version', 1);
+        }
 
         // Filter by date range
         if ($startDate) {
@@ -44,8 +37,9 @@ class LatestSearchStrategyNew
             $query->where('command', $command);
         }
 
-        // Get filtered configs
-        $configs = $query->get();
+        // Paginate the results
+
+        $configs = $query->paginate($perPage, ['*'], 'page', $page);
 
         $matches = [];
 
@@ -56,7 +50,6 @@ class LatestSearchStrategyNew
             // Check if file exists
             if (file_exists($filePath)) {
                 // Read file line by line
-                // $fileContents = file($filePath, FILE_IGNORE_NEW_LINES);
                 $fileContents = explode("\n", File::get($filePath));
                 $fileLinesCount = count($fileContents);
 
@@ -99,6 +92,12 @@ class LatestSearchStrategyNew
             }
         }
 
-        return $matches;
+        return [
+            'current_page' => $configs->currentPage(),
+            'last_page' => $configs->lastPage(),
+            'per_page' => $configs->perPage(),
+            'total' => $configs->total(),
+            'data' => $matches,
+        ];
     }
 }
