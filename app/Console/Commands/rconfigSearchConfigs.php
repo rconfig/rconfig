@@ -22,6 +22,6 @@ class rconfigSearchConfigs extends Command
 
     public function handle()
     {
-        $this->error('This command is deprecated. Please contact support if your require it.');
+        $this->error('This command has been discontinued. Please contact support if you still require it.');
     }
 }

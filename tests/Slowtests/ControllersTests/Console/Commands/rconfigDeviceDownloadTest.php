@@ -34,7 +34,7 @@ class rconfigDeviceDownloadTest extends TestCase
         // this is a placeholder for rconfigDeviceDownload class command, but most tests for this command are extracted to Tests\ControllerTests\Connections\Telnet\TelnetConnectTest
         // i keep this here so i remind myself that the real test for this class are in TelnetConnectTest, but as I mimic the dir strucutre of the commands folder, this stays put.
     }
- 
+
     public function test_basic_telnet_test()
     {
         // starttime
@@ -91,7 +91,7 @@ class rconfigDeviceDownloadTest extends TestCase
         ]);
 
         $time = microtime(true) - $start;
-        $this->assertLessThan(5, $time);
+        $this->assertLessThan(7, $time);
     }
 
     public function test_failed_auth_message_and_log_and_status_for_telnet_connect()

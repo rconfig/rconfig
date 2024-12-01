@@ -113,4 +113,10 @@ class ConfigSearchControllerTest extends TestCase
             ],
         ]);
     }
+
+    public function tearDown(): void
+    {
+        Config::where('config_location', '/var/www/html/rconfig/tests/storage/configsearch/fake1.txt')->delete();
+        parent::tearDown();
+    }
 }
