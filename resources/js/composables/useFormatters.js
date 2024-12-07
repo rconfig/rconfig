@@ -6,6 +6,14 @@ export function useFormatters() {
     return value.toString().toUpperCase();
   };
 
+  // first character of each word is capitalized
+  const capitalize = value => {
+    return value
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+
   function formatFileSize(bytes) {
     if (bytes === 0) return '0 B';
     const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
@@ -26,9 +34,10 @@ export function useFormatters() {
   }
 
   return {
+    capitalize,
+    formatDuration,
     formatFileSize,
     formatTime,
-    formatDuration,
     uppercase
   };
 }
