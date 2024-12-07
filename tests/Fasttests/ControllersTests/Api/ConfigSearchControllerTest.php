@@ -17,7 +17,7 @@ class ConfigSearchControllerTest extends TestCase
         $this->user = User::factory()->create();
         /** @var mixed $this->user */
         $this->actingAs($this->user, 'api');
-        Config::where('config_location', '/var/www/html/rconfig/tests/storage/configsearch/fake1.txt')->delete();
+        Config::truncate();
     }
 
     public function test_a_search_validation_errors()
@@ -116,7 +116,7 @@ class ConfigSearchControllerTest extends TestCase
 
     public function tearDown(): void
     {
-        Config::where('config_location', '/var/www/html/rconfig/tests/storage/configsearch/fake1.txt')->delete();
+        Config::truncate();
         parent::tearDown();
     }
 }

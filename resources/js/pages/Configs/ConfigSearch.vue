@@ -3,17 +3,43 @@ import ConfigSearchResultsTable from '@/pages/Configs/ConfigSearch/ConfigSearchR
 import ConfigSearchFilterCard from '@/pages/Configs/ConfigSearch/ConfigSearchFilterCard.vue';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const filters = ref({});
+const router = useRouter();
 
 const performSearch = newFilters => {
   // Object.assign(filters.value, newFilters);
   filters.value = { ...newFilters }; // Shallow copy to break reactivity
 };
+
+const close = () => {
+  // nav back to previous page
+  router.go(-1);
+};
 </script>
 
 <template>
-  <div>
+  <div
+    class="w-screen h-[calc(100vh-72px)] border"
+    style="display: flex; flex-direction: column; background-color: rgb(27, 29, 33); border-radius: 16px; margin: 4px 8px 8px; max-width: calc(100% - 16px); overflow: hidden">
+    <div class="flex justify-between w-full p-2 border-b">
+      <Button
+        @click="close()"
+        size="sm"
+        variant="outline"
+        class="gap-1 border-none hover:bg-rcgray-800">
+        <Icon
+          icon="mingcute:close-line"
+          class="hover:animate-pulse" />
+      </Button>
+      <h2 class="items-center content-center text-muted-foreground">Config Search</h2>
+
+      <div class="flex justify-end">
+        <!-- EMPTY -->
+      </div>
+    </div>
+
     <ResizablePanelGroup
       direction="horizontal"
       class="">

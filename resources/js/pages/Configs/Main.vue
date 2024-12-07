@@ -1,5 +1,7 @@
 <script setup>
 import ConfigsTable from '@/pages/Configs/ConfigsTable.vue';
+import ConfigSearch from '@/pages/Configs/ConfigSearch.vue';
+import ConfigCompare from '@/pages/Configs/ConfigCompare.vue';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useConfigs } from '@/pages/Configs/useConfigs';
 
@@ -31,7 +33,7 @@ const { configsId, statusIdParam, changeView, currentView, bottomBorderStyle, to
           @click="changeView('configcompare')"
           data-nav="configcompare"
           variant="ghost">
-          <ConfigToolsIcon class="mr-2" />
+          <ConfigCompareIcon class="mr-2" />
           Compare
         </Button>
         <div
@@ -47,10 +49,10 @@ const { configsId, statusIdParam, changeView, currentView, bottomBorderStyle, to
           <TooltipTrigger
             as-child
             v-if="currentView === item.id">
-            <DropdownMenuShortcut @click.stop.prevent="toggleFavorite(item.id)">
+            <div @click.stop.prevent="toggleFavorite(item.id)">
               <StarUnselected v-if="!item.isFavorite.value" />
               <StarSelected v-if="item.isFavorite.value" />
-            </DropdownMenuShortcut>
+            </div>
           </TooltipTrigger>
           <TooltipContent>
             <p>{{ item.isFavorite.value ? 'Remove from favorites' : 'Add ' + currentView + ' to favorites' }}</p>
@@ -68,6 +70,22 @@ const { configsId, statusIdParam, changeView, currentView, bottomBorderStyle, to
         // These are rendered in the resources/js/pages/Shared/ContentPanel.vue component
       <ConfigSearch v-if="currentView === 'configsearch'" />
       <ConfigCompare v-if="currentView === 'configcompare'" /> -->
+
+      <transition name="fade">
+        <ConfigSearch
+          v-if="currentView === 'configsearch'"
+          class="flex flex-col items-center justify-center h-full">
+          <h1 class="text-2xl text-muted-foreground">Config Search</h1>
+        </ConfigSearch>
+      </transition>
+
+      <transition name="fade">
+        <ConfigCompare
+          v-if="currentView === 'configcompare'"
+          class="flex flex-col items-center justify-center h-full">
+          <h1 class="text-2xl text-muted-foreground">Config Compare</h1>
+        </ConfigCompare>
+      </transition>
     </div>
   </main>
 </template>
