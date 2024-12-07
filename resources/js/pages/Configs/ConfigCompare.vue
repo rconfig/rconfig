@@ -1,4 +1,5 @@
 <script setup>
+import ConfigCompareFilterCard from '@/pages/Configs/ConfigCompare/ConfigCompareFilterCard.vue';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -48,13 +49,26 @@ const close = () => {
         collapsible
         :collapsed-size="0"
         ref="panelElement2"
-        class="min-h-[100vh]">
+        class="min-h-[86vh]">
         <h1 class="m-2 text-sm font-semibold">Search Options</h1>
 
-        CONFIG COMPARE LEFT
-      </ResizablePanel>
+        <div class="relative flex flex-col items-center">
+  <!-- First element -->
+  <div class="flex-1 w-full">
+    <ConfigCompareFilterCard @searchCompleted="performSearch" :comparePosition="'left'"/>
+  </div>
+
+  <!-- Separator -->
+  <div class="w-full my-4 border-t "></div>
+
+  <!-- Second element -->
+  <div class="flex-1 w-full">
+    <ConfigCompareFilterCard @searchCompleted="performSearch" :comparePosition="'right'"/>
+  </div>
+</div>
+      </ResizablePanel  class="min-h-[86vh]">
       <ResizableHandle with-handle />
-      <ResizablePanel class="min-h-[100vh]">
+      <ResizablePanel class="h-16">
         <ScrollArea class="border border-none rounded-md">
           <div class="h-[90dvh]">
             <h1 class="m-2 text-sm font-semibold">Results</h1>

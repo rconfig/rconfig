@@ -50,15 +50,15 @@ const close = () => {
         collapsible
         :collapsed-size="0"
         ref="panelElement2"
-        class="min-h-[100vh]">
+        class="h-[86vh]">
         <h1 class="m-2 text-sm font-semibold">Search Options</h1>
 
         <ConfigSearchFilterCard @searchCompleted="performSearch" />
       </ResizablePanel>
       <ResizableHandle with-handle />
-      <ResizablePanel class="min-h-[100vh]">
+      <ResizablePanel class="h-[86vh]">
         <ScrollArea class="border border-none rounded-md">
-          <div class="h-[90dvh]">
+          <div>
             <h1 class="m-2 text-sm font-semibold">Results</h1>
 
             <!-- Render search results here -->

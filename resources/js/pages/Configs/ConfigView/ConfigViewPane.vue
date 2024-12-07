@@ -52,11 +52,6 @@ function deleteTheConfig() {
             class="p-2 mt-2"
             :isLoading="isLoading"
             :configData="configData" />
-          <!-- <DeviceViewDetailsPanel
-            class="p-2"
-            v-if="leftNavSelected === 'details'"
-            :isLoading="isLoading"
-            :configData="configData" /> -->
         </ResizablePanel>
         <ResizableHandle with-handle />
         <ResizablePanel class="min-h-[100vh]">
@@ -75,13 +70,6 @@ function deleteTheConfig() {
           </ScrollArea>
         </ResizablePanel>
       </ResizablePanelGroup>
-
-      <!-- EDITOR -->
-      <!-- <div
-        class="code-editor__code-pre"
-        id="code-editor__code-pre"
-        style="height: calc(100vh - 450px)"></div> -->
-      <!-- EDITOR -->
     </div>
   </main>
 </template>
