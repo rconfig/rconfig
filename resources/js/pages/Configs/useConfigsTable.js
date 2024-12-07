@@ -103,11 +103,11 @@ export function useConfigsTable(props) {
     try {
       await axios.delete(`/api/configs/${id}`);
       getTabledata(); // Refresh configs list after deletion
-      toastSuccess('Config Deleted', 'The tag has been deleted successfully.');
+      toastSuccess('Config Deleted', 'The config has been deleted successfully.');
       showConfirmDelete.value = false;
     } catch (error) {
-      console.error('Error deleting tag:', error);
-      toastError('Error', 'Failed to delete tag.');
+      console.error('Error deleting config:', error);
+      toastError('Error', 'Failed to delete config.');
       showConfirmDelete.value = false;
     }
   };

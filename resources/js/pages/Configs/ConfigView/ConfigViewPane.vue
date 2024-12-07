@@ -1,17 +1,24 @@
 <script setup>
 import ConfigViewMainPanel from '@/pages/Configs/ConfigView/ConfigViewMainPanel.vue';
 import ConfigSummaryPanel from '@/pages/Configs/ConfigView/ConfigSummaryPanel.vue';
-import DeviceViewPaneDropdown from '@/pages/Inventory/Devices/DeviceView/DeviceViewPaneDropdown.vue';
+import ConfigViewPaneDropdown from '@/pages/Configs/ConfigView/ConfigViewPaneDropdown.vue';
 import Loading from '@/pages/Shared/Loading.vue';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useConfigViewPane } from '@/pages/Configs/ConfigView/useConfigViewPane';
-const emit = defineEmits(['close']);
+import { useConfigsTable } from '@/pages/Configs/useConfigsTable';
 
+const emit = defineEmits(['close']);
 const props = defineProps({
   configId: Number
 });
 
 const { configData, isLoading, panelElement2 } = useConfigViewPane(props, emit);
+const { deleteConfig } = useConfigsTable(props);
+
+function deleteTheConfig() {
+  deleteConfig(props.configId);
+  emit('close');
+}
 </script>
 
 <template>
@@ -23,7 +30,9 @@ const { configData, isLoading, panelElement2 } = useConfigViewPane(props, emit);
         <span class="text-lg font-semibold text-blue-400 font-inter">{{ configData.config_filename }}</span>
       </div>
       <div class="flex items-center">
-        <DeviceViewPaneDropdown />
+        <ConfigViewPaneDropdown
+          :editId="configId"
+          @onDelete="deleteTheConfig()" />
       </div>
     </div>
 

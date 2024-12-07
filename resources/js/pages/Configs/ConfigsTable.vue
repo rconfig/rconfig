@@ -1,4 +1,5 @@
 <script setup>
+import ActionsMenu from '@/pages/Shared/Table/ActionsMenu.vue';
 import PeekConfigDialog from '@/pages/Shared/Dialogs/PeekConfigDialog.vue';
 import ClearFilters from '@/pages/Shared/Filters/ClearFilters.vue';
 import ConfirmDeleteAlert from '@/pages/Shared/AlertDialog/ConfirmDeleteAlert.vue';
@@ -223,6 +224,12 @@ onUnmounted(() => {
                   <PeekConfigDialog
                     :editId="row.id"
                     v-if="isDialogOpen('peek-config-dialog-' + row.id)"></PeekConfigDialog>
+
+                  <ActionsMenu
+                    :rowData="row"
+                    :showEditBtn="true"
+                    @onEdit="viewDetailsPane(row.id)"
+                    @onDelete="deleteConfig(row.id)" />
                 </TableCell>
               </TableCell>
               <!-- ACTIONS MENU -->
