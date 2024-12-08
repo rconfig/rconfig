@@ -58,7 +58,6 @@ watch(selectedRows, val => {
                   class="flex justify-start w-full p-0 hover:bg-rcgray-800"
                   variant="ghost"
                   @click="toggleSort('id')">
-                  <Icon :icon="sortParam === 'id' ? 'lucide:sort-asc' : sortParam === '-id' ? 'lucide:sort-desc' : 'hugeicons:sorting-05'" />
                   <span class="ml-2">ID</span>
                 </Button>
               </TableHead>
@@ -67,7 +66,6 @@ watch(selectedRows, val => {
                   class="flex justify-start w-full p-0 hover:bg-rcgray-800"
                   variant="ghost"
                   @click="toggleSort('cred_name')">
-                  <Icon :icon="sortParam === 'cred_name' ? 'lucide:sort-asc' : sortParam === '-cred_name' ? 'lucide:sort-desc' : 'hugeicons:sorting-05'" />
                   <span class="ml-2">Name</span>
                 </Button>
               </TableHead>
@@ -83,6 +81,8 @@ watch(selectedRows, val => {
 
             <template v-else-if="!isLoading">
               <TableRow
+                @click="toggleSingleSelectRow(row.id)"
+                class="cursor-pointer hover:bg-rcgray-800"
                 v-for="row in results.data"
                 :key="row.id">
                 <TableCell class="text-start">

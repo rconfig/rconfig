@@ -1,6 +1,7 @@
 <script setup>
 import ConfigCompareFilterCard from '@/pages/Configs/ConfigCompare/ConfigCompareFilterCard.vue';
 import ConfigCompareFilterConfigResults from '@/pages/Configs/ConfigCompare/ConfigCompareFilterConfigResults.vue';
+import ConfigCompareResults from '@/pages/Configs/ConfigCompare/ConfigCompareResults.vue';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -18,12 +19,15 @@ const rightConfigData = ref({
   start_date: '',
   end_date: ''
 });
-const leftConfigResultsKey = ref(10);
-const rightConfigResultsKey = ref(20);
+const leftConfigFilterKey = ref(100);
+const leftConfigResultsKey = ref(200);
+const rightConfigFilterKey = ref(300);
+const rightConfigResultsKey = ref(400);
 const router = useRouter();
 const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
-const leftSelectedId = ref('');
-const rightSelectedId = ref('');
+const leftSelectedId = ref([]);
+const rightSelectedId = ref([]);
+const loadComparison = ref(false);
 
 const updateConfigFilterData = (position, data) => {
   if (position === 'left') {
@@ -36,21 +40,40 @@ const updateConfigFilterData = (position, data) => {
 };
 
 const sendConfigCompare = () => {
-  if (Object.keys(leftConfigData.value).length === 0 || Object.keys(rightConfigData.value).length === 0) {
+  if (leftSelectedId.length > 0 || rightSelectedId.length > 0) {
     toastError('Please select configurations for comparison');
     return;
   }
 
-  console.log('Left Config ID:', leftConfigData.value);
-  console.log('Right Config ID:', rightConfigData.value);
-
-  toastSuccess('Comparing configurations...');
-  // Add logic to handle the IDs and perform the comparison
+  toastSuccess('Comparing configurations...', '', 2000);
+  loadComparison.value = true;
 };
 
 const close = () => {
   // nav back to previous page
   router.go(-1);
+};
+
+const reset = () => {
+  leftSelectedId.value = [];
+  leftConfigData.value = {
+    selectedCommand: [],
+    device: [],
+    start_date: '',
+    end_date: ''
+  };
+  rightSelectedId.value = [];
+  rightConfigData.value = {
+    selectedCommand: [],
+    device: [],
+    start_date: '',
+    end_date: ''
+  };
+  loadComparison.value = false;
+  leftConfigResultsKey.value += 1;
+  leftConfigFilterKey.value += 1;
+  rightConfigResultsKey.value += 1;
+  rightConfigFilterKey.value += 1;
 };
 </script>
 
@@ -70,10 +93,8 @@ const close = () => {
       </Button>
       <h2 class="items-center content-center text-muted-foreground">Config Compare</h2>
 
-      <div class="flex justify-end">
-        <div
-          class=""
-          v-if="leftSelectedId && rightSelectedId">
+      <div class="flex items-center justify-end">
+        <div v-if="leftSelectedId.length > 0 && rightSelectedId.length > 0">
           <Badge
             variant="outline"
             class="py-1 mt-1 bg-rcgray-800">
@@ -86,8 +107,15 @@ const close = () => {
         <Button
           v-if="leftSelectedId && rightSelectedId"
           @click="sendConfigCompare(leftSelectedId, rightSelectedId)"
-          class="text-white bg-blue-600 hover:bg-blue-700">
+          class="h-8 ml-2 text-white bg-blue-600 hover:bg-blue-700">
           Compare
+        </Button>
+        <Button
+          variant="outline"
+          v-if="leftSelectedId && rightSelectedId"
+          @click="reset()"
+          class="h-8 ml-2 text-white">
+          Reset
         </Button>
       </div>
     </div>
@@ -103,15 +131,15 @@ const close = () => {
         :collapsed-size="0"
         ref="panelElement2"
         class="min-h-[86vh]">
-        <h1 class="m-2 text-sm font-semibold">Search Options</h1>
+        <h1 class="mt-4 ml-4 text-sm font-semibold">Search Options</h1>
 
         <div class="relative flex flex-col items-center">
           <!-- First element -->
           <div class="min-h-[35dvh] flex-1 w-full">
             <ConfigCompareFilterCard
+              :key="leftConfigFilterKey"
               @updateConfigFilter="data => updateConfigFilterData('left', data)"
-              :comparePosition="'left'"
-              :key="'left-config-filter'" />
+              :comparePosition="'left'" />
           </div>
 
           <!-- Separator -->
@@ -120,9 +148,9 @@ const close = () => {
           <!-- Second element -->
           <div class="min-h-[35dvh] flex-1 w-full">
             <ConfigCompareFilterCard
+              :key="rightConfigFilterKey"
               @updateConfigFilter="data => updateConfigFilterData('right', data)"
-              :comparePosition="'right'"
-              :key="'right-config-filter'" />
+              :comparePosition="'right'" />
           </div>
           <div class="w-full my-4 border-t"></div>
         </div>
@@ -132,9 +160,11 @@ const close = () => {
         <ScrollArea class="border border-none rounded-md">
           <!-- SEARCH RESULTS -->
           <div class="h-[80dvh]">
-            <h1 class="w-full m-2 text-sm font-semibold">Filter Results</h1>
+            <h1 class="w-full mt-4 ml-6 text-sm font-semibold">Filter Results</h1>
 
-            <div class="relative flex flex-col items-center">
+            <div
+              class="relative flex flex-col items-center"
+              v-if="!loadComparison">
               <ConfigCompareFilterConfigResults
                 :key="leftConfigResultsKey"
                 :filterData="leftConfigData"
@@ -147,6 +177,14 @@ const close = () => {
                 :filterData="rightConfigData"
                 @updateSelectedRows="rightSelectedId = $event"
                 :comparePosition="'right'" />
+            </div>
+
+            <div
+              class="relative flex flex-col items-center"
+              v-if="loadComparison">
+              <ConfigCompareResults
+                :leftSelectedId="leftSelectedId"
+                :rightSelectedId="rightSelectedId" />
             </div>
           </div>
           <!-- SEARCH RESULTS -->

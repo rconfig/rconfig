@@ -72,7 +72,6 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
     Route::resource('tracked-jobs', 'TrackedJobController')->only(['show']);
     Route::resource('tasks', 'TaskController');
 
-
     /* CONFIGS ROUTES */
     Route::resource('configs', 'ConfigController')->only(['index', 'show', 'destroy']);
     Route::resource('reports', 'TaskReportController')->only(['index', 'show', 'destroy']);
