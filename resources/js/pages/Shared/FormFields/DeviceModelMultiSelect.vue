@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import axios from 'axios';
 import { computed, onMounted, ref, watch } from 'vue';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -7,7 +7,6 @@ import DeviceModelAddDialog from '@/pages/Shared/FormFields/DeviceModelAddDialog
 
 const emit = defineEmits(['update:modelValue']);
 const DeviceModels = ref([]);
-const modelValue = ref<string[]>([]);
 const open = ref(false);
 const searchTerm = ref('');
 const selectedDeviceModels = ref([]);

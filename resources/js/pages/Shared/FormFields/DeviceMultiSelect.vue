@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import axios from 'axios';
 import { computed, onMounted, ref, watch } from 'vue';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -6,7 +6,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 
 const emit = defineEmits(['update:modelValue']);
 const devices = ref([]);
-const modelValue = ref<string[]>([]);
 const open = ref(false);
 const searchTerm = ref('');
 const selectedDevs = ref([]);
