@@ -21,6 +21,10 @@ const props = defineProps({
   modelValue: {
     type: Array,
     required: true
+  },
+  singleSelect: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -33,12 +37,19 @@ watch(
 );
 
 onMounted(() => {
-  fetchCategories();
+  fetchDevices();
 });
 
 function selectItem(item) {
+  if (props.singleSelect) {
+    // If singleSelect is true, replace the selected item
+    selectedDevs.value = [item];
+  } else {
+    // Add selected item to selectedDeviceModels
+    selectedDevs.value.push(item);
+  }
+
   // Add selected item to selectedDevs and emit updated list
-  selectedDevs.value.push(item);
   open.value = false;
   searchTerm.value = '';
   // remove item from filteredCategories
@@ -58,7 +69,7 @@ function deleteItem(itemName) {
   emit('update:modelValue', selectedDevs.value);
 }
 
-function fetchCategories() {
+function fetchDevices() {
   axios.get('/api/devices/?perPage=10000').then(response => {
     devices.value = response.data.data;
   });
