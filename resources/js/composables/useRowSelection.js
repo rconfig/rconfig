@@ -25,10 +25,19 @@ export function useRowSelection(rows) {
     }
   };
 
+  // Toggle Select Single Row (Single Select Version)
+  const toggleSingleSelectRow = rowId => {
+    if (selectedRows.value.includes(rowId)) {
+      selectedRows.value = [];
+    } else {
+      selectedRows.value = [rowId];
+    }
+  };
+
   return {
     selectedRows,
     selectAll,
     toggleSelectAll,
-    toggleSelectRow
+    toggleSingleSelectRow
   };
 }
