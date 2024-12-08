@@ -12,42 +12,47 @@ import { useToast } from '@/components/ui/toast/use-toast';
 export function useToaster() {
   const { toast } = useToast();
 
-  function toastDefault(title, description) {
-    toast({
-      title,
-      description
-    });
-  }
-
-  function toastSuccess(title, description) {
+  function toastDefault(title, description, duration = 3000) {
     toast({
       title,
       description,
-      variant: 'success'
+      duration: duration
     });
   }
 
-  function toastError(title, description) {
+  function toastSuccess(title, description, duration = 3000) {
     toast({
       title,
       description,
-      variant: 'destructive'
+      variant: 'success',
+      duration: duration
     });
   }
 
-  function toastInfo(title, description) {
+  function toastError(title, description, duration = 3000) {
     toast({
       title,
       description,
-      variant: 'info'
+      variant: 'destructive',
+      duration: duration
     });
   }
 
-  function toastWarning(title, description) {
+  function toastInfo(title, description, duration = 3000) {
     toast({
       title,
       description,
-      variant: 'warning'
+      variant: 'info',
+      duration: duration
+    });
+  }
+
+  function toastWarning(title, description, duration = 3000) {
+    toast({
+      title,
+      description,
+      variant: 'warning',
+      duration: duration
     });
   }
 
