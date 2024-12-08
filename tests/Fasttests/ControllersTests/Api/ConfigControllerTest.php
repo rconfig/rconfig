@@ -52,6 +52,30 @@ class ConfigControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function test_get_all_configs_for_given_device_id_with_status_and_filter()
+    {
+        Config::factory(10)->create(['device_id' => 3, 'download_status' => 1, 'command' => 'show clock']);
+        Config::factory(10)->create(['device_id' => 3, 'download_status' => 0, 'command' => 'show cisco']);
+        $response = $this->get('/api/configs/all-by-deviceid/3/1/?filter[q]=show cisco');
+        // test pagniation structure
+        $response->assertJsonStructure([
+            'current_page',
+            'data',
+            'first_page_url',
+            'from',
+            'last_page',
+            'last_page_url',
+            'next_page_url',
+            'path',
+            'per_page',
+            'prev_page_url',
+            'to',
+            'total',
+        ]);
+        $this->assertEquals(10, count($response['data'])); // +++ for default seeded rows
+        $response->assertStatus(200);
+    }
+
     public function test_get_distinct_commands_for_given_device_id()
     {
         Config::factory(100)->create(['device_id' => 1001]);
@@ -106,10 +130,10 @@ class ConfigControllerTest extends TestCase
 
         $response = $this->get('/api/configs/latest-by-deviceid/1001');
         $id = collect($response->json()['data'])->firstWhere('command', 'show run')['id'];
-  
+
         $response = $this->get('/api/configs/view-config/' . $id);
         $response->assertStatus(200);
- 
+
         $this->assertStringContainsString('ip domain name rconfigdev.com', $response->getContent());
         $this->assertStringContainsString('transport output pad telnet rlogin lapb-ta mop udptn v120', $response->getContent());
     }

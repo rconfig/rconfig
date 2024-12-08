@@ -56,7 +56,7 @@ class ConfigController extends ApiBaseController
         return $this->successResponse($logmsg);
     }
 
-    public function getAllById($id, $status, Request $request)
+    public function getAllById($id, Request $request)
     {
 
         $response = QueryBuilder::for(Config::class)
@@ -65,6 +65,7 @@ class ConfigController extends ApiBaseController
                 AllowedFilter::exact('device_id'),
                 AllowedFilter::exact('download_status'),
             ])
+            ->where('device_id', $id)
             ->defaultSort('-id')
             ->allowedSorts('id', 'device_name', 'command', 'download_status')
             ->paginate((int) $request->perPage);
