@@ -25,6 +25,7 @@ const props = defineProps({
     default: 0
   }
 });
+
 const { viewDetailsPane, filterCommand, configs, filterStatus, isLoading, currentPage, perPage, lastPage, editId, clearFilters, formatters, searchTerm, openDialog, isDialogOpen, getTabledata, createConfig, updateConfig, deleteConfig, deleteManyConfigs, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam, showConfirmDelete } = useConfigsTable(props);
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(configs);
 
