@@ -41,7 +41,7 @@ const routes = [
       breadcrumb: [
         { label: 'Home', link: '/' },
         { label: 'Configs', link: '/configs' },
-        { label: 'Config Search', link: '/config-compare' }
+        { label: 'Config Compare', link: '/config-compare' }
       ]
     }
   },
