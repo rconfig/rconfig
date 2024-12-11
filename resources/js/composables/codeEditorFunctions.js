@@ -52,6 +52,48 @@ export default function useCodeEditor(monaco) {
     return meditor;
   }
 
+  /* Init the Editor */
+  function initDiffEditor(divName, language) {
+    if (language === 'policy') {
+      monaco.languages.register({ id: 'rConfigPolicyLanguage' });
+      monaco.languages.setMonarchTokensProvider('rConfigPolicyLanguage', userConfigPolicyLanguage());
+
+      completionItemProvider = monaco.languages.registerCompletionItemProvider('rConfigPolicyLanguage', {
+        triggerCharacters: ['#'],
+        provideCompletionItems: function (model, position) {
+          return { suggestions: userConfigPolicyLanguageAutoComplete(monaco) };
+        }
+      });
+
+      language = 'rConfigPolicyLanguage';
+    }
+
+    const codeEditorDiv = document.getElementById(divName);
+    meditor = monaco.editor.createDiffEditor(codeEditorDiv, {
+      stickyScroll: {
+        enabled: localStorage.getItem('rConfig.editorStickyScroll') === 'true' ? true : false
+      },
+      enableSplitViewResizing: true,
+      value: meditorValue.value,
+      language: language || 'javascript',
+      lineNumbers: lineNumbers.value,
+      renderOverviewRuler: false, //https://github.com/microsoft/monaco-editor/issues/1689
+      roundedSelection: false,
+      scrollBeyondLastLine: true,
+      readOnly: false,
+      theme: darkmode.value,
+      scrollBeyondLastLine: false,
+      automaticLayout: true,
+      wordWrap: 'on',
+      minimap: {
+        enabled: localStorage.getItem('rConfig.editorMinimap') === 'true' ? true : false
+      },
+      automaticLayout: true
+    });
+
+    return meditor;
+  }
+
   /** EDITOR DARKMODE */
   const darkmode = ref('vs');
 
@@ -220,6 +262,7 @@ export default function useCodeEditor(monaco) {
     darkmode,
     download,
     initEditor,
+    initDiffEditor,
     lineNumbers,
     meditorValue,
     minimap,

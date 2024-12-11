@@ -4,7 +4,7 @@ import NoResults from '@/pages/Shared/Table/NoResults.vue';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { watch, inject } from 'vue';
-import { useCompareConfigResults } from './useCompareConfigResults';
+import { useCompareFilterConfigResults } from '@/pages/Configs/ConfigCompare/useCompareFilterConfigResults';
 import { useRowSelection } from '@/composables/useRowSelection';
 import { Badge } from '@/components/ui/badge';
 
@@ -16,7 +16,7 @@ const props = defineProps({
   comparePosition: String
 });
 
-const { currentPage, isLoading, lastPage, perPage, results } = useCompareConfigResults(props, emit);
+const { currentPage, isLoading, lastPage, perPage, results } = useCompareFilterConfigResults(props, emit);
 const { selectedRows, selectAll, toggleSelectAll, toggleSingleSelectRow } = useRowSelection(results);
 
 watch(selectedRows, val => {

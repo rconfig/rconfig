@@ -1,14 +1,14 @@
 <script setup>
-import { ref } from 'vue';
-import { useCompareResults } from './useCompareResults';
 import Loading from '@/pages/Shared/Loading.vue';
+import CompareDiffEditorComponent from './CompareDiffEditorComponent.vue';
+import { useCompareResults } from './useCompareResults';
 
 const props = defineProps({
-  leftSelectedId: String,
-  rightSelectedId: String
+  leftSelectedId: Array,
+  rightSelectedId: Array
 });
 
-const { configResultsLeft, configResultsRight, isLoadingComponent } = useCompareResults(props);
+const { isLoadingComponent, configResultsLeft, configResultsRight, getConfigLeft, getConfigRight, getConfigFileContent } = useCompareResults(props);
 </script>
 
 <template>
@@ -17,10 +17,11 @@ const { configResultsLeft, configResultsRight, isLoadingComponent } = useCompare
     class="flex items-center justify-center h-full mt-48">
     <Loading :text="'Running comparison'" />
   </div>
-  <div
-    class="flex items-center justify-center h-full"
-    v-if="!isLoadingComponent">
-    <pre style="white-space: pre-wrap"> {{ configResultsLeft }}</pre>
-    <pre style="white-space: pre-wrap"> {{ configResultsRight }}</pre>
-  </div>
+
+  <CompareDiffEditorComponent
+    v-if="!isLoadingComponent"
+    :configResultsRight="configResultsRight"
+    :configResultsLeft="configResultsLeft"
+    :leftSelectedId="leftSelectedId"
+    :rightSelectedId="rightSelectedId" />
 </template>

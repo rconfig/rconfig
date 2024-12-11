@@ -2,79 +2,12 @@
 import ConfigCompareFilterCard from '@/pages/Configs/ConfigCompare/ConfigCompareFilterCard.vue';
 import ConfigCompareFilterConfigResults from '@/pages/Configs/ConfigCompare/ConfigCompareFilterConfigResults.vue';
 import ConfigCompareResults from '@/pages/Configs/ConfigCompare/ConfigCompareResults.vue';
+import NavCloseButton from '@/pages/Shared/NavCloseButton.vue';
+import NavOpenButton from '@/pages/Shared/NavOpenButton.vue';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { useToaster } from '@/composables/useToaster'; // Import the composable
+import { useConfigCompare } from './useConfigCompare';
 
-const leftConfigData = ref({
-  selectedCommand: [],
-  device: [],
-  start_date: '',
-  end_date: ''
-});
-const rightConfigData = ref({
-  selectedCommand: [],
-  device: [],
-  start_date: '',
-  end_date: ''
-});
-const leftConfigFilterKey = ref(100);
-const leftConfigResultsKey = ref(200);
-const rightConfigFilterKey = ref(300);
-const rightConfigResultsKey = ref(400);
-const router = useRouter();
-const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
-const leftSelectedId = ref([]);
-const rightSelectedId = ref([]);
-const loadComparison = ref(false);
-
-const updateConfigFilterData = (position, data) => {
-  if (position === 'left') {
-    leftConfigData.value = data;
-  } else if (position === 'right') {
-    rightConfigData.value = data;
-  }
-  leftConfigResultsKey.value += 1;
-  rightConfigResultsKey.value += 1;
-};
-
-const sendConfigCompare = () => {
-  if (leftSelectedId.length > 0 || rightSelectedId.length > 0) {
-    toastError('Please select configurations for comparison');
-    return;
-  }
-
-  toastSuccess('Comparing configurations...', '', 2000);
-  loadComparison.value = true;
-};
-
-const close = () => {
-  // nav back to previous page
-  router.go(-1);
-};
-
-const reset = () => {
-  leftSelectedId.value = [];
-  leftConfigData.value = {
-    selectedCommand: [],
-    device: [],
-    start_date: '',
-    end_date: ''
-  };
-  rightSelectedId.value = [];
-  rightConfigData.value = {
-    selectedCommand: [],
-    device: [],
-    start_date: '',
-    end_date: ''
-  };
-  loadComparison.value = false;
-  leftConfigResultsKey.value += 1;
-  leftConfigFilterKey.value += 1;
-  rightConfigResultsKey.value += 1;
-  rightConfigFilterKey.value += 1;
-};
+const { close, closeNav, leftConfigData, leftConfigFilterKey, leftConfigResultsKey, leftSelectedId, loadComparison, navClosed, reset, openNav, panelElement3, rightConfigData, rightConfigFilterKey, rightConfigResultsKey, rightSelectedId, sendConfigCompare, updateConfigFilterData } = useConfigCompare();
 </script>
 
 <template>
@@ -129,9 +62,14 @@ const reset = () => {
         :min-size="10"
         collapsible
         :collapsed-size="0"
-        ref="panelElement2"
+        ref="panelElement3"
         class="min-h-[86vh]">
-        <h1 class="mt-4 ml-4 text-sm font-semibold">Search Options</h1>
+        <div class="flex items-center justify-between p-2 mb-2 border-b">
+          <h1 class="ml-4 text-sm font-semibold">Search Options</h1>
+          <NavCloseButton
+            class="mr-2"
+            @close="closeNav()" />
+        </div>
 
         <div class="relative flex flex-col items-center">
           <!-- First element -->
@@ -160,7 +98,13 @@ const reset = () => {
         <ScrollArea class="border border-none rounded-md">
           <!-- SEARCH RESULTS -->
           <div class="h-[80dvh]">
-            <h1 class="w-full mt-4 ml-6 text-sm font-semibold">Filter Results</h1>
+            <div class="flex items-center justify-between p-2 mb-2 border-b">
+              <NavOpenButton
+                class="mr-2"
+                @openNav="openNav()"
+                :navPanelBtnState="navClosed" />
+              <h1 class="w-full ml-6 text-sm font-semibold">Filter Results</h1>
+            </div>
 
             <div
               class="relative flex flex-col items-center"
@@ -179,9 +123,7 @@ const reset = () => {
                 :comparePosition="'right'" />
             </div>
 
-            <div
-              class="relative flex flex-col items-center"
-              v-if="loadComparison">
+            <div v-if="loadComparison">
               <ConfigCompareResults
                 :leftSelectedId="leftSelectedId"
                 :rightSelectedId="rightSelectedId" />

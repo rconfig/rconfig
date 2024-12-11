@@ -2,16 +2,16 @@ import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
 
-export function useCompareResults(props, emit) {
-  const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
-
+export function useCompareResults(props) {
   const isLoadingComponent = ref(true);
   const configResultsLeft = ref([]);
   const configResultsRight = ref([]);
   const leftId = ref(parseInt(props.leftSelectedId[0], 10));
   const rightId = ref(parseInt(props.rightSelectedId[0], 10));
+  const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
 
   onMounted(() => {
+    isLoadingComponent.value = true;
     getConfigLeft(leftId.value);
     getConfigRight(rightId.value);
 
@@ -23,43 +23,48 @@ export function useCompareResults(props, emit) {
     );
   });
 
-  async function getConfigLeft(id) {
-    try {
-      const response = await axios.get('/api/configs/' + id);
-      configResultsLeft.value = response.data;
-      configResultsLeft.value['content'] = await getConfigFileContent(id);
-    } catch (error) {
-      console.error('Error fetching commands:', error);
-      toastError('Error', 'Failed to fetch commands.');
-    } finally {
-    }
+  function getConfigLeft(id) {
+    axios
+      .get('/api/configs/' + id)
+      .then(async response => {
+        configResultsLeft.value = response.data;
+        configResultsLeft.value['filecontent'] = await getConfigFileContent(id);
+      })
+      .catch(error => {
+        console.error('Error fetching commands:', error);
+        toastError('Error', 'Failed to fetch commands.');
+      });
   }
 
-  async function getConfigRight(id) {
-    try {
-      const response = await axios.get('/api/configs/' + id);
-      configResultsRight.value = response.data;
-      configResultsRight.value['content'] = await getConfigFileContent(id);
-    } catch (error) {
-      console.error('Error fetching commands:', error);
-      toastError('Error', 'Failed to fetch commands.');
-    } finally {
-    }
+  function getConfigRight(id) {
+    axios
+      .get('/api/configs/' + id)
+      .then(async response => {
+        configResultsRight.value = response.data;
+        configResultsRight.value['filecontent'] = await getConfigFileContent(id);
+      })
+      .catch(error => {
+        console.error('Error fetching commands:', error);
+        toastError('Error', 'Failed to fetch commands.');
+      });
   }
 
-  async function getConfigFileContent(id) {
-    try {
-      const response = await axios.get('/api/configs/view-config/' + id);
-      return response.data.data.content;
-    } catch (error) {
-      console.error('Error fetching commands:', error);
-      toastError('Error', 'Failed to fetch commands.');
-    }
+  function getConfigFileContent(id) {
+    return axios
+      .get('/api/configs/view-config/' + id)
+      .then(response => response.data.data.content)
+      .catch(error => {
+        console.error('Error fetching commands:', error);
+        toastError('Error', 'Failed to fetch commands.');
+      });
   }
 
   return {
+    isLoadingComponent,
     configResultsLeft,
     configResultsRight,
-    isLoadingComponent
+    getConfigLeft,
+    getConfigRight,
+    getConfigFileContent
   };
 }

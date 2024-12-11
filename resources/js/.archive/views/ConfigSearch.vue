@@ -402,6 +402,8 @@ export default {
     const showScrollBtn = ref(false);
 
     function search() {
+      Object.keys(results).forEach(key => delete results[key]);
+
       axios
         .post('/api/configs/search', {
           category: model.device_category_id,
@@ -410,7 +412,7 @@ export default {
           latestOnly: model.search_latest_only
         })
         .then(response => {
-          Object.assign(results, response.data);
+          Object.assign(results, response.data.data);
           createNotification({
             type: 'success',
             message: `Searched for '${model.search_string}' in ${response.data.fileCount} configs...`
@@ -419,10 +421,22 @@ export default {
           isLoading.value = false;
         })
         .catch(error => {
-          createNotification({
-            type: 'error',
-            message: error.response.data.message
-          });
+          if (error.response) {
+            // The server responded with a status code outside the 2xx range
+            if (error.response.status === 504) {
+              createNotification({
+                type: 'danger',
+                message: "Gateway Timeout: Search Timeout: The server could not process your search in time. Search '504 Gateway Timeout' in the online Knowledge base for more information."
+              });
+            } else if (error.response.status === 422) {
+              errors.value = error.response.data.errors;
+              createNotification({
+                type: 'danger',
+                message: error.response.data.message
+              });
+            }
+          }
+          isLoading.value = false;
         });
     }
 

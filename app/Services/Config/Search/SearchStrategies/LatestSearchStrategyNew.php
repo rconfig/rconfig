@@ -37,6 +37,8 @@ class LatestSearchStrategyNew
             $query->where('command', $command);
         }
 
+        $query->orderBy('created_at', 'desc');
+
         // Get all configs that match the initial criteria
         $configs = $query->get();
 

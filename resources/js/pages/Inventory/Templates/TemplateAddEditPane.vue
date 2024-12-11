@@ -7,9 +7,11 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useDialogStore } from '@/stores/dialogActions';
 import { useTemplatesGithub } from '@/pages/Inventory/Templates/useTemplatesGithub';
+
 const props = defineProps({
   editId: Number
 });
+
 let meditor = null;
 const emit = defineEmits(['save', 'close']);
 

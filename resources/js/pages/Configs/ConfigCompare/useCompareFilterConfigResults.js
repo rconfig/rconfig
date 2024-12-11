@@ -2,19 +2,17 @@ import axios from 'axios';
 import { ref, onMounted, watch } from 'vue';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
 
-export function useCompareConfigResults(props, emit) {
+export function useCompareFilterConfigResults(props, emit) {
   const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
 
   const isLoading = ref(false);
   const currentPage = ref(1);
   const lastPage = ref(1);
   const perPage = ref(parseInt(localStorage.getItem('perPage') || '5'));
-
   const results = ref([]);
 
   onMounted(() => {
     if (props.filterData.device.length >= 1) {
-      console.log('useCompareConfigResults mounted', props.filterData);
       getFilteredConfigRecords();
     }
   });
