@@ -100,10 +100,14 @@ const { close, closeNav, leftConfigData, leftConfigFilterKey, leftConfigResultsK
           <div class="h-[80dvh]">
             <div class="flex items-center justify-between p-2 mb-2 border-b">
               <NavOpenButton
-                class="mr-2"
+                class="ml-2"
                 @openNav="openNav()"
                 :navPanelBtnState="navClosed" />
-              <h1 class="w-full ml-6 text-sm font-semibold">Filter Results</h1>
+              <h1
+                class="w-full text-sm font-semibold"
+                :class="navClosed === false ? 'ml-2 ' : ''">
+                Filter Results
+              </h1>
             </div>
 
             <div

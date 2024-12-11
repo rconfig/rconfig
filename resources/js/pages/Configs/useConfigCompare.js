@@ -19,15 +19,15 @@ export function useConfigCompare() {
 
   const leftConfigFilterKey = ref(100);
   const leftConfigResultsKey = ref(200);
+  const leftSelectedId = ref([]);
+  const loadComparison = ref(false);
+  const navClosed = ref(false);
+  const panelElement3 = ref(null);
   const rightConfigFilterKey = ref(300);
   const rightConfigResultsKey = ref(400);
+  const rightSelectedId = ref([]);
   const router = useRouter();
   const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
-  const leftSelectedId = ref([]);
-  const rightSelectedId = ref([]);
-  const loadComparison = ref(false);
-  const panelElement3 = ref(null);
-  const navClosed = ref(false);
 
   const updateConfigFilterData = (position, data) => {
     if (position === 'left') {

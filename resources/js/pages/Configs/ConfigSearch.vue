@@ -1,12 +1,16 @@
 <script setup>
 import ConfigSearchResultsTable from '@/pages/Configs/ConfigSearch/ConfigSearchResultsTable.vue';
 import ConfigSearchFilterCard from '@/pages/Configs/ConfigSearch/ConfigSearchFilterCard.vue';
+import NavCloseButton from '@/pages/Shared/NavCloseButton.vue';
+import NavOpenButton from '@/pages/Shared/NavOpenButton.vue';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const filters = ref({});
 const router = useRouter();
+const panelElement4 = ref(null);
+const navClosed = ref(false);
 
 const performSearch = newFilters => {
   // Object.assign(filters.value, newFilters);
@@ -17,6 +21,15 @@ const close = () => {
   // nav back to previous page
   router.go(-1);
 };
+
+function closeNav() {
+  panelElement4?.value.isCollapsed ? panelElement4?.value.expand() : panelElement4?.value.collapse();
+  navClosed.value = !navClosed.value;
+}
+function openNav() {
+  panelElement4?.value.isCollapsed ? panelElement4?.value.expand() : panelElement4?.value.collapse();
+  navClosed.value = !navClosed.value;
+}
 </script>
 
 <template>
@@ -49,9 +62,14 @@ const close = () => {
         :min-size="10"
         collapsible
         :collapsed-size="0"
-        ref="panelElement2"
+        ref="panelElement4"
         class="h-[86vh]">
-        <h1 class="m-2 text-sm font-semibold">Search Options</h1>
+        <div class="flex items-center justify-between p-2 mb-4 border-b">
+          <h1 class="ml-4 text-sm font-semibold">Search Options</h1>
+          <NavCloseButton
+            class="mr-2"
+            @close="closeNav()" />
+        </div>
 
         <ConfigSearchFilterCard @searchCompleted="performSearch" />
       </ResizablePanel>
@@ -59,7 +77,17 @@ const close = () => {
       <ResizablePanel class="h-[86vh]">
         <ScrollArea class="border border-none rounded-md">
           <div>
-            <h1 class="m-2 text-sm font-semibold">Results</h1>
+            <div class="flex items-center justify-between p-2 mb-2 border-b">
+              <NavOpenButton
+                class="ml-2"
+                @openNav="openNav()"
+                :navPanelBtnState="navClosed" />
+              <h1
+                class="w-full text-sm font-semibold"
+                :class="navClosed === false ? 'ml-2 ' : ''">
+                Results
+              </h1>
+            </div>
 
             <!-- Render search results here -->
             <ConfigSearchResultsTable :filters="filters" />
