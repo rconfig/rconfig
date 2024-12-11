@@ -1,1 +1,0 @@
-import{a3 as o,o as r,d as t,C as n,q as c,f as l,E as p}from"./app-YSBy-tDu.js";const d=o({__name:"CardFooter",props:{class:{}},setup(s){const e=s;return(a,m)=>(r(),t("div",{class:c(l(p)("flex items-center p-6 pt-0",e.class))},[n(a.$slots,"default")],2))}});export{d as _};
