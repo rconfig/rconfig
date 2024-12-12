@@ -1,3 +1,3 @@
 <template>
-  <Icon icon="fluent-emoji:star" />
+  <Icon icon="twemoji:star" />
 </template>
