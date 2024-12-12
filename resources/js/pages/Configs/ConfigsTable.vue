@@ -14,6 +14,7 @@ import { eventBus } from '@/composables/eventBus';
 import { onMounted, onUnmounted } from 'vue';
 import { useConfigsTable } from '@/pages/Configs/useConfigsTable';
 import { useRowSelection } from '@/composables/useRowSelection';
+import { Switch } from '@/components/ui/switch';
 
 const props = defineProps({
   configsId: {
@@ -26,7 +27,7 @@ const props = defineProps({
   }
 });
 
-const { viewDetailsPane, filterCommand, configs, filterStatus, isLoading, currentPage, perPage, lastPage, editId, clearFilters, formatters, searchTerm, openDialog, isDialogOpen, getTabledata, createConfig, updateConfig, deleteConfig, deleteManyConfigs, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam, showConfirmDelete } = useConfigsTable(props);
+const { toggleLatestVersion, viewDetailsPane, filterCommand, configs, filterStatus, isLoading, currentPage, perPage, lastPage, editId, clearFilters, formatters, searchTerm, openDialog, isDialogOpen, getTabledata, createConfig, updateConfig, deleteConfig, deleteManyConfigs, handleSave, handleKeyDown, viewEditDialog, toggleSort, sortParam, showConfirmDelete } = useConfigsTable(props);
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(configs);
 
 onMounted(() => {
@@ -70,9 +71,26 @@ onUnmounted(() => {
             v-model="filterCommand"
             :deviceId="configsId" />
           <StatusFilter v-model="filterStatus" />
+
           <ClearFilters
             v-if="searchTerm || filterStatus.length || filterCommand.length"
             @update:model-value="clearFilters" />
+
+          <Separator
+            orientation="vertical"
+            class="relative w-px h-6 mx-4 shrink-0 bg-border" />
+
+          <div class="flex items-center">
+            <Switch
+              id="airplane-mode"
+              @update:checked="toggleLatestVersion" />
+
+            <label
+              for="latest_downloads"
+              class="w-24 ml-2 text-sm font-medium leading-none">
+              Latest Configs
+            </label>
+          </div>
         </div>
       </div>
       <div class="flex">

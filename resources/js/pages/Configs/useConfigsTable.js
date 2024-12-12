@@ -179,20 +179,14 @@ export function useConfigsTable(props) {
     { deep: true }
   );
 
-  watch(
-    filterCommand,
-    (newVal, oldVal) => {
-      if (newVal && newVal.length > 0) {
-        // convert newVal array to string
-        let commands = newVal.map(item => item.command);
-        filters.value[`filter[command]`] = commands.join(',');
-      } else {
-        delete filters.value[`filter[command]`];
-      }
-      getTabledata();
-    },
-    { deep: true }
-  );
+  function toggleLatestVersion(e) {
+    if (e) {
+      filters.value[`filter[latest_version]`] = 1;
+    } else {
+      delete filters.value[`filter[latest_version]`];
+    }
+    getTabledata();
+  }
 
   function toggleSort(field) {
     if (sortParam.value === field) {
@@ -214,6 +208,7 @@ export function useConfigsTable(props) {
   }
 
   return {
+    toggleLatestVersion,
     viewDetailsPane,
     clearFilters,
     filterStatus,

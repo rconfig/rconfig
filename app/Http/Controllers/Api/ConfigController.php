@@ -27,6 +27,7 @@ class ConfigController extends ApiBaseController
                 AllowedFilter::custom('q', new FilterMultipleFields, 'id, device_name'),
                 AllowedFilter::exact('download_status'),
                 AllowedFilter::exact('command'),
+                AllowedFilter::exact('latest_version'),
             ])
             ->defaultSort('-id')
             ->allowedSorts('id', 'device_name', 'command', 'download_status')
