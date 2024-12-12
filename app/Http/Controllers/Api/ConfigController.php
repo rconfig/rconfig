@@ -24,8 +24,9 @@ class ConfigController extends ApiBaseController
     {
         $response = QueryBuilder::for(Config::class)
             ->allowedFilters([
-                AllowedFilter::custom('q', new FilterMultipleFields, 'id, device_name, command'),
+                AllowedFilter::custom('q', new FilterMultipleFields, 'id, device_name'),
                 AllowedFilter::exact('download_status'),
+                AllowedFilter::exact('command'),
             ])
             ->defaultSort('-id')
             ->allowedSorts('id', 'device_name', 'command', 'download_status')

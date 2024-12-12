@@ -183,8 +183,9 @@ export function useConfigsTable(props) {
     filterCommand,
     (newVal, oldVal) => {
       if (newVal && newVal.length > 0) {
-        const ids = newVal.map(item => item.id);
-        filters.value[`filter[command]`] = ids.join(',');
+        // convert newVal array to string
+        let commands = newVal.map(item => item.command);
+        filters.value[`filter[command]`] = commands.join(',');
       } else {
         delete filters.value[`filter[command]`];
       }

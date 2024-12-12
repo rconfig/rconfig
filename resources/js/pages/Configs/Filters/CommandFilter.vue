@@ -63,7 +63,6 @@ function selectItem(item) {
     }
   }
   open.value = false;
-  console.log(selectedCommand.value);
   emit('update:modelValue', selectedCommand.value);
 }
 
