@@ -26,6 +26,8 @@ export function useInventory() {
       changeView(route.name); // If route starts with /devices, load the devices component
     } else if (!route.path.includes('inventory')) {
       changeView(route.name); // loads the current view based on the route name
+    } else {
+      changeView('devices'); // Default view
     }
 
     // Preserve query params
