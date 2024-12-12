@@ -71,7 +71,7 @@ onUnmounted(() => {
             :deviceId="configsId" />
           <StatusFilter v-model="filterStatus" />
           <ClearFilters
-            v-if="searchTerm || filterStatus.length"
+            v-if="searchTerm || filterStatus.length || filterCommand.length"
             @update:model-value="clearFilters" />
         </div>
       </div>

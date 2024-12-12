@@ -63,6 +63,7 @@ function selectItem(item) {
     }
   }
   open.value = false;
+  console.log(selectedCommand.value);
   emit('update:modelValue', selectedCommand.value);
 }
 
@@ -125,7 +126,7 @@ const filteredCommand = computed(() => {
             @click="selectItem(option)">
             <input
               type="checkbox"
-              :checked="selectedCommand.some(option => option.command === option.command)"
+              :checked="selectedCommand.some(selected => selected.command === option.command)"
               class="mr-2" />
             <span
               data-size="20"
