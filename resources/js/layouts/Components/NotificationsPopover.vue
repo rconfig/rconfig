@@ -43,7 +43,6 @@ function markAsRead() {
         read_at: new Date()
       })
       .then(response => {
-        console.log(response);
         getNotifications();
       })
       .catch(error => {
@@ -74,33 +73,26 @@ function markAsRead() {
             <Loading />
           </template>
 
-          <div v-if="!isLoading">
+          <div
+            v-if="!isLoading"
+            class="space-y-2">
             <button
               v-for="item of notifications"
               :key="item.id"
-              class="flex items-start justify-between gap-2 p-3 mb-2 text-sm text-left transition-all border rounded-lg hover:bg-accent bg-rcgray-900">
-              <div class="">
-                <!-- <component
-                  :is="item.icon"
-                  :class="item.iconClass" /> -->
-              </div>
-              <div>
-                <div class="flex flex-col w-full gap-1">
-                  <div class="flex items-center">
-                    <div class="flex items-center gap-2">
-                      <div class="font-semibold">
-                        {{ item.data.title }}
-                      </div>
-                    </div>
-                    <div class="ml-auto text-xs text-muted-foreground">
-                      <span
-                        v-if="item.data.category"
-                        class="">
-                        {{ formatters.formatTime(item.created_at) }}
-                      </span>
-                    </div>
-                  </div>
+              class="flex items-start justify-between w-full p-3 text-sm text-left transition-all border rounded-lg hover:bg-accent bg-rcgray-900">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center justify-between w-full">
+                  <span class="w-3/4 font-semibold">
+                    {{ item.data.title }}
+                  </span>
+
+                  <span
+                    v-if="item.data.category"
+                    class="w-1/4 text-xs text-right text-muted-foreground">
+                    {{ formatters.formatTime(item.created_at) }}
+                  </span>
                 </div>
+
                 <div class="text-xs line-clamp-2 text-muted-foreground">
                   <!-- {{ item.data.substring(0, 300) }} -->
                   {{ item.data.description.substring(0, 300) }}
