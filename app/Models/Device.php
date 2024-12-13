@@ -68,7 +68,7 @@ class Device extends BaseModel
 
     public function comments()
     {
-        return $this->hasMany(DeviceComment::class);
+        return $this->hasMany(DeviceComment::class)->where('is_open', 1);
     }
 
     public function deviceCred()

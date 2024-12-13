@@ -322,6 +322,7 @@ function openComments(id) {
       <CommentSheet
         :deviceId="commentsDeviceId"
         :deviceName="commentsDeviceName"
+        @commentsaved="fetchDevices()"
         :key="commentSheetKey" />
 
       <Toaster />

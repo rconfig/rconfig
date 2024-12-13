@@ -36,10 +36,25 @@ class DeviceCommentController extends ApiBaseController
         return response()->json($results);
     }
 
-    public function commentsByDeviceId($devieid)
+    public function activeCommentsByDeviceId($devieid)
     {
-         $comments = DeviceComment::where('device_id', $devieid)->with('user')->get();
+        $comments = DeviceComment::where('device_id', $devieid)->where('is_open', 1)->with('user')->get();
         return response()->json($comments);
+    }
+
+    public function closedCommentsByDeviceId($devieid)
+    {
+        $comments = DeviceComment::where('device_id', $devieid)->where('is_open', 0)->with('user')->get();
+        return response()->json($comments);
+    }
+
+    public function resolve($id)
+    {
+        $comment = DeviceComment::find($id);
+        $comment->is_open = 0;
+        $comment->save();
+
+        return $this->successResponse('Comment resolved successfully!');
     }
 
 

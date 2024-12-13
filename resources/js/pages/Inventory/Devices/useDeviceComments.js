@@ -3,25 +3,48 @@ import { useSheetStore } from '@/stores/sheetActions';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 
-export function useDeviceComments(props) {
+export function useDeviceComments(props, emit) {
   const sheetStore = useSheetStore();
   const { openSheet, closeSheet, isSheetOpen } = sheetStore;
   const comments = ref([]);
   const isLoading = ref(false);
-  const hasAddedComment = ref(false);
   const router = useRouter();
   const formatters = inject('formatters');
+  const activeCommentsView = ref(true);
+  const closedCommentsView = ref(false);
 
   onMounted(() => {
     if (isSheetOpen('DeviceCommentSheet')) {
-      getComments();
+      if (activeCommentsView.value) {
+        getActiveComments();
+      }
+
+      if (closedCommentsView.value) {
+        getCloseComments();
+      }
     }
   });
 
-  function getComments() {
+  function getActiveComments() {
+    comments.value = [];
     isLoading.value = true;
     axios
       .get(`/api/device-comments/${props.deviceId}`)
+      .then(response => {
+        comments.value = response.data;
+        isLoading.value = false;
+      })
+      .catch(error => {
+        console.error(error);
+        isLoading.value = false;
+      });
+  }
+
+  function getCloseComments() {
+    comments.value = [];
+    isLoading.value = true;
+    axios
+      .get(`/api/device-closed-comments/${props.deviceId}`)
       .then(response => {
         comments.value = response.data;
         isLoading.value = false;
@@ -38,16 +61,13 @@ export function useDeviceComments(props) {
   }
 
   function addComment() {
-    if (!hasAddedComment.value) {
-      comments.value.unshift({
-        user: { name: 'New User' },
-        created_at: new Date().toISOString(),
-        comment: '',
-        is_open: true,
-        isEditable: true
-      });
-      hasAddedComment.value = true;
-    }
+    comments.value.unshift({
+      user: { name: 'New User' },
+      created_at: new Date().toISOString(),
+      comment: '',
+      is_open: true,
+      isEditable: true
+    });
   }
 
   function saveComment(index) {
@@ -58,15 +78,40 @@ export function useDeviceComments(props) {
         device_id: props.deviceId
       })
       .then(response => {
-        // Add code here to update the comment with the response data if needed
+        emit('commentsaved');
       })
       .catch(error => {
         console.error(error);
       });
-    // Add code here to persist the comment changes to the backend if needed
+  }
+
+  function closeComment(id) {
+    axios
+      .get(`/api/device/comments/${id}/close`)
+      .then(response => {
+        emit('commentsaved');
+        getActiveComments();
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  function changeView() {
+    activeCommentsView.value = !activeCommentsView.value;
+    closedCommentsView.value = !closedCommentsView.value;
+
+    if (activeCommentsView.value) {
+      getActiveComments();
+    }
+
+    if (closedCommentsView.value) {
+      getCloseComments();
+    }
   }
 
   return {
+    changeView,
     addComment,
     closeSheet,
     comments,
@@ -74,6 +119,9 @@ export function useDeviceComments(props) {
     isLoading,
     isSheetOpen,
     saveComment,
-    viewDevice
+    viewDevice,
+    closeComment,
+    activeCommentsView,
+    closedCommentsView
   };
 }
