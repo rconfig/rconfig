@@ -1,10 +1,19 @@
 <script setup>
 import { ref } from 'vue';
 import { Button } from '@/components/ui/button';
+const emit = defineEmits(['resolveComment', 'deleteComment']);
 
 const test = ref(false);
 
 const props = defineProps({});
+
+function resolveComment() {
+  emit('resolveComment');
+}
+
+function deleteComment() {
+  emit('deleteComment');
+}
 </script>
 
 <template>
@@ -15,6 +24,7 @@ const props = defineProps({});
       class="flex flex-row items-center p-0.5 bg-rcgray-900 rounded-lg shadow-inner border"
       style="box-shadow: rgb(49, 51, 55) 0px 0px 0px 0px">
       <Button
+        @click="resolveComment()"
         variant="ghost"
         aria-label="Resolve comment"
         title="Resolve comment"
@@ -25,7 +35,7 @@ const props = defineProps({});
           class="inline-flex items-center justify-center">
           <Icon
             icon="teenyicons:tick-circle-outline"
-            class="text-gray-500"></Icon>
+            class="text-gray-500 hover:text-green-500"></Icon>
         </div>
       </Button>
       <Button
@@ -51,6 +61,7 @@ const props = defineProps({});
           class="text-gray-500"></Icon>
       </Button>
       <Button
+        @click="deleteComment()"
         variant="ghost"
         aria-label="Delete"
         title="Delete"

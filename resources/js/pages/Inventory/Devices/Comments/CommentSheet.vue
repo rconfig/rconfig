@@ -24,7 +24,7 @@ const props = defineProps({
   }
 });
 
-const { changeView, addComment, closeSheet, comments, formatters, isLoading, isSheetOpen, saveComment, viewDevice, closeComment, activeCommentsView, closedCommentsView, newCommentKey } = useDeviceComments(props, emit);
+const { changeView, addComment, closeSheet, comments, formatters, isLoading, isSheetOpen, saveComment, viewDevice, closeComment, deleteComment, activeCommentsView, closedCommentsView, newCommentKey } = useDeviceComments(props, emit);
 </script>
 
 <template>
@@ -64,8 +64,8 @@ const { changeView, addComment, closeSheet, comments, formatters, isLoading, isS
 
       <transition name="fade">
         <div v-if="!isLoading">
-          <ScrollArea class="h-[85vh]">
-            <div class="mt-4 space-y-4">
+          <ScrollArea class="h-[90vh]">
+            <div class="mt-4 mr-3 space-y-4">
               <div class="flex items-center justify-between ml-1 text-sm">
                 <span>All Comments</span>
                 <DropdownMenu>
@@ -84,6 +84,7 @@ const { changeView, addComment, closeSheet, comments, formatters, isLoading, isS
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
+
               <NewCommentCard
                 :key="newCommentKey"
                 class="mt-2"
@@ -91,6 +92,8 @@ const { changeView, addComment, closeSheet, comments, formatters, isLoading, isS
               <Separator />
               <CommentsList
                 v-if="comments.length > 0"
+                @resolveComment="closeComment($event)"
+                @deleteComment="deleteComment($event)"
                 :comments="comments" />
 
               <CommentsEmpty v-if="comments.length === 0" />

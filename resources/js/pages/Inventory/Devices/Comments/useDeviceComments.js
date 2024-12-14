@@ -100,6 +100,18 @@ export function useDeviceComments(props, emit) {
       });
   }
 
+  function deleteComment(id) {
+    axios
+      .delete(`/api/device/comments/${id}`)
+      .then(response => {
+        emit('commentsaved');
+        getActiveComments();
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
   function changeView() {
     activeCommentsView.value = !activeCommentsView.value;
     closedCommentsView.value = !closedCommentsView.value;
@@ -124,6 +136,7 @@ export function useDeviceComments(props, emit) {
     saveComment,
     viewDevice,
     closeComment,
+    deleteComment,
     activeCommentsView,
     closedCommentsView,
     newCommentKey

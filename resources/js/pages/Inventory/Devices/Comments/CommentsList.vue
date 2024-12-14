@@ -1,6 +1,7 @@
 <script setup>
 import { ref, inject } from 'vue';
 import CommentsListMenu from '@/pages/Inventory/Devices/Comments/CommentsListMenu.vue';
+const emit = defineEmits(['resolveComment', 'deleteComment']);
 
 const props = defineProps({
   comments: {
@@ -9,6 +10,13 @@ const props = defineProps({
   }
 });
 const formatters = inject('formatters');
+
+function resolveComment(commentId) {
+  emit('resolveComment', commentId);
+}
+function deleteComment(commentId) {
+  emit('deleteComment', commentId);
+}
 </script>
 
 <template>
@@ -65,7 +73,9 @@ const formatters = inject('formatters');
       </div>
       <transition name="fade">
         <div class="hidden group-hover:block">
-          <CommentsListMenu />
+          <CommentsListMenu
+            @resolveComment="resolveComment(comment.id)"
+            @deleteComment="deleteComment(comment.id)" />
         </div>
       </transition>
     </div>

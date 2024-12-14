@@ -70,6 +70,9 @@ class DeviceCommentController extends ApiBaseController
 
     public function destroy($id, $return = 0)
     {
-        //
+        $comment = DeviceComment::find($id);
+        $comment->delete();
+
+        return $this->successResponse('Comment deleted successfully!');
     }
 }
