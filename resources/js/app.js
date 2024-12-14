@@ -37,6 +37,7 @@ app.config.globalProperties.$formatters = formatters;
 app.provide('formatters', formatters);
 app.provide('useremail', app.config.globalProperties.$userEmail);
 app.provide('userid', app.config.globalProperties.$userId);
+app.provide('username', app.config.globalProperties.$userName);
 app.provide('timezone', app.config.globalProperties.$timezone);
 
 const vm = app.mount('#app');
