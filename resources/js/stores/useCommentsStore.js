@@ -16,7 +16,6 @@ export const useCommentsStore = defineStore('comments', {
       try {
         // Fetch comments for the given device ID
         const response = await axios.get(`/api/device-comments/${deviceId}`);
-        console.log(response);
         const comments = response.data; // Assuming this returns an array of comments
 
         // Update the store with the comment count for this device
