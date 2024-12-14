@@ -1,15 +1,30 @@
 <script setup>
-import { ref, onMounted, nextTick, defineProps, defineEmits } from 'vue';
 import NavCloseButton from '@/pages/Shared/NavCloseButton.vue';
+import { ref, onMounted, nextTick, watch } from 'vue';
+import { useCommentsStore } from '@/stores/useCommentsStore';
+
+const props = defineProps({
+  selectedNav: String,
+  deviceId: Number
+});
 
 const selectedNav = ref(null);
 const selectedButtonRef = ref(null);
 const bottomBorderStyle = ref({});
-const props = defineProps({
-  selectedNav: String
-});
+const commentsStore = useCommentsStore();
+const commentCount = ref(commentsStore.commentCounters[props.deviceId] || 0);
 
 const emit = defineEmits(['selectLeftNavView', 'closeNav']);
+
+// Watch for changes to the comment counter for the current device
+watch(
+  () => commentsStore.commentCounters[props.deviceId],
+  (newCount, oldCount) => {
+    // console.log(`Comment count for device ${props.deviceId} changed from ${oldCount} to ${newCount}`);
+    // Add any additional logic here
+    commentCount.value = newCount;
+  }
+);
 
 onMounted(() => {
   selectedNav.value = props.selectedNav;
@@ -69,7 +84,7 @@ function closeNav() {
         <Icon
           icon="vaadin:comments-o"
           class="mr-2" />
-        Comments
+        Comments ({{ commentCount }})
       </Button>
       <div
         v-if="selectedNav"

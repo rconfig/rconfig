@@ -1,10 +1,13 @@
-import { onMounted, ref, inject } from 'vue';
-import { useSheetStore } from '@/stores/sheetActions';
 import axios from 'axios';
+import { onMounted, ref, inject } from 'vue';
+import { useCommentsStore } from '@/stores/useCommentsStore';
 import { useRouter } from 'vue-router';
+import { useSheetStore } from '@/stores/sheetActions';
 
 export function useDeviceComments(props, emit) {
   const sheetStore = useSheetStore();
+  const commentsStore = useCommentsStore();
+  const { incrementCounter, decrementCounter } = commentsStore;
   const { openSheet, closeSheet, isSheetOpen } = sheetStore;
   const comments = ref([]);
   const isLoading = ref(false);
@@ -15,7 +18,11 @@ export function useDeviceComments(props, emit) {
   const newCommentKey = ref(1);
 
   onMounted(() => {
-    if (isSheetOpen('DeviceCommentSheet')) {
+    if (props.deviceId != 0) {
+      commentsStore.initializeCommentsForDevice(props.deviceId); // Initialize comments for the device
+    }
+
+    if (isSheetOpen('DeviceCommentSheet') || props.isDeviceCommentsPanelView) {
       if (activeCommentsView.value) {
         getActiveComments();
       }
@@ -81,7 +88,7 @@ export function useDeviceComments(props, emit) {
       .then(response => {
         emit('commentsaved');
         getActiveComments();
-        console.log('commentsaved', commentContent);
+        incrementCounter(props.deviceId); // Increment counter
       })
       .catch(error => {
         console.error(error);
@@ -94,6 +101,7 @@ export function useDeviceComments(props, emit) {
       .then(response => {
         emit('commentsaved');
         getActiveComments();
+        decrementCounter(props.deviceId); // Decrement counter
       })
       .catch(error => {
         console.error(error);
@@ -106,6 +114,7 @@ export function useDeviceComments(props, emit) {
       .then(response => {
         emit('commentsaved');
         getActiveComments();
+        decrementCounter(props.deviceId); // Decrement counter
       })
       .catch(error => {
         console.error(error);

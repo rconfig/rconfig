@@ -104,7 +104,8 @@ function handleDropDownPurge() {
           <DeviceDetailsLeftNav
             @closeNav="closeNav"
             @selectLeftNavView="selectLeftNavView"
-            :selectedNav="leftNavSelected" />
+            :selectedNav="leftNavSelected"
+            :deviceId="editId" />
           <DeviceViewConfigStatusPanel
             class="p-2 mt-2"
             v-if="leftNavSelected === 'details'"
@@ -118,7 +119,8 @@ function handleDropDownPurge() {
           <DeviceViewCommentsPanel
             class="p-2"
             v-if="leftNavSelected === 'comments'"
-            :deviceId="editId" />
+            :deviceId="editId"
+            :deviceName="deviceData.device_name" />
         </ResizablePanel>
         <ResizableHandle with-handle />
         <ResizablePanel class="min-h-[100vh]">

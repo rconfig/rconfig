@@ -38,7 +38,7 @@ function deleteComment() {
             class="text-gray-500 hover:text-green-500"></Icon>
         </div>
       </Button>
-      <Button
+      <!-- <Button
         variant="ghost"
         aria-label="React"
         title="React"
@@ -59,7 +59,7 @@ function deleteComment() {
         <Icon
           icon="carbon:reply"
           class="text-gray-500"></Icon>
-      </Button>
+      </Button> -->
       <Button
         @click="deleteComment()"
         variant="ghost"

@@ -1,17 +1,10 @@
 <script setup>
-import Loading from '@/pages/Shared/Loading.vue';
-import CommentsList from '@/pages/Inventory/Devices/Comments/CommentsList.vue';
-import NewCommentCard from '@/pages/Inventory/Devices/Comments/NewCommentCard.vue';
-import CommentsEmpty from '@/pages/Inventory/Devices/Comments/CommentsEmpty.vue';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import CommentsMainPanel from '@/pages/Inventory/Devices/Comments/CommentsMainPanel.vue';
 import { Button } from '@/components/ui/button';
-
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { onMounted, ref } from 'vue';
+import { ref, watch } from 'vue';
+import { useCommentsStore } from '@/stores/useCommentsStore';
 import { useDeviceComments } from '@/pages/Inventory/Devices/Comments/useDeviceComments';
-
-const emit = defineEmits(['commentsaved']);
 
 const props = defineProps({
   deviceId: {
@@ -24,7 +17,20 @@ const props = defineProps({
   }
 });
 
-const { changeView, addComment, closeSheet, comments, formatters, isLoading, isSheetOpen, saveComment, viewDevice, closeComment, deleteComment, activeCommentsView, closedCommentsView, newCommentKey } = useDeviceComments(props, emit);
+const { closeSheet, isSheetOpen, viewDevice } = useDeviceComments(props);
+const emit = defineEmits(['commentsaved']);
+const commentsStore = useCommentsStore();
+const commentCount = ref(commentsStore.commentCounters[props.deviceId] || 0);
+
+// Watch for changes to the comment counter for the current device
+watch(
+  () => commentsStore.commentCounters[props.deviceId],
+  (newCount, oldCount) => {
+    // console.log(`Comment count for device ${props.deviceId} changed from ${oldCount} to ${newCount}`);
+    // Add any additional logic here
+    commentCount.value = newCount;
+  }
+);
 </script>
 
 <template>
@@ -36,7 +42,7 @@ const { changeView, addComment, closeSheet, comments, formatters, isLoading, isS
       @closeClicked="closeSheet('DeviceCommentSheet')">
       <SheetHeader>
         <SheetTitle class="mt-2 ml-1">
-          Comments
+          {{ commentCount }} Comments
           <span class="text-sm font-light text-muted-foreground">on</span>
           <Button
             class="px-2 py-0 hover:bg-rcgray-800 rounded-xl text-muted-foreground"
@@ -52,50 +58,10 @@ const { changeView, addComment, closeSheet, comments, formatters, isLoading, isS
 
       <transition name="fade">
         <div>
-          <ScrollArea class="h-[90vh]">
-            <div class="mt-4 mr-3 space-y-4">
-              <div class="flex items-center justify-between ml-1 text-sm">
-                <span>All {{ activeCommentsView ? 'Open' : 'Closed' }} Comments</span>
-                <DropdownMenu>
-                  <DropdownMenuTrigger as-child>
-                    <Button variant="ghost"><Icon icon="mage:filter"></Icon></Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    side="bottom"
-                    align="end">
-                    <DropdownMenuGroup>
-                      <DropdownMenuItem @click="changeView()">
-                        <span class="cursor-pointer">Show {{ activeCommentsView ? 'resolved' : 'open' }} comments</span>
-                        <!-- <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> -->
-                      </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-
-              <NewCommentCard
-                :key="newCommentKey"
-                class="mt-2"
-                @submitComment="saveComment($event)" />
-              <Separator />
-
-              <Loading
-                v-if="isLoading"
-                class="mt-4" />
-
-              <div
-                v-if="!isLoading"
-                class="space-y-4">
-                <CommentsList
-                  v-if="comments.length > 0"
-                  @resolveComment="closeComment($event)"
-                  @deleteComment="deleteComment($event)"
-                  :comments="comments" />
-
-                <CommentsEmpty v-if="comments.length === 0" />
-              </div>
-            </div>
-          </ScrollArea>
+          <CommentsMainPanel
+            @commentsaved="emit('commentsaved')"
+            :deviceId="deviceId"
+            :deviceName="deviceName" />
         </div>
       </transition>
       <!-- 

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, nextTick, defineProps, defineEmits, watch } from 'vue';
+import { ref, onMounted, nextTick, watch } from 'vue';
 import NavOpenButton from '@/pages/Shared/NavOpenButton.vue'; // Import the NavOpenButton component
 import { usePanelStore } from '@/stores/panelStore'; // Import the Pinia store
 
