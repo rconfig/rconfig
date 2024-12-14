@@ -74,10 +74,19 @@ function deleteComment(commentId) {
       <transition name="fade">
         <div class="hidden group-hover:block">
           <CommentsListMenu
+            v-if="comment.is_open"
             @resolveComment="resolveComment(comment.id)"
             @deleteComment="deleteComment(comment.id)" />
         </div>
       </transition>
+      <div
+        data-visible="true"
+        class="absolute opacity-100 top-3 right-3">
+        <Icon
+          v-if="!comment.is_open"
+          icon="teenyicons:tick-circle-outline"
+          class="text-green-500 opacity-50"></Icon>
+      </div>
     </div>
   </div>
 </template>

@@ -47,27 +47,15 @@ const { changeView, addComment, closeSheet, comments, formatters, isLoading, isS
         </SheetTitle>
         <SheetDescription>
           <Separator />
-
-          <!-- <div class="flex justify-between">
-            <Button
-              variant="ghost"
-              class="float-right"
-              @click="addComment">
-              <CommentAddIcon class="text-muted-foreground" />
-            </Button>
-          </div> -->
         </SheetDescription>
       </SheetHeader>
-      <Loading
-        v-if="isLoading"
-        class="mt-4" />
 
       <transition name="fade">
-        <div v-if="!isLoading">
+        <div>
           <ScrollArea class="h-[90vh]">
             <div class="mt-4 mr-3 space-y-4">
               <div class="flex items-center justify-between ml-1 text-sm">
-                <span>All Comments</span>
+                <span>All {{ activeCommentsView ? 'Open' : 'Closed' }} Comments</span>
                 <DropdownMenu>
                   <DropdownMenuTrigger as-child>
                     <Button variant="ghost"><Icon icon="mage:filter"></Icon></Button>
@@ -76,8 +64,8 @@ const { changeView, addComment, closeSheet, comments, formatters, isLoading, isS
                     side="bottom"
                     align="end">
                     <DropdownMenuGroup>
-                      <DropdownMenuItem>
-                        <span class="cursor-pointer">Show resolved comments</span>
+                      <DropdownMenuItem @click="changeView()">
+                        <span class="cursor-pointer">Show {{ activeCommentsView ? 'resolved' : 'open' }} comments</span>
                         <!-- <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> -->
                       </DropdownMenuItem>
                     </DropdownMenuGroup>
@@ -90,13 +78,22 @@ const { changeView, addComment, closeSheet, comments, formatters, isLoading, isS
                 class="mt-2"
                 @submitComment="saveComment($event)" />
               <Separator />
-              <CommentsList
-                v-if="comments.length > 0"
-                @resolveComment="closeComment($event)"
-                @deleteComment="deleteComment($event)"
-                :comments="comments" />
 
-              <CommentsEmpty v-if="comments.length === 0" />
+              <Loading
+                v-if="isLoading"
+                class="mt-4" />
+
+              <div
+                v-if="!isLoading"
+                class="space-y-4">
+                <CommentsList
+                  v-if="comments.length > 0"
+                  @resolveComment="closeComment($event)"
+                  @deleteComment="deleteComment($event)"
+                  :comments="comments" />
+
+                <CommentsEmpty v-if="comments.length === 0" />
+              </div>
             </div>
           </ScrollArea>
         </div>
