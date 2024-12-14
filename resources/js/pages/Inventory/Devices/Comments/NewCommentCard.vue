@@ -29,30 +29,30 @@ function handleInput(event) {
       tabindex="0"
       @click="handleFocus"
       @focusout="handleBlur"
-      class="sc-goMudc bRfJSJ sc-fkQHyZ cISAYm"
+      class="mt-4 new-comment-border"
       aria-disabled="false"
       :data-state="dataState">
-      <div class="sc-hbHicI fRjdVJ">
+      <div class="max-h-[25vh] min-h-0 flex flex-col">
         <div
           dir="ltr"
-          class="sc-fopvai JlwlM"
+          class="relative flex flex-col w-full h-full overflow-hidden"
           style="position: relative; --radix-scroll-area-corner-width: 0px; --radix-scroll-area-corner-height: 0px">
           <div
             data-radix-scroll-area-viewport=""
-            class="sc-ivtqZH dPbOdM sc-iuGutQ ddqiiE"
+            class="flex flex-col w-full h-full flex-auto min-h-0 max-h-[400px] p-[12px_12px_0_0]"
             style="overflow: hidden scroll">
             <div data-radix-scroll-area-content="">
               <div
                 aria-hidden="true"
-                class="sc-eFtBfi ewXSJs"></div>
-              <div class="sc-beySPh fHovtt sc-ceBzPL btJxMM">
+                class="w-full"></div>
+              <div class="flex flex-row items-start justify-start gap-2 pb-1 pl-[14px]">
                 <span class="relative inline-flex items-center justify-center w-4 h-4 overflow-hidden rounded-full">
                   <span class="flex items-center justify-center w-full h-full bg-blue-700 text-blue-100 font-semibold text-[10px] uppercase">{{ formatters.getFirstLetterCapitalized(username) }}</span>
                 </span>
-                <div class="sc-jDHDkZ QINEF">
-                  <div class="sc-iUrAJr gdPCgy sc-hezcEq kQlPDI">
+                <div class="flex flex-col flex-1 min-w-0">
+                  <div class="relative font-sans tracking-tight font-medium leading-5 text-sm text-[#eef0f1] [font-feature-settings:'liga','calt']">
                     <div
-                      class="sc-kDugJs mdVCi"
+                      class="outline-none"
                       contenteditable="true"
                       role="textbox"
                       spellcheck="false"
@@ -64,7 +64,7 @@ function handleInput(event) {
                     </div>
                     <div
                       v-if="showPlaceholder"
-                      class="absolute top-0 left-0 font-sans text-sm font-medium leading-5 tracking-tight text-gray-500 pointer-events-none select-none sc-bCNnoN">
+                      class="absolute top-0 left-0 font-sans text-sm font-medium leading-5 tracking-tight text-gray-500 pointer-events-none select-none">
                       Add comment...
                     </div>
                   </div>
@@ -72,7 +72,7 @@ function handleInput(event) {
               </div>
               <div
                 aria-hidden="true"
-                class="sc-eFtBfi ewXSJs"></div>
+                class="w-full"></div>
             </div>
           </div>
         </div>
@@ -80,33 +80,33 @@ function handleInput(event) {
           data-visible="false"
           data-position="bottom"
           aria-hidden="true"
-          class="sc-bgykEL gibCdC"></div>
-        <div class="sc-beySPh bzjAQf">
-          <div class="sc-beySPh koquBe">
+          class="w-full h-px flex-none bg-[rgba(244,245,246,0.04)] transition-opacity duration-[140ms] opacity-1 data-[visible='false']:opacity-0"></div>
+        <div class="flex flex-none flex-row items-center justify-between gap-2 p-[4px_8px_8px_12px]">
+          <div class="flex flex-row items-center justify-start gap-2">
             <button
               type="button"
               aria-label="Mention"
-              class="sc-dQmiwx hmLgnQ">
+              class="">
               <div
                 data-is-small-ghost="true"
-                class="sc-iVheDh cwjVZq">
+                class="">
                 <Icon
                   icon="meteor-icons:at"
-                  class="text-sm text-muted-foreground"></Icon>
+                  class="text-sm text-muted-foreground hover:text-white"></Icon>
               </div>
             </button>
           </div>
           <button
             v-if="dataState === 'default'"
             type="button"
-            class="sc-dQmiwx bCTnUd">
-            <div class="sc-jMbVJB ksLAyz">Comment</div>
+            class="relative flex shrink-0 grow-0 items-center justify-center opacity-40 cursor-default gap-1.5 bg-[#266df0] p-[6px_10px] rounded-[9px] shadow-[inset_0_0_0_1px_rgba(244,245,246,0.1)]">
+            <div class="inline-block overflow-hidden text-sm font-medium leading-5 tracking-tight align-bottom text-ellipsis whitespace-nowrap text-gray-50">Comment</div>
           </button>
           <button
             v-if="dataState === 'focus-within'"
             type="button"
-            class="sc-dQmiwx ihjlUO">
-            <div class="sc-jMbVJB ksLAyz">Comment</div>
+            class="relative flex shrink-0 grow-0 items-center justify-center opacity-100 cursor-pointer gap-1.5 bg-[#266df0] p-[6px_10px] rounded-[9px] shadow-[inset_0_0_0_1px_rgba(244,245,246,0.1)] transition-colors transition-shadow">
+            <div class="inline-block overflow-hidden text-sm font-medium leading-5 tracking-tight align-bottom text-ellipsis whitespace-nowrap text-gray-50">Comment</div>
           </button>
         </div>
       </div>
@@ -115,10 +115,7 @@ function handleInput(event) {
 </template>
 
 <style scoped>
-.cISAYm {
-  margin-top: 8px;
-}
-.bRfJSJ {
+.new-comment-border {
   border-radius: 16px;
   background-color: rgb(33, 35, 39);
   box-shadow: rgb(49, 51, 55) 0px 0px 0px 1px inset;
@@ -127,195 +124,23 @@ function handleInput(event) {
     background-color 140ms,
     border-color 140ms;
 }
-.bRfJSJ[data-state='focus-within'] {
+.new-comment-border[data-state='focus-within'] {
   box-shadow:
     rgb(25, 83, 199) 0px 0px 0px 1px inset,
     rgb(49, 51, 55) 0px 0px 0px 1px;
 }
-.fRjdVJ {
-  max-height: 25vh;
-  min-height: 0px;
-  display: flex;
-  flex-direction: column;
-}
-.JlwlM {
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-.gibCdC[data-position='top'],
-.gibCdC[data-position='bottom'] {
-  width: 100%;
-  height: 1px;
-}
-.gibCdC[data-visible='false'] {
-  opacity: 0;
-}
-.gibCdC {
-  flex: 0 0 auto;
-  width: 100%;
-  height: 1px;
-  background-color: rgba(244, 245, 246, 0.04);
-  transition: opacity 140ms;
-  opacity: 1;
-}
-.bzjAQf {
-  display: flex;
-  flex: 0 0 auto;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 4px 8px 8px 12px;
-}
-.koquBe {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 8px;
-}
-.bCTnUd {
-  --button-background-base: #266df0;
-  --button-background-hover: #407ff2;
-  --button-background-active: #407ff2;
-  --button-shadow: inset 0px 0px 0px 1px rgba(244, 245, 246, 0.1);
-  margin: 0px;
-  outline: none;
-  border: none;
-  text-decoration: none;
-  position: relative;
-  display: flex;
-  flex-shrink: 0;
-  flex-grow: 0;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.4;
-  cursor: default;
-  gap: 6px;
-  background: var(--button-background-base);
-  padding: 6px 10px;
-  border-radius: 9px;
-  box-shadow: var(--button-shadow);
-  transition:
-    background-color 0.2s,
-    color 0.2s,
-    box-shadow 0.2s;
-}
-.ksLAyz {
-  display: inline-block;
-  vertical-align: bottom;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  color: rgb(229, 238, 255);
-}
-.ihjlUO {
-  --button-background-base: #266df0;
-  --button-background-hover: #407ff2;
-  --button-background-active: #407ff2;
-  --button-shadow: inset 0px 0px 0px 1px rgba(244, 245, 246, 0.1);
-  margin: 0px;
-  outline: none;
-  border: none;
-  text-decoration: none;
-  position: relative;
-  display: flex;
-  flex-shrink: 0;
-  flex-grow: 0;
-  align-items: center;
-  justify-content: center;
-  opacity: 1;
-  cursor: pointer;
-  gap: 6px;
-  background: var(--button-background-base);
-  padding: 6px 10px;
-  border-radius: 9px;
-  box-shadow: var(--button-shadow);
-  transition:
-    background-color 0.2s,
-    color 0.2s,
-    box-shadow 0.2s;
-}
-.ddqiiE {
-  flex: 1 1 auto;
-  min-height: 0px;
-  max-height: 400px;
-  padding: 12px 12px 0px 0px;
-}
 
-.dPbOdM {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-}
 :where([data-radix-scroll-area-viewport]) {
   display: flex;
   flex-direction: column;
   align-items: stretch;
 }
-.ewXSJs {
-  width: 100%;
-}
-.btJxMM {
-  padding-left: 14px;
-}
-.fHovtt {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 8px;
-  padding-bottom: 4px;
-}
 
-.QINEF {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 0%;
-  min-width: 0px;
-}
+/* ///////// */
 
-.ihGDqD {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  cursor: default;
-  user-select: none;
-  background-color: rgb(38, 109, 240);
-  color: rgb(229, 238, 255);
-  font-weight: 500;
-  font-size: 10px;
-  text-transform: uppercase;
-  line-height: 1;
-  transition: background-color 0.2s;
-}
-.kQlPDI {
-  position: relative;
-  font-family: Inter;
-  letter-spacing: -0.02em;
-  font-weight: 500;
-  line-height: 20px;
-  font-size: 14px;
-  color: rgb(238, 239, 241);
-  font-feature-settings: 'liga', 'calt';
-}
 input,
 textarea,
 [contenteditable='true'] {
   caret-color: rgb(38, 109, 240);
-}
-.mdVCi {
-  outline: none;
 }
 </style>
