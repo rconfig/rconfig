@@ -12,6 +12,7 @@ export function useDeviceComments(props, emit) {
   const formatters = inject('formatters');
   const activeCommentsView = ref(true);
   const closedCommentsView = ref(false);
+  const newCommentKey = ref(1);
 
   onMounted(() => {
     if (isSheetOpen('DeviceCommentSheet')) {
@@ -70,15 +71,17 @@ export function useDeviceComments(props, emit) {
     });
   }
 
-  function saveComment(index) {
-    comments.value[index].isEditable = false;
+  function saveComment(commentContent) {
+    newCommentKey.value++;
     axios
       .post(`/api/device/comments`, {
-        comment: comments.value[index].comment,
+        comment: commentContent,
         device_id: props.deviceId
       })
       .then(response => {
         emit('commentsaved');
+        getActiveComments();
+        console.log('commentsaved', commentContent);
       })
       .catch(error => {
         console.error(error);
@@ -122,6 +125,7 @@ export function useDeviceComments(props, emit) {
     viewDevice,
     closeComment,
     activeCommentsView,
-    closedCommentsView
+    closedCommentsView,
+    newCommentKey
   };
 }

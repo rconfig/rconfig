@@ -38,13 +38,13 @@ class DeviceCommentController extends ApiBaseController
 
     public function activeCommentsByDeviceId($devieid)
     {
-        $comments = DeviceComment::where('device_id', $devieid)->where('is_open', 1)->with('user')->get();
+        $comments = DeviceComment::where('device_id', $devieid)->where('is_open', 1)->with('user')->orderBy('id', 'desc')->get();
         return response()->json($comments);
     }
 
     public function closedCommentsByDeviceId($devieid)
     {
-        $comments = DeviceComment::where('device_id', $devieid)->where('is_open', 0)->with('user')->get();
+        $comments = DeviceComment::where('device_id', $devieid)->where('is_open', 0)->with('user')->orderBy('id', 'desc')->get();
         return response()->json($comments);
     }
 

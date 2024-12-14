@@ -2,11 +2,13 @@
 import { ref, inject } from 'vue';
 
 const props = defineProps({});
+const emit = defineEmits(['submitComment']);
 
 const formatters = inject('formatters');
 const username = inject('username');
 const dataState = ref('default');
 const showPlaceholder = ref(true);
+const commentContent = ref('');
 
 // Function to handle focus/click
 function handleFocus() {
@@ -17,9 +19,17 @@ function handleFocus() {
 function handleBlur() {
   dataState.value = 'default';
 }
+
 function handleInput(event) {
-  const content = event.target.textContent.trim(); // Get the text content of the contenteditable
-  showPlaceholder.value = content === ''; // Show placeholder only if content is empty
+  const content = event.target.textContent.trim();
+  commentContent.value = content; // Update commentContent
+  showPlaceholder.value = content === ''; // Show placeholder if empty
+}
+
+function addComment() {
+  if (commentContent.value.trim() !== '') {
+    emit('submitComment', commentContent.value.trim());
+  }
 }
 </script>
 
@@ -60,7 +70,10 @@ function handleInput(event) {
                       data-lexical-editor="true"
                       @input="handleInput"
                       data-ms-editor="true">
-                      <p><br /></p>
+                      <p>
+                        <br />
+                        <!-- {{ commentContent }} -->
+                      </p>
                     </div>
                     <div
                       v-if="showPlaceholder"
@@ -96,6 +109,7 @@ function handleInput(event) {
               </div>
             </button>
           </div>
+
           <button
             v-if="dataState === 'default'"
             type="button"
@@ -104,7 +118,9 @@ function handleInput(event) {
           </button>
           <button
             v-if="dataState === 'focus-within'"
+            @mousedown.prevent
             type="button"
+            @click="addComment()"
             class="relative flex shrink-0 grow-0 items-center justify-center opacity-100 cursor-pointer gap-1.5 bg-[#266df0] p-[6px_10px] rounded-[9px] shadow-[inset_0_0_0_1px_rgba(244,245,246,0.1)] transition-colors transition-shadow">
             <div class="inline-block overflow-hidden text-sm font-medium leading-5 tracking-tight align-bottom text-ellipsis whitespace-nowrap text-gray-50">Comment</div>
           </button>

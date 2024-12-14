@@ -24,7 +24,7 @@ const props = defineProps({
   }
 });
 
-const { changeView, addComment, closeSheet, comments, formatters, isLoading, isSheetOpen, saveComment, viewDevice, closeComment, activeCommentsView, closedCommentsView } = useDeviceComments(props, emit);
+const { changeView, addComment, closeSheet, comments, formatters, isLoading, isSheetOpen, saveComment, viewDevice, closeComment, activeCommentsView, closedCommentsView, newCommentKey } = useDeviceComments(props, emit);
 </script>
 
 <template>
@@ -84,7 +84,10 @@ const { changeView, addComment, closeSheet, comments, formatters, isLoading, isS
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
-              <NewCommentCard class="mt-2" />
+              <NewCommentCard
+                :key="newCommentKey"
+                class="mt-2"
+                @submitComment="saveComment($event)" />
               <Separator />
               <CommentsList
                 v-if="comments.length > 0"
