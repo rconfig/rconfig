@@ -4,7 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { ref } from 'vue';
 
 const showConfirmDelete = ref(false);
-const emits = defineEmits(['onEdit', 'onDelete', 'onTaskPause']);
+const emits = defineEmits(['onEdit', 'onDelete', 'onTaskPause', 'onRunManualTask']);
 
 defineProps({
   rowData: {
@@ -20,6 +20,10 @@ defineProps({
     default: false
   },
   taskPaused: {
+    type: Number,
+    default: false
+  },
+  showTaskRunNowBtn: {
     type: Boolean,
     default: false
   }
@@ -41,6 +45,9 @@ function handleDelete() {
 function handleTaskPause() {
   emits('onTaskPause');
 }
+function handleRunManualTask() {
+  emits('onRunManualTask');
+}
 </script>
 
 <template>
@@ -58,6 +65,18 @@ function handleTaskPause() {
         align="end"
         side="bottom">
         <DropdownMenuItem
+          v-if="showTaskRunNowBtn"
+          class="cursor-pointer hover:bg-rcgray-800"
+          @click="handleRunManualTask">
+          <span>Run now</span>
+          <DropdownMenuShortcut>
+            <Icon
+              icon="lsicon:play-filled"
+              class="animate-pulse"
+              style="color: #8bd5ca" />
+          </DropdownMenuShortcut>
+        </DropdownMenuItem>
+        <DropdownMenuItem
           v-if="showTaskPauseBtn && !taskPaused"
           class="cursor-pointer hover:bg-rcgray-800"
           @click="handleTaskPause">
@@ -70,7 +89,7 @@ function handleTaskPause() {
           v-if="showTaskPauseBtn && taskPaused"
           class="cursor-pointer hover:bg-rcgray-800"
           @click="handleTaskPause">
-          <span>Run</span>
+          <span>Resume</span>
           <DropdownMenuShortcut>
             <Icon
               icon="svg-spinners:blocks-scale"
@@ -99,7 +118,6 @@ function handleTaskPause() {
     </DropdownMenu>
 
     <ConfirmDeleteAlert
-      :ids="[rowData.id]"
       :showConfirmDelete="showConfirmDelete"
       @close="showConfirmDelete = false"
       @handleDelete="handleDelete" />

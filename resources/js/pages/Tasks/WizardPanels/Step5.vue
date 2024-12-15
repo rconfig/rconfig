@@ -1,7 +1,6 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 import Step5TaskVerifyProgress from './Step5TaskVerifyProgress.vue';
-import cronstrue from 'cronstrue';
 
 const props = defineProps({
   model: Object
@@ -13,10 +12,9 @@ const hoveringCategories = ref(false);
 const hoveringDevices = ref(false);
 const hoveringTags = ref(false);
 const defaultSlice = ref(4);
-const cronToHuman = ref('');
 const validationErrors = ref([]);
 const showAll = ref(false);
-cronToHuman.value = cronstrue.toString(props.model.task_cron.join(' '));
+const formatters = inject('formatters');
 
 function toggleDefaultSlice(length) {
   if (length <= 4) return; // No need to toggle if less than 4 (default slice, but cannot use defaultSlice.value for this check, as it gets updated)
@@ -196,7 +194,7 @@ function setErrors(errors) {
         <div class="grid gap-2">
           <div class="grid items-center grid-cols-3 gap-4">
             <Label class="text-muted-foreground">Task Schedule:</Label>
-            <span class="col-span-2 font-light">{{ cronToHuman }}</span>
+            <span class="col-span-2 font-light">{{ formatters.cronToHuman(model.task_cron.join(' ')) }}</span>
           </div>
         </div>
         <div class="grid gap-2">

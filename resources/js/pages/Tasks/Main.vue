@@ -3,17 +3,16 @@ import ActionsMenu from '@/pages/Shared/Table/ActionsMenu.vue';
 import ClearFilters from '@/pages/Shared/Filters/ClearFilters.vue';
 import Loading from '@/pages/Shared/Table/Loading.vue';
 import NoResults from '@/pages/Shared/Table/NoResults.vue';
+import ConfirmProceedAlert from '@/pages/Shared/AlertDialog/ConfirmProceedAlert.vue';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
 import TaskAddEditDialog from '@/pages/Tasks/TaskAddEditDialog.vue';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { onMounted, onUnmounted } from 'vue';
 import { useRowSelection } from '@/composables/useRowSelection';
 import { useTasks } from '@/pages/Tasks/useTasks';
-import { inject } from 'vue';
 
-const { editId, tasks, currentPage, perPage, searchTerm, lastPage, isLoading, fetchTasks, viewEditDialog, createTask, deleteTask, handleSave, handleKeyDown, newTaskModalKey, toggleSort, sortParam } = useTasks();
+const { createTask, currentPage, deleteTask, editId, fetchTasks, formatters, handleKeyDown, handleSave, isLoading, lastPage, newTaskModalKey, openDialog, pauseTask, perPage, proceedEditId, runTaskConfirm, runTaskNow, searchTerm, showConfirmConfirmProceedAlertAlert, sortParam, tasks, toggleSort, updateTask, viewEditDialog } = useTasks();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(tasks);
-const formatters = inject('formatters');
 
 onMounted(() => {
   fetchTasks();
@@ -24,12 +23,6 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('keydown', handleKeyDown);
 });
-
-function pauseTask(id) {
-  axios.get(`/api/tasks/toggle-pause-task/${id}`).then(() => {
-    fetchTasks();
-  });
-}
 </script>
 
 <template>
@@ -90,7 +83,7 @@ function pauseTask(id) {
                 <span class="ml-2">ID</span>
               </Button>
             </TableHead>
-            <TableHead class="w-[20%]">
+            <TableHead class="w-[5%]">
               <Button
                 class="flex justify-start w-full p-0 hover:bg-rcgray-800"
                 variant="ghost"
@@ -100,9 +93,9 @@ function pauseTask(id) {
               </Button>
             </TableHead>
 
-            <TableHead class="w-[30%]">Description</TableHead>
-            <TableHead class="w-[10%]">Created</TableHead>
-            <TableHead class="w-[10%]">Actions</TableHead>
+            <TableHead class="w-[10%]">Frequency</TableHead>
+            <TableHead class="w-[10%]">Last Run</TableHead>
+            <TableHead class="w-[2%]">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -139,10 +132,10 @@ function pauseTask(id) {
                 {{ row.task_name }}
               </TableCell>
               <TableCell class="text-start">
-                {{ row.task_desc }}
+                {{ row.cron_plain }}
               </TableCell>
               <TableCell class="text-start">
-                {{ formatters.formatTime(row.created_at) }}
+                {{ formatters.formatTime(row.last_finished_at) }}
               </TableCell>
               <!-- ACTIONS MENU -->
               <TableCell class="text-start">
@@ -150,6 +143,8 @@ function pauseTask(id) {
                   :rowData="row"
                   :showTaskPauseBtn="true"
                   :taskPaused="row.is_paused"
+                  :showTaskRunNowBtn="true"
+                  @onRunManualTask="runTaskConfirm(row.id)"
                   @onTaskPause="pauseTask(row.id)"
                   @onEdit="viewEditDialog(row.id)"
                   @onDelete="deleteTask(row.id)" />
@@ -176,6 +171,13 @@ function pauseTask(id) {
         @save="handleSave()"
         :key="newTaskModalKey"
         :editId="editId" />
+
+      <ConfirmProceedAlert
+        :showConfirmConfirmProceedAlertAlert="showConfirmConfirmProceedAlertAlert"
+        :editId="proceedEditId"
+        @handleClose="showConfirmConfirmProceedAlertAlert = false"
+        @handleConfirm="runTaskNow(proceedEditId)"
+        :message="'Are you sure you want to run the selected task manually?'" />
 
       <Toaster />
     </div>

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ref, watch } from 'vue';
+import { ref, watch, inject } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 import { useDialogStore } from '@/stores/dialogActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
@@ -16,8 +16,11 @@ export function useTasks() {
   const lastPage = ref(1);
   const newTaskModalKey = ref(1);
   const tasks = ref([]);
+  const showConfirmConfirmProceedAlertAlert = ref(false);
+  const proceedEditId = ref(null);
   const { openDialog } = dialogStore;
   const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
+  const formatters = inject('formatters');
 
   // Fetch Tasks
   async function fetchTasks(params = {}) {
@@ -113,24 +116,60 @@ export function useTasks() {
     fetchTasks();
   }
 
+  function runTaskConfirm(id) {
+    showConfirmConfirmProceedAlertAlert.value = true;
+    proceedEditId.value = id;
+  }
+
+  function runTaskNow(id) {
+    console.log('Running task now...', id);
+    if (!id) {
+      return;
+    }
+    axios
+      .post('/api/tasks/run-manual-task', {
+        id: id
+      })
+      .then(response => {
+        showConfirmConfirmProceedAlertAlert.value = false;
+        toastSuccess('Task Run', 'The task has been run successfully.');
+      })
+      .catch(error => {
+        console.error('Error running task:', error);
+        toastError('Error', 'Failed to run task.');
+      });
+  }
+
+  function pauseTask(id) {
+    axios.get(`/api/tasks/toggle-pause-task/${id}`).then(() => {
+      fetchTasks();
+    });
+  }
+
   return {
-    tasks,
-    isLoading,
-    currentPage,
-    perPage,
-    lastPage,
-    editId,
-    newTaskModalKey,
-    searchTerm,
-    openDialog,
-    fetchTasks,
     createTask,
-    updateTask,
+    currentPage,
     deleteTask,
-    handleSave,
+    editId,
+    fetchTasks,
+    formatters,
     handleKeyDown,
-    viewEditDialog,
+    handleSave,
+    isLoading,
+    lastPage,
+    newTaskModalKey,
+    openDialog,
+    pauseTask,
+    perPage,
+    proceedEditId,
+    runTaskConfirm,
+    runTaskNow,
+    searchTerm,
+    showConfirmConfirmProceedAlertAlert,
+    sortParam,
+    tasks,
     toggleSort,
-    sortParam
+    updateTask,
+    viewEditDialog
   };
 }

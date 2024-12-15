@@ -1,5 +1,6 @@
 // src/composables/useFormatters.js
 import { ref } from 'vue';
+import cronstrue from 'cronstrue';
 
 export function useFormatters() {
   const uppercase = value => {
@@ -34,6 +35,7 @@ export function useFormatters() {
   }
 
   function formatTime(timestamp) {
+    if (!timestamp) return '--';
     return new Date(timestamp).toLocaleString();
   }
 
@@ -53,7 +55,7 @@ export function useFormatters() {
     // Validate if the timestamp is a valid date
     if (isNaN(past)) {
       console.error(`Invalid timestamp: ${timestamp}`);
-      return 'Invalid date';
+      return ' -- ';
     }
 
     const diffInSeconds = Math.floor((now - past) / 1000);
@@ -75,9 +77,16 @@ export function useFormatters() {
     return 'just now';
   };
 
+  const cronToHuman = cronExpression => {
+    // expects a valid cron expression string as input
+    // props.model.task_cron.join(' ')
+    return cronstrue.toString(cronExpression);
+  };
+
   return {
     capitalize,
     capitalizeFirstLetter,
+    cronToHuman,
     formatDuration,
     formatFileSize,
     formatTime,

@@ -38,7 +38,6 @@ const validateModel = async data => {
       cleanupFn(() => clearTimeout(timer));
     });
 
-    console.log('Task Validation Status:', e);
     if (e.response.status === 422) {
       progressCheckStatus.value = 'error';
       errors.value = e.response.data.errors;
