@@ -115,7 +115,9 @@ onUnmounted(() => {
                   :checked="selectedRows.includes(row.id) ? true : false"
                   @click="toggleSelectRow(row.id)" />
               </TableCell>
-              <TableCell class="text-start">
+              <TableCell
+                class="text-start"
+                :title="row.is_paused ? 'Task ' + row.id + 'is paused' : 'Task ' + row.id + ' is running'">
                 <Icon
                   icon="solar:pause-bold"
                   class="text-muted-foreground animate-bounce"
