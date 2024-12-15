@@ -174,7 +174,7 @@ class rconfigTaskDownload extends Command
             DB::table('job_batches')->where('id', $batch->id)->update(['finished_at' => now()->timestamp]); // need this as allowFailures( does not write finished_at)
         })->name('Process TestBatchJob')
             ->allowFailures()
-            ->onQueue('downloadqueue')
+            ->onQueue('TaskDownloadQueue')
             ->name('download-task: ' . $taskname . ' (' . $jobname . ')')
             ->dispatch();
 

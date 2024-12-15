@@ -45,7 +45,8 @@ class TaskManualRunController extends Controller
         if (in_array($task['task_command'], $download_commands)) {
             $task['task_command'] = 'rconfig:download-task';
 
-            dispatch(new TaskDownloadRun($task));
+            dispatch(new TaskDownloadRun($task))->onQueue('ManualDownloadQueue');
+
             $executionEndTime = microtime(true);
 
             $this->logTaskFinished($task['id']);
