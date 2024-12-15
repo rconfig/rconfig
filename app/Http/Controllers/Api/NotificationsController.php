@@ -24,6 +24,7 @@ class NotificationsController extends ApiBaseController
     {
         $response = QueryBuilder::for(Notification::class)
             ->whereNull('read_at')
+            ->where('notifiable_id', auth()->id())
             ->defaultSort('-created_at')
             ->paginate((int) $request->perPage);
 

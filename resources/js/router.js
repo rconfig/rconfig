@@ -77,6 +77,13 @@ const routes = [
     }
   },
   {
+    path: '/settings/logs',
+    name: 'settings-logs',
+    component: () => import('@/pages/Settings/Main.vue'),
+    props: { logs: true },
+    beforeEnter: guardMyroute
+  },
+  {
     path: '/settings/about',
     name: 'settings-about',
     component: () => import('@/pages/Settings/Main.vue'),

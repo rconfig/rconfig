@@ -102,7 +102,7 @@ onUnmounted(() => {
             </TableHead>
 
             <TableHead class="w-[10%]">Frequency</TableHead>
-            <TableHead class="w-[10%]">Last Run</TableHead>
+            <!-- <TableHead class="w-[10%]">Last Run</TableHead> -->
             <TableHead class="w-[2%]">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -144,9 +144,9 @@ onUnmounted(() => {
               <TableCell class="text-start">
                 {{ row.cron_plain }}
               </TableCell>
-              <TableCell class="text-start">
+              <!-- <TableCell class="text-start">
                 {{ formatters.formatTime(row.last_finished_at) }}
-              </TableCell>
+              </TableCell> -->
               <!-- ACTIONS MENU -->
               <TableCell class="text-start">
                 <ActionsMenu

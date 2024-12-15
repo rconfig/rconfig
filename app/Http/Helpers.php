@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\User;
+use App\Notifications\DBNotification;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 
@@ -178,6 +180,8 @@ function activityLogIt($class, $function, $log_name, $description, $event_type, 
             $activity->function = $function;
         })
         ->log($description);
+
+    Notification::send(User::all(), new DBNotification($log_name, $description, $event_type, $log_name, 'pficon-info'));
 
     // log_name = severity level
     //     critical - pficon-error-circle-o
