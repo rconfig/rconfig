@@ -17,27 +17,28 @@ export function useRowSelection(rows) {
   };
 
   // Toggle Select Single Row
-  const toggleSelectRow = rowId => {
+  function toggleSelectRow(rowId) {
     if (selectedRows.value.includes(rowId)) {
       selectedRows.value = selectedRows.value.filter(id => id !== rowId);
     } else {
       selectedRows.value.push(rowId);
     }
-  };
+  }
 
   // Toggle Select Single Row (Single Select Version)
-  const toggleSingleSelectRow = rowId => {
+  function toggleSingleSelectRow(rowId) {
     if (selectedRows.value.includes(rowId)) {
       selectedRows.value = [];
     } else {
       selectedRows.value = [rowId];
     }
-  };
+  }
 
   return {
     selectedRows,
     selectAll,
     toggleSelectAll,
+    toggleSelectRow, // Add this
     toggleSingleSelectRow
   };
 }

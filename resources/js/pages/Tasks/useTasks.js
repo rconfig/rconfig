@@ -3,6 +3,7 @@ import { ref, watch, inject } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 import { useDialogStore } from '@/stores/dialogActions';
 import { useToaster } from '@/composables/useToaster'; // Import the composable
+import { eventBus } from '@/composables/eventBus';
 
 export function useTasks() {
   const currentPage = ref(1);
@@ -18,6 +19,7 @@ export function useTasks() {
   const tasks = ref([]);
   const showConfirmConfirmProceedAlertAlert = ref(false);
   const proceedEditId = ref(null);
+  const showConfirmDelete = ref(false);
   const { openDialog } = dialogStore;
   const { toastSuccess, toastError } = useToaster(); // Using toaster for notifications
   const formatters = inject('formatters');
@@ -66,6 +68,25 @@ export function useTasks() {
     } catch (error) {
       console.error('Error deleting task:', error);
       toastError('Error', 'Failed to delete task.');
+    }
+  };
+
+  // Delete Many Tasks
+  const deleteManyTasks = async ids => {
+    try {
+      await axios.post('/api/tasks/delete-many', { ids });
+      fetchTasks(); // Refresh tasks list after deletion
+      toastSuccess('Tasks Deleted', 'The tasks have been deleted successfully.');
+      showConfirmDelete.value = false;
+      eventBus.emit('deleteManyTasksSuccess');
+    } catch (error) {
+      if (error.status === 422) {
+        toastError('Error', error.response.data.message);
+      } else {
+        console.error('Error deleting Tasks:', error);
+        toastError('Error', 'Failed to delete Tasks.');
+      }
+      showConfirmDelete.value = false;
     }
   };
 
@@ -170,6 +191,8 @@ export function useTasks() {
     tasks,
     toggleSort,
     updateTask,
-    viewEditDialog
+    viewEditDialog,
+    showConfirmDelete,
+    deleteManyTasks
   };
 }

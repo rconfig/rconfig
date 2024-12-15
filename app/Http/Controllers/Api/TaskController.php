@@ -103,6 +103,14 @@ class TaskController extends ApiBaseController
         return $this->successResponse(Str::ucfirst($this->modelname) . ' deleted successfully!');
     }
 
+    public function deleteMany(Request $request)
+    {
+        $ids = $request->input('ids');
+        $this->model::whereIn('id', $ids)->delete();
+
+        return response()->json(['message' => 'Tasks deleted successfully'], 200);
+    }
+
     public function togglePauseTask($id)
     {
 

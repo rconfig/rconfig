@@ -1,6 +1,7 @@
 <script setup>
 import ActionsMenu from '@/pages/Shared/Table/ActionsMenu.vue';
 import ClearFilters from '@/pages/Shared/Filters/ClearFilters.vue';
+import ConfirmDeleteAlert from '@/pages/Shared/AlertDialog/ConfirmDeleteAlert.vue';
 import Loading from '@/pages/Shared/Table/Loading.vue';
 import NoResults from '@/pages/Shared/Table/NoResults.vue';
 import ConfirmProceedAlert from '@/pages/Shared/AlertDialog/ConfirmProceedAlert.vue';
@@ -10,13 +11,19 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { onMounted, onUnmounted } from 'vue';
 import { useRowSelection } from '@/composables/useRowSelection';
 import { useTasks } from '@/pages/Tasks/useTasks';
+import { eventBus } from '@/composables/eventBus';
 
-const { createTask, currentPage, deleteTask, editId, fetchTasks, formatters, handleKeyDown, handleSave, isLoading, lastPage, newTaskModalKey, openDialog, pauseTask, perPage, proceedEditId, runTaskConfirm, runTaskNow, searchTerm, showConfirmConfirmProceedAlertAlert, sortParam, tasks, toggleSort, updateTask, viewEditDialog } = useTasks();
+const { createTask, currentPage, deleteTask, editId, fetchTasks, formatters, handleKeyDown, handleSave, isLoading, lastPage, newTaskModalKey, openDialog, pauseTask, perPage, proceedEditId, runTaskConfirm, runTaskNow, searchTerm, showConfirmDelete, deleteManyTasks, showConfirmConfirmProceedAlertAlert, sortParam, tasks, toggleSort, updateTask, viewEditDialog } = useTasks();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(tasks);
 
 onMounted(() => {
   fetchTasks();
   window.addEventListener('keydown', handleKeyDown);
+
+  eventBus.on('deleteManyTagsSuccess', () => {
+    selectedRows.value = [];
+    selectAll.value = false;
+  });
 });
 
 // Cleanup event listener on unmount
@@ -43,6 +50,7 @@ onUnmounted(() => {
       <div class="flex">
         <Button
           v-if="selectedRows.length"
+          @click.prevent="showConfirmDelete = true"
           class="px-2 py-1 bg-red-600 hover:bg-red-700 hover:animate-pulse"
           size="md"
           variant="primary">
@@ -180,6 +188,14 @@ onUnmounted(() => {
         @handleClose="showConfirmConfirmProceedAlertAlert = false"
         @handleConfirm="runTaskNow(proceedEditId)"
         :message="'Are you sure you want to run the selected task manually?'" />
+
+      <!-- FOR MULTIPLE DELETE -->
+      <ConfirmDeleteAlert
+        :ids="selectedRows"
+        :showConfirmDelete="showConfirmDelete"
+        @close="showConfirmDelete = false"
+        @handleDelete="deleteManyTasks(selectedRows)" />
+      <!-- FOR MULTIPLE DELETE -->
 
       <Toaster />
     </div>

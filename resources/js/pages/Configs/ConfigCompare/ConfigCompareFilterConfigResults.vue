@@ -17,7 +17,7 @@ const props = defineProps({
 });
 
 const { currentPage, isLoading, lastPage, perPage, results } = useCompareFilterConfigResults(props, emit);
-const { selectedRows, selectAll, toggleSelectAll, toggleSingleSelectRow } = useRowSelection(results);
+const { selectedRows, toggleSingleSelectRow } = useRowSelection(results);
 
 watch(selectedRows, val => {
   emit('updateSelectedRows', val);

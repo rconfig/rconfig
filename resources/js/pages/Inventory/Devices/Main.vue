@@ -29,6 +29,7 @@ const props = defineProps({
 
 const { clearFilters, createDevice, currentPage, deleteDevice, deleteManyDevices, devices, disableDevice, editId, enableDevice, fetchDevices, filterCategories, filterStatus, filterTags, filterVendor, formatters, handleKeyDown, handleSave, isLoading, lastPage, newDeviceModalKey, perPage, searchTerm, showConfirmDelete, sortParam, toggleSort, updateDevice, viewDeviceDetailsPane, viewEditDialog } = useDevices();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(devices);
+
 const sheetStore = useSheetStore();
 const { openSheet, closeSheet, isSheetOpen } = sheetStore;
 const commentsDeviceId = ref(0);
