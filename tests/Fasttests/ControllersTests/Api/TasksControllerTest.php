@@ -55,7 +55,7 @@ class TasksControllerTest extends TestCase
             'is_system' => $task->is_system,
         ]);
         $response->assertStatus(200);
- 
+
         $latestTaskId = $response->json()['data']['id'];
 
         $cronPattern = $this->_getCronPattern('0', '0', '1', '1', '*');
@@ -365,6 +365,41 @@ class TasksControllerTest extends TestCase
         $this->assertDatabaseHas('monitored_scheduled_tasks', [
             'name' => $task->task_name,
             'type' => $task->task_command,
+        ]);
+    }
+
+
+    public function test_create_task_is_paused_is_false_by_default()
+    {
+        $task = \App\Models\Task::factory()->make([
+            'is_paused' => 0,
+        ]);
+
+        $response = $this->json('post', '/api/tasks', $task->toArray());
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas('tasks', [
+            'task_name' => $task->task_name,
+            'task_desc' => $task->task_desc,
+            'task_command' => $task->task_command,
+            'is_paused' => 0,
+        ]);
+    }
+
+    public function test_can_toggle_is_paused_on_a_task()
+    {
+        $task = \App\Models\Task::factory()->create([
+            'is_paused' => 0,
+        ]);
+
+        $response = $this->json('get', '/api/tasks/toggle-pause-task/' . $task->id);
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas('tasks', [
+            'task_name' => $task->task_name,
+            'task_desc' => $task->task_desc,
+            'task_command' => $task->task_command,
+            'is_paused' => 1,
         ]);
     }
 

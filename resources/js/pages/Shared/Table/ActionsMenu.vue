@@ -4,7 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { ref } from 'vue';
 
 const showConfirmDelete = ref(false);
-const emits = defineEmits(['onEdit', 'onDelete']);
+const emits = defineEmits(['onEdit', 'onDelete', 'onTaskPause']);
 
 defineProps({
   rowData: {
@@ -14,6 +14,14 @@ defineProps({
   showEditBtn: {
     type: Boolean,
     default: true
+  },
+  showTaskPauseBtn: {
+    type: Boolean,
+    default: false
+  },
+  taskPaused: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -28,6 +36,10 @@ function showAlert() {
 function handleDelete() {
   emits('onDelete');
   showConfirmDelete.value = false;
+}
+
+function handleTaskPause() {
+  emits('onTaskPause');
 }
 </script>
 
@@ -45,6 +57,26 @@ function handleDelete() {
         class="w-56"
         align="end"
         side="bottom">
+        <DropdownMenuItem
+          v-if="showTaskPauseBtn && !taskPaused"
+          class="cursor-pointer hover:bg-rcgray-800"
+          @click="handleTaskPause">
+          <span>Pause</span>
+          <DropdownMenuShortcut>
+            <Icon icon="solar:pause-bold" />
+          </DropdownMenuShortcut>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          v-if="showTaskPauseBtn && taskPaused"
+          class="cursor-pointer hover:bg-rcgray-800"
+          @click="handleTaskPause">
+          <span>Run</span>
+          <DropdownMenuShortcut>
+            <Icon
+              icon="svg-spinners:blocks-scale"
+              class="text-green-500 text-green" />
+          </DropdownMenuShortcut>
+        </DropdownMenuItem>
         <DropdownMenuItem
           v-if="showEditBtn"
           class="cursor-pointer hover:bg-rcgray-800"

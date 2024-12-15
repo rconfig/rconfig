@@ -97,6 +97,7 @@ class StoreTaskRequest extends FormRequest
             'download_report_notify' => $this->download_report_notify,
             'verbose_download_report_notify' => $this->verbose_download_report_notify,
             'is_system' => 0,
+            'is_paused' => $this->is_paused ?? 0,
         ]);
     }
 

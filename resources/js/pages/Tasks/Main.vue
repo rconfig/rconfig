@@ -24,6 +24,12 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('keydown', handleKeyDown);
 });
+
+function pauseTask(id) {
+  axios.get(`/api/tasks/toggle-pause-task/${id}`).then(() => {
+    fetchTasks();
+  });
+}
 </script>
 
 <template>
@@ -74,6 +80,7 @@ onUnmounted(() => {
                 v-model="selectAll"
                 @click="toggleSelectAll()" />
             </TableHead>
+            <TableHead class="w-[2%]"></TableHead>
             <TableHead class="w-[5%]">
               <Button
                 class="flex justify-start w-full p-0 hover:bg-rcgray-800"
@@ -105,6 +112,7 @@ onUnmounted(() => {
 
           <template v-else-if="!isLoading">
             <TableRow
+              :class="row.is_paused ? 'bg-rcgray-800 hover:bg-rcgray-800' : ''"
               v-for="row in tasks.data"
               :key="row.id">
               <TableCell class="text-start">
@@ -113,6 +121,16 @@ onUnmounted(() => {
                   :id="'select-' + row.id"
                   :checked="selectedRows.includes(row.id) ? true : false"
                   @click="toggleSelectRow(row.id)" />
+              </TableCell>
+              <TableCell class="text-start">
+                <Icon
+                  icon="solar:pause-bold"
+                  class="text-muted-foreground animate-bounce"
+                  v-if="row.is_paused" />
+                <Icon
+                  icon="svg-spinners:blocks-scale"
+                  class="text-green-500 text-green"
+                  v-else />
               </TableCell>
               <TableCell class="text-start">
                 {{ row.id }}
@@ -130,6 +148,9 @@ onUnmounted(() => {
               <TableCell class="text-start">
                 <ActionsMenu
                   :rowData="row"
+                  :showTaskPauseBtn="true"
+                  :taskPaused="row.is_paused"
+                  @onTaskPause="pauseTask(row.id)"
                   @onEdit="viewEditDialog(row.id)"
                   @onDelete="deleteTask(row.id)" />
               </TableCell>

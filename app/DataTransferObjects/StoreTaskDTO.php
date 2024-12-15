@@ -20,6 +20,7 @@ final class StoreTaskDTO extends DtoBase
     public string $task_cron;
     public ?string $task_desc;
     public string $task_name;
+    public bool|int $is_paused;
 
     public function __construct(array $parameters = [])
     {
@@ -35,6 +36,6 @@ final class StoreTaskDTO extends DtoBase
         $this->task_cron = $parameters['task_cron'];
         $this->task_desc = $parameters['task_desc'] !== null ? $parameters['task_desc'] : '';
         $this->task_name = $parameters['task_name'];
-        
+        $this->is_paused = $parameters['is_paused'];
     }
 }

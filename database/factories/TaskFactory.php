@@ -25,6 +25,7 @@ class TaskFactory extends Factory
             'download_report_notify' => $this->faker->boolean,
             'verbose_download_report_notify' => $this->faker->boolean,
             'is_system' => $this->faker->boolean,
+            'is_paused' => $this->faker->boolean,
         ];
     }
 }

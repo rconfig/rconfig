@@ -66,6 +66,7 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
 
     /* TASKS ROUTES */
     Route::prefix('tasks')->group(function () {
+        Route::get('/toggle-pause-task/{id}', 'TaskController@togglePauseTask');
         Route::post('/validate-task', 'TaskController@validateTask');
         Route::post('/run-manual-task', 'TaskManualRunController@runManualTask');
         Route::get('/recent-failed-jobs-count', 'TaskController@failedJobsLast24HrsCount');

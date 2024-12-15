@@ -103,6 +103,17 @@ class TaskController extends ApiBaseController
         return $this->successResponse(Str::ucfirst($this->modelname) . ' deleted successfully!');
     }
 
+    public function togglePauseTask($id)
+    {
+
+        $model = $this->model->find($id);
+        $model->is_paused = ! $model->is_paused;
+        $model->save();
+        $responseText = $model->is_paused ? 'paused' : 'unpaused';
+
+        return $this->successResponse(Str::ucfirst($this->modelname) . ' ' . $responseText . ' successfully!');
+    }
+
     private function SyncToMonitoredTasks($model)
     {
         MonitoredScheduledTasks::updateOrCreate(

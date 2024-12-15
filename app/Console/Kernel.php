@@ -55,6 +55,12 @@ class Kernel extends ConsoleKernel
 
             // Go through each task to dynamically set them up.
             foreach ($tasks as $task) {
+
+                // if task is_paused, skip it
+                if ($task->is_paused) {
+                    continue;
+                }
+
                 // Use the scheduler to add the task at its desired frequency
                 $executionStartTime = microtime(true);
                 if ($task->task_command === 'rconfig:purge-configs') {
