@@ -33,7 +33,7 @@ watch(
       return;
     }
     props.modelValue = newValue;
-    console.log('newValue', [cronReturnArray.minute, cronReturnArray.hour, cronReturnArray.day, cronReturnArray.month, cronReturnArray.weekday]);
+    // console.log('newValue', [cronReturnArray.minute, cronReturnArray.hour, cronReturnArray.day, cronReturnArray.month, cronReturnArray.weekday]);
     // console.log('props.modelValue', props.modelValue);
     updateParentModel();
   }

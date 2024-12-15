@@ -56,7 +56,6 @@ class StoreTaskRequest extends FormRequest
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'task_name' => 'required|min:3|unique:tasks|max:255',
-                'task_desc' => 'required|min:3',
                 'task_command' => 'required',
                 'task_cron' => new TaskCronIsCorrectFormat(),
                 'device' => new TaskDownloadDeviceHasDevices($this->request->get('task_command')),

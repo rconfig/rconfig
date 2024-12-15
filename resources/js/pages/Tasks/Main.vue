@@ -9,9 +9,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { onMounted, onUnmounted } from 'vue';
 import { useRowSelection } from '@/composables/useRowSelection';
 import { useTasks } from '@/pages/Tasks/useTasks';
+import { inject } from 'vue';
 
 const { editId, tasks, currentPage, perPage, searchTerm, lastPage, isLoading, fetchTasks, viewEditDialog, createTask, deleteTask, handleSave, handleKeyDown, newTaskModalKey, toggleSort, sortParam } = useTasks();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(tasks);
+const formatters = inject('formatters');
 
 onMounted(() => {
   fetchTasks();
@@ -122,7 +124,7 @@ onUnmounted(() => {
                 {{ row.task_desc }}
               </TableCell>
               <TableCell class="text-start">
-                {{ row.created_at }}
+                {{ formatters.formatTime(row.created_at) }}
               </TableCell>
               <!-- ACTIONS MENU -->
               <TableCell class="text-start">

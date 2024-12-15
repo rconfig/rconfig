@@ -19,6 +19,7 @@ const { openDialog, closeDialog, isDialogOpen } = dialogStore;
 const emit = defineEmits(['save']);
 const showConfirmCloseAlert = ref(false);
 const errors = ref([]);
+const Step5Validated = ref(true); // This is a placeholder for now
 const model = ref({
   task_name: '',
   task_desc: '',
@@ -129,6 +130,11 @@ function confirmCloseWizard() {
   showConfirmCloseAlert.value = false;
   closeDialog('DialogNewTask');
 }
+
+function Step5CheckSuccess() {
+  console.log('Step5CheckSuccess');
+  Step5Validated.value = false;
+}
 </script>
 
 <template>
@@ -180,6 +186,7 @@ function confirmCloseWizard() {
               :model="model"
               v-if="activeStep === 4" />
             <Step5
+              @checkSuccess="Step5CheckSuccess()"
               :model="model"
               v-if="activeStep === 5" />
           </ScrollArea>
@@ -229,6 +236,7 @@ function confirmCloseWizard() {
         </Button>
 
         <Button
+          :disabled="Step5Validated"
           v-if="props.editId === 0"
           type="submit"
           class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"

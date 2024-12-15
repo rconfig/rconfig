@@ -4,7 +4,7 @@ import DeviceMultiSelect from '@/pages/Shared/FormFields/DeviceMultiSelect.vue';
 import TagMultiSelect from '@/pages/Shared/FormFields/TagMultiSelect.vue';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { ref, defineEmits } from 'vue';
+import { ref } from 'vue';
 
 defineProps({
   model: Object

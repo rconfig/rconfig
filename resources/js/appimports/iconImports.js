@@ -1,6 +1,7 @@
 // iconImports.js
 import { Icon } from '@iconify/vue';
 import UserIcon from '@/pages/Shared/Icon/UserIcon.vue';
+import AlertIcon from '@/pages/Shared/Icon/AlertIcon.vue';
 import NotificationIcon from '@/pages/Shared/Icon/NotificationIcon.vue';
 import DashboardIcon from '@/pages/Shared/Icon/DashboardIcon.vue';
 import InventoryIcon from '@/pages/Shared/Icon/InventoryIcon.vue';
@@ -31,4 +32,4 @@ import TroubleshootIcon from '@/pages/Shared/Icon/TroubleshootIcon.vue';
 import ConfigSearchIcon from '@/pages/Shared/Icon/ConfigSearchIcon.vue';
 import ConfigCompareIcon from '@/pages/Shared/Icon/ConfigCompareIcon.vue';
 
-export { Icon, EmailIcon, ConfigSearchIcon, ConfigCompareIcon, TroubleshootIcon, StatusGreenIcon, StatusRedIcon, StatusYellowIcon, StatusGrayIcon, UserIcon, NotificationIcon, DashboardIcon, InventoryIcon, TasksIcon, ConfigToolsIcon, SettingsIcon, SysLogViewerIcon, SysQueueManagerIcon, ExternalLinkIcon, DeviceIcon, CommandGroupIcon, CommandsIcon, TemplateIcon, VendorIcon, TagIcon, LogoutIcon, CredentialsIcon, StarSelected, StarUnselected, CommentAddIcon, NetworkDeviceIcon };
+export { Icon, AlertIcon, EmailIcon, ConfigSearchIcon, ConfigCompareIcon, TroubleshootIcon, StatusGreenIcon, StatusRedIcon, StatusYellowIcon, StatusGrayIcon, UserIcon, NotificationIcon, DashboardIcon, InventoryIcon, TasksIcon, ConfigToolsIcon, SettingsIcon, SysLogViewerIcon, SysQueueManagerIcon, ExternalLinkIcon, DeviceIcon, CommandGroupIcon, CommandsIcon, TemplateIcon, VendorIcon, TagIcon, LogoutIcon, CredentialsIcon, StarSelected, StarUnselected, CommentAddIcon, NetworkDeviceIcon };

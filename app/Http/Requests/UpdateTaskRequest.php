@@ -56,7 +56,6 @@ class UpdateTaskRequest extends FormRequest
         if ($this->getMethod() == 'PATCH') {
             $rules = [
                 'task_name' => 'required|min:3|max:255',
-                'task_desc' => 'required|min:3',
                 'task_command' => 'required',
                 'task_cron' => new TaskCronIsCorrectFormat(),
                 'device' => new TaskDownloadDeviceHasDevices($this->request->get('task_command')),
