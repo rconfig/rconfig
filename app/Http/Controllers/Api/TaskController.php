@@ -30,7 +30,7 @@ class TaskController extends ApiBaseController
         $result = QueryBuilder::for(Task::class)
             ->with(['device'])
             ->allowedFilters([
-                AllowedFilter::custom('q', new FilterMultipleFields, 'id', 'task_name'),
+                AllowedFilter::custom('q', new FilterMultipleFields, 'id, task_name'),
             ])
             ->defaultSort('-id')
             ->allowedSorts('id', 'task_name')

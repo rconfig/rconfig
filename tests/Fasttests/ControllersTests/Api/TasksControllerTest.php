@@ -241,6 +241,22 @@ class TasksControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function test_get_all_tasks_with_filters()
+    {
+        $task = \App\Models\Task::factory(10)->create();
+        $task = \App\Models\Task::factory()->create([
+            'task_name' => 'test-task',
+        ]);
+        $response = $this->get('/api/tasks?page=1&perPage=100&filter[q]=' . $task->id);
+        $response->assertStatus(200);
+        $this->assertEquals(1, count($response->json()['data']));
+
+        $response = $this->get('/api/tasks?page=1&perPage=100&filter[q]=test');
+        $response->assertStatus(200);
+        $this->assertEquals(1, count($response->json()['data']));
+        $this->assertStringContainsString('Every Sunday at 12:00am', json_decode($response->getContent())->data[0]->cron_plain);
+    }
+
     public function test_create_task_with_real_props_and_transform_some_props()
     {
         $task = [
