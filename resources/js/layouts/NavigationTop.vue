@@ -58,7 +58,7 @@ function openNav() {
 
 <template>
   <nav class="dark:bg-rcgray-900">
-    <div class="relative flex items-center justify-between w-full max-w-full py-1 p-x-2">
+    <div class="relative flex items-center justify-between w-full max-w-full px-2 py-1">
       <div class="flex items-center ml-4">
         <NavOpenButton
           @openNav="openNav()"
@@ -104,7 +104,7 @@ function openNav() {
           </Tooltip>
         </TooltipProvider>
 
-        <TooltipProvider>
+        <!-- <TooltipProvider>
           <Tooltip>
             <TooltipTrigger as-child>
               <Button
@@ -127,7 +127,7 @@ function openNav() {
               <p>{{ mode === 'dark' ? 'Switch to light theme' : 'Switch to dark theme' }}</p>
             </TooltipContent>
           </Tooltip>
-        </TooltipProvider>
+        </TooltipProvider> -->
 
         <DropdownMenu>
           <DropdownMenuTrigger as-child>

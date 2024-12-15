@@ -154,12 +154,12 @@ function openRecord() {
       <Button
         @click="customOpenDialog()"
         id="quickSearchBtn"
-        variant="outline"
-        class="w-full border-rcgray-600 hover:bg-rcgray-800 m-0 outline-none border-none no-underline flex items-center flex-shrink-0 overflow-hidden rounded-lg shadow-inner shadow-[0_0_0_1px_rgb(49,51,55)] bg-[#1b1d21] h-7 p-[4px_6px] gap-1.5 relative transition-[background]"
+        variant=" "
+        class="w-full dark:border-rcgray-600 border-rcgray-400 dark:hover:bg-rcgray-800 m-0 outline-none no-underline flex items-center flex-shrink-0 overflow-hidden rounded-lg shadow-inner shadow-[0_0_0_1px_rgb(49,51,55)] dark:bg-rcgray-900 bg-rcgray-200 hover:bg-rcgray-100 h-7 p-[4px_6px] gap-1.5 relative transition-[background]"
         data-full-width="true">
         <Icon icon="carbon:search" />
 
-        <div class="font-inter tracking-[-0.02em] font-medium leading-[20px] text-[14px] text-[#9fa1a7]">Actions & Search</div>
+        <div class="font-inter tracking-[-0.02em] font-medium leading-[20px] text-[14px] text-rcgray-900 dark:text-rcgray-400">Actions & Search</div>
         <div class="ml-auto">
           <kbd class="rc-kdb-class">Ctrl /</kbd>
         </div>
@@ -167,6 +167,8 @@ function openRecord() {
     </DialogTrigger>
     <DialogContent
       @escapeKeyDown="customCloseDialog()"
+      @close="customCloseDialog()"
+      @pointerDownOutside="customCloseDialog()"
       class="grid-rows-[auto_minmax(0,1fr)_auto] p-0 gap-0 max-h-[50dvh] focus:outline-none"
       :class="selectedResult['record'].length > 0 ? 'sm:max-w-[80dvh]' : 'sm:max-w-[60dvh]'">
       <DialogHeader class="rc-dialog-header">
