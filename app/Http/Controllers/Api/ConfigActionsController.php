@@ -39,7 +39,7 @@ class ConfigActionsController extends ApiBaseController
         if (App()->environment('testing')) { // required for testing
             dispatch(new PurgeFailedConfigsJob($request->device_id))->onConnection('sync');
         } else {
-            dispatch(new PurgeFailedConfigsJob($request->device_id))->onQueue('rConfigDefault');
+            dispatch(new PurgeFailedConfigsJob($request->device_id))->onQueue('default');
         }
 
         return $this->successResponse('Purge started');
