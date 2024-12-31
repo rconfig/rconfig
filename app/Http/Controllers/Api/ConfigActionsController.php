@@ -27,7 +27,7 @@ class ConfigActionsController extends ApiBaseController
         if (App()->environment('testing')) { // required for testing
             dispatch(new DownloadConfigNow($request->device_id, $username))->onConnection('sync');
         } else {
-            dispatch(new DownloadConfigNow($request->device_id, $username))->onQueue('ManualDownloadQueue');
+            dispatch(new DownloadConfigNow($request->device_id, $username))->onQueue('downloadqueue');
         }
 
         return $this->successResponse('Download started');
@@ -39,7 +39,7 @@ class ConfigActionsController extends ApiBaseController
         if (App()->environment('testing')) { // required for testing
             dispatch(new PurgeFailedConfigsJob($request->device_id))->onConnection('sync');
         } else {
-            dispatch(new PurgeFailedConfigsJob($request->device_id))->onQueue('rConfigDefault');
+            dispatch(new PurgeFailedConfigsJob($request->device_id))->onQueue('default');
         }
 
         return $this->successResponse('Purge started');
