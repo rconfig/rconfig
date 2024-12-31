@@ -27,7 +27,7 @@ class ConfigActionsController extends ApiBaseController
         if (App()->environment('testing')) { // required for testing
             dispatch(new DownloadConfigNow($request->device_id, $username))->onConnection('sync');
         } else {
-            dispatch(new DownloadConfigNow($request->device_id, $username))->onQueue('ManualDownloadQueue');
+            dispatch(new DownloadConfigNow($request->device_id, $username))->onQueue('downloadqueue');
         }
 
         return $this->successResponse('Download started');
