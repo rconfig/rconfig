@@ -104,7 +104,7 @@ function openNav() {
           </Tooltip>
         </TooltipProvider>
 
-        <!-- <TooltipProvider>
+        <TooltipProvider>
           <Tooltip>
             <TooltipTrigger as-child>
               <Button
@@ -127,7 +127,7 @@ function openNav() {
               <p>{{ mode === 'dark' ? 'Switch to light theme' : 'Switch to dark theme' }}</p>
             </TooltipContent>
           </Tooltip>
-        </TooltipProvider> -->
+        </TooltipProvider>
 
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
