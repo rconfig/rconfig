@@ -70,7 +70,7 @@
                         <p>Learn about new features within the Console and remaster some old ones</p>
                         <ul class="pf-c-list pf-m-plain">
                             <li>
-                                <a href="https://www.rconfig.com/docs" target="_blank">rConfig 6 Documentation <i class="fas fa-external-link-alt pf-u-font-size-xs" aria-hidden="true"></i> </a>
+                                <a href="https://docs.rconfig.com" target="_blank">rConfig 6 Documentation <i class="fas fa-external-link-alt pf-u-font-size-xs" aria-hidden="true"></i> </a>
                             </li>
                             <li>
                                 <a href="https://www.youtube.com/@rconfigtutorialsvideos5999" target="_blank"
@@ -82,7 +82,7 @@
                             </li>
                         </ul>
                     </div>
-                    <a class="pf-c-button pf-m-link pf-m-inline" href="https://www.rconfig.com/docs" target="_blank">
+                    <a class="pf-c-button pf-m-link pf-m-inline" href="https://docs.rconfig.com" target="_blank">
                         View all learning resources
                         <span class="pf-c-button__icon pf-m-end">
                             <i class="fas fa-arrow-right" aria-hidden="true"></i>

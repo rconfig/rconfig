@@ -357,14 +357,14 @@ Instruction on how to update your installation of rConfig v6 Core are below. You
 # Update PHP CentOS/RHEL/ Rocky
 cd /home
 yum -y install wget
-wget https://www.rconfig.com/downloads/php-updates/centos-php8-update.sh -O /home/centos-php8-update.sh
+wget https://dl.rconfig.com/downloads/php-updates/centos-php8-update.sh -O /home/centos-php8-update.sh
 chmod +x centos-php8-update.sh
 ./centos-php8-update.sh
 
 # Update PHP Ubuntu
 cd /home
 sudo apt-get install wget
-wget https://www.rconfig.com/downloads/php-updates/ubuntu-php8-update.sh -O /home/ubuntu-php8-update.sh
+wget https://dl.rconfig.com/downloads/php-updates/ubuntu-php8-update.sh -O /home/ubuntu-php8-update.sh
 chmod +x ubuntu-php8-update.sh
 ./ubuntu-php8-update.sh
 ```
