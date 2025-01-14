@@ -62,7 +62,7 @@
                         <div class="pf-c-card__footer">
                             <a href="https://www.rconfig.com/eula" target="_blank">License</a> |
                             <a :href="'mailto:support@rconfig.com?subject=rConfig Support from ' + state.info.rconfig_sub_name">Contact Support</a> |
-                            <a href="https://portal.rconfig.com/docs/5.1/getstarted/overview" target="_blank">Online Help</a>
+                            <a href="https://docs.rconfig.com/" target="_blank">Online Help</a>
                         </div>
                     </div>
                 </div>
