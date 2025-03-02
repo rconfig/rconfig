@@ -1,9 +1,9 @@
 import autoprefixer from 'autoprefixer';
 import fs from 'fs';
 import laravel from 'laravel-vite-plugin';
+import tailwindcss from 'tailwindcss';
 import vue from '@vitejs/plugin-vue';
 import { defineConfig } from 'vite';
-import tailwindcss from 'tailwindcss';
 
 export default defineConfig({
   server: {

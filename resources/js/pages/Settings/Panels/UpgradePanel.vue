@@ -30,7 +30,7 @@ import { Separator } from '@/components/ui/separator';
                   <div class="relative flex">
                     <div class="absolute top-0 left-0 flex items-center justify-center w-10 h-10"></div>
                     <img
-                      src="/images/brand/white_logo_only.svg"
+                      src="/images/brand/white_logo.svg"
                       alt="plus"
                       class="w-10 h-10" />
                   </div>
