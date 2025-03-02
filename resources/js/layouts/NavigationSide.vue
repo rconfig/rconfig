@@ -91,7 +91,7 @@ function loadLinksFromStoreOrDb() {
     externalLinks.value = externalLinksStore.links;
   } else {
     axios
-      .get(`/api/users/get-external-links/${userid}`)
+      .get(`/api/user/get-external-links/${userid}`)
       .then(response => {
         // Store the fetched links in Pinia for future use
         externalLinksStore.setLinks(response.data);
@@ -109,7 +109,7 @@ const removeExternalLink = async name => {
   try {
     // Make API request to delete the link by name
     await axios
-      .post(`/api/users/remove-external-link`, { name: encodeURIComponent(name) })
+      .post(`/api/user/remove-external-link`, { name: encodeURIComponent(name) })
       .then(response => {
         // Store the fetched links in Pinia for future use
         externalLinksStore.setLinks(response.data);

@@ -115,11 +115,12 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
         Route::get('clear-logs/{deviceid}', 'ActivityLogController@clearLogsByDeviceId');
     });
 
-    Route::prefix('users')->group(function () {
+    Route::prefix('user')->group(function () {
         Route::post('/add-external-link/{id}', 'UserController@addExternalLink');
         Route::get('/get-external-links/{id}', 'UserController@getExternalLinks');
         Route::post('/remove-external-link/', 'UserController@removeExternalLink');
     });
+
     Route::get('/onboarding/steps', 'UserOnboardingController@getSteps');
 
     Route::resource('users', 'UserController');

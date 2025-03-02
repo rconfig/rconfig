@@ -28,7 +28,7 @@ const closeDialog = () => {
 
 const submitLink = () => {
   axios
-    .post('/api/users/add-external-link/' + userid, {
+    .post('/api/user/add-external-link/' + userid, {
       name: linkName.value,
       url: linkUrl.value,
       icon: linkIcon.value
