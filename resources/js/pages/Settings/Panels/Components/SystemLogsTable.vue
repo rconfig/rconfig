@@ -60,7 +60,7 @@ onMounted(() => {
           size="md"
           @click.prevent="showConfirmDelete = true"
           variant="primary">
-          Delete Selected {{ selectedRows.length }} Tag(s)
+          Delete Selected {{ selectedRows.length }} Log(s)
         </Button>
       </div>
     </div>

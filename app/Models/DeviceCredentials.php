@@ -15,7 +15,6 @@ class DeviceCredentials extends Model
     protected $casts = [
         'cred_password' => EncryptStringCast::class,
         'cred_enable_password' => EncryptStringCast::class,
-
     ];
 
     public static function boot()
