@@ -7,6 +7,18 @@ https://github.com/mohammadain/laravel-docker-cron/blob/master/Dockerfile -->
 
 <a name="readme-top"></a>
 
+[!IMPORTANT]  
+**Important URL Changes – Effective March 31, 2025**
+
+We're making some important updates to our URLs:
+- The new rConfig Portal will be hosted at **portal.rconfig.com**
+- File downloads will now be available at **dl.rconfig.com**
+- Our new main website will be hosted separately at **www.rconfig.com**
+
+⚠️ If your system has any hard-coded links pointing to the old www.rconfig.com for downloads or portal access, these will no longer work after this change. Please update your URLs accordingly.
+
+Need help? Just contact our support team – we're happy to assist.
+
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
