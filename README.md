@@ -7,26 +7,11 @@ https://github.com/mohammadain/laravel-docker-cron/blob/master/Dockerfile -->
 
 <a name="readme-top"></a>
 
-> [!IMPORTANT]  
-> ## Important URL Changes – Effective March 31, 2025
-> 
-> ### New URL Structure
-> | Service | New URL |
-> |---------|---------|
-> | rConfig Portal | **portal.rconfig.com** |
-> | File Downloads | **dl.rconfig.com** |
-> | Main Website | **www.rconfig.com** |
-> 
-> ### Action Required
-> ⚠️ **Any systems with hard-coded links to the old www.rconfig.com URLs for downloads or portal access will stop working after March 31, 2025.**
-> 
-> Please update all references to point to the appropriate new URLs. For assistance with this transition, contact our support team.
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="https://github.com/rconfig/rconfig">
-            <img src="https://www.rconfig.com/images/rConfig_logos/new/blue/hex_logo_blue_horizontal_96.png" alt="rConfig Logo" />
+    <img src="https://portal.rconfig.com/images/rconfig-logos/rConfig-logo-and-icon/rconfig_logo_and_icon_with_strapline_gradient.png" alt="rConfig Logo" width="500"/>
   </a>
 
   <h3 align="center">rConfig v6 Core</h3>
@@ -53,7 +38,7 @@ https://github.com/mohammadain/laravel-docker-cron/blob/master/Dockerfile -->
 
 [![Tests](https://github.com/eliashaeussler/typo3-badges/actions/workflows/tests.yaml/badge.svg)](https://github.com/eliashaeussler/typo3-badges/actions/workflows/tests.yaml)
 [![License](https://img.shields.io/github/license/eliashaeussler/typo3-badges)](LICENSE) [![Made with Node](https://img.shields.io/badge/dynamic/json?label=node&query=%24.engines%5B%22node%22%5D&url=https%3A%2F%2Fraw.githubusercontent.com%2FMichaelCurrin%2Fbadge-generator%2Fmaster%2Fpackage.json)](https://nodejs.org 'Go to Node.js homepage')
-[![PHP Version Require](https://poser.pugx.org/pugx/badge-poser/require/php)](https://packagist.org/packages/pugx/badge-poser)
+[![PHP](https://img.shields.io/badge/PHP-^8.4-777BB4?logo=php&logoColor=white)](https://www.php.net/)
 
  <img src="https://img.shields.io/badge/-Vue3-4FC08D?logo=vue.js&logoColor=white&style=flat"/>
  <img src="https://img.shields.io/badge/-Laravel-FF2D20?logo=laravel&logoColor=white&style=flat"/>
@@ -80,7 +65,7 @@ Supported OS
 - RHEL Linux 8/9+
 - CentOS Linux 8/9+
 - Ubuntu 20.04+
-- **Now run rConfig v6 in a Docker container!** [rconfig6docker repository](https://github.com/rconfig/rconfig6docker)
+<!-- - **Now run rConfig v6 in a Docker container!** [rconfig6docker repository](https://github.com/rconfig/rconfig6docker) -->
 
 rConfig v6 core is completely free, you do not need an API key from rConfig to download and use this version. Please follow the instructions below to get started.
 
@@ -118,7 +103,7 @@ Setup a server with one of the supported OS's listed above. We recommend using a
 
 You will need to install the following software on your server:
 Git 2.25+
-PHP 8.1+
+PHP 8.4+
 Composer 2.4+
 Apache 2.4+
 MySQL 5.7+ or MariaDB 10.5+
@@ -313,9 +298,9 @@ Check out our docs [v6docs.rconfig.com](https://v6docs.rconfig.com) to learn mor
 
 <!-- Docker Option -->
 
-<a name="docker"></a>
+<!--<a name="docker"></a>
 
-## Running rConfig v6 in Docker
+ ## Running rConfig v6 in Docker
 
 We are excited to announce that you can now run **rConfig v6** in a Docker container! This new option simplifies the installation and setup process, providing an isolated environment for running rConfig v6 without the need for extensive system configurations.
 
@@ -347,7 +332,7 @@ To run rConfig v6 in Docker, follow these steps:
 
 4. Access rConfig v6 by navigating to `http://localhost:8080` in your browser.
 
-For more advanced configuration options, check out the [rconfig6docker documentation](https://github.com/rconfig/rconfig6docker).
+For more advanced configuration options, check out the [rconfig6docker documentation](https://github.com/rconfig/rconfig6docker). -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -366,7 +351,7 @@ Instruction on how to update your installation of rConfig v6 Core are below. You
 > If you edit any of the files in the rConfig directory, you may need to resolve conflicts when you run the `git pull` command. You should be familiar with git and how to resolve conflicts. If you are not, you should not edit any of the files in the rConfig directory. If you get a warning about conflicts, you can try a `git stash` and `git pull` to resolve the conflicts. If you are not familiar with git, you should seek help from a professional.
 
 > [!IMPORTANT]  
-> As of Feb 2024, you will need to update PHP to version 8.3 when updating rConfig Core V6. You will also need to update the composer version to 2.4. You can do this by running the following commands:
+> As of Feb 2024, you will need to update PHP to version 8.4 when updating rConfig Core V6. You will also need to update the composer version to 2.4. You can do this by running the following commands:
 
 ```sh
 # Update PHP CentOS/RHEL/ Rocky
