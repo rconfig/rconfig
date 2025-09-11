@@ -14,7 +14,7 @@
         "resolve-url-loader": "^5.0.0",
         "sass": "^1.79.4",
         "sass-loader": "^16.0.2",
-        "vite": "^5.4.8",
+        "vite": "^5.4.20",
         "vue": "^3.5.10",
         "vue-loader": "^17.0.0"
     },
