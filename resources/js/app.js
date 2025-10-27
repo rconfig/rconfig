@@ -5,7 +5,7 @@ import * as AuthComponents from "./appimports/authComponentImports";
 import * as UIComponents from "./appimports/uiComponentImports";
 import { NavigationSide, NavigationTop } from "./appimports/navComponentImports";
 import { applyStoredTheme } from "./appimports/themeHandler";
-import { createApp } from "vue/dist/vue.esm-bundler.js";
+import { createApp } from "vue";
 import { initializeLoadingHandlers } from "./appimports/loadingHandlers";
 import { registerComponents } from "./appimports/registerComponents";
 import { setupGlobalProperties } from "./appimports/globalProperties";
