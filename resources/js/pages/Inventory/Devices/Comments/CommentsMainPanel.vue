@@ -5,7 +5,7 @@ import { useDeviceComments } from '@/pages/Inventory/Devices/Comments/useDeviceC
 import CommentsEmpty from '@/pages/Inventory/Devices/Comments/CommentsEmpty.vue';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import CommentsList from '@/pages/Inventory/Devices/Comments/CommentsList.vue';
-import Loading from '@/pages/Shared/Loading.vue';
+import Loading from '@/pages/Shared/Loaders/Loading.vue';
 import NewCommentCard from '@/pages/Inventory/Devices/Comments/NewCommentCard.vue';
 
 const emit = defineEmits(['commentsaved']);

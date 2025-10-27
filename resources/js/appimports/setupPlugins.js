@@ -1,12 +1,19 @@
-import VueHighlightJS from 'vue3-highlightjs';
-import { createPinia } from 'pinia';
-import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
-import router from '@/router';
+import VueHighlightJS from "vue3-highlightjs";
+import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
+import router from "@/router";
+import { createPinia } from "pinia";
+import RcIcon from "@/pages/Shared/Icon/RcIcon.vue"; // Import RcIcon component
 
 export function setupPlugins(app) {
-  app.use(router);
-  app.use(VueHighlightJS);
-  const pinia = createPinia();
-  pinia.use(piniaPluginPersistedstate);
-  app.use(pinia);
+	// Register core plugins
+	app.use(router);
+	app.use(VueHighlightJS);
+
+	// Register Pinia store
+	const pinia = createPinia();
+	pinia.use(piniaPluginPersistedstate);
+	app.use(pinia);
+
+	// Register RcIcon component globally
+	app.component("RcIcon", RcIcon);
 }

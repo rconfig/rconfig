@@ -1,0 +1,107 @@
+
+/* FOR LOGIN PROGRESS BAR IN ROUTER.JS */
+.fixed-top {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 999;
+}
+
+.progress-container {
+  width: 100%;
+  background-color: transparent;
+  height: 2px;
+  display: block;
+}
+.progress-bar {
+  background-color: #5b98e4;
+  height: inherit;
+  display: block;
+  width: 0%;
+  transition: width 0.2s ease-in-out;
+}
+/* FOR LOGIN PROGRESS BAR IN ROUTER.JS */
+
+.topRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-left: 20px;
+  padding-right: 20px;
+  height: 48px;
+}
+
+/* close nav icon */
+
+.nav-icon[data-hovering='true'] {
+  transform: translateX(-6px) scale(0.9);
+  opacity: 0;
+}
+
+.nav-icon {
+  transition:
+    transform 200ms ease 0s,
+    opacity 120ms ease 0s;
+}
+
+.nac-icon-xform[data-hovering='true'] {
+  transform: translateX(-4px);
+  opacity: 0;
+}
+
+.nac-icon-xform {
+  transition:
+    transform 200ms ease 0s,
+    opacity 120ms ease 0s;
+}
+
+.nav-icon-form-2[data-hovering='true'] {
+  transform: translate(0px);
+  opacity: 1;
+}
+
+.nav-icon-form-2 {
+  transition: all 200ms ease 0s;
+}
+
+.top-nav-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.nav-state-icon[data-hovering='false'] {
+  transform: translateX(-6px) scale(0.9);
+  opacity: 0;
+}
+
+.nav-state-icon {
+  transition:
+    transform 200ms ease 0s,
+    opacity 120ms ease 0s;
+}
+
+.nav-state-icon2[data-hovering='false'] {
+  transform: translateX(-6px);
+}
+
+.nav-state-icon2 {
+  transition: all 200ms ease 0s;
+}
+
+.nav-state-icon3[data-hovering='false'] {
+  transform: translateX(-4px);
+  opacity: 0;
+}
+
+.nav-state-icon3 {
+  transition:
+    transform 200ms ease 0s,
+    opacity 120ms ease 0s;
+}
+/* close nav icon */

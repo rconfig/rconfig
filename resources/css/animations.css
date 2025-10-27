@@ -1,0 +1,46 @@
+.fade-leave-active,
+.fade-enter-active {
+  transition: opacity 0.5s;
+}
+
+.fade-leave-to,
+.fade-enter-from {
+  opacity: 0;
+}
+
+.animated-star {
+	display: inline-block;
+	transition: transform 0.3s ease;
+}
+.animated-star:hover {
+	transform: scale(1.2);
+}
+
+.github-shake {
+	animation: shake 3s ease-in-out infinite;
+}
+
+@keyframes shake {
+	0%,
+	100% {
+		transform: translateX(0);
+	}
+	1.5% {
+		transform: translateX(-1px) rotate(-1deg);
+	}
+	3% {
+		transform: translateX(1px) rotate(1deg);
+	}
+	4.5% {
+		transform: translateX(-1px) rotate(0deg);
+	}
+	6% {
+		transform: translateX(1px) rotate(0deg);
+	}
+	7.5% {
+		transform: translateX(-1px) rotate(-1deg);
+	}
+	9% {
+		transform: translateX(0) rotate(0);
+	}
+}

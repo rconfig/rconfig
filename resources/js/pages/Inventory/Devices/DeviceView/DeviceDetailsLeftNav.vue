@@ -1,5 +1,5 @@
 <script setup>
-import NavCloseButton from '@/pages/Shared/NavCloseButton.vue';
+import NavCloseButton from '@/pages/Shared/Buttons/NavCloseButton.vue';
 import { ref, onMounted, nextTick, watch } from 'vue';
 import { useCommentsStore } from '@/stores/useCommentsStore';
 

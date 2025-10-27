@@ -1,46 +1,44 @@
 <script setup>
-import { onMounted } from 'vue';
-import { useDashboard } from '@/pages/Dashboard/useDashboard';
-import ConfigInfoCards from '@/pages/Dashboard/ConfigInfoCards.vue';
-import HealthLatestCards from '@/pages/Dashboard/HealthLatestCards.vue';
-import SysinfoCards from '@/pages/Dashboard/SysinfoCards.vue';
-import DashboardActions from '@/pages/Dashboard/DashboardActions.vue';
+import AppStatusBar from "@/pages/Dashboard/AppStatusBar.vue";
+import ConfigInfoCards from "@/pages/Dashboard/ConfigInfoCards.vue";
+import FeedbackForm from "@/pages/Dashboard/FeedbackForm.vue";
+import HealthLatestCards from "@/pages/Dashboard/HealthLatestCards.vue";
+import QuickActions from "@/pages/Dashboard/QuickActions.vue";
+import SysinfoCards from "@/pages/Dashboard/SysinfoCards.vue";
+import V8DashboardTeaser from "@/pages/Dashboard/V8DashboardTeaser.vue";
+import { onMounted, ref } from "vue";
+import { useDashboard } from "@/pages/Dashboard/useDashboard";
 
-const { fetchSysinfo, fetchConfiginfo, fetchHealth, fetchLicenseInfo, sysinfo, configinfo, healthLatest, licenseInfo, isLoadingSysinfo, isLoadingConfiginfo, isLoadingHealth, toastSuccess, toastError } = useDashboard();
+const { fetchSysinfo, fetchConfiginfo, fetchHealth, sysinfo, configinfo, healthLatest, isLoadingSysinfo, isLoadingConfiginfo, isLoadingHealth } = useDashboard();
 
 defineProps({});
 
 onMounted(() => {
-  fetchSysinfo();
-  fetchConfiginfo();
-  fetchHealth();
-  fetchLicenseInfo();
-  // window.addEventListener('keydown', handleKeyDown);
+	fetchSysinfo();
+	fetchConfiginfo();
+	fetchHealth();
 });
 </script>
 
 <template>
-  <main class="flex flex-col flex-1 gap-2 dark:bg-rcgray-900">
-    <DashboardActions :licenseInfo="licenseInfo" />
+	<main class="flex flex-col flex-1 gap-4 p-6 dark:bg-rcgray-900">
+		<!-- Header Actions -->
+		<AppStatusBar :deviceCnt="configinfo?.data?.deviceCount" />
 
-    <ConfigInfoCards
-      :configinfo="configinfo"
-      :isLoadingConfiginfo="isLoadingConfiginfo" />
+		<!-- Main Dashboard Grid -->
+		<div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+			<!-- Primary Stats - Full Width on Mobile, 8 cols on XL -->
+			<QuickActions />
+			<div class="xl:col-span-12">
+				<ConfigInfoCards :configinfo="configinfo" :isLoadingConfiginfo="isLoadingConfiginfo" />
+			</div>
 
-    <div class="grid grid-cols-1 gap-2 px-8 lg:grid-cols-2 md:gap-4 xl:gap-8">
-      <div class="flex-1">
-        <HealthLatestCards
-          :healthLatest="healthLatest"
-          :isLoadingHealth="isLoadingHealth"
-          :SystemUptime="sysinfo.SystemUptime" />
-      </div>
+			<SysinfoCards :sysinfo="sysinfo" :isLoadingSysinfo="isLoadingSysinfo" @refresh="fetchSysinfo(true)" />
+			<HealthLatestCards :healthLatest="healthLatest" :isLoadingHealth="isLoadingHealth" @refresh="fetchHealth" :SystemUptime="sysinfo.systemUptime" />
 
-      <div class="flex-1">
-        <SysinfoCards
-          @refresh="fetchSysinfo(true)"
-          :sysinfo="sysinfo"
-          :isLoadingSysinfo="isLoadingSysinfo" />
-      </div>
-    </div>
-  </main>
+			<!-- Sidebar Cards - Hidden on mobile/tablet, shown on XL+ -->
+			<FeedbackForm />
+			<V8DashboardTeaser />
+		</div>
+	</main>
 </template>

@@ -1,0 +1,104 @@
+.rc-text-xs-muted {
+  @apply text-xs text-muted-foreground;
+}
+.rc-text-sm-muted {
+  @apply text-sm text-muted-foreground;
+}
+
+.rc-text-xs {
+  @apply text-xs text-white;
+}
+.rc-text-sm {
+    @apply text-sm text-white;
+}
+.rc-text-base {
+    @apply text-base text-white;
+}
+.rc-text-lg {
+    @apply text-lg text-white;
+}
+.rc-text-xl {
+    @apply text-xl text-white;
+}
+.rc-text-2xl {
+    @apply text-2xl text-white;
+}
+
+/* text styles */
+.rc-text-heading {
+  @apply text-2xl font-bold text-white;
+}
+.rc-text-heading1 {
+  @apply text-xl font-bold text-white;
+}
+.rc-text-heading2 {
+  @apply text-lg font-bold text-white;
+}
+.rc-text-heading3 {
+  @apply text-base font-bold text-white;
+}
+.rc-text-subheading {
+  @apply text-xl font-semibold text-white;
+}
+
+/* links */
+.rc-text-link {
+  @apply border-b text-sky-500 hover:text-sky-400 transition-colors hover:bg-rcgray-800;
+}
+
+
+/* code block styles */
+.rc-text-code-block {
+  @apply font-mono bg-rcgray-600 mx-1 rounded-md overflow-x-auto whitespace-pre-wrap;
+}
+
+.rc-text-code-block:hover {
+  @apply bg-rcgray-700;
+}
+
+/* text gradients */
+.rc-text-heading-gradient {
+  @apply bg-gradient-to-r from-cyan-500 to-blue-400 bg-clip-text text-transparent;
+ 
+}
+
+.rc-kdb-class {
+  color: rgb(134, 136, 141);
+  box-shadow: rgb(55, 57, 62) 0px 0px 0px 1px inset;
+  font-size: 11px;
+  border-radius: 6px;
+  height: 20px;
+  padding-left: 4px;
+  padding-right: 4px;
+  font-family: Inter;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-weight: normal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  text-align: center;
+  line-height: 1;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.rc-kdb-class2 {
+  color: rgb(203, 205, 211);
+  box-shadow: rgb(156, 161, 175) 0px 0px 0px 1px inset;
+  font-size: 11px;
+  border-radius: 6px;
+  height: 20px;
+  padding-left: 4px;
+  padding-right: 4px;
+  font-family: Inter;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-weight: normal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  text-align: center;
+  line-height: 1;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}

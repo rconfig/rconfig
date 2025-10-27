@@ -2,7 +2,7 @@
 import ConfigViewMainPanel from '@/pages/Configs/ConfigView/ConfigViewMainPanel.vue';
 import ConfigSummaryPanel from '@/pages/Configs/ConfigView/ConfigSummaryPanel.vue';
 import ConfigViewPaneDropdown from '@/pages/Configs/ConfigView/ConfigViewPaneDropdown.vue';
-import Loading from '@/pages/Shared/Loading.vue';
+import Loading from '@/pages/Shared/Loaders/Loading.vue';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useConfigViewPane } from '@/pages/Configs/ConfigView/useConfigViewPane';
 import { useConfigsTable } from '@/pages/Configs/useConfigsTable';

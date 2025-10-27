@@ -1,424 +1,298 @@
 <script setup>
-const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
-import ExternalToolDialog from '@/layouts/Components/ExternalToolDialog.vue';
-import NavCloseButton from '@/pages/Shared/NavCloseButton.vue';
-import QuickActions from '@/layouts/Components/QuickActions.vue';
-import SheetHelp from '@/layouts/Components/SheetHelp.vue';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ref, onMounted, onUnmounted, inject, watch } from 'vue';
-import { useExternalLinksStore } from '@/stores/externalLinksStore';
-import { useFavoritesStore } from '@/stores/favorites';
-import { usePanelStore } from '../stores/panelStore'; // Import the Pinia store
-import { useRouter } from 'vue-router'; // Import the useRoute from Vue Router
-import { useSheetStore } from '@/stores/sheetActions';
-import { useToaster } from '@/composables/useToaster'; // Import the composable
-import NotificationsPopover from '@/layouts/Components/NotificationsPopover.vue';
+import ConfigurationsPopover from "@/layouts/Components/ConfigurationsPopover.vue";
+import ExternalToolDialog from "@/layouts/Components/ExternalToolDialog.vue";
+import InventoryPopover from "@/layouts/Components/InventoryPopover.vue";
+import NavCloseButton from "@/pages/Shared/Buttons/NavCloseButton.vue";
+import NotificationsPopover from "@/layouts/Components/NotificationsPopover.vue";
+import QuickActions from "@/layouts/Components/QuickActions.vue";
+import SheetHelp from "@/layouts/Components/SheetHelp.vue";
+import { ChevronRight, ChevronDown, ExternalLink, Trash2, LifeBuoy } from "lucide-vue-next";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Icon } from "@iconify/vue"; // Used for External Links ONLY
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { inject, watch, ref, onMounted, onBeforeUnmount } from "vue";
+import { useAppStatusBar } from "@/pages/Dashboard/useAppStatusBar";
+import { useConfigs } from "@/pages/Configs/useConfigs";
+import { useInventory } from "@/pages/Inventory/useInventory";
+import { useNavigationSide } from "./useNavigationSide";
 
-const userid = inject('userid');
-const router = useRouter();
+// Get the userId from inject
+const userid = inject("userid");
 
-const favoritesStore = useFavoritesStore();
-const externalLinksStore = useExternalLinksStore();
-const externalLinks = ref([]); // This will store the links for this component
+// Use the composable to get all navigation functionality and state
+const { sideNavExtLinksIsOpen, sideNavFavLinksIsOpen, externalLinks, externalLinksDialogKey, favoritesStore, notificationsLength, panelElement, closeNav, closeExtDialog, removeExternalLink, notificationsCount, navToSettingsUpgrade, openSheet } = useNavigationSide(userid);
+const { subscriptionConfig } = useAppStatusBar();
+const { viewItems: inventoryViewItems } = useInventory();
+const { viewItems: configViewItems } = useConfigs();
 
-// Use localStorage to persist the state of the collapsibles
-const sideNavExtLinksIsOpen = ref(JSON.parse(localStorage.getItem('sideNavExtLinksIsOpen')) ?? true);
-const sideNavFavLinksIsOpen = ref(JSON.parse(localStorage.getItem('sideNavFavLinksIsOpen')) ?? true);
-
-watch(sideNavExtLinksIsOpen, newVal => {
-  localStorage.setItem('sideNavExtLinksIsOpen', JSON.stringify(newVal));
-});
-
-watch(sideNavFavLinksIsOpen, newVal => {
-  localStorage.setItem('sideNavFavLinksIsOpen', JSON.stringify(newVal));
-});
-
-const panelStore = usePanelStore(); // Access the panel store
-const panelElement = ref(null);
-const sheetStore = useSheetStore();
-const { openSheet, closeSheet, isSheetOpen } = sheetStore;
-const externalLinksDialogKey = ref(0);
-const notificationsLength = ref(0);
-
-defineProps({});
-
-// Media query for a certain breakpoint (e.g., max-width: 768px for mobile devices)
-const mobileQuery = window.matchMedia('(max-width: 768px)');
-
-// Function to handle panel state based on screen size
-function handleBreakpointChange() {
-  if (mobileQuery.matches) {
-    // If the screen width is less than or equal to 768px, close the panel
-    panelStore.panelRef?.collapse();
-  } else {
-    // If the screen width is greater than 768px, expand the panel (optional)
-    panelStore.panelRef?.expand();
-  }
-}
+const image = ref("/images/brand/rconfig-with-strap-white.png");
+const panelWidth = ref(0);
+let observer;
 
 onMounted(() => {
-  panelStore.panelRef = panelElement; // Set the panelElement ref globally via Pinia
+	observer = new ResizeObserver((entries) => {
+		for (const entry of entries) {
+			panelWidth.value = entry.contentRect.width;
+		}
+	});
 
-  // Add event listener for window resize
-  mobileQuery.addEventListener('change', handleBreakpointChange);
-
-  // Call it initially to set the correct state on load
-  handleBreakpointChange();
-
-  loadLinksFromStoreOrDb();
+	if (panelElement.value?.$el) {
+		observer.observe(panelElement.value.$el);
+	} else if (panelElement.value) {
+		observer.observe(panelElement.value);
+	}
 });
 
-const navToSettingsUpgrade = () => {
-  router.push({ name: 'settings-upgrade' });
-};
-
-onUnmounted(() => {
-  // Clean up the event listener when the component is unmounted
-  mobileQuery.removeEventListener('change', handleBreakpointChange);
+onBeforeUnmount(() => {
+	if (observer) observer.disconnect();
 });
 
-function closeExtDialog() {
-  externalLinksDialogKey.value += 1;
-  loadLinksFromStoreOrDb();
-}
+// Add a method to toggle favorites
+const toggleFavorite = (viewId) => {
+	// If an item object was passed directly
+	if (typeof viewId === "object" && viewId !== null) {
+		// Handle object case (when called from favorites list)
+		viewId.isFavorite = { value: !viewId.isFavorite?.value };
+		favoritesStore.toggleFavorite(viewId);
+		return;
+	}
 
-function loadLinksFromStoreOrDb() {
-  // Check if the store already has links
+	// Handle ID case (when called from elsewhere)
+	const allViewItems = [...inventoryViewItems, ...configViewItems];
+	const viewItem = allViewItems.find((item) => item.id === viewId);
 
-  if (externalLinksStore.links.length > 0) {
-    // Use the links from the store
-    externalLinks.value = externalLinksStore.links;
-  } else {
-    axios
-      .get(`/api/user/get-external-links/${userid}`)
-      .then(response => {
-        // Store the fetched links in Pinia for future use
-        externalLinksStore.setLinks(response.data);
-
-        // Assign the links to the local reference
-        externalLinks.value = response.data;
-      })
-      .catch(error => {
-        console.error('Error fetching external links:', error);
-      });
-  }
-}
-
-const removeExternalLink = async name => {
-  try {
-    // Make API request to delete the link by name
-    await axios
-      .post(`/api/user/remove-external-link`, { name: encodeURIComponent(name) })
-      .then(response => {
-        // Store the fetched links in Pinia for future use
-        externalLinksStore.setLinks(response.data);
-
-        // Assign the links to the local reference
-        externalLinks.value = response.data;
-
-        // // Update the local reference to reflect changes
-        loadLinksFromStoreOrDb();
-        console.log('Link removed successfully');
-        toastSuccess('External Link', 'Link removed successfully');
-      })
-      .catch(error => {
-        console.error('Error fetching external links:', error);
-        toastError('External Link', 'Error removing link');
-      });
-  } catch (error) {
-    console.error('Error removing link:', error);
-    toastError('External Link', 'Error removing link');
-  }
+	if (viewItem) {
+		viewItem.isFavorite = !viewItem.isFavorite;
+		favoritesStore.toggleFavorite(viewItem);
+	}
 };
 
-function closeNav() {
-  panelElement?.value.isCollapsed ? panelElement?.value.expand() : panelElement?.value.collapse();
-}
-
-function notificationsCount(count) {
-  notificationsLength.value = count;
-}
+// Add these options to your watcher for better reactivity
+watch(
+	subscriptionConfig,
+	(newConfig) => {
+		image.value = newConfig.image || "/images/brand/rconfig-with-strap-white.png";
+	},
+	{
+		immediate: true, // Run the watcher immediately when component mounts
+		deep: true, // Watch for changes in nested properties
+	}
+);
 </script>
 
 <template>
-  <resizable-panel
-    id="nav-panel-1"
-    :default-size="17"
-    :max-size="30"
-    :min-size="10"
-    collapsible
-    :collapsed-size="0"
-    ref="panelElement"
-    class="dark:bg-rcgray-800">
-    <div class="grid min-h-[calc(100vh-2px)]">
-      <div class="bg-gray-100 bg-muted/40 md:block">
-        <div class="flex flex-col h-full max-h-screen gap-2">
-          <div class="flex justify-between w-full max-w-full px-2 py-1 border-b">
-            <div class="flex items-center my-2">
-              <img
-                alt="rConfig"
-                class="h-6"
-                src="/images/brand/blue_light_logo_only.svg" />
-              <div class="hidden ml-2 font-semibold text-md lg:block">rConfig</div>
-              <!-- Hidden on small screens -->
-            </div>
-            <div class="flex items-center justify-center h-full">
-              <NavCloseButton
-                class="mr-2"
-                @close="closeNav()" />
-            </div>
-          </div>
+	<resizable-panel id="nav-panel-1" :default-size="17" :max-size="30" :min-size="10" collapsible :collapsed-size="0" ref="panelElement" class="dark:bg-rcgray-800">
+		<div class="grid h-full overflow-y-auto">
+			<div class="bg-gray-100 bg-muted/40 md:block">
+				<div class="flex flex-col h-full max-h-screen gap-2">
+					<div class="flex justify-between w-full max-w-full px-2 py-1">
+						<div class="flex items-center my-2">
+							<router-link to="/" class="pf-v5-c-page__header-brand-link">
+								<img alt="rConfig" class="pf-v5-c-brand max-h-12 ml-4" :src="image" />
+							</router-link>
+						</div>
+						<div class="flex items-center justify-center h-full">
+							<NavCloseButton class="mr-2" @close="closeNav()" />
+						</div>
+					</div>
 
-          <div class="flex-1">
-            <QuickActions />
+					<div class="flex-1">
+						<QuickActions :panelWidth="panelWidth" />
 
-            <div class="mx-2 hover:transition-all">
-              <nav class="grid items-start px-2 text-sm font-medium lg:px-4">
-                <NotificationsPopover @notificationsLength="notificationsCount($event)">
-                  <div class="cursor-pointer transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md hover:bg-rcgray-600 pl-1">
-                    <NotificationIcon />
-                    <div class="flex justify-between w-full p-1 ml-2 text-gray-200">
-                      <span>Notifications</span>
-                      <span
-                        class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-1 py-0.5 rounded-lg dark:bg-blue-900 dark:text-blue-300"
-                        v-if="notificationsLength > 0">
-                        {{ notificationsLength }}
-                      </span>
-                    </div>
-                  </div>
-                </NotificationsPopover>
+						<div class="mx-2 hover:transition-all">
+							<nav class="grid items-start px-2 text-sm font-medium">
+								<NotificationsPopover @notificationsLength="notificationsCount($event)">
+									<div class="group cursor-pointer transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md hover:bg-rcgray-600">
+										<RcIcon name="notification" class="h-4" />
+										<div class="flex justify-between w-full p-1 text-gray-200">
+											<span>Notifications</span>
+											<span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-1 py-0.5 rounded-lg dark:bg-blue-900 dark:text-blue-300" v-if="notificationsLength > 0">
+												{{ notificationsLength }}
+											</span>
+										</div>
+										<span class="text-rcgray-400 group-hover:text-blue-400 transition-colors h-full mr-2">
+											<ChevronRight size="16" />
+										</span>
+									</div>
+								</NotificationsPopover>
 
-                <router-link
-                  to="/"
-                  class="transition ease-in-out delay-50 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
-                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'Home' }">
-                  <DashboardIcon />
-                  <div class="p-1 ml-2 text-left text-gray-200"><div>Dashboard</div></div>
-                </router-link>
-                <router-link
-                  to="/inventory"
-                  class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
-                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'inventory' }">
-                  <InventoryIcon />
-                  <div class="p-1 ml-2 text-left text-gray-200"><div>Inventory</div></div>
-                </router-link>
-                <router-link
-                  to="/tasks"
-                  class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
-                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'tasks' }">
-                  <TasksIcon />
-                  <div class="p-1 ml-2 text-left text-gray-200"><div>Tasks</div></div>
-                </router-link>
-                <router-link
-                  to="/settings/users"
-                  class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
-                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'users' }">
-                  <UserIcon />
-                  <div class="p-1 ml-2 text-left text-gray-200"><div>Users</div></div>
-                </router-link>
-                <router-link
-                  to="/configs"
-                  class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
-                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'configtools' }">
-                  <ConfigToolsIcon />
-                  <div class="p-1 ml-2 text-left text-gray-200"><div>Config Tools</div></div>
-                </router-link>
-                <router-link
-                  to="/settings"
-                  class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
-                  :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'settings' }">
-                  <SettingsIcon />
+								<router-link
+									to="/"
+									class="transition ease-in-out delay-50 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600"
+									:class="{
+										'active-nav': $route.name === 'Home' || $route.name === 'Dashboard' || $route.path === '/' || ($route.path === '' && $route.name === null),
+									}"
+								>
+									<span class="gradient-indicator"></span>
+									<RcIcon name="dashboard" class="w-4" />
+									<div class="p-1 ml-2 text-left text-gray-200">
+										<div>Dashboard</div>
+									</div>
+								</router-link>
 
-                  <div class="p-1 ml-2 text-left text-gray-200"><div>Settings</div></div>
-                </router-link>
+								<InventoryPopover :boundary-el="panelElement?.$el || panelElement" :panel-width="panelWidth">
+									<div to="/inventory" class="group flex justify-between transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600" :class="{ 'active-nav': inventoryViewItems.some((item) => $route.path.startsWith(item.route)) }">
+										<div class="flex items-center">
+											<RcIcon name="inventory" />
+											<div class="p-1 ml-2 text-left text-gray-200">
+												<div>Inventory</div>
+											</div>
+										</div>
+										<span class="text-rcgray-400 group-hover:text-blue-400 transition-colors h-full mr-2">
+											<ChevronRight size="16" />
+										</span>
+									</div>
+								</InventoryPopover>
 
-                <Collapsible
-                  v-model:open="sideNavExtLinksIsOpen"
-                  class="w-full mt-4">
-                  <div class="flex items-center justify-between">
-                    <CollapsibleTrigger as-child>
-                      <div class="flex items-center w-full">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          class="w-full pl-0 pr-4">
-                          <div
-                            class="flex items-center w-full cursor-pointer"
-                            type="button"
-                            aria-expanded="true"
-                            data-state="open">
-                            <Icon
-                              icon="fluent:chevron-right-28-filled"
-                              v-if="!sideNavExtLinksIsOpen" />
-                            <Icon
-                              icon="fluent:chevron-down-48-filled"
-                              v-if="sideNavExtLinksIsOpen" />
-                            <div
-                              class="ml-2 text-left"
-                              data-truncate="false"
-                              data-numeric="false"
-                              data-uppercase="false"
-                              style="color: rgb(134, 136, 141)">
-                              <span>External Tools</span>
-                            </div>
-                          </div>
-                        </Button>
-                      </div>
-                    </CollapsibleTrigger>
-                    <ExternalToolDialog
-                      @close="closeExtDialog"
-                      :key="externalLinksDialogKey" />
-                  </div>
-                  <CollapsibleContent>
-                    <div>
-                      <router-link
-                        to="/log-viewer"
-                        target="_blank"
-                        class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1">
-                        <SysLogViewerIcon />
-                        <div class="flex items-center justify-between w-full p-1 ml-2 text-left text-gray-200">
-                          <div>System Log Viewer</div>
-                          <Icon
-                            icon="iconamoon:link-external-duotone"
-                            class="text-rcgray-400" />
-                        </div>
-                      </router-link>
-                      <router-link
-                        to="/horizon/dashboard"
-                        target="_blank"
-                        class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1">
-                        <SysQueueManagerIcon />
-                        <div class="flex items-center justify-between w-full p-1 ml-2 text-left text-gray-200">
-                          <div>System Queue Manager</div>
-                          <Icon
-                            icon="iconamoon:link-external-duotone"
-                            class="text-rcgray-400" />
-                        </div>
-                      </router-link>
-                      <div class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1">
-                        <ExternalLinkIcon />
-                        <a
-                          href="https://www.rconfig.com"
-                          target="_blank"
-                          class="flex items-center justify-between w-full p-1 ml-2 text-left text-gray-200">
-                          <div>rConfig.com</div>
-                          <Icon
-                            icon="iconamoon:link-external-duotone"
-                            class="text-rcgray-400" />
-                        </a>
-                      </div>
-                      <div
-                        v-if="externalLinks.length > 0"
-                        v-for="link in externalLinks"
-                        class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1">
-                        <Icon
-                          :icon="link.icon"
-                          class="text-rcgray-400" />
-                        <a
-                          :href="link.url"
-                          target="_blank"
-                          class="flex items-center justify-between w-full p-1 ml-2 text-left text-gray-200">
-                          <div>{{ link.name }}</div>
-                        </a>
-                        <Icon
-                          icon="ic:outline-remove"
-                          class="ml-2 mr-2 cursor-pointer text-muted-foreground hover:text-white"
-                          @click="removeExternalLink(link.name)" />
-                      </div>
-                    </div>
-                  </CollapsibleContent>
-                </Collapsible>
+								<ConfigurationsPopover :boundary-el="panelElement?.$el || panelElement" :panel-width="panelWidth">
+									<div to="/configs" class="group flex justify-between transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600" :class="{ 'active-nav': configViewItems.some((item) => $route.path.startsWith(item.route)) }">
+										<div class="flex items-center">
+											<RcIcon name="config-tools" class="w-4" />
+											<div class="p-1 ml-2 text-left text-gray-200">
+												<div>Configurations</div>
+											</div>
+										</div>
+										<span class="text-rcgray-400 group-hover:text-blue-400 transition-colors h-full mr-2">
+											<ChevronRight size="16" />
+										</span>
+									</div>
+								</ConfigurationsPopover>
 
-                <Collapsible
-                  v-model:open="sideNavFavLinksIsOpen"
-                  class="w-full mb-4">
-                  <div class="flex items-center justify-between">
-                    <CollapsibleTrigger as-child>
-                      <div class="flex items-center w-full">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          class="w-full pl-0 pr-4">
-                          <div
-                            class="flex items-center w-full cursor-pointer"
-                            type="button"
-                            aria-expanded="true"
-                            data-state="open">
-                            <Icon
-                              icon="fluent:chevron-right-28-filled"
-                              v-if="!sideNavFavLinksIsOpen" />
-                            <Icon
-                              icon="fluent:chevron-down-48-filled"
-                              v-if="sideNavFavLinksIsOpen" />
-                            <div
-                              class="ml-2 text-left"
-                              data-truncate="false"
-                              data-numeric="false"
-                              data-uppercase="false"
-                              style="color: rgb(134, 136, 141)">
-                              Favorites
-                            </div>
-                          </div>
-                        </Button>
-                      </div>
-                    </CollapsibleTrigger>
-                  </div>
-                  <CollapsibleContent>
-                    <div
-                      v-if="favoritesStore.favorites.size == 0"
-                      class="ml-6 text-xs text-muted-foreground">
-                      No favorites set
-                    </div>
-                    <div v-else>
-                      <router-link
-                        v-for="item in favoritesStore.favorites"
-                        :key="item.id"
-                        :to="item.route"
-                        class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
-                        :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === item.route }">
-                        <component :is="item.icon" />
-                        <div class="p-1 ml-2 text-left text-gray-200">
-                          <div>{{ item.label }}</div>
-                        </div>
-                      </router-link>
-                    </div>
-                  </CollapsibleContent>
-                </Collapsible>
-              </nav>
-            </div>
-          </div>
-          <div class="p-4 mt-auto">
-            <Card class="dark:bg-rcgray-900">
-              <CardHeader class="p-2 pt-0 md:p-4">
-                <CardTitle>Upgrade to Pro</CardTitle>
-                <CardDescription>Unlock all features and get unlimited access to our support team.</CardDescription>
-              </CardHeader>
-              <CardContent class="p-2 pt-0 md:p-4 md:pt-0">
-                <Button
-                  size="sm"
-                  class="w-full py-2 hover:bg-rcgray-300 hover:animate-pulse"
-                  @click="navToSettingsUpgrade()">
-                  Upgrade
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-          <div class="p-4 mt-auto border-t">
-            <a
-              @click.prevent="openSheet('SheetHelp')"
-              class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600 pl-1"
-              :class="{ 'font-semibold text-sm bg-rcgray-600': $route.name === 'scheduled-tasks' }">
-              <Icon
-                icon="carbon:lifesaver"
-                class="text-rcgray-400" />
-              <div class="p-1 ml-2 text-left text-gray-200"><div>Getting started & Help</div></div>
-            </a>
+								<router-link to="/scheduled-tasks" class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600" :class="{ 'active-nav': $route.name === 'scheduled-tasks' }">
+									<RcIcon name="tasks" />
+									<div class="p-1 ml-2 text-left text-gray-200">
+										<div>Scheduled Tasks</div>
+									</div>
+								</router-link>
 
-            <SheetHelp />
-          </div>
-        </div>
-      </div>
-    </div>
-  </resizable-panel>
+								<router-link to="/activity" class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600" :class="{ 'active-nav': $route.name === 'activity' }">
+									<RcIcon name="activity-log" />
+									<div class="p-1 ml-2 text-left text-gray-200">
+										<div>Activity</div>
+									</div>
+								</router-link>
+
+								<router-link to="/settings" class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600" :class="{ 'active-nav': $route.name === 'settings' }">
+									<RcIcon name="settings" />
+									<div class="p-1 ml-2 text-left text-gray-200">
+										<div>Settings</div>
+									</div>
+								</router-link>
+
+								<Collapsible v-model:open="sideNavExtLinksIsOpen" class="w-full mt-2">
+									<div class="flex items-center justify-between">
+										<CollapsibleTrigger as-child>
+											<div class="flex items-center w-full">
+												<Button variant="ghost" size="sm" class="w-full pl-0 pr-4">
+													<div class="flex items-center w-full cursor-pointer" type="button" aria-expanded="true" data-state="open">
+														<ChevronRight v-if="!sideNavExtLinksIsOpen" size="18" class="text-rcgray-500" />
+														<ChevronDown v-if="sideNavExtLinksIsOpen" size="18" class="text-rcgray-500" />
+														<div class="ml-2 text-left" data-truncate="false" data-numeric="false" data-uppercase="false" style="color: rgb(134, 136, 141)">
+															<span>External Tools</span>
+														</div>
+													</div>
+												</Button>
+											</div>
+										</CollapsibleTrigger>
+										<ExternalToolDialog @close="closeExtDialog" :key="externalLinksDialogKey" />
+									</div>
+									<CollapsibleContent>
+										<div>
+											<router-link to="/log-viewer" target="_blank" class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600">
+												<RcIcon name="sys-log-viewer" />
+												<div class="flex items-center justify-between w-full p-1 ml-2 text-left text-gray-200">
+													<div>System Log Viewer</div>
+													<ExternalLink size="18" class="text-rcgray-500" />
+												</div>
+											</router-link>
+											<router-link to="/horizon/dashboard" target="_blank" class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600">
+												<RcIcon name="sys-queue-manager" />
+												<div class="flex items-center justify-between w-full p-1 ml-2 text-left text-gray-200">
+													<div>System Queue Manager</div>
+													<ExternalLink size="18" class="text-rcgray-500" />
+												</div>
+											</router-link>
+											<div class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600">
+												<RcIcon name="external-link" />
+												<a href="https://www.rconfig.com" target="_blank" class="flex items-center justify-between w-full p-1 ml-2 text-left text-gray-200">
+													<div>rConfig.com</div>
+													<ExternalLink size="18" class="text-rcgray-500" />
+												</a>
+											</div>
+											<div v-if="externalLinks.length > 0" v-for="link in externalLinks" class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600">
+												<Icon :icon="link.icon" class="text-rcgray-400 w-6 h-6" />
+												<a :href="link.url" target="_blank" class="flex items-center justify-between w-full p-1 ml-2 text-left text-gray-200">
+													<div>{{ link.name }}</div>
+												</a>
+												<Trash2 size="18" class="text-rcgray-500 mr-1 hover:text-rcgray-400" @click="removeExternalLink(link.name)" />
+											</div>
+										</div>
+									</CollapsibleContent>
+								</Collapsible>
+
+								<Collapsible v-model:open="sideNavFavLinksIsOpen" class="w-full mb-4">
+									<div class="flex items-center justify-between">
+										<CollapsibleTrigger as-child>
+											<div class="flex items-center w-full">
+												<Button variant="ghost" size="sm" class="w-full pl-0 pr-4">
+													<div class="flex items-center w-full cursor-pointer" type="button" aria-expanded="true" data-state="open">
+														<ChevronRight v-if="!sideNavFavLinksIsOpen" size="18" class="text-rcgray-500" />
+														<ChevronDown v-if="sideNavFavLinksIsOpen" size="18" class="text-rcgray-500" />
+														<div class="ml-2 text-left" data-truncate="false" data-numeric="false" data-uppercase="false" style="color: rgb(134, 136, 141)">Favorites</div>
+													</div>
+												</Button>
+											</div>
+										</CollapsibleTrigger>
+									</div>
+									<CollapsibleContent>
+										<div v-if="favoritesStore.favorites.size == 0" class="ml-6 text-xs text-muted-foreground">No favorites set</div>
+										<div v-else>
+											<div v-for="item in favoritesStore.favorites" :key="item.id" class="flex items-center">
+												<router-link :to="item.route" class="transition ease-in-out delay-150 flex justify-between items-center flex-grow mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600" :class="{ 'active-nav': $route.name === item.route }">
+													<div class="flex items-center">
+														<RcIcon :name="item.icon" />
+														<div class="p-1 ml-2 text-left text-gray-200">
+															<div>{{ item.label }}</div>
+														</div>
+													</div>
+													<TooltipProvider>
+														<Tooltip>
+															<TooltipTrigger as-child>
+																<div @click.stop.prevent="toggleFavorite(item)" class="p-1 cursor-pointer">
+																	<RcIcon name="star-selected" class="w-4 h-4 text-yellow-400 animated-star" />
+																</div>
+															</TooltipTrigger>
+															<TooltipContent>
+																<p>Remove from favorites</p>
+															</TooltipContent>
+														</Tooltip>
+													</TooltipProvider>
+												</router-link>
+											</div>
+										</div>
+									</CollapsibleContent>
+								</Collapsible>
+							</nav>
+						</div>
+					</div>
+
+					<div class="p-4 mt-auto border-t">
+						<a @click.prevent="openSheet('SheetHelp')" class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600" :class="{ 'active-nav': $route.name === 'scheduled-tasks' }">
+							<LifeBuoy class="text-rcgray-400" size="18" />
+							<div class="p-1 ml-2 text-left text-gray-200">
+								<div>Getting started & Help</div>
+							</div>
+						</a>
+						<SheetHelp />
+					</div>
+				</div>
+			</div>
+		</div>
+	</resizable-panel>
 </template>
+
+<style scoped>
+.active-nav {
+	@apply font-semibold text-sm bg-rcgray-600;
+}
+</style>

@@ -1,0 +1,36 @@
+.rc-th-heading {
+  @apply text-left font-medium;
+}
+
+/* Fixed row height for consistent table appearance */
+.table-row-fixed {
+  @apply h-[60px] max-h-[60px] overflow-hidden;
+}
+
+/* Ensure table cells don't expand beyond fixed height */
+.table-cell-fixed {
+  @apply h-[60px] max-h-[60px] overflow-hidden align-middle leading-[1.4];
+}
+
+/* Text truncation for content that might overflow */
+.text-truncate {
+  @apply whitespace-nowrap overflow-hidden text-ellipsis max-w-full;
+}
+
+/* Multi-line text truncation for longer content */
+.text-truncate-multiline {
+  @apply overflow-hidden text-ellipsis leading-[1.4] max-h-[2.8em];
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* Badge container with fixed height */
+.badge-container-fixed {
+  @apply h-full flex items-center overflow-hidden;
+}
+
+/* Ensure buttons in cells don't exceed row height */
+.button-cell-fixed {
+  @apply max-h-[50px] overflow-hidden;
+}

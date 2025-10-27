@@ -1,0 +1,12 @@
+.polcomment {
+  @apply text-[#3db831] italic;
+}
+
+.polmethod {
+  @apply text-[#f5d07f] font-bold;
+}
+
+.pf-v5-c-code-block__code {
+  @apply font-mono;
+  font-family: "Fira Code", "Consolas", monospace;
+}

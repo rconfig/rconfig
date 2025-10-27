@@ -2,8 +2,8 @@
 import ConfigCompareFilterCard from '@/pages/Configs/ConfigCompare/ConfigCompareFilterCard.vue';
 import ConfigCompareFilterConfigResults from '@/pages/Configs/ConfigCompare/ConfigCompareFilterConfigResults.vue';
 import ConfigCompareResults from '@/pages/Configs/ConfigCompare/ConfigCompareResults.vue';
-import NavCloseButton from '@/pages/Shared/NavCloseButton.vue';
-import NavOpenButton from '@/pages/Shared/NavOpenButton.vue';
+import NavCloseButton from '@/pages/Shared/Buttons/NavCloseButton.vue';
+import NavOpenButton from '@/pages/Shared/Buttons/NavOpenButton.vue';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useConfigCompare } from './useConfigCompare';
 

@@ -9,7 +9,7 @@ import DeviceViewCommentsPanel from '@/pages/Inventory/Devices/DeviceView/Device
 import DeviceViewConfigStatusPanel from '@/pages/Inventory/Devices/DeviceView/DeviceViewConfigStatusPanel.vue';
 import DeviceViewDetailsPanel from '@/pages/Inventory/Devices/DeviceView/DeviceViewDetailsPanel.vue';
 import DeviceViewPaneDropdown from '@/pages/Inventory/Devices/DeviceView/DeviceViewPaneDropdown.vue';
-import Loading from '@/pages/Shared/Loading.vue';
+import Loading from '@/pages/Shared/Loaders/Loading.vue';
 import Spinner from '@/pages/Shared/Icon/Spinner.vue';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useDeviceViewPane } from '@/pages/Inventory/Devices/DeviceView/useDeviceViewPane';

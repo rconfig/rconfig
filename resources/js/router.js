@@ -6,7 +6,7 @@ const routes = [
   { path: '/inventory/:view?', name: 'inventory', component: () => import('@/pages/Inventory/Main.vue'), props: true },
   { path: '/commandgroups', name: 'commandgroups', component: () => import('@/pages/Inventory/Main.vue') },
   { path: '/devices', name: 'devices', component: () => import('@/pages/Inventory/Main.vue') },
-  { path: '/device/view/:id', name: 'devicesview', component: () => import('@/pages/Shared/ContentPanel.vue'), props: true },
+  { path: '/device/view/:id', name: 'devicesview', component: () => import('@/pages/Shared/Panels/ContentPanel.vue'), props: true },
   {
     path: '/configs',
     name: 'configs',
@@ -46,12 +46,12 @@ const routes = [
     }
   },
 
-  { path: '/configs/view/:id', name: 'configsview', component: () => import('@/pages/Shared/ContentPanel.vue'), props: true },
+  { path: '/configs/view/:id', name: 'configsview', component: () => import('@/pages/Shared/Panels/ContentPanel.vue'), props: true },
   { path: '/tags', name: 'tags', component: () => import('@/pages/Inventory/Main.vue') },
   { path: '/vendors', name: 'vendors', component: () => import('@/pages/Inventory/Main.vue') },
   { path: '/commands', name: 'commands', component: () => import('@/pages/Inventory/Main.vue') },
   { path: '/templates', name: 'templates', component: () => import('@/pages/Inventory/Main.vue') },
-  { path: '/templates/view/:id', name: 'templatesview', component: () => import('@/pages/Shared/ContentPanel.vue'), props: true },
+  { path: '/templates/view/:id', name: 'templatesview', component: () => import('@/pages/Shared/Panels/ContentPanel.vue'), props: true },
 
   {
     path: '/tasks',

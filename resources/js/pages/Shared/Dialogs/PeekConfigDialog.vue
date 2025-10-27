@@ -1,138 +1,144 @@
 <script setup lang="ts">
-import Loading from '@/pages/Shared/Loading.vue';
-import axios from 'axios';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ref, onUnmounted, onMounted, watch } from 'vue';
-import { useDialogStore } from '@/stores/dialogActions';
-import { useToaster } from '@/composables/useToaster'; // Import the composable
-import { useClipboard } from '@vueuse/core';
+import Loading from "@/pages/Shared/Loaders/Loading.vue";
+import axios from "axios";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ref, onUnmounted, onMounted } from "vue";
+import { useDialogStore } from "@/stores/dialogActions";
+import { useToaster } from "@/composables/useToaster";
+import { useClipboard } from "@vueuse/core";
 
-const activeIcons = ref({});
 const dialogStore = useDialogStore();
-const fileLocation = ref('');
-const hoverIcons = ref({});
+const fileLocation = ref("");
 const isLoading = ref(true);
-const processedCode = ref('');
-const selectedLanguage = ref(localStorage.getItem('selectedLanguage') || 'language-plaintext');
+const processedCode = ref("");
+const ishardlink = ref(0);
+const selectedLanguage = ref(localStorage.getItem("selectedPeekLanguage") || "language-plaintext");
+const fontSize = ref(parseInt(localStorage.getItem("peekFontSize") || "14", 10)); // Default 14px
+
 const { closeDialog, isDialogOpen } = dialogStore;
 const { toastError } = useToaster();
-const { text, copy, copied, isSupported } = useClipboard();
+const { copy, copied } = useClipboard();
 
 const props = defineProps({
-  editId: Number
+	editId: Number,
 });
 
-const languages = ['bash', 'c', 'cpp', 'css', 'html', 'java', 'javascript', 'language-plaintext', 'php', 'python', 'typescript'];
+const languages = ["bash", "c", "cpp", "css", "html", "java", "javascript", "language-plaintext", "php", "python", "typescript"];
 
 onMounted(() => {
-  showConfig();
-  window.addEventListener('keydown', handleKeyDown);
+	showConfig();
+	window.addEventListener("keydown", handleKeyDown);
 });
 
 function showConfig() {
-  processedCode.value = '';
-  isLoading.value = true;
-  axios
-    .get('/api/configs/view-config/' + props.editId)
-    .then(response => {
-      // handle success
-      processedCode.value = response.data.data.content;
-      fileLocation.value = response.data.data.config_location;
-      //   processedCode.value = processedCode.value.replace(/(\/\/.*)/g, '<span class="polcomment">$1</span>').replace(/(\#\[[^\]]+\])/g, '<span class="polmethod">$1</span>');
-      selectedLanguage.value = localStorage.getItem('selectedPeekLanguage') || 'language-plaintext';
-      isLoading.value = false;
-    })
-    .catch(error => {
-      console.log(error);
-      processedCode.value = 'Something went wrong - could not retrieve the template from the file system!';
-      toastError('Error', 'Could not retrieve the template from the file system!');
-      isLoading.value = false;
-    });
+	processedCode.value = "";
+	isLoading.value = true;
+	axios
+		.get("/api/configs/view-config/" + props.editId)
+		.then((response) => {
+			processedCode.value = response.data.data.content;
+			fileLocation.value = response.data.data.config_location;
+			ishardlink.value = response.data.data.is_hardlink;
+			selectedLanguage.value = localStorage.getItem("selectedPeekLanguage") || "language-plaintext";
+			isLoading.value = false;
+		})
+		.catch((error) => {
+			console.log(error);
+			processedCode.value = "Something went wrong - could not retrieve the template from the file system!";
+			toastError("Error", "Could not retrieve the template from the file system!");
+			isLoading.value = false;
+		});
 }
 
-function handleKeyDown(event) {
-  if (event.key === 'Escape') {
-    handleClose();
-  }
+function handleKeyDown(event: KeyboardEvent) {
+	if (event.key === "Escape") {
+		handleClose();
+	}
 }
 
 onUnmounted(() => {
-  window.removeEventListener('keydown', handleKeyDown);
+	window.removeEventListener("keydown", handleKeyDown);
 });
 
-const handleMouseOver = key => {
-  hoverIcons.value[key] = true;
-};
-
-const handleMouseLeave = key => {
-  hoverIcons.value[key] = false;
-};
-
 function handleClose() {
-  closeDialog('peek-config-dialog-' + props.editId);
+	closeDialog("peek-config-dialog-" + props.editId);
+}
+
+// ✅ Font size controls
+function increaseFont() {
+	fontSize.value = Math.min(fontSize.value + 2, 32);
+	localStorage.setItem("peekFontSize", fontSize.value.toString());
+}
+
+function decreaseFont() {
+	fontSize.value = Math.max(fontSize.value - 2, 10);
+	localStorage.setItem("peekFontSize", fontSize.value.toString());
+}
+
+function resetFont() {
+	fontSize.value = 14;
+	localStorage.setItem("peekFontSize", fontSize.value.toString());
 }
 </script>
 
 <template>
-  <Dialog :open="isDialogOpen('peek-config-dialog-' + editId)">
-    <DialogTrigger as-child>
-      <slot />
-    </DialogTrigger>
-    <DialogContent
-      class="sm:max-w-[70dvw] grid-rows-[auto_minmax(0,1fr)_auto] p-0 max-h-[90dvh]"
-      @escapeKeyDown="closeDialog('peek-config-dialog-' + editId)"
-      @pointerDownOutside="closeDialog('peek-config-dialog-' + editId)"
-      @closeClicked="closeDialog('peek-config-dialog-' + editId)">
-      <DialogHeader class="p-6 pb-0">
-        <DialogTitle>Configuration Quick Peek (Config ID: {{ editId }})</DialogTitle>
-        <DialogDescription>
-          <div class="flex justify-between">
-            <div class="flex items-center">
-              <div class="mr-2">Language Options:</div>
-              <Select v-model="selectedLanguage">
-                <SelectTrigger class="w-[180px]">
-                  <SelectValue placeholder="Select a language" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem
-                      :value="language"
-                      v-for="language in languages"
-                      :key="language">
-                      {{ language }}
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-            <div class="flex items-center">
-              Path: {{ fileLocation }}
-              <Icon
-                :icon="copied ? 'material-symbols:check-circle-outline' : !copied ? 'material-symbols:content-copy' : 'material-symbols:content-copy-outline'"
-                :class="copied ? 'text-green-500' : 'text-gray-500'"
-                class="ml-2 cursor-pointer hover:text-gray-700"
-                @mouseover="handleMouseOver('fileLocation')"
-                @mouseleave="handleMouseLeave('fileLocation')"
-                @click="copy(fileLocation)" />
-            </div>
-          </div>
-        </DialogDescription>
-      </DialogHeader>
-      <div class="grid gap-4 px-6 py-4 overflow-y-auto">
-        <div class="flex flex-col justify-between h-[100dvh]">
-          <Loading v-if="isLoading" />
-          <pre v-highlightjs><code :class="selectedLanguage">{{ processedCode }}
-            </code></pre>
-        </div>
-      </div>
-      <DialogFooter class="p-6 pt-0">
-        <Button
-          @click="handleClose()"
-          variant="outline">
-          Close
-        </Button>
-      </DialogFooter>
-    </DialogContent>
-  </Dialog>
+	<Dialog :open="isDialogOpen('peek-config-dialog-' + editId)">
+		<DialogTrigger as-child>
+			<slot />
+		</DialogTrigger>
+		<DialogContent class="sm:max-w-[70dvw] max-h-[90dvh] grid grid-rows-[auto_minmax(0,1fr)_auto] p-0" @escapeKeyDown="closeDialog('peek-config-dialog-' + editId)" @pointerDownOutside="closeDialog('peek-config-dialog-' + editId)" @closeClicked="closeDialog('peek-config-dialog-' + editId)">
+			<DialogHeader class="p-6 pb-0">
+				<DialogTitle>Configuration Quick Peek (Config ID: {{ editId }})</DialogTitle>
+				<DialogDescription>
+					<div class="flex justify-between items-center">
+						<div class="flex items-center gap-2">
+							<div>Language:</div>
+							<Select v-model="selectedLanguage">
+								<SelectTrigger class="w-[180px] focus:ring-0 focus:outline-none">
+									<SelectValue placeholder="Select a language" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectGroup>
+										<SelectItem :value="language" v-for="language in languages" :key="language">
+											{{ language }}
+										</SelectItem>
+									</SelectGroup>
+								</SelectContent>
+							</Select>
+
+							<!-- ✅ Font size controls -->
+							<div class="flex items-center gap-2">
+								<Button variant="outline" size="sm" @click="decreaseFont">A-</Button>
+								<Button variant="outline" size="sm" @click="resetFont">A</Button>
+								<Button variant="outline" size="sm" @click="increaseFont">A+</Button>
+							</div>
+						</div>
+						
+						<div class="flex items-center gap-4">
+							<div v-if="ishardlink === 1" size="sm" class="text-sm text-blue-400 font-medium flex justify-between items-center">
+								🔗 HardLink
+							</div>
+							<Button variant="outline" size="sm" @click="copy(fileLocation)" class="flex items-center gap-2">
+								<RcIcon name="copy-transition" :isActive="copied" />
+								{{ copied ? "Copied" : "Copy path" }}
+							</Button>
+						</div>
+					</div>
+				</DialogDescription>
+			</DialogHeader>
+
+			<!-- Scrollable region -->
+			<div class="overflow-y-auto px-6 py-4">
+				<Loading v-if="isLoading" />
+				<pre v-highlightjs class="rounded bg-muted overflow-auto whitespace-pre"><code class="pf-v5-c-code-block__code " :class="selectedLanguage" style="background: none !important;" :style="{ background: 'none', fontSize: fontSize + 'px' }">{{ processedCode }}
+            </code> 
+         </pre>
+			</div>
+
+			<DialogFooter class="p-6 pt-0">
+				<Button @click="handleClose()" variant="outline">Close</Button>
+			</DialogFooter>
+		</DialogContent>
+	</Dialog>
 </template>

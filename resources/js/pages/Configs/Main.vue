@@ -67,7 +67,7 @@ const { configsId, statusIdParam, changeView, currentView, bottomBorderStyle, to
         :statusId="statusIdParam.statusId"
         v-if="currentView === 'configs'" />
       <!-- 
-        // These are rendered in the resources/js/pages/Shared/ContentPanel.vue component
+        // These are rendered in the resources/js/pages/Shared/Panels/ContentPanel.vue component
       <ConfigSearch v-if="currentView === 'configsearch'" />
       <ConfigCompare v-if="currentView === 'configcompare'" /> -->
 

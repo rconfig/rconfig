@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import axios from 'axios';
-import Loading from '@/pages/Shared/Loading.vue';
+import Loading from '@/pages/Shared/Loaders/Loading.vue';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area'; // Import ScrollArea component
 import { onMounted, onUnmounted, ref, nextTick, watch, inject } from 'vue';

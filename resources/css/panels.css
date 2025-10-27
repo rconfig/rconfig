@@ -1,0 +1,16 @@
+.rc-panel-heading {
+	@apply mb-2 text-2xl font-semibold leading-7 tracking-tight;
+}
+.rc-panel-heading2 {
+	@apply mb-2 text-xl font-semibold leading-7 tracking-tight;
+}
+.rc-panel-heading3 {
+    @apply mb-2 text-lg font-semibold leading-7 tracking-tight;
+}
+
+.rc-panel-subheading {
+    @apply text-sm text-muted-foreground
+}
+.rc-panel-paragraph {
+    @apply text-sm text-muted-foreground;
+}

@@ -1,168 +1,116 @@
-<script setup lang="ts">
-import axios from 'axios';
-import TagAddEditDialog from '@/pages/Inventory/Tags/TagAddEditDialog.vue';
-import { computed, onMounted, ref, watch } from 'vue';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { useTags } from '@/pages/Inventory/Tags/useTags';
+<script setup>
+import TagMultiSelectI18N from "@/i18n/pages/Shared/FormFields/TagMultiSelect.i18n.js";
+import axios from "axios";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { X } from "lucide-vue-next";
+import { onMounted, ref } from "vue";
+import { useComponentTranslations } from "@/composables/useComponentTranslations";
+import { useMultiSelect } from "./useMultiSelect.js";
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(["update:modelValue"]);
 const tags = ref([]);
-const modelValue = ref<string[]>([]);
-const open = ref(false);
-const searchTerm = ref('');
-const selectedTags = ref([]);
+const isLoading = ref(true);
 
-const { newTagModalKey, createTag, handleSave } = useTags();
-
-const filteredTags = computed(() => {
-  return tags.value.filter(
-    tag => tag.tagname.toLowerCase().includes(searchTerm.value.toLowerCase()) && !selectedTags.value.some(selectedCat => selectedCat.id === tag.id) // Prevent displaying already selected items
-  );
-});
+const { t } = useComponentTranslations(TagMultiSelectI18N);
 
 const props = defineProps({
-  modelValue: {
-    type: Array,
-    required: true
-  }
+	modelValue: {
+		type: [Array, String],
+		required: true,
+	},
+	singleSelect: {
+		type: Boolean,
+		default: false,
+	},
+	placeholder: {
+		type: String,
+		default: "Select tags",
+	},
+});
+
+const { selectedItems: selectedTags, open, searchTerm, filteredItems: filteredTags, selectItem, deleteItem } = useMultiSelect({
+	items: tags,
+	modelValue: props.modelValue,
+	singleSelect: props.singleSelect,
+	displayField: "tagname",
+	searchFields: ["tagname"],
+	emit,
 });
 
 onMounted(() => {
-  fetchTags();
-
-  if (props.modelValue && props.modelValue.length > 0) {
-    selectedTags.value.push(...props.modelValue);
-  }
+	fetchTags();
 });
-
-// Watch for changes to the prop and update internalModel
-watch(
-  () => props.modelValue,
-  newValue => {
-    selectedTags.value = newValue;
-  }
-);
-
-watch(newTagModalKey, () => {
-  // if the add new category dialog is closed, fetch Tags again
-  fetchTags();
-});
-
-function selectItem(item) {
-  // Add selected item to selectedTags and emit updated list
-  selectedTags.value.push(item);
-  open.value = false;
-  searchTerm.value = '';
-  // remove item from filteredTags
-  const itemIndex = filteredTags.value.findIndex(tag => tag.tagname === item.tagname);
-  if (itemIndex !== -1) {
-    filteredTags.value.splice(itemIndex, 1);
-  }
-  emit('update:modelValue', selectedTags.value);
-}
-
-function deleteItem(itemName) {
-  // Remove item from selectedTags and emit updated list
-  const itemIndex = selectedTags.value.findIndex(tag => tag.tagname === itemName);
-  if (itemIndex !== -1) {
-    selectedTags.value.splice(itemIndex, 1);
-  }
-  emit('update:modelValue', selectedTags.value);
-}
 
 function fetchTags() {
-  axios.get('/api/tags/?perPage=10000').then(response => {
-    tags.value = response.data.data;
-  });
+	isLoading.value = true;
+	axios.get("/api/tags/?perPage=10000").then((response) => {
+		tags.value = response.data.data;
+		isLoading.value = false;
+	});
 }
 </script>
 
 <template>
-  <Popover>
-    <PopoverTrigger class="col-span-3">
-      <Button
-        variant="ghost"
-        class="flex flex-wrap items-start justify-start w-full pl-2 whitespace-normal border h-fit"
-        :class="selectedTags.length === 0 ? 'text-muted-foreground' : ' '"
-        :style="selectedTags.length === 0 ? 'padding: 0.45rem' : 'padding: 0.2rem'">
-        <!-- Padding is 0.45rem to match Inputs and adjustment when adding tags -->
+	<Popover>
+		<PopoverTrigger class="col-span-3">
+			<Button variant="ghost" class="flex items-center justify-start w-full px-2 py-1 border rounded-xl whitespace-nowrap h-fit bg-rcgray-700" :class="selectedTags.length === 0 ? ' text-rcgray-400' : ''" :style="selectedTags.length === 0 ? 'padding: 0.45rem' : 'padding: 0.2rem'">
+				<span v-if="isLoading">{{ t("loadingTags") }}</span>
+				<template v-else class="text-rcgray-400">
+					<RcIcon name="tag" class="mx-2" />
 
-        {{ selectedTags && selectedTags.length === 0 ? 'Select tags' : '' }}
-        <span
-          v-for="tag in selectedTags"
-          :key="tag.id"
-          class="relative my-1 group">
-          <span
-            :class="tag.badgeColor ? tag.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'"
-            class="flex items-center text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border">
-            {{ tag.tagname }}
+					<span v-if="selectedTags.length === 0">{{ props.placeholder }}</span>
 
-            <Icon
-              icon="si:close-line"
-              class="ml-1 cursor-pointer hover:text-white"
-              @click.stop="deleteItem(tag.tagname)" />
-          </span>
-        </span>
-      </Button>
-    </PopoverTrigger>
-    <PopoverContent
-      side="bottom"
-      align="start"
-      class="col-span-3 p-0">
-      <div class="relative items-center w-full">
-        <Input
-          id="search"
-          type="text"
-          v-model="searchTerm"
-          autocomplete="off"
-          placeholder="Search..."
-          class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter" />
-        <span class="absolute inset-y-0 flex items-center justify-center px-2 start-0">
-          <Icon
-            icon="weui:search-outlined"
-            class="size-6 text-muted-foreground" />
-        </span>
-      </div>
-      <Separator />
+					<!-- Display single selected item -->
+					<span v-else-if="props.singleSelect && selectedTags.length > 0" class="flex items-center text-xs font-medium px-2.5 py-0.5 rounded-xl border bg-muted">
+						{{ selectedTags[0].tagname }}
+						<X size="16" class="ml-1 cursor-pointer hover:text-primary" @click.stop="deleteItem(selectedTags.id)" />
+					</span>
 
-      <ScrollArea class="h-64">
-        <div class="py-1">
-          <div
-            v-for="tag in filteredTags"
-            :key="tag.id"
-            class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600"
-            @click="selectItem(tag)">
-            <span
-              data-size="20"
-              class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border"
-              :class="tag.badgeColor ? tag.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'">
-              <span data-size="20">
-                {{ tag.tagname }}
-              </span>
-            </span>
-          </div>
-        </div>
-      </ScrollArea>
+					<!-- Display multiple selected items -->
+					<template v-else>
+						<span v-for="tag in selectedTags" :key="tag.id" class="relative my-1 group">
+							<span class="flex items-center text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border">
+								{{ tag.tagname }}
 
-      <Separator />
+								<X size="16" class="ml-1 cursor-pointer hover:text-white" @click.stop="deleteItem(tag.id)" />
+							</span>
+						</span>
+					</template>
+				</template>
+			</Button>
+		</PopoverTrigger>
 
-      <div class="p-1 border-5">
-        <Button
-          variant="ghost"
-          @click.prevent="createTag()"
-          class="justify-start w-full p-1">
-          <Icon
-            icon="octicon:plus-16"
-            class="w-3 h-3 mt-1 mr-2 text-muted-foreground" />
-          <span>Create new record</span>
-        </Button>
-      </div>
-    </PopoverContent>
+		<PopoverContent side="bottom" align="start" class="col-span-3 p-0">
+			<div class="relative items-center w-full">
+				<Input id="search" type="text" v-model="searchTerm" autocomplete="off" :placeholder="t('common.search')" class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter" />
+				<span class="absolute inset-y-0 flex items-center justify-center px-2 start-0">
+					<RcIcon name="search" />
+				</span>
+			</div>
+			<Separator />
 
-    <TagAddEditDialog
-      @save="handleSave()"
-      :key="newTagModalKey"
-      :editId="0" />
-  </Popover>
+			<ScrollArea class="h-64">
+				<div class="py-1">
+					<RcIcon name="three-dots-loading" class="w-8 h-8 mx-auto my-4 text-muted-foreground" v-if="isLoading" />
+					<div v-else v-for="tag in filteredTags" :key="tag.id" class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600" @click="selectItem(tag)">
+						<span data-size="20" class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border" :class="tag.badgeColor ? tag.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'">
+							<span data-size="20">
+								{{ tag.tagname }}
+							</span>
+						</span>
+					</div>
+				</div>
+			</ScrollArea>
+
+			<Separator />
+
+			<div class="p-1 border-5">
+				<Button variant="ghost" class="justify-start w-full p-1">
+					<RcIcon name="plus" class="w-8" />
+					<div class="rc-text-xs-muted ml-1">{{ t("createNewRecord") }}</div>
+				</Button>
+			</div>
+		</PopoverContent>
+	</Popover>
 </template>

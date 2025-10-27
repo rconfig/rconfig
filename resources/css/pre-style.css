@@ -1,0 +1,26 @@
+/* pre-style.css - works better with span tag ideally */
+.pre-container {
+  border-radius: 0.5rem; /* rounded-lg */
+  background-color: #f1f5f9; /* bg-slate-100 */
+  color: #1f2937; /* text-sm */
+  padding: 0.75rem; /* p-3 */
+  font-family: 'Courier New', monospace; /* font-mono */
+  width: 100%; /* w-full */
+  display: flex;
+  justify-content: space-between; /* justify-between */
+  align-items: center; /* items-center */
+  margin: 0; /* m-0 */
+  line-height: 1.5; /* Reset line-height to avoid extra space */
+  min-height: 3rem; /* Adjust this based on your preferred height */
+}
+
+.dark .pre-container {
+  background-color: #303236; /* dark:bg-slate-800 */
+  color: #e2e8f0; /* dark text */
+}
+.pre-container pre {
+  margin: 0; /* Reset margin for pre */
+  overflow-x: auto; /* Enable horizontal scrolling if needed */
+  white-space: pre-wrap; /* Allow wrapping of long lines */
+  word-break: break-all; /* Break long words to prevent overflow */
+}

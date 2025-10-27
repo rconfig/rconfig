@@ -2,7 +2,7 @@
 import { useSettings } from '@/pages/Settings/useSettings';
 import SidebarNav from '@/pages/Settings/SidebarNav.vue';
 import { Separator } from '@/components/ui/separator';
-import Loading from '@/pages/Shared/Loading.vue';
+import Loading from '@/pages/Shared/Loaders/Loading.vue';
 
 const { settingsActivePane, setForm, formComponents, settingsActivePaneComponent } = useSettings();
 </script>

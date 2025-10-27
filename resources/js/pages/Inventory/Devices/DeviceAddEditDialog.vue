@@ -8,7 +8,7 @@ import HelpPopover from '@/pages/Shared/Popover/HelpPopover.vue';
 import TagMultiSelect from '@/pages/Shared/FormFields/TagMultiSelect.vue';
 import TemplateMultiSelect from '@/pages/Shared/FormFields/TemplateMultiSelect.vue';
 import VendorMultiSelect from '@/pages/Shared/FormFields/VendorMultiSelect.vue';
-import Loading from '@/pages/Shared/Loading.vue';
+import Loading from '@/pages/Shared/Loaders/Loading.vue';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { InputPassword } from '@/components/ui/input-password';
 import { ScrollArea } from '@/components/ui/scroll-area';

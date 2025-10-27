@@ -1,0 +1,191 @@
+/* Modern Diff Styling with Tailwind/ShadCN Design System */
+
+.diff-wrapper.diff {
+  --tab-size: 4;
+  @apply w-full font-mono text-sm border border-border rounded-lg overflow-hidden bg-background;
+  background: repeating-linear-gradient(
+    -45deg, 
+    hsl(var(--muted)) 0%, 
+    hsl(var(--muted)) 0.5em, 
+    hsl(var(--muted) / 0.5) 0.5em, 
+    hsl(var(--muted) / 0.5) 1em
+  );
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: hsl(var(--foreground));
+  empty-cells: show;
+  word-break: break-all;
+}
+
+.diff-wrapper.diff th {
+  @apply font-semibold select-none cursor-default;
+}
+
+.diff-wrapper.diff td {
+  @apply align-baseline;
+}
+
+.diff-wrapper.diff td,
+.diff-wrapper.diff th {
+  @apply border-0 p-1 bg-background;
+  border-collapse: separate;
+}
+
+.diff-wrapper.diff td:empty:after,
+.diff-wrapper.diff th:empty:after {
+  content: " ";
+  visibility: hidden;
+}
+
+.diff-wrapper.diff td a,
+.diff-wrapper.diff th a {
+  @apply text-foreground pointer-events-none;
+  cursor: inherit;
+}
+
+.diff-wrapper.diff thead th {
+  @apply bg-muted/80 border-b border-border p-2 text-left font-semibold text-muted-foreground;
+}
+
+.diff-wrapper.diff tbody.skipped {
+  @apply border-t border-border;
+}
+
+.diff-wrapper.diff tbody.skipped td,
+.diff-wrapper.diff tbody.skipped th {
+  @apply hidden;
+}
+
+.diff-wrapper.diff tbody th {
+  @apply bg-muted/60 border-r border-border text-right align-top w-16 text-muted-foreground;
+}
+
+.diff-wrapper.diff tbody th.sign {
+  @apply bg-background border-r-0 p-0 text-center w-4;
+}
+
+.diff-wrapper.diff tbody th.sign.del {
+  @apply bg-destructive/10;
+}
+
+.diff-wrapper.diff tbody th.sign.ins {
+  @apply bg-emerald-50 dark:bg-emerald-950/30;
+}
+
+.diff-wrapper.diff.diff-html {
+  @apply whitespace-pre-wrap;
+  tab-size: var(--tab-size);
+}
+
+.diff-wrapper.diff.diff-html .ch {
+  @apply leading-4;
+  background-clip: border-box;
+  background-repeat: repeat-x;
+  background-position: left center;
+}
+
+.diff-wrapper.diff.diff-html .ch.sp {
+  background-image: url('data:image/svg+xml,%3Csvg preserveAspectRatio="xMinYMid meet" viewBox="0 0 12 24" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M4.5 11C4.5 10.1716 5.17157 9.5 6 9.5C6.82843 9.5 7.5 10.1716 7.5 11C7.5 11.8284 6.82843 12.5 6 12.5C5.17157 12.5 4.5 11.8284 4.5 11Z" fill="rgba%2896, 165, 250, 0.5%29"/%3E%3C/svg%3E');
+  background-size: 1ch 1.25em;
+}
+
+.diff-wrapper.diff.diff-html .ch.tab {
+  background-image: url('data:image/svg+xml,%3Csvg preserveAspectRatio="xMinYMid meet" viewBox="0 0 12 24" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M9.5 10.44L6.62 8.12L7.32 7.26L12.04 11V11.44L7.28 14.9L6.62 13.9L9.48 11.78H0V10.44H9.5Z" fill="rgba%2896, 165, 250, 0.5%29"/%3E%3C/svg%3E');
+  background-size: calc(var(--tab-size) * 1ch) 1.25em;
+  background-position: 2px center;
+}
+
+/* Equal/unchanged lines */
+.diff-wrapper.diff.diff-html .change.change-eq .old,
+.diff-wrapper.diff.diff-html .change.change-eq .new {
+  @apply bg-background;
+}
+
+/* Deleted content */
+.diff-wrapper.diff.diff-html .change .old {
+  @apply bg-destructive/10 dark:bg-destructive/20;
+}
+
+/* Added content */
+.diff-wrapper.diff.diff-html .change .new {
+  @apply bg-emerald-50 dark:bg-emerald-950/30;
+}
+
+/* Replaced content */
+.diff-wrapper.diff.diff-html .change .rep {
+  @apply bg-yellow-50 dark:bg-yellow-950/30;
+}
+
+/* Empty/none states */
+.diff-wrapper.diff.diff-html .change .old.none,
+.diff-wrapper.diff.diff-html .change .new.none,
+.diff-wrapper.diff.diff-html .change .rep.none {
+  @apply bg-transparent cursor-not-allowed;
+}
+
+/* Inline changes */
+.diff-wrapper.diff.diff-html .change ins,
+.diff-wrapper.diff.diff-html .change del {
+  @apply font-semibold no-underline;
+}
+
+.diff-wrapper.diff.diff-html .change ins {
+  @apply bg-emerald-200 dark:bg-emerald-800/60;
+}
+
+.diff-wrapper.diff.diff-html .change del {
+  @apply bg-destructive/30 dark:bg-destructive/40;
+}
+
+/* Enhanced modern touches */
+.diff-wrapper.diff {
+  @apply shadow-sm;
+}
+
+.diff-wrapper.diff thead th {
+  @apply backdrop-blur-sm;
+}
+
+.diff-wrapper.diff tbody tr:hover td {
+  @apply bg-muted/30;
+}
+
+.diff-wrapper.diff tbody th:hover {
+  @apply bg-muted/80;
+}
+
+/* Dark mode specific adjustments */
+@media (prefers-color-scheme: dark) {
+  .diff-wrapper.diff {
+    background: repeating-linear-gradient(
+      -45deg, 
+      hsl(var(--muted)) 0%, 
+      hsl(var(--muted)) 0.5em, 
+      hsl(var(--muted) / 0.3) 0.5em, 
+      hsl(var(--muted) / 0.3) 1em
+    );
+  }
+  
+  .diff-wrapper.diff.diff-html .ch.sp {
+    background-image: url('data:image/svg+xml,%3Csvg preserveAspectRatio="xMinYMid meet" viewBox="0 0 12 24" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M4.5 11C4.5 10.1716 5.17157 9.5 6 9.5C6.82843 9.5 7.5 10.1716 7.5 11C7.5 11.8284 6.82843 12.5 6 12.5C5.17157 12.5 4.5 11.8284 4.5 11Z" fill="rgba%28148, 163, 184, 0.5%29"/%3E%3C/svg%3E');
+  }
+  
+  .diff-wrapper.diff.diff-html .ch.tab {
+    background-image: url('data:image/svg+xml,%3Csvg preserveAspectRatio="xMinYMid meet" viewBox="0 0 12 24" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M9.5 10.44L6.62 8.12L7.32 7.26L12.04 11V11.44L7.28 14.9L6.62 13.9L9.48 11.78H0V10.44H9.5Z" fill="rgba%28148, 163, 184, 0.5%29"/%3E%3C/svg%3E');
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .diff-wrapper.diff {
+    @apply text-xs;
+  }
+  
+  .diff-wrapper.diff tbody th {
+    @apply w-12;
+  }
+  
+  .diff-wrapper.diff thead th {
+    @apply p-1;
+  }
+}

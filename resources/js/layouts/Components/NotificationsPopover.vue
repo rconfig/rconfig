@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { ref, onMounted, inject, watch } from 'vue';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import Loading from '@/pages/Shared/Loading.vue';
+import Loading from '@/pages/Shared/Loaders/Loading.vue';
 import { EmitFlags } from 'typescript';
 import { useRoute, useRouter } from 'vue-router';
 

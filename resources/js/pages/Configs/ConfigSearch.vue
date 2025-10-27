@@ -1,8 +1,8 @@
 <script setup>
 import ConfigSearchResultsTable from '@/pages/Configs/ConfigSearch/ConfigSearchResultsTable.vue';
 import ConfigSearchFilterCard from '@/pages/Configs/ConfigSearch/ConfigSearchFilterCard.vue';
-import NavCloseButton from '@/pages/Shared/NavCloseButton.vue';
-import NavOpenButton from '@/pages/Shared/NavOpenButton.vue';
+import NavCloseButton from '@/pages/Shared/Buttons/NavCloseButton.vue';
+import NavOpenButton from '@/pages/Shared/Buttons/NavOpenButton.vue';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';

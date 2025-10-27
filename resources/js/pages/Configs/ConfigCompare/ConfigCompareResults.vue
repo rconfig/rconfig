@@ -1,5 +1,5 @@
 <script setup>
-import Loading from '@/pages/Shared/Loading.vue';
+import Loading from '@/pages/Shared/Loaders/Loading.vue';
 import CompareDiffEditorComponent from './CompareDiffEditorComponent.vue';
 import { useCompareResults } from './useCompareResults';
 
