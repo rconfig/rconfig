@@ -149,7 +149,7 @@ watch(
 										<div class="flex items-center">
 											<RcIcon name="config-tools" class="w-4" />
 											<div class="p-1 ml-2 text-left text-gray-200">
-												<div>Configurations</div>
+												<div>Config Tools</div>
 											</div>
 										</div>
 										<span class="text-rcgray-400 group-hover:text-blue-400 transition-colors h-full mr-2">
@@ -158,26 +158,46 @@ watch(
 									</div>
 								</ConfigurationsPopover>
 
-								<router-link to="/scheduled-tasks" class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600" :class="{ 'active-nav': $route.name === 'scheduled-tasks' }">
+								<router-link to="/tasks" class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600" :class="{ 'active-nav': $route.name === 'scheduled-tasks' }">
 									<RcIcon name="tasks" />
 									<div class="p-1 ml-2 text-left text-gray-200">
-										<div>Scheduled Tasks</div>
+										<div>Tasks</div>
 									</div>
 								</router-link>
-
-								<router-link to="/activity" class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600" :class="{ 'active-nav': $route.name === 'activity' }">
-									<RcIcon name="activity-log" />
-									<div class="p-1 ml-2 text-left text-gray-200">
-										<div>Activity</div>
+								
+								<Collapsible v-model:open="sideNavSettingsIsOpen" class="w-full mt-2">
+									<div class="flex items-center justify-between">
+										<CollapsibleTrigger as-child>
+											<div class="flex items-center w-full">
+												<Button variant="ghost" size="sm" class="w-full pl-0 pr-4">
+													<div class="flex items-center w-full cursor-pointer" type="button" aria-expanded="true" data-state="open">
+														<ChevronRight v-if="!sideNavSettingsIsOpen" size="18" class="text-rcgray-500" />
+														<ChevronDown v-if="sideNavSettingsIsOpen" size="18" class="text-rcgray-500" />
+														<div class="ml-2 text-left" data-truncate="false" data-numeric="false" data-uppercase="false" style="color: rgb(134, 136, 141);">
+															<span>Settings</span>
+														</div>
+													</div>
+												</Button>
+											</div>
+										</CollapsibleTrigger>
 									</div>
-								</router-link>
-
-								<router-link to="/settings" class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600" :class="{ 'active-nav': $route.name === 'settings' }">
-									<RcIcon name="settings" />
-									<div class="p-1 ml-2 text-left text-gray-200">
-										<div>Settings</div>
-									</div>
-								</router-link>
+									<CollapsibleContent>
+										<div>
+											<router-link to="/settings/users" class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600" :class="{ 'active-nav': $route.name === 'users' }">
+												<RcIcon name="user" />
+												<div class="p-1 ml-2 text-left text-gray-200">
+													<div> Users </div>
+												</div>
+											</router-link>
+											<router-link to="/settings" class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600" :class="{ 'active-nav': $route.name === 'settings' }">
+												<RcIcon name="settings" />
+												<div class="p-1 ml-2 text-left text-gray-200">
+													<div> System Settings </div>
+												</div>
+											</router-link>
+										</div>
+									</CollapsibleContent>
+								</Collapsible>
 
 								<Collapsible v-model:open="sideNavExtLinksIsOpen" class="w-full mt-2">
 									<div class="flex items-center justify-between">

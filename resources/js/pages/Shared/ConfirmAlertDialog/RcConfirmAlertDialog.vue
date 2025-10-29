@@ -1,8 +1,6 @@
 <script setup>
-import RcConfirmAlertDialogI18N from "@/i18n/pages/Shared/ConfirmAlertDialog/RcConfirmAlertDialog.i18n.js";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { onMounted, onUnmounted, computed } from "vue";
-import { useComponentTranslations } from "@/composables/useComponentTranslations";
 
 const emit = defineEmits(["handleConfirm", "handleClose", "handleDelete", "handleDisable", "handlePurge", "handleReset", "handleConfirmProceedAlert", "close"]);
 
@@ -28,7 +26,6 @@ const props = defineProps({
 });
 
 const open = computed(() => props.showConfirmCloseAlert || props.showConfirmDelete || props.showConfirmDisable || props.showConfirmPurge || props.showConfirmConfirmProceedAlertAlert || props.showConfirmReset);
-const { t } = useComponentTranslations(RcConfirmAlertDialogI18N);
 
 const defaultTitle = computed(() => {
 	if (props.title) return props.title;
@@ -61,11 +58,11 @@ const actionButtonClass = computed(() => {
 
 // Get appropriate button text based on operation type
 const actionButtonText = computed(() => {
-	if (props.showConfirmDelete) return t("delete") || "Delete";
-	if (props.showConfirmDisable) return t("disable") || "Disable";
-	if (props.showConfirmPurge) return t("common.purge") || "Purge";
-	if (props.showConfirmReset) return t("common.reset") || "Reset";
-	return t("continue");
+	if (props.showConfirmDelete) return "Delete";
+	if (props.showConfirmDisable) return "Disable";
+	if (props.showConfirmPurge) return "Purge";
+	if (props.showConfirmReset) return "Reset";
+	return "Continue";
 });
 
 // Confirm handler
@@ -106,7 +103,7 @@ function handleClose() {
 			</AlertDialogHeader>
 
 			<AlertDialogFooter>
-				<AlertDialogCancel type="button" @click="handleClose">{{ t("common.cancel") }}</AlertDialogCancel>
+				<AlertDialogCancel type="button" @click="handleClose">Cancel</AlertDialogCancel>
 				<AlertDialogAction type="button" @click="handleConfirm" :class="actionButtonClass">
 					{{ actionButtonText }}
 					<div v-if="showKeyHints" class="pl-2 ml-auto">

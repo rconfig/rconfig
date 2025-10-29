@@ -1,5 +1,5 @@
 <script setup>
-import { HoverCardRoot, useForwardPropsEmits } from 'radix-vue';
+import { HoverCardRoot, useForwardPropsEmits } from "reka-ui";
 
 const props = defineProps({
   defaultOpen: { type: Boolean, required: false },
@@ -7,7 +7,7 @@ const props = defineProps({
   openDelay: { type: Number, required: false },
   closeDelay: { type: Number, required: false },
 });
-const emits = defineEmits(['update:open']);
+const emits = defineEmits(["update:open"]);
 
 const forwarded = useForwardPropsEmits(props, emits);
 </script>

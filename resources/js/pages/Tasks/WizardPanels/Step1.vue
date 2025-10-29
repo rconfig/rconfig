@@ -1,137 +1,121 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { CheckCircle, ArrowRight, Smartphone, FolderClosed, Tag } from "lucide-vue-next";
+import { ref, onMounted, computed } from "vue";
+import useTasksCommandsStep1 from "./useTasksCommandsStep1";
+
+const { commands } = useTasksCommandsStep1();
 
 const selectedValue = ref(null);
 
-const props = defineProps({
-  model: Object
+// Only 3 basic task icons
+const iconMap = {
+	'rconfig:download-device': Smartphone,
+	'rconfig:download-category': FolderClosed,
+	'rconfig:download-tag': Tag
+};
+
+const groupedCommands = computed(() => {
+	const groups = {};
+	Object.values(commands).forEach(command => {
+		const category = command.categoryLabel;
+		if (!groups[category]) {
+			groups[category] = [];
+		}
+		groups[category].push(command);
+	});
+	return groups;
 });
 
-const handleCheck = value => {
-  selectedValue.value = value;
-  props.model.task_command = value;
-  setTaskType(value);
-  // remove these properties when the task type is changed
-  delete props.model.category;
-  delete props.model.tag;
-  delete props.model.device;
+const getCategoryIcon = (categoryName) => {
+	return { type: 'rc', name: 'commands' };
+};
+
+const props = defineProps({
+	model: Object,
+});
+
+const handleCheck = (value) => {
+	selectedValue.value = value;
+	props.model.task_command = value;
+	setTaskType(value);
+	delete props.model.category;
+	delete props.model.tag;
+	delete props.model.device;
 };
 
 function setTaskType(value) {
-  switch (value) {
-    case 'rconfig:download-device':
-      props.model.task_devices = 1;
-      props.model.task_tags = 0;
-      props.model.task_categories = 0;
-      break;
-    case 'rconfig:download-category':
-      props.model.task_categories = 1;
-      props.model.task_devices = 0;
-      props.model.task_tags = 0;
-      break;
-    case 'rconfig:download-tag':
-      props.model.task_tags = 1;
-      props.model.task_devices = 0;
-      props.model.task_categories = 0;
-      break;
-  }
+	props.model.task_devices = 0;
+	props.model.task_tags = 0;
+	props.model.task_categories = 0;
+
+	const taskTypeMap = {
+		"rconfig:download-device": { task_devices: 1 },
+		"rconfig:download-category": { task_categories: 1 },
+		"rconfig:download-tag": { task_tags: 1 }
+	};
+
+	const taskConfig = taskTypeMap[value];
+	if (taskConfig) {
+		Object.assign(props.model, taskConfig);
+	}
 }
 
 onMounted(() => {
-  if (props.model.task_command) {
-    selectedValue.value = props.model.task_command;
-  }
+	if (props.model.task_command) {
+		selectedValue.value = props.model.task_command;
+	}
 });
 </script>
 
 <template>
-  <div>
-    <h3 class="mb-5 text-lg font-medium text-gray-900 dark:text-white">Select a task type</h3>
-    <ul class="grid w-full gap-4 md:grid-cols-1">
-      <li class="text-sm">
-        <input
-          type="radio"
-          id="devices"
-          name="hosting"
-          value="devices"
-          class="hidden peer"
-          @change="handleCheck('rconfig:download-device')" />
-        <label
-          for="devices"
-          class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-rcgray-900 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-rcgray-800 dark:hover:bg-gray-700">
-          <div class="block">
-            <div class="flex items-center w-full font-semibold">
-              <DeviceIcon />
-              <span class="ml-1">Devices</span>
-            </div>
-            <div class="w-full">Select one or many devices to backup</div>
-          </div>
-          <Icon
-            v-if="selectedValue === 'rconfig:download-device'"
-            icon="solar:check-circle-broken"
-            class="w-8 h-8 text-green-500" />
-          <Icon
-            v-else
-            icon="uil:arrow-right"
-            class="w-8 h-8 text-blue-500 hover:animate-ping" />
-        </label>
-      </li>
-      <li class="text-sm">
-        <input
-          type="radio"
-          id="categories"
-          name="hosting"
-          value="categories"
-          class="hidden peer"
-          @change="handleCheck('rconfig:download-category')" />
-        <label
-          for="categories"
-          class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-rcgray-900 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-rcgray-800 dark:hover:bg-gray-700">
-          <div class="block">
-            <div class="flex items-center w-full font-semibold">
-              <CommandGroupIcon />
-              <span class="ml-1">Command Groups</span>
-            </div>
-            <div class="w-full">Select one or many command groups to backup</div>
-          </div>
-          <Icon
-            v-if="selectedValue === 'rconfig:download-category'"
-            icon="solar:check-circle-broken"
-            class="w-8 h-8 text-green-500" />
-          <Icon
-            v-else
-            icon="uil:arrow-right"
-            class="w-8 h-8 text-blue-500 hover:animate-ping" />
-        </label>
-      </li>
-      <li class="text-sm">
-        <input
-          type="radio"
-          id="tags"
-          name="hosting"
-          value="tags"
-          class="hidden peer"
-          @change="handleCheck('rconfig:download-tag')" />
-        <label
-          for="tags"
-          class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-rcgray-900 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-rcgray-800 dark:hover:bg-gray-700">
-          <div class="block">
-            <div class="flex items-center w-full font-semibold">
-              <TagIcon />
-              <span class="ml-1">Tags</span>
-            </div>
-            <div class="w-full">Select one or many tags to backup</div>
-          </div>
-          <Icon
-            v-if="selectedValue === 'rconfig:download-tag'"
-            icon="solar:check-circle-broken"
-            class="w-8 h-8 text-green-500" />
-          <Icon
-            v-else
-            icon="uil:arrow-right"
-            class="w-8 h-8 text-blue-500 hover:animate-ping" />
-        </label>
-      </li>
-    </ul>
-  </div>
+	<div>
+		<h3 class="mb-3 text-base font-medium text-gray-900 dark:text-white">Select Task Type</h3>
+		
+		<!-- Iterate through each category -->
+		<div v-for="(categoryCommands, categoryName, index) in groupedCommands" :key="categoryName" class="mb-4">
+			<!-- Subtle separator line (not for first category) -->
+			<div v-if="index > 0" class="w-full h-px bg-gray-200 dark:bg-gray-700 mb-4"></div>
+			
+			<!-- Minimal Category Header -->
+			<div class="flex items-center mb-2">
+				<RcIcon 
+					:name="getCategoryIcon(categoryName).name" 
+					class="w-3 h-3 text-blue-600 dark:text-blue-400 mr-1.5" 
+				/>
+				<h4 class="text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">{{ categoryName }}</h4>
+			</div>
+			
+			<!-- Compact List Layout - Two Columns -->
+			<div class="grid grid-cols-2 gap-x-4 gap-y-1">
+				<div v-for="command in categoryCommands" :key="command.id">
+					<input 
+						type="radio" 
+						:id="`task-${command.id}`" 
+						name="task-type" 
+						:value="command.command" 
+						class="sr-only peer" 
+						@change="handleCheck(command.command)" 
+					/>
+					<label 
+						:for="`task-${command.id}`" 
+						class="flex items-center px-2 py-1.5 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded cursor-pointer transition-colors duration-150 peer-checked:bg-blue-50 dark:peer-checked:bg-blue-900/20 peer-checked:border-l-2 peer-checked:border-blue-500 group"
+					>
+						<!-- Tiny Icon - Simple Lucide -->
+						<component :is="iconMap[command.command]" class="w-3 h-3 text-gray-500 dark:text-gray-400 mr-2 flex-shrink-0 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+						
+						<!-- Content -->
+						<div class="flex-1 min-w-0">
+							<span class="text-sm text-gray-900 dark:text-white">{{ command.label }}</span>
+						</div>
+						
+						<!-- Minimal Selection Indicator -->
+						<div class="flex-shrink-0 ml-2">
+							<div v-if="selectedValue === command.command" class="w-2 h-2 bg-green-500 rounded-full"></div>
+							<div v-else class="w-2 h-2 border border-gray-300 dark:border-gray-600 rounded-full group-hover:border-blue-400"></div>
+						</div>
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>

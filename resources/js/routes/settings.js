@@ -1,0 +1,71 @@
+export default [
+	{
+		path: "/settings",
+		name: "settings",
+		component: () => import("@/pages/Settings/Main.vue"),
+		meta: {
+			rbacViewName: "Setting",
+			pageTitleKey: "Settings",
+			breadcrumb: [
+				{ label: "Home", link: "/" },
+				{ label: "System Settings", link: "/settings" },
+			],
+		},
+	},
+	{
+		path: "/settings/start",
+		name: "settings-start",
+		component: () => import("@/pages/Settings/Main.vue"),
+		props: { start: true },
+		meta: { rbacViewName: "Setting", pageTitleKey: "SettingsStart" },
+	},
+	{
+		path: "/settings/system",
+		name: "settings-system",
+		component: () => import("@/pages/Settings/Main.vue"),
+		props: { system: true },
+		meta: { rbacViewName: "Setting", pageTitleKey: "SettingsSystem" },
+	},
+	{
+		path: "/settings/security",
+		name: "settings-security",
+		component: () => import("@/pages/Settings/Main.vue"),
+		props: { security: true },
+		meta: { rbacViewName: "Setting", pageTitleKey: "SettingsSecurity" },
+	},
+	{
+		path: "/settings/credentials/:id?",
+		name: "settings-credentials",
+		component: () => import("@/pages/Settings/Main.vue"),
+		props: { credentials: true },
+		meta: { rbacViewName: "Setting", pageTitleKey: "SettingsCredentials" },
+	},
+	{
+		path: "/settings/debugging",
+		name: "settings-debugging",
+		component: () => import("@/pages/Settings/Main.vue"),
+		props: { debugging: true },
+		meta: { rbacViewName: "Setting", pageTitleKey: "SettingsDebugging" },
+	},
+	{
+		path: "/settings/logs",
+		name: "settings-logs",
+		component: () => import("@/pages/Settings/Main.vue"),
+		props: { logs: true },
+		meta: { rbacViewName: "Setting", pageTitleKey: "SettingsLogs" },
+	},
+	{
+		path: "/settings/scheduled-tasks",
+		name: "settings-scheduledtasks",
+		component: () => import("@/pages/Settings/Main.vue"),
+		props: { scheduledTasks: true },
+		meta: { rbacViewName: "Setting", pageTitleKey: "SettingsScheduledTasks" },
+	},
+	{
+		path: "/settings/about",
+		name: "settings-about",
+		component: () => import("@/pages/Settings/Main.vue"),
+		props: { about: true },
+		meta: { rbacViewName: "Setting", pageTitleKey: "SettingsAbout" },
+	},
+];
