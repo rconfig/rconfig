@@ -6,7 +6,7 @@ import SystemSettingsFormEmail from '@/pages/Settings/Panels/Components/SystemSe
 
 <template>
   <div class="flex justify-center w-full">
-    <div class="flex flex-col items-center w-full gap-4 md:w-1/2">
+    <div class="flex flex-col items-center w-full gap-4 xl:w-3/4 w-full">
       <SystemSettingsFormTimezone />
       <SystemSettingsFormBanner />
       <SystemSettingsFormEmail />

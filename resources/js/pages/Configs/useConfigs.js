@@ -1,83 +1,146 @@
-import axios from 'axios';
-import { ref, onMounted, nextTick } from 'vue';
-import { useFavoritesStore } from '@/stores/favorites';
-import { useRoute, useRouter } from 'vue-router'; // Import the useRoute from Vue Router
+import { ref, onMounted, computed, watch } from "vue";
+import { useFavoritesStore } from "@/stores/favorites";
+import { useRoute, useRouter } from "vue-router";
 
 export function useConfigs() {
-  const favoritesStore = useFavoritesStore();
-  const currentView = ref(localStorage.getItem('inventorySelectedView') || 'devices');
-  const route = useRoute();
-  const router = useRouter();
-  const configsId = ref(parseInt(route.params.id) || 0);
-  const statusIdParam = ref(route.query || null);
-  const bottomBorderStyle = ref({});
+	const favoritesStore = useFavoritesStore();
+	const route = useRoute();
+	const router = useRouter();
 
-  const viewItems = [
-    { id: 'configs', label: 'Configurations', icon: 'ConfigToolsIcon', isFavorite: ref(false), route: '/configs' },
-    { id: 'configsearch', label: 'Config Search', icon: 'ConfigSearchIcon', isFavorite: ref(false), route: '/config-search' },
-    { id: 'configcompare', label: 'Config Compare', icon: 'ConfigCompareIcon', isFavorite: ref(false), route: '/config-compare' }
-  ];
+	// Reactive state
+	const currentView = ref(localStorage.getItem("configsSelectedView") || "configs");
+	const configsId = ref(parseInt(route.params.id) || null);
+	const statusIdParam = ref(route.query.statusId || null);
 
-  onMounted(() => {
-    if (route.params.view) {
-      changeView(route.params.view);
-    } // Set currentView if path is not Inventory
-    else if (route.name === 'configs') {
-      changeView(route.name); // If route starts with /devices, load the devices component
-    } else if (!route.path.includes('inventory')) {
-      changeView(route.name); // loads the current view based on the route name
-    }
+	// Base navigation items configuration - Core features only
+	const baseViewItems = computed(() => {
+		return [
+			{
+				id: "configs",
+				label: "Configurations",
+				icon: "config-tools",
+				isFavorite: favoritesStore.isFavorite("configs"),
+				route: "/configs",
+			},
+			{
+				id: "configsearch",
+				label: "Config Search",
+				icon: "config-search",
+				isFavorite: favoritesStore.isFavorite("configsearch"),
+				route: "/config-search",
+			},
+			{
+				id: "configcompare",
+				label: "Config Compare",
+				icon: "config-compare",
+				isFavorite: favoritesStore.isFavorite("configcompare"),
+				route: "/config-compare",
+			},
+		];
+	});
 
-    // Preserve query params
-    const queryParams = route.query;
-    if (Object.keys(queryParams).length > 0) {
-      router.push({ name: currentView.value, query: queryParams });
-    }
+	// View items (can be extended later for custom ordering like inventory)
+	const viewItems = computed(() => baseViewItems.value);
 
-    viewItems.forEach(item => {
-      item.isFavorite.value = favoritesStore.isFavorite(item.id);
-    });
-  });
+	// Nav pills items for the navigation component
+	const navPillsItems = computed(() => {
+		return viewItems.value.map((item) => ({
+			label: item.label,
+			to: item.id,
+			icon: item.icon,
+		}));
+	});
 
-  function changeView(view) {
-    updateBottomBorder(view);
-    localStorage.setItem('inventorySelectedView', view);
-    currentView.value = view;
-    router.push({ name: view });
-  }
+	onMounted(() => {
+		initializeView();
+	});
 
-  function toggleFavorite(viewId) {
-    const viewItem = viewItems.find(item => item.id === viewId);
-    if (viewItem) {
-      viewItem.isFavorite.value = !viewItem.isFavorite.value;
-      favoritesStore.toggleFavorite(viewItem);
-    }
-  }
+	function initializeView() {
+		if (route.params.view) {
+			changeView(route.params.view);
+			return;
+		}
 
-  function updateBottomBorder(view) {
-    const selectedButton = document.querySelector(`[data-nav='${view}']`);
+		if (viewItems.value.some((v) => v.id === route.name)) {
+			currentView.value = route.name;
+			return;
+		}
 
-    nextTick(() => {
-      if (selectedButton) {
-        const { offsetLeft, offsetWidth } = selectedButton;
-        bottomBorderStyle.value = {
-          left: `${offsetLeft}px`,
-          width: `${offsetWidth}px`
-        };
-      }
-    });
-  }
+		// Default to configs view
+		if (route.path.includes("config")) {
+			const routeName = route.name;
+			if (["configs", "configsearch", "configcompare"].includes(routeName)) {
+				currentView.value = routeName;
+			}
+		}
+	}
 
-  return {
-    bottomBorderStyle,
-    configsId,
-    statusIdParam,
-    changeView,
-    currentView,
-    favoritesStore,
-    route,
-    router,
-    toggleFavorite,
-    viewItems
-  };
+	function handleRouteChange(routeName) {
+		if (viewItems.value.some((v) => v.id === routeName)) {
+			currentView.value = routeName;
+		}
+	}
+
+	function changeView(view) {
+		localStorage.setItem("configsSelectedView", view);
+		currentView.value = view;
+
+		if (route.name !== view) {
+			router.push({ name: view }).catch((err) => console.error("Navigation error:", err));
+		}
+	}
+
+	function handleNavSelection(view) {
+		changeView(view);
+	}
+
+	function toggleFavorite(viewId) {
+		const viewItem = viewItems.value.find((item) => item.id === viewId);
+		if (viewItem) {
+			favoritesStore.toggleFavorite(viewItem);
+		}
+	}
+
+	// Watch for route changes
+	watch(
+		() => route.name,
+		(newRouteName) => {
+			handleRouteChange(newRouteName);
+		}
+	);
+
+	// Watch for route params changes
+	watch(
+		() => route.params.id,
+		(newId) => {
+			configsId.value = parseInt(newId) || null;
+		}
+	);
+
+	// Watch for query params changes
+	watch(
+		() => route.query.statusId,
+		(newStatusId) => {
+			statusIdParam.value = newStatusId || null;
+		}
+	);
+
+	return {
+		// State
+		configsId,
+		statusIdParam,
+		currentView,
+		viewItems,
+		navPillsItems,
+
+		// Methods
+		changeView,
+		handleNavSelection,
+		toggleFavorite,
+
+		// Store references
+		favoritesStore,
+		route,
+		router,
+	};
 }
