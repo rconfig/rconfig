@@ -52,5 +52,20 @@ export default [
 				{ label: "Config Compare", link: "/config-compare" },
 			],
 		},
-	}
+	},
+	{
+		path: "/config-report",
+		name: "configreport",
+		component: () => import("@/pages/Configs/Main.vue"),
+		props: true,
+		meta: {
+			rbacViewName: "Config",
+			pageTitleKey: "ConfigReport",
+			breadcrumb: [
+				{ label: "Home", link: "/" },
+				{ label: "Configs", link: "/configs" },
+				{ label: "Config Report", link: "/config-report" },
+			],
+		},
+	},
 ];

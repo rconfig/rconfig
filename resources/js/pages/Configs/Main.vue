@@ -25,7 +25,7 @@ const {
 	<main class="flex flex-col flex-1 gap-2 dark:bg-rcgray-900">
 		<div class="flex flex-row items-center justify-between h-12 gap-3 px-5 border-t border-b">
 			<div class="flex justify-start items-center">
-				<NavPills :items="navPillsItems" v-model="currentView" persist-key="configsSelectedView" @select="handleNavSelection" />
+				<NavPills :items="navPillsItems" v-model="currentView" persist-key="inventorySelectedView" @select="handleNavSelection" />
 			</div>
 
 			<!-- Star/favorite icon -->
@@ -33,11 +33,11 @@ const {
 				<Tooltip v-for="item in viewItems" :key="item.id">
 					<TooltipTrigger as-child v-if="currentView === item.id">
 						<div @click.stop.prevent="toggleFavorite(item.id)" class="cursor-pointer">
-							<RcIcon :name="item.isFavorite ? 'star-selected' : 'star-unselected'" />
+							<RcIcon :name="item.isFavorite.value ? 'star-selected' : 'star-unselected'" />
 						</div>
 					</TooltipTrigger>
 					<TooltipContent>
-						<p>{{ item.isFavorite ? "Remove from favorites" : "Add " + currentView + " to favorites" }}</p>
+						<p>{{ item.isFavorite.value ? "Remove from favorites" : "Add " + currentView + " to favorites" }}</p>
 					</TooltipContent>
 				</Tooltip>
 			</TooltipProvider>

@@ -18,7 +18,7 @@ const popoverOpen = ref(false);
 const {
 	viewItems,
 	// Methods
-	changeView,
+	changeViewSidePopover,
 	toggleFavorite,
 } = useConfigs();
 
@@ -35,7 +35,7 @@ watch(
 );
 
 function navigate(id) {
-	changeView(id);
+	changeViewSidePopover(id);
 	close();
 }
 

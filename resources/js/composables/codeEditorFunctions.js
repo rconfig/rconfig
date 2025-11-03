@@ -1,6 +1,6 @@
 import useMonacoDarkmodeTheme from "@/composables/MonacoDarkmodeTheme.js";
-import userConfigPolicyLanguage from "@/composables/rConfigPolicyLanguage.js";
-import userConfigPolicyLanguageAutoComplete from "@/composables/rConfigPolicyLanguageAutoComplete.js";
+//import userConfigPolicyLanguage from "@/composables/rConfigPolicyLanguage.js";
+//import userConfigPolicyLanguageAutoComplete from "@/composables/rConfigPolicyLanguageAutoComplete.js";
 import { ref, reactive, inject, onUnmounted } from "vue";
 import { saveAs } from "file-saver";
 import { useCopy } from "@/composables/useCopy";
@@ -21,19 +21,19 @@ export default function useCodeEditor(monaco) {
 
 	/* Init the Editor */
 	function initEditor(divName, language) {
-		if (language === "policy") {
-			monaco.languages.register({ id: "rConfigPolicyLanguage" });
-			monaco.languages.setMonarchTokensProvider("rConfigPolicyLanguage", userConfigPolicyLanguage());
+		// if (language === "policy") {
+		// 	monaco.languages.register({ id: "rConfigPolicyLanguage" });
+		// 	monaco.languages.setMonarchTokensProvider("rConfigPolicyLanguage", userConfigPolicyLanguage());
 
-			completionItemProvider = monaco.languages.registerCompletionItemProvider("rConfigPolicyLanguage", {
-				triggerCharacters: ["#"],
-				provideCompletionItems: function (model, position) {
-					return { suggestions: userConfigPolicyLanguageAutoComplete(monaco) };
-				},
-			});
+		// 	completionItemProvider = monaco.languages.registerCompletionItemProvider("rConfigPolicyLanguage", {
+		// 		triggerCharacters: ["#"],
+		// 		provideCompletionItems: function (model, position) {
+		// 			return { suggestions: userConfigPolicyLanguageAutoComplete(monaco) };
+		// 		},
+		// 	});
 
-			language = "rConfigPolicyLanguage";
-		}
+		// 	language = "rConfigPolicyLanguage";
+		// }
 
 		const codeEditorDiv = document.getElementById(divName);
 		meditor = monaco.editor.create(codeEditorDiv, {
@@ -61,19 +61,19 @@ export default function useCodeEditor(monaco) {
 
 	/* Init the Editor */
 	function initDiffEditor(divName, language) {
-		if (language === "policy") {
-			monaco.languages.register({ id: "rConfigPolicyLanguage" });
-			monaco.languages.setMonarchTokensProvider("rConfigPolicyLanguage", userConfigPolicyLanguage());
+		// if (language === "policy") {
+		// 	monaco.languages.register({ id: "rConfigPolicyLanguage" });
+		// 	monaco.languages.setMonarchTokensProvider("rConfigPolicyLanguage", userConfigPolicyLanguage());
 
-			completionItemProvider = monaco.languages.registerCompletionItemProvider("rConfigPolicyLanguage", {
-				triggerCharacters: ["#"],
-				provideCompletionItems: function (model, position) {
-					return { suggestions: userConfigPolicyLanguageAutoComplete(monaco) };
-				},
-			});
+		// 	completionItemProvider = monaco.languages.registerCompletionItemProvider("rConfigPolicyLanguage", {
+		// 		triggerCharacters: ["#"],
+		// 		provideCompletionItems: function (model, position) {
+		// 			return { suggestions: userConfigPolicyLanguageAutoComplete(monaco) };
+		// 		},
+		// 	});
 
-			language = "rConfigPolicyLanguage";
-		}
+		// 	language = "rConfigPolicyLanguage";
+		// }
 
 		const codeEditorDiv = document.getElementById(divName);
 		meditor = monaco.editor.createDiffEditor(codeEditorDiv, {

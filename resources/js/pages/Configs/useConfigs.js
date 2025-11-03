@@ -1,4 +1,4 @@
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useFavoritesStore } from "@/stores/favorites";
 import { useRoute, useRouter } from "vue-router";
 
@@ -6,124 +6,105 @@ export function useConfigs() {
 	const favoritesStore = useFavoritesStore();
 	const route = useRoute();
 	const router = useRouter();
-
-	// Reactive state
-	const currentView = ref(localStorage.getItem("configsSelectedView") || "configs");
-	const configsId = ref(parseInt(route.params.id) || null);
+	const currentView = ref(localStorage.getItem("inventorySelectedView") || "configs");
+	const configsId = ref(parseInt(route.params.id) || 0);
 	const statusIdParam = ref(route.query.statusId || null);
 
-	// Base navigation items configuration - Core features only
-	const baseViewItems = computed(() => {
-		return [
-			{
-				id: "configs",
-				label: "Configurations",
-				icon: "config-tools",
-				isFavorite: favoritesStore.isFavorite("configs"),
-				route: "/configs",
-			},
-			{
-				id: "configsearch",
-				label: "Config Search",
-				icon: "config-search",
-				isFavorite: favoritesStore.isFavorite("configsearch"),
-				route: "/config-search",
-			},
-			{
-				id: "configcompare",
-				label: "Config Compare",
-				icon: "config-compare",
-				isFavorite: favoritesStore.isFavorite("configcompare"),
-				route: "/config-compare",
-			},
-		];
-	});
+	const viewItems = [
+		{ id: "configs", label: "Configurations", icon: "config-tools", isFavorite: ref(false), route: "/configs" },
+		{ id: "configsearch", label: "Config Search", icon: "config-search", isFavorite: ref(false), route: "/config-search" },
+		{ id: "configcompare", label: "Config Compare", icon: "config-compare", isFavorite: ref(false), route: "/config-compare" },
+		{ id: "configreport", label: "Config Report", icon: "config-reports", isFavorite: ref(false), route: "/config-report" },
+	];
 
-	// View items (can be extended later for custom ordering like inventory)
-	const viewItems = computed(() => baseViewItems.value);
-
-	// Nav pills items for the navigation component
-	const navPillsItems = computed(() => {
-		return viewItems.value.map((item) => ({
+	// NavPills-compatible items format
+	const navPillsItems = computed(() =>
+		viewItems.map((item) => ({
 			label: item.label,
-			to: item.id,
+			to: item.id, // Use id instead of route for consistency with NavPills
 			icon: item.icon,
-		}));
-	});
+		}))
+	);
 
 	onMounted(() => {
-		initializeView();
+		const routeName = route.name;
+
+		// Set current view if route matches a known view
+		if (viewItems.some((v) => v.id === routeName)) {
+			currentView.value = routeName;
+			localStorage.setItem("inventorySelectedView", routeName);
+		}
+		// Handle explicit view parameter
+		else if (route.params.view && viewItems.some((v) => v.id === route.params.view)) {
+			changeViewSidePopover(route.params.view);
+		}
+
+		// Preserve query parameters if they exist
+		if (Object.keys(route.query).length > 0 && currentView.value === routeName) {
+			router.replace({ name: currentView.value, query: route.query });
+		}
+
+		// Initialize favorites from store
+		viewItems.forEach((item) => {
+			item.isFavorite.value = favoritesStore.isFavorite(item.id);
+		});
 	});
 
-	function initializeView() {
-		if (route.params.view) {
-			changeView(route.params.view);
-			return;
-		}
-
-		if (viewItems.value.some((v) => v.id === route.name)) {
-			currentView.value = route.name;
-			return;
-		}
-
-		// Default to configs view
-		if (route.path.includes("config")) {
-			const routeName = route.name;
-			if (["configs", "configsearch", "configcompare"].includes(routeName)) {
-				currentView.value = routeName;
-			}
-		}
-	}
-
-	function handleRouteChange(routeName) {
-		if (viewItems.value.some((v) => v.id === routeName)) {
-			currentView.value = routeName;
-		}
-	}
-
-	function changeView(view) {
-		localStorage.setItem("configsSelectedView", view);
+	function changeViewSidePopover(view) {
+		// Update localStorage for persistence
+		localStorage.setItem("inventorySelectedView", view);
 		currentView.value = view;
 
+		// Always use Vue Router navigation for view changes
 		if (route.name !== view) {
 			router.push({ name: view }).catch((err) => console.error("Navigation error:", err));
 		}
 	}
 
-	function handleNavSelection(view) {
-		changeView(view);
+	function changeViewNavPills(view) {
+		// Update localStorage for persistence
+		localStorage.setItem("inventorySelectedView", view);
+		currentView.value = view;
+
+		// Handle URL updates
+		if (route.path.includes("/config") || route.name?.includes("config")) {
+			// Use history.replaceState for smooth navigation within configs module
+			if (route.name !== view) {
+				const pathMap = {
+					configs: "/configs",
+					configsearch: "/config-search",
+					configcompare: "/config-compare",
+					configreport: "/config-report",
+				};
+
+				const newPath = pathMap[view];
+				if (newPath) {
+					window.history.replaceState({}, "", newPath);
+				} else {
+					// Fallback to router resolution
+					const newUrl = router.resolve({ name: view }).href;
+					window.history.replaceState({}, "", newUrl);
+				}
+			}
+		} else {
+			// Use normal router navigation if outside configs module
+			if (route.name !== view) {
+				router.push({ name: view }).catch((err) => console.error("Navigation error:", err));
+			}
+		}
 	}
 
 	function toggleFavorite(viewId) {
-		const viewItem = viewItems.value.find((item) => item.id === viewId);
+		const viewItem = viewItems.find((item) => item.id === viewId);
 		if (viewItem) {
+			viewItem.isFavorite.value = !viewItem.isFavorite.value;
 			favoritesStore.toggleFavorite(viewItem);
 		}
 	}
 
-	// Watch for route changes
-	watch(
-		() => route.name,
-		(newRouteName) => {
-			handleRouteChange(newRouteName);
-		}
-	);
-
-	// Watch for route params changes
-	watch(
-		() => route.params.id,
-		(newId) => {
-			configsId.value = parseInt(newId) || null;
-		}
-	);
-
-	// Watch for query params changes
-	watch(
-		() => route.query.statusId,
-		(newStatusId) => {
-			statusIdParam.value = newStatusId || null;
-		}
-	);
+	function handleNavSelection(selectedView) {
+		changeViewNavPills(selectedView);
+	}
 
 	return {
 		// State
@@ -134,7 +115,8 @@ export function useConfigs() {
 		navPillsItems,
 
 		// Methods
-		changeView,
+		changeViewNavPills,
+		changeViewSidePopover,
 		handleNavSelection,
 		toggleFavorite,
 
