@@ -20,7 +20,7 @@ import { useNavigationSide } from "./useNavigationSide";
 const userid = inject("userid");
 
 // Use the composable to get all navigation functionality and state
-const { sideNavExtLinksIsOpen, sideNavFavLinksIsOpen, externalLinks, externalLinksDialogKey, favoritesStore, notificationsLength, panelElement, closeNav, closeExtDialog, removeExternalLink, notificationsCount, navToSettingsUpgrade, openSheet } = useNavigationSide(userid);
+const { sideNavSettingsIsOpen,sideNavExtLinksIsOpen, sideNavFavLinksIsOpen, externalLinks, externalLinksDialogKey, favoritesStore, notificationsLength, panelElement, closeNav, closeExtDialog, removeExternalLink, notificationsCount, navToSettingsUpgrade, openSheet } = useNavigationSide(userid);
 const { subscriptionConfig } = useAppStatusBar();
 const { viewItems: inventoryViewItems } = useInventory();
 const { viewItems: configViewItems } = useConfigs();

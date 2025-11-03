@@ -1,8 +1,6 @@
 <script setup>
-import Step5TaskVerifyProgressI18N from "@/i18n/pages/Tasks/WizardPanels/Step5TaskVerifyProgress.i18n.js";
 import { Progress } from "@/components/ui/progress";
 import { ref, watchEffect, onMounted } from "vue";
-import { useComponentTranslations } from "@/composables/useComponentTranslations";
 
 const props = defineProps({
 	model: {
@@ -15,16 +13,9 @@ const progress = ref(50);
 const progressCheckStatus = ref("checking");
 const errors = ref(null);
 
-const { t } = useComponentTranslations(Step5TaskVerifyProgressI18N);
-
 onMounted(() => {
 	validateModel();
 });
-
-// watchEffect(cleanupFn => {
-//   const timer = setTimeout(() => (progress.value = 100), 500);
-//   cleanupFn(() => clearTimeout(timer));
-// });
 
 const validateModel = async (data) => {
 	errors.value = "";
@@ -55,7 +46,7 @@ const validateModel = async (data) => {
 </script>
 
 <template>
-	<h2 class="mb-0 text-base font-semibold text-gray-900 dark:text-white">{{ t("taskVerification") }}</h2>
-	<span v-if="progressCheckStatus === 'error'" class="text-red-500"> {{ t("status") }}: {{ progressCheckStatus }} </span>
+	<h2 class="mb-0 text-base font-semibold text-gray-900 dark:text-white">Task Verification</h2>
+	<span v-if="progressCheckStatus === 'error'" class="text-red-500"> Status: {{ progressCheckStatus }} </span>
 	<Progress v-model="progress" class="w-3/5" />
 </template>

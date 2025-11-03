@@ -1,18 +1,14 @@
 <script setup>
-import TagMultiSelectI18N from "@/i18n/pages/Shared/FormFields/TagMultiSelect.i18n.js";
 import axios from "axios";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { X } from "lucide-vue-next";
 import { onMounted, ref } from "vue";
-import { useComponentTranslations } from "@/composables/useComponentTranslations";
 import { useMultiSelect } from "./useMultiSelect.js";
 
 const emit = defineEmits(["update:modelValue"]);
 const tags = ref([]);
 const isLoading = ref(true);
-
-const { t } = useComponentTranslations(TagMultiSelectI18N);
 
 const props = defineProps({
 	modelValue: {
@@ -55,7 +51,7 @@ function fetchTags() {
 	<Popover>
 		<PopoverTrigger class="col-span-3">
 			<Button variant="ghost" class="flex items-center justify-start w-full px-2 py-1 border rounded-xl whitespace-nowrap h-fit bg-rcgray-700" :class="selectedTags.length === 0 ? ' text-rcgray-400' : ''" :style="selectedTags.length === 0 ? 'padding: 0.45rem' : 'padding: 0.2rem'">
-				<span v-if="isLoading">{{ t("loadingTags") }}</span>
+				<span v-if="isLoading">Loading tags...</span>
 				<template v-else class="text-rcgray-400">
 					<RcIcon name="tag" class="mx-2" />
 
@@ -83,7 +79,7 @@ function fetchTags() {
 
 		<PopoverContent side="bottom" align="start" class="col-span-3 p-0">
 			<div class="relative items-center w-full">
-				<Input id="search" type="text" v-model="searchTerm" autocomplete="off" :placeholder="t('common.search')" class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter" />
+				<Input id="search" type="text" v-model="searchTerm" autocomplete="off" placeholder="Search..." class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter" />
 				<span class="absolute inset-y-0 flex items-center justify-center px-2 start-0">
 					<RcIcon name="search" />
 				</span>
@@ -108,7 +104,7 @@ function fetchTags() {
 			<div class="p-1 border-5">
 				<Button variant="ghost" class="justify-start w-full p-1">
 					<RcIcon name="plus" class="w-8" />
-					<div class="rc-text-xs-muted ml-1">{{ t("createNewRecord") }}</div>
+					<div class="rc-text-xs-muted ml-1">Create new record</div>
 				</Button>
 			</div>
 		</PopoverContent>

@@ -1,22 +1,17 @@
 <script setup>
-// filepath: /var/www/html/rconfig7/resources/js/pages/Tasks/TasksHistoryDetails/TaskHistoryDialog.vue
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import Loading from "@/pages/Shared/Table/Loading.vue";
 import NoResults from "@/pages/Shared/Table/NoResults.vue";
 import Pagination from "@/pages/Shared/Table/Pagination.vue";
-import TaskHistoryDialogI18N from "@/i18n/pages/Tasks/TasksHistoryDetails/TaskHistoryDialog.i18n.js";
 import { useReload } from "@/composables/tables/useReload";
 import { Play, CheckCircle, XCircle, Clock } from "lucide-vue-next";
 import { ref, onMounted, watch, inject, onUnmounted } from "vue";
-import { useComponentTranslations } from "@/composables/useComponentTranslations";
 import { useDialogStore } from "@/stores/dialogActions";
 import { useToaster } from "@/composables/useToaster";
 import axios from "axios";
 
-const { t } = useComponentTranslations(TaskHistoryDialogI18N);
 const dialogStore = useDialogStore();
 const { isDialogOpen, closeDialog } = dialogStore;
 const { toastError } = useToaster();
@@ -125,7 +120,6 @@ onUnmounted(() => {
 </script>
 
 <template>
-	<!-- filepath: /var/www/html/rconfig7/resources/js/pages/Tasks/TasksHistoryDetails/TaskHistoryDialog.vue -->
 	<Dialog :open="isDialogOpen('DialogViewHistory')">
 		<DialogTrigger as-child>
 			<!-- Dialog trigger handled externally -->
@@ -135,11 +129,11 @@ onUnmounted(() => {
 				<DialogTitle class="text-sm text-rcgray-200">
 					<div class="flex items-center">
 						<RcIcon name="history" />
-						<span class="ml-2">{{ t("taskHistoryTitle") }} ID: {{ taskId }}</span>
+						<span class="ml-2">Task History - ID: {{ taskId }}</span>
 					</div>
 				</DialogTitle>
 				<p class="text-xs text-rcgray-400 mt-1">
-					{{ t("taskHistoryDescription") }}
+					View the execution history for this scheduled task
 				</p>
 			</DialogHeader>
 
@@ -149,7 +143,7 @@ onUnmounted(() => {
 				<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2 md:p-4 gap-2 sm:gap-0">
 					<div class="flex items-center justify-center sm:justify-start ml-0 sm:ml-2">
 						<div class="text-sm text-rcgray-300">
-							<span class="font-medium">{{ t("totalRuns") }}:</span>
+							<span class="font-medium">Total Runs:</span>
 							<span class="ml-1 font-mono">{{ total }}</span>
 						</div>
 					</div>
@@ -165,9 +159,9 @@ onUnmounted(() => {
 						<div class="w-12 h-12 md:w-16 md:h-16 mb-4 rounded-full bg-muted/50 flex items-center justify-center">
 							<RcIcon name="history" class="w-6 h-6 md:w-8 md:h-8 text-muted-foreground" />
 						</div>
-						<h3 class="text-base md:text-lg font-semibold mb-2">{{ t("noTaskSelected") }}</h3>
+						<h3 class="text-base md:text-lg font-semibold mb-2">No Task Selected</h3>
 						<p class="text-muted-foreground text-sm text-center max-w-sm">
-							{{ t("selectTaskToViewHistory") }}
+							Select a task from the list to view its execution history
 						</p>
 					</div>
 
@@ -176,11 +170,11 @@ onUnmounted(() => {
 						<Table>
 							<TableHeader>
 								<TableRow>
-									<TableHead class="w-[8%] min-w-[60px] text-xs md:text-sm">{{ t("taskID") }}</TableHead>
-									<TableHead class="w-[8%] min-w-[80px] text-xs md:text-sm">{{ t("monitoredTaskID") }}</TableHead>
-									<TableHead class="w-[12%] min-w-[60px] text-xs md:text-sm">{{ t("common.type") }}</TableHead>
-									<TableHead class="w-[15%] min-w-[100px] text-xs md:text-sm">{{ t("common.status") }}</TableHead>
-									<TableHead class="w-[15%] min-w-[100px] text-xs md:text-sm">{{ t("timestamp") }}</TableHead>
+									<TableHead class="w-[8%] min-w-[60px] text-xs md:text-sm">Task ID</TableHead>
+									<TableHead class="w-[8%] min-w-[80px] text-xs md:text-sm">Monitored Task ID</TableHead>
+									<TableHead class="w-[12%] min-w-[60px] text-xs md:text-sm">Type</TableHead>
+									<TableHead class="w-[15%] min-w-[100px] text-xs md:text-sm">Status</TableHead>
+									<TableHead class="w-[15%] min-w-[100px] text-xs md:text-sm">Timestamp</TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody>
@@ -234,7 +228,7 @@ onUnmounted(() => {
 			<!-- Footer -->
 			<div class="flex items-center justify-end p-2 md:p-4 border-t border-rcgray-700">
 				<Button variant="outline" size="sm" @click="closeDialog('DialogViewHistory')" class="px-3 py-1 md:px-4 text-sm">
-					{{ t("common.close") }}
+					Close
 					<div class="pl-2 ml-auto hidden sm:block">
 						<kbd class="rc-kdb-class">ESC</kbd>
 					</div>

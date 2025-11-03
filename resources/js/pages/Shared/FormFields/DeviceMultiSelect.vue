@@ -33,14 +33,12 @@
  * - Disabled during search (search shows all matching results)
  * - Maintains alphabetical order via backend sorting
  */
-import DeviceMultiSelectI18N from "@/i18n/pages/Shared/FormFields/DeviceMultiSelect.i18n.js";
 import axios from "axios";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { X } from "lucide-vue-next";
 import { onMounted, ref, computed, watch, nextTick } from "vue";
 import { useMultiSelect } from "./useMultiSelect.js";
-import { useComponentTranslations } from "@/composables/useComponentTranslations";
 import { useDebounceFn } from "@vueuse/core";
 
 const emit = defineEmits(["update:modelValue"]);
@@ -52,7 +50,6 @@ const currentPage = ref(1);
 const totalRecords = ref(0);
 const searchTerm = ref("");
 const scrollContainer = ref(null);
-const { t } = useComponentTranslations(DeviceMultiSelectI18N);
 
 const props = defineProps({
 	modelValue: {
@@ -128,7 +125,7 @@ async function fetchDevices(page = 1, search = "", replaceData = false) {
 	try {
 		const params = {
 			page,
-			per_page: 50, // Set to 5 for testing - change back to 50 for production
+			per_page: 50,
 			sort: "device_name",
 		};
 
@@ -174,11 +171,7 @@ async function handleScroll(event) {
 	const { scrollTop, scrollHeight, clientHeight } = event.target;
 	const threshold = 100; // Load more when 100px from bottom
 
-	// Debug logging for testing
-	console.log(`Scroll: ${scrollTop + clientHeight}/${scrollHeight}, Threshold: ${scrollHeight - threshold}`);
-
 	if (scrollTop + clientHeight >= scrollHeight - threshold) {
-		console.log(`Loading page ${currentPage.value + 1}...`);
 		await fetchDevices(currentPage.value + 1);
 	}
 }
@@ -186,18 +179,13 @@ async function handleScroll(event) {
 // Setup scroll listener
 function setupScrollListener() {
 	nextTick(() => {
-		// Try multiple selectors for the scrollable element
 		const scrollArea = scrollContainer.value?.querySelector("[data-radix-scroll-area-viewport]") || scrollContainer.value?.querySelector(".scroll-area-viewport") || scrollContainer.value?.querySelector("[data-scroll-area-viewport]");
 
 		if (scrollArea) {
-			console.log("Scroll listener attached to:", scrollArea);
 			scrollArea.addEventListener("scroll", handleScroll);
 		} else {
-			console.warn("Could not find scroll area viewport");
-			// Fallback: attach to the ScrollArea itself
 			if (scrollContainer.value) {
 				scrollContainer.value.addEventListener("scroll", handleScroll);
-				console.log("Fallback: attached to scrollContainer directly");
 			}
 		}
 	});
@@ -215,7 +203,7 @@ onMounted(() => {
 			<Button variant="ghost" class="flex items-center justify-start p-1 pl-2 border h-fit gap-1 min-w-2xl" :class="selectedDevs.length === 0 ? 'text-muted-foreground' : ''">
 				<RcIcon name="device" class="flex-shrink-0 mx-2" />
 				<span v-if="selectedDevs && selectedDevs.length === 0" class="flex-1 text-left mr-2">
-					{{ t("selectDevices") }}
+					Select devices
 				</span>
 				<div v-else class="flex flex-wrap gap-1 flex-1 overflow-hidden">
 					<!-- Show first 3 devices -->
@@ -232,7 +220,7 @@ onMounted(() => {
 		</PopoverTrigger>
 		<PopoverContent side="bottom" align="start" class="col-span-3 p-0">
 			<div class="relative items-center w-full">
-				<Input id="search" type="text" v-model="searchTerm" autocomplete="off" :placeholder="t('common.search')" class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter" />
+				<Input id="search" type="text" v-model="searchTerm" autocomplete="off" placeholder="Search..." class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter" />
 				<span class="absolute inset-y-0 flex items-center justify-center px-2 start-0">
 					<RcIcon name="search" />
 				</span>
@@ -249,14 +237,14 @@ onMounted(() => {
 							</span>
 						</div>
 
-						<!-- Manual Load More Button for Testing -->
+						<!-- Manual Load More Button -->
 						<div v-if="hasMoreData && !searchTerm" class="text-center rc-text-xs-muted">
 							<Button @click="fetchDevices(currentPage + 1)" :disabled="isLoadingMore" variant="outline" class="load-more-btn my-4">
 								<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 									<path d="M12 8v8m0 0l4-4m-4 4l-4-4" />
 									<path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
 								</svg>
-								{{ isLoadingMore ? t("common.loading", "Loading...") : `${t("common.loadMoreResults", "Load More")} (${devices.length}/${totalRecords})` }}
+								{{ isLoadingMore ? "Loading..." : `Load More (${devices.length}/${totalRecords})` }}
 							</Button>
 						</div>
 
@@ -266,11 +254,11 @@ onMounted(() => {
 						</div>
 
 						<!-- End of data indicator -->
-						<div v-else-if="!hasMoreData && !searchTerm && devices.length > 0" class="text-center py-2 rc-text-xs-muted">{{ t("common.noMoreResults", "No more devices to load") }} ({{ devices.length }} total)</div>
+						<div v-else-if="!hasMoreData && !searchTerm && devices.length > 0" class="text-center py-2 rc-text-xs-muted">No more devices to load ({{ devices.length }} total)</div>
 
 						<!-- No search results -->
 						<div v-else-if="searchTerm && displayedDevices.length === 0" class="text-center py-4 rc-text-xs-muted">
-							{{ t("common.noSearchResults", "No devices found") }}
+							No devices found
 						</div>
 					</template>
 				</div>

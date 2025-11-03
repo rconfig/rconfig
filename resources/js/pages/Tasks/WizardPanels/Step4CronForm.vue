@@ -1,10 +1,8 @@
 <script setup>
-import Step4CronFormI18N from "@/i18n/pages/Tasks/WizardPanels/Step4CronForm.i18n.js";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { reactive, watchEffect, toRefs, watch, ref } from "vue";
-import { useComponentTranslations } from "@/composables/useComponentTranslations";
 
 const emit = defineEmits(["update:modelValue"]);
 
@@ -27,18 +25,14 @@ const cronReturnArray = reactive({
 
 const { minute, hour, day, month, weekday } = toRefs(cronReturnArray);
 
-const { t } = useComponentTranslations(Step4CronFormI18N);
-
 watch(
 	() => [cronReturnArray.minute, cronReturnArray.hour, cronReturnArray.day, cronReturnArray.month, cronReturnArray.weekday],
 	(newValue) => {
 		if (newValue[0] === "" || newValue[1] === "" || newValue[2] === "" || newValue[3] === "" || newValue[4] === "") {
-			errors.value = t("allFieldsRequired");
+			errors.value = "All fields are required";
 			return;
 		}
 		props.modelValue = newValue;
-		// console.log('newValue', [cronReturnArray.minute, cronReturnArray.hour, cronReturnArray.day, cronReturnArray.month, cronReturnArray.weekday]);
-		// console.log('props.modelValue', props.modelValue);
 		updateParentModel();
 	}
 );
@@ -68,31 +62,29 @@ watchEffect(() => {
 		<!--MINUTES-->
 		<div class="flex w-full max-w-xl items-center gap-1.5">
 			<Label class="w-1/4" for="picture">
-				{{ t("selectMinute") }}
+				Select Minute
 			</Label>
 			<Input class="w-1/4 focus:outline-none focus-visible:ring-0" v-model="cronReturnArray.minute" />
 			<Select v-model="cronReturnArray.minute" class="w-1/2">
 				<SelectTrigger class="w-full focus:outline-none focus:ring-0">
-					<SelectValue :placeholder="t('selectAnOption')" />
+					<SelectValue placeholder="Select an option" />
 				</SelectTrigger>
 				<SelectContent>
 					<SelectGroup>
-						<SelectLabel class="text-muted-foreground" value="--">
-							{{ t("selectAnOption") }}
-						</SelectLabel>
-						<SelectItem value="*">{{ t("everyMinute") }} (*)</SelectItem>
-						<SelectItem value="*/2">{{ t("everyOtherMinute") }} (*/2)</SelectItem>
-						<SelectItem value="*/5">{{ t("every5Minutes") }} (*/5)</SelectItem>
-						<SelectItem value="*/10">{{ t("every10Minutes") }} (*/10)</SelectItem>
-						<SelectItem value="*/15">{{ t("every15Minutes") }} (*/15)</SelectItem>
-						<SelectItem value="0,30">{{ t("every30Minutes") }} (0,30)</SelectItem>
-						<SelectLabel class="text-muted-foreground" value="--"> -- {{ t("minutes") }} -- </SelectLabel>
-						<SelectItem value="0">:00 {{ t("topOfTheHour") }} (0)</SelectItem>
-						<SelectItem value="1">{{ t("first") }} (1)</SelectItem>
+						<SelectLabel class="text-muted-foreground" value="--">Select an option</SelectLabel>
+						<SelectItem value="*">Every Minute (*)</SelectItem>
+						<SelectItem value="*/2">Every Other Minute (*/2)</SelectItem>
+						<SelectItem value="*/5">Every 5 Minutes (*/5)</SelectItem>
+						<SelectItem value="*/10">Every 10 Minutes (*/10)</SelectItem>
+						<SelectItem value="*/15">Every 15 Minutes (*/15)</SelectItem>
+						<SelectItem value="0,30">Every 30 Minutes (0,30)</SelectItem>
+						<SelectLabel class="text-muted-foreground" value="--">-- Minutes --</SelectLabel>
+						<SelectItem value="0">:00 Top of the Hour (0)</SelectItem>
+						<SelectItem value="1">:01 (1)</SelectItem>
 						<SelectItem value="2">:02 (2)</SelectItem>
 						<SelectItem value="3">:03 (3)</SelectItem>
 						<SelectItem value="4">:04 (4)</SelectItem>
-						<SelectItem value="5">{{ t("fifth") }} (5)</SelectItem>
+						<SelectItem value="5">:05 (5)</SelectItem>
 						<SelectItem value="6">:06 (6)</SelectItem>
 						<SelectItem value="7">:07 (7)</SelectItem>
 						<SelectItem value="8">:08 (8)</SelectItem>
@@ -102,7 +94,7 @@ watchEffect(() => {
 						<SelectItem value="12">:12 (12)</SelectItem>
 						<SelectItem value="13">:13 (13)</SelectItem>
 						<SelectItem value="14">:14 (14)</SelectItem>
-						<SelectItem value="15">:15 {{ t("quarterPast") }} (15)</SelectItem>
+						<SelectItem value="15">:15 Quarter Past (15)</SelectItem>
 						<SelectItem value="16">:16 (16)</SelectItem>
 						<SelectItem value="17">:17 (17)</SelectItem>
 						<SelectItem value="18">:18 (18)</SelectItem>
@@ -117,7 +109,7 @@ watchEffect(() => {
 						<SelectItem value="27">:27 (27)</SelectItem>
 						<SelectItem value="28">:28 (28)</SelectItem>
 						<SelectItem value="29">:29 (29)</SelectItem>
-						<SelectItem value="30">:30 {{ t("halfPast") }} (30)</SelectItem>
+						<SelectItem value="30">:30 Half Past (30)</SelectItem>
 						<SelectItem value="31">:31 (31)</SelectItem>
 						<SelectItem value="32">:32 (32)</SelectItem>
 						<SelectItem value="33">:33 (33)</SelectItem>
@@ -132,7 +124,7 @@ watchEffect(() => {
 						<SelectItem value="42">:42 (42)</SelectItem>
 						<SelectItem value="43">:43 (43)</SelectItem>
 						<SelectItem value="44">:44 (44)</SelectItem>
-						<SelectItem value="45">:45 {{ t("quarterTil") }} (45)</SelectItem>
+						<SelectItem value="45">:45 Quarter Til (45)</SelectItem>
 						<SelectItem value="46">:46 (46)</SelectItem>
 						<SelectItem value="47">:47 (47)</SelectItem>
 						<SelectItem value="48">:48 (48)</SelectItem>
@@ -156,26 +148,24 @@ watchEffect(() => {
 		<!--HOURS-->
 		<div class="flex w-full max-w-xl items-center gap-1.5">
 			<Label class="w-1/4" for="picture">
-				{{ t("selectHour") }}
+				Select Hour
 			</Label>
 			<Input class="w-1/4 focus:outline-none focus-visible:ring-0" v-model="cronReturnArray.hour" />
 			<Select v-model="cronReturnArray.hour" class="w-1/2">
 				<SelectTrigger class="w-full focus:outline-none focus:ring-0">
-					<SelectValue :placeholder="t('selectAnOption')" />
+					<SelectValue placeholder="Select an option" />
 				</SelectTrigger>
 				<SelectContent>
 					<SelectGroup>
-						<SelectLabel class="text-muted-foreground" value="--">
-							{{ t("selectAnOption") }}
-						</SelectLabel>
-						<SelectItem value="*">{{ t("everyHour") }} (*)</SelectItem>
-						<SelectItem value="*/2">{{ t("everyOtherHour") }} (*/2)</SelectItem>
-						<SelectItem value="*/3">{{ t("every3Hours") }} (*/3)</SelectItem>
-						<SelectItem value="*/4">{{ t("every4Hours") }} (*/4)</SelectItem>
-						<SelectItem value="*/6">{{ t("every6Hours") }} (*/6)</SelectItem>
-						<SelectItem value="0,12">{{ t("every12Hours") }} (0,12)</SelectItem>
-						<SelectLabel class="text-muted-foreground" value="--"> -- {{ t("hours") }} -- </SelectLabel>
-						<SelectItem value="0">12:00 a.m. {{ t("midnight") }} (0)</SelectItem>
+						<SelectLabel class="text-muted-foreground" value="--">Select an option</SelectLabel>
+						<SelectItem value="*">Every Hour (*)</SelectItem>
+						<SelectItem value="*/2">Every Other Hour (*/2)</SelectItem>
+						<SelectItem value="*/3">Every 3 Hours (*/3)</SelectItem>
+						<SelectItem value="*/4">Every 4 Hours (*/4)</SelectItem>
+						<SelectItem value="*/6">Every 6 Hours (*/6)</SelectItem>
+						<SelectItem value="0,12">Every 12 Hours (0,12)</SelectItem>
+						<SelectLabel class="text-muted-foreground" value="--">-- Hours --</SelectLabel>
+						<SelectItem value="0">12:00 a.m. Midnight (0)</SelectItem>
 						<SelectItem value="1">1:00 a.m. (1)</SelectItem>
 						<SelectItem value="2">2:00 a.m. (2)</SelectItem>
 						<SelectItem value="3">3:00 a.m. (3)</SelectItem>
@@ -187,7 +177,7 @@ watchEffect(() => {
 						<SelectItem value="9">9:00 a.m. (9)</SelectItem>
 						<SelectItem value="10">10:00 a.m. (10)</SelectItem>
 						<SelectItem value="11">11:00 a.m. (11)</SelectItem>
-						<SelectItem value="12">12:00 p.m. {{ t("noon") }} (12)</SelectItem>
+						<SelectItem value="12">12:00 p.m. Noon (12)</SelectItem>
 						<SelectItem value="13">1:00 p.m. (13)</SelectItem>
 						<SelectItem value="14">2:00 p.m. (14)</SelectItem>
 						<SelectItem value="15">3:00 p.m. (15)</SelectItem>
@@ -208,53 +198,51 @@ watchEffect(() => {
 		<!--DAYS-->
 		<div class="flex w-full max-w-xl items-center gap-1.5">
 			<Label class="w-1/4" for="picture">
-				{{ t("selectDay") }}
+				Select Day
 			</Label>
 			<Input class="w-1/4 focus:outline-none focus-visible:ring-0" v-model="cronReturnArray.day" />
 			<Select v-model="cronReturnArray.day" class="w-1/2">
 				<SelectTrigger class="w-full focus:outline-none focus:ring-0">
-					<SelectValue :placeholder="t('selectAnOption')" />
+					<SelectValue placeholder="Select an option" />
 				</SelectTrigger>
 				<SelectContent>
 					<SelectGroup>
-						<SelectLabel class="text-muted-foreground" value="--">
-							{{ t("selectAnOption") }}
-						</SelectLabel>
-						<SelectItem value="*">{{ t("everyDay") }} (*)</SelectItem>
-						<SelectItem value="*/2">{{ t("everyOtherDay") }} (*/2)</SelectItem>
-						<SelectItem value="1,15">{{ t("firstAnd15th") }} (1,15)</SelectItem>
-						<SelectLabel class="text-muted-foreground" value="--"> -- {{ t("days") }} -- </SelectLabel>
-						<SelectItem value="1">{{ t("first") }} (1)</SelectItem>
-						<SelectItem value="2">{{ t("second") }} (2)</SelectItem>
-						<SelectItem value="3">{{ t("third") }} (3)</SelectItem>
-						<SelectItem value="4">{{ t("fourth") }} (4)</SelectItem>
-						<SelectItem value="5">{{ t("fifth") }} (5)</SelectItem>
-						<SelectItem value="6">{{ t("sixth") }} (6)</SelectItem>
-						<SelectItem value="7">{{ t("seventh") }} (7)</SelectItem>
-						<SelectItem value="8">{{ t("eighth") }} (8)</SelectItem>
-						<SelectItem value="9">{{ t("ninth") }} (9)</SelectItem>
-						<SelectItem value="10">{{ t("tenth") }} (10)</SelectItem>
-						<SelectItem value="11">{{ t("eleventh") }} (11)</SelectItem>
-						<SelectItem value="12">{{ t("twelfth") }} (12)</SelectItem>
-						<SelectItem value="13">{{ t("thirteenth") }} (13)</SelectItem>
-						<SelectItem value="14">{{ t("fourteenth") }} (14)</SelectItem>
-						<SelectItem value="15">{{ t("fifteenth") }} (15)</SelectItem>
-						<SelectItem value="16">{{ t("sixteenth") }} (16)</SelectItem>
-						<SelectItem value="17">{{ t("seventeenth") }} (17)</SelectItem>
-						<SelectItem value="18">{{ t("eighteenth") }} (18)</SelectItem>
-						<SelectItem value="19">{{ t("nineteenth") }} (19)</SelectItem>
-						<SelectItem value="20">{{ t("twentieth") }} (20)</SelectItem>
-						<SelectItem value="21">{{ t("twentyFirst") }} (21)</SelectItem>
-						<SelectItem value="22">{{ t("twentySecond") }} (22)</SelectItem>
-						<SelectItem value="23">{{ t("twentyThird") }} (23)</SelectItem>
-						<SelectItem value="24">{{ t("twentyFourth") }} (24)</SelectItem>
-						<SelectItem value="25">{{ t("twentyFifth") }} (25)</SelectItem>
-						<SelectItem value="26">{{ t("twentySixth") }} (26)</SelectItem>
-						<SelectItem value="27">{{ t("twentySeventh") }} (27)</SelectItem>
-						<SelectItem value="28">{{ t("twentyEighth") }} (28)</SelectItem>
-						<SelectItem value="29">{{ t("twentyNinth") }} (29)</SelectItem>
-						<SelectItem value="30">{{ t("thirtieth") }} (30)</SelectItem>
-						<SelectItem value="31">{{ t("thirtyFirst") }} (31)</SelectItem>
+						<SelectLabel class="text-muted-foreground" value="--">Select an option</SelectLabel>
+						<SelectItem value="*">Every Day (*)</SelectItem>
+						<SelectItem value="*/2">Every Other Day (*/2)</SelectItem>
+						<SelectItem value="1,15">1st and 15th (1,15)</SelectItem>
+						<SelectLabel class="text-muted-foreground" value="--">-- Days --</SelectLabel>
+						<SelectItem value="1">1st (1)</SelectItem>
+						<SelectItem value="2">2nd (2)</SelectItem>
+						<SelectItem value="3">3rd (3)</SelectItem>
+						<SelectItem value="4">4th (4)</SelectItem>
+						<SelectItem value="5">5th (5)</SelectItem>
+						<SelectItem value="6">6th (6)</SelectItem>
+						<SelectItem value="7">7th (7)</SelectItem>
+						<SelectItem value="8">8th (8)</SelectItem>
+						<SelectItem value="9">9th (9)</SelectItem>
+						<SelectItem value="10">10th (10)</SelectItem>
+						<SelectItem value="11">11th (11)</SelectItem>
+						<SelectItem value="12">12th (12)</SelectItem>
+						<SelectItem value="13">13th (13)</SelectItem>
+						<SelectItem value="14">14th (14)</SelectItem>
+						<SelectItem value="15">15th (15)</SelectItem>
+						<SelectItem value="16">16th (16)</SelectItem>
+						<SelectItem value="17">17th (17)</SelectItem>
+						<SelectItem value="18">18th (18)</SelectItem>
+						<SelectItem value="19">19th (19)</SelectItem>
+						<SelectItem value="20">20th (20)</SelectItem>
+						<SelectItem value="21">21st (21)</SelectItem>
+						<SelectItem value="22">22nd (22)</SelectItem>
+						<SelectItem value="23">23rd (23)</SelectItem>
+						<SelectItem value="24">24th (24)</SelectItem>
+						<SelectItem value="25">25th (25)</SelectItem>
+						<SelectItem value="26">26th (26)</SelectItem>
+						<SelectItem value="27">27th (27)</SelectItem>
+						<SelectItem value="28">28th (28)</SelectItem>
+						<SelectItem value="29">29th (29)</SelectItem>
+						<SelectItem value="30">30th (30)</SelectItem>
+						<SelectItem value="31">31st (31)</SelectItem>
 					</SelectGroup>
 				</SelectContent>
 			</Select>
@@ -264,35 +252,33 @@ watchEffect(() => {
 		<!--MONTHS-->
 		<div class="flex w-full max-w-xl items-center gap-1.5">
 			<Label class="w-1/4" for="picture">
-				{{ t("selectMonth") }}
+				Select Month
 			</Label>
 			<Input class="w-1/4 focus:outline-none focus-visible:ring-0" v-model="cronReturnArray.month" />
 			<Select v-model="cronReturnArray.month" class="w-1/2">
 				<SelectTrigger class="w-full focus:outline-none focus:ring-0">
-					<SelectValue :placeholder="t('selectAnOption')" />
+					<SelectValue placeholder="Select an option" />
 				</SelectTrigger>
 				<SelectContent>
 					<SelectGroup>
-						<SelectLabel class="text-muted-foreground" value="--">
-							{{ t("selectAnOption") }}
-						</SelectLabel>
-						<SelectItem value="*">{{ t("everyMonth") }} (*)</SelectItem>
-						<SelectItem value="*/2">{{ t("everyOtherMonth") }} (*/2)</SelectItem>
-						<SelectItem value="*/4">{{ t("every3Months") }} (*/4)</SelectItem>
-						<SelectItem value="1,7">{{ t("every6Months") }} (1,7)</SelectItem>
-						<SelectLabel class="text-muted-foreground" value="--"> -- {{ t("months") }} -- </SelectLabel>
-						<SelectItem value="1">{{ t("january") }} (1)</SelectItem>
-						<SelectItem value="2">{{ t("february") }} (2)</SelectItem>
-						<SelectItem value="3">{{ t("march") }} (3)</SelectItem>
-						<SelectItem value="4">{{ t("april") }} (4)</SelectItem>
-						<SelectItem value="5">{{ t("may") }} (5)</SelectItem>
-						<SelectItem value="6">{{ t("june") }} (6)</SelectItem>
-						<SelectItem value="7">{{ t("july") }} (7)</SelectItem>
-						<SelectItem value="8">{{ t("august") }} (8)</SelectItem>
-						<SelectItem value="9">{{ t("september") }} (9)</SelectItem>
-						<SelectItem value="10">{{ t("october") }} (10)</SelectItem>
-						<SelectItem value="11">{{ t("november") }} (11)</SelectItem>
-						<SelectItem value="12">{{ t("december") }} (12)</SelectItem>
+						<SelectLabel class="text-muted-foreground" value="--">Select an option</SelectLabel>
+						<SelectItem value="*">Every Month (*)</SelectItem>
+						<SelectItem value="*/2">Every Other Month (*/2)</SelectItem>
+						<SelectItem value="*/4">Every 3 Months (*/4)</SelectItem>
+						<SelectItem value="1,7">Every 6 Months (1,7)</SelectItem>
+						<SelectLabel class="text-muted-foreground" value="--">-- Months --</SelectLabel>
+						<SelectItem value="1">January (1)</SelectItem>
+						<SelectItem value="2">February (2)</SelectItem>
+						<SelectItem value="3">March (3)</SelectItem>
+						<SelectItem value="4">April (4)</SelectItem>
+						<SelectItem value="5">May (5)</SelectItem>
+						<SelectItem value="6">June (6)</SelectItem>
+						<SelectItem value="7">July (7)</SelectItem>
+						<SelectItem value="8">August (8)</SelectItem>
+						<SelectItem value="9">September (9)</SelectItem>
+						<SelectItem value="10">October (10)</SelectItem>
+						<SelectItem value="11">November (11)</SelectItem>
+						<SelectItem value="12">December (12)</SelectItem>
 					</SelectGroup>
 				</SelectContent>
 			</Select>
@@ -302,32 +288,30 @@ watchEffect(() => {
 		<!--WEEKDAYS-->
 		<div class="flex w-full max-w-xl items-center gap-1.5">
 			<Label class="w-1/4" for="picture">
-				{{ t("selectWeekday") }}
+				Select Weekday
 			</Label>
 			<Input class="w-1/4 focus:outline-none focus-visible:ring-0" v-model="cronReturnArray.weekday" />
 			<Select v-model="cronReturnArray.weekday" class="w-1/2">
 				<SelectTrigger class="w-full focus:outline-none focus:ring-0">
-					<SelectValue :placeholder="t('selectAnOption')" />
+					<SelectValue placeholder="Select an option" />
 				</SelectTrigger>
 				<SelectContent>
 					<SelectGroup>
-						<SelectLabel class="text-muted-foreground" value="--">
-							{{ t("selectAnOption") }}
-						</SelectLabel>
-						<SelectItem value="*">{{ t("everyWeekday") }} (*)</SelectItem>
-						<SelectItem value="1-5">{{ t("monThruFri") }} (1-5)</SelectItem>
-						<SelectItem value="0,6">{{ t("satAndSun") }} (6,0)</SelectItem>
-						<SelectItem value="1,3,5">{{ t("monWedFri") }} (1,3,5)</SelectItem>
-						<SelectItem value="2,4">{{ t("tuesThurs") }} (2,4)</SelectItem>
-						<SelectItem value="2,5">{{ t("tuesFri") }} (2,5)</SelectItem>
-						<SelectLabel class="text-muted-foreground" value="--"> -- {{ t("weekday") }} -- </SelectLabel>
-						<SelectItem value="0">{{ t("sunday") }} (0)</SelectItem>
-						<SelectItem value="1">{{ t("monday") }} (1)</SelectItem>
-						<SelectItem value="2">{{ t("tuesday") }} (2)</SelectItem>
-						<SelectItem value="3">{{ t("wednesday") }} (3)</SelectItem>
-						<SelectItem value="4">{{ t("thursday") }} (4)</SelectItem>
-						<SelectItem value="5">{{ t("friday") }} (5)</SelectItem>
-						<SelectItem value="6">{{ t("saturday") }} (6)</SelectItem>
+						<SelectLabel class="text-muted-foreground" value="--">Select an option</SelectLabel>
+						<SelectItem value="*">Every Weekday (*)</SelectItem>
+						<SelectItem value="1-5">Mon thru Fri (1-5)</SelectItem>
+						<SelectItem value="0,6">Sat and Sun (6,0)</SelectItem>
+						<SelectItem value="1,3,5">Mon Wed Fri (1,3,5)</SelectItem>
+						<SelectItem value="2,4">Tues Thurs (2,4)</SelectItem>
+						<SelectItem value="2,5">Tues Fri (2,5)</SelectItem>
+						<SelectLabel class="text-muted-foreground" value="--">-- Weekday --</SelectLabel>
+						<SelectItem value="0">Sunday (0)</SelectItem>
+						<SelectItem value="1">Monday (1)</SelectItem>
+						<SelectItem value="2">Tuesday (2)</SelectItem>
+						<SelectItem value="3">Wednesday (3)</SelectItem>
+						<SelectItem value="4">Thursday (4)</SelectItem>
+						<SelectItem value="5">Friday (5)</SelectItem>
+						<SelectItem value="6">Saturday (6)</SelectItem>
 					</SelectGroup>
 				</SelectContent>
 			</Select>

@@ -118,7 +118,7 @@ onUnmounted(() => {
 							<TableCell class="text-start">
 								{{ row.email }}
 							</TableCell>
-							<TableCell>
+							<TableCell class="text-start">
 								<Switch :id="`notif-${row.id}`" :checked="row.get_notifications === 1" @update:checked="toggleNotification(row.id, $event ? 1 : 0)" />
 							</TableCell>
 							<TableCell class="text-start">

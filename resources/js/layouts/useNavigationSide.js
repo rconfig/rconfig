@@ -22,6 +22,7 @@ export function useNavigationSide(userid) {
 	// Use localStorage to persist the state of the collapsibles
 	const sideNavExtLinksIsOpen = ref(JSON.parse(localStorage.getItem("sideNavExtLinksIsOpen")) ?? true);
 	const sideNavFavLinksIsOpen = ref(JSON.parse(localStorage.getItem("sideNavFavLinksIsOpen")) ?? true);
+	const sideNavSettingsIsOpen = ref(JSON.parse(localStorage.getItem("sideNavSettingsIsOpen")) ?? true);
 
 	watch(sideNavExtLinksIsOpen, (newVal) => {
 		localStorage.setItem("sideNavExtLinksIsOpen", JSON.stringify(newVal));
@@ -29,6 +30,10 @@ export function useNavigationSide(userid) {
 
 	watch(sideNavFavLinksIsOpen, (newVal) => {
 		localStorage.setItem("sideNavFavLinksIsOpen", JSON.stringify(newVal));
+	});
+
+	watch(sideNavSettingsIsOpen, (newVal) => {
+		localStorage.setItem("sideNavSettingsIsOpen", JSON.stringify(newVal));
 	});
 
 	// Media query for a certain breakpoint
@@ -130,6 +135,7 @@ export function useNavigationSide(userid) {
 	return {
 		sideNavExtLinksIsOpen,
 		sideNavFavLinksIsOpen,
+		sideNavSettingsIsOpen,
 		externalLinks,
 		externalLinksDialogKey,
 		favoritesStore,

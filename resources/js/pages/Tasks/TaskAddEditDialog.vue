@@ -13,11 +13,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { ref, onMounted, onUnmounted } from "vue";
 import { useDialogStore } from "@/stores/dialogActions";
-import { useOnboardingCompletion } from "@/composables/useOnboardingCompletion";
 import { useToaster } from "@/composables/useToaster";
 
 const { toastSuccess, toastError, toastInfo, toastWarning, toastDefault } = useToaster();
-const { markStepComplete } = useOnboardingCompletion();
 
 const dialogStore = useDialogStore();
 const { openDialog, closeDialog, isDialogOpen } = dialogStore;
@@ -99,7 +97,6 @@ function saveDialog() {
 			emit("save", response.data);
 			const message = props.editId > 0 ? "Task updated successfully" : "Task created successfully";
 			toastSuccess("Success", message);
-			markStepComplete("add_schedule_task");
 
 			closeDialog("DialogNewTask");
 		})

@@ -1,8 +1,6 @@
 <script setup>
-import NavPanelI18N from "@/i18n/pages/Tasks/WizardPanels/NavPanel.i18n.js";
 import { computed } from "vue";
 import { Check, Info, Settings, Calendar, CheckCircle } from "lucide-vue-next";
-import { useComponentTranslations } from "@/composables/useComponentTranslations";
 
 const props = defineProps({
     currentStep: {
@@ -16,14 +14,12 @@ const props = defineProps({
     },
 });
 
-const { t } = useComponentTranslations(NavPanelI18N);
-
 // Step configuration with icons and colors
 const steps = [
     {
         id: 2,
         key: "taskInfo",
-        label: t("taskInfo"),
+        label: "Task Info",
         icon: Info,
         color: "#04a5e5",
         description: "Basic information"
@@ -31,7 +27,7 @@ const steps = [
     {
         id: 3,
         key: "taskConfiguration", 
-        label: t("taskConfiguration"),
+        label: "Configuration",
         icon: Settings,
         color: "#c6a0f6",
         description: "Configure parameters"
@@ -39,7 +35,7 @@ const steps = [
     {
         id: 4,
         key: "taskSchedule",
-        label: t("taskSchedule"),
+        label: "Schedule",
         icon: Calendar,
         color: "#f97316",
         description: "Set timing"
@@ -47,7 +43,7 @@ const steps = [
     {
         id: 5,
         key: "taskFinalize",
-        label: t("taskFinalize"),
+        label: "Finalize",
         icon: CheckCircle,
         color: "#059669",
         description: "Review & finalize"
