@@ -1,0 +1,1 @@
+.pulsing-icon-wrapper[data-v-ddb494ec]{display:inline-flex;align-items:center;justify-content:center}@keyframes pulse-slow-ddb494ec{0%,to{opacity:1}50%{opacity:.4}}.animate-pulse-slow[data-v-ddb494ec]{animation:pulse-slow-ddb494ec var(--pulse-duration, 2s) ease-in-out infinite}
