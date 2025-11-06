@@ -3,14 +3,11 @@ import axios from "axios";
 import { onMounted, ref, watch, computed } from "vue";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 
 const emit = defineEmits(["update:modelValue"]);
 const options = ref([]);
 const open = ref(false);
-const selectedCats = ref([]);
+const selectedDeviceModel = ref([]);
 const searchTerm = ref("");
 const allSelected = ref(false);
 
@@ -22,15 +19,15 @@ const props = defineProps({
 });
 
 onMounted(() => {
-	fetchCategories();
+	fetchDeviceModels();
 });
 
 // Watch for changes to the prop and update internalModel
 watch(
 	() => props.modelValue,
 	(newValue) => {
-		selectedCats.value = newValue;
-		allSelected.value = selectedCats.value.length === options.value.length;
+		selectedDeviceModel.value = newValue;
+		allSelected.value = selectedDeviceModel.value.length === options.value.length;
 	}
 );
 
@@ -39,40 +36,40 @@ function selectItem(item) {
 		// If 'All' is selected, toggle selection state
 		if (allSelected.value) {
 			// If all items are already selected, remove all
-			selectedCats.value = [];
+			selectedDeviceModel.value = [];
 			allSelected.value = false;
 		} else {
 			// Select all items
-			selectedCats.value = [...options.value];
+			selectedDeviceModel.value = [...options.value];
 			allSelected.value = true;
 		}
 	} else {
-		const existingIndex = selectedCats.value.findIndex((tag) => tag.id === item.id);
+		const existingIndex = selectedDeviceModel.value.findIndex((model) => model.id === item.id);
 		if (existingIndex !== -1) {
 			// If item exists, remove it
-			selectedCats.value.splice(existingIndex, 1);
+			selectedDeviceModel.value.splice(existingIndex, 1);
 			allSelected.value = false;
 		} else {
 			// If item does not exist, add it
-			selectedCats.value.push(item);
-			if (selectedCats.value.length === options.value.length) {
+			selectedDeviceModel.value.push(item);
+			if (selectedDeviceModel.value.length === options.value.length) {
 				allSelected.value = true;
 			}
 		}
 	}
 	open.value = false;
-	emit("update:modelValue", selectedCats.value);
+	emit("update:modelValue", selectedDeviceModel.value);
 }
 
-function fetchCategories() {
-	axios.get("/api/categories/?perPage=10000&sort=categoryName").then((response) => {
+function fetchDeviceModels() {
+	axios.get("/api/device-models/?perPage=10000&sort=name").then((response) => {
 		options.value = response.data.data;
 	});
 }
 
-const filteredCategories = computed(() => {
+const filteredDeviceModels = computed(() => {
 	return options.value.filter(
-		(cat) => cat.categoryName.toLowerCase().includes(searchTerm.value.toLowerCase()) // Prevent displaying already selected items
+		(model) => model.name.toLowerCase().includes(searchTerm.value.toLowerCase()) // Prevent displaying already selected items
 	);
 });
 </script>
@@ -81,14 +78,14 @@ const filteredCategories = computed(() => {
 	<Popover>
 		<PopoverTrigger>
 			<Button variant="ghost" class="flex items-center justify-center w-full px-2 py-1 border rounded-xl whitespace-nowrap h-fit bg-rcgray-700 text-rcgray-400">
-				<RcIcon name="command-group" class="lg:mr-2" />
+				<RcIcon name="model" class="lg:mr-2" />
 
 				<div class="hidden lg:inline-flex">
-					<template v-if="selectedCats && selectedCats.length === 0">Command Group</template>
+					<template v-if="selectedDeviceModel && selectedDeviceModel.length === 0">Device Model</template>
 					<template v-else>
-						<span class="text-sm font-light" v-if="selectedCats.length > 0">
-							Command Group
-							<strong class="text-sm font-semibold">{{ selectedCats.length }} Selected</strong>
+						<span class="text-sm font-light" v-if="selectedDeviceModel.length > 0">
+							Device Model
+							<strong class="text-sm font-semibold">{{ selectedDeviceModel.length }} Selected</strong>
 						</span>
 					</template>
 				</div>
@@ -104,11 +101,11 @@ const filteredCategories = computed(() => {
 			<Separator />
 			<ScrollArea class="h-44">
 				<div class="py-1">
-					<div v-for="option in filteredCategories" :key="option.id" class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600" @click="selectItem(option)">
-						<input type="checkbox" :checked="selectedCats.some((cat) => cat.id === option.id)" class="mr-2" />
+					<div v-for="option in filteredDeviceModels" :key="option.id" class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600" @click="selectItem(option)">
+						<input type="checkbox" :checked="selectedDeviceModel.some((model) => model.id === option.id)" class="mr-2" />
 						<span data-size="20" class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5">
 							<span data-size="20">
-								{{ option.categoryName }}
+								{{ option.name }}
 							</span>
 						</span>
 					</div>

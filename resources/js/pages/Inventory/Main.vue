@@ -46,13 +46,11 @@ const currentViewExists = computed(() => {
 							</div>
 						</Button>
 					</DropdownMenuTrigger>
-
-					<div class="flex items-center gap-2 mr-4">
-						<RcIcon :name="viewItems.find((item) => item.id === currentView)?.icon || ''" />
-						{{ viewItems.find((item) => item.id === currentView)?.label || "" }}
-					</div>
 				</div>
-
+				<div class="flex items-center gap-2 mr-4">
+					<RcIcon :name="viewItems.find((item) => item.id === currentView)?.icon || ''" />
+					{{ viewItems.find((item) => item.id === currentView)?.label || "" }}
+				</div>
 				<DropdownMenuContent class="w-56" align="start">
 					<DropdownMenuGroup>
 						<DropdownMenuItem v-for="item in viewItems" :key="item.id" @click="changeView(item.id)">

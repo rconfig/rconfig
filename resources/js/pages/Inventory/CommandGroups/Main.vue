@@ -1,199 +1,136 @@
 <script setup>
-import ActionsMenu from '@/pages/Shared/Table/ActionsMenu.vue';
-import ClearFilters from '@/pages/Shared/Filters/ClearFilters.vue';
-import ConfirmDeleteAlert from '@/pages/Shared/AlertDialog/ConfirmDeleteAlert.vue';
-import DeviceListPopover from '@/pages/Shared/Popover/DeviceListPopover.vue';
-import Loading from '@/pages/Shared/Table/Loading.vue';
-import NoResults from '@/pages/Shared/Table/NoResults.vue';
-import Pagination from '@/pages/Shared/Table/Pagination.vue';
-import CommandGroupAddEditDialog from '@/pages/Inventory/CommandGroups/CommandGroupAddEditDialog.vue';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { onMounted, onUnmounted } from 'vue';
-import { useRowSelection } from '@/composables/useRowSelection';
-import { useCommandGroups } from '@/pages/Inventory/CommandGroups/useCommandGroups';
-import { eventBus } from '@/composables/eventBus';
+import ActionsMenu from "@/pages/Shared/Table/ActionsMenu.vue";
+import BadgeList from "@/pages/Shared/Table/BadgeList.vue";
+import CategoryCell from "@/pages/Shared/Table/CategoryCell.vue";
+import ClearFilters from "@/pages/Shared/Filters/ClearFilters.vue";
+import CommandGroupAddEditDialog from "@/pages/Inventory/CommandGroups/CommandGroupAddEditDialog.vue";
+import Loading from "@/pages/Shared/Table/Loading.vue";
+import NoResults from "@/pages/Shared/Table/NoResults.vue";
+import Pagination from "@/pages/Shared/Table/Pagination.vue";
+import RcConfirmAlertDialog from "@/pages/Shared/ConfirmAlertDialog/RcConfirmAlertDialog.vue";
+import RcToolTip from "@/pages/Shared/Tooltips/RcToolTip.vue";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { eventBus } from "@/composables/eventBus";
+import { onMounted, onUnmounted } from "vue";
+import { useCommandGroups } from "@/pages/Inventory/CommandGroups/useCommandGroups";
+import { useRouter } from "vue-router";
+import { useRowSelection } from "@/composables/useRowSelection";
+import RcBadge from "@/pages/Shared/Badges/RcBadge.vue";
 
-const { editId, categories, currentPage, perPage, searchTerm, lastPage, isLoading, fetchCommandGroups, viewEditDialog, createCommandGroup, deleteCommandGroup, deleteManyCommandGroups, handleSave, showConfirmDelete, handleKeyDown, newCommandGroupsModalKey, toggleSort, sortParam } = useCommandGroups();
+const { reload, editId, categories, currentPage, perPage, searchTerm, lastPage, isLoading, fetchCommandGroups, viewEditDialog, createCommandGroup, deleteCommandGroup, deleteManyCommandGroups, handleSave, showConfirmDelete, handleKeyDown, newCommandGroupsModalKey, toggleSort, sortParam } = useCommandGroups();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(categories);
+const router = useRouter();
 
 onMounted(() => {
-  fetchCommandGroups();
-  window.addEventListener('keydown', handleKeyDown);
+	fetchCommandGroups();
 
-  eventBus.on('deleteManyCommandGroupsSuccess', () => {
-    selectedRows.value = [];
-    selectAll.value = false;
-  });
+	if (router.currentRoute?.value.params?.id) {
+		editId.value = parseInt(router.currentRoute.value.params.id);
+		viewEditDialog(editId.value);
+	}
+
+	window.addEventListener("keydown", handleKeyDown);
+
+	eventBus.on("deleteManyCommandGroupsSuccess", () => {
+		selectedRows.value = [];
+		selectAll.value = false;
+	});
 });
 
 // Cleanup event listener on unmount
 onUnmounted(() => {
-  window.removeEventListener('keydown', handleKeyDown);
+	window.removeEventListener("keydown", handleKeyDown);
 });
 </script>
 
 <template>
-  <div class="flex flex-col h-full gap-1 text-center">
-    <div class="hidden text-yellow-200 text-teal-100 bg-yellow-700 bg-teal-700 border-yellow-500 border-teal-500 bg-stone-700 text-stone-200 border-stone-500 bg-lime-700 text-lime-200 border-lime-500 bg-sky-700 text-sky-100 border-sky-500 bg-violet-700 text-violet-200 border-violet-500 bg-fuchsia-700 text-fuchsia-200 border-fuchsia-500"></div>
+	<div class="flex flex-col h-full gap-1 text-center">
+		<div class="hidden text-yellow-200 text-teal-100 bg-yellow-700 bg-teal-700 border-yellow-500 border-teal-500 bg-stone-700 text-stone-200 border-stone-500 bg-lime-700 text-lime-200 border-lime-500 bg-sky-700 text-sky-100 border-sky-500 bg-violet-700 text-violet-200 border-violet-500 bg-fuchsia-700 text-fuchsia-200 border-fuchsia-500"></div>
 
-    <div class="flex items-center justify-between p-4">
-      <div class="flex items-center">
-        <Input
-          class="max-w-sm ml-4 mr-2"
-          autocomplete="off"
-          data-1p-ignore
-          data-lpignore="true"
-          placeholder="Filter command groups..."
-          v-model="searchTerm" />
-        <ClearFilters
-          v-if="searchTerm"
-          @update:model-value="searchTerm = ''" />
-      </div>
-      <div class="flex">
-        <Button
-          v-if="selectedRows.length"
-          class="px-2 py-1 bg-red-600 hover:bg-red-700 hover:animate-pulse"
-          size="md"
-          @click.prevent="showConfirmDelete = true"
-          variant="primary">
-          Delete Selected {{ selectedRows.length }} CommandGroup(s)
-        </Button>
-        <Button
-          type="submit"
-          class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
-          size="sm"
-          @click.prevent="createCommandGroup"
-          variant="primary">
-          New Command Group
-          <div class="pl-2 ml-auto">
-            <kbd class="rc-kdb-class2">ALT N</kbd>
-          </div>
-        </Button>
-      </div>
-    </div>
+		<div class="flex items-center justify-between p-4">
+			<div class="flex items-center">
+				<Input class="max-w-sm ml-4 mr-2" autocomplete="off" data-1p-ignore data-lpignore="true" placeholder="Filter Command Groups..." v-model="searchTerm" />
+				<ClearFilters v-if="searchTerm" @update:model-value="searchTerm = ''" />
+			</div>
+			<div class="flex items-center justify-end">
+				<Button v-if="selectedRows.length" class="px-2 py-1 bg-red-600 hover:bg-red-700 hover:animate-pulse" size="md" @click.prevent="showConfirmDelete = true" variant="primary"> Delete Selected {{ selectedRows.length }} Command Group(s) </Button>
+				<Button type="submit" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click.prevent="createCommandGroup" variant="primary">
+					New Command Group
+					<div class="pl-2 ml-auto">
+						<kbd class="rc-kdb-class2">ALT N</kbd>
+					</div>
+				</Button>
+				<RcIcon name="refresh" class="w-4 h-4 mx-4 text-muted-foreground cursor-pointer hover:text-rcgray-200" @click="reload()" />
+			</div>
+		</div>
 
-    <div class="px-6">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead class="w-[2%]">
-              <Checkbox
-                id="selectAll"
-                v-model="selectAll"
-                :checked="selectAll"
-                @click="toggleSelectAll()" />
-            </TableHead>
-            <TableHead class="w-[5%]">
-              <Button
-                class="flex justify-start w-full p-0 hover:bg-rcgray-800"
-                variant="ghost"
-                @click="toggleSort('id')">
-                <Icon :icon="sortParam === 'id' ? 'lucide:sort-asc' : sortParam === '-id' ? 'lucide:sort-desc' : 'hugeicons:sorting-05'" />
-                <span class="ml-2">ID</span>
-              </Button>
-            </TableHead>
-            <TableHead class="w-[20%]">
-              <Button
-                class="flex justify-start w-full p-0 hover:bg-rcgray-800"
-                variant="ghost"
-                @click="toggleSort('categoryName')">
-                <Icon :icon="sortParam === 'categoryName' ? 'lucide:sort-asc' : sortParam === '-categoryName' ? 'lucide:sort-desc' : 'hugeicons:sorting-05'" />
-                <span class="ml-2">Name</span>
-              </Button>
-            </TableHead>
-            <TableHead class="w-[20%]">Description</TableHead>
-            <TableHead class="w-[40%]">Devices</TableHead>
-            <TableHead class="w-[10%]">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <template v-if="isLoading">
-            <Loading />
-          </template>
+		<div class="px-6">
+			<Table>
+				<TableHeader>
+					<TableRow>
+						<TableHead class="w-[2%]">
+							<Checkbox id="selectAll" v-model="selectAll" :checked="selectAll" @click="toggleSelectAll()" />
+						</TableHead>
+						<TableHead class="w-[5%]">
+							<Button class="flex justify-start w-full p-0 hover:bg-rcgray-800" variant="ghost" @click="toggleSort('id')">
+								<RcIcon name="sort" :sortParam="sortParam" field="id" />
+								<span class="ml-2">ID</span>
+							</Button>
+						</TableHead>
+						<TableHead class="w-[10%]">
+							<Button class="flex justify-start w-full p-0 hover:bg-rcgray-800" variant="ghost" @click="toggleSort('categoryName')">
+								<RcIcon name="sort" :sortParam="sortParam" field="categoryName" />
+								<span class="ml-2">Name</span>
+							</Button>
+						</TableHead>
+						<TableHead class="w-[20%]">Commands</TableHead>
+						<TableHead class="w-[40%]">Devices</TableHead>
+						<TableHead class="w-[10%]">Actions</TableHead>
+					</TableRow>
+				</TableHeader>
+				<TableBody>
+					<template v-if="isLoading">
+						<Loading />
+					</template>
 
-          <template v-else-if="!isLoading">
-            <TableRow
-              v-for="row in categories.data"
-              :key="row.id">
-              <TableCell class="text-start">
-                <Checkbox
-                  class="cursor-pointer"
-                  :id="'select-' + row.id"
-                  :checked="selectedRows.includes(row.id) ? true : false"
-                  @click="toggleSelectRow(row.id)" />
-              </TableCell>
-              <TableCell class="text-start">
-                {{ row.id }}
-              </TableCell>
-              <TableCell class="text-start">
-                <span
-                  :class="row.badgeColor ? row.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'"
-                  class="w-fit flex items-center text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border">
-                  {{ row.categoryName }}
-                </span>
-              </TableCell>
-              <TableCell class="text-start">
-                {{ row.categoryDescription }}
-              </TableCell>
-              <TableCell class="text-start">
-                <span
-                  v-for="(device, index) in row.device.slice(0, 8)"
-                  :key="device.device_name"
-                  class="mr-2">
-                  <Badge
-                    variant="outline"
-                    class="py-1 mt-1 hover:bg-rcgray-800">
-                    <router-link :to="device.view_url">{{ device.device_name }}</router-link>
-                  </Badge>
-                </span>
-                <span
-                  v-if="row.device.length > 8"
-                  class="mr-2">
-                  <DeviceListPopover
-                    :recordName="row.categoryName"
-                    :items="row.device"
-                    displayField="device_name" />
-                </span>
-              </TableCell>
-              <!-- ACTIONS MENU -->
-              <TableCell class="text-start">
-                <ActionsMenu
-                  :rowData="row"
-                  @onEdit="viewEditDialog(row.id)"
-                  @onDelete="deleteCommandGroup(row.id)" />
-              </TableCell>
-              <!-- ACTIONS MENU -->
-            </TableRow>
-          </template>
-          <template v-else>
-            <NoResults />
-          </template>
-        </TableBody>
-      </Table>
+					<template v-else-if="!isLoading">
+						<TableRow v-for="row in categories.data" :key="row.id">
+							<TableCell class="text-start">
+								<Checkbox class="cursor-pointer" :id="'select-' + row.id" :checked="selectedRows.includes(row.id) ? true : false" @click="toggleSelectRow(row.id)" />
+							</TableCell>
+							<TableCell class="text-start">
+								{{ row.id }}
+							</TableCell>
+							<TableCell class="text-start">
+								<CategoryCell :category-name="row.categoryName" :category-description="row.categoryDescription" :badge-color="row.badgeColor" :word-limit="8" />
+							</TableCell>
+							<TableCell class="text-start">
+								<RcToolTip v-if="row.command.length == 0" :delayDuration="100" content="No commands attached to this command group" side="bottom">
+									<template #trigger>
+										<RcBadge class="ml-1 px-2" variant="warning" size="sm">0 Commands</RcBadge>
+									</template>
+								</RcToolTip>
+								<BadgeList :items="row.command" displayField="command" linkField="view_url" :maxVisible="8" :hoverCardFields="['id', 'command']" :showEmptyText="false" />
+							</TableCell>
+							<TableCell class="text-start">
+								<BadgeList :items="row.device" displayField="device_name" linkField="view_url" :maxVisible="8" :hoverCardFields="['id', 'device_name', 'device_ip']" />
+							</TableCell>
+							<!-- ACTIONS MENU -->
+							<TableCell class="text-start">
+								<ActionsMenu :rowData="row" @onEdit="viewEditDialog(row.id)" @onDelete="deleteCommandGroup(row.id)" />
+							</TableCell>
+							<!-- ACTIONS MENU -->
+						</TableRow>
+					</template>
+					<template v-else>
+						<NoResults />
+					</template>
+				</TableBody>
+			</Table>
 
-      <!-- PAGINATION -->
-      <Pagination
-        :currentPage="currentPage"
-        :lastPage="lastPage"
-        :perPage="perPage"
-        @update:currentPage="currentPage = $event"
-        @update:perPage="perPage = $event" />
-      <!-- END PAGINATION -->
-
-      <CommandGroupAddEditDialog
-        @save="handleSave()"
-        :key="newCommandGroupsModalKey"
-        :editId="editId" />
-
-      <!-- FOR MULTIPLE DELETE -->
-      <ConfirmDeleteAlert
-        :ids="selectedRows"
-        :showConfirmDelete="showConfirmDelete"
-        @close="showConfirmDelete = false"
-        @handleDelete="deleteManyCommandGroups(selectedRows)" />
-      <!-- FOR MULTIPLE DELETE -->
-
-      <Toaster />
-    </div>
-  </div>
+			<Pagination :currentPage="currentPage" :lastPage="lastPage" :perPage="perPage" @update:currentPage="currentPage = $event" @update:perPage="perPage = $event" :totalRecords="categories.total" :isLoading="isLoading" />
+			<CommandGroupAddEditDialog @save="handleSave()" :key="newCommandGroupsModalKey" :editId="editId" />
+			<RcConfirmAlertDialog :ids="selectedRows" :showConfirmDelete="showConfirmDelete" @close="showConfirmDelete = false" @handleDelete="deleteManyCommandGroups(selectedRows)" />
+		</div>
+	</div>
 </template>
