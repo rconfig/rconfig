@@ -37,15 +37,6 @@ const inventoryRoutes = [
 		},
 	},
 	{
-		path: "/device-configprops",
-		name: "device-configprops",
-		component: () => import("@/pages/Inventory/Main.vue"),
-		meta: {
-			rbacViewName: "Command",
-			pageTitleKey: "DeviceConfigProperties",
-		},
-	},
-	{
 		path: "/tags/:id?",
 		name: "tags",
 		component: () => import("@/pages/Inventory/Main.vue"),

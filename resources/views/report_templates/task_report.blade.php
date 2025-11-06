@@ -6,86 +6,6 @@
     <title>{{ config('app.name', 'rConfig') }}</title>
     <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
     <style>
-        @font-face {
-            font-family: "Open Sans";
-            font-style: normal;
-            font-weight: 300;
-            src: url(../fonts/OpenSans-Light-webfont.eot);
-            src: local("Open Sans Light"), local("OpenSans-Light"), url(../fonts/OpenSans-Light-webfont.eot?#iefix) format("embedded-opentype"), url(../fonts/OpenSans-Light-webfont.woff2) format("woff2"), url(../fonts/OpenSans-Light-webfont.woff) format("woff"), url(../fonts/OpenSans-Light-webfont.ttf) format("truetype"), url(../fonts/OpenSans-Light-webfont.svg#OpenSans) format("svg")
-        }
-
-        @font-face {
-            font-family: "Open Sans";
-            font-style: normal;
-            font-weight: 400;
-            src: url(../fonts/OpenSans-Regular-webfont.eot);
-            src: local("Open Sans"), local("OpenSans"), url(../fonts/OpenSans-Regular-webfont.eot?#iefix) format("embedded-opentype"), url(../fonts/OpenSans-Regular-webfont.woff2) format("woff2"), url(../fonts/OpenSans-Regular-webfont.woff) format("woff"), url(../fonts/OpenSans-Regular-webfont.ttf) format("truetype"), url(../fonts/OpenSans-Regular-webfont.svg#OpenSans) format("svg")
-        }
-
-        @font-face {
-            font-family: "Open Sans";
-            font-style: italic;
-            font-weight: 300;
-            src: url(../fonts/OpenSans-LightItalic-webfont.eot);
-            src: local("Open Sans Light Italic"), local("OpenSansLight-Italic"), url(../fonts/OpenSans-LightItalic-webfont.eot?#iefix) format("embedded-opentype"), url(../fonts/OpenSans-LightItalic-webfont.woff2) format("woff2"), url(../fonts/OpenSans-LightItalic-webfont.woff) format("woff"), url(../fonts/OpenSans-LightItalic-webfont.ttf) format("truetype"), url(../fonts/OpenSans-LightItalic-webfont.svg#OpenSans) format("svg")
-        }
-
-        @font-face {
-            font-family: "Open Sans";
-            font-style: italic;
-            font-weight: 400;
-            src: url(../fonts/OpenSans-Italic-webfont.eot);
-            src: local("Open Sans Italic"), local("OpenSans-Italic"), url(../fonts/OpenSans-Italic-webfont.eot?#iefix) format("embedded-opentype"), url(../fonts/OpenSans-Italic-webfont.woff2) format("woff2"), url(../fonts/OpenSans-Italic-webfont.woff) format("woff"), url(../fonts/OpenSans-Italic-webfont.ttf) format("truetype"), url(../fonts/OpenSans-Italic-webfont.svg#OpenSans) format("svg")
-        }
-
-        @font-face {
-            font-family: "Open Sans";
-            font-style: normal;
-            font-weight: 600;
-            src: url(../fonts/OpenSans-Semibold-webfont.eot);
-            src: local("Open Sans Semibold"), local("OpenSans-Semibold-webfont"), url(../fonts/OpenSans-Semibold-webfont.eot?#iefix) format("embedded-opentype"), url(../fonts/OpenSans-Semibold-webfont.woff2) format("woff2"), url(../fonts/OpenSans-Semibold-webfont.woff) format("woff"), url(../fonts/OpenSans-Semibold-webfont.ttf) format("truetype"), url(../fonts/OpenSans-Semibold-webfont.svg#OpenSans) format("svg")
-        }
-
-        @font-face {
-            font-family: "Open Sans";
-            font-style: italic;
-            font-weight: 600;
-            src: url(../fonts/OpenSans-SemiboldItalic-webfont.eot);
-            src: local("Open Sans Semibold Italic"), local("OpenSans-SemiboldItalic-webfont"), url(../fonts/OpenSans-SemiboldItalic-webfont.eot?#iefix) format("embedded-opentype"), url(../fonts/OpenSans-SemiboldItalic-webfont.woff2) format("woff2"), url(../fonts/OpenSans-SemiboldItalic-webfont.woff) format("woff"), url(../fonts/OpenSans-SemiboldItalic-webfont.ttf) format("truetype"), url(../fonts/OpenSans-SemiboldItalic-webfont.svg#OpenSans) format("svg")
-        }
-
-        @font-face {
-            font-family: "Open Sans";
-            font-style: normal;
-            font-weight: 700;
-            src: url(../fonts/OpenSans-Bold-webfont.eot);
-            src: local("Open Sans Bold"), local("OpenSans-Bold"), url(../fonts/OpenSans-Bold-webfont.eot?#iefix) format("embedded-opentype"), url(../fonts/OpenSans-Bold-webfont.woff2) format("woff2"), url(../fonts/OpenSans-Bold-webfont.woff) format("woff"), url(../fonts/OpenSans-Bold-webfont.ttf) format("truetype"), url(../fonts/OpenSans-Bold-webfont.svg#OpenSans) format("svg")
-        }
-
-        @font-face {
-            font-family: "Open Sans";
-            font-style: italic;
-            font-weight: 700;
-            src: url(../fonts/OpenSans-BoldItalic-webfont.eot);
-            src: local("Open Sans Bold Italic"), local("OpenSans-BoldItalic"), url(../fonts/OpenSans-BoldItalic-webfont.eot?#iefix) format("embedded-opentype"), url(../fonts/OpenSans-BoldItalic-webfont.woff2) format("woff2"), url(../fonts/OpenSans-BoldItalic-webfont.woff) format("woff"), url(../fonts/OpenSans-BoldItalic-webfont.ttf) format("truetype"), url(../fonts/OpenSans-BoldItalic-webfont.svg#OpenSans) format("svg")
-        }
-
-        @font-face {
-            font-family: "Open Sans";
-            font-style: italic;
-            font-weight: 800;
-            src: url(../fonts/OpenSans-ExtraBoldItalic-webfont.eot);
-            src: local("Open Sans Extrabold Italic"), local("OpenSans-ExtraboldItalic"), url(../fonts/OpenSans-ExtraBoldItalic-webfont.eot?#iefix) format("embedded-opentype"), url(../fonts/OpenSans-ExtraBoldItalic-webfont.woff2) format("woff2"), url(../fonts/OpenSans-ExtraBoldItalic-webfont.woff) format("woff"), url(../fonts/OpenSans-ExtraBoldItalic-webfont.ttf) format("truetype"), url(../fonts/OpenSans-ExtraBoldItalic-webfont.svg#OpenSans) format("svg")
-        }
-
-        @font-face {
-            font-family: "Open Sans";
-            font-style: normal;
-            font-weight: 800;
-            src: url(../fonts/OpenSans-ExtraBold-webfont.eot);
-            src: local("Open Sans Extrabold"), local("OpenSans-Extrabold"), url(../fonts/OpenSans-ExtraBold-webfont.eot?#iefix) format("embedded-opentype"), url(../fonts/OpenSans-ExtraBold-webfont.woff2) format("woff2"), url(../fonts/OpenSans-ExtraBold-webfont.woff) format("woff"), url(../fonts/OpenSans-ExtraBold-webfont.ttf) format("truetype"), url(../fonts/OpenSans-ExtraBold-webfont.svg#OpenSans) format("svg")
-        }
-
         /*!
  * Bootstrap v3.4.1 (https://getbootstrap.com/)
  * Copyright 2011-2019 Twitter, Inc.
@@ -152,7 +72,7 @@
             }
 
             a[href]:after {
-                content: " ("attr(href) ")"
+                content: " (" attr(href) ")"
             }
 
             thead {
@@ -405,7 +325,7 @@
             margin: 10px 0 0
         }
 
-        .card-pf-utilization-details {
+        .card-pf-v5-utilization-details {
             border-bottom: 1px solid #d1d1d1;
             display: table;
             margin: 12px 0 15px;
@@ -413,24 +333,24 @@
             width: 100%
         }
 
-        .card-pf-utilization-details .card-pf-utilization-card-details-count,
-        .card-pf-utilization-details .card-pf-utilization-card-details-description {
+        .card-pf-v5-utilization-details .card-pf-v5-utilization-card-details-count,
+        .card-pf-v5-utilization-details .card-pf-v5-utilization-card-details-description {
             float: left;
             line-height: 1
         }
 
-        .card-pf-utilization-details .card-pf-utilization-card-details-count {
+        .card-pf-v5-utilization-details .card-pf-v5-utilization-card-details-count {
             font-size: 26px;
             font-weight: 300;
             margin-right: 10px
         }
 
-        .card-pf-utilization-details .card-pf-utilization-card-details-line-1,
-        .card-pf-utilization-details .card-pf-utilization-card-details-line-2 {
+        .card-pf-v5-utilization-details .card-pf-v5-utilization-card-details-line-1,
+        .card-pf-v5-utilization-details .card-pf-v5-utilization-card-details-line-2 {
             display: block
         }
 
-        .card-pf-utilization-details .card-pf-utilization-card-details-line-1 {
+        .card-pf-v5-utilization-details .card-pf-v5-utilization-card-details-line-1 {
             font-size: 10px;
             margin-bottom: 2px
         }
@@ -515,7 +435,6 @@
                 display: none;
             }
         }
-
     </style>
 </head>
 
@@ -523,18 +442,19 @@
 
     <div class="row row-cards-pf" style="margin-bottom: 30px;">
         <div class="col-xs-12 col-sm-6 col-md-6">
-            <img src="https://www.rconfig.com/images/rConfig_logos/new/blue/hex_logo_blue_horizontal_72.png" alt="rConfig Logo" />
+            <img src="{!! url('/images/brand/blue_logo_brand_strap_72h.png'); !!}"
+                alt="rConfig Logo" />
         </div>
         <div class="col-xs-12 col-sm-6 col-md-6">
-            <h1><strong>{{$report_data->task_type}}</strong></h1>
+            <h1><strong>{{ $report_data->task_type }}</strong></h1>
         </div>
     </div>
 
     <div class="row row-cards-pf" style="margin-bottom: 30px;">
         <div class="col-xs-12 col-sm-6 col-md-6">
-            <h4><strong>Exectution Date/Time:</strong> {{$report_data->start_time}}</h4>
-            <h4><strong>Task ID/ Name:</strong> {{$report_data->task->id}} / {{$report_data->task->task_name}} </h4>
-            <h4><strong>Task Description:</strong> {{$report_data->task->task_desc}}</h4>
+            <h4><strong>Execution Date/Time:</strong> {{ $report_data->start_time }}</h4>
+            <h4><strong>Task ID/ Name:</strong> {{ $report_data->task->id }} / {{ $report_data->task->task_name }} </h4>
+            <h4><strong>Task Description:</strong> {{ $report_data->task->task_desc }}</h4>
         </div>
     </div>
 
@@ -545,8 +465,9 @@
                     Device Count
                 </h2>
                 <div class="card-pf-body" style="display: inline-block">
-                    <p class="card-pf-utilization-details" style="border: none; text-align: center">
-                        <span class="card-pf-utilization-card-details-count">{{ count($report_data->config_data_success) + count($report_data->config_data_failed)}}</span>
+                    <p class="card-pf-v5-utilization-details" style="border: none; text-align: center">
+                        <span class="card-pf-v5-utilization-card-details-count">{{
+                            count($report_data->config_data_success) + count($report_data->config_data_failed) }}</span>
                     </p>
                 </div>
             </div>
@@ -557,8 +478,8 @@
                     Successes/ Failures
                 </h2>
                 <div class="card-pf-body" style="display: inline-block">
-                    <p class="card-pf-utilization-details" style="border: none; text-align: center">
-                        <span class="card-pf-utilization-card-details-count">
+                    <p class="card-pf-v5-utilization-details" style="border: none; text-align: center">
+                        <span class="card-pf-v5-utilization-card-details-count">
                             {{ $report_data->config_data_success->count() }}
                             / {{ $report_data->config_data_failed->count() }}
                         </span>
@@ -569,14 +490,14 @@
         <div class="col-xs-12 col-sm-6 col-md-4">
             <div class="card-pf card-pf-accented card-pf-aggregate-status">
                 <h2 class="card-pf-title">
-                    Execution Time
+                    Report build time
                 </h2>
                 <div class="card-pf-body" style="display: inline-block">
-                    <p class="card-pf-utilization-details" style="border: none; text-align: center">
-                        <span class="card-pf-utilization-card-details-count">{{$report_data->duration}}</span>
-                        <span class="card-pf-utilization-card-details-description">
-                            <span class="card-pf-utilization-card-details-line-1"></span>
-                            <span class="card-pf-utilization-card-details-line-2">seconds</span>
+                    <p class="card-pf-v5-utilization-details" style="border: none; text-align: center">
+                        <span class="card-pf-v5-utilization-card-details-count">{{ $report_data->duration }}</span>
+                        <span class="card-pf-v5-utilization-card-details-description">
+                            <span class="card-pf-v5-utilization-card-details-line-1"></span>
+                            <span class="card-pf-v5-utilization-card-details-line-2">seconds</span>
                         </span>
                     </p>
                 </div>
@@ -603,34 +524,54 @@
             </thead>
             <tbody>
                 @foreach ($report_data->config_data_failed as $fitem)
-
                 <tr>
-                    <td><a target="_blank" class="alink" href="{{url('/device/view/' . $fitem['device_id'])}}">{{$fitem['device_name']}}</a></td>
-                    <td><a target="_blank" class="alink" href="{{url('/categories')}}">{{$fitem['device_category']}}</a></td>
-                    <td><a target="_blank" class="alink" href="{{url('/device/view/' . $fitem['device_id'])}}">{{$fitem['command_count']}}</a></td>
-                    <td>{{$fitem['start_time']}}</td>
-                    <td>{{$fitem['end_time']}}</td>
-                    <td>{{$fitem['duration']}}</td>
-                    <td style="background: #ea4335; padding-left: 2px;">Failed</td>
+                    <td><a target="_blank" class="alink" href="{{ url('/device/view/' . $fitem['device_id']) }}">{{
+                            $fitem['device_name'] }}</a>
+                    </td>
+                    <td><a target="_blank" class="alink" href="{{ url('/categories') }}">{{ $fitem['device_category']
+                            }}</a></td>
+                    <td><a target="_blank" class="alink" href="{{ url('/device/view/' . $fitem['device_id']) }}">{{
+                            $fitem['command_count'] }}</a>
+                    </td>
+                    <td>{{ $fitem['start_time'] }}</td>
+                    <td>{{ $fitem['end_time'] }}</td>
+                    <td>{{ $fitem['duration'] }}</td>
+                    @if ($fitem['download_status'] == 0)
+                    <td style=" padding-left: 2px;">
+                        ❌
+                    </td>
+                    @endif
+                    @if ($fitem['download_status'] == 2)
+                    <td style=" padding-left: 2px;">
+                        ⚠️
+                    </td>
+                    @endif
                 </tr>
-
                 @endforeach
-                @if ($report_data->task->verbose_download_report_notify)
+
+                @if ($report_data->task->verbose_download_report_notify === true || $report_data->task->verbose_download_report_notify == 1)
 
                 @foreach ($report_data->config_data_success as $sitem)
-
                 <tr>
-                    <td><a target="_blank" class="alink" href="{{url('/device/view/' . $sitem['device_id'])}}">{{$sitem['device_name']}}</a></td>
-                    <td><a target="_blank" class="alink" href="{{url('/categories')}}">{{$sitem['device_category']}}</a></td>
-                    <td><a target="_blank" class="alink" href="{{url('/device/view/' . $sitem['device_id'])}}">{{$sitem['command_count']}}</a></td>
-                    <td>{{$sitem['start_time']}}</td>
-                    <td>{{$sitem['end_time']}}</td>
-                    <td>{{$sitem['duration']}}</td>
-                    <td style="background: #6ec664; padding-left: 2px;">Success</td>
+                    <td><a target="_blank" class="alink" href="{{ url('/device/view/' . $sitem['device_id']) }}">{{
+                            $sitem['device_name'] }}</a>
+                    </td>
+                    <td><a target="_blank" class="alink" href="{{ url('/categories') }}">{{ $sitem['device_category']
+                            }}</a></td>
+                    <td><a target="_blank" class="alink" href="{{ url('/device/view/' . $sitem['device_id']) }}">{{
+                            $sitem['command_count'] }}</a>
+                    </td>
+                    <td>{{ $sitem['start_time'] }}</td>
+                    <td>{{ $sitem['end_time'] }}</td>
+                    <td>{{ $sitem['duration'] }}</td>
+                    <td style=" padding-left: 2px;">
+                        ✅
+                    </td>
                 </tr>
-
                 @endforeach
-
+                @endif
+                @if($report_data->config_data_failed == null)
+                <td style="background: #6ec664; padding-left: 2px;">No download errors</td>
                 @endif
             </tbody>
         </table>
