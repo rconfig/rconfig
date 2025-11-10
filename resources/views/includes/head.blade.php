@@ -1,8 +1,7 @@
 <meta charset="UTF-8">
 <title>{{ config('app.name', 'rConfig') }}</title>
 <link rel="stylesheet" type="text/css" href="{{ asset('css/global.css') }}">
- <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
- <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
   
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <meta name="user-id" content="{{ optional(Auth::user())->id }}">

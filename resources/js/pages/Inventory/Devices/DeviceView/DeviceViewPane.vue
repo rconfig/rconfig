@@ -4,6 +4,7 @@ import DetailsViewLeftNav from "@/pages/Inventory/Shared/Navs/DetailsViewLeftNav
 import DetailsViewRightNav from "@/pages/Inventory/Shared/Navs/DetailsViewRightNav.vue";
 import DeviceAddEditDialog from "@/pages/Inventory/Devices/DeviceAddEditDialog.vue";
 import DeviceConfigsViewPanel from "@/pages/Inventory/Devices/DeviceView/DeviceConfigsViewPanel.vue";
+import DeviceViewDetailsPanel from "@/pages/Inventory/Devices/DeviceView/DeviceViewDetailsPanel.vue";
 import LatestEventsPanel from "@/pages/Inventory/Shared/Panels/LatestEventsPanel.vue";
 import Loading from "@/pages/Shared/Loaders/Loading.vue";
 import RcConfirmAlertDialog from "@/pages/Shared/ConfirmAlertDialog/RcConfirmAlertDialog.vue";

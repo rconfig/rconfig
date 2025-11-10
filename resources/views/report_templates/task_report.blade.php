@@ -4,7 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ config('app.name', 'rConfig') }}</title>
-    <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
+    <style>
+        /* Raleway Font - Local */
+        @font-face {
+            font-family: 'Raleway';
+            font-style: normal;
+            font-weight: 300;
+            src: url({{ asset('fonts/raleway/1Ptug8zYS_SKggPNyC0ITw.woff2') }}) format('woff2');
+        }
+        @font-face {
+            font-family: 'Raleway';
+            font-style: normal;
+            font-weight: 400;
+            src: url({{ asset('fonts/raleway/1Ptug8zYS_SKggPNyC0ITw.woff2') }}) format('woff2');
+        }
+        @font-face {
+            font-family: 'Raleway';
+            font-style: normal;
+            font-weight: 600;
+            src: url({{ asset('fonts/raleway/1Ptug8zYS_SKggPNyC0ITw.woff2') }}) format('woff2');
+        }
+    </style>
     <style>
         /*!
  * Bootstrap v3.4.1 (https://getbootstrap.com/)
