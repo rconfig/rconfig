@@ -183,6 +183,12 @@ watch(
 									</div>
 									<CollapsibleContent>
 										<div>
+											<router-link to="/settings/integrations" class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600" :class="{ 'active-nav': $route.name === 'integrations' }">
+												<RcIcon name="integrations" />
+												<div class="p-1 ml-2 text-left text-gray-200">
+													<div> Integrations </div>
+												</div>
+											</router-link>
 											<router-link to="/settings/users" class="transition ease-in-out delay-150 flex items-center mb-[0.1rem] text-sm rounded-md cursor-pointer hover:bg-rcgray-600" :class="{ 'active-nav': $route.name === 'users' }">
 												<RcIcon name="user" />
 												<div class="p-1 ml-2 text-left text-gray-200">

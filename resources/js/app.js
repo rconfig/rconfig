@@ -12,6 +12,7 @@ import { setupGlobalProperties } from "./appimports/globalProperties";
 import { setupPlugins } from "./appimports/setupPlugins";
 import { useFormatters } from "./composables/useFormatters";
 import { usePermissionsStore } from "./stores/permissions";
+import { RCONFIG_DOCS_URL } from "./config/constants";
 
 // Initialize app
 const app = createApp({});
@@ -43,6 +44,9 @@ app.config.globalProperties.$formatters = formatters;
 // Extract global properties once for consistent usage
 const globalProperties = app.config.globalProperties;
 
+globalProperties.$rconfigDocsUrl = RCONFIG_DOCS_URL;
+app.provide("rconfigDocsUrl", RCONFIG_DOCS_URL);
+
 // Provide shared values to the component tree
 app.provide("formatters", formatters);
 app.provide("useremail", globalProperties.$userEmail);
@@ -50,6 +54,9 @@ app.provide("userid", globalProperties.$userId);
 app.provide("username", globalProperties.$userName);
 app.provide("timezone", globalProperties.$timezone);
 app.provide("appDirPath", globalProperties.$config?.appDirPath);
+app.provide("serverDisplayName", globalProperties.$serverDisplayName);
+app.provide("serverDisplayColor", globalProperties.$serverDisplayColor);
+app.provide("serverDisplaySize", globalProperties.$serverDisplaySize); // New
 
 // Mount the Vue app with error handling
 let vm;

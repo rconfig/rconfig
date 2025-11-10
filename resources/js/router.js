@@ -1,5 +1,6 @@
 import configsRoutes from "@/routes/configs";
 import dashboardRoutes from "@/routes/dashboard";
+import integrationsRoutes from "@/routes/integrations";
 import inventoryRoutes from "@/routes/inventory";
 import settingsRoutes from "@/routes/settings";
 import tasksRoutes from "@/routes/tasks";
@@ -10,6 +11,7 @@ import { generatePageTitle } from "@/composables/pageTitleHandler";
 const routes = [
 	...configsRoutes,
 	...dashboardRoutes,
+	...integrationsRoutes,
 	...inventoryRoutes,
 	...settingsRoutes,
 	...tasksRoutes,

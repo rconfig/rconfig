@@ -1,0 +1,1 @@
+export const RCONFIG_DOCS_URL = "https://v8coredocs.rconfig.com";
