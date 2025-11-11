@@ -51,7 +51,7 @@ function emitToggleView() {
 					<span class="flex-[0_1_auto] min-w-0 overflow-hidden text-ellipsis whitespace-nowrap inline-flex line-clamp-1">All Config Downloads for Device ID: {{ props.deviceId }}</span>
 				</span>
 				<span class="flex-1 bg-[rgb(49,51,55)] bg-[rgb(49,51,55)] flex-shrink-0 h-px w-full"></span>
-				<Button type="button" :title="t('common.refresh')" variant="ghost" @click="refreshConfigs" class="p-2 h-7">
+				<Button type="button" :title="'Refresh'" variant="ghost" @click="refreshConfigs" class="p-2 h-7">
 					<RefreshCw :class="isLoading ? 'text-blue-500 animate-spin' : 'text-gray-600 hover:text-blue-500'" class="w-4 h-4" />
 				</Button>
 			</div>

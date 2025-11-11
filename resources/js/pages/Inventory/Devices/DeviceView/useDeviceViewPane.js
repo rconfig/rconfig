@@ -214,7 +214,6 @@ export function useDeviceViewPane(props, emit) {
 		copyDebug,
 		downloadNow,
 		fetchDevice,
-		openIntegrationUrl,
 		recheckEocValidation,
 		selectLeftNavView,
 		selectMainNavView,

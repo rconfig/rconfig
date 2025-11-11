@@ -173,38 +173,6 @@ function close() {
               </Button>
             </template>
           </RcToolTip>
-
-          <RcToolTip
-            v-if="deviceData && integrationIds.some((id) => id === parseInt(deviceData.device_added_by, 10))"
-            :delayDuration="50"
-            :content="'Open in ' + (integrationNames.find((item) => item.id === parseInt(deviceData.device_added_by, 10))?.name || '')"
-            :side="'bottom'"
-          >
-            <template #trigger>
-              <Button
-                class="h-8 ml-2"
-                @click="openIntegrationUrl()
-                "
-                variant="outline"
-                :title="'Open in ' + (integrationNames.find((item) => item.id === parseInt(deviceData.device_added_by, 10))?.name || '')"
-              >
-                <RcIcon
-                  name="imported-device"
-                  class="-ml-2 -mr-2"
-                  :addedBy="deviceData?.device_added_by"
-                  v-if="deviceData?.device_added_by && deviceData?.device_added_by == 9000"
-                  :source="'Zabbix'"
-                />
-                <RcIcon
-                  name="imported-device"
-                  class="-ml-2 -mr-2"
-                  :addedBy="deviceData?.device_added_by"
-                  v-if="deviceData?.device_added_by && deviceData?.device_added_by == 9001"
-                  :source="'Netbox'"
-                />
-              </Button>
-            </template>
-          </RcToolTip>
         </div>
 
         <ViewPaneDropdown
