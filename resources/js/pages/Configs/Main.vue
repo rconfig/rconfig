@@ -2,6 +2,7 @@
 import ConfigCompare from "@/pages/Configs/ConfigCompare.vue";
 import ConfigSearch from "@/pages/Configs/ConfigSearch.vue";
 import ConfigsTable from "@/pages/Configs/ConfigsTable.vue";
+import ConfigReportsTable from "@/pages/Configs/ConfigReportsTable.vue";
 import NavPills from "@/pages/Shared/Buttons/NavPills.vue";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useConfigs } from "@/pages/Configs/useConfigs";
@@ -46,13 +47,13 @@ const {
 		<div>
 			<keep-alive>
 				<component 
-					:is="currentView === 'configs' ? ConfigsTable : currentView === 'configsearch' ? ConfigSearch : currentView === 'configcompare' ? ConfigCompare : null" 
+					:is="currentView === 'configs' ? ConfigsTable : currentView === 'configsearch' ? ConfigSearch : currentView === 'configcompare' ? ConfigCompare : currentView === 'configreport' ? ConfigReportsTable : null" 
 					:configsId="configsId" 
 					:statusId="statusIdParam" 
 					:key="currentView">
 					<template v-if="['configsearch', 'configcompare'].includes(currentView)" #default>
 						<h1 class="text-2xl text-muted-foreground">
-							{{ currentView === 'configsearch' ? 'Config Search' : 'Config Compare' }}
+							{{ currentView === 'configsearch' ? 'Config Search' : currentView === 'configcompare' ? 'Config Compare' : 'Config Reports' }}
 						</h1>
 					</template>
 				</component>
