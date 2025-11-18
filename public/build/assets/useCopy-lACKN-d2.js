@@ -1,1 +1,0 @@
-import{X as s,x as a}from"./app-Bm01Br6Y.js";function u(){const{copy:t}=s(),o=a({});return{copyItem:async(e,c)=>{try{t(c),o.value[e]=!0,setTimeout(()=>{o.value[e]=!1},1500)}catch(r){console.error("Failed to copy:",r)}},activeCopyIcon:o}}export{u};
