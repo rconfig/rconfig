@@ -35,6 +35,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'external_links' => 'array',
         'onboarding_status' => 'array',
+        'get_notifications' => 'boolean',
+        'is_socialite' => 'integer',
+        'is_socialite_approved' => 'integer',
     ];
 
     //Make it available in the json response

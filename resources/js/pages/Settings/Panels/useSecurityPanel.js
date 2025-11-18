@@ -1,17 +1,34 @@
-import { ref } from 'vue';
+import axios from 'axios';
+import { ref, onMounted } from 'vue';
 
 export function useSecurityPanel() {
-	// Keeping these as empty refs in case you want to add functionality later
-	// or to prevent breaking changes if other components reference them
 	const isLoading = ref(false);
 	const isSsoLoading = ref(false);
-	const fileStatus = ref(false);
 	const ssoEnabled = ref(false);
+
+	function getSsoStatus() {
+		isSsoLoading.value = true;
+		axios
+			.get("/api/settings/socialite-status")
+			.then((response) => {
+				setTimeout(() => {
+				ssoEnabled.value = response.data.is_socialite || false;
+				isSsoLoading.value = false;
+				}, 2000);
+			})
+			.catch((error) => {
+				console.log("Error fetching SSO status:", error);
+				isSsoLoading.value = false;
+			});
+	}
+
+	onMounted(() => {
+		getSsoStatus();
+	});
 
 	return {
 		isLoading,
 		isSsoLoading,
-		fileStatus,
 		ssoEnabled,
 	};
 }

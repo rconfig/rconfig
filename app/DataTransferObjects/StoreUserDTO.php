@@ -13,6 +13,8 @@ final class StoreUserDTO extends DtoBase
     public string $email;
     public string $password;
     public string $role;
+    public bool $is_socialite;
+    public bool $is_socialite_approved;
     
 
     public function __construct(array $parameters = [])
@@ -22,5 +24,7 @@ final class StoreUserDTO extends DtoBase
         $this->email = $parameters['email'];
         $this->password = $parameters['password'];
         $this->role = $parameters['role'];
+        $this->is_socialite = $parameters['is_socialite'];
+        $this->is_socialite_approved = $parameters['is_socialite_approved'];
        }
 }

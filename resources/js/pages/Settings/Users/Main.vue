@@ -7,7 +7,7 @@ import Pagination from "@/pages/Shared/Table/Pagination.vue";
 import RcConfirmAlertDialog from "@/pages/Shared/ConfirmAlertDialog/RcConfirmAlertDialog.vue";
 import RelatedDocumentationNav from "@/pages/Shared/RelatedDocumentationNavs/RelatedDocumentationNav.vue";
 import UserAddEditDialog from "@/pages/Settings/Users/UserAddEditDialog.vue";
-import { ClipboardList } from "lucide-vue-next";
+import { ClipboardList, User, Pyramid, ShieldUser } from "lucide-vue-next";
 import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { onMounted, onUnmounted } from "vue";
@@ -15,7 +15,7 @@ import { useRoute } from "vue-router";
 import { useRowSelection } from "@/composables/useRowSelection";
 import { useUsers } from "@/pages/Settings/Users/useUsers";
 
-const { reload, editId, users, currentPage, perPage, searchTerm, lastPage, isLoading, navigateToActivityLog, fetchUsers, viewEditDialog, createUser, deleteUser, handleSave, handleKeyDown, newUserModalKey, toggleSort, sortParam, toggleNotification, relatedDocs, showConfirmDelete, deleteManyUsers, updateRelatedDocs } = useUsers();
+const { reload, editId, users, currentPage, perPage, searchTerm, lastPage, isLoading, navigateToActivityLog, fetchUsers, viewEditDialog, createUser, deleteUser, handleSave, handleKeyDown, newUserModalKey, toggleSort, sortParam, toggleNotification, toggleSocialiteApproved, relatedDocs, showConfirmDelete, deleteManyUsers, updateRelatedDocs } = useUsers();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(users);
 const route = useRoute();
 
@@ -75,19 +75,21 @@ onUnmounted(() => {
 								<span class="ml-2">ID</span>
 							</Button>
 						</TableHead>
-						<TableHead class="w-[20%]">
+						<TableHead class="w-[8%]"> User Type </TableHead>
+						<TableHead class="w-[10%]">
 							<Button class="flex justify-start w-full p-0 hover:bg-rcgray-800" variant="ghost" @click="toggleSort('name')">
 								<RcIcon name="sort" :sortParam="sortParam" field="name" />
 								<span class="ml-2">Name</span>
 							</Button>
 						</TableHead>
-						<TableHead class="w-[25%]">
+						<TableHead class="w-[20%]">
 							<Button class="flex justify-start w-full p-0 hover:bg-rcgray-800" variant="ghost" @click="toggleSort('email')">
 								<RcIcon name="sort" :sortParam="sortParam" field="email" />
 								<span class="ml-2">Email</span>
 							</Button>
 						</TableHead>
 						<TableHead>Notifications</TableHead>
+						<TableHead>SSO Approved</TableHead>
 						<TableHead class="w-[20%]">
 							<Button class="flex justify-start w-full p-0 hover:bg-rcgray-800" variant="ghost" @click="toggleSort('last_login')">
 								<RcIcon name="sort" :sortParam="sortParam" field="last_login" />
@@ -107,11 +109,19 @@ onUnmounted(() => {
 							<TableCell class="text-start">
 								<Checkbox class="cursor-pointer" :id="'select-' + row.id" :checked="selectedRows.includes(row.id) ? true : false" @click="toggleSelectRow(row.id)" />
 							</TableCell>
-
 							<TableCell class="text-start">
 								{{ row.id }}
 							</TableCell>
-
+							<TableCell class="text-start">
+								<RcBadge v-if="row.is_socialite" variant="secondary" class="ml-2 px-2 flex items-center gap-1" title="SSO User">
+									<ShieldUser class="h-3 w-3" />
+									<span class="text-xs">SSO</span>
+								</RcBadge>
+								<RcBadge v-else variant="outline" class="ml-2 px-2 flex items-center gap-1" title="Local User">
+									<User class="h-3 w-3" />
+									<span class="text-xs">Local</span>
+								</RcBadge>
+							</TableCell>
 							<TableCell class="text-start">
 								{{ row.name }}
 							</TableCell>
@@ -120,6 +130,9 @@ onUnmounted(() => {
 							</TableCell>
 							<TableCell class="text-start">
 								<Switch :id="`notif-${row.id}`" :checked="row.get_notifications === 1" @update:checked="toggleNotification(row.id, $event ? 1 : 0)" />
+							</TableCell>
+							<TableCell class="text-start">
+								<Switch :id="`socialite-${row.id}`" v-model:checked="row.is_socialite_approved" @update:checked="toggleSocialiteApproved(row.id, $event ? 1 : 0)" />
 							</TableCell>
 							<TableCell class="text-start">
 								{{ row.last_login }}

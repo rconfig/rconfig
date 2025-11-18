@@ -130,6 +130,25 @@ export function useUsers() {
 		}
 	};
 
+	const toggleSocialiteApproved = async (id, value) => {
+		// Optimistically update the UI
+		const user = users.value.data.find((u) => u.id === id);
+		if (user) {
+			user.is_socialite_approved = value;
+		}
+
+		try {
+			await axios.post(`/api/user/set-socialite-approval-status/${id}`, { status: value });
+			toastSuccess("SSO approval status updated", "User SSO approval status has been saved.");
+		} catch (error) {
+			// Revert on error
+			if (user) {
+				user.is_socialite_approved = value === 1 ? 0 : 1;
+			}
+			toastError("Error updating SSO approval status", error.response?.data?.message || "An unexpected error occurred");
+		}
+	};
+
 	const updateRelatedDocs = () => {
 		relatedDocs.value = [
 			{
@@ -186,6 +205,7 @@ export function useUsers() {
 		toggleSort,
 		sortParam,
 		toggleNotification,
+		toggleSocialiteApproved,
 		relatedDocs,
 		showConfirmDelete,
 		deleteManyUsers,

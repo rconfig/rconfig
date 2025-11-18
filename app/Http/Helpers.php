@@ -51,6 +51,12 @@ if (!function_exists('getComposerVersion')) {
     }
 }
 
+// used in routes files to load routes from a file
+function loadRoutesFrom($path)
+{
+    return require rconfig_appdir_path() . '/routes' . $path;
+}
+
 function rconfig_appdir_path()
 {
     return Config::get('rConfig.app_dir_path');

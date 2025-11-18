@@ -31,6 +31,8 @@ class UserController extends ApiBaseController
 
     public function store(StoreUserRequest $request)
     {
+        $request->is_socialite_approved = 1;
+
         return parent::storeResource($request->toDTO()->toArray());
     }
 
@@ -47,6 +49,18 @@ class UserController extends ApiBaseController
     public function destroy($id, $return = 0)
     {
         return parent::destroy($id);
+    }
+
+    public function setSocialiteApprovalStatus($userid, Request $request)
+    {
+        // $this->authorize('user.update');
+        $status = $request->input('status');
+
+        $user = User::find($userid);
+        $user->is_socialite_approved = $status;
+        $user->save();
+
+        return response()->json(['status' => 'success']);
     }
 
     public function addExternalLink(Request $request, $id)

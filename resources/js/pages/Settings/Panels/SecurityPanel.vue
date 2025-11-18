@@ -60,6 +60,46 @@ const { isLoading, isSsoLoading, fileStatus, ssoEnabled } = useSecurityPanel();
 				</div>
 
 				<Separator class="my-6" />
+				<div v-if="isSsoLoading" class="flex items-center justify-center w-full">
+					<Loading />
+				</div>
+				<div v-if="!isSsoLoading" class="flex items-start gap-4 mt-6">
+					<div class="w-12 h-12 mr-8 flex items-center justify-center">
+						<UserCheck size="42" class="text-purple-400 dark:text-purple-300" stroke-width="1.5" />
+					</div>
+					<div class="w-3/4">
+						<div class="rc-panel-heading3">
+							<span v-if="ssoEnabled" class="flex items-center">
+								<svg class="h-5 w-5 text-green-400 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+								</svg>
+								Single Sign-On Authentication Active
+							</span>
+							<span v-else class="flex items-center">
+								<svg class="h-5 w-5 text-blue-400 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+									<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+								</svg>
+								Single Sign-On Authentication Disabled
+							</span>
+						</div>
+						<div class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+							<span v-if="ssoEnabled">
+								Your rConfig installation is configured with Single Sign-On (SSO) authentication. This allows users to authenticate using their existing organizational credentials, enhancing security by leveraging centralized identity management and reducing the need for multiple passwords.
+							</span>
+							<span v-else>
+								Single Sign-On (SSO) authentication is not currently configured. Setting up SSO can improve security by reducing password fatigue and leveraging your organization's existing identity management systems. Follow the documentation to enable this feature.
+							</span>
+						</div>
+						<div class="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
+							<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+								<path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+							</svg>
+							<ExternalLinkComponent :to="$rconfigDocsUrl + '/integrations/sso/sso-overview/'" :text="'Learn more about SSO configuration'" :active="true" />
+						</div>
+					</div>
+				</div>
+				<Separator class="my-6" />
 			</div>
 		</div>
 	</div>

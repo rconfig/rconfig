@@ -60,6 +60,8 @@ class StoreUserRequest extends FormRequest
             'username' => $this->username,
             'password' => \Hash::make($this->password),
             'role' => $this->role,
+            'is_socialite' => $this->is_socialite ? true : false,
+            'is_socialite_approved' => $this->is_socialite_approved ? true : false,
         ]);
     }
 }
