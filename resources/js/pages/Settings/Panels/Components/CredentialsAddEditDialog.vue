@@ -125,11 +125,6 @@ function validateRotation(value) {
 						<span class="inline-flex items-center gap-1">
 							Name
 							<span class="text-red-400">*</span>
-							<RcIcon v-if="editId > 0" name="lock" size="12" class="text-yellow-500" />
-						</span>
-						<br v-if="editId > 0" />
-						<span v-if="editId > 0" class="text-xs font-normal text-gray-500">
-							(CM locked)
 						</span>
 					</Label>
 					<Skeleton class="h-8 col-span-3" v-if="isLoading" />
@@ -143,11 +138,6 @@ function validateRotation(value) {
 					<Label for="cred_description" class="text-right">
 						<span class="inline-flex items-center gap-1">
 							Description
-							<RcIcon v-if="editId > 0" name="lock" size="12" class="text-yellow-500" />
-						</span>
-						<br v-if="editId > 0" />
-						<span v-if="editId > 0" class="text-xs font-normal text-gray-500">
-							(CM locked)
 						</span>
 					</Label>
 					<Skeleton class="h-8 col-span-3" v-if="isLoading" />
@@ -164,11 +154,6 @@ function validateRotation(value) {
 							<label class="flex items-center space-x-2 cursor-pointer">
 								<RadioGroupItem value="usernamePassword" id="usernamePassword" class="h-5 w-5 rounded-full focus:ring-2 focus:ring-blue-400 focus:outline-none data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-600" />
 								<span class="text-sm font-medium rc-text-sm-muted">Username/Password</span>
-							</label>
-
-							<label class="flex items-center space-x-2 cursor-pointer">
-								<RadioGroupItem value="privateKey" id="privateKey" class="h-5 w-5 rounded-full focus:ring-2 focus:ring-blue-400 focus:outline-none data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-600" />
-								<span class="text-sm font-medium rc-text-sm-muted">Private Key</span>
 							</label>
 						</RadioGroup>
 					</div>
@@ -225,66 +210,6 @@ function validateRotation(value) {
 						<Skeleton class="h-8 col-span-3" />
 					</div>
 				</template>
-
-				<template v-if="!isLoading && selectedMethod === 'privateKey'">
-					<div class="grid items-start grid-cols-4 gap-4">
-						<Label for="ssh_key" class="text-right pt-2">
-							Private Key
-							<span class="text-red-400">*</span>
-							<br />
-							<span class="text-xs font-normal text-gray-500">(paste the key encryption code)</span>
-						</Label>
-						<Textarea
-							v-model="model.ssh_key"
-							id="ssh_key"
-							class="col-span-3 h-40 font-mono text-sm"
-							placeholder="-----BEGIN PRIVATE KEY-----
-...
------END PRIVATE KEY-----"
-						/>
-						<span class="col-span-2 col-start-2 -mt-4 text-sm text-red-400" v-if="errors.ssh_key">
-							{{ errors.ssh_key[0] }}
-						</span>
-					</div>
-
-					<div class="grid items-center grid-cols-4 gap-4">
-						<Label for="ssh_key_passphrase" class="text-right">
-							Private Key Passphrase
-							<br />
-							<span class="text-xs font-normal text-gray-500">(optional)</span>
-						</Label>
-						<InputPassword v-model="model.ssh_key_passphrase" id="ssh_key_passphrase" mainDivClass="col-span-3" />
-						<span class="col-span-2 col-start-2 -mt-4 text-sm text-red-400" v-if="errors.ssh_key_passphrase">
-							{{ errors.ssh_key_passphrase[0] }}
-						</span>
-					</div>
-
-					<div class="grid items-start grid-cols-4 gap-4">
-						<AlertInfo class="rc-text-xs-muted col-span-3 col-start-2 mt-4" title="Notice" message="Private Key and Passphrase will not be accessible after initial save." :small="true" :showClose="false" @closed="handleAlertClosed" />
-					</div>
-				</template>
-
-				<template v-if="isLoading && selectedMethod === 'privateKey'">
-					<div class="grid items-start grid-cols-4 gap-4">
-						<Label for="ssh_key" class="text-right pt-2">
-							Private Key
-							<span class="text-red-400">*</span>
-							<br />
-							<span class="text-xs font-normal text-gray-500">(paste the key encryption code)</span>
-						</Label>
-						<Skeleton class="h-40 col-span-3" />
-					</div>
-
-					<div class="grid items-center grid-cols-4 gap-4">
-						<Label for="ssh_key_passphrase" class="text-right">
-							Private Key Passphrase
-							<br />
-							<span class="text-xs font-normal text-gray-500">(optional)</span>
-						</Label>
-						<Skeleton class="h-8 col-span-3" />
-					</div>
-				</template>
-
 				<div v-if="!isLoading && editId > 0" class="grid items-center grid-cols-4 gap-4">
 					<Label for="rotate_creds" class="text-right">
 						Rotate Device Credentials

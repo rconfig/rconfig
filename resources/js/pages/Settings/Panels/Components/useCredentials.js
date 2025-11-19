@@ -16,7 +16,6 @@ export function useCredentials(options = {}) {
 
 	const editId = ref(0);
 	const newCredModalKey = ref(1);
-	const newVaultCredModalKey = ref(1);
 	const currentPage = ref(1);
 	const filters = ref({});
 	const isLoading = ref(false);
@@ -27,8 +26,6 @@ export function useCredentials(options = {}) {
 	const searchTerm = ref("");
 	const showConfirmDelete = ref(false);
 	const sortParam = ref("-id");
-	const vaultStatus = ref("");
-	const viewVaultBtn = ref(false);
 	const formatters = inject("formatters");
 	const dialogStore = useDialogStore();
 	const { toggleSort } = useToggleSort(sortParam, fetchCreds, "useCredentials");
@@ -38,7 +35,6 @@ export function useCredentials(options = {}) {
 	if (autoMount && !skipInitialization) {
 		onMounted(() => {
 			fetchCreds();
-			getVaultStatus();
 		});
 	}
 
@@ -68,22 +64,6 @@ export function useCredentials(options = {}) {
 		}
 	}
 
-	// Get Vault Status
-	function getVaultStatus() {
-		axios
-			.get("/api/integrations/get-vault-status")
-			.then((response) => {
-				vaultStatus.value = response.data.vault_status;
-				if (vaultStatus.value !== "rconfig") {
-					viewVaultBtn.value = true;
-				}
-			})
-			.catch((error) => {
-				console.error("Error fetching vault status:", error);
-				toastError("Error", "Failed to fetch vault status");
-			});
-	}
-
 	// Create Cred
 	const createCred = () => {
 		editId.value = 0;
@@ -93,31 +73,10 @@ export function useCredentials(options = {}) {
 
 	// Edit Cred
 	const editCred = (row) => {
-		if (row.vault_enabled === 0) {
-			editId.value = row.id;
-			newCredModalKey.value = Math.floor(Math.random() * 1000);
-			dialogStore.openDialog("DialogNewCred");
-		} else {
-			editId.value = row.id;
-			newCredModalKey.value = Math.floor(Math.random() * 1000);
-			dialogStore.openDialog("DialogNewVaultCred");
-		}
+		editId.value = row.id;
+		newCredModalKey.value = Math.floor(Math.random() * 1000);
+		dialogStore.openDialog("DialogNewCred");
 	};
-
-	// Create Vault Credential
-	function createVaultCred() {
-		editId.value = 0;
-		newVaultCredModalKey.value = Math.floor(Math.random() * 1000);
-		dialogStore.openDialog("DialogNewVaultCred");
-		console.log("newVaultCredModalKey", newVaultCredModalKey.value);
-	}
-
-	// Edit Vault Credential
-	function editVaultCred(id) {
-		editId.value = id;
-		newVaultCredModalKey.value = Math.floor(Math.random() * 1000);
-		dialogStore.openDialog("DialogNewVaultCred");
-	}
 
 	const handleSave = () => {
 		fetchCreds(); // Fetch the updated tags after saving
@@ -184,11 +143,8 @@ export function useCredentials(options = {}) {
 		// --- Methods / Actions ---
 		reload,
 		fetchCreds,
-		getVaultStatus,
 		createCred,
-		createVaultCred,
 		editCred,
-		editVaultCred,
 		deleteCredential,
 		deleteManyCredentials,
 		handleSave,
@@ -201,12 +157,9 @@ export function useCredentials(options = {}) {
 		perPage,
 		searchTerm,
 		sortParam,
-		vaultStatus,
-		viewVaultBtn,
 		isLoading,
 		editId,
 		newCredModalKey,
-		newVaultCredModalKey,
 		showConfirmDelete,
 		formatters,
 		dialogStore,

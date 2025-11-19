@@ -3,11 +3,12 @@
 namespace Tests;
 
 use App\Models\Template;
+use Tests\Traits\ManagesTransactions;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-    use MigrateFreshSeedOnce, CreatesApplication;
+    use MigrateFreshSeedOnce, CreatesApplication, ManagesTransactions;
 
     public function log_message_during_test($testname, $message)
     {

@@ -105,21 +105,6 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
         Route::post('/search', 'ConfigSearchController@search');
     });
 
-    /* SETTINGS RESOURCE ROUTES*/
-    Route::prefix('settings')->group(function () {
-        Route::resource('/settings', 'SettingBannerController')->only(['show']);
-        Route::resource('/banner', 'SettingBannerController')->only(['show', 'update']);
-        Route::resource('/timezone', 'SettingTimezoneController')->only(['show', 'update']);
-        Route::resource('/email', 'SettingEmailController')->only(['show', 'update']);
-        // Route::resource('/debug', 'SettingDebugController')->only(['show', 'update']); missing
-        Route::resource('/support-info', 'SettingsSupportInfoController')->only(['index']);
-
-        /* SETTINGS SPECIFIC ROUTES*/
-        Route::get('/get-timezone-list', 'SettingTimezoneController@getTimezoneList');
-        Route::get('/test-email', 'SettingEmailController@TestMail');
-        Route::get('/test-notification', 'SettingEmailController@TestMailNotifications');
-    });
-
     Route::resource('/notifications', 'NotificationsController')->only(['index', 'update']);
 
     Route::get('/license-info', 'LicenseInfoController@index');

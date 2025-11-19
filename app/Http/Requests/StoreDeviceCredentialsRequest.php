@@ -41,7 +41,7 @@ class StoreDeviceCredentialsRequest extends FormRequest
             'cred_description' => $this->cred_description ?? null,
             'cred_username' => $this->cred_username,
             'cred_password' => $this->cred_password,
-            'cred_enable_password' => $this->cred_password ?? null,
+            'cred_enable_password' => $this->cred_enable_password ?? null,
         ]);
     }
 }

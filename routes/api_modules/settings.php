@@ -7,9 +7,14 @@ Route::prefix('settings')->group(function () {
     Route::resource('/banner', 'SettingBannerController')->only(['show', 'update']);
     Route::resource('/timezone', 'SettingTimezoneController')->only(['show', 'update']);
     Route::resource('/email', 'SettingEmailController')->only(['show', 'update']);
+    Route::post('/credentials/delete-many', 'DeviceCredentialsController@deleteMany');
+    Route::resource('/defaultcred', 'SettingDeviceCredController')->only(['show', 'update']);
+    Route::resource('/credentials', 'DeviceCredentialsController');
+    Route::resource('/debug', 'SettingDebugController')->only(['show', 'update']);
     Route::get('/socialite-status', 'SettingSSOController@show');
 
     /* SETTINGS SPECIFIC ROUTES*/
     Route::get('/get-timezone-list', 'SettingTimezoneController@getTimezoneList');
     Route::get('/test-email', 'SettingEmailController@TestMail');
+    Route::get('/schedule/list', 'ScheduleController@list');
 });

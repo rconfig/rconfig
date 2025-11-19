@@ -8,7 +8,6 @@ import NoResults from "@/pages/Shared/Table/NoResults.vue";
 import Pagination from "@/pages/Shared/Table/Pagination.vue";
 import RcConfirmAlertDialog from "@/pages/Shared/ConfirmAlertDialog/RcConfirmAlertDialog.vue";
 import RcToolTip from "@/pages/Shared/Tooltips/RcToolTip.vue";
-import VaultCredentialsDialog from "@/pages/Settings/Panels/Components/VaultCredentialsDialog.vue";
 import { Key } from "lucide-vue-next";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { eventBus } from "@/composables/eventBus";
@@ -20,11 +19,8 @@ const {
 	// --- Methods / Actions ---
 	reload,
 	fetchCreds,
-	getVaultStatus,
 	createCred,
-	createVaultCred,
 	editCred,
-	editVaultCred,
 	deleteCredential,
 	deleteManyCredentials,
 	handleSave,
@@ -37,12 +33,9 @@ const {
 	perPage,
 	searchTerm,
 	sortParam,
-	vaultStatus,
-	viewVaultBtn,
 	isLoading,
 	editId,
 	newCredModalKey,
-	newVaultCredModalKey,
 	showConfirmDelete,
 	formatters,
 	dialogStore,
@@ -78,10 +71,6 @@ onMounted(() => {
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class2">ALT N</kbd>
 					</div>
-				</Button>
-				<Button v-if="viewVaultBtn" type="submit" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click.prevent="createVaultCred()" variant="primary" title="Add Vault Credential">
-					<RcIcon name="vault" class="text-white mr-2" />
-					Add Vault Credential Set
 				</Button>
 				<RcIcon name="refresh" class="w-4 h-4 mx-4 text-muted-foreground cursor-pointer hover:text-rcgray-200" @click="reload()" />
 			</div>
@@ -132,13 +121,6 @@ onMounted(() => {
 									<Button class="px-2 py-0 text-sm hover:bg-rcgray-800 rounded-xl" variant="ghost" @click="editCred(row)">
 										<span class="border-b">{{ row.cred_name }}</span>
 									</Button>
-									<RcToolTip v-if="row.cm_lock == true" :delayDuration="100" content="This credential was installed via Change Manager" side="top">
-										<template #trigger>
-											<Button variant="ghost" class="px-2 py-1">
-												<RcIcon v-if="row.cm_lock == true" name="lock" size="14" class="text-yellow-500" />
-											</Button>
-										</template>
-									</RcToolTip>
 								</div>
 							</TableCell>
 							<TableCell class="text-start">
@@ -173,7 +155,6 @@ onMounted(() => {
 
 			<Pagination :currentPage="currentPage" :lastPage="lastPage" :perPage="perPage" @update:currentPage="currentPage = $event" @update:perPage="perPage = $event" :totalRecords="creds.total" :isLoading="isLoading" />
 			<CredentialsAddEditDialog @save="handleSave()" :key="newCredModalKey" :editId="editId" />
-			<VaultCredentialsDialog @save="handleSave()" :key="newVaultCredModalKey" :editId="editId" :vaultStatus="vaultStatus" />
 			<RcConfirmAlertDialog :ids="selectedRows" :showConfirmDelete="showConfirmDelete" @close="showConfirmDelete = false" @handleDelete="deleteManyCredentials(selectedRows)" />
 		</div>
 	</div>
