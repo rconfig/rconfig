@@ -22,6 +22,9 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
     /* INTEGRATIONS ROUTES */
     loadRoutesFrom('/api_modules/integrations.php');
 
+    /* USERS ROUTES */
+    loadRoutesFrom('/api_modules/users.php');
+
     Route::get('/app-dir-path', function () {
         return rconfig_appdir_path();
     });
@@ -118,15 +121,8 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
         Route::get('clear-logs/{deviceid}', 'ActivityLogController@clearLogsByDeviceId');
     });
 
-    Route::prefix('user')->group(function () {
-        Route::post('/add-external-link/{id}', 'UserController@addExternalLink');
-        Route::get('/get-external-links/{id}', 'UserController@getExternalLinks');
-        Route::post('/remove-external-link/', 'UserController@removeExternalLink');
-    });
-
     Route::get('/onboarding/steps', 'UserOnboardingController@getSteps');
 
-    Route::resource('users', 'UserController');
     Route::resource('device-credentials', 'DeviceCredentialsController');
     Route::post('/device-credentials/delete-many', 'DeviceCredentialsController@deleteMany');
 });

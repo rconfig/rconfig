@@ -4,6 +4,7 @@ import ClearFilters from "@/pages/Shared/Filters/ClearFilters.vue";
 import Loading from "@/pages/Shared/Table/Loading.vue";
 import NoResults from "@/pages/Shared/Table/NoResults.vue";
 import Pagination from "@/pages/Shared/Table/Pagination.vue";
+import RcBadge from "@/pages/Shared/Badges/RcBadge.vue";
 import RcConfirmAlertDialog from "@/pages/Shared/ConfirmAlertDialog/RcConfirmAlertDialog.vue";
 import RelatedDocumentationNav from "@/pages/Shared/RelatedDocumentationNavs/RelatedDocumentationNav.vue";
 import UserAddEditDialog from "@/pages/Settings/Users/UserAddEditDialog.vue";
@@ -88,6 +89,7 @@ onUnmounted(() => {
 								<span class="ml-2">Email</span>
 							</Button>
 						</TableHead>
+						<TableHead class="w-[10%]"> Roles</TableHead>
 						<TableHead>Notifications</TableHead>
 						<TableHead>SSO Approved</TableHead>
 						<TableHead class="w-[20%]">
@@ -127,6 +129,18 @@ onUnmounted(() => {
 							</TableCell>
 							<TableCell class="text-start">
 								{{ row.email }}
+							</TableCell>
+							<TableCell class="text-start">
+								<div v-if="row.role" class="flex gap-1">
+									<RcBadge variant="outline">
+										{{ row.role }}
+									</RcBadge>
+								</div>
+								<RcToolTip v-else :delayDuration="100" :content="'No role assigned to this user'" side="bottom">
+									<template #trigger>
+										<RcBadge class="ml-1 px-2" variant="warning" size="sm">No Role</RcBadge>
+									</template>
+								</RcToolTip>
 							</TableCell>
 							<TableCell class="text-start">
 								<Switch :id="`notif-${row.id}`" :checked="row.get_notifications === 1" @update:checked="toggleNotification(row.id, $event ? 1 : 0)" />

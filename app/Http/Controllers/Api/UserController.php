@@ -6,7 +6,10 @@ use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class UserController extends ApiBaseController
@@ -20,13 +23,15 @@ class UserController extends ApiBaseController
     public function index(Request $request, $searchCols = null, $relationship = null, $withCount = null)
     {
 
-        $response = QueryBuilder::for(User::class)
-            ->allowedFilters(['name'])
+        $query = QueryBuilder::for($this->model::class)
+            ->allowedFilters([
+                AllowedFilter::custom('q', new FilterMultipleFields, 'id, name, username, email'),
+            ])
             ->defaultSort('-id')
-            ->allowedSorts(['id', 'name', 'email', 'last_login'])
-            ->paginate((int) $request->perPage);
+            ->allowedSorts(['id', 'email', 'name', 'last_login'])
+            ->paginate($request->perPage ?? 10);
 
-        return response()->json($response);
+        return response()->json($query);
     }
 
     public function store(StoreUserRequest $request)
@@ -46,6 +51,16 @@ class UserController extends ApiBaseController
         return parent::updateResource($id, $request->toDTO()->toArray());
     }
 
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+        $user->name = $request->input('name');
+        $user->username = $request->input('username');
+        $user->save();
+
+        return response()->json(['status' => 'success']);
+    }
+
     public function destroy($id, $return = 0)
     {
         return parent::destroy($id);
@@ -58,6 +73,17 @@ class UserController extends ApiBaseController
 
         $user = User::find($userid);
         $user->is_socialite_approved = $status;
+        $user->save();
+
+        return response()->json(['status' => 'success']);
+    }
+
+    public function setLocale($userid, Request $request)
+    {
+        $user = User::find($userid);
+        $user->locale = $request->input('locale');
+        $user->datestyle = $request->input('datestyle');
+        $user->timestyle = $request->input('timestyle');
         $user->save();
 
         return response()->json(['status' => 'success']);
@@ -117,5 +143,30 @@ class UserController extends ApiBaseController
     {
         $user = User::findOrFail($id);
         return response()->json($user->external_links);
+    }
+    public function changePassword(Request $request, $userid)
+    {
+        $validator = Validator::make($request->all(), [
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $user = User::findOrFail($userid);
+
+        if (! Hash::check($request->current_password, $user->password)) {
+            return response()->json([
+                'message' => 'Current password is incorrect',
+                'errors' => ['current_password' => ['The provided password does not match our records.']],
+            ], 422);
+        }
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return response()->json(['status' => 'success']);
     }
 }

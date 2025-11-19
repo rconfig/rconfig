@@ -2,7 +2,8 @@
 import Spinner from "@/pages/Shared/Icon/Spinner.vue";
 import axios from "axios";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { ref, onMounted, onUnmounted, watch } from "vue";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ref, onMounted, onUnmounted, watch, computed } from "vue";
 import { useDialogStore } from "@/stores/dialogActions";
 import { useToaster } from "@/composables/useToaster";
 
@@ -34,6 +35,20 @@ const model = ref({
 	email: "",
 	password: "",
 	repeat_password: "",
+	role: "",
+});
+
+const roles = ref([
+	{ id: "Admin", name: "Admin" },
+	{ id: "User", name: "User" },
+]);
+
+// Computed property for role string binding
+const roleIdString = computed({
+	get: () => model.value.role ? String(model.value.role) : "",
+	set: (value) => {
+		model.value.role = value;
+	}
 });
 
 // Event handlers
@@ -64,6 +79,10 @@ function saveDialog() {
 		});
 }
 
+function setRole(role) {
+	model.value.role = role;
+}
+
 function onDialogClose() {
 	closeDialog("DialogNewUser");
 
@@ -81,6 +100,7 @@ function resetForm() {
 		email: "",
 		password: "",
 		repeat_password: "",
+		role: "",
 	};
 	errors.value = {};
 	formKey.value = Date.now();
@@ -204,6 +224,28 @@ watch(
 					<span class="col-span-3 col-start-2 text-sm text-green-400" v-if="successMessage && model.password && model.repeat_password">
 						{{ successMessage }}
 					</span>
+				</div>
+
+				<div class="grid items-center grid-cols-4 gap-2">
+					<Label for="role-select" class="text-right">
+						Role
+						<span class="text-red-400">*</span>
+					</Label>
+				<Select v-model="roleIdString">
+					<SelectTrigger id="role-select" class="col-span-3">
+						<SelectValue placeholder="Select a role" />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectGroup>
+							<SelectItem v-for="role in roles" :key="role.id" :value="String(role.id)" @click="setRole(role.id)">
+								{{ role.name }}
+							</SelectItem>
+						</SelectGroup>
+					</SelectContent>
+				</Select>
+				<span class="col-span-3 col-start-2 text-sm text-red-400" v-if="errors?.role?.[0]">
+					{{ errors.role[0] }}
+				</span>
 				</div>
 
 				<!-- Notifications -->
