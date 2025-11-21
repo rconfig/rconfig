@@ -12,28 +12,20 @@ class Device extends BaseModel
 {
     use HasFactory;
 
+    public const STATUS_UNREACHABLE = 0;
+
+    public const STATUS_REACHABLE = 1;
+
+    public const STATUS_UNKNOWN = 2;
+
+    public const STATUS_DISABLED = 100;
+
+    protected $searchableColumns = ['deviceName', 'deviceIpAddr'];
+
     protected $casts = [
         'device_password' => EncryptStringCast::class,
         'device_enable_password' => EncryptStringCast::class,
     ];
-
-    public $fillable = [
-        'device_name',
-        'device_ip',
-        'device_port_override',
-        'device_username',
-        'device_password',
-        'device_enable_password',
-        'device_cred_id',
-        'device_main_prompt',
-        'device_enable_prompt',
-        'device_category_id',
-        'device_template',
-        'device_model',
-        'device_version',
-        'last_config_at'
-    ];
-
 
     //Make it available in the json response
     protected $appends = ['view_url'];
@@ -73,36 +65,46 @@ class Device extends BaseModel
 
     public function deviceCred()
     {
-        return $this->belongsTo(DeviceCredentials::class,  'device_cred_id', 'id');
+        return $this->belongsTo(DeviceCredentials::class, 'device_cred_id', 'id');
+    }
+
+    public function deviceCredName()
+    {
+        return $this->deviceCred()->select(['id', 'cred_name']);
     }
 
     public function lastConfig()
     {
-        return $this->hasOne('App\Models\Config')->latestOfMany();
+        return $this->hasOne('App\Models\Config')->latest();
         // order by by how ever you need it ordered to get the latest
     }
 
-    /**
-     * Get the good config record associated with the device.
-     */
-    public function config_good()
+    public function configSummary()
     {
-        return $this->hasMany('App\Models\Config')->where('configs.download_status', '=', '1');
+        return $this->hasOne(ConfigSummary::class);
     }
 
-    /**
-     * Get the bad config record associated with the device.
-     */
-    public function config_unknown()
-    {
-        return $this->hasMany('App\Models\Config')->where('configs.download_status', '=', '2');
-    }
+    // /**
+    //  * Get the good config record associated with the device.
+    //  */
+    // public function config_good()
+    // {
+    //     return $this->hasMany('App\Models\Config')->where('configs.download_status', '=', '1');
+    // }
 
-    /**
-     * Get the bad config record associated with the device.
-     */
-    public function config_bad()
-    {
-        return $this->hasMany('App\Models\Config')->where('configs.download_status', '=', '0');
-    }
+    // /**
+    //  * Get the bad config record associated with the device.
+    //  */
+    // public function config_unknown()
+    // {
+    //     return $this->hasMany('App\Models\Config')->where('configs.download_status', '=', '2');
+    // }
+
+    // /**
+    //  * Get the bad config record associated with the device.
+    //  */
+    // public function config_bad()
+    // {
+    //     return $this->hasMany('App\Models\Config')->where('configs.download_status', '=', '0');
+    // }
 }

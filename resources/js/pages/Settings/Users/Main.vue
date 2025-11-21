@@ -6,6 +6,7 @@ import NoResults from "@/pages/Shared/Table/NoResults.vue";
 import Pagination from "@/pages/Shared/Table/Pagination.vue";
 import RcBadge from "@/pages/Shared/Badges/RcBadge.vue";
 import RcConfirmAlertDialog from "@/pages/Shared/ConfirmAlertDialog/RcConfirmAlertDialog.vue";
+import RcToolTip from "@/pages/Shared/Tooltips/RcToolTip.vue";
 import RelatedDocumentationNav from "@/pages/Shared/RelatedDocumentationNavs/RelatedDocumentationNav.vue";
 import UserAddEditDialog from "@/pages/Settings/Users/UserAddEditDialog.vue";
 import { ClipboardList, User, Pyramid, ShieldUser } from "lucide-vue-next";
@@ -146,7 +147,7 @@ onUnmounted(() => {
 								<Switch :id="`notif-${row.id}`" :checked="row.get_notifications === 1" @update:checked="toggleNotification(row.id, $event ? 1 : 0)" />
 							</TableCell>
 							<TableCell class="text-start">
-								<Switch :id="`socialite-${row.id}`" v-model:checked="row.is_socialite_approved" @update:checked="toggleSocialiteApproved(row.id, $event ? 1 : 0)" />
+								<Switch :id="`socialite-${row.id}`" :checked="row.is_socialite_approved === 1" @update:checked="toggleSocialiteApproved(row.id, $event ? 1 : 0)" />
 							</TableCell>
 							<TableCell class="text-start">
 								{{ row.last_login }}

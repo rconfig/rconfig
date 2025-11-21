@@ -25,37 +25,18 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
     /* USERS ROUTES */
     loadRoutesFrom('/api_modules/users.php');
 
+    /* DASHBOARD ROUTES */
+    loadRoutesFrom('/api_modules/dashboard.php');
+
+    /* DEVICES ROUTES */
+    loadRoutesFrom('/api_modules/devices.php');
+
     Route::get('/app-dir-path', function () {
         return rconfig_appdir_path();
     });
 
-
-    /* DASHBOARD ROUTES */
-    Route::prefix('dashboard')->group(function () {
-        Route::get('/sysinfo', 'DashboardController@getSysInfo')->name('api.dashboard.sysinfo');
-        Route::get('/configinfo', 'DashboardController@getConfigInfo')->name('api.dashboard.configinfo');
-        Route::get('/health-latest', 'SystemHealthController@healthLatest')->name('api.dashboard.health-latest');
-    });
-
     /* SEARCH ROUTES */
     Route::get('/search', 'QuickSearchController@search');
-
-    /* DEVICES ROUTES */
-    Route::resource('devices', 'DeviceController');
-    Route::post('/devices/delete-many', 'DeviceController@deleteMany');
-
-    Route::prefix('device')->group(function () {
-        Route::post('/download-now', 'ConfigActionsController@downloadNow');
-        Route::post('/purge-failed-configs', 'ConfigActionsController@purgeFailed');
-        Route::get('/all-device-names', 'DeviceController@allDeviceNames');
-        Route::get('/disable/{id}', 'DeviceController@disable');
-        Route::get('/enable/{id}', 'DeviceController@enable');
-        Route::get('/comments/{id}/close', 'DeviceCommentController@resolve');
-        Route::resource('comments', 'DeviceCommentController');
-    });
-
-    Route::get('device-comments/{deviceid}', 'DeviceCommentController@activeCommentsByDeviceId');
-    Route::get('device-closed-comments/{deviceid}', 'DeviceCommentController@closedCommentsByDeviceId');
 
     Route::resource('categories', 'CategoryController');
     Route::post('/categories/delete-many', 'CategoryController@deleteMany');
@@ -107,8 +88,6 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
         Route::get('distinct-commands/{id}', 'ConfigController@getDistinctCommands');
         Route::post('/search', 'ConfigSearchController@search');
     });
-
-    Route::resource('/notifications', 'NotificationsController')->only(['index', 'update']);
 
     Route::get('/license-info', 'LicenseInfoController@index');
 
