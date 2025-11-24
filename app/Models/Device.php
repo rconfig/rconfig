@@ -27,6 +27,8 @@ class Device extends BaseModel
         'device_enable_password' => EncryptStringCast::class,
     ];
 
+    protected $guarded = [];
+
     //Make it available in the json response
     protected $appends = ['view_url'];
 
@@ -56,6 +58,11 @@ class Device extends BaseModel
     public function template()
     {
         return $this->belongsToMany('App\Models\Template');
+    }
+
+    public function deviceModel()
+    {
+        return $this->belongsTo(DeviceModels::class, 'device_model', 'name');
     }
 
     public function comments()

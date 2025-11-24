@@ -2,7 +2,7 @@
 
 namespace Tests\Fasttests\ControllersTests\Api;
 
-use App\Jobs\DownloadConfigNow;
+use App\Jobs\DownloadConfigNowJob;
 use App\Models\Category;
 use App\Models\Command;
 use App\Models\Device;
@@ -10,6 +10,8 @@ use App\Models\Tag;
 use App\Models\Template;
 use App\Models\User;
 use App\Models\Vendor;
+use App\Services\Device\PingService;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Queue;
 use Tests\TestCase;
@@ -31,6 +33,23 @@ class DevicesControllerTest extends TestCase
         $response = $this->get('/api/devices?page=1&perPage=100');
         $this->assertEquals(100, count($response['data']));
         $response->assertStatus(200);
+    }
+
+    public function test_get_all_devices_but_not_creds_when_password_mask_is_enabled()
+    {
+        Config::set('rConfig.mask_device_credentials', true);
+        $this->assertTrue(Config::get('rConfig.mask_device_credentials'));
+
+        $response = $this->get('/api/devices?page=1&perPage=100');
+        $response->assertStatus(200);
+
+        // check a device did not send back username and passwords
+        $this->assertArrayNotHasKey('device_username', $response->json()['data'][1]);
+        $this->assertArrayNotHasKey('device_password', $response->json()['data'][1]);
+        $this->assertArrayNotHasKey('device_enable_password', $response->json()['data'][1]);
+
+        Config::set('rConfig.mask_device_credentials', false);
+        $this->assertFalse(Config::get('rConfig.mask_device_credentials'));
     }
 
     public function test_devices_have_relationships()
@@ -200,7 +219,7 @@ class DevicesControllerTest extends TestCase
             'vendor_id' => $device->device_vendor[0]['id'],
         ]);
 
-        Queue::assertPushed(DownloadConfigNow::class);
+        Queue::assertPushed(DownloadConfigNowJob::class);
     }
 
     public function test_edit_device()
@@ -263,6 +282,7 @@ class DevicesControllerTest extends TestCase
 
     public function test_add_serialised_encrypted_password_and_decrypt_correctly_if_pw_is_serialised_v5_migration_bug()
     {
+        Device::where('id', 1111111)->delete();
         DB::table('devices')->insert([
             'id' => 1111111,
             'device_name' => 'test_device',
@@ -270,10 +290,12 @@ class DevicesControllerTest extends TestCase
             'device_password' => \Crypt::encrypt('v5_encrypted_password'),
             'device_enable_password' => \Crypt::encrypt('v5_encrypted_password'),
             'device_template' => 1,
+            'device_model' => 'DevicesControllerTestCSR1000v',
         ]);
-
+        $device = Device::where('id', 1111111)->first();
         // dd(Device::all());
         $v5EncryptedPassword = Device::select('device_password')->where('id', 1111111)->first();
+        // dd($v5EncryptedPassword->device_password);
         $v6EncryptedPassword = Device::select('device_password')->where('id', 1001)->first();
         $this->assertFalse($this->is_serialized($v5EncryptedPassword->device_password));
         $this->assertFalse($this->is_serialized($v6EncryptedPassword->device_password));

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use App\DataTransferObjects\StoreDeviceModelDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -16,17 +17,41 @@ class StoreDeviceModelsRequest extends FormRequest
     {
         if ($this->getMethod() == 'POST') {
             $rules = [
-                'name' => 'required|min:3|unique:device_models|max:255',
+                'name' => [
+                    'required', 
+                    'string',
+                    'max:255',
+                    'min:1',
+                    Rule::unique('device_models', 'name'),
+                    Rule::unique('devices', 'device_model')->where(function ($query) {
+                        return $query->whereNotNull('device_model')->where('device_model', '!=', '');
+                    }),
+                ],
             ];
         }
 
         if ($this->getMethod() == 'PATCH') {
             $rules = [
-                'name' => 'required|min:3|max:255',
+                'name' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    'min:1',
+                ],
             ];
         }
 
         return $rules;
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'Device model name is required.',
+            'name.unique' => 'This device model name already exists.',
+            'name.max' => 'Device model name cannot exceed 255 characters.',
+            'name.min' => 'Device model name must be at least 1 character.',
+        ];
     }
 
     public function toDTO(): StoreDeviceModelDTO
