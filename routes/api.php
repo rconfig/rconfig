@@ -31,6 +31,12 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
     /* DEVICES ROUTES */
     loadRoutesFrom('/api_modules/devices.php');
 
+    /* CATEGORY ROUTES */
+    loadRoutesFrom('/api_modules/category.php');
+
+    /* COMMANDS ROUTES */
+    loadRoutesFrom('/api_modules/commands.php');
+
     Route::get('/app-dir-path', function () {
         return rconfig_appdir_path();
     });
@@ -38,17 +44,8 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
     /* SEARCH ROUTES */
     Route::get('/search', 'QuickSearchController@search');
 
-    Route::resource('categories', 'CategoryController');
-    Route::post('/categories/delete-many', 'CategoryController@deleteMany');
-
-    Route::resource('commands', 'CommandController');
-    Route::post('/commands/delete-many', 'CommandController@deleteMany');
-
     Route::resource('vendors', 'VendorController');
     Route::post('/vendors/delete-many', 'VendorController@deleteMany');
-
-    Route::resource('device-models', 'DeviceModelsController');
-    Route::post('/device-models/delete-many', 'DeviceModelsController@deleteMany');
 
     Route::resource('tags', 'TagController');
     Route::post('/tags/delete-many', 'TagController@deleteMany');
@@ -62,9 +59,6 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
     Route::post('/list-repo-folders-contents', 'TemplateGithubController@list_repo_folders_contents');
     Route::post('/get-template-file-contents', 'TemplateGithubController@get_template_file_contents');
     Route::get('/get-default-template', 'TemplateController@getDefaultTemplate');
-
-    /* DEVICES SPECIFIC ROUTES*/
-    Route::get('/get-device-models', 'DeviceController@getDeviceModels');
 
     /* TASKS ROUTES */
     Route::prefix('tasks')->group(function () {

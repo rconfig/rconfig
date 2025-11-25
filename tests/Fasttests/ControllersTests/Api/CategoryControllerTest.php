@@ -9,13 +9,14 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-class CategoriesControllerTest extends TestCase
+class CategoryControllerTest extends TestCase
 {
     protected $user;
 
     public function setUp(): void
     {
         parent::setUp();
+        $this->beginTransaction();
         $this->user = User::factory()->create();
         $this->actingAs($this->user, 'api');
     }
@@ -87,6 +88,21 @@ class CategoriesControllerTest extends TestCase
         $response->assertJsonFragment(['categoryName' => 'Switches']);
         $response->assertJsonFragment(['total' => 1]);
         $response->assertStatus(200);
+    }
+
+    public function test_create_category_does_not_require_description()
+    {
+        $category = \App\Models\Category::factory()->make([
+            'categoryDescription' => null,
+        ]);
+
+        $response = $this->json('post', '/api/categories', $category->toArray());
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas('categories', [
+            'categoryName' => $category->categoryName,
+            'categoryDescription' => null,
+        ]);
     }
 
     public function test_create_category()
@@ -220,5 +236,11 @@ class CategoriesControllerTest extends TestCase
 
         $this->assertCount(1, $cat);
         $this->assertCount(0, $cat[0]->device);
+    }
+
+    protected function tearDown(): void
+    {
+        $this->rollBackTransaction();
+        parent::tearDown();
     }
 }

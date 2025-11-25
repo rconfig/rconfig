@@ -15,6 +15,7 @@ const { newCommandGroupsModalKey, handleSave, viewEditDialog } = useCommandGroup
 
 const categories = ref([]);
 const isLoading = ref(true);
+const isExpanded = ref(false);
 
 const props = defineProps({
 	modelValue: {
@@ -51,6 +52,11 @@ const groupedCategories = computed(() => {
 	};
 });
 
+// Toggle expansion of selected categories
+function toggleExpanded() {
+	isExpanded.value = !isExpanded.value;
+}
+
 onMounted(() => {
 	fetchCategories();
 });
@@ -59,6 +65,17 @@ watch(newCommandGroupsModalKey, () => {
 	// if the add new category dialog is closed, fetch categories again
 	fetchCategories();
 });
+
+// Watch selected categories and reset expanded state if we have 3 or fewer categories
+watch(
+	selectedCats,
+	(newSelectedCats) => {
+		if (newSelectedCats.length <= 3) {
+			isExpanded.value = false;
+		}
+	},
+	{ deep: true }
+);
 
 function fetchCategories() {
 	isLoading.value = true;
@@ -75,7 +92,7 @@ function fetchCategories() {
 		<div class="hidden text-yellow-200 text-teal-100 bg-yellow-700 bg-teal-700 border-yellow-500 border-teal-500 bg-stone-700 text-stone-200 border-stone-500 bg-lime-700 text-lime-200 border-lime-500 bg-sky-700 text-sky-100 border-sky-500 bg-violet-700 text-violet-200 border-violet-500 bg-fuchsia-700 text-fuchsia-200 border-fuchsia-500"></div>
 
 		<PopoverTrigger class="col-span-3">
-			<Button variant="ghost" class="flex items-center justify-start w-full px-2 py-1 border rounded-xl whitespace-nowrap h-fit bg-rcgray-700" :class="selectedCats.length === 0 ? ' text-rcgray-400' : ''" :style="selectedCats.length === 0 ? 'padding: 0.45rem' : 'padding: 0.2rem'">
+			<Button variant="ghost" class="flex items-start justify-start w-full px-2 py-1 border rounded-xl gap-1" :class="[selectedCats.length === 0 ? 'text-rcgray-400 h-fit whitespace-nowrap' : 'h-auto min-h-fit bg-rcgray-700']" :style="selectedCats.length === 0 ? 'padding: 0.45rem' : 'padding: 0.2rem'">
 				<span v-if="isLoading">Loading command groups...</span>
 				<template v-else class="text-rcgray-400">
 					<RcIcon name="command-group" class="mx-2" />
@@ -85,19 +102,25 @@ function fetchCategories() {
 					<!-- Display single selected item -->
 					<span v-else-if="props.singleSelect && selectedCats.length > 0" :class="selectedCats[0].badgeColor ? selectedCats[0].badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'" class="flex items-center text-xs font-medium px-2.5 py-0.5 rounded-xl border bg-muted">
 						{{ selectedCats[0].categoryName }}
-						<X size="16" class="ml-1 cursor-pointer hover:text-primary" @click.stop="deleteItemById(selectedCats[0].id)" />
+						<X :size="16" class="ml-1 cursor-pointer hover:text-primary" @click.stop="deleteItemById(selectedCats[0].id)" />
 					</span>
 
 					<!-- Display multiple selected items -->
-					<template v-else>
-						<span v-for="cat in selectedCats" :key="cat.id" class="relative my-1 group">
-							<span :class="cat.badgeColor ? cat.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'" class="flex items-center text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border">
-								{{ cat.categoryName }}
-
-								<X size="16" class="ml-1 cursor-pointer hover:text-white" @click.stop="deleteItemById(cat.id)" />
+					<div v-if="!props.singleSelect && selectedCats.length > 0" class="flex flex-wrap gap-1 flex-1 overflow-hidden">
+						<!-- Show first 3 categories or all categories based on expanded state -->
+						<span v-for="cat in isExpanded ? selectedCats : selectedCats.slice(0, 3)" :key="cat.id" class="relative group flex-shrink-0">
+							<span :class="cat.badgeColor ? cat.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'" class="flex items-center text-xs font-medium px-2.5 py-0.5 rounded-xl border whitespace-nowrap max-w-[150px]">
+								<span class="truncate">{{ cat.categoryName }}</span>
+								<X :size="16" class="ml-1 cursor-pointer hover:text-white flex-shrink-0" @click.stop="deleteItemById(cat.id)" />
 							</span>
 						</span>
-					</template>
+						<!-- Show expandable button if there are more than 3 selected and not expanded -->
+						<button v-if="selectedCats.length > 3 && !isExpanded" @click.stop="toggleExpanded()" class="flex items-center text-xs font-medium px-2.5 py-0.5 rounded-xl border bg-muted text-muted-foreground flex-shrink-0 hover:bg-muted/80 transition-colors cursor-pointer rc-btn-shadow">+{{ selectedCats.length - 3 }} more</button>
+						<!-- Show collapse button when expanded and there are more than 3 items -->
+						<button v-if="selectedCats.length > 3 && isExpanded" @click.stop="toggleExpanded()" class="flex items-center text-xs font-medium px-2.5 py-0.5 rounded-xl border bg-muted text-muted-foreground flex-shrink-0 hover:bg-muted/80 transition-colors cursor-pointer rc-btn-shadow">
+							Show less
+						</button>
+					</div>
 				</template>
 			</Button>
 		</PopoverTrigger>
@@ -144,7 +167,7 @@ function fetchCategories() {
 									<TooltipProvider>
 										<Tooltip>
 											<TooltipTrigger as-child>
-												<CloudAlert size="14" class="mr-4 text-yellow-300 cursor-default" />
+												<CloudAlert :size="14" class="mr-4 text-yellow-300 cursor-default" />
 											</TooltipTrigger>
 											<TooltipContent class="text-white bg-rcgray-800 border border-blue-500/30">
 												<p>This command group does not have any commands assigned to it</p>

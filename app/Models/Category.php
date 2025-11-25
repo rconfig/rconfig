@@ -12,26 +12,25 @@ class Category extends BaseModel
     protected $guarded = [];
     protected $appends = ['view_url'];
 
+    protected function viewUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => '/commandgroups',
+        );
+    }
+
     public static function boot()
     {
         parent::boot();
 
         static::deleting(function ($cat) {
-            if ($cat->devicesCount() > 0) {
+            if ($cat->device()->count() > 0) {
                 throw new \Exception('Cannot delete command group with related devices.');
             }
             if ($cat->command()->count() > 0) {
                 throw new \Exception('Cannot delete command group with related commands.');
             }
         });
-    }
-
-    protected function viewUrl(): Attribute
-    {
-        // view url for search results
-        return Attribute::make(
-            get: fn() => '/categories',
-        );
     }
 
     public function devicesCount()

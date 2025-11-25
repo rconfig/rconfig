@@ -28,6 +28,16 @@ class CategoryController extends ApiBaseController
         return response()->json($response);
     }
 
+    public function multiSelectIndex()
+    {
+        $response = QueryBuilder::for(Category::class)
+            ->with('command') // required for multiselect display
+            ->defaultSort('categoryName')
+            ->paginate(100000); // large number to get all categories
+
+        return response()->json($response);
+    }
+
     public function store(StoreCategoryRequest $request)
     {
         return parent::storeResource($request->toDTO()->toArray());

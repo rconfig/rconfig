@@ -13,19 +13,28 @@ class StoreCommandRequest extends FormRequest
         return auth()->check(); // returning true if user is logged in
     }
 
+    protected function prepareForValidation()
+    {
+        if (isset($this->request->all()['category'])) {
+            $this->merge([
+                'categoryArray' => collect($this->request->all()['category'])->pluck('id')->toArray(),
+            ]);
+        }
+    }
+
     public function rules()
     {
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'command' => 'required|min:3|unique:commands|max:255',
-                'category' => 'required|array|min:1',
+                'categoryArray' => 'required|array|min:1',
             ];
         }
 
         if ($this->getMethod() == 'PATCH') {
             $rules = [
                 'command' => 'required|min:3|max:255',
-                'category' => 'required|array|min:1',
+                'categoryArray' => 'required|array|min:1',
             ];
         }
 
