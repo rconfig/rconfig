@@ -171,6 +171,27 @@ class ApiBaseController extends Controller
         return $this->successResponse(Str::ucfirst($this->modelname) . ' deleted successfully!');
     }
 
+    public function deleteMany(Request $request)
+    {
+        try {
+            $ids = $request->ids;
+            \DB::beginTransaction();
+            $items = $this->model::whereIn('id', $ids)->get();
+
+            // need to run each vendor through the boot method
+            foreach ($items as $item) {
+                $item->delete();
+            }
+            \DB::commit();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 422);
+        }
+
+        return response()->json(['message' => $this->modelname . 'deleted successfully'], 200);
+    }
+
     private function is_valid_json($string)
     {
         return is_object(json_decode($string));

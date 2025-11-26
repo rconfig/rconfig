@@ -6,11 +6,21 @@ use Illuminate\Validation\Rule;
 use App\DataTransferObjects\StoreDeviceModelDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreDeviceModelsRequest extends FormRequest
+class StoreDeviceModelRequest extends FormRequest
 {
     public function authorize()
     {
         return auth()->check(); // returning true if user is logged in
+    }
+
+    protected function prepareForValidation()
+    {
+        // Trim whitespace from name
+        if ($this->has('name')) {
+            $this->merge([
+                'name' => trim($this->name),
+            ]);
+        }
     }
 
     public function rules()

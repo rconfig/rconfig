@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\StoreTagRequest;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class TagController extends ApiBaseController
@@ -17,19 +19,25 @@ class TagController extends ApiBaseController
 
     public function index(Request $request, $searchCols = null, $relationship = null, $withCount = null, $return = 0)
     {
-        $response = QueryBuilder::for(Tag::class)
-            ->with(['device'])
-            ->allowedFilters(['tagname'])
-            ->defaultSort('-id')
-            ->allowedSorts('id', 'tagname')
-            ->paginate((int) $request->perPage);
+        $perPage = (int) $request->perPage ?: 10;
 
-        return response()->json($response);
+        $query = QueryBuilder::for(Tag::class)
+            ->allowedFilters([
+                AllowedFilter::custom('q', new FilterMultipleFields, 'tagname'),
+            ])
+            ->allowedSorts(['id', 'tagname', 'created_at'])
+            ->with(['device:id,device_name']);
+
+        $result = $query->paginate($perPage);
+
+        return response()->json($result);
     }
 
     public function store(StoreTagRequest $request)
     {
-        return parent::storeResource($request->toDTO()->toArray());
+        $model = parent::storeResource($request->toDTO()->toArray(), 1);
+
+        return $this->successResponse(Str::ucfirst($this->modelname) . ' created successfully!', ['id' => $model->id]);
     }
 
     public function show($id, $relationship = null, $withCount = null)
@@ -39,46 +47,16 @@ class TagController extends ApiBaseController
 
     public function update($id, StoreTagRequest $request)
     {
-        return parent::updateResource($id, $request->toDTO()->toArray());
+        $model = parent::updateResource($id, $request->toDTO()->toArray(), 1);
+
+        return $this->successResponse(Str::ucfirst($this->modelname) . ' edited successfully!', ['id' => $model->id]);
     }
 
     public function destroy($id, $return = 0)
     {
 
-        try {
-            $category = Tag::findOrFail($id);
-            $category->delete();
+        $model = parent::destroy($id, 1);
 
-            return response()->json(['message' => 'Tag deleted successfully.'], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage(),
-            ], 422);
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'An unexpected error occurred.',
-            ], 500); // For other exceptions, use 500
-        }
-    }
-
-    public function deleteMany(Request $request)
-    {
-        try {
-            $ids = $request->ids;
-            \DB::beginTransaction();
-            $tag = Tag::whereIn('id', $ids)->get();
-
-            // need to run each category through the boot method
-            foreach ($tag as $category) {
-                $category->delete();
-            }
-            \DB::commit();
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage(),
-            ], 422);
-        }
-
-        return response()->json(['message' => 'Tags deleted successfully'], 200);
+        return $this->successResponse(Str::ucfirst($this->modelname) . ' deleted successfully!', ['id' => $model->id]);
     }
 }

@@ -40,4 +40,14 @@ class StoreTemplateRequest extends FormRequest
             'description' => $this->description,
         ]);
     }
+
+    public function formattedFilename(): string
+    {
+        $filename = $this->fileName;
+        if (str_ends_with($filename, '.yml')) {
+            $filename = substr($filename, 0, -4);
+        }
+
+        return $filename . '.yml';
+    }
 }

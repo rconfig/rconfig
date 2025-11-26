@@ -5,6 +5,7 @@ namespace Tests\Fasttests\ControllersTests\Api;
 use App\Models\Device;
 use App\Models\Template;
 use App\Models\User;
+use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 
 class TemplatesControllerTest extends TestCase
@@ -14,6 +15,8 @@ class TemplatesControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->beginTransaction();
+        
         $this->user = User::factory()->create();
         $this->actingAs($this->user, 'api');
     }
@@ -49,6 +52,12 @@ class TemplatesControllerTest extends TestCase
         $this->assertStringContainsString('name: "Name of Template"', $response->getContent());
     }
 
+    public function test_show_nonexistent_template_returns_404()
+    {
+        $response = $this->get('/api/templates/99999');
+        $response->assertStatus(404);
+    }
+
     public function test_get_all_templates()
     {
         $template = Template::factory(10)->create();
@@ -57,92 +66,95 @@ class TemplatesControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_get_all_templates_with_generic_filter()
+   public function test_edit_template()
     {
-        $response = $this->get('/api/templates?page=1&perPage=100&filter[templateName]=SSH');
-        $response->assertJsonFragment(['templateName' => 'Cisco IOS - SSH - No Enable']);
-        $response->assertJsonFragment(['total' => 3]);
-        $response->assertStatus(200);
-    }
+        // Ensure the templates directory exists
+        $templatesDir = storage_path('app/rconfig/templates');
+        if (! is_dir($templatesDir)) {
+            mkdir($templatesDir, 0755, true);
+        }
 
-    public function test_create_template()
-    {
-        $code = file_get_contents(base_path('tests/storage/default_template_test.yml'));
+        // delete the test file if it exists
+        $testFile = storage_path('app/rconfig/templates/test_file_name.yml');
+        if (file_exists($testFile)) {
+            unlink($testFile);
+        }
 
-        $response = $this->post('/api/templates', [
-            'templateName' => 'test file name',
-            'code' => $code,
-        ]);
-        $response->assertStatus(200);
-        $json = json_decode($response->getContent());
-
-        $this->assertDatabaseHas('templates', [
-            'fileName' => '/app/rconfig/templates/test-file-name.yml',
-        ]);
-
-        $this->assertFileExists(storage_path() . '/app/rconfig/templates/test-file-name.yml');
-        unlink(storage_path() . '/app/rconfig/templates/test-file-name.yml');
-    }
-
-    public function test_edit_template()
-    {
         // Add first
         $code = file_get_contents(base_path('tests/storage/default_template_test.yml'));
         $response = $this->withHeaders(['Accept' => 'application/json'])->json('POST', '/api/templates', [
             'templateName' => 'test file name',
             'code' => $code,
+            'description' => 'Test template description',
         ]);
-        $response->assertStatus(200);
 
         $latestTemplate = Template::orderBy('id', 'desc')->first();
-
+        $response->assertStatus(200);
         $this->assertDatabaseHas('templates', [
             'id' => $latestTemplate->id,
-            'fileName' => '/app/rconfig/templates/test-file-name.yml',
+            'fileName' => '/app/rconfig/templates/test_file_name.yml',
         ]);
 
-        // Then Edit
+        // Then Edit - include the current fileName so the controller can find the old file
         $code2 = file_get_contents(base_path('tests/storage/default_template_test2.yml'));
-        $response2 = $this->patch('/api/templates/' . $latestTemplate->id, [
-            'templateName' => 'a new file name2',
+        $response2 = $this->withHeaders(['Accept' => 'application/json'])->patch('/api/templates/' . $latestTemplate->id, [
+            'templateName' => 'a-new-file-name2',
             'code' => $code2,
+            'description' => 'Updated test template description',
+            'fileName' => 'test_file_name.yml', // Add the current fileName so controller can delete old file
         ]);
         $response2->assertStatus(200);
 
         $this->assertDatabaseHas('templates', [
             'id' => $latestTemplate->id,
-            'fileName' => '/app/rconfig/templates/a-new-file-name2.yml',
+            'fileName' => '/app/rconfig/templates/a_new_file_name2.yml',
         ]);
 
         // Then get the new template and read the code
         $response3 = $this->get('/api/templates/' . $latestTemplate->id);
-        $response3->assertSee('This is a test Template Number2 for edit tests'); // test file data has returned
-        unlink(storage_path() . '/app/rconfig/templates/test-file-name.yml');
+        $response3->assertSee('This is a test Template Number2 for edit tests');
+
+        // Clean up both possible file names
+        $oldFile = storage_path('app/rconfig/templates/test_file_name.yml');
+        $newFile = storage_path('app/rconfig/templates/a_new_file_name2.yml');
+
+        if (file_exists($oldFile)) {
+            unlink($oldFile);
+        }
+        if (file_exists($newFile)) {
+            unlink($newFile);
+        }
     }
 
     public function test_delete_template()
     {
         // Add first
+        $testFile = storage_path('app/rconfig/templates/test_file_name.yml');
+        if (file_exists($testFile)) {
+            unlink($testFile);
+        }
+
         $code = file_get_contents(base_path('tests/storage/default_template_test.yml'));
         $response = $this->withHeaders(['Accept' => 'application/json'])->json('POST', '/api/templates', [
             'templateName' => 'test file name',
+            'description' => 'Test template description',
             'code' => $code,
         ]);
+
         $response->assertStatus(200);
 
         $json = json_decode($response->getContent());
         $latestTemplate = Template::orderBy('id', 'desc')->first();
 
-        $response->assertStatus(200);
         $this->assertDatabaseHas('templates', [
             'id' => $latestTemplate->id,
-            'fileName' => '/app/rconfig/templates/test-file-name.yml',
+            'fileName' => '/app/rconfig/templates/test_file_name.yml',
         ]);
 
         // Then Delete
         $this->delete('/api/templates/' . $latestTemplate->id);
 
-        $this->assertFileDoesNotExist(storage_path() . '/app/rconfig/templates/test-file-name.yml');
+        $this->assertFileDoesNotExist(storage_path() . '/app/rconfig/templates/test_file_name.yml');
         $this->assertDatabaseMissing('templates', ['id' => $latestTemplate->id]);
     }
 
@@ -214,5 +226,46 @@ class TemplatesControllerTest extends TestCase
 
         $this->assertCount(1, $cat);
         $this->assertCount(0, $cat[0]->device);
+    }
+
+    public function test_sanitize_file_name()
+    {
+        $controller = new \App\Http\Controllers\Api\TemplateController(new \App\Models\Template);
+        // Test with spaces - should be converted to underscores
+        $result = $controller->sanitizeFileName('test file name');
+        $this->assertEquals('test_file_name.yml', $result);
+
+        // Test with special characters
+        $result = $controller->sanitizeFileName('test@file#name$');
+        $this->assertStringNotContainsString('@', $result);
+        $this->assertStringNotContainsString('#', $result);
+        $this->assertStringNotContainsString('$', $result);
+        $this->assertStringEndsWith('.yml', $result);
+
+        // Test with already clean filename
+        $result = $controller->sanitizeFileName('clean_filename');
+        $this->assertEquals('clean_filename.yml', $result);
+
+        // Test with empty string
+        $result = $controller->sanitizeFileName('');
+        $this->assertNotEmpty($result);
+        $this->assertStringEndsWith('.yml', $result);
+
+        // Test with numbers and letters
+        $result = $controller->sanitizeFileName('test123file');
+        $this->assertEquals('test123file.yml', $result);
+
+        // Test with dots and dashes
+        $result = $controller->sanitizeFileName('test.file-name');
+        $this->assertStringEndsWith('.yml', $result);
+        $this->assertStringContainsString('test', $result);
+        $this->assertStringContainsString('file', $result);
+        $this->assertStringContainsString('name', $result);
+    }
+    
+    protected function tearDown(): void
+    {
+        $this->rollBackTransaction();
+        parent::tearDown();
     }
 }

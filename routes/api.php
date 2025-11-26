@@ -31,11 +31,23 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
     /* DEVICES ROUTES */
     loadRoutesFrom('/api_modules/devices.php');
 
+    /* DEVICE MODELS ROUTES */
+    loadRoutesFrom('/api_modules/device_models.php');
+
     /* CATEGORY ROUTES */
     loadRoutesFrom('/api_modules/category.php');
 
     /* COMMANDS ROUTES */
     loadRoutesFrom('/api_modules/commands.php');
+
+    /* VENDORS ROUTES */
+    loadRoutesFrom('/api_modules/vendors.php');
+
+    /* TAGS ROUTES */
+    loadRoutesFrom('/api_modules/tags.php');
+
+    /* TEMPLATE ROUTES */
+    loadRoutesFrom('/api_modules/templates.php');
 
     Route::get('/app-dir-path', function () {
         return rconfig_appdir_path();
@@ -43,22 +55,6 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
 
     /* SEARCH ROUTES */
     Route::get('/search', 'QuickSearchController@search');
-
-    Route::resource('vendors', 'VendorController');
-    Route::post('/vendors/delete-many', 'VendorController@deleteMany');
-
-    Route::resource('tags', 'TagController');
-    Route::post('/tags/delete-many', 'TagController@deleteMany');
-
-    Route::resource('templates', 'TemplateController');
-    Route::post('/templates/delete-many', 'TemplateController@deleteMany');
-
-    Route::get('/import-github-templates', 'TemplateGithubController@import_github_templates');
-    Route::get('/test-template-repo-connection', 'TemplateGithubController@test_github_repo_connection');
-    Route::get('/list-template-repo-folders', 'TemplateGithubController@list_template_repo_folders');
-    Route::post('/list-repo-folders-contents', 'TemplateGithubController@list_repo_folders_contents');
-    Route::post('/get-template-file-contents', 'TemplateGithubController@get_template_file_contents');
-    Route::get('/get-default-template', 'TemplateController@getDefaultTemplate');
 
     /* TASKS ROUTES */
     Route::prefix('tasks')->group(function () {

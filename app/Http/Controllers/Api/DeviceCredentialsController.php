@@ -60,25 +60,4 @@ class DeviceCredentialsController extends ApiBaseController
             ], 500); // For other exceptions, use 500
         }
     }
-
-    public function deleteMany(Request $request)
-    {
-        try {
-            $ids = $request->ids;
-            \DB::beginTransaction();
-            $deviceCredentials = DeviceCredentials::whereIn('id', $ids)->get();
-
-            // need to run each category through the boot method
-            foreach ($deviceCredentials as $deviceCredential) {
-                $deviceCredential->delete();
-            }
-            \DB::commit();
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage(),
-            ], 422);
-        }
-
-        return response()->json(['message' => 'Device credentials deleted successfully'], 200);
-    }
 }

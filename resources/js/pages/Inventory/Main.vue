@@ -3,6 +3,7 @@ import Command from "@/pages/Inventory/Commands/Main.vue";
 import CommandGroups from "@/pages/Inventory/CommandGroups/Main.vue";
 import Devices from "@/pages/Inventory/Devices/Main.vue";
 import Tags from "@/pages/Inventory/Tags/Main.vue";
+import Models from "@/pages/Inventory/Models/Main.vue";
 import Template from "@/pages/Inventory/Templates/Main.vue";
 import Vendors from "@/pages/Inventory/Vendors/Main.vue";
 import { ChevronDown } from "lucide-vue-next";
@@ -27,7 +28,7 @@ const {
 
 // Check if the current view exists in the list of valid views
 const currentViewExists = computed(() => {
-	const validViews = ["devices", "commandgroups", "commands", "templates", "vendors", "tags"];
+	const validViews = ["devices", "commandgroups", "commands", "templates", "vendors", "tags", "models"];
 	return validViews.includes(currentView.value);
 });
 </script>
@@ -85,6 +86,7 @@ const currentViewExists = computed(() => {
 				<Command v-if="currentView === 'commands'"></Command>
 				<Template v-if="currentView === 'templates'"></Template>
 				<Vendors v-if="currentView === 'vendors'"></Vendors>
+				<Models v-if="currentView === 'models'"></Models>
 				<Tags v-if="currentView === 'tags'"></Tags>
 			</template>
 

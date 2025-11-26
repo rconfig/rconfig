@@ -41,6 +41,13 @@ export function useInventory() {
 				route: "/devices",
 			},
 			{
+				id: "models",
+				label: "Models",
+				icon: "model",
+				isFavorite: favoritesStore.isFavorite("models"),
+				route: "/models",
+			},
+			{
 				id: "tags",
 				label: "Tags",
 				icon: "tag",

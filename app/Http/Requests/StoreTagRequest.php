@@ -27,14 +27,12 @@ class StoreTagRequest extends FormRequest
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'tagname' => 'required|unique:tags| max:50',
-                'tagDescription' => 'required| max:255',
             ];
         }
 
         if ($this->getMethod() == 'PATCH') {
             $rules = [
                 'tagname' => 'required|max:50',
-                'tagDescription' => 'required| max:255',
             ];
         }
 
