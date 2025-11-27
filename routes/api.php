@@ -49,6 +49,9 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
     /* TEMPLATE ROUTES */
     loadRoutesFrom('/api_modules/templates.php');
 
+    /* CONFIGS ROUTES */
+    loadRoutesFrom('/api_modules/configs.php');
+
     Route::get('/app-dir-path', function () {
         return rconfig_appdir_path();
     });
@@ -68,16 +71,7 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
     Route::resource('tracked-jobs', 'TrackedJobController')->only(['show']);
     Route::resource('tasks', 'TaskController');
 
-    /* CONFIGS ROUTES */
-    Route::resource('configs', 'ConfigController')->only(['index', 'show', 'destroy']);
     Route::resource('reports', 'TaskReportController')->only(['index', 'show', 'destroy']);
-    Route::prefix('configs')->group(function () {
-        Route::get('all-by-deviceid/{id}/{status}', 'ConfigController@getAllById');
-        Route::get('latest-by-deviceid/{id}', 'ConfigController@getLatestById');
-        Route::get('view-config/{id}', 'ConfigController@getSingleConfigFile');
-        Route::get('distinct-commands/{id}', 'ConfigController@getDistinctCommands');
-        Route::post('/search', 'ConfigSearchController@search');
-    });
 
     Route::get('/license-info', 'LicenseInfoController@index');
 

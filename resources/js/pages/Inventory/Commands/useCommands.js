@@ -158,28 +158,6 @@ export function useCommands() {
 		fetchCommands();
 	});
 
-	function navToConfigProps() {
-		router.push({ name: "device-configprops" });
-	}
-
-	function navToCompareOptions() {
-		router.push({ name: "command-compare-options" });
-	}
-
-	function updateCICEnabled(row, id, currentValue) {
-		const newValue = !currentValue;
-		row.eoc_enabled = newValue; // ✅ directly mutates row object
-
-		axios
-			.post(`/api/commands/set-eoc-state/${id}`, { state: newValue })
-			.then(() => toastSuccess("Success", "CIC check updated"))
-			.catch((error) => {
-				row.eoc_enabled = currentValue; // ✅ revert if error
-				console.log(error);
-				toastError("Error", error.response?.data?.message || "Failed to update CIC");
-			});
-	}
-
 	function updateChangeNotification(row, id, currentValue) {
 		const newValue = !currentValue;
 		row.change_notification = newValue; // ✅ optimistic update
@@ -233,8 +211,6 @@ export function useCommands() {
 		fetchCommands,
 		handleKeyDown,
 		handleSave,
-		navToConfigProps,
-		navToCompareOptions,
 		openDialog,
 		reload,
 		toggleSort,
@@ -243,7 +219,6 @@ export function useCommands() {
 		openBulkUpdateDialog,
 		handleCloseBulkUpdate,
 		handleUpdateBulkCommands,
-		updateCICEnabled,
 		updateChangeNotification,
 		updateSaveConfig,
 	};

@@ -177,26 +177,6 @@ export function useDeviceViewPane(props, emit) {
 		panelElement2?.value.isCollapsed ? panelElement2?.value.expand() : panelElement2?.value.collapse();
 	}
 
-	function recheckEocValidation() {
-		axios
-			.post("/api/eoc-recheck-device", {
-				device_id: deviceData.value.id,
-				category_id: deviceData.value.device_category_id,
-			})
-			.then((response) => {
-				if (response.data.success) {
-					toastSuccess("EOC Recheck", "EOC validation rechecked successfully queued for device " + deviceData.value.device_name);
-					toastSuccess("EOC Recheck", "Refresh the configs table to see the updated EOC validation status in a few moments.");
-				} else {
-					toastError("EOC Recheck Failed", "Failed to recheck EOC validation for device " + deviceData.value.device_name);
-				}
-			})
-			.catch((error) => {
-				console.error("Error rechecking EOC validation:", error);
-				toastError("Error", "Failed to recheck EOC validation: " + error.message);
-			});
-	}
-
 	return {
 		// State
 		appDirPath,
@@ -214,7 +194,6 @@ export function useDeviceViewPane(props, emit) {
 		copyDebug,
 		downloadNow,
 		fetchDevice,
-		recheckEocValidation,
 		selectLeftNavView,
 		selectMainNavView,
 	};

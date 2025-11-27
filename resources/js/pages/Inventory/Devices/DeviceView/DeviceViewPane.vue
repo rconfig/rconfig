@@ -47,7 +47,6 @@ const {
   openIntegrationUrl,
   selectLeftNavView,
   selectMainNavView,
-  recheckEocValidation,
 } = useDeviceViewPane(props, emit);
 
 const {
@@ -158,18 +157,6 @@ function close() {
                   {{ downloadStatus }}
                 </span>
                 <span v-if="!downloadStatus" class="button-text">Download now</span>
-              </Button>
-            </template>
-          </RcToolTip>
-
-          <!-- Removed Send Snippet button -->
-          <!-- Removed Vector Queue / agentqueue button -->
-
-          <RcToolTip :delayDuration="50" :content="'Re-check CIC validation'" :side="'bottom'">
-            <template #trigger>
-              <Button class="h-8 ml-2 w-4" @click="recheckEocValidation()" variant="outline" :title="'Re-check CIC validation'">
-                <RcIcon name="cic" size="16" class="button-icon" />
-                <span class="button-text">Re-check CIC validation</span>
               </Button>
             </template>
           </RcToolTip>

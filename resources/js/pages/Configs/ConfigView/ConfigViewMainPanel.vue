@@ -80,14 +80,6 @@ function initializeToggleStates() {
 function initCodeEditor() {
 	meditor = initEditor("code-editor__code-pre", "rconfig");
 	props.configId === 0 ? getDefaultEditorCode(meditor) : showConfiguration(props.configId, meditor);
-
-	// Add selection change listener
-	if (meditor) {
-		meditor.onDidChangeCursorSelection((e) => {
-			// Check if there's any text selected
-			hasSelection.value = !e.selection.isEmpty();
-		});
-	}
 }
 
 </script>
@@ -148,9 +140,6 @@ function initCodeEditor() {
 									Config ID: <RcBadge variant="info">{{ props.configId }}</RcBadge>
 								</span>
 								<Separator orientation="vertical" class="relative w-px h-6 mx-4 shrink-0 bg-border" />
-								<span class="flex items-center gap-1 text-lg font-semibold rc-text-heading-gradient font-inter">
-									Version: <RcBadge variant="info">{{ props.selectedConfigVersion }}</RcBadge>
-								</span>
 							</div>
 
 							<!-- RIGHT BUTTONS -->

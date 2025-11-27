@@ -103,7 +103,6 @@ function viewDetailsPane(configId) {
               <TableHead class="w-[10%]">Command</TableHead>
               <TableHead class="w-[10%]">Filename</TableHead>
               <TableHead class="w-[10%]">File size</TableHead>
-              <TableHead class="w-[10%]">Version</TableHead>
               <TableHead class="w-[10%]">Downloaded at</TableHead>
               <TableHead class="w-[10%]">Status</TableHead>
               <TableHead class="w-[10%]">Actions</TableHead>
@@ -125,9 +124,6 @@ function viewDetailsPane(configId) {
                   </Button>
                 </TableCell>
                 <TableCell>{{ row.config_filesize ? formatters.formatFileSize(row.config_filesize) : "" }}</TableCell>
-                <TableCell>
-                  <RcBadge variant="info">{{ row.config_version }}</RcBadge>
-                </TableCell>
                 <TableCell>{{ formatters.formatTime(row.created_at) }}</TableCell>
                 <TableCell>
                   <RcIcon name="status-red" v-if="row.download_status === 0" />

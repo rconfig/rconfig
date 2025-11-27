@@ -30,22 +30,6 @@ const navItems = computed(() => {
 		},
 	];
 
-	// Conditionally add config history for config context
-	if (props.context === "config") {
-		items.push({
-			label: "Config History",
-			to: "configHistory",
-			icon: "config-history",
-		});
-	}
-
-	// Uncomment when ready to add comments back
-	// items.push({
-	//   label: `${t("navigation.comments")} (${commentCount.value})`,
-	//   to: "comments",
-	//   icon: "comments"
-	// });
-
 	return items;
 });
 

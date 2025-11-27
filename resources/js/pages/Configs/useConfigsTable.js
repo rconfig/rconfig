@@ -30,11 +30,6 @@ export function useConfigsTable(props) {
 	const { reload } = useReload(getTabledata);
 	const { toggleSort } = useToggleSort(sortParam, getTabledata, "useConfigsTable");
 
-	// Hardlink tracking with localStorage caching
-	const hasHardlinks = ref(false);
-	const HARDLINK_CACHE_KEY = "configs_hardlinks_cache";
-	const CACHE_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
-
 	// Load more state
 	const isLoadingMore = ref(false);
 	const hasMoreData = ref(true);
@@ -51,68 +46,6 @@ export function useConfigsTable(props) {
 	const initialPerPage = parseInt(localStorage.getItem("ConfigPerPage") || "10");
 	if (initialPerPage >= 10000000) {
 		checkLoadMoreMode(initialPerPage);
-	}
-
-	// Initialize hardlink cache on composable creation
-	getCachedHardlinkStatus();
-
-	// Get cached hardlink status or check freshness
-	function getCachedHardlinkStatus() {
-		try {
-			const cached = localStorage.getItem(HARDLINK_CACHE_KEY);
-			if (cached) {
-				const parsedCache = JSON.parse(cached);
-				const now = Date.now();
-				const isExpired = now - parsedCache.timestamp > CACHE_DURATION_MS;
-
-				if (!isExpired) {
-					hasHardlinks.value = parsedCache.hasHardlinks;
-					return true; // Cache hit
-				} else {
-					// Cache expired, remove it
-					localStorage.removeItem(HARDLINK_CACHE_KEY);
-				}
-			}
-		} catch (error) {
-			console.error("Error reading hardlink cache:", error);
-			localStorage.removeItem(HARDLINK_CACHE_KEY);
-		}
-		return false; // Cache miss
-	}
-
-	// Save hardlink status to cache
-	function setCachedHardlinkStatus(hasHardlinksValue) {
-		try {
-			const cacheData = {
-				hasHardlinks: hasHardlinksValue,
-				timestamp: Date.now(),
-			};
-			localStorage.setItem(HARDLINK_CACHE_KEY, JSON.stringify(cacheData));
-			hasHardlinks.value = hasHardlinksValue;
-		} catch (error) {
-			console.error("Error saving hardlink cache:", error);
-		}
-	}
-
-	// Check for hardlinks globally
-	async function checkForHardlinks(forceRefresh = false) {
-		// Check cache first unless forced refresh
-		if (!forceRefresh && getCachedHardlinkStatus()) {
-			return; // Using cached value
-		}
-
-		try {
-			const response = await axios.get("/api/configs/check-hardlink-status");
-			const hardlinkStatus = response.data.hasHardlinks || false;
-
-			// Cache the result
-			setCachedHardlinkStatus(hardlinkStatus);
-		} catch (error) {
-			console.error("Error checking for hardlinks:", error);
-			// Fallback: check current data and cache it
-			const fallbackStatus = configs.value.some((row) => row.is_hardlink === 1);
-			setCachedHardlinkStatus(fallbackStatus);
-		}
 	}
 
 	// Data Fetching
@@ -156,9 +89,6 @@ export function useConfigsTable(props) {
 				loadMorePage.value++;
 			} else {
 				configs.value = response.data.data;
-				// Check for hardlinks when loading new data (not appending)
-				// Only check if cache is expired or missing
-				await checkForHardlinks();
 			}
 
 			lastPage.value = response.data.last_page;
@@ -201,9 +131,6 @@ export function useConfigsTable(props) {
 				loadMorePage.value++;
 			} else {
 				configs.value = response.data.data;
-				// Check for hardlinks when loading new data (not appending)
-				// Only check if cache is expired or missing
-				await checkForHardlinks();
 			}
 
 			lastPage.value = response.data.last_page;
@@ -321,10 +248,6 @@ export function useConfigsTable(props) {
 	function viewDetailsPane(id) {
 		let referringRouteName = "configs";
 
-		if (currentRouteName === "api-collections-view") {
-			referringRouteName = "api-collections";
-		}
-
 		if (currentRouteName === "device-view") {
 			referringRouteName = "device-view";
 		}
@@ -425,7 +348,6 @@ export function useConfigsTable(props) {
 		filterCommand,
 		sortParam,
 		showDownloadedConfigs,
-		hasHardlinks,
 		formatters,
 
 		// Methods

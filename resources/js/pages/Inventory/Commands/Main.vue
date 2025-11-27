@@ -39,15 +39,12 @@ const {
 	fetchCommands,
 	handleKeyDown,
 	handleSave,
-	navToConfigProps,
-	navToCompareOptions,
 	reload,
 	toggleSort,
 	viewEditDialog,
 	openBulkUpdateDialog,
 	handleCloseBulkUpdate,
 	handleUpdateBulkCommands,
-	updateCICEnabled,
 	updateChangeNotification,
 	updateSaveConfig,
 } = useCommands();
@@ -89,17 +86,6 @@ const selectedRecords = computed(() => {
 			</div>
 
 			<div class="flex items-center justify-end">
-				<Button class="px-2 py-1 mr-2 text-sm hover:animate-pulse flex items-center" size="sm" variant="outline" @click="navToConfigProps">
-					<RcIcon name="configprop" class="lg:mr-2" />
-					<span class="hidden lg:inline-flex">Config Properties</span>
-				</Button>
-				<Button class="px-2 py-1 text-sm hover:animate-pulse flex items-center" size="sm" variant="outline" @click="navToCompareOptions">
-					<RcIcon name="config-compare" class="lg:mr-2" />
-					<span class="hidden lg:inline-flex">Compare Options</span>
-				</Button>
-
-				<Separator orientation="vertical" class="relative w-px h-6 mx-4 shrink-0 bg-border" />
-
 				<Button
 					type="submit"
 					class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
@@ -136,13 +122,12 @@ const selectedRecords = computed(() => {
 							</Button>
 						</TableHead>
 						<TableHead class="w-[20%]">Description</TableHead>
-						<TableHead class="w-[40%]">Command Groups</TableHead>
-						<TableHead class="w-[40%]">Config Properties</TableHead>
-						<TableHead class="w-[40%]">
+						<TableHead class="w-[20%]">Command Groups</TableHead>
+						<TableHead class="w-[20%]">
 							Options
 							<GenericPopover
 								:title="'Command Options'"
-								:description="'Each command has multiple options. You can toggle CIC checks, choose whether to save unchanged configs, and enable or disable change notifications.'"
+								:description="'Enable or Disable change notifications.'"
 								:href="$rconfigDocsUrl + '/devices/commands/'"
 								:linkText="'Command Docs'"
 								:align="'end'"
@@ -192,39 +177,7 @@ const selectedRecords = computed(() => {
 							</TableCell>
 
 							<TableCell class="text-start">
-								{{ row.config_properties?.length || 0 }}
-							</TableCell>
-
-							<TableCell class="text-start">
-								<ToggleGroup type="multiple" class="flex gap-1">
-									<!-- CIC Enabled -->
-									<ToggleGroupItem
-										value="cic"
-										:data-state="row.eoc_enabled ? 'on' : 'off'"
-										@click="updateCICEnabled(row, row.id, row.eoc_enabled)"
-										class="rounded p-1 px-2 transition-colors rc-btn-shadow data-[state=on]:bg-blue-500 data-[state=off]:bg-gray-800 hover:data-[state=off]:bg-gray-700 hover:data-[state=on]:bg-blue-400"
-									>
-										<RcToolTip :delayDuration="100" :content="row.eoc_enabled ? 'CIC Enabled: On' : 'CIC Enabled: Off'" side="bottom">
-											<template #trigger>
-												<FileJson2 class="h-4 w-4 focus:outline-none" :class="row.eoc_enabled ? 'text-black' : 'text-blue-300'" />
-											</template>
-										</RcToolTip>
-									</ToggleGroupItem>
-
-									<!-- Keep Unchanged Config -->
-									<ToggleGroupItem
-										value="keep"
-										:data-state="row.save_config ? 'on' : 'off'"
-										@click="updateSaveConfig(row, row.id, row.save_config)"
-										class="rounded p-1 px-2 transition-colors rc-btn-shadow data-[state=on]:bg-emerald-500 data-[state=off]:bg-gray-800 hover:data-[state=off]:bg-gray-700 hover:data-[state=on]:bg-emerald-400"
-									>
-										<RcToolTip :delayDuration="100" :content="row.save_config ? 'Keep Unchanged Config: On' : 'Keep Unchanged Config: Off'" side="bottom">
-											<template #trigger>
-												<SquareTerminal class="h-4 w-4 focus:outline-none" :class="row.save_config ? 'text-black' : 'text-emerald-300'" />
-											</template>
-										</RcToolTip>
-									</ToggleGroupItem>
-
+								<ToggleGroup type="multiple">
 									<!-- Change Notifications -->
 									<ToggleGroupItem
 										value="notify"

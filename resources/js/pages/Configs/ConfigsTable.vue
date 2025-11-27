@@ -51,7 +51,6 @@ const {
 	filterCommand,
 	sortParam,
 	showDownloadedConfigs,
-	hasHardlinks,
 	formatters,
 
 	// Methods
@@ -170,8 +169,6 @@ onUnmounted(() => {
 						</TableHead>
 						<TableHead class="w-[10%] rc-th-heading">Device</TableHead>
 						<TableHead class="w-[10%] rc-th-heading">File Size</TableHead>
-						<TableHead class="w-[10%] rc-th-heading">Version</TableHead>
-						<TableHead class="w-[2%] rc-th-heading" v-if="hasHardlinks">Is Hardlink</TableHead>
 						<TableHead class="w-[10%] rc-th-heading">Downloaded</TableHead>
 						<TableHead class="w-[10%] rc-th-heading"></TableHead>
 					</TableRow>
@@ -196,10 +193,9 @@ onUnmounted(() => {
 								<RcIcon name="status-gray" v-if="row.download_status === 100" />
 							</TableCell>
 							<TableCell class="text-start table-cell-fixed">
-								<Button v-if="row.config_downloaded == 1 || row.is_hardlink === 1" class="px-2 py-0 hover:bg-rcgray-800 rounded-xl button-cell-fixed" variant="ghost" @click="viewDetailsPane(row.id)">
+								<Button class="px-2 py-0 hover:bg-rcgray-800 rounded-xl button-cell-fixed" variant="ghost" @click="viewDetailsPane(row.id)">
 									<span class="border-b text-truncate" :title="row.config_filename">{{ row.config_filename }}</span>
 								</Button>
-								<span v-else class="text-truncate">Not Downloaded</span>
 							</TableCell>
 							<TableCell class="text-start table-cell-fixed">
 								<span class="text-truncate" :title="row.command">{{ row.command }}</span>
@@ -208,18 +204,7 @@ onUnmounted(() => {
 								<span class="text-truncate" :title="row.device_name"> <BadgeList :items="[{ id: row.device_id, device_name: row.device_name, view_url: 'device/view/' + row.device_id }]" displayField="device_name" linkField="view_url" :maxVisible="2" :hoverCardFields="['id', 'device_name']" /> </span>
 							</TableCell>
 							<TableCell class="text-start table-cell-fixed">
-								<span v-if="row.config_downloaded == 1 || row.is_hardlink === 1" class="text-truncate" :title="row.config_filesize ? formatters.formatFileSize(row.config_filesize) : ''"> {{ row.config_filesize ? formatters.formatFileSize(row.config_filesize) : "" }}</span>
-								<span v-else>--</span>
-							</TableCell>
-							<TableCell class="text-start table-cell-fixed">
-								<div class="badge-container-fixed">
-									<RcBadge v-if="row.latest_version === 1" variant="info">{{ row.config_version }}</RcBadge>
-									<Badge v-else variant="secondary">{{ row.config_version }}</Badge>
-								</div>
-							</TableCell>
-							<TableCell class="text-start table-cell-fixed" v-if="hasHardlinks">
-								<RcBadge v-if="row.is_hardlink === 1" variant="success" :interactive="false">Yes</RcBadge>
-								<RcBadge v-else variant="outline" :interactive="false">No</RcBadge>
+								<span class="text-truncate" :title="row.config_filesize ? formatters.formatFileSize(row.config_filesize) : ''"> {{ row.config_filesize ? formatters.formatFileSize(row.config_filesize) : "" }}</span>
 							</TableCell>
 							<TableCell class="text-start table-cell-fixed">
 								<span class="text-truncate" :title="formatters.formatTime(row.created_at)">{{ formatters.formatTime(row.created_at) }}</span>
@@ -230,7 +215,7 @@ onUnmounted(() => {
 									<TooltipProvider>
 										<Tooltip>
 											<TooltipTrigger as-child>
-												<Button variant="ghost" @click="openDialog('peek-config-dialog-' + row.id)" :disabled="row.config_downloaded == 0 && row.is_hardlink !== 1">
+												<Button variant="ghost" @click="openDialog('peek-config-dialog-' + row.id)" :disabled="row.config_downloaded == 0">
 													<RcIcon name="peek-eye" />
 												</Button>
 											</TooltipTrigger>
@@ -243,7 +228,7 @@ onUnmounted(() => {
 									<TooltipProvider>
 										<Tooltip>
 											<TooltipTrigger as-child>
-												<Button variant="ghost" @click="viewDetailsPane(row.id)" :disabled="row.config_downloaded == 0 && row.is_hardlink !== 1">
+												<Button variant="ghost" @click="viewDetailsPane(row.id)" :disabled="row.config_downloaded == 0">
 													<FileView size="16" class="text-muted-foreground hover:text-blue-500" />
 												</Button>
 											</TooltipTrigger>
@@ -255,7 +240,7 @@ onUnmounted(() => {
 
 									<PeekConfigDialog :editId="row.id" v-if="isDialogOpen('peek-config-dialog-' + row.id)"></PeekConfigDialog>
 
-									<ActionsMenu :rowData="row" :showEditBtn="false" :showViewDetailsBtn="row.config_downloaded == 1 || row.is_hardlink === 1" @onViewDetails="viewDetailsPane(row.id)" @onDelete="deleteConfig(row.id)" />
+									<ActionsMenu :rowData="row" :showEditBtn="false" :showViewDetailsBtn="row.config_downloaded == 1" @onViewDetails="viewDetailsPane(row.id)" @onDelete="deleteConfig(row.id)" />
 								</div>
 							</TableCell>
 							<!-- ACTIONS MENU -->

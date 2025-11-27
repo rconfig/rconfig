@@ -10,18 +10,6 @@ const selectedButtonRef = ref(null);
 const panelStore = usePanelStore(); // Access the panel store
 const props = defineProps({
 	selectedNav: String,
-	hasApiEndpoints: {
-		type: Boolean,
-		default: false,
-	},
-	hasXftpFiles: {
-		type: Boolean,
-		default: false,
-	},
-	apiEndpointsCount: {
-		type: Number,
-		default: 0,
-	},
 });
 
 const emit = defineEmits(["selectMainNavView", "closeNav"]);
@@ -73,24 +61,6 @@ const navItems = computed(() => {
 		},
 	];
 
-	// Conditionally add xftp item
-	if (props.hasXftpFiles) {
-		items.push({
-			label: "XFTP Files",
-			to: "xftp",
-			icon: "xftp",
-		});
-	}
-
-	// Conditionally add api-endpoints item
-	if (props.hasApiEndpoints) {
-		items.push({
-			label: "API Endpoints",
-			to: "api-endpoints",
-			icon: "api-collection",
-			badge: props.apiEndpointsCount > 0 ? props.apiEndpointsCount : null,
-		});
-	}
 
 	return items;
 });
@@ -117,10 +87,6 @@ function handleNavSelection(navItem) {
 
 				<h3 class="gap-2 ml-auto mr-4 text-lg font-semibold tracking-tight group" v-if="selectedNav === 'configs'">
 					Latest Configs
-				</h3>
-				<h3 class="gap-2 ml-auto mr-4 text-lg font-semibold tracking-tight group" v-if="selectedNav === 'xftp' && hasXftpFiles">XFTP Files</h3>
-				<h3 class="gap-2 ml-auto mr-4 text-lg font-semibold tracking-tight group" v-if="selectedNav === 'api-endpoints' && hasApiEndpoints">
-					API Endpoints
 				</h3>
 			</div>
 		</div>

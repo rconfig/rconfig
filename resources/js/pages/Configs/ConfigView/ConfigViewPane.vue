@@ -1,6 +1,4 @@
 <script setup>
-import ConfigChangesPanel from "@/pages/Configs/ConfigView/ConfigChangesPanel.vue";
-import ConfigHistoryPanel from "@/pages/Configs/ConfigView/ConfigHistoryPanel.vue";
 import ConfigSummaryPanel from "@/pages/Configs/ConfigView/ConfigSummaryPanel.vue";
 import ConfigViewMainPanel from "@/pages/Configs/ConfigView/ConfigViewMainPanel.vue";
 import ConfigViewPaneDropdown from "@/pages/Configs/ConfigView/ConfigViewPaneDropdown.vue";
@@ -69,7 +67,6 @@ function close() {
 					<ScrollArea class="max-h-[83vh] w-full rounded-md border smooth-scroll overflow-y-auto">
 						<DetailsViewLeftNav @closeNav="closeNav" @selectLeftNavView="selectLeftNavView" :selectedNav="leftNavSelected" :deviceId="configId" context="config" />
 						<ConfigSummaryPanel class="p-2" v-if="leftNavSelected === 'details'" :isLoading="isLoading" :configData="configData" />
-						<ConfigHistoryPanel class="p-2" v-if="leftNavSelected === 'configHistory'" :configData="configData" @viewConfig="handleViewConfig" @viewConfigChanges="handleViewConfigChanges" />
 					</ScrollArea>
 				</ResizablePanel>
 				<ResizableHandle with-handle />
@@ -78,8 +75,7 @@ function close() {
 						<div class="flex items-center justify-center" style="height: 60vh;" v-if="isLoading">
 							<Loading class="flex justify-center" />
 						</div>
-						<ConfigViewMainPanel class="p-2" v-if="!isLoading && configData && !showChangesPanel" :deviceId="configData.device_id" :deviceName="configData.device_name" :configId="viewConfigId" :selectedConfigVersion="selectedConfigVersion || configData.config_version" :key="viewConfigId" style="height: 60vh;" />
-						<ConfigChangesPanel class="p-2" v-if="!isLoading && showChangesPanel && changesConfigId" :configId="changesConfigId" :configModel="configData" :key="changesConfigId" @backToConfig="handleBackToConfig" style="height: 60vh;" />
+						<ConfigViewMainPanel class="p-2" v-if="!isLoading && configData && !showChangesPanel" :deviceId="configData.device_id" :deviceName="configData.device_name" :configId="viewConfigId" :selectedConfigVersion="selectedConfigVersion" :key="viewConfigId" style="height: 60vh;" />
 					</ScrollArea>
 				</ResizablePanel>
 			</ResizablePanelGroup>

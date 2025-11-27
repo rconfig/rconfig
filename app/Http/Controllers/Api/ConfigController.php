@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Api\FilterMultipleFields;
 use App\Models\Config;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Response;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -22,16 +19,30 @@ class ConfigController extends ApiBaseController
 
     public function index(Request $request, $searchCols = null, $relationship = null, $withCount = null)
     {
+        // Handle load more mode - when perPage is very large, use chunked loading
+        $isLoadMoreMode = $request->has('loadMore') && $request->boolean('loadMore');
+        $perPage = (int) $request->perPage;
+
+        // If load more mode is detected but perPage is still very large, use a reasonable chunk size
+        if ($isLoadMoreMode && $perPage >= 10000000) {
+            $perPage = 50; // Use a reasonable chunk size for load more
+        }
+
         $response = QueryBuilder::for(Config::class)
             ->allowedFilters([
                 AllowedFilter::custom('q', new FilterMultipleFields, 'id, device_name'),
                 AllowedFilter::exact('download_status'),
                 AllowedFilter::exact('command'),
                 AllowedFilter::exact('latest_version'),
+                AllowedFilter::scope('created_at_between'),
             ])
             ->defaultSort('-id')
-            ->allowedSorts('id', 'device_name', 'command', 'download_status')
-            ->paginate((int) $request->perPage);
+            ->allowedSorts('id', 'device_name', 'command', 'download_status', 'created_at')
+            ->paginate($perPage);
+
+        if ($isLoadMoreMode) {
+            $response->appends(['loadMore' => true]);
+        }
 
         return response()->json($response);
     }
@@ -59,20 +70,27 @@ class ConfigController extends ApiBaseController
     }
 
     public function getAllById($id, Request $request)
-    {
+    {   
+        $sortCol = $request->sortCol != '' ? $request->sortCol : 'created_at';
+        $sortOrd = $request->sortOrd != '' ? $request->sortOrd : 'desc';
+        $perPage = (int) $request->perPage;
 
-        $response = QueryBuilder::for(Config::class)
+        $query = QueryBuilder::for(Config::class)
             ->allowedFilters([
-                AllowedFilter::custom('q', new FilterMultipleFields, 'id, device_name, command', 'download_status'),
+                AllowedFilter::custom('q', new FilterMultipleFields, 'id, command, device_name'),
                 AllowedFilter::exact('device_id'),
+                AllowedFilter::exact('latest_version'),
+                AllowedFilter::exact('command'),
                 AllowedFilter::exact('download_status'),
             ])
-            ->where('device_id', $id)
-            ->defaultSort('-id')
-            ->allowedSorts('id', 'device_name', 'command', 'download_status')
-            ->paginate((int) $request->perPage);
+            ->allowedSorts('id', 'created_at', 'command')
+            ->defaultSort($sortCol === 'created_at' ? ($sortOrd === 'desc' ? '-created_at' : 'created_at') : ($sortOrd === 'desc' ? '-' . $sortCol : $sortCol));
 
-        return response()->json($response);
+        if ($id != 0) {
+            $query->where('device_id', $id);
+        }
+
+        return $query->orderBy('created_at', 'desc')->paginate($perPage);
     }
 
     public function getLatestById($id)
