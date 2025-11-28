@@ -28,16 +28,9 @@ const model = ref({
 	task_name: "",
 	task_desc: "",
 	task_command: "",
-	integration_id: null,
 	task_categories: null,
 	task_devices: null,
 	task_tags: null,
-	task_snippet: null,
-	task_policyassignment: null,
-	task_archive_logs: null,
-	archive_type: null,
-	purge_days: "",
-	archive_value: "",
 	task_cron: ["*", "*", "*", "*", "*"],
 	task_email_notify: true,
 	download_report_notify: true,
@@ -49,9 +42,6 @@ const model = ref({
 	device: [],
 	category: [],
 	tag: [],
-	snippet: [],
-	policyassignment: [],
-	api_collection: [],
 });
 
 const activeStep = ref(0);

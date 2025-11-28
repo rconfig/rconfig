@@ -24,8 +24,8 @@ class DBTaskCompleteNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'title' => 'rConfig Download-Task Complete!',
-            'description' => 'Scheduled task '.$this->report_data->task->id.' completed',
+            'title' => $this->report_data->task->task_name . ' - rConfig Download-Task Complete!',
+            'description' => 'Scheduled task ' . $this->report_data->task->id . ' completed',
             'category' => 'task',
             'severity' => 'info',
             'icon' => 'pficon-info',

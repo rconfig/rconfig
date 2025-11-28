@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Models\Taskdownloadreport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class TaskReportController extends ApiBaseController
 {
@@ -14,27 +16,28 @@ class TaskReportController extends ApiBaseController
         $this->modelname = $modelname;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request, $searchCols = null, $relationship = null, $withCount = null)
     {
         $searchCols = ['report_id', 'task_id', 'task_name', 'task_type'];
 
-        return response()->json(parent::index($request, $searchCols));
+        try {
+            $query = QueryBuilder::for($this->model::class)
+                ->allowedFilters([
+                    AllowedFilter::custom('q', new FilterMultipleFields, 'report_id, task_id, task_name, task_type'),
+                ])
+                ->defaultSort('-created_at')
+                ->allowedSorts(['id', 'report_name', 'task_id', 'created_at'])
+                ->paginate($request->perPage ?? 10);
+        } catch (\Exception $e) {
+            return $this->failureResponse($e->getMessage());
+        }
+
+        return response()->json($query);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Command  $tag
-     * @return \Illuminate\Http\Response
-     */
     public function show($id, $relationship = null, $withCount = null)
     {
-        $reportfile = report_path().$id.'.html';
+        $reportfile = report_path() . $id . '.html';
 
         if (File::exists($reportfile)) {
             return File::get($reportfile);
@@ -45,12 +48,6 @@ class TaskReportController extends ApiBaseController
         return parent::show($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id, $return = 0)
     {
         $model = parent::destroy($id, 1);
@@ -70,7 +67,7 @@ class TaskReportController extends ApiBaseController
 
     public function getReport(Request $request)
     {
-        $reportfile = report_path().$request->id.'.html';
+        $reportfile = report_path() . $request->id . '.html';
 
         if (File::exists($reportfile)) {
             return File::get($reportfile);

@@ -43,7 +43,7 @@ class TestMailNotification extends Notification
             ->greeting('rConfig System Test Notification!')
             ->line('Hello, ')
             ->line('If your reading this, your notification test from rConfig worked.')
-            ->action('rConfig Dashboard', url('/'))
+            ->action('rConfig Dashboard', url('/settings'))
             ->line('Thank you for using rConfig!');
     }
 

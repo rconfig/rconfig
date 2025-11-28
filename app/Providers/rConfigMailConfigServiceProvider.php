@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Setting;
 use Config;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 
 class rConfigMailConfigServiceProvider extends ServiceProvider
@@ -11,8 +12,9 @@ class rConfigMailConfigServiceProvider extends ServiceProvider
     public function boot()
     {
         if (\Schema::hasTable('settings')) {
-            $settings = Setting::where('id', 1)->first();
-            // dd($settings);
+            $settings = Cache::remember('mail_settings', 1440, function () {
+                return Setting::where('id', 1)->first();
+            });
 
             if ($settings) { //checking if table is not empty
                 // mail_password decrypted at the model

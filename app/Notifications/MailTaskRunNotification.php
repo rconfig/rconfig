@@ -29,11 +29,11 @@ class MailTaskRunNotification extends Notification
         // Log::info('Sending task notification email');
         try {
             return (new MailMessage)
-                ->subject('rConfig Scheduled Task Notification')
+                ->subject($this->task['task_name'] . ' - rConfig Scheduled Task Notification')
                 ->markdown(
                     'emails.notifications.task.complete',
                     [
-                        'greeting' => 'rConfig Scheduled Task Notification!',
+                        'greeting' => $this->task['task_name'] . ' - rConfig Scheduled Task Notification!',
                         'task_id' => $this->task['id'],
                         'task_name' => $this->task['task_name'],
                         'task_desc' => $this->task['task_desc'],

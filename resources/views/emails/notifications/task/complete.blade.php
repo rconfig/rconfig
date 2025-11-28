@@ -51,17 +51,18 @@
                                 style="font-family: Avenir, Helvetica, sans-serif; box-sizing: border-box; background-color: #ffffff; margin: 0 auto; padding: 0; width: 570px; -premailer-cellpadding: 0; -premailer-cellspacing: 0; -premailer-width: 570px;">
                                 <!-- Body content -->
                                 <tr>
-                                    <td class="content-cell"
+                                     <td class="content-cell"
                                         style="font-family: Avenir, Helvetica, sans-serif; box-sizing: border-box; padding: 35px;">
-                                        <img src="https://www.rconfig.com/images/rConfig_logos/new/blue/hex_logo_blue_horizontal_72.png"
+                                        <img src="{!! url('/images/brand/blue_logo_brand_strap_72h.png'); !!}"
                                             alt="rConfig Logo" title="rConfig Logo"
                                             style="display: block;  margin-left: auto; margin-right: auto; padding-bottom: 15px;" />
+
                                         <h1
                                             style="font-family: Avenir, Helvetica, sans-serif; box-sizing: border-box; color: #2F3133; font-size: 19px; font-weight: bold; margin-top: 0; text-align: left;">
                                             {{$greeting}}</h1>
                                         <p
                                             style="font-family: Avenir, Helvetica, sans-serif; box-sizing: border-box; color: #74787e; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
-                                            <b>{{$task_name}}</b> Task ran successfully in <b>{{$seconds}}</b> seconds.
+                                            <b>{{$task_name}}</b> Task ran in <b>{{$seconds}}</b> seconds.
                                         </p>
                                         <h2
                                             style="font-family: Avenir, Helvetica, sans-serif; box-sizing: border-box; color: #2F3133; font-size: 16px; font-weight: bold; margin-top: 0; text-align: left;">

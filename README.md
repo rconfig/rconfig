@@ -11,16 +11,16 @@ https://github.com/mohammadain/laravel-docker-cron/blob/master/Dockerfile -->
 <br />
 <div align="center">
   <a href="https://github.com/rconfig/rconfig">
-            <img src="https://www.rconfig.com/images/rConfig_logos/new/blue/hex_logo_blue_horizontal_96.png" alt="rConfig Logo" />
+            <img src="https://portal.rconfig.com/images/rconfig-logos/v8-core-logo-and-icon/rconfig_v8_core_logo_and_icon_with_strapline_gradient.png" alt="rConfig Logo" />
   </a>
 
-  <h3 align="center">rConfig v6 Core</h3>
+  <h3 align="center">rConfig v8 Core</h3>
 
   <p align="center">
-    rConfig v6 Core is a free, open source, community edition of rConfig v6. It is a fully functional version of rConfig v6, with all the core features of rConfig v6 Professional, but with some limitations. Check out our <a href="https://www.rconfig.com/pricing#full-features"><strong>features list</strong></a> to learn more.
+    rConfig v8 Core is a free, open source, community edition of rConfig v8. It is a fully functional version of rConfig v8, with all the core features of rConfig v8 Professional, but with some limitations. Check out our <a href="https://www.rconfig.com/pricing#full-features"><strong>features list</strong></a> to learn more.
     <br />
     <br />
-    <a href="https://v6docs.rconfig.com"><strong>Explore the docs »</strong></a>
+    <a href="https://v8coredocs.rconfig.com"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="#intro">Intro</a>
@@ -38,7 +38,7 @@ https://github.com/mohammadain/laravel-docker-cron/blob/master/Dockerfile -->
 
 [![Tests](https://github.com/eliashaeussler/typo3-badges/actions/workflows/tests.yaml/badge.svg)](https://github.com/eliashaeussler/typo3-badges/actions/workflows/tests.yaml)
 [![License](https://img.shields.io/github/license/eliashaeussler/typo3-badges)](LICENSE) [![Made with Node](https://img.shields.io/badge/dynamic/json?label=node&query=%24.engines%5B%22node%22%5D&url=https%3A%2F%2Fraw.githubusercontent.com%2FMichaelCurrin%2Fbadge-generator%2Fmaster%2Fpackage.json)](https://nodejs.org 'Go to Node.js homepage')
-[![PHP Version Require](https://poser.pugx.org/pugx/badge-poser/require/php)](https://packagist.org/packages/pugx/badge-poser)
+[![PHP Version](https://img.shields.io/badge/PHP-%3E%3D8.3-777BB4?logo=php&logoColor=white)](https://www.php.net/)
 
  <img src="https://img.shields.io/badge/-Vue3-4FC08D?logo=vue.js&logoColor=white&style=flat"/>
  <img src="https://img.shields.io/badge/-Laravel-FF2D20?logo=laravel&logoColor=white&style=flat"/>
@@ -55,30 +55,51 @@ https://github.com/mohammadain/laravel-docker-cron/blob/master/Dockerfile -->
 
 ## Intro
 
-rConfig v6 is an enterprise grade Network Configuration Management (NCM) software package with superior NCM features and capabilities to help you easily manage configurations on large and small heterogenous networks. rConfig v6 is our flagship professional version of rConfig aimed at high value networks and business operations. rConfig v6 runs natively on many variants of Linux. Within this repo, is the code base for rConfig v6 Core, and a set of scripts to help you get started with rConfig v6 Core.
+rConfig v8 is an enterprise-grade Network Configuration Management (NCM) software package designed to help you easily manage configurations across large and small heterogeneous networks. With superior NCM features and capabilities, rConfig v8 streamlines network management operations for high-value networks and business-critical environments.
 
-If you are looking for rConfig V6 professional, please visit `https://www.rconfig.com/`.
+rConfig v8 runs natively on many Linux distributions, offering flexibility and reliability for your infrastructure. This repository contains the code base for rConfig v8 Core—the free, open-source community edition—along with setup scripts to help you get started quickly.
+
+rConfig v8 Professional, our flagship commercial version, offers additional enterprise features, priority support, and advanced integrations for organizations requiring enhanced capabilities.
+
+If you are looking for rConfig v8 professional, please visit `https://www.rconfig.com/`.
 
 Supported OS
 
-- Rocky Linux 8/9+
-- RHEL Linux 8/9+
-- CentOS Linux 8/9+
-- Ubuntu 20.04+
-- **Now run rConfig v6 in a Docker container!** [rconfig6docker repository](https://github.com/rconfig/rconfig6docker)
+- Rocky Linux 9 (recommended)
+- CentOS 9
+- RHEL 9
+- Ubuntu 22.04+
+- Alma Linux 9+
+- AWS Linux 2023
+- **Now run rConfig v8 Core in a Docker container!** [rconfigv8coredocker repository](https://github.com/rconfig/rconfigv8coredocker)
 
-rConfig v6 core is completely free, you do not need an API key from rConfig to download and use this version. Please follow the instructions below to get started.
+rConfig v8 core is completely free, you do not need an API key from rConfig to download and use this version. Please follow the instructions below to get started.
 
 ## rConfig Editions
 
-| Feature              | rConfig Core        | rConfig Professional |
-|----------------------|---------------------|----------------------|
-| Configuration Backup | :white_check_mark:  | :white_check_mark:   |
-| Multi-Vendor Support | :white_check_mark:  | :white_check_mark:   |
-| Unlimited Devices | :white_check_mark:  | :white_check_mark:   |
-| Enterprise Features  | :x:                 | :white_check_mark:   |
-| API Access           | :x:                 | :white_check_mark:   |
-| Premium Support      | :x:                 | :white_check_mark:   |
+| Feature                          | rConfig Core        | rConfig Professional |
+|----------------------------------|---------------------|----------------------|
+| **Target Audience**              | Individuals & small organizations | Medium-sized businesses to 1,000 devices |
+| **License**                      |                     |                      |
+| Active Users                     | Unlimited           | All Core Features    |
+| Active Devices                   | Unlimited           | Perpetual License    |
+| Backups                          | Unlimited           | Subscription for support/Updates |
+| **Core Features**                |                     |                      |
+| Modern UI                        | ✓                   | ✓                    |
+| SSO Integration                  | ✓                   | ✓                    |
+| Import from Oxidized             | ✓                   | ✓                    |
+| **Support**                      |                     |                      |
+| Github for issues                | Best effort         | ✗                    |
+| Phone Support                    | ✗                   | ✓                    |
+| Email Support                    | ✗                   | ✓                    |
+| Priority Support & Updates       | ✗                   | Priority Support 8X5 NBD |
+| All major and minor updates      | ✗                   | ✓                    |
+| **Advanced Features**            |                     |                      |
+| Config Versioning                | ✗                   | ✓                    |
+| Snippets/Automations             | ✗                   | ✓                    |
+| All roadmap feature updates      | ✗                   | ✓                    |
+| API/Integrations                 | ✗                   | ✓                    |
+| Advanced customisations          | ✗                   | ✓                    |
 
 _Check out more on our [features page](https://www.rconfig.com/pricing#full-features)._
 
@@ -90,9 +111,9 @@ _Check out more on our [features page](https://www.rconfig.com/pricing#full-feat
 
 ## Installation
 
-We have made it super easy to get started with rConfig v6. Follow the steps below to get started. Check out our youtube channel for a video walkthrough of the installation process.
+We have made it super easy to get started with rConfig v8. Follow the steps below to get started. Check out our youtube channel for a video walkthrough of the installation process.
 
-[https://www.youtube.com/channel/rconfigV6Core](https://www.youtube.com/playlist?list=PL8dpV2hQIDLR04p5RuJEVcdhQY1gXKOgU)
+[https://www.youtube.com/channel/rconfigv8Core](https://www.youtube.com/playlist?list=PL8dpV2hQIDLR04p5RuJEVcdhQY1gXKOgU)
 
 > [!NOTE]  
 > Do not follow the installation steps to update existing rConfig installations. You must skip to the <a href="#update">Updating</a> section below.
@@ -103,7 +124,7 @@ Setup a server with one of the supported OS's listed above. We recommend using a
 
 You will need to install the following software on your server:
 Git 2.25+
-PHP 8.1+
+PHP 8.3+
 Composer 2.4+
 Apache 2.4+
 MySQL 5.7+ or MariaDB 10.5+
@@ -125,7 +146,7 @@ mysql -u root -p
 CREATE DATABASE rconfig;
 ```
 
-3. Create a new user if required (do not use the credentials below in production). This is likely required for Ubutnu 20.04+. If you are using a different OS, you may not need to create a new user, and you can use the root account, though this is not recommended.
+3. Create a new user if required (do not use the credentials below in production). This is likely required for Ubutnu 22.04+. If you are using a different OS, you may not need to create a new user, and you can use the root account, though this is not recommended.
 
 ```sh
 
@@ -294,35 +315,35 @@ php artisan rconfig:clear-all
 Username: admin@domain.com
 Password: admin
 
-Check out our docs [v6docs.rconfig.com](https://v6docs.rconfig.com) to learn more.
+Check out our docs [v8docs.rconfig.com](https://v8docs.rconfig.com) to learn more.
 
 <!-- Docker Option -->
 
 <a name="docker"></a>
 
-## Running rConfig v6 in Docker
+## Running rConfig v8 Core in Docker
 
-We are excited to announce that you can now run **rConfig v6** in a Docker container! This new option simplifies the installation and setup process, providing an isolated environment for running rConfig v6 without the need for extensive system configurations.
+We are excited to announce that you can now run **rConfig v8 Core** in a Docker container! This new option simplifies the installation and setup process, providing an isolated environment for running rConfig v8 core without the need for extensive system configurations.
 
-For detailed instructions on setting up rConfig v6 in Docker, visit the [rconfig6docker repository](https://github.com/rconfig/rconfig6docker). 
+For detailed instructions on setting up rConfig v8 Core in Docker, visit the [rconfig8coredocker repository](https://github.com/rconfig/rconfig8coredocker). 
 
-### Benefits of Docker for rConfig v6
-- **Easy Setup**: Quickly deploy rConfig v6 with minimal configuration.
-- **Isolation**: Run rConfig v6 in a clean and isolated containerized environment.
-- **Portability**: Easily move or replicate your rConfig v6 setup across different systems.
-- **Consistency**: Ensure that rConfig v6 behaves the same across different machines and environments.
+### Benefits of Docker for rConfig v8
+- **Easy Setup**: Quickly deploy rConfig v8 with minimal configuration.
+- **Isolation**: Run rConfig v8 in a clean and isolated containerized environment.
+- **Portability**: Easily move or replicate your rConfig v8 setup across different systems.
+- **Consistency**: Ensure that rConfig v8 behaves the same across different machines and environments.
 
 ### Quick Start
-To run rConfig v6 in Docker, follow these steps:
+To run rConfig v8 in Docker, follow these steps:
 
-1. Clone the `rconfig6docker` repository:
+1. Clone the `rconfig8coredocker` repository:
     ```bash
-    git clone https://github.com/rconfig/rconfig6docker.git
+    git clone https://github.com/rconfig/rconfig8coredocker.git
     ```
 
 2. Navigate to the cloned directory:
     ```bash
-    cd rconfig6docker
+    cd rconfig8coredocker
     ```
 
 3. Build and start the Docker container:
@@ -330,9 +351,9 @@ To run rConfig v6 in Docker, follow these steps:
     docker-compose up -d
     ```
 
-4. Access rConfig v6 by navigating to `http://localhost:8080` in your browser.
+4. Access rConfig v8 by navigating to `http://localhost:8080` in your browser.
 
-For more advanced configuration options, check out the [rconfig6docker documentation](https://github.com/rconfig/rconfig6docker).
+For more advanced configuration options, check out the [rconfig8coredocker documentation](https://github.com/rconfig/rconfig8coredocker).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -345,13 +366,13 @@ For more advanced configuration options, check out the [rconfig6docker documenta
 > [!IMPORTANT]  
 > Your advised to backup your database, .env file and storage directory at a minimum before proceeding. You should also backup your entire server if possible.
 
-Instruction on how to update your installation of rConfig v6 Core are below. You should run the commands below as root, and you may need to use sudo if installed on Ubuntu.
+Instruction on how to update your installation of rConfig v8 Core are below. You should run the commands below as root, and you may need to use sudo if installed on Ubuntu.
 
 > [!WARNING]
 > If you edit any of the files in the rConfig directory, you may need to resolve conflicts when you run the `git pull` command. You should be familiar with git and how to resolve conflicts. If you are not, you should not edit any of the files in the rConfig directory. If you get a warning about conflicts, you can try a `git stash` and `git pull` to resolve the conflicts. If you are not familiar with git, you should seek help from a professional.
 
 > [!IMPORTANT]  
-> As of Feb 2024, you will need to update PHP to version 8.3 when updating rConfig Core V6. You will also need to update the composer version to 2.4. You can do this by running the following commands:
+> As of Feb 2024, you will need to update PHP to version 8.3 when updating rConfig Core v8. You will also need to update the composer version to 2.4. You can do this by running the following commands:
 
 ```sh
 # Update PHP CentOS/RHEL/ Rocky
@@ -369,7 +390,7 @@ chmod +x ubuntu-php8-update.sh
 ./ubuntu-php8-update.sh
 ```
 
-rConfig V7 professional subscribers should follow the instructions in the rConfig V7 professional documentation. As the installation and update process is different.
+rConfig V8 professional subscribers should follow the instructions in the rConfig V8 professional documentation. As the installation and update process is different.
 
 ```sh
 # Centos/Rocky/RHEL
@@ -433,7 +454,7 @@ Front end development requires `npm install --include=dev`, and `npm run dev` to
 
 ## License
 
-This code base for this repository's code is distributed under License from rConfig. See `LICENSE.txt` for more information. rConfig v6 Professional is excluded from this license and repository.
+This code base for this repository's code is distributed under License from rConfig. See `LICENSE.txt` for more information. rConfig v8 Professional is excluded from this license and repository.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -443,7 +464,7 @@ This code base for this repository's code is distributed under License from rCon
 
 ## Support
 
-Although we provide this code free and open source, rConfig v6 core is based best effort support basis. You may open issues in the issue section here at github. We will try to address issues in a timely manner, but without guarantees. For prompt support and business critical environments, you should take out a subscription for rCOnfig v6 Professional. rConfig Professional subscribers should open a ticket via our normal support channels.
+Although we provide this code free and open source, rConfig v8 core is based best effort support basis. You may open issues in the issue section here at github. We will try to address issues in a timely manner, but without guarantees. For prompt support and business critical environments, you should take out a subscription for rConfig v8 Professional. rConfig Professional subscribers should open a ticket via our normal support channels.
 
 ## Acknowledgments
 

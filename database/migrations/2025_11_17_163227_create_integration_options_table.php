@@ -24,6 +24,9 @@ return new class extends Migration
             $table->string('status')->default('Active');
             $table->timestamps();
         });
+
+        $seeder = new IntegrationOptionSeeder;
+        $seeder->run();
     }
 
     /**

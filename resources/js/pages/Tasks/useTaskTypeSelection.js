@@ -42,39 +42,47 @@ export function useTaskTypeSelection(props, emit) {
 
     // Computed filtered commands
     const filteredCommands = computed(() => {
-        let filtered = Object.values(commands).filter(command => 
-            allowedCommands.includes(command.command)
-        );
-        
-        // Filter by search term
-        if (searchTerm.value) {
-            const search = searchTerm.value.toLowerCase();
-            filtered = filtered.filter(command => 
-                command.label.toLowerCase().includes(search) ||
-                command.description.toLowerCase().includes(search) ||
-                command.categoryLabel.toLowerCase().includes(search)
-            );
-        }
-        
-        return filtered;
-    });
+		let filtered = Object.values(commands);
+
+		// Filter by search term
+		if (searchTerm.value) {
+			const search = searchTerm.value.toLowerCase();
+			filtered = filtered.filter((command) => command.label.toLowerCase().includes(search) || command.description.toLowerCase().includes(search) || command.categoryLabel.toLowerCase().includes(search));
+		}
+
+		// Filter by category
+		if (activeCategory.value !== "all") {
+			filtered = filtered.filter((command) => {
+				const commandCategory = categoryMap[command.categoryLabel];
+				return commandCategory === activeCategory.value;
+			});
+		}
+
+		return filtered;
+	});
 
     // Update category counts
     const categoriesWithCounts = computed(() => {
-        const filtered = Object.values(commands).filter(command => 
-            allowedCommands.includes(command.command)
-        );
-        
-        const counts = {
-            all: filtered.length,
-            config: filtered.length
-        };
-        
-        return categories.map(cat => ({
-            ...cat,
-            count: counts[cat.key]
-        }));
-    });
+		const counts = {
+			all: Object.values(commands).length,
+			config: 0,
+			api: 0,
+			snippets: 0,
+			other: 0,
+		};
+
+		Object.values(commands).forEach((command) => {
+			const categoryKey = categoryMap[command.categoryLabel];
+			if (categoryKey) {
+				counts[categoryKey]++;
+			}
+		});
+
+		return categories.map((cat) => ({
+			...cat,
+			count: counts[cat.key],
+		}));
+	});
 
     // Handle task selection
     const handleTaskSelect = (command) => {
@@ -118,22 +126,28 @@ export function useTaskTypeSelection(props, emit) {
     }
 
     function getCategoryTasks(categoryKey) {
-        let filtered = Object.values(commands).filter(command => 
-            allowedCommands.includes(command.command)
-        );
-        
-        // Filter by search term first
-        if (searchTerm.value) {
-            const search = searchTerm.value.toLowerCase();
-            filtered = filtered.filter(command => 
-                command.label.toLowerCase().includes(search) ||
-                command.description.toLowerCase().includes(search) ||
-                command.categoryLabel.toLowerCase().includes(search)
-            );
-        }
-        
-        return filtered;
-    }
+		let filtered = Object.values(commands);
+
+		// Filter by search term first
+		if (searchTerm.value) {
+			const search = searchTerm.value.toLowerCase();
+			filtered = filtered.filter((command) => command.label.toLowerCase().includes(search) || command.description.toLowerCase().includes(search) || command.categoryLabel.toLowerCase().includes(search));
+		}
+
+		// Then filter by category
+		if (activeCategory.value !== "all") {
+			filtered = filtered.filter((command) => {
+				const commandCategory = categoryMap[command.categoryLabel];
+				return commandCategory === activeCategory.value;
+			});
+		}
+
+		// Finally filter by the specific category for this section
+		return filtered.filter((command) => {
+			const commandCategory = categoryMap[command.categoryLabel];
+			return commandCategory === categoryKey;
+		});
+	}
 
     // Initialize component
     onMounted(() => {
@@ -152,11 +166,23 @@ export function useTaskTypeSelection(props, emit) {
         }
         // If search term is being used
         else if (newValue && newValue.length > 0) {
-            if (getCategoryTasks('config').length > 0) {
-                collapsedCategories.value.config = false;
-            }
+            const matchingCategories = ["config"].filter((categoryKey) => {
+				return getCategoryTasks(categoryKey).length > 0;
+			});
+
+			// Expand categories that have matching results
+			matchingCategories.forEach((categoryKey) => {
+				collapsedCategories.value[categoryKey] = false;
+			});
         }
     });
+
+    watch(activeCategory, (newCategory) => {
+		if (newCategory !== "all") {
+			// Expand the selected category
+			collapsedCategories.value[newCategory] = false;
+		}
+	});
 
     return {
         // State

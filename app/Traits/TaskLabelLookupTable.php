@@ -12,6 +12,7 @@ trait TaskLabelLookupTable
             'rconfig:download-device' => 'Devices - Config Downloads',
             'rconfig:download-category' => 'Categories - Config Downloads',
             'rconfig:download-tag' => 'Tags - Config Downloads',
+            'rconfig:purge-configs' => 'Other Tasks - Purge Old Configs',
         ];
 
         return $lookupTable[$command];

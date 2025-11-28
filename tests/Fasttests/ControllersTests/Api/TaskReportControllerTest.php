@@ -18,6 +18,8 @@ class TaskReportControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->beginTransaction();
+
         $this->user = \App\Models\User::factory()->create();
         $this->actingAs($this->user, 'api');
     }
@@ -72,5 +74,11 @@ class TaskReportControllerTest extends TestCase
         $this->assertFileExists(report_path() . $report_data->file_name);
         File::delete(report_path() . $report_data->file_name);
         $this->assertFileDoesNotExist(report_path() . $report_data->file_name);
+    }
+
+    protected function tearDown(): void
+    {
+        $this->rollBackTransaction();
+        parent::tearDown();
     }
 }

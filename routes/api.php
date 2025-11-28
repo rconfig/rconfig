@@ -48,6 +48,12 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
     /* TAGS ROUTES */
     loadRoutesFrom('/api_modules/tags.php');
 
+    /* TASKS ROUTES */
+    loadRoutesFrom('/api_modules/tasks.php');
+
+    /* TASKS REPORTS ROUTES */
+    loadRoutesFrom('/api_modules/tasks_reports.php');
+
     /* TEMPLATE ROUTES */
     loadRoutesFrom('/api_modules/templates.php');
 
@@ -60,20 +66,6 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
 
     /* SEARCH ROUTES */
     Route::get('/search', 'QuickSearchController@search');
-
-    /* TASKS ROUTES */
-    Route::prefix('tasks')->group(function () {
-        Route::post('/delete-many', 'TaskController@deleteMany');
-        Route::get('/toggle-pause-task/{id}', 'TaskController@togglePauseTask');
-        Route::post('/validate-task', 'TaskController@validateTask');
-        Route::post('/run-manual-task', 'TaskManualRunController@runManualTask');
-        Route::get('/recent-failed-jobs-count', 'TaskController@failedJobsLast24HrsCount');
-        Route::resource('monitored', 'MonitoredScheduledTaskLogItemController');
-    });
-
-    Route::resource('tasks', 'TaskController');
-
-    Route::resource('reports', 'TaskReportController')->only(['index', 'show', 'destroy']);
 
     Route::get('/license-info', 'LicenseInfoController@index');
 

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Api\FilterMultipleFields;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\MonitoredScheduledTasks;
@@ -28,13 +27,13 @@ class TaskController extends ApiBaseController
         $searchCols = ['id', 'task_name'];
 
         $result = QueryBuilder::for(Task::class)
-            ->with(['device'])
             ->allowedFilters([
-                AllowedFilter::custom('q', new FilterMultipleFields, 'id, task_name'),
+                AllowedFilter::custom('q', new FilterMultipleFields, 'task_name', 'task_command'),
+                AllowedFilter::partial('task_command'),
             ])
             ->defaultSort('-id')
-            ->allowedSorts('id', 'task_name')
-            ->paginate((int) $request->perPage);
+            ->allowedSorts(['id', 'task_name', 'created_at'])
+            ->paginate($request->perPage ?? 10);
 
         $result->map(function ($item) {
             $item['cron_plain'] = CronTranslator::translate(implode(' ', $item['task_cron']));
@@ -99,6 +98,9 @@ class TaskController extends ApiBaseController
         $model->tag()->detach();
         $model->category()->detach();
         $model->tag()->detach();
+        $model->device()->detach();
+
+        $model->delete();
 
         return $this->successResponse(Str::ucfirst($this->modelname) . ' deleted successfully!');
     }

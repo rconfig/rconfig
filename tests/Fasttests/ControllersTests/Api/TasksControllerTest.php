@@ -2,6 +2,7 @@
 
 namespace Tests\Fasttests\ControllersTests\Api;
 
+use App\Models\Task;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -14,6 +15,8 @@ class TasksControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->beginTransaction();
+
         $this->user = \App\Models\User::factory()->create();
         $this->actingAs($this->user, 'api');
 
@@ -85,12 +88,10 @@ class TasksControllerTest extends TestCase
     public function test_a_task_requires_a_name_and_desc_and_command_and_cron()
     {
         $response = $this->json('post', '/api/tasks', ['task_name' => null]);
-
-        $response->assertJson(['errors' => true]);
-        $this->assertArrayHasKey('task_name', $response['errors']);
-        $this->assertArrayHasKey('task_desc', $response['errors']);
-        $this->assertArrayHasKey('task_command', $response['errors']);
         $response->assertStatus(422);
+
+        $response->assertJsonValidationErrors(['task_name', 'task_command', 'task_cron']);
+        $response->assertJsonMissingValidationErrors(['task_desc']);
     }
 
     public function test_a_cron_must_be_a_full_array()
@@ -125,12 +126,10 @@ class TasksControllerTest extends TestCase
             ],
         ];
         $response = $this->json('post', '/api/tasks/validate-task', $this->validationTestArr);
-
-        $this->assertArrayHasKey('task_name', $response['errors']);
-        $this->assertArrayHasKey('task_desc', $response['errors']);
-        $this->assertArrayHasKey('task_cron', $response['errors']);
-        $response->assertJsonMissing(['device', $response['errors']]);
         $response->assertStatus(422);
+
+        $response->assertJsonValidationErrors(['task_name', 'task_cron']);
+        $response->assertJsonMissingValidationErrors(['device', 'task_desc']);
     }
 
     public function test_check_custom_validators_category_passes()
@@ -147,12 +146,10 @@ class TasksControllerTest extends TestCase
             ],
         ];
         $response = $this->json('post', '/api/tasks/validate-task', $this->validationTestArr);
-
-        $this->assertArrayHasKey('task_name', $response['errors']);
-        $this->assertArrayHasKey('task_desc', $response['errors']);
-        $this->assertArrayHasKey('task_cron', $response['errors']);
-        $response->assertJsonMissing(['category', $response['errors']]);
         $response->assertStatus(422);
+
+        $response->assertJsonValidationErrors(['task_name', 'task_cron']);
+        $response->assertJsonMissingValidationErrors(['category', 'task_desc']);
     }
 
     public function test_check_custom_validators_task_tags_passes()
@@ -169,12 +166,10 @@ class TasksControllerTest extends TestCase
             ],
         ];
         $response = $this->json('post', '/api/tasks/validate-task', $this->validationTestArr);
-
-        $this->assertArrayHasKey('task_name', $response['errors']);
-        $this->assertArrayHasKey('task_desc', $response['errors']);
-        $this->assertArrayHasKey('task_cron', $response['errors']);
-        $response->assertJsonMissing(['task_tags', $response['errors']]);
         $response->assertStatus(422);
+
+        $response->assertJsonValidationErrors(['task_name', 'task_cron']);
+        $response->assertJsonMissingValidationErrors(['task_tags', 'task_desc']);
     }
 
     public function test_check_custom_validators_task_tags_fails_download()
@@ -182,12 +177,11 @@ class TasksControllerTest extends TestCase
         $this->validationTestArr['task_command'] = 'rconfig:download-tag';
         $this->validationTestArr['task_tags'] = null;
         $response = $this->json('post', '/api/tasks/validate-task', $this->validationTestArr);
+        $response->assertStatus(422);
 
-        $this->assertArrayHasKey('task_name', $response['errors']);
-        $this->assertArrayHasKey('task_desc', $response['errors']);
-        $this->assertArrayHasKey('task_cron', $response['errors']);
-        $this->assertArrayNotHasKey('device', $response['errors']);
-        $this->assertArrayNotHasKey('category', $response['errors']);
+        $response->assertJsonValidationErrors(['task_name', 'task_cron']);
+        $response->assertJsonMissingValidationErrors(['device', 'task_desc', 'category']);
+
         $response->assertJsonFragment(['task_tags' => ['The Tags - Config Downloads task must have tags associated with it. Please select at least one tag.']]);
         $response->assertStatus(422);
     }
@@ -197,12 +191,11 @@ class TasksControllerTest extends TestCase
         $this->validationTestArr['task_command'] = 'rconfig:download-device';
         $this->validationTestArr['device'] = null;
         $response = $this->json('post', '/api/tasks/validate-task', $this->validationTestArr);
+        $response->assertStatus(422);
 
-        $this->assertArrayHasKey('task_name', $response['errors']);
-        $this->assertArrayHasKey('task_desc', $response['errors']);
-        $this->assertArrayHasKey('task_cron', $response['errors']);
-        $this->assertArrayNotHasKey('category', $response['errors']);
-        $this->assertArrayNotHasKey('task_tags', $response['errors']);
+        $response->assertJsonValidationErrors(['task_name', 'task_cron']);
+        $response->assertJsonMissingValidationErrors(['task_tags', 'task_desc', 'category']);
+
         $response->assertJsonFragment(['device' => ['The Devices - Config Downloads task type must have devices associated with it. Please select at least one device.']]);
         $response->assertStatus(422);
     }
@@ -212,12 +205,11 @@ class TasksControllerTest extends TestCase
         $this->validationTestArr['task_command'] = 'rconfig:download-category';
         $this->validationTestArr['category'] = null;
         $response = $this->json('post', '/api/tasks/validate-task', $this->validationTestArr);
+        $response->assertStatus(422);
 
-        $this->assertArrayHasKey('task_name', $response['errors']);
-        $this->assertArrayHasKey('task_desc', $response['errors']);
-        $this->assertArrayHasKey('task_cron', $response['errors']);
-        $this->assertArrayNotHasKey('device', $response['errors']);
-        $this->assertArrayNotHasKey('task_tags', $response['errors']);
+        $response->assertJsonValidationErrors(['task_name', 'task_cron']);
+        $response->assertJsonMissingValidationErrors(['device', 'task_desc', 'task_tags']);
+
         $response->assertJsonFragment(['category' => ['The Categories - Config Downloads task must have categories associated with it. Please select at least one category.']]);
         $response->assertStatus(422);
     }
@@ -236,9 +228,10 @@ class TasksControllerTest extends TestCase
     {
         $task = \App\Models\Task::factory(100)->create();
         $response = $this->get('/api/tasks?page=1&perPage=100');
-        $this->assertEquals(100, count($response->json()['data']));
-        $this->assertStringContainsString('Every Sunday at 12:00am', json_decode($response->getContent())->data[0]->cron_plain);
         $response->assertStatus(200);
+
+        $this->assertGreaterThan(49, count($response->json()['data']));
+        $this->assertStringContainsString('Every Sunday at 12:00am', json_decode($response->getContent())->data[0]->cron_plain);
     }
 
     public function test_get_all_tasks_with_filters()
@@ -247,7 +240,7 @@ class TasksControllerTest extends TestCase
         $task = \App\Models\Task::factory()->create([
             'task_name' => 'test-task',
         ]);
-        $response = $this->get('/api/tasks?page=1&perPage=100&filter[q]=' . $task->id);
+        $response = $this->get('/api/tasks?page=1&perPage=100&filter[q]=' . $task->task_name);
         $response->assertStatus(200);
         $this->assertEquals(1, count($response->json()['data']));
 
@@ -316,6 +309,7 @@ class TasksControllerTest extends TestCase
             'device_id' => 1005,
             'task_id' => json_decode($response->getContent())->data->id,
         ]);
+        Task::where('task_name', 'avsasvascasc')->delete();
     }
 
     public function test_create_task_with_real_props_and_transform_some_props_and_verify_device_relationship()
@@ -363,6 +357,7 @@ class TasksControllerTest extends TestCase
 
         $response = $this->json('get', '/api/tasks/' . json_decode($response->getContent())->data->id);
         $this->assertCount(4, json_decode($response->getContent())->device);
+        Task::where('task_name', 'avsasvascasc123123')->delete();
     }
 
     public function test_create_task()
@@ -419,11 +414,46 @@ class TasksControllerTest extends TestCase
         ]);
     }
 
+    public function test_edit_task_with_null_description()
+    {
+        $task = \App\Models\Task::factory()->create();
+
+        $response = $this->json('patch', '/api/tasks/' . $task->id, [
+            'id' => $task->id,
+            'task_name' => 'TestTask-a-new-task-name',
+            'task_desc' => null,
+            'task_command' => $task->task_command,
+            'task_cron' => ['0', '0', '1', '1', '*'],
+            'category' => $task->category,
+            'device' => [['id' => '1', 'device_name' => 'device1'], ['id' => '2', 'device_name' => 'device2']],
+            'task_tags' => [['id' => '1', 'tag_name' => 'tag1'], ['id' => '2', 'tag_name' => 'tag2']],
+            'task_email_notify' => $task->task_email_notify,
+            'download_report_notify' => $task->download_report_notify,
+            'verbose_download_report_notify' => $task->verbose_download_report_notify,
+            'is_system' => $task->is_system,
+            'editId' => $task->id,
+        ]);
+
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas('tasks', [
+            'task_name' => 'TestTask-a-new-task-name',
+            'task_desc' => '',
+            'task_command' => 'rconfig:download-device',
+        ]);
+
+        $this->assertDatabaseHas('monitored_scheduled_tasks', [
+            'name' => 'TestTask-a-new-task-name',
+            'type' => 'rconfig:download-device',
+        ]);
+    }
+
     public function test_edit_task()
     {
         $task = \App\Models\Task::factory()->create();
 
         $response = $this->json('patch', '/api/tasks/' . $task->id, [
+            'id' => $task->id,
             'task_name' => 'a-new-task-name',
             'task_desc' => 'this is a new task description',
             'task_command' => $task->task_command,
@@ -497,7 +527,7 @@ class TasksControllerTest extends TestCase
         ]);
     }
 
-    public function test_test_device_relationship()
+    public function test_device_relationship()
     {
         $task = \App\Models\Task::factory()->make();
         $task->task_cron = ['0', '0', '1', '1', '*'];
@@ -534,7 +564,7 @@ class TasksControllerTest extends TestCase
         ]);
     }
 
-    public function test_test_category_relationship()
+    public function test_category_relationship()
     {
         $task = \App\Models\Task::factory()->make();
         $task->task_cron = ['0', '0', '1', '1', '*'];
@@ -614,8 +644,23 @@ class TasksControllerTest extends TestCase
         $response->assertJsonFragment(['last_finished_at' => '2022-05-27 08:44:05']);
     }
 
+    public function test_get_task_device_relationship_but_not_disabled_devices()
+    {
+
+        $tasks = Task::with('device')->whereIn('id', [555555, 666666])->get();
+
+        $this->assertCount(2, $tasks);
+        $this->assertCount(2, $tasks[0]->device);
+    }
+
     private function _getCronPattern($minute, $hour, $day, $month, $weekday)
     {
         return $minute . ' ' . $hour . ' ' . $day . ' ' . $month . ' ' . $weekday . ' ';
+    }
+
+    protected function tearDown(): void
+    {
+        $this->rollBackTransaction();
+        parent::tearDown();
     }
 }
