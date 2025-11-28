@@ -29,9 +29,6 @@ const {
   deviceData,
   downloadStatus,
   favoriteItem,
-  // removed: hasXftpFiles
-  integrationIds,
-  integrationNames,
   isLoading,
   leftNavSelected,
   mainNavSelected,
@@ -44,7 +41,6 @@ const {
   copyDebug,
   downloadNow,
   fetchDevice,
-  openIntegrationUrl,
   selectLeftNavView,
   selectMainNavView,
 } = useDeviceViewPane(props, emit);
@@ -103,24 +99,6 @@ function close() {
         <span class="text-lg font-semibold rc-text-heading-gradient font-inter ml-2">
           {{ deviceData.device_name }}
         </span>
-
-        <!-- Removed CM lock icon -->
-        <!-- Imported device badges with plain sources -->
-        <RcIcon
-          name="imported-device"
-          class="ml-2 mr-0"
-          :addedBy="deviceData?.device_added_by"
-          v-if="deviceData?.device_added_by && deviceData?.device_added_by == 9000"
-          :source="'Zabbix'"
-        />
-        <RcIcon
-          name="imported-device"
-          class="ml-2 mr-0"
-          :addedBy="deviceData?.device_added_by"
-          v-if="deviceData?.device_added_by && deviceData?.device_added_by == 9001"
-          :source="'Netbox'"
-        />
-
         <Button variant="ghost" class="h-8 px-2 py-1.5 h-7 ml-2 animated-star" @click="addToFavorites()">
           <RcIcon name="star-unselected" class="text-muted-foreground animated-star" v-if="!favoriteItem.isFavorite" />
           <RcIcon name="star-selected" class="text-muted-foreground animated-star" v-if="favoriteItem.isFavorite" />

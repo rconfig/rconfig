@@ -16,6 +16,8 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
 
     /* UPDATES ROUTES */
 
+    Route::resource('tracked-jobs', 'TrackedJobController')->only(['show']);
+
     /* SETTINGS ROUTES */
     loadRoutesFrom('/api_modules/settings.php');
     
@@ -68,7 +70,7 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
         Route::get('/recent-failed-jobs-count', 'TaskController@failedJobsLast24HrsCount');
         Route::resource('monitored', 'MonitoredScheduledTaskLogItemController');
     });
-    Route::resource('tracked-jobs', 'TrackedJobController')->only(['show']);
+
     Route::resource('tasks', 'TaskController');
 
     Route::resource('reports', 'TaskReportController')->only(['index', 'show', 'destroy']);

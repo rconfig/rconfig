@@ -4,37 +4,53 @@
  * @returns {string} - Page title
  */
 export function generatePageTitle(route) {
-	const pageTitleKey = route.meta?.pageTitleKey;
+	const apiName = import.meta.env.VITE_APP_NAME;
+	const defaultTitle = apiName || "rConfigV8 Core - NCM";
 	
-	// Simple title mapping without i18n
-	const titles = {
-		dashboard: "Dashboard",
-		inventory: "Inventory",
-		devices: "Devices",
-		deviceView: "Device View",
-		commandGroups: "Command Groups",
-		tags: "Tags",
-		vendors: "Vendors",
-		commands: "Commands",
-		templates: "Templates",
-		templateView: "Template View",
-		configurations: "Configurations",
-		configSearch: "Config Search",
-		configCompare: "Config Compare",
-		configView: "Config View",
-		scheduledTasks: "Scheduled Tasks",
-		settings: "Settings",
-		systemLogs: "System Logs",
-		about: "About",
-		upgrade: "Upgrade",
-		users: "Users",
-		Login: "Login",
-		LoggedOut: "Logged Out",
-		PasswordReset: "Password Reset",
-		AccessDenied: "Access Denied",
-		pageNotFound: "Page Not Found",
-	};
+	if (route.meta?.pageTitleKey) {
+		const titles = {
+			dashboard: "Dashboard",
+			inventory: "Inventory",
+			devices: "Devices",
+			deviceView: "Device View",
+			commandGroups: "Command Groups",
+			tags: "Tags",
+			vendors: "Vendors",
+			commands: "Commands",
+			templates: "Templates",
+			templateView: "Template View",
+			configurations: "Configurations",
+			configSearch: "Config Search",
+			configCompare: "Config Compare",
+			configView: "Config View",
+			scheduledTasks: "Scheduled Tasks",
+			settings: "Settings",
+			systemLogs: "System Logs",
+			about: "About",
+			upgrade: "Upgrade",
+			users: "Users",
+			Login: "Login",
+			LoggedOut: "Logged Out",
+			PasswordReset: "Password Reset",
+			AccessDenied: "Access Denied",
+			pageNotFound: "Page Not Found",
+		};
 
-	const title = titles[pageTitleKey] || "rConfig";
-	return `${title} | rConfig`;
+		const translatedTitle = titles[route.meta.pageTitleKey];
+			
+		if (translatedTitle) {
+			return `${translatedTitle} | ${defaultTitle}`;
+		}
+	
+	}
+
+	if (route.name) {
+		const readable = route.name
+			.replace(/([A-Z])/g, " $1")
+			.trim()
+			.replace(/^\w/, (c) => c.toUpperCase());
+		return `${readable} | ${defaultTitle}`;
+	}
+
+	return defaultTitle;
 }

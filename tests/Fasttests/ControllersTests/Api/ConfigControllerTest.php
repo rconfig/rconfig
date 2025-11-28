@@ -3,8 +3,9 @@
 namespace Tests\Fasttests\ControllersTests\Api;
 
 use App\Models\Config;
-use App\Models\Device;
 use App\Models\User;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Tests\TestCase;
@@ -17,23 +18,45 @@ class ConfigControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->beginTransaction();
+
         $this->user = User::factory()->create();
         $this->actingAs($this->user, 'api');
     }
 
     public function test_get_all_configs()
     {
-        Config::factory(100)->create();
+        Config::factory(20)->create();
         $response = $this->get('/api/configs?page=1&perPage=100');
-        $this->assertEquals(100, count($response['data']));
         $response->assertStatus(200);
+        $this->assertEquals(20, count($response['data']));
+    }
+
+    public function test_get_all_configs_sorted_by_created_at()
+    {
+        $olderConfig = Config::factory()->create(['created_at' => Carbon::now()->subDay()]);
+        $newerConfig = Config::factory()->create(['created_at' => Carbon::now()->subMinutes(5)]);
+
+        $ascendingResponse = $this->get('/api/configs?page=1&perPage=10&sort=created_at');
+        $ascendingResponse->assertStatus(200);
+        $ascendingData = $ascendingResponse->json('data');
+        $this->assertEquals($olderConfig->id, $ascendingData[0]['id']);
+        $this->assertEquals($newerConfig->id, $ascendingData[1]['id']);
+
+        $descendingResponse = $this->get('/api/configs?page=1&perPage=10&sort=-created_at');
+        $descendingResponse->assertStatus(200);
+        $descendingData = $descendingResponse->json('data');
+        $this->assertEquals($newerConfig->id, $descendingData[0]['id']);
+        $this->assertEquals($olderConfig->id, $descendingData[1]['id']);
     }
 
     public function test_get_all_configs_for_given_device_id()
     {
-        Config::factory(100)->create(['device_id' => 1001]);
-        $response = $this->get('/api/configs/all-by-deviceid/1001/all/?page=1&perPage=100&filter=&sortCol=&sortOrd=');
-        // test pagniation structure
+        Config::factory(20)->create(['device_id' => 1001]);
+        $response = $this->get('/api/configs/all-by-deviceid/1001/?page=1&perPage=100&filter=&sortCol=&sortOrd=');
+        $response->assertStatus(200);
+
+        // test pagination structure
         $response->assertJsonStructure([
             'current_page',
             'data',
@@ -48,16 +71,23 @@ class ConfigControllerTest extends TestCase
             'to',
             'total',
         ]);
-        $this->assertEquals(100, count($response['data'])); // +++ for default seeded rows
+
+        // Access the response data properly
+        $responseData = $response->json();
+        $this->assertEquals(20, count($responseData['data']));
         $response->assertStatus(200);
     }
 
-    public function test_get_all_configs_for_given_device_id_with_status_and_filter()
+    public function test_get_all_configs_for_given_device_id_filter_by_command()
     {
-        Config::factory(10)->create(['device_id' => 3, 'download_status' => 1, 'command' => 'show clock']);
-        Config::factory(10)->create(['device_id' => 3, 'download_status' => 0, 'command' => 'show cisco']);
-        $response = $this->get('/api/configs/all-by-deviceid/3/1/?filter[q]=show cisco');
-        // test pagniation structure
+        Config::factory(36)->create(['device_id' => 1001, 'command' => 'show run']);
+        Config::factory(100)->create(['device_id' => 1001, 'command' => 'notshow notrun']);
+
+        // Updated URL to use proper Spatie Query Builder filter format
+        $response = $this->get('/api/configs/all-by-deviceid/1001?page=1&perPage=200&filter[q]=show run&sortCol=&sortOrd=desc');
+        $response->assertStatus(200);
+
+        // test pagination structure
         $response->assertJsonStructure([
             'current_page',
             'data',
@@ -72,8 +102,40 @@ class ConfigControllerTest extends TestCase
             'to',
             'total',
         ]);
-        $this->assertEquals(10, count($response['data'])); // +++ for default seeded rows
+
+        // Access the response data properly
+        $responseData = $response->json();
+        $this->assertEquals(36, count($responseData['data']));
+    }
+
+    public function test_get_all_configs_for_given_device_id_filter_by_json_command()
+    {
+        Config::factory(7)->create(['device_id' => 1001, 'command' => 'not commands']);
+        Config::factory(3)->create(['device_id' => 1001, 'command' => 'show run']);
+
+        // Updated URL to use proper Spatie Query Builder filter format
+        $response = $this->get('/api/configs/all-by-deviceid/1001/?page=1&perPage=100&filter[q]=show run&sortCol=&sortOrd=');
         $response->assertStatus(200);
+
+        // test pagination structure
+        $response->assertJsonStructure([
+            'current_page',
+            'data',
+            'first_page_url',
+            'from',
+            'last_page',
+            'last_page_url',
+            'next_page_url',
+            'path',
+            'per_page',
+            'prev_page_url',
+            'to',
+            'total',
+        ]);
+
+        // Access the response data properly
+        $responseData = $response->json();
+        $this->assertEquals(3, count($responseData['data']));
     }
 
     public function test_get_distinct_commands_for_given_device_id()
@@ -116,6 +178,7 @@ class ConfigControllerTest extends TestCase
         $config = Config::factory()->create();
         $response = $this->get('/api/configs/' . $config->id);
         // dd($response);
+        $response->assertStatus(200);
 
         $response->assertJson([
             'id' => $config->id,
@@ -638,5 +701,11 @@ class ConfigControllerTest extends TestCase
             ],
         ];
         Config::insert($configs);
+    }
+
+    protected function tearDown(): void
+    {
+        $this->rollBackTransaction();
+        parent::tearDown();
     }
 }
