@@ -65,11 +65,11 @@ If you are looking for rConfig v8 professional, please visit `https://www.rconfi
 
 Supported OS
 
-- Rocky Linux 9 (recommended)
-- CentOS 9
-- RHEL 9
+- Rocky Linux 8/9+ (recommended)
+- CentOS 8/9+
+- RHEL 8/9+
 - Ubuntu 22.04+
-- Alma Linux 9+
+- Alma Linux 8/9+
 - AWS Linux 2023
 - **Now run rConfig v8 Core in a Docker container!** [rconfigv8coredocker repository](https://github.com/rconfig/rconfigv8coredocker)
 
