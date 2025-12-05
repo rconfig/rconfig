@@ -1,1 +1,0 @@
-import{e,o,u as r}from"./app-BqfXl96_.js";import{L as a}from"./logs-yrkpNZtK.js";/* empty css               */const n={__name:"AgentLogIcon",props:{height:{type:Number,default:24},width:{type:Number,default:24}},setup(t){return(h,i)=>(o(),e(r(a),{width:t.width,height:t.height,class:"text-blue-400"},null,8,["width","height"]))}};export{n as default};
