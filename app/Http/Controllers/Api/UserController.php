@@ -66,6 +66,16 @@ class UserController extends ApiBaseController
         return parent::destroy($id);
     }
 
+    public function setNotificationStatus($userid, Request $request)
+    {
+        $status = $request->input('status');
+
+        $user = User::find($userid);
+        $user->save();
+
+        return response()->json(['status' => 'success']);
+    }
+
     public function setSocialiteApprovalStatus($userid, Request $request)
     {
         // $this->authorize('user.update');

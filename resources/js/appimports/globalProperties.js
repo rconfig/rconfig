@@ -1,9 +1,9 @@
 export function setupGlobalProperties(app) {
-  const userIdMeta = document.querySelector("meta[name='user-id']");
-  const userNameMeta = document.querySelector("meta[name='user-name']");
-  const userEmailMeta = document.querySelector("meta[name='user-email']");
-  const userRoleMeta = document.querySelector("meta[name='user-role']");
-  const userLocaleMeta = document.querySelector("meta[name='user-locale']");
+	const userIdMeta = document.querySelector("meta[name='user-id']");
+	const userNameMeta = document.querySelector("meta[name='user-name']");
+	const userEmailMeta = document.querySelector("meta[name='user-email']");
+	const userRoleMeta = document.querySelector("meta[name='user-role']");
+	const userLocaleMeta = document.querySelector("meta[name='user-locale']");
 	const prismServerEnabledMeta = document.querySelector("meta[name='prism-server-enabled']");
 	const serverDisplayNameMeta = document.querySelector("meta[name='server-display-name']");
 	const serverDisplayColorMeta = document.querySelector("meta[name='server-display-color']");

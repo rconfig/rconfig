@@ -53,6 +53,7 @@ app.provide("useremail", globalProperties.$userEmail);
 app.provide("userid", globalProperties.$userId);
 app.provide("username", globalProperties.$userName);
 app.provide("timezone", globalProperties.$timezone);
+app.provide("userLocale", globalProperties.$userLocale);
 app.provide("appDirPath", globalProperties.$config?.appDirPath);
 app.provide("serverDisplayName", globalProperties.$serverDisplayName);
 app.provide("serverDisplayColor", globalProperties.$serverDisplayColor);

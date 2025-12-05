@@ -12,20 +12,20 @@ enum NotificationCategory: string
     public function label(): string
     {
         return match ($this) {
-            self::SYSTEM => 'notifications.categories.system',
-            self::CONFIG => 'notifications.categories.config',
-            self::CONNECTION => 'notifications.categories.connection',
-            self::TASK => 'notifications.categories.task',
+            self::SYSTEM => 'System Events',
+            self::CONFIG => 'Configuration Changes',
+            self::CONNECTION => 'Device Connection Issues',
+            self::TASK => 'Task Completion',
         };
     }
 
     public function description(): string
     {
         return match ($this) {
-            self::SYSTEM => 'notifications.categories.system_desc',
-            self::CONFIG => 'notifications.categories.config_desc',
-            self::CONNECTION => 'notifications.categories.connection_desc',
-            self::TASK => 'notifications.categories.task_desc',
+            self::SYSTEM => 'General system notifications and alerts',
+            self::CONFIG => 'Configuration downloads, changes, and management',
+            self::CONNECTION => 'Device connection failures and network issues',
+            self::TASK => 'Task completion notifications and reports',
         };
     }
 

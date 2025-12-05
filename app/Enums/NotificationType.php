@@ -43,28 +43,28 @@ enum NotificationType: string
     public function label(): string
     {
         return match ($this) {
-            self::SYSTEM_NOTIFICATION_ERROR => 'notifications.types.system_notification_error',
-            self::CONFIG_CHANGED => 'notifications.types.config_changed',
-            self::CONFIG_DOWNLOAD_COMPLETED => 'notifications.types.config_download_completed',
-            self::CONFIG_PURGE_COMPLETED => 'notifications.types.config_purge_completed',
-            self::CONFIG_PURGE_FAILED_COMPLETED => 'notifications.types.config_purge_failed_completed',
-            self::CONNECTION_DEVICE_FAILURE => 'notifications.types.connection_device_failure',
-            self::TASK_COMPLETED => 'notifications.types.task_completed',
-            self::TASK_DOWNLOAD_REPORT => 'notifications.types.task_download_report',
+            self::SYSTEM_NOTIFICATION_ERROR => 'Notification System Error',
+            self::CONFIG_CHANGED => 'Configuration Changed',
+            self::CONFIG_DOWNLOAD_COMPLETED => 'Configuration Download Completed',
+            self::CONFIG_PURGE_COMPLETED => 'Configuration Purge Completed',
+            self::CONFIG_PURGE_FAILED_COMPLETED => 'Failed Configuration Purge Completed',
+            self::CONNECTION_DEVICE_FAILURE => 'Device Connection Failure',
+            self::TASK_COMPLETED => 'Task Completed',
+            self::TASK_DOWNLOAD_REPORT => 'Download Task Report',
         };
     }
 
     public function description(): string
     {
         return match ($this) {
-            self::SYSTEM_NOTIFICATION_ERROR => 'notifications.types.system_notification_error_desc',
-            self::CONFIG_CHANGED => 'notifications.types.config_changed_desc',
-            self::CONFIG_DOWNLOAD_COMPLETED => 'notifications.types.config_download_completed_desc',
-            self::CONFIG_PURGE_COMPLETED => 'notifications.types.config_purge_completed_desc',
-            self::CONFIG_PURGE_FAILED_COMPLETED => 'notifications.types.config_purge_failed_completed_desc',
-            self::CONNECTION_DEVICE_FAILURE => 'notifications.types.connection_device_failure_desc',
-            self::TASK_COMPLETED => 'notifications.types.task_completed_desc',
-            self::TASK_DOWNLOAD_REPORT => 'notifications.types.task_download_report_desc',
+            self::SYSTEM_NOTIFICATION_ERROR => 'Alerts when notification system encounters errors',
+            self::CONFIG_CHANGED => 'Alerts when device configurations are modified',
+            self::CONFIG_DOWNLOAD_COMPLETED => 'Notifications when manual config downloads complete',
+            self::CONFIG_PURGE_COMPLETED => 'Alerts when configuration purge operations finish',
+            self::CONFIG_PURGE_FAILED_COMPLETED => 'Notifications when failed config purge operations complete',
+            self::CONNECTION_DEVICE_FAILURE => 'Alerts when devices fail to connect via SSH, Telnet, or API',
+            self::TASK_COMPLETED => 'Notifications when scheduled tasks complete',
+            self::TASK_DOWNLOAD_REPORT => 'Email reports for download task completion',
         };
     }
 
