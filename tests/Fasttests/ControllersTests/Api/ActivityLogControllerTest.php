@@ -19,19 +19,54 @@ class ActivityLogControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->beginTransaction();
+
+        ActivityLog::truncate();
+
         $this->user = User::factory()->create();
-        /** @var mixed $this->user */
         $this->actingAs($this->user, 'api');
     }
 
     public function test_get_all_logs()
     {
-        for ($i = 0; $i < 100; $i++) {
-            activity()->log($this->faker->sentence());
-        }
+        $logs = collect(range(1, 100))
+            ->map(fn () => [
+                'description' => $this->faker->sentence(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
-        $response = $this->get('/api/activitylogs?page=1&perPage=100');
-        $this->assertEquals(100, count($response['data']));
+        // Bulk insert instead of individual activity() calls
+        DB::table('activity_log')->insert($logs->toArray());
+
+        $response = $this->getJson('/api/activitylogs?page=1&perPage=100');
+
+        $response->assertStatus(200)
+            ->assertJsonCount(100, 'data');
+    }
+
+    public function test_get_all_logs_with_device_id_filter()
+    {
+        // Keep the original approach but optimize with transaction
+        DB::transaction(function () {
+            for ($i = 0; $i < 20; $i++) {
+                $msg = 'Authenticating user  (stephen) against database.';
+                activityLogIt(__CLASS__, __FUNCTION__, 'info', $msg . $i, 'authentication');
+            }
+            for ($i = 0; $i < 20; $i++) {
+                activityLogIt(__CLASS__, __FUNCTION__, 'info', 'SomeMesgForTesting' . $i, 'connection', '', 1001, 'download');
+            }
+            for ($i = 0; $i < 20; $i++) {
+                activityLogIt(__CLASS__, __FUNCTION__, 'info', 'SomeMesgForTesting' . $i, 'connection', '', 1002, 'download');
+            }
+        });
+
+        $this->assertEquals(60, ActivityLog::count());
+
+        // Fixed URL syntax
+        $response = $this->get('/api/activitylogs?page=1&perPage=100&filter[device_id]=1001');
+
+        $this->assertEquals(20, count($response['data'])); // Should be 20, not 60
         $response->assertStatus(200);
     }
 
@@ -55,7 +90,7 @@ class ActivityLogControllerTest extends TestCase
         ]);
     }
 
-    public function test_test_logIt_helper_function()
+    public function test_test_log_it_helper_function()
     {
         // logIt($class, $function, $log_name, $description, $event_type, $device_name = null, $device_id = null, $connection_category = null, $connection_ids = null );
         $logMsg = $this->faker->sentence;
@@ -124,7 +159,7 @@ class ActivityLogControllerTest extends TestCase
             'description' => $descr,
         ]);
 
-        $log = ActivityLog::all()->last();
+        $log = ActivityLog::latest()->first();
         $this->delete('/api/activitylogs/' . $log->id);
 
         $this->assertDatabaseMissing('activity_log', ['id' => $log->id]);
@@ -220,9 +255,70 @@ class ActivityLogControllerTest extends TestCase
         ActivityLog::truncate();
     }
 
+    public function test_load_more_mode_caps_per_page_at_50()
+    {
+        // Create 200 logs for testing pagination
+        $logs = collect(range(1, 200))->map(fn ($i) => [
+            'description' => "Test log entry {$i}",
+            'log_name' => $this->faker->randomElement(['info', 'warn', 'error']),
+            'subject_type' => null,
+            'subject_id' => null,
+            'causer_type' => null,
+            'causer_id' => null,
+            'properties' => '{}',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        DB::table('activity_log')->insert($logs->toArray());
+
+        // Test 1: Without loadMore parameter and perPage=10000000, should return all records
+        $response = $this->getJson('/api/activitylogs?page=1&perPage=10000000');
+        $response->assertStatus(200);
+        $this->assertEquals(200, count($response->json('data')), 'Without loadMore, should return all 200 records');
+
+        // Test 2: With loadMore=true and perPage=10000000, should cap at 50 records per page
+        $response = $this->getJson('/api/activitylogs?page=1&perPage=10000000&loadMore=true');
+        $response->assertStatus(200);
+        $this->assertEquals(50, count($response->json('data')), 'With loadMore=true, should cap at 50 records');
+        $this->assertEquals(4, $response->json('last_page'), 'Should have 4 pages total (200/50)');
+        $this->assertEquals(1, $response->json('current_page'), 'Should be on page 1');
+
+        // Test 3: Verify loadMore parameter is appended to pagination links (Laravel converts true to 1)
+        $nextPageUrl = $response->json('next_page_url');
+        $this->assertTrue(
+            str_contains($nextPageUrl, 'loadMore=true') || str_contains($nextPageUrl, 'loadMore=1'),
+            'Next page URL should contain loadMore parameter'
+        );
+
+        // Test 4: Fetch page 2 with loadMore
+        $response = $this->getJson('/api/activitylogs?page=2&perPage=10000000&loadMore=true');
+        $response->assertStatus(200);
+        $this->assertEquals(50, count($response->json('data')), 'Page 2 should also have 50 records');
+        $this->assertEquals(2, $response->json('current_page'), 'Should be on page 2');
+
+        // Test 5: Fetch page 4 (last page) with loadMore
+        $response = $this->getJson('/api/activitylogs?page=4&perPage=10000000&loadMore=true');
+        $response->assertStatus(200);
+        $this->assertEquals(50, count($response->json('data')), 'Last page should have 50 records');
+        $this->assertEquals(4, $response->json('current_page'), 'Should be on page 4');
+        $this->assertNull($response->json('next_page_url'), 'Last page should have no next_page_url');
+
+        // Test 6: Verify loadMore=false doesn't cap pagination
+        $response = $this->getJson('/api/activitylogs?page=1&perPage=10000000&loadMore=false');
+        $response->assertStatus(200);
+        $this->assertEquals(200, count($response->json('data')), 'With loadMore=false, should return all records');
+
+        // Test 7: Verify normal pagination (perPage=10) is not affected by loadMore
+        $response = $this->getJson('/api/activitylogs?page=1&perPage=10&loadMore=true');
+        $response->assertStatus(200);
+        $this->assertEquals(10, count($response->json('data')), 'Normal perPage should not be affected by loadMore');
+    }
+
     // tearDown
     public function tearDown(): void
     {
+        $this->rollBackTransaction();
         parent::tearDown();
     }
 }

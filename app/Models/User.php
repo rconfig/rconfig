@@ -15,11 +15,6 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var string[]
-     */
     protected $guarded = [];
 
     protected $hidden = [
@@ -91,7 +86,8 @@ class User extends Authenticatable
 
     public static function getNotificationRecipients(?NotificationType $type = null, ?NotificationChannel $channel = null)
     {
-         $query = static::whereNotNull('created_at');
+        $query = static::whereNotNull('created_at')
+            ->where('get_notifications', true);
 
         if ($type && $channel) {
             $query->where(function ($q) use ($type, $channel) {

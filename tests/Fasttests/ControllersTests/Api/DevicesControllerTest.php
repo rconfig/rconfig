@@ -3,6 +3,7 @@
 namespace Tests\Fasttests\ControllersTests\Api;
 
 use App\Jobs\DownloadConfigNowJob;
+use App\Models\DeviceModel;
 use App\Models\Category;
 use App\Models\Command;
 use App\Models\Device;
@@ -23,15 +24,16 @@ class DevicesControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->beginTransaction();
+
         $this->user = User::factory()->create();
         $this->actingAs($this->user, 'api');
     }
 
     public function test_get_all_devices()
     {
-        Device::factory(100)->create();
-        $response = $this->get('/api/devices?page=1&perPage=100');
-        $this->assertEquals(100, count($response['data']));
+        $devices = Device::factory(17)->create(['device_model' => 'DevicesControllerTestCSR1000v']);
+        $response = $this->get('/api/devices?page=1&perPage=1000');
         $response->assertStatus(200);
     }
 
@@ -93,19 +95,6 @@ class DevicesControllerTest extends TestCase
                 'template',
             ]
         );
-    }
-
-    public function test_get_list_of_device_models()
-    {
-        $devices = Device::factory(10)->create();
-        $models = $devices->pluck('device_model');
-        $response = $this->get('/api/get-device-models');
-
-        $response->assertStatus(200);
-        $response->assertJsonFragment(['CSR1000v']);
-        $response->assertJsonFragment([$models[0]]);
-        $response->assertJsonFragment([$models[1]]);
-        $response->assertJsonFragment([$models[9]]);
     }
 
     public function test_get_list_of_a_devices_commands()

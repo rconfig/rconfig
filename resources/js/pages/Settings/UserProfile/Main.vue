@@ -95,7 +95,7 @@ onMounted(() => {
 				<!-- Notifications Tab -->
 				<TabsContent value="notifications" class="space-y-4 mt-0">
 					<div class="tab-content-wrapper">
-						<NotificationPreferences v-if="user" :profileUserId="user.id" />
+						<NotificationPreferences v-if="user" :profileUserId="user.id" :notificationStatus="user.get_notifications"/>
 					</div>
 				</TabsContent>
 			</Tabs>

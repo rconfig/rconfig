@@ -22,13 +22,25 @@ class ActivityLogController extends ApiBaseController
     public function index(Request $request, $searchCols = null, $relationship = null, $withCount = null)
     {
 
+        // Load More mode detection
+        $isLoadMoreMode = $request->has('loadMore') && $request->boolean('loadMore');
+        $perPage = (int) $request->perPage;
+
+        // If load more mode and user selected "All", cap at 50 per page
+        if ($isLoadMoreMode && $perPage >= 10000000) {
+            $perPage = 50;
+        }
+
         $response = QueryBuilder::for(ActivityLog::class)
-            ->allowedFilters(['description', 'log_name'])
+            ->allowedFilters(['description', 'log_name', 'device_id', 'event_type'])
             ->defaultSort('-id')
             ->allowedSorts('id', 'log_name')
+            ->paginate($perPage);
 
-            ->paginate((int) $request->perPage);
-
+        // Append loadMore parameter to pagination links
+        if ($isLoadMoreMode) {
+            $response->appends(['loadMore' => true]);
+        }
         return response()->json($response);
     }
 

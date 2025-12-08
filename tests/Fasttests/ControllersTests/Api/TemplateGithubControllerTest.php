@@ -17,6 +17,7 @@ class TemplateGithubControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->beginTransaction();
         $this->user = User::factory()->create();
         $this->actingAs($this->user, 'api');
         $this->templatesDstDir = templates_path() . 'rConfig-templates';
@@ -31,7 +32,9 @@ class TemplateGithubControllerTest extends TestCase
         $response->assertStatus(200)->assertJsonFragment([
             'html_url' => 'https://github.com/rconfig/rConfig-templates/blob/master/.gitignore',
         ]);
-        $response->assertJsonCount(36);
+        $response->assertStatus(200)->assertJsonFragment([
+            'msg' => 'Successfully connected to rConfig Templates Github repo',
+        ]);
     }
 
     public function test_failed_github_connectivity_test()

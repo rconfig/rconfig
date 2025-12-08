@@ -13,6 +13,7 @@ final class StoreUserDTO extends DtoBase
     public string $email;
     public string $password;
     public string $role;
+    public bool $get_notifications;
     public bool $is_socialite;
     public bool $is_socialite_approved;
     
@@ -24,6 +25,7 @@ final class StoreUserDTO extends DtoBase
         $this->email = $parameters['email'];
         $this->password = $parameters['password'];
         $this->role = $parameters['role'];
+        $this->get_notifications = $parameters['get_notifications'];
         $this->is_socialite = $parameters['is_socialite'];
         $this->is_socialite_approved = $parameters['is_socialite_approved'];
        }

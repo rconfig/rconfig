@@ -119,13 +119,20 @@ export function useUsers() {
 
 	// Function for notification toggle
 	const toggleNotification = async (id, value) => {
+		// Optimistically update the UI
+		const user = users.value.data.find((u) => u.id === id);
+		if (user) {
+			user.get_notifications = value;
+		}
+
 		try {
 			await axios.post(`/api/user/set-notification-status/${id}`, { status: value });
 			toastSuccess("Notification settings updated", "User notification preferences have been saved.");
-
-			// Refresh data or update the specific user in the table
-			await fetchUsers();
 		} catch (error) {
+			// Revert on error
+			if (user) {
+				user.get_notifications = value === 1 ? 0 : 1;
+			}
 			toastError("Error updating notification settings", error.response?.data?.message || "An unexpected error occurred");
 		}
 	};

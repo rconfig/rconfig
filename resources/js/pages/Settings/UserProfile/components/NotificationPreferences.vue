@@ -12,6 +12,10 @@ const props = defineProps({
 		type: [String, Number],
 		required: true,
 	},
+	notificationStatus: {
+		type: Boolean,
+		required: true,
+	},
 });
 
 const notificationStore = useNotificationStore();
@@ -59,6 +63,8 @@ function handleAlertClosed() {
 				</div>
 			</CardTitle>
 			<CardDescription>Manage your notification preferences and settings.</CardDescription>
+
+			<AlertWarning v-if="notificationStatus === false" :title="'Your notifications are disabled'" :message="'Please enable notifications in the users settings to receive updates.'" :small="true" class="my-2" />
         </CardHeader>
 
 		<CardContent>

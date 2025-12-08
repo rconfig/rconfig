@@ -187,18 +187,36 @@ class ConfigControllerTest extends TestCase
         ]);
     }
 
-    public function test_get_single_config_file_contents()
+    public function test_get_single_config_file_contents_and_response_time_for_large_file()
     {
-        Artisan::call('rconfig:download-device 1001');
+        $lge_config_file = rconfig_appdir_path() . '/tests/storage/lge_655KB_configfile.txt';
+        $this->assertEquals(true, File::exists($lge_config_file));
+        $this->assertEquals(670987, File::size($lge_config_file));
 
-        $response = $this->get('/api/configs/latest-by-deviceid/1001');
-        $id = collect($response->json()['data'])->firstWhere('command', 'show run')['id'];
+        Config::insert([
+            'id' => 99999999,
+            'device_id' => 99999999,
+            'device_name' => 'fortigate',
+            'device_category' => 'fortigate',
+            'command' => 'show fill-configuration',
+            'config_location' => rconfig_appdir_path() . '/tests/storage/lge_655KB_configfile.txt',
+            'config_filename' => 'lge_655KB_configfile.txt',
+            'config_filesize' => File::size($lge_config_file),
+        ]);
 
-        $response = $this->get('/api/configs/view-config/' . $id);
+        // start time after download
+        $start = microtime(true);
+
+        $response = $this->get('/api/configs/view-config/99999999');
         $response->assertStatus(200);
 
-        $this->assertStringContainsString('ip domain name rconfigdev.com', $response->getContent());
-        $this->assertStringContainsString('transport output pad telnet rlogin lapb-ta mop udptn v120', $response->getContent());
+        $this->assertStringContainsString('config system interface', $response->getContent());
+
+        $end = microtime(true);
+        $responseTime = $end - $start;
+        $this->assertLessThan(0.2, $responseTime); // less than 200ms
+
+        Config::where('id', 99999999)->delete();
     }
 
     public function test_delete_config()

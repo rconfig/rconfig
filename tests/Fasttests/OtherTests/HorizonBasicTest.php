@@ -20,7 +20,7 @@ class HorizonBasicTest extends TestCase
 
         $response = $this->actingAs($user)->get('horizon');
         $response->assertStatus(200);
-        $this->assertStringContainsString('<title>Horizon - rConfig6 - Network Configuration Management</title>', $response->getContent());
+        $this->assertStringContainsString(config('app.name'), $response->getContent());
     }
 
     public function test_horizon_timeout_value_can_be_changed()

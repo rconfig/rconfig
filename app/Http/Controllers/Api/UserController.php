@@ -71,6 +71,7 @@ class UserController extends ApiBaseController
         $status = $request->input('status');
 
         $user = User::find($userid);
+        $user->get_notifications = $status;
         $user->save();
 
         return response()->json(['status' => 'success']);

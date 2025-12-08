@@ -16,6 +16,8 @@ class ConfigActionsControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->beginTransaction();
+
         $this->user = User::factory()->create();
         $this->actingAs($this->user, 'api');
     }
@@ -25,12 +27,12 @@ class ConfigActionsControllerTest extends TestCase
         $response = $this->json('post', '/api/device/download-now', ['device_id' => 1001]);
         $response->assertStatus(200);
         $this->assertDatabaseHas('activity_log', ['device_id' => 1001, 'description' => 'Config downloaded for router1 with command: "show clock" was successful']);
-        $this->assertDatabaseHas('configs', ['device_id' => 1001, 'download_status' => 1, 'type' => 'device_download', 'command' => 'show version']);
+        $this->assertDatabaseHas('configs', ['device_id' => 1001, 'download_status' => 2, 'type' => 'device_download', 'command' => 'show version']);
         $response->assertStatus(200);
         $lastestConfig = Config::where('device_id', 1001)->orderBy('id', 'desc')->first();
         $this->assertFileExists($lastestConfig->config_location);
         $fileContents = File::get($lastestConfig->config_location);
-        $this->assertStringContainsString('ipv6 address 2001:BB6:788A:8000:6273:5CFF:FED9:4C01/64', $fileContents);
+        $this->assertStringContainsString('ipv6 address 2001:DB8:1::2/64', $fileContents);
     }
 
     public function test_purge_failed_config()

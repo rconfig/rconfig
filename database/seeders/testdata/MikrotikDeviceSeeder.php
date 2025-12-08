@@ -20,7 +20,7 @@ class MikrotikDeviceSeeder extends Seeder
         $device_id = 20001;
         $cat_id = 20001;
         $command_id = 5189;
-        $template_id = $faker->randomNumber(4);
+        $template_id = 20001;
         $template_url = 'https://raw.githubusercontent.com/rconfig/rConfig-templates/master/Mikrotik/mikrotik-ssh-noenable_v2.yml';
         $template_contents = file_get_contents($template_url);
         $filename = basename($template_url);
