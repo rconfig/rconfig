@@ -76,8 +76,6 @@ class DeviceModelFactory extends Factory
 
         return [
             'name' => $name,
-            'slug' => Str::slug($name),
-            'description' => $this->faker->optional(0.7)->sentence(),
             'created_at' => now(),
             'updated_at' => now(),
         ];
@@ -90,27 +88,6 @@ class DeviceModelFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'name' => $name,
-            'slug' => Str::slug($name),
-        ]);
-    }
-
-    /**
-     * Create a device model with a description
-     */
-    public function withDescription(?string $description = null): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'description' => $description ?? $this->faker->paragraph(),
-        ]);
-    }
-
-    /**
-     * Create a device model without a description
-     */
-    public function withoutDescription(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'description' => null,
         ]);
     }
 
@@ -140,8 +117,6 @@ class DeviceModelFactory extends Factory
 
         return $this->state(fn (array $attributes) => [
             'name' => $name,
-            'slug' => Str::slug($name),
-            'description' => 'Mobile device: ' . $name,
         ]);
     }
 
@@ -166,8 +141,6 @@ class DeviceModelFactory extends Factory
 
         return $this->state(fn (array $attributes) => [
             'name' => $name,
-            'slug' => Str::slug($name),
-            'description' => 'Laptop computer: ' . $name,
         ]);
     }
 
@@ -192,8 +165,6 @@ class DeviceModelFactory extends Factory
 
         return $this->state(fn (array $attributes) => [
             'name' => $name,
-            'slug' => Str::slug($name),
-            'description' => 'Network device: ' . $name,
         ]);
     }
 
@@ -215,8 +186,6 @@ class DeviceModelFactory extends Factory
 
         return $this->state(fn (array $attributes) => [
             'name' => $name,
-            'slug' => Str::slug($name),
-            'description' => 'Printer: ' . $name,
         ]);
     }
 
@@ -226,11 +195,11 @@ class DeviceModelFactory extends Factory
     public function popular(): static
     {
         return $this->sequence(
-            ['name' => 'iPhone 15', 'slug' => 'iphone-15'],
-            ['name' => 'Samsung Galaxy S24', 'slug' => 'samsung-galaxy-s24'],
-            ['name' => 'MacBook Pro M3', 'slug' => 'macbook-pro-m3'],
-            ['name' => 'Dell XPS 13', 'slug' => 'dell-xps-13'],
-            ['name' => 'iPad Pro', 'slug' => 'ipad-pro'],
+            ['name' => 'iPhone 15'],
+            ['name' => 'Samsung Galaxy S24'],
+            ['name' => 'MacBook Pro M3'],
+            ['name' => 'Dell XPS 13'],
+            ['name' => 'iPad Pro'],
         );
     }
 }

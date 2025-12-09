@@ -32,21 +32,37 @@ class ConfigActionsControllerTest extends TestCase
         $lastestConfig = Config::where('device_id', 1001)->orderBy('id', 'desc')->first();
         $this->assertFileExists($lastestConfig->config_location);
         $fileContents = File::get($lastestConfig->config_location);
-        $this->assertStringContainsString('ipv6 address 2001:DB8:1::2/64', $fileContents);
+        $this->assertStringContainsString('ipv6 address 2A01:AC:1000:700::170/64', $fileContents);
     }
 
     public function test_purge_failed_config()
     {
-        Config::truncate();
-        $configs = Config::factory(50)->create(['device_id' => 1001, 'type' => 'device_download', 'download_status' => 1]);
+
         $configs = Config::factory(50)->create(['device_id' => 1001, 'type' => 'device_download', 'download_status' => 0]);
-        $totalConfigsCount = Config::where('device_id', 1001)->count();
         $failedConfigsCnt = $configs->where('download_status', 0)->where('device_id', 1001)->count();
-        $this->assertEquals(100, $totalConfigsCount);
         $this->assertEquals(50, $failedConfigsCnt);
+
+        $configs = Config::factory(50)->create(['device_id' => 1001, 'type' => 'device_download', 'download_status' => 1]);
+        $goodConfigsCnt = $configs->where('download_status', 1)->where('device_id', 1001)->count();
+        $this->assertEquals(50, $goodConfigsCnt);
+
+        $configs = Config::factory(50)->create(['device_id' => 1001, 'type' => 'device_download', 'download_status' => 2]);
+        $unkownConfigsCnt = $configs->where('download_status', 2)->where('device_id', 1001)->count();
+        $this->assertEquals(50, $unkownConfigsCnt);
+
+        $totalConfigsCount = Config::where('device_id', 1001)->count();
+        $this->assertEquals(150, $totalConfigsCount);
 
         $response = $this->json('post', '/api/device/purge-failed-configs', ['device_id' => 1001]);
         $remainingFailedConfigsCnt = Config::where('device_id', 1001)->count();
-        $this->assertEquals(50, $remainingFailedConfigsCnt);
+        $this->assertEquals(100, $remainingFailedConfigsCnt);
+    }
+
+    protected function tearDown(): void
+    {
+        Config::query()->delete();
+
+        $this->rollbackTransaction();
+        parent::tearDown();
     }
 }

@@ -32,6 +32,16 @@ const sections = computed(() => [
 		],
 	},
 	{
+		heading: "Data Management",
+		openState: ref(false),
+		items: [
+			{
+				title: "Data Migration",
+				href: "/settings/data-migration",
+			},
+		],
+	},
+	{
 		heading: "Monitoring & Debugging",
 		openState: ref(false),
 		items: [

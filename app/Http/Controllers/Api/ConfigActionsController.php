@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Jobs\DownloadConfigNow;
+use App\Jobs\DownloadConfigNowJob;
 use App\Jobs\PurgeFailedConfigsJob;
 use App\Models\Config;
 use Illuminate\Http\Request;
@@ -25,9 +25,9 @@ class ConfigActionsController extends ApiBaseController
         $username = Auth::user()->name;
 
         if (App()->environment('testing')) { // required for testing
-            dispatch(new DownloadConfigNow($request->device_id, $username))->onConnection('sync');
+            dispatch(new DownloadConfigNowJob($request->device_id, $username))->onConnection('sync');
         } else {
-            dispatch(new DownloadConfigNow($request->device_id, $username))->onQueue('ManualDownloadQueue');
+            dispatch(new DownloadConfigNowJob($request->device_id, $username))->onQueue('ManualDownloadQueue');
         }
 
         return $this->successResponse('Download started');

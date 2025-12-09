@@ -2,7 +2,7 @@
 import { ref, watch, computed } from "vue";
 import { useRouter } from "vue-router";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { FileCode2, Bug, FileText, Save, CloudUpload, CircleFadingArrowUp, Info, Cpu, ChevronRight, ChevronDown, Settings, Shield, Key, Users } from "lucide-vue-next";
+import { FileCode2, Bug, FileText, Save, BetweenHorizontalStart, CloudUpload, CircleFadingArrowUp, Info, Cpu, ChevronRight, ChevronDown, Settings, Shield, Key, Users } from "lucide-vue-next";
 
 const props = defineProps({
 	settingsActivePane: String,
@@ -12,6 +12,7 @@ const router = useRouter();
 // Use localStorage to persist the state of the collapsibles
 const systemManagementIsOpen = ref(JSON.parse(localStorage.getItem("sidebarSystemManagementIsOpen")) ?? true);
 const securityAccessIsOpen = ref(JSON.parse(localStorage.getItem("sidebarSecurityAccessIsOpen")) ?? true);
+const dataManagementIsOpen = ref(JSON.parse(localStorage.getItem("sidebarDataManagementIsOpen")) ?? true);
 const monitoringDebuggingIsOpen = ref(JSON.parse(localStorage.getItem("sidebarMonitoringDebuggingIsOpen")) ?? true);
 const infoIsOpen = ref(JSON.parse(localStorage.getItem("sidebarInfoIsOpen")) ?? true);
 
@@ -22,6 +23,10 @@ watch(systemManagementIsOpen, (newVal) => {
 
 watch(securityAccessIsOpen, (newVal) => {
 	localStorage.setItem("sidebarSecurityAccessIsOpen", JSON.stringify(newVal));
+});
+
+watch(dataManagementIsOpen, (newVal) => {
+	localStorage.setItem("sidebarDataManagementIsOpen", JSON.stringify(newVal));
 });
 
 watch(monitoringDebuggingIsOpen, (newVal) => {
@@ -58,6 +63,17 @@ const sections = computed(() => [
 				title: "Device Credentials",
 				href: "/settings/credentials",
 				icon: Key,
+			},
+		],
+	},
+	{
+		heading: "Data Management",
+		openState: dataManagementIsOpen,
+		items: [
+			{
+				title: "Data Migration",
+				href: "/settings/data-migration",
+				icon: BetweenHorizontalStart,
 			},
 		],
 	},

@@ -17,28 +17,8 @@ class purgeFailedConfigs extends Command
                             {deviceid?*}
                             {--all}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Purge failed configs for some or all devices';
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
     public function handle()
     {
         $deviceids = $this->argument('deviceid');
@@ -49,27 +29,57 @@ class purgeFailedConfigs extends Command
             exit();
         }
 
+        $deletedConfigCount = 0;
         if (empty($deviceids) && $all === true) {
-            $configs = Config::where('download_status', '!=', 1)->orWhereNull('download_status')->get();
-        } else {
-            $configs = Config::whereIn('device_id', $deviceids)->where('download_status', '!=', 1)->orWhereNull('download_status')->get();
-        }
+            $ids = Config::where('download_status', 0)->pluck('id')->toArray();
+            $progressBar = ! app()->runningInConsole() || app()->runningUnitTests() ? null : $this->output->createProgressBar(count($ids));
 
-        if (count($configs) === 0) {
-            $this->info('Nothing to purge! Thanks!');
-        }
-
-        foreach ($configs as $config) {
-            if ($config->config_location != null) {
-                File::delete($config->config_location);
+            foreach ($ids as $id) {
+                if ($progressBar) {
+                    $progressBar->display();
+                }
+                // files are deleted from the model
+                Config::destroy($id);
+                $deletedConfigCount += 1;
+                if ($progressBar) {
+                    $progressBar->advance();
+                }
             }
-            Config::destroy($config->id);
+        } else {
+            $deviceids = array_map('intval', $deviceids);
+            $ids = Config::whereIn('device_id', $deviceids)->where('download_status', 0)->pluck('id')->toArray();
+            $progressBar = ! app()->runningInConsole() || app()->runningUnitTests() ? null : $this->output->createProgressBar(count($ids));
+
+            foreach ($ids as $id) {
+                if ($progressBar) {
+                    $progressBar->display();
+                }
+                // files are deleted from the model
+                Config::destroy($id);
+                $deletedConfigCount += 1;
+                if ($progressBar) {
+                    $progressBar->advance();
+                }
+            }
         }
 
-        $logmsg = count($configs) . ' invalid or failed configurations purged!';
+        if ($progressBar) {
+            $progressBar->finish();
+        }
+
+        $logmsg = $deletedConfigCount . ' invalid or failed configurations purged!';
         $this->info($logmsg);
         activityLogIt(__CLASS__, __FUNCTION__, 'info', $logmsg, 'devices', '', '', 'config', $deviceids);
 
-        return true;
+        if (! app()->runningUnitTests()) {
+            // theres an output issue with the progress bar in unit tests, so we don't queue this job in unit tests
+            try {
+                Artisan::queue('rconfig:config-summaries-sync')->onQueue('rConfigDefault');
+            } catch (\Exception $e) {
+                $this->error('Failed to sync config summaries: ' . $e->getMessage());
+            }
+        }
+
+        return 0;
     }
 }
