@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\HealthChecks\RcDiskSpaceCheck;
 use Spatie\CpuLoadHealthCheck\CpuLoadCheck;
 use Spatie\Health\Checks\Checks\CacheCheck;
 use Spatie\Health\Checks\Checks\DatabaseCheck;
@@ -10,7 +11,6 @@ use Spatie\Health\Checks\Checks\HorizonCheck;
 use Spatie\Health\Checks\Checks\PingCheck;
 use Spatie\Health\Checks\Checks\RedisCheck;
 use Spatie\Health\Checks\Checks\ScheduleCheck;
-use Spatie\Health\Checks\Checks\UsedDiskSpaceCheck;
 use Spatie\Health\Facades\Health;
 
 class HealthCheckProvider extends ServiceProvider
@@ -42,7 +42,11 @@ class HealthCheckProvider extends ServiceProvider
             PingCheck::new()->failureMessage('Pinging rconfig.com failed')->url('https://www.rconfig.com')->timeout(5),
             RedisCheck::new(),
             ScheduleCheck::new()->heartbeatMaxAgeInMinutes(10),
-            UsedDiskSpaceCheck::new(),
+            RcDiskSpaceCheck::new()
+                ->name('Disk Space: /storage')
+                ->filesystemName(storage_path())
+                ->warnWhenUsedSpaceIsAbovePercentage(70)
+                ->failWhenUsedSpaceIsAbovePercentage(90),
         ]);
     }
 }

@@ -21,14 +21,14 @@ use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
 use function Laravel\Prompts\warning;
 
-class OxidizedRconfigDeviceImportCommand extends Command
+class RancidRconfigDeviceImportCommand extends Command
 {
-    protected $signature = 'rconfig:oxidized-import-devices
+    protected $signature = 'rconfig:rancid-import-devices
                             {file? : Path to the JSON import file}
                             {--group=1 : Default device group ID to assign devices to}
                             {--dry-run : Validate the import without making changes}
                             {--info : Display information about this command}';
-    protected $description = 'Import devices from JSON file to rConfig database';
+    protected $description = 'Import devices from RANCID JSON file to rConfig database';
 
     /**
      * Execute the console command.
@@ -50,7 +50,7 @@ class OxidizedRconfigDeviceImportCommand extends Command
      */
     protected function showStartMenu()
     {
-        note('rConfig Device Import Utility');
+        note('rConfig RANCID Device Import Utility');
 
         $options = [
             'info' => 'Show information about this command',
@@ -109,26 +109,25 @@ class OxidizedRconfigDeviceImportCommand extends Command
      */
     protected function showInfo()
     {
-        info('===== rConfig Device Import Tool =====');
+        info('===== rConfig RANCID Device Import Tool =====');
 
         note('PURPOSE:');
-        $this->line('This command imports devices from a JSON file into the rConfig database.');
-        $this->line('It validates the device data and creates all necessary relationships.');
-        $this->line('');
+        $this->line('This command imports devices from a JSON file (created by rconfig:rancid-load-devices)');
+        $this->line('into the rConfig database. It validates device data and creates all necessary');
+        $this->line('relationships with templates, vendors, categories, and credentials.');
 
         note('PREREQUISITES:');
-        $this->line('1. A valid JSON import file (typically created by rconfig:oxidized-load-devices)');
+        $this->line('1. A valid JSON import file (created by rconfig:rancid-load-devices)');
         $this->line('2. Existing templates, vendors, and categories in the rConfig database');
         $this->line('3. Valid credential sets for the devices');
-        $this->line('');
 
         note('FEATURES:');
         $this->line('- Can import from a specific file or find the latest one automatically');
         $this->line('- Validates all data before import');
         $this->line('- Supports dry-run mode to check for issues without making changes');
-        $this->line('- Automatically assigns devices to a default group');
+        $this->line('- Automatically assigns devices to groups');
         $this->line('- Creates device-tag relationships');
-        $this->line('');
+        $this->line('- Skips devices that already exist (based on name or IP)');
 
         note('JSON FORMAT:');
         $this->line('The JSON file should contain an array of device objects with:');
@@ -143,19 +142,18 @@ class OxidizedRconfigDeviceImportCommand extends Command
         $this->line('- device_cred_id: Credential set ID (or 0 for direct credentials)');
         $this->line('- connection_type: "ssh" or "telnet"');
         $this->line('- port: Connection port number');
-        $this->line('');
+        $this->line('- rancid_group: Original RANCID group name (for reference)');
 
         note('USAGE:');
-        $this->line('php artisan rconfig:oxidized-import-devices /path/to/file.json');
-        $this->line('php artisan rconfig:oxidized-import-devices --latest');
-        $this->line('php artisan rconfig:oxidized-import-devices --dry-run /path/to/file.json');
-        $this->line('php artisan rconfig:oxidized-import-devices --group=2 /path/to/file.json');
-        $this->line('');
+        $this->line('php artisan rconfig:rancid-import-devices /path/to/file.json');
+        $this->line('php artisan rconfig:rancid-import-devices --latest');
+        $this->line('php artisan rconfig:rancid-import-devices --dry-run /path/to/file.json');
+        $this->line('php artisan rconfig:rancid-import-devices --group=2 /path/to/file.json');
 
         note('RELATED COMMANDS:');
-        $this->line('rconfig:oxidized-import-devices - Load devices from Oxidized mapped to devices table');
-        $this->line('rconfig:oxidized-load-devices - Create rConfig compatible JSON files from Oxidized hosts');
-        $this->line('rconfig:oxidized-device-mappings - Manage device type mappings');
+        $this->line('rconfig:rancid-device-mappings  - Manage device type mappings');
+        $this->line('rconfig:rancid-load-devices     - Create rConfig compatible JSON from RANCID');
+        $this->line('rconfig:rancid-import-devices   - Import JSON to rConfig database');
 
         if (confirm('Return to menu?')) {
             $this->showStartMenu();
@@ -184,8 +182,6 @@ class OxidizedRconfigDeviceImportCommand extends Command
 
     /**
      * Display all available import files and let user select one
-     *
-     * @return string|null The selected file path or null if no file selected/available
      */
     protected function selectImportFile()
     {
@@ -230,7 +226,7 @@ class OxidizedRconfigDeviceImportCommand extends Command
             'Select an import file:',
             $options,
             null,
-            8 // Display up to 8 options at once
+            8
         );
 
         if ($selected === 'cancel') {
@@ -295,13 +291,6 @@ class OxidizedRconfigDeviceImportCommand extends Command
         $validDevices = [];
         $invalidDevices = [];
 
-        // Check if we have any devices to validate
-        if (empty($devices)) {
-            warning('No devices found in the import file.');
-
-            return 1;
-        }
-
         $bar = progress('Validating devices', count($devices));
 
         foreach ($devices as $index => $device) {
@@ -347,7 +336,6 @@ class OxidizedRconfigDeviceImportCommand extends Command
         $failedCount = 0;
         $skipCount = 0;
 
-        // Check if we have any valid devices to import
         if (empty($validDevices)) {
             warning('No valid devices to import.');
 
@@ -380,12 +368,9 @@ class OxidizedRconfigDeviceImportCommand extends Command
                 $device->device_main_prompt = $deviceData['prompts']['device_main_prompt'];
                 $device->device_enable_prompt = $deviceData['prompts']['device_enable_prompt'];
                 $device->device_model = $deviceData['device_model'];
-                // $device->vendor_id = $deviceData['vendor_id'];
                 $device->device_template = $deviceData['template_id'];
                 $device->device_category_id = $deviceData['device_category_id'];
                 $device->device_cred_id = $deviceData['device_cred_id'];
-                // $device->connectionType = $deviceData['connection_type'] ?? 'ssh';
-                // $device->port = $deviceData['port'] ?? 22;
                 $device->status = 1; // Enable by default
                 $device->device_username = $deviceData['device_username'] ?? null;
                 $device->device_password = $deviceData['device_password'] ?? null;
@@ -394,13 +379,11 @@ class OxidizedRconfigDeviceImportCommand extends Command
                 // Save device
                 $device->save();
 
-                // Add tags to device
+                // Add relationships
                 $device->Tag()->attach($deviceData['tags'] ?? []);
                 $device->Vendor()->attach($deviceData['vendor_id']);
                 $device->Category()->attach($deviceData['device_category_id']);
                 $device->Template()->attach($deviceData['template_id']);
-
-                // $this->dispatch(new DownloadConfigNowJob($device->id))->onQueue('ManualDownloadQueue');
 
                 $importedCount++;
                 $bar->advance();
@@ -425,7 +408,7 @@ class OxidizedRconfigDeviceImportCommand extends Command
             // Roll back transaction on error
             DB::rollBack();
             error('Import failed: ' . $e->getMessage());
-            Log::error('Device import failed: ' . $e->getMessage());
+            Log::error('RANCID device import failed: ' . $e->getMessage());
 
             return 1;
         }
@@ -440,10 +423,6 @@ class OxidizedRconfigDeviceImportCommand extends Command
 
     /**
      * Validate a device before import
-     *
-     * @param  array  $device  The device data to validate
-     * @param  int  $index  The index of the device in the import file
-     * @return true|array True if valid, array of error messages if invalid
      */
     protected function validateDevice($device, $index)
     {

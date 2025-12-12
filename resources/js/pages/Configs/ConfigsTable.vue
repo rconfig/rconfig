@@ -193,9 +193,10 @@ onUnmounted(() => {
 								<RcIcon name="status-gray" v-if="row.download_status === 100" />
 							</TableCell>
 							<TableCell class="text-start table-cell-fixed">
-								<Button class="px-2 py-0 hover:bg-rcgray-800 rounded-xl button-cell-fixed" variant="ghost" @click="viewDetailsPane(row.id)">
+								<Button v-if="row.config_filename" class="px-2 py-0 hover:bg-rcgray-800 rounded-xl button-cell-fixed" variant="ghost" @click="viewDetailsPane(row.id)">
 									<span class="border-b text-truncate" :title="row.config_filename">{{ row.config_filename }}</span>
 								</Button>
+								<span v-else class="text-truncate">Not Downloaded - unchanged</span>
 							</TableCell>
 							<TableCell class="text-start table-cell-fixed">
 								<span class="text-truncate" :title="row.command">{{ row.command }}</span>

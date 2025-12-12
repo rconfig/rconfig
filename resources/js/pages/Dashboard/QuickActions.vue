@@ -38,9 +38,6 @@ const openSettings = () => {
 	router.push({ name: "settings" });
 };
 
-const openChangeManager = () => {
-	router.push({ name: "changemanager" });
-};
 </script>
 
 <template>
@@ -53,7 +50,7 @@ const openChangeManager = () => {
 				Quick Actions
 			</h3>
 
-			<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-1 md:gap-2 lg:gap-3">
+			<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 md:gap-2 lg:gap-3">
 				<button @click="addDevice" class="flex items-center gap-2 2xl:gap-3 p-2 md:p-2 2xl:p-2 rounded-xl bg-muted/50 hover:bg-green-50 dark:hover:bg-green-900/30 hover:scale-105 transition-all duration-200 text-left group">
 					<div class="p-2 rounded-lg bg-green-100 dark:bg-green-900/50 group-hover:bg-green-200 dark:group-hover:bg-green-800/70 transition-colors duration-200">
 						<svg class="w-4 h-4 text-green-600 dark:text-green-400 group-hover:text-green-700 dark:group-hover:text-green-300 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -75,16 +72,6 @@ const openChangeManager = () => {
 					<div>
 						<div class="font-medium text-sm group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-200">View Devices</div>
 						<div class="text-xs text-muted-foreground hidden 2xl:block">Device inventory</div>
-					</div>
-				</button>
-
-				<button @click="openChangeManager" class="flex items-center gap-2 2xl:gap-3 p-2 md:p-2 2xl:p-2 rounded-xl bg-muted/50 hover:bg-orange-50 dark:hover:bg-orange-900/30 hover:scale-105 transition-all duration-200 text-left group">
-					<div class="p-2 rounded-lg bg-orange-100 dark:bg-orange-900/50 group-hover:bg-orange-200 dark:group-hover:bg-orange-800/70 transition-colors duration-200">
-						<RcIcon name="change-manager" :color="'#ea580c'" />
-					</div>
-					<div>
-						<div class="font-medium text-sm group-hover:text-orange-700 dark:group-hover:text-orange-300 transition-colors duration-200">Change Manager</div>
-						<div class="text-xs text-muted-foreground hidden 2xl:block">Track configuration changes</div>
 					</div>
 				</button>
 

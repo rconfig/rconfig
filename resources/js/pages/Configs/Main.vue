@@ -1,5 +1,4 @@
 <script setup>
-import ConfigCompare from "@/pages/Configs/ConfigCompare.vue";
 import ConfigSearch from "@/pages/Configs/ConfigSearch.vue";
 import ConfigsTable from "@/pages/Configs/ConfigsTable.vue";
 import ConfigReportsTable from "@/pages/Configs/ConfigReportsTable.vue";
@@ -47,13 +46,13 @@ const {
 		<div>
 			<keep-alive>
 				<component 
-					:is="currentView === 'configs' ? ConfigsTable : currentView === 'configsearch' ? ConfigSearch : currentView === 'configcompare' ? ConfigCompare : currentView === 'configreport' ? ConfigReportsTable : null" 
+					:is="currentView === 'configs' ? ConfigsTable : currentView === 'configsearch' ? ConfigSearch : currentView === 'configreport' ? ConfigReportsTable : null" 
 					:configsId="configsId" 
 					:statusId="statusIdParam" 
 					:key="currentView">
-					<template v-if="['configsearch', 'configcompare'].includes(currentView)" #default>
+					<template v-if="['configsearch', 'configreport'].includes(currentView)" #default>
 						<h1 class="text-2xl text-muted-foreground">
-							{{ currentView === 'configsearch' ? 'Config Search' : currentView === 'configcompare' ? 'Config Compare' : 'Config Reports' }}
+							{{ currentView === 'configsearch' ? 'Config Search' : currentView === 'configreport' ? 'Config Reports' : '' }}
 						</h1>
 					</template>
 				</component>

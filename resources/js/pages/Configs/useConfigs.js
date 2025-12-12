@@ -13,7 +13,6 @@ export function useConfigs() {
 	const viewItems = [
 		{ id: "configs", label: "Configurations", icon: "config-tools", isFavorite: ref(false), route: "/configs" },
 		{ id: "configsearch", label: "Config Search", icon: "config-search", isFavorite: ref(false), route: "/config-search" },
-		{ id: "configcompare", label: "Config Compare", icon: "config-compare", isFavorite: ref(false), route: "/config-compare" },
 		{ id: "configreport", label: "Config Report", icon: "config-reports", isFavorite: ref(false), route: "/config-report" },
 	];
 

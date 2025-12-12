@@ -21,7 +21,6 @@ export function generatePageTitle(route) {
 			templateView: "Template View",
 			configurations: "Configurations",
 			configSearch: "Config Search",
-			configCompare: "Config Compare",
 			configView: "Config View",
 			scheduledTasks: "Scheduled Tasks",
 			settings: "Settings",
