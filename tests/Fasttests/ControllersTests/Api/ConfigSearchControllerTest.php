@@ -10,108 +10,225 @@ use Tests\TestCase;
 class ConfigSearchControllerTest extends TestCase
 {
     protected $user;
+    protected $strategy;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->user = User::factory()->create();
-        /** @var mixed $this->user */
         $this->actingAs($this->user, 'api');
+        $this->strategy = new LatestSearchStrategyNew();
         Config::truncate();
     }
 
-    public function test_a_search_validation_errors()
+    public function test_search_returns_empty_array_when_no_search_string_provided()
     {
-        $response = $this->json('post', '/api/configs/search', ['category' => null]);
-        $response->assertStatus(422);
-
-        $response->assertJsonValidationErrors(['search_string', 'command']);
-    }
-
-    public function test_search_configurations_returns_matches_for_LatestSearchStrategyNew()
-    {
-        // Setup - insert dummy records into the 'configs' table
-        $config = \DB::table('configs')->insert([
-            'id' => 1,
+        \DB::table('configs')->insert([
             'device_id' => 1001,
             'device_name' => 'router1',
             'device_category' => 'Routers',
             'command' => 'show run',
             'config_location' => '/var/www/html/rconfig/tests/storage/configsearch/fake1.txt',
-            'start_time' => '2024-09-12 00:00:00',
+            'start_time' => now(),
             'latest_version' => 1,
-            'end_time' => '2024-09-12 01:00:00',
             'created_at' => now(),
-            'updated_at' => now(),
         ]);
 
-        // Call the function with mock parameters
-        $result = (new LatestSearchStrategyNew())->searchConfigurations('router1', 'Routers', 'show run', 'configuration', 0, 0, true, '2024-09-01', '2024-09-12', false);
+        $result = $this->strategy->searchConfigurations([
+            'search_string' => '',
+            'command' => 'show run',
+        ]);
 
-        // Assert the structure of the result
+        $this->assertEmpty($result);
+    }
+
+    public function test_search_finds_matches_in_configuration_file()
+    {
+        \DB::table('configs')->insert([
+            'device_id' => 1001,
+            'device_name' => 'router1',
+            'device_category' => 'Routers',
+            'command' => 'show run',
+            'config_location' => '/var/www/html/rconfig/tests/storage/configsearch/fake1.txt',
+            'start_time' => now(),
+            'latest_version' => 1,
+            'created_at' => now(),
+        ]);
+
+        $result = $this->strategy->searchConfigurations([
+            'search_string' => 'configuration',
+            'command' => 'show run',
+        ]);
+
         $this->assertNotEmpty($result);
-        $this->assertEquals(1, $result['last_page']);
-        $this->assertEquals(1, $result['total']);
-        $this->assertEquals(10, $result['per_page']);
-        $data = $result['data'];
-        $this->assertEquals(1, $data[0]['id']);
-        $this->assertEquals('router1', $data[0]['device_name']);
-        $this->assertEquals(5, $data[0]['matches'][1]['line_number']);
-        $this->assertEquals('Another configuration line', $data[0]['matches'][1]['context']);
+        $this->assertCount(1, $result);
+        $this->assertEquals('router1', $result[0]['device_name']);
+        $this->assertArrayHasKey('matches', $result[0]);
+        $this->assertGreaterThan(0, count($result[0]['matches']));
     }
 
-    public function test_search_returns_empty_array()
+    public function test_search_respects_case_sensitivity()
     {
-        $this->assertDatabaseHas('categories', ['id' => 1]);
-        $response = $this->post('/api/configs/search', ['command' => 'show run', 'search_string' => 'snmp',]);
-
-        $response->assertJson([]);
-    }
-
-    public function test_search_returns_valid_result_on_api_endpoint()
-    {
-        $config = \DB::table('configs')->insert([
-            'id' => 1,
+        \DB::table('configs')->insert([
             'device_id' => 1001,
             'device_name' => 'router1',
             'device_category' => 'Routers',
             'command' => 'show run',
             'config_location' => '/var/www/html/rconfig/tests/storage/configsearch/fake1.txt',
-            'start_time' => '2024-09-12 00:00:00',
-            'end_time' => '2024-09-12 01:00:00',
+            'start_time' => now(),
             'latest_version' => 1,
             'created_at' => now(),
-            'updated_at' => now(),
         ]);
 
-        $this->assertDatabaseHas('categories', ['id' => 1]);
-        $response = $this->post('/api/configs/search', ['device_name' => 'outer1', 'command' => 'show run', 'search_string' => 'configuration', 'lines_before' => 0, 'lines_after' => 0, 'latest_version_only' => 'true', 'start_date' => '2024-09-01', 'end_date' => '2024-09-12', 'ignore_case' => 'false', 'page' => 1, 'per_page' => 10]);
-        $response->assertStatus(200);
+        // Case-sensitive search (should find lowercase 'configuration')
+        $caseSensitiveResult = $this->strategy->searchConfigurations([
+            'search_string' => 'configuration',
+            'command' => 'show run',
+            'ignore_case' => false,
+        ]);
 
-        $response->assertJsonCount(5);
-        $this->assertCount(2, $response->json()['data'][0]['matches']);
+        // Case-sensitive search with uppercase (should not find anything if file has lowercase)
+        $noMatchResult = $this->strategy->searchConfigurations([
+            'search_string' => 'ZZZZNOTFOUND',
+            'command' => 'show run',
+            'ignore_case' => false,
+        ]);
 
-        $response->assertJsonStructure([
-            'last_page',
-            'total',
-            'per_page',
-            'data' => [
-                '*' => [
-                    'id',
-                    'device_name',
-                    'device_category',
-                    'file',
-                    'config_filesize',
-                    'config_date',
-                    'matches' => [
-                        '*' => [
-                            'line_number',
-                            'context',
-                        ],
-                    ],
-                ],
+        // Case-insensitive search (should find regardless of case)
+        $caseInsensitiveResult = $this->strategy->searchConfigurations([
+            'search_string' => 'CONFIGURATION',
+            'command' => 'show run',
+            'ignore_case' => true,
+        ]);
+
+        $this->assertNotEmpty($caseSensitiveResult);
+        $this->assertEmpty($noMatchResult);
+        $this->assertNotEmpty($caseInsensitiveResult);
+    }
+
+    public function test_search_filters_by_device_name_and_category()
+    {
+        \DB::table('configs')->insert([
+            [
+                'device_id' => 1001,
+                'device_name' => 'router1',
+                'device_category' => 'Routers',
+                'command' => 'show run',
+                'config_location' => '/var/www/html/rconfig/tests/storage/configsearch/fake1.txt',
+                'start_time' => now(),
+                'latest_version' => 1,
+                'created_at' => now(),
+            ],
+            [
+                'device_id' => 1002,
+                'device_name' => 'switch1',
+                'device_category' => 'Switches',
+                'command' => 'show run',
+                'config_location' => '/var/www/html/rconfig/tests/storage/configsearch/fake1.txt',
+                'start_time' => now(),
+                'latest_version' => 1,
+                'created_at' => now(),
             ],
         ]);
+
+        // Filter by device name
+        $routerResult = $this->strategy->searchConfigurations([
+            'search_string' => 'configuration',
+            'device_name' => 'router',
+            'command' => 'show run',
+        ]);
+
+        // Filter by category
+        $switchResult = $this->strategy->searchConfigurations([
+            'search_string' => 'configuration',
+            'device_category' => 'Switches',
+            'command' => 'show run',
+        ]);
+
+        $this->assertCount(1, $routerResult);
+        $this->assertEquals('router1', $routerResult[0]['device_name']);
+        
+        $this->assertCount(1, $switchResult);
+        $this->assertEquals('switch1', $switchResult[0]['device_name']);
+    }
+
+    public function test_search_includes_context_lines_before_and_after_match()
+    {
+        \DB::table('configs')->insert([
+            'device_id' => 1001,
+            'device_name' => 'router1',
+            'device_category' => 'Routers',
+            'command' => 'show run',
+            'config_location' => '/var/www/html/rconfig/tests/storage/configsearch/fake1.txt',
+            'start_time' => now(),
+            'latest_version' => 1,
+            'created_at' => now(),
+        ]);
+
+        $resultWithoutContext = $this->strategy->searchConfigurations([
+            'search_string' => 'configuration',
+            'command' => 'show run',
+            'lines_before' => 0,
+            'lines_after' => 0,
+        ]);
+
+        $resultWithContext = $this->strategy->searchConfigurations([
+            'search_string' => 'configuration',
+            'command' => 'show run',
+            'lines_before' => 2,
+            'lines_after' => 2,
+        ]);
+
+        $this->assertNotEmpty($resultWithoutContext);
+        $this->assertNotEmpty($resultWithContext);
+        
+        // Context result should have more lines
+        $contextLines = explode("\n", $resultWithContext[0]['context']);
+        $noContextLines = explode("\n", $resultWithoutContext[0]['context']);
+        
+        $this->assertGreaterThan(count($noContextLines), count($contextLines));
+    }
+
+    public function test_search_filters_by_latest_version_only()
+    {
+        \DB::table('configs')->insert([
+            [
+                'device_id' => 1001,
+                'device_name' => 'router1',
+                'device_category' => 'Routers',
+                'command' => 'show run',
+                'config_location' => '/var/www/html/rconfig/tests/storage/configsearch/fake1.txt',
+                'start_time' => now()->subDay(),
+                'latest_version' => 0,
+                'created_at' => now()->subDay(),
+            ],
+            [
+                'device_id' => 1001,
+                'device_name' => 'router1',
+                'device_category' => 'Routers',
+                'command' => 'show run',
+                'config_location' => '/var/www/html/rconfig/tests/storage/configsearch/fake1.txt',
+                'start_time' => now(),
+                'latest_version' => 1,
+                'created_at' => now(),
+            ],
+        ]);
+
+        // Without latest version filter (should return both)
+        $allVersionsResult = $this->strategy->searchConfigurations([
+            'search_string' => 'configuration',
+            'command' => 'show run',
+        ]);
+
+        // With latest version filter (should return only one)
+        $latestOnlyResult = $this->strategy->searchConfigurations([
+            'search_string' => 'configuration',
+            'command' => 'show run',
+            'latest_version_only' => true,
+        ]);
+
+        $this->assertCount(2, $allVersionsResult);
+        $this->assertCount(1, $latestOnlyResult);
     }
 
     public function tearDown(): void

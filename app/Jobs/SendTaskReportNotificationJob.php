@@ -2,8 +2,11 @@
 
 namespace App\Jobs;
 
-use App\Models\User;
+use App\Enums\NotificationChannel;
+use App\Enums\NotificationType;
+use App\Notifications\DBTaskCompleteNotification;
 use App\Notifications\MailSendTaskReportNotification;
+use App\Traits\NotificationDispatcher;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -13,7 +16,7 @@ use Illuminate\Support\Facades\Notification;
 
 class SendTaskReportNotificationJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, NotificationDispatcher, Queueable, SerializesModels;
 
     public $report_data;
 
@@ -24,11 +27,18 @@ class SendTaskReportNotificationJob implements ShouldQueue
 
     public function handle()
     {
-        try {
-            Notification::send(User::allUsersAndRecipients(), new MailSendTaskReportNotification($this->report_data));
-        } catch (\Exception $e) {
-            $response = $e->getMessage();
-            activityLogIt(__CLASS__, __FUNCTION__, 'error', $response, 'config');
-        }
+        // Send email notification to users who want task completion notifications via email
+        $this->sendToSingleChannel(
+            NotificationType::TASK_COMPLETED,
+            NotificationChannel::MAIL,
+            new MailSendTaskReportNotification($this->report_data)
+        );
+
+        // Send DB notification to users who want task completion notifications in-app
+        $this->sendToSingleChannel(
+            NotificationType::TASK_COMPLETED,
+            NotificationChannel::DB,
+            new DBTaskCompleteNotification($this->report_data)
+        );
     }
 }

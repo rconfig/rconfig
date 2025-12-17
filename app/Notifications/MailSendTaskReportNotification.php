@@ -25,9 +25,9 @@ class MailSendTaskReportNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('rConfig Task Report')
+            ->subject($this->report_data->task->task_name . ' - rConfig Download-Task Complete')
             ->markdown('emails.notifications.task.complete',
-                ['greeting' => 'rConfig Task Report Attached!',
+                ['greeting' => 'rConfig Download-Task Complete',
                     'task_id' => $this->report_data->task->id,
                     'task_name' => $this->report_data->task->task_name,
                     'task_desc' => $this->report_data->task->task_desc,

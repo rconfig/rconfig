@@ -40,4 +40,13 @@ class NotificationsController extends ApiBaseController
 
         return $this->successResponse(Str::ucfirst($this->modelname) . ' updated successfully!');
     }
+
+    public function markAllAsRead()
+    {
+        Notification::where('notifiable_id', auth()->id())
+            ->whereNull('read_at')
+            ->update(['read_at' => now()]);
+
+        return $this->successResponse('All notifications marked as read successfully!');
+    }
 }

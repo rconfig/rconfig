@@ -42,9 +42,7 @@ function markAsRead() {
 	isLoading.value = true;
 	notifications.value.forEach((notification) => {
 		axios
-			.put(`/api/notifications/${notification.id}`, {
-				read_at: new Date(),
-			})
+			.post(`/api/notifications/mark-all-as-read`)
 			.then((response) => {
 				getNotifications();
 			})
@@ -56,6 +54,10 @@ function markAsRead() {
 
 function navToLogs() {
 	router.push({ name: "settings-logs" });
+	const popover = document.querySelector("[data-radix-popper-content]");
+	if (popover) {
+		popover.dispatchEvent(new Event("close", { bubbles: true }));
+	}
 }
 </script>
 
@@ -102,11 +104,11 @@ function navToLogs() {
 						</button>
 
 						<div class="flex justify-between w-full">
-							<Button @click="markAsRead()" variant="ghost" to="/notifications">
+							<Button @click="markAsRead()" variant="ghost" to="/notifications" class="focus:outline-none focus:ring-0">
 								<RcIcon name="status-green" />
 								<span class="ml-2">Mark all read</span>
 							</Button>
-							<Button @click="navToLogs()" variant="ghost">
+							<Button @click="navToLogs()" variant="ghost" class="focus:outline-none focus:ring-0">
 								<RcIcon name="sys-log-viewer" />
 								<span class="ml-2">View all logs</span>
 							</Button>

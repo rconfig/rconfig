@@ -194,7 +194,7 @@ class TelnetConnectTest extends TestCase
         $this->assertDatabaseHas('activity_log', [
             'device_id' => 10011,
             'event_type' => 'connection',
-            'description' => 'Authentication Failed for 192.168.1.170 ID:10011. Or wrong prompt configured for this device! Check your device settings.',
+            'description' => 'Authentication Failed for 10.1.1.170 ID:10011. Or wrong prompt configured for this device! Check your device settings.',
         ]);
 
         $this->remove_extra_devices();
@@ -300,7 +300,7 @@ class TelnetConnectTest extends TestCase
 
     private function setup_extra_devices()
     {
-        $dev_cisco_ip = '192.168.1.170';
+        $dev_cisco_ip = '10.1.1.170';
 
         // incorrect prompt template to test for log error on download
         DB::table('devices')->insert([

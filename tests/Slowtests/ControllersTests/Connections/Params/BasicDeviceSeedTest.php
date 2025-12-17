@@ -23,7 +23,7 @@ class BasicDeviceSeedTest extends TestCase
         $this->assertDatabaseHas('devices', [
             'id' => 1001,
             'device_name' => 'router1',
-            'device_ip' => '192.168.1.170',
+            'device_ip' => '10.1.1.170',
         ]);
     }
 

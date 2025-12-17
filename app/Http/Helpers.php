@@ -42,6 +42,11 @@ function setPagePath($path)
     return $title;
 }
 
+function isTrue($value): bool
+{
+    return $value === 'true' || $value === true || $value === 1 || $value === '1';
+}
+
 if (!function_exists('getComposerVersion')) {
     function getComposerVersion()
     {

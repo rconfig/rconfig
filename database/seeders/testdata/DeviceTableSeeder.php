@@ -17,7 +17,7 @@ class DeviceTableSeeder extends Seeder
      */
     public function run()
     {
-        $dev_cisco_ip = '192.168.1.170';
+        $dev_cisco_ip = '10.1.1.170';
         $dev_cisco_ipv6 = '2001:bb6:788a:8000:6273:5cff:fed9:4c01';
         // telnet no enable template
         Device::create([

@@ -14,9 +14,10 @@ class ConfigFactory extends Factory
     public function definition()
     {
         $id = $this->faker->randomNumber(5);
+        $deviceIds = $this->device_ids();
 
         return [
-            'device_id' => $id,
+            'device_id' => $this->faker->randomElement($deviceIds),
             'device_name' => 'router'.$id,
             'device_category' => $this->faker->randomElement(['Switches', 'Routers', 'Firewalls', 'Load Balancers', 'Servers', 'Storage', 'Access Points', 'Wireless', 'Other'], 1),
             'command' => $this->faker->randomElement(['show run', 'show clock', 'show version']),
@@ -30,6 +31,34 @@ class ConfigFactory extends Factory
             'duration' => $this->faker->randomDigit,
             'created_at' => $this->faker->dateTimeThisDecade($max = 'now', $timezone = null),
             'updated_at' => $this->faker->dateTimeThisDecade($max = 'now', $timezone = null),
+        ];
+    }
+
+    private function device_ids()
+    {
+        return [
+            30001,
+            20001,
+            1001,
+            1002,
+            1003,
+            1004,
+            1005,
+            1006,
+            1008,
+            1009,
+            1010,
+            1011,
+            1012,
+            1014,
+            9000,
+            1016,
+            2001,
+            2002,
+            30002,
+            950,
+            951,
+            952,
         ];
     }
 }

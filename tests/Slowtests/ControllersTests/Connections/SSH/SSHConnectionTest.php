@@ -28,8 +28,8 @@ class SSHConnectionTest extends TestCase
         $this->device6 = Device::where('id', 1006)->first();
         $this->device11 = Device::where('id', 1011)->first();
 
-        // check if 192.168.1.170 is reachable
-        $dev_cisco_ip = '192.168.1.170';
+        // check if 10.1.1.170 is reachable
+        $dev_cisco_ip = '10.1.1.170';
         $pingresult = exec("ping -c 1 -W 1 $dev_cisco_ip", $outcome, $status);
 
         if (str_contains($outcome[3], '0 received')) {
@@ -288,7 +288,7 @@ class SSHConnectionTest extends TestCase
 
     private function setup_extra_devices()
     {
-        $dev_cisco_ip = '192.168.1.170';
+        $dev_cisco_ip = '10.1.1.170';
 
         // SSH no enable template with case affected prompts
         DB::table('devices')->insert([

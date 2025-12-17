@@ -22,29 +22,11 @@ class ConfigSearchController extends Controller
             'command' => 'required',
             'search_string' => 'required',
             'latest_version_only' => 'required|boolean',
+            'ignore_case' => 'required|boolean',
         ])->validate();
 
         try {
-
-            // Set pagination parameters
-            $page = $request->input('page', 1); // Default to page 1
-            $perPage = $request->input('per_page', 10); // Default to 10 results per page
-
-            // Call the search strategy
-            $result = (new LatestSearchStrategyNew())->searchConfigurations(
-                $request['device_name'],
-                $request['device_category'],
-                $request['command'],
-                $request['search_string'],
-                $request['lines_before'],
-                $request['lines_after'],
-                $request['latest_version_only'] == 'true' ? true : false,
-                $request['start_date'],
-                $request['end_date'],
-                $request['ignore_case'] == 'true' ? true : false,
-                $page,
-                $perPage
-            );
+            $result = (new LatestSearchStrategyNew)->searchConfigurations($request->toArray());
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
             activityLogIt(__CLASS__, __FUNCTION__, 'error', $e->getMessage(), 'config');

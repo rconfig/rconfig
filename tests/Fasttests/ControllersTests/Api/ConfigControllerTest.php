@@ -22,6 +22,8 @@ class ConfigControllerTest extends TestCase
 
         $this->user = User::factory()->create();
         $this->actingAs($this->user, 'api');
+
+        Config::truncate();
     }
 
     public function test_get_all_configs()
@@ -723,6 +725,8 @@ class ConfigControllerTest extends TestCase
 
     protected function tearDown(): void
     {
+        Config::query()->delete();
+        
         $this->rollBackTransaction();
         parent::tearDown();
     }

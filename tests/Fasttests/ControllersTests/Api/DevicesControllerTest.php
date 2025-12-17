@@ -68,8 +68,8 @@ class DevicesControllerTest extends TestCase
 
     public function test_get_all_devices_with_generic_filter()
     {
-        $response = $this->get('/api/devices?page=1&perPage=100&filter[q]=192.168.1.170');
-        $response->assertJsonFragment(['device_ip' => '192.168.1.170']);
+        $response = $this->get('/api/devices?page=1&perPage=100&filter[q]=10.1.1.170');
+        $response->assertJsonFragment(['device_ip' => '10.1.1.170']);
         $response->assertJsonFragment(['total' => 4]);
         $response->assertStatus(200);
     }

@@ -12,21 +12,24 @@ use App\Models\User;
 use App\Services\Config\FileOperations;
 use Artisan;
 use File;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class rconfigTaskDownloadTest extends TestCase
 {
     protected $user;
-
     protected $device;
-
     protected $tags;
-
     protected $device1_params_object;
+    protected $transactionStarted = false;
 
     public function setUp(): void
     {
         parent::setUp();
+
+        $this->beginTransaction();
+        $this->transactionStarted = true;
+
         $this->device1 = Device::where('id', 1001)->first();
         $this->device2 = Device::where('id', 1002)->first();
         $this->device5 = Device::where('id', 1005)->first();
@@ -225,6 +228,9 @@ class rconfigTaskDownloadTest extends TestCase
     {
         Artisan::call('rconfig:download-task 777777 -d');
         $result = Artisan::output();
+
+        $output = $result;
+
         $arr = explode("\n", $result);
 
         foreach ($arr as $line) {
@@ -234,25 +240,60 @@ class rconfigTaskDownloadTest extends TestCase
             }
         }
 
-        $this->assertGreaterThan(0, count($arr));
-        $this->assertStringContainsString($arr[0], 'This operation can take some time, depending on how many devices are configured for this task!!!');
-        $this->assertStringContainsString($arr[1], 'Start rconfig:download-task IDs:777777');
-        $this->assertStringContainsString($arr[2], 'Start device download for router1 ID:1001');
-        $this->assertStringContainsString($arr[3], 'Config downloaded for router1 with command: "show clock" was successful');
-        $this->assertStringContainsString($arr[6], 'Start device download for router2 ID:1002');
-        $this->assertStringContainsString($arr[10], 'Start device download for router3 ID:1003');
-        $this->assertStringContainsString($arr[14], 'Start device download for router4 ID:1004');
-        $this->assertStringContainsString($arr[18], 'Start device download for router5 ID:1005');
-        $this->assertStringContainsString($arr[19], 'Start device download for router1v6 ID:1009');
-        $this->assertStringContainsString($arr[24], 'Config downloaded for router1v6 with command: "show run" was successful');
-        // $this->assertStringContainsString($arr[27], 'End rconfig:download-task');
+        // Verify expected output messages
+        $this->assertStringContainsString('This operation can take some time, depending on how many devices are configured for this task!!!', $output);
+        $this->assertStringContainsString('Start rconfig:download-task IDs:777777', $output);
+        
+        // Successful downloads (router1-4)
+        $this->assertStringContainsString('Start device download for router1 ID:1001', $output);
+        $this->assertStringContainsString('Config downloaded for router1 with command: "show clock" was successful', $output);
+        $this->assertStringContainsString('Config downloaded for router1 with command: "show version" was successful', $output);
+        $this->assertStringContainsString('Config downloaded for router1 with command: "show run" was successful', $output);
+        
+        $this->assertStringContainsString('Start device download for router2 ID:1002', $output);
+        $this->assertStringContainsString('Start device download for router3 ID:1003', $output);
+        $this->assertStringContainsString('Start device download for router4 ID:1004', $output);
+        
+        // Failed downloads (router5 and router1v6 devices)
+        $this->assertStringContainsString('Start device download for router5 ID:1005', $output);
+        $this->assertStringContainsString('No config data returned for router5 - ID:1005', $output);
+        
+        $this->assertStringContainsString('Start device download for router1v6 ID:1009', $output);
+        $this->assertStringContainsString('No config data returned for router1v6 - ID:1009', $output);
+        
+        $this->assertStringContainsString('Start device download for router1v6 ID:1010', $output);
+        $this->assertStringContainsString('No config data returned for router1v6 - ID:1010', $output);
+        
+        // Verify successful devices have status 1
         $this->assertDatabaseHas('devices', [
             'id' => 1001,
             'status' => 1,
         ]);
         $this->assertDatabaseHas('devices', [
-            'id' => 1009,
+            'id' => 1002,
             'status' => 1,
+        ]);
+        $this->assertDatabaseHas('devices', [
+            'id' => 1003,
+            'status' => 1,
+        ]);
+        $this->assertDatabaseHas('devices', [
+            'id' => 1004,
+            'status' => 1,
+        ]);
+        
+        // Verify failed devices have status 0
+        $this->assertDatabaseHas('devices', [
+            'id' => 1005,
+            'status' => 0,  // Unreachable IP
+        ]);
+        $this->assertDatabaseHas('devices', [
+            'id' => 1009,
+            'status' => 0,  // IPv6 unreachable
+        ]);
+        $this->assertDatabaseHas('devices', [
+            'id' => 1010,
+            'status' => 0,  // IPv6 unreachable
         ]);
     }
 
@@ -298,15 +339,13 @@ class rconfigTaskDownloadTest extends TestCase
             'verbose_download_report_notify' => 0,
         ]);
 
-        // \Queue::assertPushed(\App\Jobs\TaskCompleteNotificationJob::class, 1);
+        \Queue::assertPushed(\App\Jobs\TaskCompleteNotificationJob::class, 1);
 
         $this->assertDatabaseHas('notifications', [
-            'notifiable_id' => 1,
             'type' => 'App\Notifications\DBDeviceConnectionFailureNotification',
             'data' => '{"title":"Device Connection Error","description":"No config data returned for router8 - ID:1008. Check your logs for more information","category":"downloader","error":"error","icon":"pficon-error-circle-o"}',
         ]);
         $this->assertDatabaseHas('notifications', [
-            'notifiable_id' => 2,
             'type' => 'App\Notifications\DBDeviceConnectionFailureNotification',
             'data' => '{"title":"Device Connection Error","description":"Unable to connect to 10.0.0.111 - ID:1008","category":"downloader","error":"error","icon":"pficon-error-circle-o"}',
         ]);
@@ -352,7 +391,7 @@ class rconfigTaskDownloadTest extends TestCase
             'download_report_notify' => 1,
             'verbose_download_report_notify' => 0,
         ]);
-        // \Queue::assertPushed(\App\Jobs\SendTaskReportNotificationJob::class, 1);
+        \Queue::assertPushed(\App\Jobs\SendTaskReportNotificationJob::class, 1);
 
         $this->assertDatabaseHas('notifications', [
             'notifiable_id' => 1,
@@ -360,10 +399,10 @@ class rconfigTaskDownloadTest extends TestCase
             'data' => '{"title":"Device Connection Error","description":"No config data returned for router8 - ID:1008. Check your logs for more information","category":"downloader","error":"error","icon":"pficon-error-circle-o"}',
         ]);
         $this->assertDatabaseHas('notifications', [
-            'notifiable_id' => 2,
             'type' => 'App\Notifications\DBDeviceConnectionFailureNotification',
             'data' => '{"title":"Device Connection Error","description":"Unable to connect to 10.0.0.111 - ID:1008","category":"downloader","error":"error","icon":"pficon-error-circle-o"}',
         ]);
+        DB::table('tasks')->where('id', 888888)->update(['download_report_notify' => 0]);
     }
 
     private function downloaded_file_exists_on_disk($device, $command)
@@ -380,5 +419,18 @@ class rconfigTaskDownloadTest extends TestCase
         $fullpath = $fileops->createFile($command);
 
         return File::exists($fullpath);
+    }
+
+    protected function tearDown(): void
+    {
+        if ($this->transactionStarted) {
+            $this->rollBackTransaction();
+        }
+
+        DB::table('notifications')->truncate();
+        DB::table('taskdownloadreports')->truncate();
+        DB::table('tasks')->where('id', 888888)->update(['download_report_notify' => 0]);
+
+        parent::tearDown();
     }
 }

@@ -14,3 +14,4 @@ Route::prefix('dashboard')->group(function () {
 });
 
 Route::resource('/notifications', 'NotificationsController')->only(['index', 'update']);
+Route::post('/notifications/mark-all-as-read', 'NotificationsController@markAllAsRead')->name('api.notifications.mark-all-as-read');

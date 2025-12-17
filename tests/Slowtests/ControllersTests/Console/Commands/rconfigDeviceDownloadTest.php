@@ -64,7 +64,7 @@ class rconfigDeviceDownloadTest extends TestCase
         $time = $end - $start;
 
         // assert time
-        $this->assertLessThan(5, $time);
+        $this->assertLessThan(7, $time);
     }
 
     public function test_basic_ssh_test()

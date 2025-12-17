@@ -47,17 +47,6 @@ class IntegrationOptionSeeder extends Seeder
                 'status' => 'Disabled',
             ],
             [
-                'id' => 4,
-                'icon' => 'HashVaultLogo',
-                'name' => 'Hashicorp Vault',
-                'type' => 'Device Credentials',
-                'description' => 'Use Hashicorp Vault for device credentials',
-                'action_text' => 'Configure',
-                'config_url' => '/settings/integrations/vault/6',
-                'external_url' => false,
-                'status' => 'Active',
-            ],
-            [
                 'id' => 5,
                 'icon' => 'GoogleLogo',
                 'name' => 'Google SSO',
