@@ -69,6 +69,13 @@ export default [
 		meta: { rbacViewName: "Setting", pageTitleKey: "SettingsScheduledTasks" },
 	},
 	{
+		path: "/settings/upgrade",
+		name: "settings-upgrade",
+		component: () => import("@/pages/Settings/Main.vue"),
+		props: { upgrade: true },
+		meta: { rbacViewName: "Setting", pageTitleKey: "SettingsUpgrade" },
+	},
+	{
 		path: "/settings/about",
 		name: "settings-about",
 		component: () => import("@/pages/Settings/Main.vue"),
