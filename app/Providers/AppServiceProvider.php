@@ -67,7 +67,7 @@ class AppServiceProvider extends ServiceProvider
             Log::info('Job ready: ' . $event->job->resolveName());
 
             if (
-                $event->job->resolveName() === 'App\Jobs\DownloadConfigNow' ||
+                $event->job->resolveName() === 'App\Jobs\DownloadConfigNowJob' ||
                 $event->job->resolveName() === 'App\Jobs\DeviceDownloadJob' ||
                 $event->job->resolveName() === 'App\Jobs\PurgeConfigsJob'
             ) {
@@ -91,7 +91,7 @@ class AppServiceProvider extends ServiceProvider
         // */
         Queue::after(function (JobProcessed $event) {
             if (
-                $event->job->resolveName() === 'App\Jobs\DownloadConfigNow' ||
+                $event->job->resolveName() === 'App\Jobs\DownloadConfigNowJob' ||
                 $event->job->resolveName() === 'App\Jobs\DeviceDownloadJob' ||
                 $event->job->resolveName() === 'App\Jobs\PurgeConfigsJob'
             ) {
@@ -109,7 +109,7 @@ class AppServiceProvider extends ServiceProvider
         // */
         Queue::failing(function (JobFailed $event) {
             if (
-                $event->job->resolveName() === 'App\Jobs\DownloadConfigNow' ||
+                $event->job->resolveName() === 'App\Jobs\DownloadConfigNowJob' ||
                 $event->job->resolveName() === 'App\Jobs\DeviceDownloadJob' ||
                 $event->job->resolveName() === 'App\Jobs\PurgeConfigsJob'
             ) {

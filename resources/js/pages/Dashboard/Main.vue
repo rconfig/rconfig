@@ -1,5 +1,4 @@
 <script setup>
-import AppStatusBar from "@/pages/Dashboard/AppStatusBar.vue";
 import ConfigInfoCards from "@/pages/Dashboard/ConfigInfoCards.vue";
 import FeedbackForm from "@/pages/Dashboard/FeedbackForm.vue";
 import HealthLatestCards from "@/pages/Dashboard/HealthLatestCards.vue";
@@ -22,9 +21,6 @@ onMounted(() => {
 
 <template>
 	<main class="flex flex-col flex-1 gap-4 p-6 dark:bg-rcgray-900">
-		<!-- Header Actions -->
-		<AppStatusBar :deviceCnt="configinfo?.data?.deviceCount" />
-
 		<!-- Main Dashboard Grid -->
 		<div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
 			<!-- Primary Stats - Full Width on Mobile, 8 cols on XL -->

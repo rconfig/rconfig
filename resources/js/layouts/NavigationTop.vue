@@ -10,6 +10,8 @@ import { usePermissionsStore } from "@/stores/permissions";
 import { useRoute, useRouter } from "vue-router";
 import { useToaster } from "@/composables/useToaster";
 import { HelpCircle, Sun, Moon, MoreVertical, Paintbrush } from "lucide-vue-next";
+import { Lock } from "lucide-vue-next";
+import GenericPopover from "@/pages/Shared/Popover/GeneralPopover.vue";
 
 const mode = useColorMode();
 const panelStore = usePanelStore(); // Access the panel store
@@ -21,6 +23,8 @@ const permissionsStore = usePermissionsStore();
 const serverDisplayName = inject("serverDisplayName");
 const serverDisplayColor = inject("serverDisplayColor");
 const serverDisplaySize = inject("serverDisplaySize");
+const loading = ref(true);
+const isHttpsDisabled = ref(false);
 
 //Flag to control dark mode enforcement - set to true for now.
 //When we want to enable light mode in the future, set this to false
@@ -38,7 +42,13 @@ onMounted(() => {
 		mode.value = "dark";
 		document.documentElement.classList.add("dark");
 	}
+	checkHttpsStatus();
 });
+
+function checkHttpsStatus() {
+	isHttpsDisabled.value = window.location.protocol !== 'https:';
+	loading.value = false;
+}
 
 const breadcrumbs = computed(() => {
 	return route.meta.breadcrumb || [];
@@ -132,6 +142,28 @@ const showServerName = computed(() => {
 				<Button v-if="isDevMode" class="hover:bg-rcgray-600 transition-colors duration-200 transform hover:scale-105" @click="navToStyles()" variant="ghost">
 					<Paintbrush class="absolute h-[1.2rem] w-[1.2rem] text-blue-400" />
 				</Button>
+
+				<!-- HTTPS Status Section -->
+				<Skeleton v-if="loading && isHttpsDisabled" class="h-5 w-20 rounded-md" />
+
+				<GenericPopover v-if="!loading && isHttpsDisabled" title="HTTPS Disabled" description="HTTPS is currently disabled. Please enable HTTPS. Some features may be unavailable." :hasLink="true" :align="'end'" :href="$rconfigDocsUrl + '/other/ssl-setup/'">
+					<template #trigger>
+					<div class="flex items-center gap-1 px-2 py-1 bg-red-100 dark:bg-red-900/30 rounded-md border border-red-300 dark:border-red-700 cursor-pointer hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors">
+						<Lock size="14" class="text-red-500 dark:text-red-400 animate-pulse" />
+					</div>
+					</template>
+				</GenericPopover>
+
+				<GenericPopover v-else-if="!loading && !isHttpsDisabled" title="HTTPS Enabled" description="HTTPS is enabled and your connection is secure." :hasLink="false" :align="'end'">
+					<template #trigger>
+					<div class="flex items-center gap-1 px-2 py-1 bg-green-100 dark:bg-green-900/30 rounded-md border border-green-300 dark:border-green-700 cursor-pointer hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors">
+						<Lock size="14" class="text-green-600 dark:text-green-400" />
+					</div>
+					</template>
+				</GenericPopover>
+
+				<Skeleton v-if="loading" class="h-5 w-20 rounded-md" />
+				<!-- End HTTPS Status Section -->
 
 				<TooltipProvider>
 					<Tooltip>

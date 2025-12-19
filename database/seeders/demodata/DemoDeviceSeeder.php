@@ -223,7 +223,7 @@ class DemoDeviceSeeder extends Seeder
                 'events_ids' => null,
                 'connection_category' => null,
                 'connection_ids' => 'N;',
-                'class' => 'App\\Jobs\\DownloadConfigNow',
+                'class' => 'App\\Jobs\\DownloadConfigNowJob',
                 'function' => 'handle',
                 'created_at' => $datetime,
                 'updated_at' => $datetime,

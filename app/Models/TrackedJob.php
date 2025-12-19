@@ -87,7 +87,7 @@ class TrackedJob extends BaseModel
     {
         $device_id = null;
 
-        if ($payload['displayName'] === 'App\Jobs\DownloadConfigNow') {
+        if ($payload['displayName'] === 'App\Jobs\DownloadConfigNowJob') {
             $device_id = $this->accessProtected(unserialize($payload['data']['command']), 'device_id');
         }
         if ($payload['displayName'] === 'App\Jobs\DeviceDownloadJob') {
