@@ -10,8 +10,7 @@ import { ChevronRight, ChevronDown, ExternalLink, Trash2, LifeBuoy } from "lucid
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Icon } from "@iconify/vue"; // Used for External Links ONLY
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { inject, watch, ref, onMounted, onBeforeUnmount } from "vue";
-import { useAppStatusBar } from "@/pages/Dashboard/useAppStatusBar";
+import { inject, ref, onMounted, onBeforeUnmount } from "vue";
 import { useConfigs } from "@/pages/Configs/useConfigs";
 import { useInventory } from "@/pages/Inventory/useInventory";
 import { useNavigationSide } from "./useNavigationSide";
@@ -21,7 +20,6 @@ const userid = inject("userid");
 
 // Use the composable to get all navigation functionality and state
 const { sideNavSettingsIsOpen,sideNavExtLinksIsOpen, sideNavFavLinksIsOpen, externalLinks, externalLinksDialogKey, favoritesStore, notificationsLength, panelElement, closeNav, closeExtDialog, removeExternalLink, notificationsCount, navToSettingsUpgrade, openSheet } = useNavigationSide(userid);
-const { subscriptionConfig } = useAppStatusBar();
 const { viewItems: inventoryViewItems } = useInventory();
 const { viewItems: configViewItems } = useConfigs();
 
@@ -66,18 +64,6 @@ const toggleFavorite = (viewId) => {
 		favoritesStore.toggleFavorite(viewItem);
 	}
 };
-
-// Add these options to your watcher for better reactivity
-watch(
-	subscriptionConfig,
-	(newConfig) => {
-		image.value = newConfig.image || "/images/brand/rconfig-with-strap-white.png";
-	},
-	{
-		immediate: true, // Run the watcher immediately when component mounts
-		deep: true, // Watch for changes in nested properties
-	}
-);
 </script>
 
 <template>

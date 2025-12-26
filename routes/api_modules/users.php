@@ -25,7 +25,7 @@ Route::controller(UserController::class)->prefix('user')->group(function () {
 Route::resource('users', 'UserController');
 Route::post('/users/delete-many', 'UserController@deleteMany');
 
-Route::resource('users-activity-log', 'UserLogActivityController')->only(['index', 'show']);
-Route::post('/users-activity-log/delete-many', 'UserLogActivityController@deleteMany');
+// Route::resource('users-activity-log', 'UserLogActivityController')->only(['index', 'show']);
+// Route::post('/users-activity-log/delete-many', 'UserLogActivityController@deleteMany');
 
 Route::get('/notification-enums', [NotificationEnumsController::class, 'index']);

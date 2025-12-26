@@ -8,7 +8,7 @@ const items = useStorage('helpTopicItemsHelpSheet', [
     id: 1,
     name: 'Adding a device',
     url: 'https://docs.rconfig.com/devices/devices/',
-    icon: 'DeviceIcon',
+    icon: 'device',
     iconClass: 'text-4xl',
     text: 'Adding a device to inventory is easy, but it requires a few steps. Follow this guide to get started.',
     read: false
@@ -17,7 +17,7 @@ const items = useStorage('helpTopicItemsHelpSheet', [
     id: 2,
     name: 'Troubleshooting Device Connectivity',
     url: 'https://docs.rconfig.com/general/troubleshooting/',
-    icon: 'TroubleshootIcon',
+    icon: 'troubleshoot',
     iconClass: 'text-4xl',
     text: 'If you are having trouble connecting to a device, follow this guide to troubleshoot the issue.',
     read: false
@@ -26,7 +26,7 @@ const items = useStorage('helpTopicItemsHelpSheet', [
     id: 3,
     name: 'Queue Manager',
     url: 'https://docs.rconfig.com/settings/queues/',
-    icon: 'SysQueueManagerIcon',
+    icon: 'sys-queue-manager',
     iconClass: 'text-4xl',
     text: 'The Queue Manager is a powerful tool that manages multi threaded tasks. Learn how to use it here.',
     read: false
@@ -51,8 +51,8 @@ function markAsRead(itemId) {
 </script>
 
 <template>
-  <div class="grid gap-4 py-4">
-    <div class="flex justify-between">
+  <div class="grid gap-2 py-4">
+    <div class="flex justify-between mb-1">
       <span class="font-semibold">Popular Docs</span>
 
       <Badge
@@ -65,13 +65,13 @@ function markAsRead(itemId) {
       @click="openItem(item)"
       v-for="item of items"
       :key="item.id"
-      class="flex items-start justify-between gap-2 p-3 text-sm text-left transition-all border rounded-lg hover:bg-accent">
-      <div class="">
-        <component
-          :is="item.icon"
+      class="flex items-start justify-between gap-2 p-2.5 text-sm text-left transition-all border rounded-lg hover:bg-accent">
+      <div class="flex-shrink-0">
+        <RcIcon 
+          :name="item.icon"
           :class="item.iconClass" />
       </div>
-      <div>
+      <div class="flex-1 min-w-0">
         <div class="flex flex-col w-full gap-1">
           <div class="flex items-center">
             <div class="flex items-center gap-2">
@@ -79,7 +79,7 @@ function markAsRead(itemId) {
                 {{ item.name }}
               </div>
             </div>
-            <div class="ml-auto text-xs text-muted-foreground">
+            <div class="ml-auto text-xs text-muted-foreground flex-shrink-0">
               <span
                 v-if="!item.read"
                 class="flex w-2 h-2 bg-blue-600 rounded-full" />

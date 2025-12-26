@@ -1,25 +1,16 @@
 <script setup>
 import AlertTip from "@/pages/Shared/Alerts/AlertTip.vue";
-import Loading from "@/pages/Shared/Loaders/Loading.vue";
-import RcBadge from "@/pages/Shared/Badges/RcBadge.vue";
 import { onMounted, computed } from "vue";
 import { useDashboard } from "@/pages/Dashboard/useDashboard";
-import { useLicenseInfoStore } from "@/stores/useLicenseInfoStore";
 
 // Import Lucide Vue Next icons
 import { FileText, Headphones, HelpCircle } from "lucide-vue-next";
 
-const store = useLicenseInfoStore();
-
 const image = computed(() => "/images/brand/rconfig-with-strap-white.png");
-
-const handleRefreshClick = () => store.fetchAll();
 
 const { fetchConfiginfo, configinfo } = useDashboard();
 
 onMounted(() => {
-	store.fetchAll();
-	store.startAutoRefresh();
 	fetchConfiginfo();
 });
 </script>
@@ -34,15 +25,7 @@ onMounted(() => {
 				<h3 class="mb-4 text-2xl font-semibold leading-7 tracking-tight font-inter">About rConfig</h3>
 				<p class="text-sm">rConfig is a powerful and user-friendly network configuration management tool designed to help you efficiently manage and automate your network devices. Stay organized, save time, and ensure consistency across your network infrastructure with rConfig.</p>
 
-				<div class="flex items-center w-full justify-end px-4">
-					<!-- Refresh Button -->
-					<Button variant="ghost" size="sm" class="ml-4 mt-4 h-8 w-8 p-0 hover:bg-muted/80 transition-colors" :disabled="store.loading" @click="handleRefreshClick" title="Refresh system information"> Refresh: <RcIcon name="refresh" size="14" class="ml-2 text-muted-foreground/80" :class="{ 'animate-spin': store.loading }" /> </Button>
-				</div>
-				<div v-if="store.loading" class="flex items-center justify-center w-full">
-					<Loading />
-				</div>
-
-				<div class="grid gap-3 mt-2 p-4 border" v-if="!store.loading">
+				<div class="grid gap-3 mt-2 p-4 border">
 					<dl class="grid gap-3">
 						<div class="flex items-center justify-between">
 							<dt class="text-muted-foreground">Edition</dt>
@@ -61,19 +44,6 @@ onMounted(() => {
 								<span class="font-medium text-muted-foreground"> 
 									{{ configinfo.data?.deviceCount || 0 }}
 								</span>
-							</dd>
-						</div>
-					</dl>
-
-					<!-- Update information -->
-					<dl class="grid gap-3" v-if="store.hasUpdate">
-						<div class="flex items-center justify-between">
-							<dt class="text-muted-foreground">Latest Version</dt>
-							<dd class="flex items-center gap-2">
-								<RcBadge variant="info" size="sm">
-									{{ store.data.update?.latest_version }}
-								</RcBadge>
-								<span class="text-sm text-muted-foreground">Update available</span>
 							</dd>
 						</div>
 					</dl>

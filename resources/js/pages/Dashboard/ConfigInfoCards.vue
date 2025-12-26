@@ -5,7 +5,6 @@ import { Clock, ChartColumnIncreasing, AlertTriangle, Activity, TrendingUp } fro
 import { inject, computed } from "vue";
 import { useRouter } from "vue-router";
 import GenericPopover from "@/pages/Shared/Popover/GeneralPopover.vue";
-import { useAppStatusBar } from "./useAppStatusBar";
 
 defineProps({
 	configinfo: {
@@ -20,8 +19,6 @@ defineProps({
 
 const router = useRouter();
 const formatters = inject("formatters");
-
-const { licenseData } = useAppStatusBar();
 
 function openDevices() {
 	router.push({ name: "devices" });
@@ -51,11 +48,6 @@ const isOlderThanOneDay = (dateString) => {
 	return now - configDate > oneDayInMs;
 };
 
-const isProOrHigher = computed(() => {
-	// const testLicenseType = "Professional"; // Change this value to test different scenarios
-	// return testLicenseType.toLowerCase().includes("pro") || testLicenseType.toLowerCase().includes("professional");
-	return licenseData.plan_type.toLowerCase().includes("pro") || licenseData.plan_type.toLowerCase().includes("professional");
-});
 </script>
 
 <template>
@@ -72,15 +64,6 @@ const isProOrHigher = computed(() => {
 				</div>
 			</div>
 			<div v-else class="absolute inset-0 rounded-2xl pointer-events-none" style="background: linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 30%, rgba(255, 255, 255, 0) 70%); z-index: 0;"></div>
-			<div v-if="configinfo.data && configinfo.data.deviceCount > 1000 && isProOrHigher" class="absolute -top-2 -right-2 z-10" @click.stop>
-				<GenericPopover :title="'High Volume Device Count'" :description="`You are managing ${configinfo.data.deviceCount} devices, which is considered enterprise scale. Monitor performance and consider resource optimization.  Contact us for License Upgrade options.`" href="/settings/upgrade" linkText="View Upgrade Options" align="start">
-					<template #trigger>
-						<RcBadge variant="warning" size="sm" class="p-0 w-6 h-6 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200 animate-pulse">
-							<TrendingUp class="w-3 h-3 text-white" />
-						</RcBadge>
-					</template>
-				</GenericPopover>
-			</div>
 
 			<CardHeader class="flex flex-row items-center justify-between pb-2 space-y-0 relative z-10">
 				<CardTitle class="text-sm font-medium">Device Count</CardTitle>

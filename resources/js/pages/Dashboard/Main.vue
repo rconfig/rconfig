@@ -1,14 +1,13 @@
 <script setup>
 import ConfigInfoCards from "@/pages/Dashboard/ConfigInfoCards.vue";
-import FeedbackForm from "@/pages/Dashboard/FeedbackForm.vue";
 import HealthLatestCards from "@/pages/Dashboard/HealthLatestCards.vue";
 import QuickActions from "@/pages/Dashboard/QuickActions.vue";
 import SysinfoCards from "@/pages/Dashboard/SysinfoCards.vue";
-import V8DashboardTeaser from "@/pages/Dashboard/V8DashboardTeaser.vue";
+import DashboardWidgets from "@/pages/Dashboard/DashboardWidgets.vue";
 import { onMounted, ref } from "vue";
 import { useDashboard } from "@/pages/Dashboard/useDashboard";
 
-const { fetchSysinfo, fetchConfiginfo, fetchHealth, sysinfo, configinfo, healthLatest, isLoadingSysinfo, isLoadingConfiginfo, isLoadingHealth } = useDashboard();
+const { fetchSysinfo, fetchConfiginfo, fetchHealth, fetchLatestDevices, sysinfo, configinfo, healthLatest, latestDevices, isLoadingSysinfo, isLoadingConfiginfo, isLoadingHealth, isLoadingLatestDevices } = useDashboard();
 
 defineProps({});
 
@@ -16,6 +15,7 @@ onMounted(() => {
 	fetchSysinfo();
 	fetchConfiginfo();
 	fetchHealth();
+	fetchLatestDevices();
 });
 </script>
 
@@ -32,9 +32,7 @@ onMounted(() => {
 			<SysinfoCards :sysinfo="sysinfo" :isLoadingSysinfo="isLoadingSysinfo" @refresh="fetchSysinfo(true)" />
 			<HealthLatestCards :healthLatest="healthLatest" :isLoadingHealth="isLoadingHealth" @refresh="fetchHealth" :SystemUptime="sysinfo.systemUptime" />
 
-			<!-- Sidebar Cards - Hidden on mobile/tablet, shown on XL+ -->
-			<FeedbackForm />
-			<V8DashboardTeaser />
+			<DashboardWidgets :configinfo="configinfo" :healthLatest="healthLatest" :latestDevices="latestDevices" :isLoadingLatestDevices="isLoadingLatestDevices" />
 		</div>
 	</main>
 </template>

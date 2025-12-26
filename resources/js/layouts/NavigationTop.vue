@@ -9,7 +9,7 @@ import { usePanelStore } from "@/stores/panelStore"; // Import the Pinia store
 import { usePermissionsStore } from "@/stores/permissions";
 import { useRoute, useRouter } from "vue-router";
 import { useToaster } from "@/composables/useToaster";
-import { HelpCircle, Sun, Moon, MoreVertical, Paintbrush } from "lucide-vue-next";
+import { HelpCircle, Sun, Moon, MoreVertical, Paintbrush, Star } from "lucide-vue-next";
 import { Lock } from "lucide-vue-next";
 import GenericPopover from "@/pages/Shared/Popover/GeneralPopover.vue";
 
@@ -98,15 +98,21 @@ function logout() {
 			console.log(error);
 		});
 }
+
 function openNav() {
 	panelStore.panelRef?.isCollapsed ? panelStore.panelRef?.expand() : panelStore.panelRef?.collapse();
 }
+
 function navToStyles() {
 	if (!isDevMode) {
 		toastInfo("Dev Mode Only", "Styles page is only available in development mode");
 		return;
 	}
 	router.push({ name: "StylesPage" });
+}
+
+function openGitHub() {
+	window.open('https://github.com/rconfig/rconfig', '_blank');
 }
 
 const showServerName = computed(() => {
@@ -117,8 +123,32 @@ const showServerName = computed(() => {
 <template>
 	<nav class="bg-rcgray-900 relative">
 		<div class="relative flex items-center justify-between w-full max-w-full px-2 py-1">
-			<div class="flex items-center ml-4">
+			<div class="flex items-center ml-4 gap-3">
 				<NavOpenButton @openNav="openNav()" :navPanelBtnState="navPanelBtnState" class="transition-transform duration-300 hover:scale-110" />
+				
+				<!-- GitHub Star Button -->
+				<TooltipProvider>
+					<Tooltip>
+						<TooltipTrigger as-child>
+							<button
+								@click="openGitHub"
+								class="group relative flex items-center gap-2 px-3 py-1.5 bg-transparent hover:bg-rcgray-700 border border-transparent hover:border-blue-500/50 rounded-md transition-all duration-300 hover:scale-105"
+							>
+								<!-- Animated star icon -->
+								<Star class="w-4 h-4 text-yellow-500/50 group-hover:text-yellow-500 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110" :fill="'currentColor'" />
+								<span class="text-xs font-medium text-white group-hover:text-blue-400 transition-colors duration-300 leading-none">
+									Star us on GitHub
+								</span>
+								<!-- Subtle glow effect on hover -->
+								<div class="absolute inset-0 bg-blue-500/5 rounded-md filter blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+							</button>
+						</TooltipTrigger>
+						<TooltipContent class="text-white bg-rcgray-800 border border-blue-500/30">
+							<p>Star us on GitHub</p>
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
+
 				<!-- Breadcrumb -->
 				<Breadcrumb>
 					<BreadcrumbList>
