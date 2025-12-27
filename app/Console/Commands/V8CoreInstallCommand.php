@@ -30,15 +30,8 @@ class V8CoreInstallCommand extends Command
         $this->newLine();
         $this->line('╔══════════════════════════════════════════════════════════════════════════════════╗');
         $this->line('║                                                                                  ║');
-        $this->line('║   <fg=blue>██████╗  ██████╗ ██████╗ ███╗   ██╗███████╗██╗ ██████╗</>                         ║');
-        $this->line('║   <fg=blue>██╔══██╗██╔════╝██╔═══██╗████╗  ██║██╔════╝██║██╔════╝</>                         ║');
-        $this->line('║   <fg=blue>██████╔╝██║     ██║   ██║██╔██╗ ██║█████╗  ██║██║  ███╗</>                        ║');
-        $this->line('║   <fg=blue>██╔══██╗██║     ██║   ██║██║╚██╗██║██╔══╝  ██║██║   ██║</>                        ║');
-        $this->line('║   <fg=blue>██║  ██║╚██████╗╚██████╔╝██║ ╚████║██║     ██║╚██████╔╝</>                        ║');
-        $this->line('║   <fg=blue>╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝     ╚═╝ ╚═════╝</>                         ║');
-        $this->line('║                                                                                  ║');
         $this->line('║                <fg=cyan>Network Configuration Management System</>                           ║');
-        $this->line('║                   <fg=white>Professional Grade • Open Source</>                               ║');
+        $this->line('║                   <fg=white>rConfig V8 Core • Open Source</>                               ║');
         $this->line('║                                                                                  ║');
         $this->line('╚══════════════════════════════════════════════════════════════════════════════════╝');
         $this->newLine();
@@ -132,18 +125,12 @@ class V8CoreInstallCommand extends Command
     {
         $url = 'https://github.com/rconfig/rconfig';
         
-        $this->components->info("Opening GitHub repository...");
-        $this->line("URL: $url");
-        
-        // Try to open in browser
-        if (PHP_OS_FAMILY === 'Windows') {
-            @exec("start $url");
-        } elseif (PHP_OS_FAMILY === 'Darwin') {
-            @exec("open $url");
-        } else {
-            // Linux - may fail on some systems
-            @exec("xdg-open $url 2>/dev/null &");
-        }
+        $this->newLine();
+        $this->components->info("⭐ Show your support by starring our repo!");
+        $this->line("   <fg=cyan>$url</fg>");
+        $this->newLine();
+        $this->line("   <fg=yellow>→ Copy the link above and open it in your browser</>");
+        $this->newLine();
     }
 
     protected function displayNextSteps()

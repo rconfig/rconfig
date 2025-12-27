@@ -4,6 +4,7 @@ import HealthLatestCards from "@/pages/Dashboard/HealthLatestCards.vue";
 import QuickActions from "@/pages/Dashboard/QuickActions.vue";
 import SysinfoCards from "@/pages/Dashboard/SysinfoCards.vue";
 import DashboardWidgets from "@/pages/Dashboard/DashboardWidgets.vue";
+import NewsletterModal from "@/pages/Dashboard/NewsletterModal.vue";
 import { onMounted, ref } from "vue";
 import { useDashboard } from "@/pages/Dashboard/useDashboard";
 
@@ -21,6 +22,7 @@ onMounted(() => {
 
 <template>
 	<main class="flex flex-col flex-1 gap-4 p-6 dark:bg-rcgray-900">
+		<NewsletterModal />
 		<!-- Main Dashboard Grid -->
 		<div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
 			<!-- Primary Stats - Full Width on Mobile, 8 cols on XL -->
