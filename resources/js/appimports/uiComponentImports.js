@@ -13,6 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Toaster } from "@/components/ui/toast";
+import KeyboardShortcut from "@/pages/Shared/Buttons/KeyboardShortcut.vue";
 
 export {
 	// Alerts
@@ -24,6 +25,7 @@ export {
 	Checkbox,
 	Input,
 	InputPassword,
+	KeyboardShortcut,
 	Label,
 	RcBadge,
 	ResizableHandle,

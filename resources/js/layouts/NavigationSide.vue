@@ -4,7 +4,6 @@ import ExternalToolDialog from "@/layouts/Components/ExternalToolDialog.vue";
 import InventoryPopover from "@/layouts/Components/InventoryPopover.vue";
 import NavCloseButton from "@/pages/Shared/Buttons/NavCloseButton.vue";
 import NotificationsPopover from "@/layouts/Components/NotificationsPopover.vue";
-import QuickActions from "@/layouts/Components/QuickActions.vue";
 import SheetHelp from "@/layouts/Components/SheetHelp.vue";
 import { ChevronRight, ChevronDown, ExternalLink, Trash2, LifeBuoy } from "lucide-vue-next";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -83,7 +82,6 @@ const toggleFavorite = (viewId) => {
 					</div>
 
 					<div class="flex-1">
-						<QuickActions :panelWidth="panelWidth" />
 
 						<div class="mx-2 hover:transition-all">
 							<nav class="grid items-start px-2 text-sm font-medium">

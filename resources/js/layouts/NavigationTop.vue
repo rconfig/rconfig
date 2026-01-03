@@ -6,7 +6,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { ref, computed, onMounted, inject } from "vue";
 import { useColorMode } from "@vueuse/core";
 import { usePanelStore } from "@/stores/panelStore"; // Import the Pinia store
-import { usePermissionsStore } from "@/stores/permissions";
 import { useRoute, useRouter } from "vue-router";
 import { useToaster } from "@/composables/useToaster";
 import { HelpCircle, Sun, Moon, MoreVertical, Paintbrush, Star } from "lucide-vue-next";
@@ -19,7 +18,6 @@ const route = useRoute();
 const router = useRouter();
 const { toastSuccess, toastInfo } = useToaster();
 const isDevMode = import.meta.env.DEV;
-const permissionsStore = usePermissionsStore();
 const serverDisplayName = inject("serverDisplayName");
 const serverDisplayColor = inject("serverDisplayColor");
 const serverDisplaySize = inject("serverDisplaySize");
@@ -91,7 +89,6 @@ function logout() {
 	axios
 		.post("/logout")
 		.then((response) => {
-			permissionsStore.resetOnLogout();
 			window.location.href = "/login";
 		})
 		.catch((error) => {

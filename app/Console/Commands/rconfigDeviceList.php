@@ -19,7 +19,7 @@ class rconfigDeviceList extends Command
      *
      * @var string
      */
-    protected $description = 'List all tag IDs and names in rConfig';
+    protected $description = 'List all Device IDs and names in rConfig';
 
     /**
      * Create a new command instance.

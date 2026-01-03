@@ -11,7 +11,6 @@ import { registerComponents } from "./appimports/registerComponents";
 import { setupGlobalProperties } from "./appimports/globalProperties";
 import { setupPlugins } from "./appimports/setupPlugins";
 import { useFormatters } from "./composables/useFormatters";
-import { usePermissionsStore } from "./stores/permissions";
 import { RCONFIG_DOCS_URL } from "./config/constants";
 
 // Initialize app
@@ -87,12 +86,3 @@ window.vueApp = app;
 
 // Emit the app-ready event when Vue has mounted
 window.dispatchEvent(new Event("app-ready"));
-
-// Load user permissions if logged in
-const userId = globalProperties.$userId;
-if (userId) {
-	const permissionsStore = usePermissionsStore();
-	permissionsStore.loadPermissions(userId).catch((err) => {
-		console.error("Failed to load user permissions:", err);
-	});
-}
