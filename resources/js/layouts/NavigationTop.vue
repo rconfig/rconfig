@@ -141,7 +141,7 @@ const showServerName = computed(() => {
 							</button>
 						</TooltipTrigger>
 						<TooltipContent class="text-white bg-rcgray-800 border border-blue-500/30">
-							<p>Star us on GitHub</p>
+							<p>Click to star our repo - Takes 2 seconds!</p>
 						</TooltipContent>
 					</Tooltip>
 				</TooltipProvider>

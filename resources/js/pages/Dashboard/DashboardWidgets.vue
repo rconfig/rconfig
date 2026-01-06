@@ -169,7 +169,7 @@ onMounted(() => {
 		</div>
 
 		<!-- Empty State -->
-		<div v-if="activeWidgets.length === 0" class="border-0 shadow-md rounded-2xl bg-card text-card-foreground p-4 transition-all duration-200 hover:shadow-lg">
+		<!-- <div v-if="activeWidgets.length === 0" class="border-0 shadow-md rounded-2xl bg-card text-card-foreground p-4 transition-all duration-200 hover:shadow-lg">
 			<div class="text-center py-8">
 				<div class="inline-flex p-3 rounded-full bg-muted/50 mb-3">
 					<Plus class="w-6 h-6 text-muted-foreground" />
@@ -188,6 +188,6 @@ onMounted(() => {
 					Configure Widgets
 				</Button>
 			</div>
-		</div>
+		</div> -->
 	</div>
 </template>

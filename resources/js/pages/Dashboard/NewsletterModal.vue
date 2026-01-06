@@ -4,24 +4,62 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from '@/components/ui/button';
 import { Mail, Sparkles, TrendingUp, Bell, Zap } from 'lucide-vue-next';
 
-const STORAGE_KEY = 'rconfig_newsletter_shown';
+const STORAGE_KEY = 'rconfig_newsletter_subscribed';
+const INTERACTIONS_KEY = 'rconfig_newsletter_data';
 
 const showModal = ref(false);
 const isSubmitting = ref(false);
 
+const getInteractionData = () => {
+	const data = localStorage.getItem(INTERACTIONS_KEY);
+	return data ? JSON.parse(data) : {
+		dismissCount: 0,
+		lastShown: null
+	};
+};
+
+const saveInteractionData = (data) => {
+	localStorage.setItem(INTERACTIONS_KEY, JSON.stringify(data));
+};
+
+const shouldShowModal = () => {
+	// Already subscribed? Never show again
+	if (localStorage.getItem(STORAGE_KEY) === 'true') {
+		return false;
+	}
+
+	const data = getInteractionData();
+	const now = Date.now();
+	
+	if (!data.lastShown) {
+		return true;
+	}
+	
+	// If they dismissed it, calculate cooldown
+	const minutesSinceLastShow = (now - data.lastShown) / (1000 * 60);
+	
+	// Progressive but AGGRESSIVE cooldown strategy:
+	switch (data.dismissCount) {
+		case 1: return minutesSinceLastShow >= 5;   // 5 minutes
+		case 2: return minutesSinceLastShow >= 15;  // 15 minutes
+		case 3: return minutesSinceLastShow >= 30;  // 30 minutes
+		default: return minutesSinceLastShow >= 60; // 1 hour
+	}
+};
+
 onMounted(() => {
-	const hasShown = localStorage.getItem(STORAGE_KEY);
-	if (!hasShown) {
+	// Check if we should show
+	if (shouldShowModal()) {
 		setTimeout(() => {
 			showModal.value = true;
-		}, 2000);
+			
+			// Update last shown time
+			const data = getInteractionData();
+			data.lastShown = Date.now();
+			saveInteractionData(data);
+		}, 2000); // 2 second delay after login
 	}
 });
-
-const handleClose = () => {
-	showModal.value = false;
-	localStorage.setItem(STORAGE_KEY, 'true');
-};
 
 const handleSubmit = async () => {
 	isSubmitting.value = true;
@@ -34,8 +72,11 @@ const handleSubmit = async () => {
 			window.location.href = 'https://www.rconfig.com/newsletter';
 		}
 		
+		localStorage.setItem(STORAGE_KEY, 'true');
+		localStorage.removeItem(INTERACTIONS_KEY);
+		
 		setTimeout(() => {
-			handleClose();
+			showModal.value = false;
 			isSubmitting.value = false;
 		}, 500);
 		
@@ -47,18 +88,20 @@ const handleSubmit = async () => {
 };
 
 const handleMaybeLater = () => {
-	handleClose();
+	const data = getInteractionData();
+	data.dismissCount += 1;
+	data.lastShown = Date.now();
+	saveInteractionData(data);
+	
+	showModal.value = false;
 };
 </script>
 
 <template>
-  <Dialog :open="showModal" @update:open="(val) => showModal = val">
+  <Dialog :open="showModal" @update:open="(val) => { if (!val) handleMaybeLater(); }">
     <DialogContent class="sm:max-w-lg shadow-2xl bg-card p-6">
-      
-      <!-- Content -->
       <div class="space-y-5">
         <DialogHeader class="text-center space-y-3">
-          <!-- Icon with glow effect -->
           <div class="flex items-center justify-center gap-3">
             <div class="relative">
               <div class="absolute inset-0 bg-blue-500/20 rounded-full blur-xl"></div>
@@ -78,7 +121,6 @@ const handleMaybeLater = () => {
           </DialogDescription>
         </DialogHeader>
 
-        <!-- Feature cards -->
         <div class="grid gap-2.5">
           <div class="flex items-start gap-3 p-2.5 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors group">
             <div class="p-1.5 rounded-lg bg-blue-100 dark:bg-blue-900/50 group-hover:scale-110 transition-transform">
@@ -111,7 +153,6 @@ const handleMaybeLater = () => {
           </div>
         </div>
 
-        <!-- CTA Buttons -->
         <div class="flex flex-col gap-2.5 pt-1">
           <Button 
             @click="handleSubmit"
@@ -133,7 +174,6 @@ const handleMaybeLater = () => {
           </Button>
         </div>
 
-        <!-- Trust indicator -->
         <div class="text-center pt-2 border-t border-muted/50">
           <p class="text-xs text-muted-foreground flex items-center justify-center gap-2">
             <svg class="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
@@ -161,7 +201,6 @@ const handleMaybeLater = () => {
   animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* Smooth animations */
 @keyframes slideUp {
   from {
     opacity: 0;

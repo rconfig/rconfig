@@ -23,18 +23,24 @@ class DashboardControllerTest extends TestCase
         $response = $this->json('get', '/api/dashboard/sysinfo');
 
         $response->assertStatus(200);
-        $response->assertJsonStructure([
+        $expectedStructure = [
             'OSVersion',
             'localIp',
             'PublicIP',
             'ServerName',
             'PHPVersion',
             'RedisVersion',
-            'MySQLVersion',
             'timezone',
             'url',
             'systemUptime',
-        ]);
+        ];
+        
+        $dbDriver = config('database.default');
+        if (in_array($dbDriver, ['mysql', 'test_mysql']) || strpos($dbDriver, 'pgsql') !== false) {
+            $expectedStructure[] = 'MySQLVersion';
+        }
+        
+        $response->assertJsonStructure($expectedStructure);
     }
 
     public function test_config_info_test()

@@ -103,7 +103,7 @@ rConfig v8 Core is a **powerful, free, and open-source** Network Configuration M
 - 🔧 **Laravel 12** - Modern PHP framework
 - 🎨 **Vue.js 3** - Reactive UI components
 - ⚡ **Vite** - Lightning-fast builds
-- 🎭 **PatternFly** - Enterprise UI patterns
+- 🎨 **shadcn/ui** - Beautiful UI components
 - 🐳 **Docker Ready** - Container deployment
 - 📊 **MySQL/MariaDB** - Reliable database
 
@@ -487,7 +487,7 @@ Built with amazing open-source technologies:
 
 - [Laravel](https://laravel.com) - The PHP Framework for Web Artisans (V12)
 - [Vue.js](https://vuejs.org/) - The Progressive JavaScript Framework
-- [PatternFly](https://v4-archive.patternfly.org/v4/) - Enterprise UI Components
+- [shadcn/ui](https://ui.shadcn.com/) - Beautifully designed components
 - [Vite](https://vitejs.dev/) - Next Generation Frontend Tooling
 
 See [`composer.json`](composer.json) and [`package.json`](package.json) for the complete list of dependencies.
