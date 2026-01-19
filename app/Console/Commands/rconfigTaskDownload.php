@@ -67,6 +67,7 @@ class rconfigTaskDownload extends Command
         foreach ($tasks as $task) {
 
             $this->report_data->report_id = (string) Str::uuid();
+            $this->report_data->report_name = "device_download_report_{$task->id}";
             $this->report_data->task_type = 'Task Download Report';
             $this->report_data->task = $task;
             $this->report_data->start_time = Carbon::now();

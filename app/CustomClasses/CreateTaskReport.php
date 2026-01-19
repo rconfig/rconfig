@@ -27,6 +27,7 @@ class CreateTaskReport
 
         $model = new Taskdownloadreport;
         $model->report_id = $this->report_data->report_id;
+        $model->report_name = $this->report_data->report_name;
         $model->task_type = $this->report_data->task_type;
         $model->task_id = $this->report_data->task->id;
         $model->task_name = $this->report_data->task->task_name;

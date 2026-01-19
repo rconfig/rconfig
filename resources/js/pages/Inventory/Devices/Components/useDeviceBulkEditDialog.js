@@ -15,6 +15,7 @@ export function useDeviceBulkEditDialog(props, emit) {
 	const selectedCategory = ref([]);
 	const selectedTags = ref([]);
 	const selectedVendor = ref([]);
+	const selectedCredentials = ref([]);
 	const deviceEnablePrompt = ref("");
 	const deviceMainPrompt = ref("");
 	const selectedModel = ref([]);
@@ -23,6 +24,7 @@ export function useDeviceBulkEditDialog(props, emit) {
 	const successMsg = ref("");
 	const propertyOptions = [
 		{ id: 2, name: "command_group" },
+		{ id: 1, name: "credentials" },
 		{ id: 4, name: "device_enable_prompt" },
 		{ id: 5, name: "device_main_prompt" },
 		{ id: 6, name: "model" },
@@ -57,6 +59,7 @@ export function useDeviceBulkEditDialog(props, emit) {
 		selectedTemplate.value = 0;
 		selectedCategory.value = 0;
 		selectedVendor.value = 0;
+		selectedCredentials.value = 0;
 		deviceEnablePrompt.value = "";
 		deviceMainPrompt.value = "";
 		selectedModel.value = "";
@@ -74,6 +77,11 @@ export function useDeviceBulkEditDialog(props, emit) {
 		}
 
 		const typeActions = {
+			credentials: {
+				value: selectedCredentials.value,
+				errorMessage: "Please select Credentials",
+				updateFunction: updateCredentials,
+			},
 			command_group: {
 				value: selectedCategory.value,
 				errorMessage: "Please select a Command Group",
@@ -125,6 +133,28 @@ export function useDeviceBulkEditDialog(props, emit) {
 		}
 
 		selectedAction.updateFunction();
+	}
+
+	function updateCredentials() {
+		isUpdating.value = true;
+		axios
+			.post("/api/device/bulk-update/credentials", {
+				device_ids: props.checkedRows,
+				cred_id: selectedCredentials.value.id,
+			})
+			.then((response) => {
+				toastSuccess("Success", response.data.message);
+				isUpdating.value = false;
+				successMsg.value = "Credentials updated successfully, you can now close this dialog or continue updating other properties.";
+				clearMsgs();
+				emit("bulkUpdateSuccess");
+			})
+			.catch((error) => {
+				toastError("Error", error.response.data.message || "An error occurred while updating vendors");
+
+				isUpdating.value = false;
+				emit("bulkUpdateSuccess");
+			});
 	}
 
 	function updateCategory() {
@@ -301,6 +331,7 @@ export function useDeviceBulkEditDialog(props, emit) {
 		isUpdating,
 		selectedModel,
 		selectedCategory,
+		selectedCredentials,
 		selectedProperty,
 		selectedPropertyName,
 		selectedTemplate,

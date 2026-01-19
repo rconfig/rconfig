@@ -1,5 +1,6 @@
 <script setup>
 import CategoryMultiSelect from "@/pages/Shared/FormFields/CategoryMultiSelect.vue";
+import CredentialsMultiSelect from "@/pages/Shared/FormFields/CredentialsMultiSelect.vue";
 import VendorMultiSelect from "@/pages/Shared/FormFields/VendorMultiSelect.vue";
 import TemplateMultiSelect from "@/pages/Shared/FormFields/TemplateMultiSelect.vue";
 import DeviceModelMultiSelect from "@/pages/Shared/FormFields/DeviceModelMultiSelect.vue";
@@ -33,6 +34,7 @@ const {
 	isUpdating,
 	selectedModel,
 	selectedCategory,
+	selectedCredentials,
 	selectedProperty,
 	selectedPropertyName,
 	selectedTemplate,
@@ -89,6 +91,7 @@ const {
 							{{ formatters.capitalizeFirstLetter(selectedPropertyName) }}
 							<span class="text-red-400">*</span>
 						</Label>
+						<CredentialsMultiSelect v-if="selectedProperty.name === 'credentials'" v-model="selectedCredentials" :singleSelect="true" class="w-full" />
 						<CategoryMultiSelect v-if="selectedProperty.name === 'command_group'" v-model="selectedCategory" :singleSelect="true" class="w-full" />
 						<div v-if="selectedProperty.name === 'device_enable_prompt'" class="col-span-3">
 							<Input v-model="deviceEnablePrompt" id="device_enable_prompt" autocomplete="new-name" name="new-name" />
