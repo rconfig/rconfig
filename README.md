@@ -78,7 +78,7 @@ rConfig v8 Core is a **powerful, free, and open-source** Network Configuration M
 <summary><strong>Click to view screenshots</strong></summary>
 
 ### Dashboard
-![Dashboard](public/images/brand/dashboard.png)
+![Dashboard](public/images/brand/v8core/dashboard.png)
 
 </details>
 

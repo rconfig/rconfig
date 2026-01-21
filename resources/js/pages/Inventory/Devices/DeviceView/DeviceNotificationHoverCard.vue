@@ -33,7 +33,7 @@ const props = defineProps({
 					<div class="flex pt-2 items-between">
 						<Calendar class="w-4 h-4 mr-2 opacity-70" />
 						<span class="text-xs text-muted-foreground">Event Date: {{ formatters.formatTime(notification.created_at) }}</span>
-						<Button class="h-6 p-1 ml-auto" variant="ghost" :title="t('actions.copyRawData')" @click="copyItem(notification.id, notification)">
+						<Button class="h-6 p-1 ml-auto" variant="ghost" :title="'Copy Raw Data'" @click="copyItem(notification.id, notification)">
 							<RcIcon name="copy-transition" :isActive="activeCopyIcon[notification.id]" :size="16" />
 						</Button>
 					</div>

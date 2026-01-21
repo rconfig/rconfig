@@ -24,6 +24,9 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
     /* INTEGRATIONS ROUTES */
     loadRoutesFrom('/api_modules/integrations.php');
 
+    /* ACTIVITYLOGS ROUTES */
+    loadRoutesFrom('/api_modules/activitylogs.php');
+
     /* USERS ROUTES */
     loadRoutesFrom('/api_modules/users.php');
 
@@ -63,22 +66,6 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
     Route::get('/app-dir-path', function () {
         return rconfig_appdir_path();
     });
-
-    /* SEARCH ROUTES */
-    Route::get('/search', 'QuickSearchController@search');
-
-    Route::get('/license-info', 'LicenseInfoController@index');
-
-    Route::resource('activitylogs', 'ActivityLogController')->only(['index', 'show', 'destroy']);
-    Route::post('/activitylogs/delete-many', 'ActivityLogController@deleteMany');
-
-    Route::prefix('activitylogs')->group(function () {
-        Route::get('last5/{deviceid}', 'ActivityLogController@getLast5');
-        Route::get('device-stats/{deviceid}', 'ActivityLogController@showStatsByDeviceId');
-        Route::get('clear-logs/{deviceid}', 'ActivityLogController@clearLogsByDeviceId');
-    });
-
-    Route::get('/onboarding/steps', 'UserOnboardingController@getSteps');
 
     Route::resource('device-credentials', 'DeviceCredentialsController');
     Route::post('/device-credentials/delete-many', 'DeviceCredentialsController@deleteMany');

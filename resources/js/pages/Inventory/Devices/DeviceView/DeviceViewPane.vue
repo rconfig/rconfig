@@ -191,8 +191,8 @@ function close() {
 
             <div v-if="!isLoading">
               <DetailsViewRightNav class="p-2" @selectMainNavView="selectMainNavView" :selectedNav="mainNavSelected" />
-              <LatestEventsPanel v-if="!isLoading && mainNavSelected === 'notifications'" class="p-2" style="height: 60vh;" :deviceId="editId" />
-              <DeviceConfigsViewPanel class="p-2" v-if="!isLoading && mainNavSelected === 'configs'" :deviceId="editId" style="height: 60vh;" />
+              <LatestEventsPanel v-if="!isLoading && mainNavSelected === 'notifications'" class="p-2" style="height: 80vh;" :deviceId="editId" />
+              <DeviceConfigsViewPanel class="p-2" v-if="!isLoading && mainNavSelected === 'configs'" :deviceId="editId" style="height: 80vh;" />
             </div>
           </ScrollArea>
         </ResizablePanel>

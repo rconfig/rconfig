@@ -218,6 +218,8 @@ class DeviceController extends ApiBaseController
         $model->Category()->detach();
         $model->Template()->detach();
 
+        // configs are deleted in the Device Observer
+
         return $this->successResponse(Str::ucfirst($this->modelname) . ' deleted successfully!');
     }
 

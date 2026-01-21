@@ -40,7 +40,14 @@ const defaultTitle = computed(() => {
 const defaultDescription = computed(() => {
 	if (props.description) return props.description;
 	if (props.message) return props.message;
-	if (props.showConfirmDelete) return `This will permanently delete the item${Array.isArray(props.ids) ? "s" : ""} with ID: ${props.ids}.`;
+	if (props.showConfirmDelete) {
+		const idsArray = Array.isArray(props.ids) ? props.ids : [props.ids];
+		const count = idsArray.length;
+		if (count > 5) {
+			return `This will permanently delete ${count} selected items. This action cannot be undone.`;
+		}
+		return `This will permanently delete the item${Array.isArray(props.ids) ? "s" : ""} with ID: ${props.ids}. All related data (configs, changes and policies results) will also be removed. This action cannot be undone.`;
+	}
 	if (props.showConfirmDisable) return `Disabling will stop device${Array.isArray(props.ids) ? "s" : ""} from performing scheduled tasks.`;
 	if (props.showConfirmPurge) return `This will permanently purge the selected data ${props.purgedDataMsg}. This action cannot be undone.`;
 	if (props.showConfirmConfirmProceedAlertAlert) return `Please confirm you want to proceed with the current operation.`;

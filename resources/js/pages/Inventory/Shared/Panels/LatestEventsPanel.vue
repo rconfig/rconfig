@@ -85,7 +85,7 @@ function refreshData() {
 									<div class="flex items-center justify-between">
 										<p class="text-muted-foreground">{{ formatters.formatTime(notification.created_at) }}</p>
 										<DeviceNotificationHoverCard :notification="notification">
-											<Button :title="t('actions.viewRawData')" :alt="t('actions.viewRawData')" variant="outline" class="h-4 px-1 text-sm text-muted-foreground">
+											<Button :title="'View Raw Data'" :alt="'View Raw Data'" variant="outline" class="h-4 px-1 text-sm text-muted-foreground">
 												<Eye size="16" />
 											</Button>
 										</DeviceNotificationHoverCard>

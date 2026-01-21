@@ -30,7 +30,7 @@ import { Separator } from "@/components/ui/separator";
 								<div class="flex flex-col items-start justify-start gap-2.5 w-full">
 									<div class="relative flex">
 										<div data-variant="enterprise" class="absolute top-0 left-0 flex items-center justify-center"></div>
-										<img src="/images/brand/gradient_v6_logo.svg" alt="enterprise" class="w-36 h-10" />
+										<img src="/images/brand/v8core/rconfig_v8_core_logo_without_strapline_gradient.svg" alt="enterprise" class="w-36 h-10" />
 									</div>
 									<div class="tracking-[-0.02em]text-[#EEEFF1] font-normal text-[14px] leading-5 text-left text-inherit font-sora">V8 Core</div>
 								</div>
@@ -91,7 +91,7 @@ import { Separator } from "@/components/ui/separator";
 								<div class="flex flex-col items-start justify-start gap-2.5 w-full">
 									<div class="relative flex">
 										<div data-variant="pro" class="absolute top-0 left-0 flex items-center justify-center"></div>
-										<img src="/images/brand/gradient_v7_logo.svg" alt="professional" class="w-24 h-10" />
+										<img src="/images/brand/v8core/rconfig_v8_pro_logo_without_strapline_gradient.svg" alt="professional" class="w-24 h-10" />
 									</div>
 									<div class="tracking-[-0.02em]text-[#EEEFF1] font-normal text-[14px] leading-5 text-left text-inherit font-sora">V8 Professional</div>
 								</div>
