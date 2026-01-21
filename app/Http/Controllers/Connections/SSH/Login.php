@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Connections\SSH;
 // use App\Http\use App\Services\Connections\Params\DeviceParams;\SSH\Send;
 // use App\Http\use App\Services\Connections\Params\DeviceParams;\SSH\Read;
 // use App\Http\use App\Services\Connections\Params\DeviceParams;\SSH\Quit;
-use App\Models\PrivSshKeys;
+
+use App\Models\DeviceCredentials;
 use phpseclib3\Crypt\PublicKeyLoader;
 use phpseclib3\Net\SSH2;
 
@@ -20,28 +21,22 @@ class Login
     {
         $this->connectionObj = $connectionObj;
         // $this->send = new Send($this->connectionObj->connection);
-        // $this->read = new Read($this->connectionObj);
+        $this->send = new Send($this->connectionObj);
     }
 
     public function login()
     {
-
         $this->escapeTildeChars();
 
-        if ($this->connectionObj->sshPrivKey) {
-            // $privKeyRecord = PrivSshKeys::find($this->connectionObj->ssh_key_id);
-            // $privateKey = file_get_contents($privKeyRecord->privSshKeyFile);
-
-            // $this->loadedKey = PublicKeyLoader::load($privateKey);
-            // $this->privKeyloginErrorCheck();
-        } else {
-            $this->loginErrorCheck();
-            $this->HPChecks();
+        if (! $this->authenticate()) {
+            return false;
         }
 
-        if ($this->connectionObj->sshInteractive === 'on') {
+        if ($this->shouldUseInteractiveLogin()) {
             $this->interactive_login();
         }
+
+        $this->handleSplashScreen();
 
         if ($this->connectionObj->enable == 'on') {
             $this->enableModeLogin();
@@ -50,6 +45,8 @@ class Login
 
             return true;
         }
+
+        return true;
     }
 
     public function interactive_login()
@@ -61,25 +58,101 @@ class Login
         return true;
     }
 
-
-    public function loginErrorCheck()
+    private function authenticate(): bool
     {
-        if (!$this->connectionObj->connection->login($this->connectionObj->username, $this->connectionObj->password)) {
-            $logmsg = 'Authentication Failed for ' . ($this->connectionObj->hostname . ' ID:' . $this->connectionObj->device_id) . '. Or wrong prompt configured for this device! Check your device settings.';
+        if ($this->connectionObj->sshPrivKey) {
+            return $this->authenticateWithKey();
+        }
+
+        return $this->authenticateWithPassword();
+    }
+
+    private function authenticateWithPassword(): bool
+    {
+        $authOk = $this->loginErrorCheck();
+
+        if ($authOk === true) {
+            $this->HPChecks();
+        }
+
+        return $authOk;
+    }
+
+    private function authenticateWithKey(): bool
+    {
+        $cred = DeviceCredentials::where('id', $this->connectionObj->device_cred_id)->first();
+
+        if (! $cred) {
+            $logmsg = 'SSH Private key Device Credentials not found for ' . ($this->connectionObj->hostname . ' ID:' . $this->connectionObj->device_id) . '. Or wrong prompt configured for this device! Check your device settings.';
             activityLogIt(__CLASS__, __FUNCTION__, 'error', $logmsg, 'connection', $this->connectionObj->hostname, $this->connectionObj->device_id, 'device');
+
+            return false;
+        }
+
+        try {
+            $this->connectionObj->username = $cred->cred_username;
+            $this->loadedKey = PublicKeyLoader::load($cred->ssh_key, $cred->ssh_key_passphrase ?? null);
+
+            return $this->privKeyloginErrorCheck();
+        } catch (\Exception $e) {
+            $logmsg = 'Authentication Failed using SSH Private key for ' . ($this->connectionObj->hostname . ' ID:' . $this->connectionObj->device_id) . '. Check key and passphrase.';
+            activityLogIt(__CLASS__, __FUNCTION__, 'error', $logmsg, 'connection', $this->connectionObj->hostname, $this->connectionObj->device_id, 'device');
+            \Log::error($e);
 
             return false;
         }
     }
 
-    public function privKeyloginErrorCheck()
+    private function shouldUseInteractiveLogin(): bool
     {
-        if (!$this->connectionObj->connection->login($this->connectionObj->username, $this->loadedKey)) {
+        return $this->connectionObj->sshInteractive === 'on' || $this->connectionObj->sshInteractive === 'yes';
+    }
+
+    private function handleSplashScreen(): void
+    {
+        // For RuggedCom and Avaya type devices that have splash screens
+        if (! isset($this->connectionObj->hasSplashScreen) || $this->connectionObj->hasSplashScreen !== 'on') {
+            return;
+        }
+
+        if (isset($this->connectionObj->hasSplashScreenEnterKey) && $this->connectionObj->hasSplashScreenEnterKey == 'on') {
+            // some devices require an enter key to be sent to get past the splash screen
+            $this->connectionObj->connection->write("\n");
+            sleep(1);
+        }
+
+        $this->connectionObj->connection->read($this->connectionObj->splashScreenReadToText);
+        $this->send->sendControlCode($this->connectionObj->splashScreenSendControlCode);
+    }
+
+    public function loginErrorCheck()
+    {
+        $loginSuccess = $this->connectionObj->connection->login($this->connectionObj->username, $this->connectionObj->password);
+
+        if (! $loginSuccess) {
             $logmsg = 'Authentication Failed for ' . ($this->connectionObj->hostname . ' ID:' . $this->connectionObj->device_id) . '. Or wrong prompt configured for this device! Check your device settings.';
+            $logmsg = $this->appendLastError($logmsg);
             activityLogIt(__CLASS__, __FUNCTION__, 'error', $logmsg, 'connection', $this->connectionObj->hostname, $this->connectionObj->device_id, 'device');
 
             return false;
         }
+
+        return true;
+    }
+
+    public function privKeyloginErrorCheck()
+    {
+        $loginSuccess = $this->connectionObj->connection->login($this->connectionObj->username, $this->loadedKey);
+
+        if (! $loginSuccess) {
+            $logmsg = 'Authentication Failed for ' . ($this->connectionObj->hostname . ' ID:' . $this->connectionObj->device_id) . '. Or wrong prompt configured for this device! Check your device settings.';
+            $logmsg = $this->appendLastError($logmsg);
+            activityLogIt(__CLASS__, __FUNCTION__, 'error', $logmsg, 'connection', $this->connectionObj->hostname, $this->connectionObj->device_id, 'device');
+
+            return false;
+        }
+
+        return true;
     }
 
     private function sendPagingCommand()
@@ -135,5 +208,19 @@ class Login
         $this->connectionObj->enableCmd = str_replace('~', '\~', $this->connectionObj->enableCmd);
         $this->connectionObj->enablePassPrmpt = str_replace('~', '\~', $this->connectionObj->enablePassPrmpt);
         $this->connectionObj->devicePrompt = str_replace('~', '\~', $this->connectionObj->devicePrompt);
+    }
+
+    private function appendLastError(string $logmsg): string
+    {
+        if (! method_exists($this->connectionObj->connection, 'getLastError')) {
+            return $logmsg;
+        }
+
+        $lastError = trim((string) $this->connectionObj->connection->getLastError());
+        if ($lastError === '') {
+            return $logmsg;
+        }
+
+        return $logmsg . ' Last error: ' . $lastError;
     }
 }

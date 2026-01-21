@@ -10,13 +10,9 @@ use App\Http\Controllers\Connections\SSH\SendCommand;
 class SSHConnectionManager
 {
     protected $deviceParamsObject;
-
     protected $connectionObj;
-
     protected $loginObj;
-
     protected $SendCommandObj;
-
     protected $debug;
 
     public function __construct($deviceParamsObject, $debug)
@@ -56,11 +52,19 @@ class SSHConnectionManager
     {
         try {
             $this->loginObj = new Login($this->connectionObj);
-            $this->loginObj->login();
+            $loginResult = $this->loginObj->login();
+            if ($loginResult === false) {
+                return false;
+            }
 
             return true;
         } catch (\Exception $e) {
-            // \activityLogIt($e->message);
+            if ($this->debug) {
+                dump($e->getMessage());
+            }
+            $logmsg = $e->getMessage();
+            activityLogIt(__CLASS__, __FUNCTION__, 'error', $logmsg, 'connection', $this->connectionObj->hostname, $this->connectionObj->device_id, 'device');
+
             return false;
         }
     }

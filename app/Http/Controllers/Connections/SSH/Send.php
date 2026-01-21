@@ -20,4 +20,10 @@ class Send
     {
         return $this->connectionObj->connection->exec($command . "\r");
     }
+
+    public function sendControlCode($code)
+    {
+        sleep(1);
+        return $this->connectionObj->connection->write($code);
+    }
 }

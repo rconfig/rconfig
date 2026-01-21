@@ -5,74 +5,61 @@ namespace App\Http\Controllers\Connections\Telnet;
 use App\CustomClasses\SetDeviceStatus;
 use App\Models\User;
 use App\Notifications\DBDeviceConnectionFailureNotification;
-use Illuminate\Support\Facades\Notification;
+use App\Enums\NotificationType;
+use App\Traits\NotificationDispatcher;
 
 class Connect
 {
+    use NotificationDispatcher;
+
     public $connection;
 
     /* MAIN */
     public $name;
-
     public $desc;
 
     /* CONNECT */
     public $timeout;
-
     public $protocol;
-
     public $port;
 
     /* AUTH */
     public $usernamePrompt;
-
     public $passwordPrompt;
-
     public $enable;
-
     public $enableCmd;
-
     public $enablePassPrmpt;
-
     public $hpAnyKeyStatus;
-
     public $hpAnyKeyPrmpt;
+    public $sshPrivKey;
 
     /* CONFIG */
     public $linebreak;
-
     public $paging;
-
     public $pagingCmd;
-
     public $resetPagingCmd;
-
     public $pagerPrompt;
-
     public $pagerPromptCmd;
-
     public $saveConfig;
-
     public $exitCmd;
 
     /* DEVICEPARAMS */
     public $device_id;
-
     public $hostname;
-
     public $username;
-
     public $password;
-
+    public $enableModePassword;
     public $devicePrompt;
-
+    public $enablePrompt;
     public $cliDebugStatus;
-
+    public $commands;
     public $command;
 
 
     /* OPTIONS */
     public $AnsiHost;
+    public $setWindowSize;
+    public $setTerminalDimensions;
 
     /* VT100 */
     public $hasSplashScreen;
@@ -162,9 +149,14 @@ class Connect
 
     private function checkConnectionState()
     {
-        if (!$this->connection) {
+        if (! $this->connection) {
             $logmsg = 'Unable to connect to ' . ($this->hostname . ' - ID:' . $this->device_id);
-            Notification::send(User::all(), new DBDeviceConnectionFailureNotification($logmsg, $this->device_id));
+
+            $this->sendToDefaultChannels(
+                NotificationType::CONNECTION_DEVICE_FAILURE,
+                new DBDeviceConnectionFailureNotification($logmsg, $this->device_id)
+            );
+
             (new SetDeviceStatus($this->device_id, 0))->setDeviceStatus();
             activityLogIt(__CLASS__, __FUNCTION__, 'error', $logmsg, 'connection', $this->hostname, $this->device_id, 'device');
 

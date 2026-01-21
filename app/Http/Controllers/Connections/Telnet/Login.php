@@ -7,9 +7,7 @@ use App\CustomClasses\SetDeviceStatus;
 class Login
 {
     protected $send;
-
     protected $read;
-
     protected $connectionObj;
 
     public function __construct(object $connectionObj)

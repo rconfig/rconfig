@@ -6,11 +6,13 @@ use App\Jobs\DownloadConfigNowJob;
 use App\Models\DeviceModel;
 use App\Models\Category;
 use App\Models\Command;
+use App\Models\Config as DeviceConfig;
 use App\Models\Device;
 use App\Models\Tag;
 use App\Models\Template;
 use App\Models\User;
 use App\Models\Vendor;
+use App\Observers\DeviceObserver;
 use App\Services\Device\PingService;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -257,6 +259,32 @@ class DevicesControllerTest extends TestCase
             'device_ip' => '12.12.12.12',
             'device_username' => 'stacky',
         ]);
+    }
+
+    public function test_delete_device_removes_configs_and_config_changes()
+    {
+        // Observer registration is skipped in tests by default; register it here to exercise the cleanup logic.
+        Device::observe(DeviceObserver::class);
+
+        $device = Device::factory()->create();
+
+        $configOne = DeviceConfig::factory()->create([
+            'device_id' => $device->id,
+            'device_name' => $device->device_name,
+            'config_location' => 'tests/storage/configs/' . $device->id . '_one.txt', // avoid deleting real files
+        ]);
+        $configTwo = DeviceConfig::factory()->create([
+            'device_id' => $device->id,
+            'device_name' => $device->device_name,
+            'config_location' => 'tests/storage/configs/' . $device->id . '_two.txt',
+        ]);
+
+        $response = $this->delete('/api/devices/' . $device->id);
+        $response->assertStatus(200);
+
+        $this->assertDatabaseMissing('devices', ['id' => $device->id]);
+        $this->assertDatabaseMissing('configs', ['id' => $configOne->id]);
+        $this->assertDatabaseMissing('configs', ['id' => $configTwo->id]);
     }
 
     public function test_delete_device()

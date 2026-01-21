@@ -2,10 +2,15 @@
 
 namespace App\Services\Config;
 
+use App\Models\Command;
+use DateTime;
+
 class FileOperations
 {
     public $type;
     public $_command;
+    public $_commandObj;
+    public $_commandFileName;
     public $_deviceName;
     public $_deviceid;
     public $date;
@@ -32,26 +37,31 @@ class FileOperations
      * @param  string  $todayfolder Todays Date folder
      * @return object  file object
      */
-    public function __construct($command, $catName, $deviceName, $deviceId, $data_basedir)
+    public function __construct($command, $catName, $deviceName, $deviceId, $data_basedir, $type)
     {
         // Set some variables for file and folder creation
+        $this->type = $type;
         $this->_command = $command;
+        $this->_commandFileName = $command;
         $this->_deviceName = $deviceName;
         $this->_deviceid = $deviceId;
-        $this->date = date('Ymd');
-        $this->year = date('Y');
-        $this->month = date('M');
-        $this->day = date('d');
-        $this->catfolder = $data_basedir . $catName . '/';
-        $this->hostfolder = $data_basedir . $catName . '/' . $deviceName;
-        $this->yearfolder = $data_basedir . $catName . '/' . $deviceName . '/' . $this->year;
-        $this->monthfolder = $data_basedir . $catName . '/' . $deviceName . '/' . $this->year . '/' . $this->month;
-        $this->todayfolder = $data_basedir . $catName . '/' . $deviceName . '/' . $this->year . '/' . $this->month . '/' . $this->day;
+        $date = new DateTime;
+        $this->date = $date->format('Ymd');
+        $this->year = $date->format('Y');
+        $this->month = $date->format('M');
+        $this->day = $date->format('d');
+        $this->catfolder = "{$data_basedir}{$catName}/";
+        $this->hostfolder = "{$this->catfolder}{$deviceName}";
+        $this->yearfolder = "{$this->hostfolder}/{$this->year}";
+        $this->monthfolder = "{$this->yearfolder}/{$this->month}";
+        $this->todayfolder = "{$this->monthfolder}/{$this->day}";
     }
 
     public function saveFile($showCmdOutput)
     {
-        $fullpath = $this->createFile($this->_command);
+        $this->_commandObj = Command::where('command', $this->_command)->first();
+        $this->checkIfCommandHasAlternateName();
+        $fullpath = $this->createFile($this->_commandFileName);
         $filecontents = $this->_eolOperation($showCmdOutput);
         $this->_insertFileContents($filecontents, $fullpath);
 
@@ -68,52 +78,37 @@ class FileOperations
         return ['filepath' => $fullpath, 'filename' => basename($fullpath), 'download_status' => $downloadStatus, 'filesize' => $fileSize];
     }
 
-    public function createFile($command)
+    public function createFile($command, $isJson = 0)
     {
         $command = $this->cleanDeviceName($command);
-        //create the file
-        $filename = $this->_createFileName($command);
-        $fullpath = $this->todayfolder . '/' . $filename;
-        // create category dir based on hostname if not already made
-        if (!is_dir($this->catfolder)) {
-            mkdir($this->catfolder);
-            custom_chown($this->catfolder);
-        }
-        // create hostname dir based on hostname if not already made
-        if (!is_dir($this->hostfolder)) {
-            mkdir($this->hostfolder);
-            custom_chown($this->hostfolder);
-        }
-        // create todays dir.name based on this years date if not already made
-        if (!is_dir($this->yearfolder)) {
-            mkdir($this->yearfolder);
-            custom_chown($this->yearfolder);
-        }
-        // create todays dir.name based on this months date if not already made
-        if (!is_dir($this->monthfolder)) {
-            mkdir($this->monthfolder);
-            custom_chown($this->monthfolder);
-        }
-        // create todays dir.name based on todays date if not already made
-        if (!is_dir($this->todayfolder)) {
-            mkdir($this->todayfolder);
-            custom_chown($this->todayfolder);
-        }
-        // if'' to create the filename based on the command if not created & chmod to 666
-        if (!file_exists($fullpath)) {
-            exec('touch ' . $fullpath);
+        $filename = $isJson ? $this->createJsonFileName($command) : $this->createFileName($command);
+        $fullpath = "{$this->todayfolder}/{$filename}";
+
+        // Ensure the directories exist and apply ownership
+        $this->ensureDirectoryExists($this->catfolder);
+        $this->ensureDirectoryExists($this->hostfolder);
+        $this->ensureDirectoryExists($this->yearfolder);
+        $this->ensureDirectoryExists($this->monthfolder);
+        $this->ensureDirectoryExists($this->todayfolder);
+
+        // Create the file if it doesn't exist and set permissions
+        if (! file_exists($fullpath)) {
+            $fullpath = str_replace(' ', '_', $fullpath); // Replace spaces in path
+            exec('touch ' . escapeshellarg($fullpath)); // Escape the filename for security
             chmod($fullpath, 0666);
         }
 
         return (string) $fullpath;
     }
 
-    /**
-     * Function insertFileContents
-     *
-     * @param  string  $lines Command output from device
-     * @param  string  $fullpath Fullpath as return by createFile Function to main script
-     */
+    private function ensureDirectoryExists($directory)
+    {
+        if (! is_dir($directory)) {
+            mkdir($directory, 0755, true); // Ensure all parent directories are created
+            custom_chown($directory);
+        }
+    }
+
     private function _insertFileContents($lines, $fullpath)
     {
         // if the file is alread in place chmod it to 666 before writing info
@@ -125,32 +120,22 @@ class FileOperations
         @chmod($fullpath, 0444); // disabled errors in case ops is not permitted
     }
 
-    /**
-     * Function appendFileContents
-     *
-     * @param  string  $lines Command output from device
-     * @param  string  $fullpath Fullpath as return by createFile Function to main script
-     */
-    //    public static function appendFileContents($lines, $fullpath) {
-    //        // if the file is alread in place chmod it to 666 before writing info
-    //        chmod($fullpath, 0666);
-    //        // dump array into file & chmod back to RO
-    //        $filehandle = fopen($fullpath, 'a');
-    //        file_put_contents($fullpath, $lines);
-    //        fclose($filehandle);
-    //        chmod($fullpath, 0444);
-    //    }
-    /**
-     * Function private _createFileName
-     *
-     * @param  string  $command Command from device
-     * @param  string  $filename Filename after removing spaces and appending '.txt'
-     */
-    private function _createFileName($command)
+    private function createFileName($command)
     {
         $timestamp = date('Gi'); // format 1301
         // Create file name and return it
         $filename = str_replace(' ', '', $command) . '_' . $timestamp . '.txt';
+        $filename = str_replace('/', '', $command) . '_' . $timestamp . '.txt';
+
+        return $filename;
+    }
+
+    private function createJsonFileName($command)
+    {
+        $timestamp = date('Gi'); // format 1301
+        // Create file name and return it
+        $filename = str_replace(' ', '', $command) . '_' . $timestamp . '.json';
+        $filename = str_replace('/', '', $command) . '_' . $timestamp . '.json';
 
         return $filename;
     }
@@ -166,6 +151,18 @@ class FileOperations
     // create new array with PHPs EOL parameter
     private function _eolOperation($showCmd)
     {
-        return implode(PHP_EOL, $showCmd);
+        if (is_array($showCmd)) {
+            return implode(PHP_EOL, $showCmd);
+        } else {
+            // Handle the case where $input is not an array
+            return $showCmd;
+        }
+    }
+
+    private function checkIfCommandHasAlternateName()
+    {
+        if ($this->_commandObj && $this->_commandObj->alternate_filename) {
+            $this->_commandFileName = $this->_commandObj->alternate_filename;
+        }
     }
 }

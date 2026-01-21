@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Connections\SSH;
 use App\CustomClasses\SetDeviceStatus;
 use App\Models\User;
 use App\Notifications\DBDeviceConnectionFailureNotification;
-use Illuminate\Support\Facades\Notification;
+use App\Enums\NotificationType;
+use App\Traits\NotificationDispatcher;
 use phpseclib3\Net\SSH2;
 
 class Connect
 {
+    use NotificationDispatcher;
+
     public $connection;
 
     /* MAIN */
@@ -33,6 +36,7 @@ class Connect
     public $enablePassPrmpt;
     public $hpAnyKeyStatus;
     public $hpAnyKeyPrmpt;
+    public $device_cred_id;
     public $sshPrivKey;
     public $ssh_key_id;
 
@@ -65,6 +69,12 @@ class Connect
     public $setWindowSize;
     public $setTerminalDimensions;
 
+    /* VT100 */
+    public $hasSplashScreen;
+    public $hasSplashScreenEnterKey;
+    public $splashScreenReadToText;
+    public $splashScreenSendControlCode;
+
 
     public function __construct(object $deviceParamsObject, $debug)
     {
@@ -88,6 +98,8 @@ class Connect
         $this->enablePassPrmpt = $deviceParamsObject->auth['enablePassPrmpt'];
         $this->hpAnyKeyStatus = $deviceParamsObject->auth['hpAnyKeyStatus'];
         $this->hpAnyKeyPrmpt = $deviceParamsObject->auth['hpAnyKeyPrmpt'];
+        // Send in Cred ID for Optional SSHPrivKey Setting
+        $this->device_cred_id = $deviceParamsObject->deviceparams['device_cred_id'] ?? null;
         // Optional SSHPrivKey Setting
         $this->sshPrivKey = isset($deviceParamsObject->auth['sshPrivKey']) ? $deviceParamsObject->auth['sshPrivKey'] : null;
         /* CONFIG */
@@ -119,6 +131,12 @@ class Connect
         $this->setWindowSize = isset($deviceParamsObject->options['setWindowSize']) ? $deviceParamsObject->options['setWindowSize'] : null;
         // next is implementation of https://api.phpseclib.org/2.0/File_ANSI.html#method_setDimensions
         $this->setTerminalDimensions = isset($deviceParamsObject->options['setTerminalDimensions']) ? $deviceParamsObject->options['setTerminalDimensions'] : null;
+
+        /* VT100 */
+        $this->hasSplashScreen = isset($deviceParamsObject->vt100['hasSplashScreen']) ? $deviceParamsObject->vt100['hasSplashScreen'] : null;
+        $this->hasSplashScreenEnterKey = isset($deviceParamsObject->vt100['hasSplashScreenEnterKey']) ? $deviceParamsObject->vt100['hasSplashScreenEnterKey'] : null;
+        $this->splashScreenReadToText = isset($deviceParamsObject->vt100['splashScreenReadToText']) ? $deviceParamsObject->vt100['splashScreenReadToText'] : null;
+        $this->splashScreenSendControlCode = isset($deviceParamsObject->vt100['splashScreenSendControlCode']) ? $deviceParamsObject->vt100['splashScreenSendControlCode'] : null;
 
         $cliDebugStatus = ($debug === true) ? 1 : 0; // convert debug to boolean
         $this->cliDebugStatus = $cliDebugStatus;
@@ -163,9 +181,14 @@ class Connect
 
     private function checkConnectionState()
     {
-        if (!$this->connection) {
+        if (! $this->connection) {
             $logmsg = 'Unable to connect to ' . ($this->hostname . ' - ID:' . $this->device_id);
-            Notification::send(User::allUsersAndRecipients(), new DBDeviceConnectionFailureNotification($logmsg, $this->device_id));
+
+            $this->sendToDefaultChannels(
+                NotificationType::CONNECTION_DEVICE_FAILURE,
+                new DBDeviceConnectionFailureNotification($logmsg, $this->device_id)
+            );
+
             (new SetDeviceStatus($this->device_id, 0))->setDeviceStatus();
             activityLogIt(__CLASS__, __FUNCTION__, 'error', $logmsg, 'connection', $this->hostname, $this->device_id, 'device');
 
