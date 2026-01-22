@@ -2,9 +2,11 @@
 import Loading from '@/pages/Shared/Table/Loading.vue';
 import PeekConfigDialog from '@/pages/Shared/Dialogs/PeekConfigDialog.vue';
 import PeekConfigSearchMatchesDialog from '@/pages/Shared/Dialogs/PeekConfigSearchMatchesDialog.vue';
+import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import Pagination from '@/pages/Shared/Table/Pagination.vue';
+import { Eye, FileSearch } from "lucide-vue-next";
 import { useResultsTable } from './useResultsTable';
 
 const props = defineProps({
@@ -19,8 +21,9 @@ const { changePage, currentPage, errors, formatters, isDialogOpen, isFetching, l
       <TableHeader>
         <TableRow>
           <TableHead class="w-[5%]">ID</TableHead>
-          <TableHead class="w-[20%]">Device</TableHead>
+          <TableHead class="w-[5%]">Device</TableHead>
           <TableHead class="w-[10%]">Command Group</TableHead>
+          <TableHead class="w-[10%]">Command</TableHead>
           <TableHead class="w-[10%]">Filesize</TableHead>
           <TableHead class="w-[10%]">Config date</TableHead>
           <TableHead class="w-[10%]">Matches</TableHead>
@@ -37,6 +40,7 @@ const { changePage, currentPage, errors, formatters, isDialogOpen, isFetching, l
             <TableCell class="text-start">{{ row.id }}</TableCell>
             <TableCell class="text-start">{{ row.device_name }}</TableCell>
             <TableCell class="text-start">{{ row.device_category }}</TableCell>
+            <TableCell class="text-start">{{ row.command }}</TableCell>
             <TableCell class="text-start">{{ formatters.formatFileSize(row.config_filesize) }}</TableCell>
             <TableCell class="text-start">{{ formatters.formatTime(row.config_date) }}</TableCell>
             <TableCell class="text-start">
@@ -48,9 +52,7 @@ const { changePage, currentPage, errors, formatters, isDialogOpen, isFetching, l
                       @click="openDialog('peek-config-search-matches-dialog-' + row.id)"
                       class="px-2 py-0 hover:bg-rcgray-800 rounded-xl">
                       <span class="flex items-center border-b">
-                        <Icon
-                          icon="charm:eye"
-                          class="mr-2 text-muted-foreground hover:text-blue-500" />
+                        <Eye class="mr-2 text-muted-foreground hover:text-blue-500" size="16" />
                         {{ row.matches.length ? row.matches.length : 'No' }} match{{ row.matches.length > 1 ? 'es' : '' }}
                       </span>
                     </Button>
@@ -68,9 +70,7 @@ const { changePage, currentPage, errors, formatters, isDialogOpen, isFetching, l
                     <Button
                       variant="ghost"
                       @click="openDialog('peek-config-dialog-' + row.id)">
-                      <Icon
-                        icon="lets-icons:view-alt-fill"
-                        class="size-6 text-muted-foreground hover:text-blue-500" />
+                      	<RcIcon name="peek-eye" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent class="text-white bg-rcgray-800">
@@ -85,9 +85,7 @@ const { changePage, currentPage, errors, formatters, isDialogOpen, isFetching, l
                     <Button
                       variant="ghost"
                       @click="viewDetailsPane(row.id)">
-                      <Icon
-                        icon="hugeicons:file-view"
-                        class="size-5 text-muted-foreground hover:text-blue-500" />
+                      <FileSearch class="size-5 text-muted-foreground hover:text-blue-500" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent class="text-white bg-rcgray-800">
@@ -125,13 +123,7 @@ const { changePage, currentPage, errors, formatters, isDialogOpen, isFetching, l
       </div>
     </div>
 
-    <Pagination
-      v-if="!isFetching && results.length > 0"
-      :currentPage="currentPage"
-      :lastPage="lastPage"
-      :perPage="perPage"
-      @update:currentPage="changePage($event)"
-      @update:perPage="updatePerpage($event)" />
+    <Pagination v-if="!isFetching && results.length > 0"  :currentPage="currentPage" :lastPage="lastPage" :perPage="perPage" @update:currentPage="currentPage = $event" @update:perPage="perPage = $event" :totalRecords="results.total" :isLoading="isFetching" />
 
     <div
       v-if="!isFetching && currentPage >= lastPage"
