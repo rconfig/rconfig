@@ -184,7 +184,7 @@ class TemplateReformatter
         $output[] = '# rConfig connection template – DO NOT EDIT DIRECTLY';
         $output[] = '## Template Notes:';
         $output[] = '## - All free text values must be wrapped in double quotes: " "';
-        $output[] = '## - Documentation: https://docs.rconfig.com/devices/templates/';
+        $output[] = '## - Documentation: https://v8coredocs.rconfig.com/devices/templates/';
         $output[] = '## - Community templates and contributions: https://github.com/rconfig/rConfig-templates';
         $output[] = '';
 

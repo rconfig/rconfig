@@ -7,7 +7,7 @@ const items = useStorage('helpTopicItemsHelpSheet', [
   {
     id: 1,
     name: 'Adding a device',
-    url: 'https://docs.rconfig.com/devices/devices/',
+    url: 'https://v8coredocs.rconfig.com/devices/devices/',
     icon: 'device',
     iconClass: 'text-4xl',
     text: 'Adding a device to inventory is easy, but it requires a few steps. Follow this guide to get started.',
@@ -16,7 +16,7 @@ const items = useStorage('helpTopicItemsHelpSheet', [
   {
     id: 2,
     name: 'Troubleshooting Device Connectivity',
-    url: 'https://docs.rconfig.com/general/troubleshooting/',
+    url: 'https://v8coredocs.rconfig.com/general/troubleshooting/',
     icon: 'troubleshoot',
     iconClass: 'text-4xl',
     text: 'If you are having trouble connecting to a device, follow this guide to troubleshoot the issue.',
@@ -25,7 +25,7 @@ const items = useStorage('helpTopicItemsHelpSheet', [
   {
     id: 3,
     name: 'Queue Manager',
-    url: 'https://docs.rconfig.com/settings/queues/',
+    url: 'https://v8coredocs.rconfig.com/settings/queues/',
     icon: 'sys-queue-manager',
     iconClass: 'text-4xl',
     text: 'The Queue Manager is a powerful tool that manages multi threaded tasks. Learn how to use it here.',
@@ -34,7 +34,7 @@ const items = useStorage('helpTopicItemsHelpSheet', [
 ]);
 
 function visitDocs() {
-  window.open('https://docs.rconfig.com', '_blank');
+  window.open('https://v8coredocs.rconfig.com', '_blank');
 }
 
 function openItem(item) {
