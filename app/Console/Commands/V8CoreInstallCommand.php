@@ -112,13 +112,25 @@ class V8CoreInstallCommand extends Command
     protected function setupCron()
     {
         $cronEntry = '* * * * * cd ' . base_path() . ' && php artisan schedule:run >> /dev/null 2>&1';
+
+        $currentCron = shell_exec('crontab -l 2>/dev/null') ?? '';
         
-        $this->components->info("Entry was added [$cronEntry]");
+        if (strpos($currentCron, 'artisan schedule:run') === false) {
+            $newCron = trim($currentCron) . "\n" . $cronEntry . "\n";
+            
+            $tempFile = tempnam(sys_get_temp_dir(), 'crontab');
+            file_put_contents($tempFile, $newCron);
+            shell_exec("crontab $tempFile");
+            unlink($tempFile);
+            
+            $this->components->success("Cron entry added successfully!");
+        } else {
+            $this->components->info("Cron entry already exists");
+        }
+
         $this->newLine();
-        
-        // Show the cron command to add
-        $this->components->warn('Please add the following to your crontab if not added automatically:');
-        $this->line($cronEntry);
+
+        $this->components->info("Cron entry: $cronEntry");
     }
 
     protected function openGitHub()
@@ -127,7 +139,7 @@ class V8CoreInstallCommand extends Command
         
         $this->newLine();
         $this->components->info("⭐ Show your support by starring our repo!");
-        $this->line("   <fg=cyan>$url</fg>");
+        $this->line("   <fg=cyan>$url</>");
         $this->newLine();
         $this->line("   <fg=yellow>→ Copy the link above and open it in your browser</>");
         $this->newLine();
