@@ -1,0 +1,1 @@
+import{e,o as r,u as o,x as n}from"./app-D03JNDkq.js";/* empty css               */const l={__name:"EnterIcon",props:{width:{type:[String,Number],default:16},height:{type:[String,Number],default:16},color:{type:String,default:"currentColor"}},setup(t){return(c,i)=>(r(),e(o(n),{width:t.width,height:t.height,color:t.color},null,8,["width","height","color"]))}};export{l as default};
