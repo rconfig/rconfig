@@ -19,25 +19,31 @@ class StoreDeviceRequest extends FormRequest
     protected function prepareForValidation()
     {
         if (isset($this->request->all()['device_tags'])) {
-            $this->merge([
-                'device_tags' => collect($this->request->all()['device_tags'])->pluck('id'),
-            ]);
-        }
-
-        if (isset($this->request->all()['device_template'])) {
-            $this->merge([
-                'device_template' => collect($this->request->all()['device_template'])->pluck('id'),
-            ]);
+            // check if isset($this->request->all()['device_tags'][0]['id'] as this is a manual ui request. REST API requests will have an array of ids [1, 2] etc..
+            if (isset($this->request->all()['device_tags'][0]['id'])) {
+                $this->merge([
+                    'device_tags' => collect($this->request->all()['device_tags'])->pluck('id'),
+                ]);
+            }
         }
 
         if (isset($this->request->all()['device_vendor'])) {
-            $this->merge([
-                'device_vendor' => collect($this->request->all()['device_vendor'])->pluck('id'),
-            ]);
+            // check if it's an object array from UI or already an ID array from REST API
+            if (isset($this->request->all()['device_vendor'][0]['id'])) {
+                $this->merge([
+                    'device_vendor' => collect($this->request->all()['device_vendor'])->pluck('id'),
+                ]);
+            }
         }
 
-        unset($this->request->all()['selectedCategoryArray']);
-        unset($this->request->all()['selectedModelArray']);
+        if (isset($this->request->all()['device_template'])) {
+            // check if it's an object array from UI or already an ID array from REST API
+            if (isset($this->request->all()['device_template'][0]['id'])) {
+                $this->merge([
+                    'device_template' => collect($this->request->all()['device_template'])->pluck('id'),
+                ]);
+            }
+        }
     }
 
     public function rules()
