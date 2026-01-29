@@ -138,6 +138,11 @@ Check out the complete feature list at <a href="https://www.rconfig.com/pricing#
 Get rConfig v8 Core up and running in minutes!
 
 ### Option 1: 🐳 Docker (Recommended for Quick Testing)
+
+For Docker installation, please use our dedicated Docker repository:
+
+**👉 [rconfig8coredocker](https://github.com/rconfig/rconfig8coredocker)**
+
 ```bash
 # Clone the Docker repository
 git clone https://github.com/rconfig/rconfig8coredocker.git
@@ -167,24 +172,9 @@ See the [Full Installation Guide](#installation) below.
 
 ### Prerequisites
 
-Before you begin, ensure you have:
+**Supported OS:** Rocky Linux 8/9+ (recommended), CentOS 8/9+, RHEL 8/9+, Ubuntu 22.04+, Alma Linux 8/9+, AWS Linux 2023
 
-- ✅ One of the supported operating systems:
-  - Rocky Linux 8/9+ (recommended)
-  - CentOS 8/9+
-  - RHEL 8/9+
-  - Ubuntu 22.04+
-  - Alma Linux 8/9+
-  - AWS Linux 2023
-
-- ✅ Required software:
-  - Git 2.25+
-  - PHP 8.4+
-  - Composer 2.4+
-  - Apache 2.4+
-  - MySQL 5.7+ or MariaDB 10.5+
-  - Node.js 14.17+
-  - Supervisor 4.2+
+**Required Software:** PHP 8.4+, Composer 2.4+, Apache 2.4+, MySQL 5.7+/MariaDB 10.5+, Node.js 14.17+, Git 2.25+, Supervisor 4.2+
 
 > 💡 **Tip:** We provide automated setup scripts! Visit [docs.rconfig.com/getstarted/os-setup](https://docs.rconfig.com/getstarted/os-setup)
 
@@ -315,6 +305,12 @@ Running rConfig v8 Core in Docker provides:
 - 🚚 **Portability** - Move between systems easily
 - 📦 **Consistency** - Same behavior everywhere
 
+### Docker Repository
+
+We maintain a dedicated Docker repository for rConfig v8 Core:
+
+**👉 [rconfig8coredocker](https://github.com/rconfig/rconfig8coredocker)**
+
 ### Quick Docker Setup
 ```bash
 # Clone the Docker repository
@@ -346,14 +342,14 @@ docker-compose up -d
 # For CentOS/RHEL/Rocky:
 cd /home
 yum -y install wget
-wget https://www.rconfig.com/downloads/php-updates/centos-php8-update.sh -O /home/centos-php8-update.sh
+wget https://dl.rconfig.com/downloads/php-updates/centos-php8-update.sh -O /home/centos-php8-update.sh
 chmod +x centos-php8-update.sh
 ./centos-php8-update.sh
 
 # For Ubuntu:
 cd /home
 sudo apt-get install wget
-wget https://www.rconfig.com/downloads/php-updates/ubuntu-php8-update.sh -O /home/ubuntu-php8-update.sh
+wget https://dl.rconfig.com/downloads/php-updates/ubuntu-php8-update.sh -O /home/ubuntu-php8-update.sh
 chmod +x ubuntu-php8-update.sh
 ./ubuntu-php8-update.sh
 ```
