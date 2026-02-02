@@ -40,7 +40,17 @@ class DeviceCredentialsController extends ApiBaseController
 
     public function update($id, StoreDeviceCredentialsRequest $request)
     {
-        return parent::updateResource($id, $request->toDTO()->toArray());
+        if ($request->cred_password === false) {
+            $request->cred_password = null;
+        }
+
+        if ($request->cred_enable_password === false) {
+            $request->cred_enable_password = null;
+        }
+
+        $inputArray = $request->toDTO()->toArray();
+
+        return parent::updateResource($id, $inputArray);
     }
 
     public function destroy($id, $return = 0)

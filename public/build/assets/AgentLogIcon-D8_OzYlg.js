@@ -1,0 +1,1 @@
+import{e as t,o as a,u as h,L as o}from"./app-hFCoyFCj.js";/* empty css               */const c={__name:"AgentLogIcon",props:{height:{type:Number,default:24},width:{type:Number,default:24}},setup(e){return(r,u)=>(a(),t(h(o),{width:e.width,height:e.height,class:"text-blue-400"},null,8,["width","height"]))}};export{c as default};

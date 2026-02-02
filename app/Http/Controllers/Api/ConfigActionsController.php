@@ -7,6 +7,7 @@ use App\Jobs\PurgeFailedConfigsJob;
 use App\Models\Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Services\UserLog\UserLogActivity;
 
 class ConfigActionsController extends ApiBaseController
 {
@@ -31,6 +32,32 @@ class ConfigActionsController extends ApiBaseController
         }
 
         return $this->successResponse('Download started');
+    }
+
+    public function downloadMany(Request $request)
+    {
+
+        if (! is_array($request->device_ids) || empty($request->device_ids)) {
+            return $this->failureResponse('Device IDs must be an array', 422);
+        }
+
+        $username = Auth::user()->name;
+
+        foreach ($request->device_ids as $device_id) {
+            if (! is_int($device_id)) {
+                return $this->failureResponse('Device IDs must be integers', 422);
+            }
+
+            if (App()->environment('testing')) { // required for testing
+                dispatch(new DownloadConfigNowJob($device_id, $username))->onConnection('sync');
+            } else {
+                dispatch(new DownloadConfigNowJob($device_id, $username))->onQueue('ManualDownloadQueue');
+            }
+        }
+
+        // UserLogActivity::addToLog('User started download for devices: ' . implode(', ', $request->device_ids));
+
+        return $this->successResponse('Download started for devices: ' . implode(', ', $request->device_ids));
     }
 
     public function purgeFailed(Request $request)

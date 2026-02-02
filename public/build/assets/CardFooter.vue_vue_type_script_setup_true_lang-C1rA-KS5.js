@@ -1,0 +1,1 @@
+import{j as o,c as n,o as r,n as t,u as c,aS as l,m as p}from"./app-hFCoyFCj.js";const i=o({__name:"CardFooter",props:{class:{}},setup(s){const e=s;return(a,m)=>(r(),n("div",{class:t(c(l)("flex items-center p-6 pt-0",e.class))},[p(a.$slots,"default")],2))}});export{i as _};
