@@ -1,0 +1,1 @@
+import{e as t,o as a,n as s,u as l,B as r}from"./app-hFCoyFCj.js";/* empty css               */const u={__name:"AlertIcon",props:{width:{type:Number,default:16},height:{type:Number,default:16},class:{type:String,default:""}},setup(e){return(c,h)=>(a(),t(l(r),{width:e.width,height:e.height,class:s(e.class)},null,8,["width","height","class"]))}};export{u as default};
