@@ -19,7 +19,6 @@ class StoreDeviceCredentialsRequest extends FormRequest
             $rules = [
                 'cred_name' => 'required|min:3|unique:device_credentials|max:255',
                 'cred_username' => 'required|min:3|max:255',
-                'cred_password' => 'required|min:3|max:255',
             ];
         }
 
@@ -27,7 +26,6 @@ class StoreDeviceCredentialsRequest extends FormRequest
             $rules = [
                 'cred_name' => 'required|min:3|max:255',
                 'cred_username' => 'required|min:3|max:255',
-                'cred_password' => 'required|min:3|max:255',
             ];
         }
 
@@ -38,10 +36,10 @@ class StoreDeviceCredentialsRequest extends FormRequest
     {
         return new StoreDeviceCredentialDTO([
             'cred_name' => $this->cred_name,
-            'cred_description' => $this->cred_description ?? null,
-            'cred_username' => $this->cred_username,
-            'cred_password' => $this->cred_password,
-            'cred_enable_password' => $this->cred_enable_password ?? null,
+            'cred_description' => $this->cred_description,
+            'cred_username' => $this->cred_username ?? '0',
+            'cred_password' => $this->cred_password ?? '0',
+            'cred_enable_password' => $this->cred_enable_password ?? '0',
         ]);
     }
 }

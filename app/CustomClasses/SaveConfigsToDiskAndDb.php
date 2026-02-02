@@ -73,9 +73,9 @@ class SaveConfigsToDiskAndDb
         $this->model->duration = $duration;
         $this->model->latest_version = 1;
 
-        $this->model->save();
+        $saved = $this->model->save();
 
-        if ($this->model->save() && ! empty($savedFileInfo)) {
+        if ($saved && ! empty($savedFileInfo)) {
             return ['success' => true, 'commandName' => $this->commandName];
         }
 

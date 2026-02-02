@@ -89,7 +89,7 @@ export function useResultsTable(props) {
 	};
 
 	function viewDetailsPane(configId) {
-		router.push({ name: 'configs-view', params: { id: parseInt(configId) }, query: { ref: 'configsearch' } });
+		router.push({ name: 'config-view', params: { id: parseInt(configId) }, query: { ref: 'configsearch' } });
 	}
 
 	function updatePerpage(event) {

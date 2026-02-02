@@ -78,6 +78,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('queue:prune-batches --hours=48 --unfinished=72')->daily();
         $schedule->command('model:prune', ['--model' => MonitoredScheduledTaskLogItem::class])->daily();
         $schedule->command('model:prune', ['--model' => \Spatie\Health\Models\HealthCheckResultHistoryItem::class])->daily();
+        $this->schedule->command('rconfig:config-summaries-sync')->dailyAt('3:00');
+
     }
 
     private function download_task($executionStartTime, $task)
