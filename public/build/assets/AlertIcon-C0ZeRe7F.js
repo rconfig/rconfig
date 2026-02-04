@@ -1,0 +1,1 @@
+import{o as t,e as a,n as s,u as l,B as r}from"./app-CVdXIL_t.js";/* empty css               */const u={__name:"AlertIcon",props:{width:{type:Number,default:16},height:{type:Number,default:16},class:{type:String,default:""}},setup(e){return(c,h)=>(t(),a(l(r),{width:e.width,height:e.height,class:s(e.class)},null,8,["width","height","class"]))}};export{u as default};
