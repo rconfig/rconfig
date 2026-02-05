@@ -64,7 +64,6 @@ const {
 	loadMoreConfigs,
 	reload,
 	setDates,
-	toggleDownloaded,
 	toggleLatestVersion,
 	toggleSort,
 	viewDetailsPane,
@@ -113,16 +112,6 @@ onUnmounted(() => {
 							</template>
 						</RcToolTip>
 						<Switch id="airplane-mode" @update:checked="toggleLatestVersion" />
-					</div>
-
-					<div class="flex items-center">
-						<RcToolTip :delayDuration="100" content="Downloaded configs only" :side="'bottom'">
-							<template #trigger>
-								<PackageCheck size="16" class="mr-2" />
-							</template>
-						</RcToolTip>
-
-						<Switch id="airplane-mode" @update:checked="toggleDownloaded" />
 					</div>
 				</div>
 			</div>
