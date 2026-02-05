@@ -226,17 +226,6 @@ export function useConfigsTable(props) {
 		getTabledata();
 	}
 
-	function toggleDownloaded(e) {
-		if (e) {
-			filters.value[`filter[config_downloaded]`] = 1;
-			showDownloadedConfigs.value = true;
-		} else {
-			delete filters.value[`filter[config_downloaded]`];
-			showDownloadedConfigs.value = false;
-		}
-		getTabledata();
-	}
-
 	function clearFilters() {
 		filters.value = {};
 		filterStatus.value = [];
@@ -361,7 +350,6 @@ export function useConfigsTable(props) {
 		loadMoreConfigs,
 		reload,
 		setDates,
-		toggleDownloaded,
 		toggleLatestVersion,
 		toggleSort,
 		viewDetailsPane,

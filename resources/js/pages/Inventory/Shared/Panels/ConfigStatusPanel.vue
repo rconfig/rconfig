@@ -82,10 +82,10 @@ defineProps({
 								<!-- <dd class="flex items-center gap-2">{{ data.last_config_at ? formatters.formatTime(data.last_config_at) : formatters.formatTime(data.last_config?.updated_at) }}</dd> -->
 								<dd class="flex items-center gap-2">
 									<span>
-										{{ formatters.formatDateOnly(data.last_config_at ?? data.last_config?.updated_at) }}
+										{{ formatters.formatDateOnly(data.last_config_at ?? data.updated_at) }}
 									</span>
 									<span class="hidden xl:inline">
-										{{ formatters.formatTimeOnly(data.last_config_at ?? data.last_config?.updated_at) }}
+										{{ formatters.formatTimeOnly(data.last_config_at ?? data.updated_at) }}
 									</span>
 								</dd>
 							</div>
