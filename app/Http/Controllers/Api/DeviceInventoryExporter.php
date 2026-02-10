@@ -15,21 +15,16 @@ class DeviceInventoryExporter extends Controller
 
     public function export(Request $request)
     {
-        \Log::info('Export method called');
-
         $excludeFields = ['device_password', 'device_enable_password'];
 
         $devices = $this->fetchDevices($excludeFields);
 
-        \Log::info('Devices count: ' . $devices->count());
 
         if ($devices->isEmpty()) {
             return $this->failureResponse('No device inventory data found', 422);
         }
 
         $filename = $this->generateFileName();
-
-        \Log::info('Generated filename: ' . $filename);
 
         if ($this->exportToFile($devices->toArray(), $filename)) {
             $downloadLink = $this->generateDownloadLink($filename);
