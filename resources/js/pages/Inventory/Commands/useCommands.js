@@ -158,38 +158,6 @@ export function useCommands() {
 		fetchCommands();
 	});
 
-	function updateChangeNotification(row, id, currentValue) {
-		const newValue = !currentValue;
-		row.change_notification = newValue; // ✅ optimistic update
-
-		axios
-			.post(`/api/commands/toggle-change-notification/${id}`, { change_notification: newValue })
-			.then(() => {
-				toastSuccess("Success", "Change notification setting updated");
-			})
-			.catch((error) => {
-				row.change_notification = currentValue; // ✅ revert if error
-				console.log(error);
-				toastError("Error", error.response?.data?.message || "Failed to update change notification");
-			});
-	}
-
-	function updateSaveConfig(row, id, currentValue) {
-		const newValue = !currentValue;
-		row.save_config = newValue; // ✅ optimistic update
-
-		axios
-			.post(`/api/commands/set-save_config-state/${id}`, { state: newValue })
-			.then(() => {
-				toastSuccess("Success", "Save config setting updated");
-			})
-			.catch((error) => {
-				row.save_config = currentValue; // ✅ revert if error
-				console.log(error);
-				toastError("Error", error.response?.data?.message || "Failed to update save config");
-			});
-	}
-
 	return {
 		// state
 		commands,
@@ -219,7 +187,5 @@ export function useCommands() {
 		openBulkUpdateDialog,
 		handleCloseBulkUpdate,
 		handleUpdateBulkCommands,
-		updateChangeNotification,
-		updateSaveConfig,
 	};
 }
