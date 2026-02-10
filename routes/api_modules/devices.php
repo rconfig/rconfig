@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\Api\DeviceInventoryExporter;
 use Illuminate\Support\Facades\Route;
 
 Route::resource('devices', 'DeviceController');
@@ -13,6 +13,7 @@ Route::prefix('device')->group(function () {
     Route::get('/disable/{id}', 'DeviceController@disable');
     Route::get('/enable/{id}', 'DeviceController@enable');
     Route::post('/bulk-update/{type}', 'DeviceBulkUpdateController@bulkUpdate');
+    Route::get('inventory/export', [DeviceInventoryExporter::class, 'export']);
 });
 
 /* DEVICES SPECIFIC ROUTES */
