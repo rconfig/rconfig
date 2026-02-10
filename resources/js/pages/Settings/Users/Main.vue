@@ -17,7 +17,7 @@ import { useRoute } from "vue-router";
 import { useRowSelection } from "@/composables/useRowSelection";
 import { useUsers } from "@/pages/Settings/Users/useUsers";
 
-const { reload, editId, users, currentPage, perPage, searchTerm, lastPage, isLoading, navigateToActivityLog, fetchUsers, viewEditDialog, createUser, deleteUser, handleSave, handleKeyDown, newUserModalKey, toggleSort, sortParam, toggleNotification, toggleSocialiteApproved, relatedDocs, showConfirmDelete, deleteManyUsers, updateRelatedDocs } = useUsers();
+const { reload, editId, users, currentPage, perPage, searchTerm, lastPage, isLoading, fetchUsers, viewEditDialog, createUser, deleteUser, handleSave, handleKeyDown, newUserModalKey, toggleSort, sortParam, toggleNotification, toggleSocialiteApproved, relatedDocs, showConfirmDelete, deleteManyUsers, updateRelatedDocs } = useUsers();
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(users);
 const route = useRoute();
 
@@ -47,13 +47,6 @@ onUnmounted(() => {
 			</div>
 			<div class="flex items-center justify-end">
 				<Button v-if="selectedRows.length" @click.prevent="showConfirmDelete = true" class="px-2 py-1 bg-red-600 hover:bg-red-700 hover:animate-pulse" size="md" variant="primary"> Delete Selected {{ selectedRows.length }} User(s) </Button>
-
-				<!-- Activity Log Button -->
-				<Button class="px-2 py-1 ml-4 mr-2 text-sm hover:animate-pulse flex items-center" size="sm" @click="navigateToActivityLog" variant="outline">
-					<ClipboardList class="h-4 w-4 mr-1" />
-					User Activity Log
-				</Button>
-
 				<Button type="submit" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click.prevent="createUser" variant="primary">
 					New User
 					<div class="pl-2 ml-auto">

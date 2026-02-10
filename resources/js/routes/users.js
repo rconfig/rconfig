@@ -12,19 +12,6 @@ export default [
 			],
 		},
 	},
-	// {
-	// 	path: "/settings/users-activity-log",
-	// 	name: "users-activity-log",
-	// 	component: () => import("@/pages/Settings/UserActivityLogs/Main.vue"),
-	// 	meta: {
-	// 		rbacViewName: "ActivityLog",
-	// 		pageTitleKey: "UsersActivityLog",
-	// 		breadcrumb: [
-	// 			{ label: "Home", link: "/" },
-	// 			{ label: "Users Activity Log", link: "/users-activity-log" },
-	// 		],
-	// 	},
-	// },
 	{
 		path: "/settings/my-profile/:userId?",
 		name: "user-profile",

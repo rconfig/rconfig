@@ -87,6 +87,11 @@ function config_data_path()
     return rconfig_appdir_storage_path() . '/app/rconfig/data/';
 }
 
+function export_path()
+{
+    return rconfig_appdir_storage_path() . '/app/rconfig/exports/';
+}
+
 function download_path()
 {
     return rconfig_appdir_storage_path() . '/app/rconfig/downloads/';

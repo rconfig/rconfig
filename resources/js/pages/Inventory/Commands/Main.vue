@@ -45,8 +45,6 @@ const {
 	openBulkUpdateDialog,
 	handleCloseBulkUpdate,
 	handleUpdateBulkCommands,
-	updateChangeNotification,
-	updateSaveConfig,
 } = useCommands();
 
 const { selectedRows, selectAll, toggleSelectAll, toggleSelectRow } = useRowSelection(commands);
@@ -123,22 +121,6 @@ const selectedRecords = computed(() => {
 						</TableHead>
 						<TableHead class="w-[20%]">Description</TableHead>
 						<TableHead class="w-[20%]">Command Groups</TableHead>
-						<TableHead class="w-[20%]">
-							Options
-							<GenericPopover
-								:title="'Command Options'"
-								:description="'Enable or Disable change notifications.'"
-								:href="$rconfigDocsUrl + '/devices/commands/'"
-								:linkText="'Command Docs'"
-								:align="'end'"
-							>
-								<template #trigger>
-									<Button variant="link" size="sm" class="text-blue-400 hover:text-blue-300 p-0">
-										<MessageCircleQuestion class="h-3.5 w-3.5 ml-1" />
-									</Button>
-								</template>
-							</GenericPopover>
-						</TableHead>
 						<TableHead class="w-[10%]">Actions</TableHead>
 					</TableRow>
 				</TableHeader>
@@ -174,24 +156,6 @@ const selectedRecords = computed(() => {
 
 							<TableCell class="text-start">
 								<BadgeList :items="row.category" displayField="categoryName" linkField="view_url" :maxVisible="8" :hoverCardFields="['id', 'categoryName']" />
-							</TableCell>
-
-							<TableCell class="text-start">
-								<ToggleGroup type="multiple">
-									<!-- Change Notifications -->
-									<ToggleGroupItem
-										value="notify"
-										:data-state="row.change_notification ? 'on' : 'off'"
-										@click="updateChangeNotification(row, row.id, row.change_notification)"
-										class="rounded p-1 px-2 transition-colors rc-btn-shadow data-[state=on]:bg-amber-400 data-[state=off]:bg-gray-800 hover:data-[state=off]:bg-gray-700 hover:data-[state=on]:bg-amber-300"
-									>
-										<RcToolTip :delayDuration="100" :content="row.change_notification ? 'Change Notifications: On' : 'Change Notifications: Off'" side="bottom">
-											<template #trigger>
-												<Bell class="h-4 w-4 focus:outline-none" :class="row.change_notification ? 'text-black' : 'text-amber-300'" />
-											</template>
-										</RcToolTip>
-									</ToggleGroupItem>
-								</ToggleGroup>
 							</TableCell>
 
 							<!-- ACTIONS MENU -->
