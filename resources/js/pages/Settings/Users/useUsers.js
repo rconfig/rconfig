@@ -167,11 +167,6 @@ export function useUsers() {
 		];
 	};
 
-	// Function to navigate to users activity log
-	const navigateToActivityLog = () => {
-		router.push("/settings/users-activity-log");
-	};
-
 	const deleteManyUsers = async (ids) => {
 		try {
 			await axios.post("/api/users/delete-many", { ids });
@@ -202,7 +197,6 @@ export function useUsers() {
 		searchTerm,
 		openDialog,
 		fetchUsers,
-		navigateToActivityLog,
 		createUser,
 		updateUser,
 		deleteUser,
