@@ -52,7 +52,7 @@
         "@highlightjs/vue-plugin": "^2.1.0",
         "@radix-icons/vue": "^1.0.0",
         "@vueuse/core": "^13.3.0",
-        "axios": "^1.10.0",
+        "axios": "^1.13.5",
         "axios-cache-interceptor": "^1.8.0",
         "canvas-confetti": "^1.9.3",
         "class-variance-authority": "^0.7.1",
