@@ -1,0 +1,1 @@
+import{o as t,e as a,u as h,L as o}from"./app-DTbHGiGB.js";/* empty css               */const c={__name:"AgentLogIcon",props:{height:{type:Number,default:24},width:{type:Number,default:24}},setup(e){return(r,u)=>(t(),a(h(o),{width:e.width,height:e.height,class:"text-blue-400"},null,8,["width","height"]))}};export{c as default};
