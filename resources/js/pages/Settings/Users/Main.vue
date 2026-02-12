@@ -137,10 +137,10 @@ onUnmounted(() => {
 								</RcToolTip>
 							</TableCell>
 							<TableCell class="text-start">
-								<Switch :id="`notif-${row.id}`" :checked="row.get_notifications === 1" @update:checked="toggleNotification(row.id, $event ? 1 : 0)" />
+								<Switch :id="`notif-${row.id}`" v-model:checked="row.get_notifications" @update:checked="toggleNotification(row.id, $event ? 1 : 0)" />
 							</TableCell>
 							<TableCell class="text-start">
-								<Switch :id="`socialite-${row.id}`" :checked="row.is_socialite_approved === 1" @update:checked="toggleSocialiteApproved(row.id, $event ? 1 : 0)" />
+								<Switch :id="`socialite-${row.id}`" v-model:checked="row.is_socialite_approved" @update:checked="toggleSocialiteApproved(row.id, $event ? 1 : 0)" />
 							</TableCell>
 							<TableCell class="text-start">
 								{{ row.last_login }}

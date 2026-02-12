@@ -47,7 +47,7 @@ class rconfigTaskDownload extends Command
         $this->error('This operation can take some time, depending on how many devices are configured for this task!!!');
 
         // get ids from command
-        $ids = (new FilterArgsForCommnds)->filterArgs($this->argument('taskid'));
+        $ids = (new FilterArgsForCommnds)->sanitize($this->argument('taskid'));
         $this->debug = $this->option('debug');
 
         $this->info('Start ' . $this->eventtype . ' IDs:' . implode(' ', $ids));
