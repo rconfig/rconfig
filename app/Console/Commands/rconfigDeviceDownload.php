@@ -16,6 +16,7 @@ class rconfigDeviceDownload extends Command
     protected $eventtype = 'rconfig:download-device';
 
     protected $description = 'Download configurations for one or multiple devices via the CLI';
+    protected $devicerecords;
 
     public function __construct()
     {
@@ -25,7 +26,7 @@ class rconfigDeviceDownload extends Command
     public function handle()
     {
         // get ids from command
-        $ids = (new FilterArgsForCommnds)->filterArgs($this->argument('deviceid'));
+        $ids = (new FilterArgsForCommnds)->sanitize($this->argument('deviceid'));
         $debug = $this->option('debug');
 
         $this->info('Start ' . $this->eventtype . ' IDs:' . implode(' ', $ids));

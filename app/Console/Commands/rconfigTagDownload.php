@@ -17,15 +17,10 @@ class rconfigTagDownload extends Command
 
     protected $description = 'Download configurations for devices with one or multiple tags';
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function handle()
     {
         // get ids from command
-        $ids = (new FilterArgsForCommnds)->filterArgs($this->argument('tagid'));
+        $ids = (new FilterArgsForCommnds)->sanitize($this->argument('tagid'));
         $debug = $this->option('debug');
 
         $this->info('Start ' . $this->eventtype . ' IDs:' . implode(' ', $ids));

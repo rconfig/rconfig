@@ -25,7 +25,7 @@ class rconfigCatDownload extends Command
     public function handle()
     {
         // get ids from command
-        $ids = (new FilterArgsForCommnds)->filterArgs($this->argument('catid'));
+        $ids = (new FilterArgsForCommnds)->sanitize($this->argument('catid'));
         $debug = $this->option('debug');
 
         $this->info('Start ' . $this->eventtype . ' IDs:' . implode(' ', $ids));

@@ -15,6 +15,6 @@ class GetAndCheckTagIds
 
     public function GetTagRecords()
     {
-        return Tag::with('device')->whereIn('id', $this->ids)->get();
+        return Tag::with('device')->whereIn('id', $this->ids)->orderBy('id', 'asc')->get();
     }
 }

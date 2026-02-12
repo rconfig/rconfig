@@ -34,9 +34,9 @@ class UpdateTaskRequest extends FormRequest
                 'device' => collect($this->request->all()['device'])->pluck('id')->toArray(),
             ]);
         }
-        if (isset($this->request->all()['task_tags'])) {
+        if (isset($this->request->all()['tag'])) {
             $this->merge([
-                'tag' => collect($this->request->all()['task_tags'])->pluck('id')->toArray(),
+                'tag' => collect($this->request->all()['tag'])->pluck('id')->toArray(),
             ]);
         }
         if (isset($this->request->all()['category'])) {

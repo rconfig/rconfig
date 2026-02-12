@@ -1,1 +1,0 @@
-import{o as a,e as r,n,u as o,R as c,g as l}from"./app-DeY0Hx-B.js";/* empty css               */const d={__name:"PlusIcon",props:{size:{type:[Number,String],default:16},class:{type:String,default:""}},setup(s){const e=s,t=l(()=>`size-4 text-muted-foreground ${e.class}`);return(u,i)=>(a(),r(o(c),{size:s.size,class:n(t.value)},null,8,["size","class"]))}};export{d as default};
