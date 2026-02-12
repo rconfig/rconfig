@@ -16,6 +16,7 @@ class rconfigDeviceDownload extends Command
     protected $eventtype = 'rconfig:download-device';
 
     protected $description = 'Download configurations for one or multiple devices via the CLI';
+    protected $devicerecords;
 
     public function __construct()
     {
