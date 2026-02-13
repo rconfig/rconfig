@@ -144,4 +144,20 @@ class TemplateController extends ApiBaseController
 
         return $filename;
     }
+
+    public function reformatTemplateFile(Request $request)
+    {
+        $fileName = $request['fileName'];
+        $storage_dir = storage_path() . '/app/rconfig/templates/';
+        $filePath = $storage_dir . $fileName;
+
+        $reformatter = new \App\Services\Templates\TemplateReformatter;
+        $reformattedContent = $reformatter->reformatTemplateFile($filePath);
+
+        if ($reformattedContent === false) {
+            return $this->failureResponse('Failed to reformat template file: ' . $fileName);
+        }
+
+        return $reformattedContent;
+    }
 }
