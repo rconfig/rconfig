@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import axios from 'axios';
-import { useColorMode } from '@vueuse/core';
 
 const email = ref('');
 const password = ref('');
@@ -14,7 +13,6 @@ const isLoading = ref(false);
 const successMessage = ref('');
 const errorMessage = ref('');
 const token = ref('');
-const mode = useColorMode();
 
 const props = defineProps({
   token: {

@@ -4,7 +4,6 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbS
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ref, computed, onMounted, inject } from "vue";
-import { useColorMode } from "@vueuse/core";
 import { usePanelStore } from "@/stores/panelStore"; // Import the Pinia store
 import { useRoute, useRouter } from "vue-router";
 import { useToaster } from "@/composables/useToaster";
@@ -12,7 +11,7 @@ import { HelpCircle, Sun, Moon, MoreVertical, Paintbrush, Star } from "lucide-vu
 import { Lock } from "lucide-vue-next";
 import GenericPopover from "@/pages/Shared/Popover/GeneralPopover.vue";
 
-const mode = useColorMode();
+const colorMode = inject("colorMode");
 const panelStore = usePanelStore(); // Access the panel store
 const route = useRoute();
 const router = useRouter();
@@ -37,7 +36,7 @@ defineProps({
 
 onMounted(() => {
 	if (enforceDarkMode.value) {
-		mode.value = "dark";
+		colorMode.value = "dark";
 		document.documentElement.classList.add("dark");
 	}
 	checkHttpsStatus();
@@ -60,11 +59,11 @@ function toggleTheme() {
 	if (enforceDarkMode.value) {
 		toastInfo("Dark Mode Only", "Light mode is currently disabled. Only dark mode is available.");
 
-		mode.value = "dark";
+		colorMode.value = "dark";
 		document.documentElement.classList.add("dark");
 	} else {
-		const newMode = mode.value === "dark" ? "light" : "dark";
-		mode.value = newMode;
+		const newMode = colorMode.value === "dark" ? "light" : "dark";
+		colorMode.value = newMode;
 
 		if (newMode === "dark") {
 			document.documentElement.classList.add("dark");
@@ -211,13 +210,13 @@ const showServerName = computed(() => {
 							<Button variant="ghost" class="hover:bg-rcgray-600 transition-colors duration-200 transform hover:scale-105 relative overflow-hidden" @click="toggleTheme()">
 								<div class="absolute inset-0 bg-blue-500/10 rounded-full filter blur-md opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
 								<Sun v-if="enforceDarkMode" class="h-[1.2rem] w-[1.2rem] text-yellow-400" />
-								<Sun v-else-if="mode === 'dark'" class="h-[1.2rem] w-[1.2rem] text-yellow-400" />
+								<Sun v-else-if="colorMode === 'dark'" class="h-[1.2rem] w-[1.2rem] text-yellow-400" />
 								<Moon v-else class="h-[1.2rem] w-[1.2rem] text-blue-400" />
 							</Button>
 						</TooltipTrigger>
 						<TooltipContent class="text-white bg-rcgray-800 border border-blue-500/30">
 							<p v-if="enforceDarkMode">Dark Mode Enabled</p>
-							<p v-else>Toggle {{ mode === "dark" ? "Light Mode" : "Dark Mode" }}</p>
+							<p v-else>Toggle {{ colorMode === "dark" ? "Light Mode" : "Dark Mode" }}</p>
 						</TooltipContent>
 					</Tooltip>
 				</TooltipProvider>

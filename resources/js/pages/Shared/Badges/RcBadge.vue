@@ -1,5 +1,7 @@
 <script setup>
-import { computed } from "vue";
+import { computed, inject } from "vue";
+
+const colorMode = inject("colorMode");
 
 const props = defineProps({
 	variant: {
@@ -23,6 +25,13 @@ const props = defineProps({
 	},
 });
 
+// Determine if we should use dark mode reactively
+const isDarkMode = computed(() => {
+	if (props.mode === "dark") return true;
+	if (props.mode === "light") return false;
+	return colorMode.value === "dark";
+});
+
 // Compute classes based on variant, size and mode
 const badgeClasses = computed(() => {
 	const sizeClasses = {
@@ -41,30 +50,30 @@ const badgeClasses = computed(() => {
 
 			if (isDark) {
 				const hoverClasses = {
-					default: "hover:bg-gray-800/50",
-					primary: "hover:bg-blue-900/50",
-					secondary: "hover:bg-purple-900/50",
-					success: "hover:bg-green-900/50",
-					warning: "hover:bg-amber-900/50",
-					danger: "hover:bg-red-900/50",
-					info: "hover:bg-cyan-900/50",
-					outline: "hover:bg-gray-700/20",
-					new: "hover:bg-green-900/50",
-					updated: "hover:bg-blue-900/50",
+					default: "hover:bg-gray-700/70",
+					primary: "hover:bg-blue-700/70",
+					secondary: "hover:bg-purple-700/70",
+					success: "hover:bg-green-700/70",
+					warning: "hover:bg-amber-700/70",
+					danger: "hover:bg-red-700/70",
+					info: "hover:bg-cyan-700/70",
+					outline: "hover:bg-gray-600/50",
+					new: "hover:bg-green-700/70",
+					updated: "hover:bg-blue-700/70",
 				};
 				return hoverClasses[variant];
 			} else {
 				const hoverClasses = {
 					default: "hover:bg-gray-200",
-					primary: "hover:bg-blue-100",
-					secondary: "hover:bg-purple-100",
-					success: "hover:bg-green-100",
-					warning: "hover:bg-amber-100",
-					danger: "hover:bg-red-100",
-					info: "hover:bg-cyan-100",
-					outline: "hover:bg-gray-100",
-					new: "hover:bg-green-100",
-					updated: "hover:bg-blue-100",
+					primary: "hover:bg-blue-200/80",
+					secondary: "hover:bg-purple-200/80",
+					success: "hover:bg-green-200/80",
+					warning: "hover:bg-amber-200/80",
+					danger: "hover:bg-red-200/80",
+					info: "hover:bg-cyan-200/80",
+					outline: "hover:bg-gray-200",
+					new: "hover:bg-green-200/80",
+					updated: "hover:bg-blue-200/80",
 				};
 				return hoverClasses[variant];
 			}
@@ -105,11 +114,8 @@ const badgeClasses = computed(() => {
 		}
 	};
 
-	// Determine if we should use dark mode
-	const isDarkMode = props.mode === "dark" || (props.mode === "auto" && document.documentElement.classList.contains("dark"));
-
 	// Combine all classes
-	return `${sizeClasses[props.size]} ${getVariantClasses(isDarkMode)}`;
+	return `${sizeClasses[props.size]} ${getVariantClasses(isDarkMode.value)}`;
 });
 </script>
 
