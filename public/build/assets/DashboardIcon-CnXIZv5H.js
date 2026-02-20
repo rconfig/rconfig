@@ -1,0 +1,1 @@
+import{o as a,e,n as s,u as r,s as c}from"./app-DAFnjW-c.js";/* empty css               */const u={__name:"DashboardIcon",props:{height:{type:Number,default:16},width:{type:Number,default:16},class:{type:String,default:""}},setup(t){return(h,l)=>(a(),e(r(c),{width:t.width,height:t.height,color:"#c8d1f3",class:s(t.class)},null,8,["width","height","class"]))}};export{u as default};
