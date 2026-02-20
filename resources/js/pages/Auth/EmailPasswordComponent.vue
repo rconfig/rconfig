@@ -5,14 +5,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import axios from 'axios';
-import { useColorMode } from '@vueuse/core';
 
 // Form state
 const email = ref('');
 const isLoading = ref(false);
 const successMessage = ref('');
 const errorMessage = ref('');
-const mode = useColorMode();
 
 // Handle password reset request
 const handlePasswordReset = async () => {

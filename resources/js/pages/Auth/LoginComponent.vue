@@ -5,14 +5,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import axios from 'axios';
-import { useColorMode } from '@vueuse/core';
 
 // Form state
 const username = ref('');
 const password = ref('');
 const isLoading = ref(false);
 const errorMessage = ref('');
-const mode = useColorMode();
 
 const socialProviders = ref({
 	microsoft: false,

@@ -2,11 +2,9 @@
 import { ref } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useColorMode } from '@vueuse/core';
 
 // State for button loading animation
 const isLoading = ref(false);
-const mode = useColorMode();
 
 // Function to redirect to /login
 const redirectToLogin = () => {

@@ -12,6 +12,7 @@ import { setupGlobalProperties } from "./appimports/globalProperties";
 import { setupPlugins } from "./appimports/setupPlugins";
 import { useFormatters } from "./composables/useFormatters";
 import { RCONFIG_DOCS_URL } from "./config/constants";
+import { useColorMode } from "@vueuse/core";
 
 // Initialize app
 const app = createApp({});
@@ -57,6 +58,10 @@ app.provide("appDirPath", globalProperties.$config?.appDirPath);
 app.provide("serverDisplayName", globalProperties.$serverDisplayName);
 app.provide("serverDisplayColor", globalProperties.$serverDisplayColor);
 app.provide("serverDisplaySize", globalProperties.$serverDisplaySize); // New
+
+// provide colorMode globally so it can be injected in any component without needing to import useColorMode everywhere
+const colorMode = useColorMode();
+app.provide("colorMode", colorMode);
 
 // Mount the Vue app with error handling
 let vm;
