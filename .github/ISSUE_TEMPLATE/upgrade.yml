@@ -1,0 +1,28 @@
+name: Upgrade Issue
+description: Problems upgrading rConfig
+title: "[Upgrade]: "
+labels: ["upgrade"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        📘 Upgrade guide:
+        https://v8coredocs.rconfig.com/installation-upgrades/v8-core/update-process/
+
+  - type: input
+    attributes:
+      label: Current version
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Target version
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Describe the issue
+    validations:
+      required: true
