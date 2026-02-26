@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: rConfig Documentation
+    url: https://v8coredocs.rconfig.com
+    about: Please review the documentation before opening an issue.
+
+  - name: rConfig Support
+    url: https://www.rconfig.com/contact
+    about: For commercial support enquiries.
+
+  - name: Security Issues
+    url: https://www.rconfig.com/security-policy
+    about: Please report security issues privately.
