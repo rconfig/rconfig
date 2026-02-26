@@ -1,0 +1,86 @@
+name: Device Connection/ Backup Issue
+description: Problems backing up network devices
+title: "[Device]: "
+labels: ["device"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Device backup issues require diagnostic output to be investigated.
+
+        You must read this documentation before submitting:
+        https://v8coredocs.rconfig.com/troubleshooting/device-connectivity/
+
+        Specifically:
+        https://v8coredocs.rconfig.com/troubleshooting/device-connectivity/#device-prompt-troubleshooting
+        https://v8coredocs.rconfig.com/troubleshooting/device-connectivity/#using-rconfig-cli-diagnostic-tools
+
+        Diagnostic output is mandatory. Issues submitted without diagnostic output will be closed.
+
+        All diagnostic output must be sanitised before sharing. Passwords, keys, tokens, and community strings may appear in logs.
+
+        If the output is large or sensitive, upload it to:
+        https://paste.rconfig.com
+
+        Then email the paste link and Issue ID to:
+        hello@rconfig.com
+
+  - type: checkboxes
+    attributes:
+      label: Required confirmation
+      options:
+        - label: I have read the device connectivity troubleshooting documentation
+          required: true
+        - label: I have reviewed the device prompt troubleshooting section
+          required: true
+        - label: I have reviewed the CLI diagnostic tools section and collected debug output
+          required: true
+        - label: I confirm all shared output is sanitised and contains no passwords, keys, tokens, or secrets
+          required: true
+        - label: I understand that issues without diagnostic output will be closed
+          required: true
+
+  - type: input
+    attributes:
+      label: Device vendor and model
+      placeholder: Cisco IOS XE, Juniper SRX, Palo Alto, etc.
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Transport and authentication method
+      placeholder: SSH password, SSH key, Telnet, Vector client, etc.
+    validations:
+      required: true
+ 
+  - type: textarea
+    attributes:
+      label: Expected behaviour
+      placeholder: Config download completes, prompt detected correctly, etc.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Actual behaviour
+      placeholder: Timeout, prompt mismatch, authentication failure, command failure, etc.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Sanitised diagnostic output (required)
+      description: |
+        Paste sanitised diagnostic output here, OR upload to https://paste.rconfig.com and include the paste link and issue ID in hello@rconfig.com.
+      placeholder: |
+        Paste sanitised diagnostic output here.
+
+        Remove or redact:
+        - passwords
+        - private keys
+        - SNMP community strings
+        - tokens
+        - secrets
+    validations:
+      required: true
