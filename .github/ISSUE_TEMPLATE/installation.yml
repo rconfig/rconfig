@@ -1,0 +1,32 @@
+name: Installation Issue
+description: Problems installing or setting up rConfig
+title: "[Installation]: "
+labels: ["installation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        📘 Please review the installation guide first:
+        https://v8coredocs.rconfig.com/installation-upgrades/v8-core/installation/
+
+        Most installation issues are resolved using this guide.
+
+  - type: checkboxes
+    attributes:
+      label: Pre-check
+      options:
+        - label: I have reviewed the installation documentation
+          required: true
+
+  - type: input
+    attributes:
+      label: OS and version
+      placeholder: Rocky Linux 9.4, Ubuntu 22.04, etc.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Describe the issue
+    validations:
+      required: true
