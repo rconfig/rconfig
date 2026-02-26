@@ -1,0 +1,26 @@
+name: Authentication / SSO Issue
+description: SAML, LDAP, or login problems
+title: "[Auth]: "
+labels: ["authentication"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        📘 Authentication documentation:
+        https://v8coredocs.rconfig.com/auth-security/sso-overview/
+
+  - type: dropdown
+    attributes:
+      label: Authentication type
+      options:
+        - SAML
+        - LDAP
+        - Local login
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Describe the issue
+    validations:
+      required: true
