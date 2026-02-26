@@ -1,0 +1,47 @@
+name: Documentation Issue
+description: Report missing, incorrect, or unclear documentation
+title: "[Docs]: "
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping improve rConfig documentation.
+
+        Documentation portal:
+        https://v8coredocs.rconfig.com
+
+        Please provide clear details so we can address this quickly.
+
+  - type: dropdown
+    attributes:
+      label: Documentation type
+      options:
+        - Incorrect information
+        - Missing documentation
+        - Unclear instructions
+        - Typo or formatting issue
+        - New documentation request
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Documentation URL
+      placeholder: https://v8coredocs.rconfig.com/...
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: What is the issue?
+      description: Clearly describe the problem with the documentation
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Suggested improvement
+      description: Optional, but helpful if you have a proposed fix or clarification
+    validations:
+      required: false
