@@ -5,7 +5,9 @@
         "build": "vite build --config vite.prod.config.js"
     },
     "overrides": {
-        "@modelcontextprotocol/sdk": "^1.26.0"
+        "@modelcontextprotocol/sdk": "^1.26.0",
+        "serialize-javascript": "^7.0.3",
+        "ajv": "^8.18.0"
     },
     "devDependencies": {
         "@iconify/vue": "^5.0.0",
