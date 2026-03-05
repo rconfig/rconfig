@@ -19,6 +19,7 @@ const model = ref({
 	command: "",
 	description: "",
 	category: [],
+	base64: false,
 });
 
 const props = defineProps({
@@ -56,10 +57,14 @@ onUnmounted(() => {
 });
 
 function saveDialog() {
+    const payload = {
+        ...model.value,
+        base64: model.value.base64 ? 1 : 0,
+    };
 	const id = props.editId > 0 ? `/${props.editId}` : "";
 	const method = props.editId > 0 ? "patch" : "post";
 
-	axios[method]("/api/commands" + id, model.value)
+	axios[method]("/api/commands" + id, payload)
 		.then((response) => {
 			emit("save", response.data);
 			toastSuccess("Command saved", "The command has been saved successfully.");
@@ -111,6 +116,15 @@ function saveDialog() {
 						<Skeleton class="h-6 w-full" />
 					</div>
 					<Input v-else v-model="model.description" id="description" class="col-span-3" />
+				</div>
+
+				<!-- base64 Field -->
+				<div class="grid items-center grid-cols-4 gap-2">
+				   <Label for="base64" class="text-right">base64</Label>
+				   <div v-if="isLoading" class="col-span-3">
+					   <Skeleton class="h-6 w-6" />
+				   </div>
+				   <Checkbox v-else id="base64" v-model:checked="model.base64" />
 				</div>
 
 				<!-- Command Group Field -->
