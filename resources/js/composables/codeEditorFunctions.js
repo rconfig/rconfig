@@ -217,7 +217,26 @@ export default function useCodeEditor(monaco) {
 		});
 	}
 
-	function download(filename = null) {
+    function txt_to_bin(txt) {
+	    const data = txt.replace(/\n/g, '').replace(/\r/g, '');
+	    const binary = atob(data);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+            bytes[i] = binary.charCodeAt(i);
+        }
+        const blob = new Blob([bytes], { type: "application/octet-stream" });
+        return blob;
+    }
+
+	function download(filename = null, isBase64 = false) {
+        const base64Val = isBase64?.value ?? isBase64;
+        if (base64Val) {
+            console.log("decode base64 to bin");
+            const bin_blob = txt_to_bin(meditor.getValue());
+            saveAs(bin_blob, filename);
+	        return;
+        }
+
 		isDownloaded.value = true;
 
 		const blob = new Blob([meditor.getValue()], { type: "text/plain;charset=utf-8" });

@@ -48,6 +48,7 @@ const {
 const {
 	// State
 	config_location,
+    base64,
 
 	// Functions
 	getDefaultEditorCode,
@@ -125,7 +126,7 @@ function initCodeEditor() {
 
 								<RcToolTip :delayDuration="100" :content="'Download Configs'" :side="'bottom'">
 									<template #trigger>
-										<Button variant="ghost" @click="download(config_location)" class="px-2 py-1 rc-btn-shadow">
+										<Button variant="ghost" @click="download(config_location, base64)" class="px-2 py-1 rc-btn-shadow">
 											<RcIcon name="copy-download-transition" :isActive="isDownloaded" :size="16" />
 										</Button>
 									</template>
