@@ -72,6 +72,8 @@ class SaveConfigsToDiskAndDb
         $this->model->end_time = $this->devicerecord['end_time']->toDateTimeString();
         $this->model->duration = $duration;
         $this->model->latest_version = 1;
+        $command = Command::where('command', $this->commandName)->first();
+        $this->model->base64 = $command ? $command->base64 : false;
 
         $saved = $this->model->save();
 
