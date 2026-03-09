@@ -48,7 +48,7 @@ const {
 const {
 	// State
 	config_location,
-    base64,
+	base64,
 
 	// Functions
 	getDefaultEditorCode,
