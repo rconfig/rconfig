@@ -20,6 +20,7 @@ const model = ref({
 	description: "",
 	category: [],
 	base64: false,
+    ext: "",
 });
 
 const props = defineProps({
@@ -125,6 +126,15 @@ function saveDialog() {
 					   <Skeleton class="h-6 w-6" />
 				   </div>
 				   <Checkbox v-else id="base64" v-model:checked="model.base64" />
+				</div>
+
+				<!-- File Extension Field -->
+				<div class="grid items-center grid-cols-4 gap-2">
+					<Label for="ext" class="text-right">File Extension</Label>
+					<div v-if="isLoading" class="col-span-3">
+						<Skeleton class="h-6 w-full" />
+					</div>
+					<Input v-else v-model="model.ext" id="ext" class="col-span-3" />
 				</div>
 
 				<!-- Command Group Field -->

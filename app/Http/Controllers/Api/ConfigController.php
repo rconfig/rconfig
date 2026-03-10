@@ -116,6 +116,7 @@ class ConfigController extends ApiBaseController
                 'content' => $utf8_string,
                 'config_location' => $config_location,
                 'base64' => (bool) Config::find($id)->base64,
+                'ext' => Config::find($id)->ext,
             ];
 
             return $this->successResponse('Success', $result);

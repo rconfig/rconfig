@@ -50,6 +50,7 @@ class StoreCommandRequest extends FormRequest
             'description' => $this->description,
             'category' => $this->category,
             'base64' => $this->base64,
+            'ext' => $this->ext,
         ]);
     }
 }

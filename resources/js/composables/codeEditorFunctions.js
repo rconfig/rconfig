@@ -219,7 +219,13 @@ export default function useCodeEditor(monaco) {
 
 	function txt_to_bin(txt) {
 		const data = txt.replace(/\n/g, '').replace(/\r/g, '');
-		const binary = atob(data);
+		let binary;
+		try {
+			binary = atob(data);
+		} catch (e) {
+			alert("Can't decode base64.");
+			return null;
+		}
 		const bytes = new Uint8Array(binary.length);
 		for (let i = 0; i < binary.length; i++) {
 			bytes[i] = binary.charCodeAt(i);
@@ -228,12 +234,16 @@ export default function useCodeEditor(monaco) {
 		return blob;
 	}
 
-	function download(filename = null, isBase64 = false) {
+	function download(filename = null, isBase64 = false, ext = "") {
 		const base64Val = isBase64?.value ?? isBase64;
+		const extVal = ext?.value ?? ext;
 		if (base64Val) {
 			console.log("decode base64 to bin");
 			const bin_blob = txt_to_bin(meditor.getValue());
-			saveAs(bin_blob, filename);
+			if (bin_blob === null) {
+				return;
+			}
+			saveAs(bin_blob, filename.slice(0, -4) + '.' + extVal);
 			return;
 		}
 

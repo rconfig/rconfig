@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::table('commands', function (Blueprint $table) {
             $table->boolean('base64')->default(false);
+            $table->string('ext')->nullable();
         });
         Schema::table('configs', function (Blueprint $table) {
             $table->boolean('base64')->default(false);
+            $table->string('ext')->nullable();
         });
     }
 
@@ -26,9 +28,11 @@ return new class extends Migration
     {
         Schema::table('commands', function (Blueprint $table) {
             $table->dropColumn('base64');
+            $table->dropColumn('ext');
         });
         Schema::table('configs', function (Blueprint $table) {
             $table->dropColumn('base64');
+            $table->dropColumn('ext');
         });
     }
 };

@@ -8,6 +8,7 @@ export default function useConfigViewMainPanel(props) {
 	const errors = ref([]);
 	const config_location = ref("");
 	const base64 = ref(false);
+	const ext = ref("");
 	const extension = ref("");
 	const sheetStore = useSheetStore();
 	const { openSheet } = sheetStore;
@@ -32,6 +33,7 @@ export default function useConfigViewMainPanel(props) {
 
 			config_location.value = location || "No file location provided";
 			base64.value = data?.data?.base64 ?? false;
+			ext.value = data?.data?.ext ?? "";
 			meditor.getModel().setValue(content || "No content available.");
 
 			if (location) {
@@ -102,6 +104,7 @@ export default function useConfigViewMainPanel(props) {
 		// State
 		config_location,
 		base64,
+		ext,
 		errors,
 
 		// Functions
