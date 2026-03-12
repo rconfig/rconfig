@@ -28,6 +28,7 @@ class StoreCommandRequest extends FormRequest
             $rules = [
                 'command' => 'required|min:3|unique:commands|max:255',
                 'categoryArray' => 'required|array|min:1',
+                'base64' => 'nullable|boolean',
             ];
         }
 
@@ -35,6 +36,7 @@ class StoreCommandRequest extends FormRequest
             $rules = [
                 'command' => 'required|min:3|max:255',
                 'categoryArray' => 'required|array|min:1',
+                'base64' => 'nullable|boolean',
             ];
         }
 
@@ -47,6 +49,8 @@ class StoreCommandRequest extends FormRequest
             'command' => $this->command,
             'description' => $this->description,
             'category' => $this->category,
+            'base64' => $this->base64,
+            'ext' => $this->ext,
         ]);
     }
 }
