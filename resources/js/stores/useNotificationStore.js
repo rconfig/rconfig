@@ -86,14 +86,6 @@ export const useNotificationStore = defineStore("notifications", () => {
 				},
 				// Config
 				{
-					key: "config.changed",
-					category: "config",
-					label: notificationConfig.types.config_changed.label,
-					description: notificationConfig.types.config_changed.description,
-					severity: "warning",
-					channels: ["db", "mail"],
-				},
-				{
 					key: "config.download_completed",
 					category: "config",
 					label: notificationConfig.types.config_download_completed.label,

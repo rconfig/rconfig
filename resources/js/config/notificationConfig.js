@@ -35,10 +35,6 @@ export const notificationConfig = {
                 description: "Alerts when notification system encounters errors",
             },
             // Config
-            config_changed: {
-                label: "Configuration Changed",
-                description: "Alerts when device configurations are modified",
-            },
             config_download_completed: {
                 label: "Configuration Download Completed",
                 description: "Notifications when manual config downloads complete",
