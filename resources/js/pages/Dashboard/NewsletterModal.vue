@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Mail, Sparkles, TrendingUp, Bell, Zap } from 'lucide-vue-next';
 
 const STORAGE_KEY = 'rconfig_newsletter_subscribed';
+const DISMISSED_KEY = 'rconfig_newsletter_dismissed';
 const INTERACTIONS_KEY = 'rconfig_newsletter_data';
 
 const showModal = ref(false);
@@ -25,6 +26,11 @@ const saveInteractionData = (data) => {
 const shouldShowModal = () => {
 	// Already subscribed? Never show again
 	if (localStorage.getItem(STORAGE_KEY) === 'true') {
+		return false;
+	}
+
+	// Closed locally on this browser? Keep it hidden.
+	if (localStorage.getItem(DISMISSED_KEY) === 'true') {
 		return false;
 	}
 
@@ -73,6 +79,7 @@ const handleSubmit = async () => {
 		}
 		
 		localStorage.setItem(STORAGE_KEY, 'true');
+		localStorage.removeItem(DISMISSED_KEY);
 		localStorage.removeItem(INTERACTIONS_KEY);
 		
 		setTimeout(() => {
@@ -92,13 +99,28 @@ const handleMaybeLater = () => {
 	data.dismissCount += 1;
 	data.lastShown = Date.now();
 	saveInteractionData(data);
-	
+
 	showModal.value = false;
+};
+
+const handlePersistentClose = () => {
+	localStorage.setItem(DISMISSED_KEY, 'true');
+	localStorage.removeItem(INTERACTIONS_KEY);
+	showModal.value = false;
+};
+
+const handleOpenChange = (isOpen) => {
+	if (isOpen) {
+		showModal.value = true;
+		return;
+	}
+
+	handlePersistentClose();
 };
 </script>
 
 <template>
-  <Dialog :open="showModal" @update:open="(val) => { if (!val) handleMaybeLater(); }">
+  <Dialog :open="showModal" @update:open="handleOpenChange">
     <DialogContent class="sm:max-w-lg shadow-2xl bg-card p-6">
       <div class="space-y-5">
         <DialogHeader class="text-center space-y-3">

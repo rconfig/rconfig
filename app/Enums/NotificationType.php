@@ -10,7 +10,6 @@ enum NotificationType: string
     case SYSTEM_NOTIFICATION_ERROR = 'system.notification_error';
 
     // Config notifications
-    case CONFIG_CHANGED = 'config.changed';
     case CONFIG_DOWNLOAD_COMPLETED = 'config.download_completed';
     case CONFIG_PURGE_COMPLETED = 'config.purge_completed';
     case CONFIG_PURGE_FAILED_COMPLETED = 'config.purge_failed_completed';
@@ -27,7 +26,6 @@ enum NotificationType: string
         return match ($this) {
             self::SYSTEM_NOTIFICATION_ERROR => NotificationCategory::SYSTEM,
 
-            self::CONFIG_CHANGED,
             self::CONFIG_DOWNLOAD_COMPLETED,
             self::CONFIG_PURGE_COMPLETED,
             self::CONFIG_PURGE_FAILED_COMPLETED => NotificationCategory::CONFIG,
@@ -44,7 +42,6 @@ enum NotificationType: string
     {
         return match ($this) {
             self::SYSTEM_NOTIFICATION_ERROR => 'Notification System Error',
-            self::CONFIG_CHANGED => 'Configuration Changed',
             self::CONFIG_DOWNLOAD_COMPLETED => 'Configuration Download Completed',
             self::CONFIG_PURGE_COMPLETED => 'Configuration Purge Completed',
             self::CONFIG_PURGE_FAILED_COMPLETED => 'Failed Configuration Purge Completed',
@@ -58,7 +55,6 @@ enum NotificationType: string
     {
         return match ($this) {
             self::SYSTEM_NOTIFICATION_ERROR => 'Alerts when notification system encounters errors',
-            self::CONFIG_CHANGED => 'Alerts when device configurations are modified',
             self::CONFIG_DOWNLOAD_COMPLETED => 'Notifications when manual config downloads complete',
             self::CONFIG_PURGE_COMPLETED => 'Alerts when configuration purge operations finish',
             self::CONFIG_PURGE_FAILED_COMPLETED => 'Notifications when failed config purge operations complete',
@@ -73,9 +69,6 @@ enum NotificationType: string
         return match ($this) {
             // Critical alerts - all channels by default
             self::CONNECTION_DEVICE_FAILURE => ['db' => true, 'mail' => true],
-
-            // Important operations - DB + Mail
-            self::CONFIG_CHANGED => ['db' => true, 'mail' => true],
 
             // Regular operations - DB only
             self::CONFIG_DOWNLOAD_COMPLETED => ['db' => true, 'mail' => true],
@@ -94,8 +87,7 @@ enum NotificationType: string
     public function severity(): string
     {
         return match ($this) {
-            self::CONNECTION_DEVICE_FAILURE,
-            self::CONFIG_CHANGED => 'warning',
+            self::CONNECTION_DEVICE_FAILURE => 'warning',
 
             default => 'info',
         };

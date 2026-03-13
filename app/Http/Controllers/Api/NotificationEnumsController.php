@@ -96,11 +96,4 @@ class NotificationEnumsController extends Controller
             default => 'gray'
         };
     }
-
-    private function isSlackEnabledForType(NotificationType $type): bool
-    {
-        return in_array($type, [
-            NotificationType::CONFIG_CHANGED,
-        ], true);
-    }
 }
