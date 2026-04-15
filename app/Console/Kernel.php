@@ -41,13 +41,6 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $this->schedule = $schedule;
-        //running this to fix logging permissions issue every day in case of issues
-        $this->schedule->exec('chown -R apache /var/www/html')
-            ->dailyAt('8:00')
-            ->after(function () {
-                $logmsg = 'Exec Command chown -R apache was run on html dir';
-                activityLogIt(__CLASS__, __FUNCTION__, 'info', $logmsg, 'cron_scheduler');
-            });
 
         if (Schema::hasTable('tasks')) {
             // Get all tasks from the database
@@ -79,7 +72,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('model:prune', ['--model' => MonitoredScheduledTaskLogItem::class])->daily();
         $schedule->command('model:prune', ['--model' => \Spatie\Health\Models\HealthCheckResultHistoryItem::class])->daily();
         $this->schedule->command('rconfig:config-summaries-sync')->dailyAt('3:00');
-
     }
 
     private function download_task($executionStartTime, $task)
