@@ -2,7 +2,7 @@
 
 return [
 
-    'app_dir_path' => env('APP_DIR_PATH', '/var/www/html/rconfig6-core'),
+    'app_dir_path' => env('APP_DIR_PATH', '/var/www/html/rconfig'),
 
     /*
     |--------------------------------------------------------------------------

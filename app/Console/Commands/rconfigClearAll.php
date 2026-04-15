@@ -68,7 +68,7 @@ class rconfigClearAll extends Command
 
             custom_chown(rconfig_appdir_path());
         }
-         if ( getenv('IS_DOCKER') ===  "true") {
+        if (getenv('IS_DOCKER') ===  "true") {
             chmod('/var/www/html/storage', 0777);
         }
 
@@ -82,6 +82,7 @@ class rconfigClearAll extends Command
             chmod($storagePath . '/oauth-private.key', 0600);
             $this->info('------  OAuth Private Key Permissions Set!  ------');
         }
+
         echo exec('composer dump-autoload') . PHP_EOL;
         $this->info(config('app.name') . ' application settings have been cleared!');
     }

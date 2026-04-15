@@ -33,18 +33,6 @@ return [
 
     'connections' => [
 
-        'testing_db' => [
-            'driver' => 'mysql',
-            'host' => env('TEST_DB_HOST', 'localhost'),
-            'database' => env('TEST_DB_DATABASE', 'forge'),
-            'username' => env('TEST_DB_USERNAME', 'forge'),
-            'password' => env('TEST_DB_PASSWORD', ''),
-            'charset' => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix' => '',
-            'strict' => false,
-        ],
-
         'mysql' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
@@ -59,6 +47,19 @@ return [
             'prefix_indexes' => true,
             'strict' => false,
             'engine' => null,
+        ],
+
+        'test_mysql' => [
+            'driver' => 'mysql',
+            'host' => env('TEST_DB_MYSQL_HOST', 'localhost'),
+            'port' => env('TEST_DB_MYSQL_PORT', '3306'),
+            'database' => env('TEST_DB_MYSQL_DATABASE', 'forge'),
+            'username' => env('TEST_DB_MYSQL_USERNAME', 'forge'),
+            'password' => env('TEST_DB_MYSQL_PASSWORD', ''),
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
         ],
 
         'pgsql' => [
