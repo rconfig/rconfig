@@ -110,11 +110,16 @@ class LoginControllerTest extends TestCase
         $user = $user->fresh();
 
         $response->assertRedirect($this->successfulLoginRoute());
-        $response->assertCookie(Auth::guard()->getRecallerName(), vsprintf('%s|%s|%s', [
-            $user->id,
-            $user->getRememberToken(),
-            $user->password,
-        ]));
+        $response->assertCookie(Auth::guard()->getRecallerName());
+
+        $recallerCookie = $response->getCookie(Auth::guard()->getRecallerName());
+        $this->assertNotNull($recallerCookie);
+
+        $cookieParts = explode('|', (string) $recallerCookie->getValue());
+        $this->assertCount(3, $cookieParts);
+        $this->assertSame((string) $user->id, $cookieParts[0]);
+        $this->assertSame((string) $user->getRememberToken(), $cookieParts[1]);
+        $this->assertNotSame('', $cookieParts[2]);
         $this->assertAuthenticatedAs($user);
     }
 

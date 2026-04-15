@@ -19,7 +19,7 @@ class ConfigActionsControllerTest extends TestCase
         $this->beginTransaction();
 
         $this->user = User::factory()->create();
-        $this->actingAs($this->user, 'api');
+        $this->actingAs($this->user);
     }
 
     public function test_start_download_now_test()

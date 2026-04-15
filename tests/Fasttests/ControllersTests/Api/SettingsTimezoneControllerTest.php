@@ -2,6 +2,8 @@
 
 namespace Tests\Fasttests\ControllersTests\Api;
 
+use App\Models\User;
+
 use Tests\TestCase;
 
 class SettingsTimezoneControllerTest extends TestCase
@@ -13,8 +15,8 @@ class SettingsTimezoneControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = \App\Models\User::factory()->create();
-        $this->actingAs($this->user, 'api');
+        $this->user = User::factory()->create();
+        $this->actingAs($this->user);
     }
 
     public function test_get_timezone()

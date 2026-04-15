@@ -21,7 +21,7 @@ class ConfigControllerTest extends TestCase
         $this->beginTransaction();
 
         $this->user = User::factory()->create();
-        $this->actingAs($this->user, 'api');
+        $this->actingAs($this->user);
 
         Config::truncate();
     }

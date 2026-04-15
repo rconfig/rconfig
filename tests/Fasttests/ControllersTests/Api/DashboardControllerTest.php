@@ -1,6 +1,8 @@
 <?php
 
 namespace Tests\Fasttests\ControllersTests\Api;
+
+use App\Models\User;
 use App\Models\Device;
 
 use Tests\TestCase;
@@ -14,8 +16,8 @@ class DashboardControllerTest extends TestCase
     {
         parent::setUp();
         $this->beginTransaction();
-        $this->user = \App\Models\User::factory()->create();
-        $this->actingAs($this->user, 'api');
+        $this->user = User::factory()->create();
+        $this->actingAs($this->user);
     }
 
     public function test_sys_info_returns_correct_structure()

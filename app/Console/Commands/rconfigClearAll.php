@@ -72,17 +72,6 @@ class rconfigClearAll extends Command
             chmod('/var/www/html/storage', 0777);
         }
 
-        $this->info('------  Permissions Updated!  ------');
-        $storagePath = storage_path();
-        if (file_exists($storagePath . '/oauth-public.key')) {
-            chmod($storagePath . '/oauth-public.key', 0600);
-            $this->info('------  OAuth Public Key Permissions Set!  ------');
-        }
-        if (file_exists($storagePath . '/oauth-private.key')) {
-            chmod($storagePath . '/oauth-private.key', 0600);
-            $this->info('------  OAuth Private Key Permissions Set!  ------');
-        }
-
         echo exec('composer dump-autoload') . PHP_EOL;
         $this->info(config('app.name') . ' application settings have been cleared!');
     }

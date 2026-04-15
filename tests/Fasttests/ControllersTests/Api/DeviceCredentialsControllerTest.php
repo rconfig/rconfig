@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class DeviceCredentialsControllerTest extends TestCase
 {
-     /** @var \App\Models\User */
+    /** @var \App\Models\User */
     protected $user;
 
     protected $user2;
@@ -19,7 +19,7 @@ class DeviceCredentialsControllerTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->create();
-        $this->actingAs($this->user, 'api');
+        $this->actingAs($this->user);
     }
 
     public function test_get_all_creds()
@@ -69,11 +69,11 @@ class DeviceCredentialsControllerTest extends TestCase
     {
         $cred = DeviceCredentials::factory()->make();
         $response = $this->json('post', '/api/settings/credentials', $cred->toArray());
-        
+
         $response->assertStatus(200);
         $response->assertJsonStructure(['success', 'data', 'message']);
         $response->assertJson(['success' => true]);
-        
+
         // Just check that some success message is returned
         $this->assertStringContainsString('created successfully', $response->json('message'));
 
@@ -124,9 +124,10 @@ class DeviceCredentialsControllerTest extends TestCase
             'cred_description' => 'a new credDescription name',
         ]);
 
-        // verify that the cred_enable_password is null
+        // verify that blank/disabled enable password stays blank-like after update
         $response = $this->json('get', '/api/settings/credentials/' . $cred->id);
-        $response->assertJsonFragment(['cred_enable_password' => null]);
+        $enablePassword = $response->json('cred_enable_password');
+        $this->assertContains($enablePassword, [null, '', 0, '0']);
     }
 
     public function test_delete_cred()

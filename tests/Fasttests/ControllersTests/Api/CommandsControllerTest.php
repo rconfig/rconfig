@@ -16,7 +16,7 @@ class CommandsControllerTest extends TestCase
         parent::setUp();
         $this->beginTransaction();
         $this->user = User::factory()->create();
-        $this->actingAs($this->user, 'api');
+        $this->actingAs($this->user);
     }
 
     public function test_a_command_requires_a_name_and_a_category_array()

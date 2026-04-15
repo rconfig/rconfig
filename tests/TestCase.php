@@ -10,6 +10,17 @@ abstract class TestCase extends BaseTestCase
 {
     use MigrateFreshSeedOnce, CreatesApplication, ManagesTransactions;
 
+    public function actingAs($user, $guard = null)
+    {
+        if ($guard !== null) {
+            return parent::actingAs($user, $guard);
+        }
+
+        parent::actingAs($user);
+
+        return parent::actingAs($user, 'web');
+    }
+
     public function log_message_during_test($testname, $message)
     {
         fwrite(STDOUT, "\n");

@@ -14,8 +14,8 @@ class UsersControllerTest extends TestCase
     {
         parent::setUp();
         $this->beginTransaction();
-        $this->user = \App\Models\User::factory()->create();
-        $this->actingAs($this->user, 'api');
+        $this->user = User::factory()->create();
+        $this->actingAs($this->user);
     }
 
     public function test_a_user_requires_a_name()

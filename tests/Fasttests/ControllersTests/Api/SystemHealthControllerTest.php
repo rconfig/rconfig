@@ -2,6 +2,8 @@
 
 namespace Tests\Fasttests\ControllersTests\Api;
 
+use App\Models\User;
+
 use Tests\TestCase;
 
 class SystemHealthControllerTest extends TestCase
@@ -11,8 +13,8 @@ class SystemHealthControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = \App\Models\User::factory()->create();
-        $this->actingAs($this->user, 'api');
+        $this->user = User::factory()->create();
+        $this->actingAs($this->user);
     }
 
 

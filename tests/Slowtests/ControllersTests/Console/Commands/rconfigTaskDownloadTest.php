@@ -42,7 +42,7 @@ class rconfigTaskDownloadTest extends TestCase
 
         $this->user = User::factory()->create();
         /** @var mixed $this->user */
-        $this->actingAs($this->user, 'api');
+        $this->actingAs($this->user);
     }
 
     public function test_task_was_not_found()

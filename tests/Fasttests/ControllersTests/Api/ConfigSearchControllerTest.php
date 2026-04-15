@@ -16,7 +16,7 @@ class ConfigSearchControllerTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->create();
-        $this->actingAs($this->user, 'api');
+        $this->actingAs($this->user);
         $this->strategy = new LatestSearchStrategyNew();
         Config::truncate();
     }

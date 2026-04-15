@@ -16,7 +16,6 @@
         "jfcherng/php-diff": "^6.15",
         "laravel/framework": "^12.0",
         "laravel/horizon": "^5.7",
-        "laravel/passport": "^13.1.0",
         "laravel/prompts": "^0.3.6",
         "laravel/sanctum": "^4.0.2",
         "laravel/socialite": "^5.9",
@@ -70,7 +69,8 @@
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan ide-helper:generate --ansi"
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",

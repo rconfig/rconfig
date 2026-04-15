@@ -18,7 +18,7 @@ class TemplatesControllerTest extends TestCase
         $this->beginTransaction();
         
         $this->user = User::factory()->create();
-        $this->actingAs($this->user, 'api');
+        $this->actingAs($this->user);
     }
 
     public function test_a_template_requires_a_name()

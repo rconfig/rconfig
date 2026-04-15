@@ -2,6 +2,8 @@
 
 namespace Tests\Fasttests\ControllersTests\Api;
 
+use App\Models\User;
+
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
@@ -17,8 +19,8 @@ class SettingsEmailControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = \App\Models\User::factory()->create();
-        $this->actingAs($this->user, 'api');
+        $this->user = User::factory()->create();
+        $this->actingAs($this->user);
     }
 
     public function test_get_smtp_settings()
