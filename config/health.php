@@ -111,4 +111,21 @@ return [
      * - dark: dark mode
      */
     'theme' => 'light',
+
+    /*
+     * Configure the connectivity ping check.
+     *
+     * - Set `HEALTHCHECK_PING_ENABLED=false` to disable the check entirely.
+     * - Set `HEALTHCHECK_OFFLINE_MODE=true` or `HEALTHCHECK_AIR_GAPPED=true`
+     *   to automatically skip external ping checks.
+     * - Set `HEALTHCHECK_PING_TARGET` to an internal endpoint/host such as
+     *   `http://127.0.0.1`, `http://localhost`, or your gateway address.
+     */
+    'ping' => [
+        'enabled' => env('HEALTHCHECK_PING_ENABLED', true),
+        'offline_mode' => env('HEALTHCHECK_OFFLINE_MODE', false),
+        'air_gapped' => env('HEALTHCHECK_AIR_GAPPED', false),
+        'target' => env('HEALTHCHECK_PING_TARGET', 'https://www.rconfig.com'),
+        'timeout' => (int) env('HEALTHCHECK_PING_TIMEOUT', 5),
+    ],
 ];
