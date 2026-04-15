@@ -2,6 +2,8 @@
 
 namespace Tests\Fasttests\ControllersTests\Api;
 
+use App\Models\User;
+
 use App\Jobs\TaskReportJob;
 use App\Models\Config;
 use App\Models\Taskdownloadreport;
@@ -20,8 +22,8 @@ class TaskReportControllerTest extends TestCase
         parent::setUp();
         $this->beginTransaction();
 
-        $this->user = \App\Models\User::factory()->create();
-        $this->actingAs($this->user, 'api');
+        $this->user = User::factory()->create();
+        $this->actingAs($this->user);
     }
 
     public function test_get_all_reports()

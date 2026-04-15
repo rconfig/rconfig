@@ -32,7 +32,7 @@ class RunningProcessTest extends TestCase
     {
         exec('supervisorctl status', $result);
         $expectedResult = 'horizon';
-        $this->assertStringContainsString($expectedResult, $result[0]);
+        $this->assertStringContainsString($expectedResult, implode("\n", $result));
     }
 
     public function processExists($processName)

@@ -24,9 +24,9 @@ class TaskManualRunControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = \App\Models\User::factory()->create();
-        $this->user2 = \App\Models\User::factory()->create();
-        $this->actingAs($this->user, 'api');
+        $this->user = User::factory()->create();
+        $this->user2 = User::factory()->create();
+        $this->actingAs($this->user);
         $this->report_data = collect();
         $this->report_data->report_id = (string) Str::uuid();
         $this->report_data->task_type = 'Task Download Report';

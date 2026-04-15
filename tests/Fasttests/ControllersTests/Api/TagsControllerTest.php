@@ -18,7 +18,7 @@ class TagsControllerTest extends TestCase
         $this->beginTransaction();
 
         $this->user = User::factory()->create();
-        $this->actingAs($this->user, 'api');
+        $this->actingAs($this->user);
     }
 
     public function test_get_all_tags_with_tagname_filter()

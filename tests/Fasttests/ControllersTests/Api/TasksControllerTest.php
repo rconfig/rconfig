@@ -2,6 +2,8 @@
 
 namespace Tests\Fasttests\ControllersTests\Api;
 
+use App\Models\User;
+
 use App\Models\Task;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -17,8 +19,8 @@ class TasksControllerTest extends TestCase
         parent::setUp();
         $this->beginTransaction();
 
-        $this->user = \App\Models\User::factory()->create();
-        $this->actingAs($this->user, 'api');
+        $this->user = User::factory()->create();
+        $this->actingAs($this->user);
 
         $this->validationTestArr = [
             'task_name' => '',

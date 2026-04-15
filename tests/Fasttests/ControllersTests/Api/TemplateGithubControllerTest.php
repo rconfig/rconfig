@@ -19,7 +19,7 @@ class TemplateGithubControllerTest extends TestCase
         parent::setUp();
         $this->beginTransaction();
         $this->user = User::factory()->create();
-        $this->actingAs($this->user, 'api');
+        $this->actingAs($this->user);
         $this->templatesDstDir = templates_path() . 'rConfig-templates';
     }
 
