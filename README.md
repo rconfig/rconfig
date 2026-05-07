@@ -142,14 +142,6 @@ Check out the complete feature list at <a href="https://www.rconfig.com/pricing#
 
 Get rConfig v8 Core up and running in minutes!
 
-Running rConfig v8 Core in Docker provides:
-
-- ✨ **Easy Setup** - Get started in minutes
-- 🔒 **Isolation** - Clean containerized environment  
-- 🚚 **Portability** - Move between systems easily
-- 📦 **Consistency** - Same behavior everywhere
-
-
 ### Option 1: 🐳 Docker (Recommended for Quick Testing)
 
 For Docker installation, please use our dedicated Docker repository:
