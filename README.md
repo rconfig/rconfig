@@ -168,6 +168,7 @@ See the [Full Installation Guide](#installation) below.
 
 ---
 
+<a id="installation"></a>
 ## 📦 Installation
 
 ### Prerequisites
