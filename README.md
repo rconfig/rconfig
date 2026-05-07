@@ -82,6 +82,11 @@ rConfig v8 Core is a **powerful, free, and open-source** Network Configuration M
 
 </details>
 
+## 📘 Documentation
+
+Full V8Core documentation: [https://v8coredocs.rconfig.com/getting-started/](https://v8coredocs.rconfig.com/getting-started/)
+
+
 ## ✨ Features
 
 <table>
@@ -137,6 +142,14 @@ Check out the complete feature list at <a href="https://www.rconfig.com/pricing#
 
 Get rConfig v8 Core up and running in minutes!
 
+Running rConfig v8 Core in Docker provides:
+
+- ✨ **Easy Setup** - Get started in minutes
+- 🔒 **Isolation** - Clean containerized environment  
+- 🚚 **Portability** - Move between systems easily
+- 📦 **Consistency** - Same behavior everywhere
+
+
 ### Option 1: 🐳 Docker (Recommended for Quick Testing)
 
 For Docker installation, please use our dedicated Docker repository:
@@ -171,19 +184,25 @@ See the [Full Installation Guide](#installation) below.
 <a id="installation"></a>
 ## 📦 Installation
 
+For a full VM installation, refer to the documentation at [https://v8coredocs.rconfig.com/getting-started/installation/](https://v8coredocs.rconfig.com/getting-started/installation/) or follow the steps below. Please note, this installation method is more complex and is recommended for experienced users or production environments.
+
+When setting up your VM, we have provided detailed instructions for both CentOS/RHEL/Rocky and Ubuntu. Please follow the steps that correspond to your operating system. and ensure you have the necessary prerequisites installed before proceeding. 
+
+> 💡 **Tip:** We provide automated setup scripts! Visit [v8coredocs.rconfig.com/getting-started/os-configuration/](https://v8coredocs.rconfig.com/getting-started/os-configuration/)
+
 ### Prerequisites
+
+OS Requirements: [System Requirements](https://v8coredocs.rconfig.com/getting-started/os-configuration/#system-requirements)
 
 **Supported OS:** Rocky Linux 8/9+ (recommended), CentOS 8/9+, RHEL 8/9+, Ubuntu 22.04+, Alma Linux 8/9+, AWS Linux 2023
 
 **Required Software:** PHP 8.4+, Composer 2.4+, Apache 2.4+, MySQL 5.7+/MariaDB 10.5+, Node.js 14.17+, Git 2.25+, Supervisor 4.2+
 
-> 💡 **Tip:** We provide automated setup scripts! Visit [docs.rconfig.com/getstarted/os-setup](https://docs.rconfig.com/getstarted/os-setup)
-
 ---
 
 ### 🗄️ Database Setup
 ```bash
-# Login to MySQL
+# Login to mariadb/mysql
 mysql -u root -p
 
 # Create database
@@ -224,6 +243,8 @@ DB_DATABASE=rconfig
 DB_USERNAME=rconfig_user
 DB_PASSWORD=your_secure_password
 ```
+
+> 💡 **Best practice:** Set `APP_URL` to the exact hostname (and scheme) users will browse to, and match it to the Apache `ServerName` further below. This drives absolute URL generation, password reset links, and Sanctum's stateful-domain check. The SPA will still log in if `APP_URL` is left as a placeholder — same-origin requests are accepted automatically — but mail links and OAuth/SAML callbacks will be wrong until you set it correctly.
 ```bash
 # 5. Install PHP dependencies
 export COMPOSER_ALLOW_SUPERUSER=1
@@ -238,7 +259,7 @@ chmod +x setup_apache.sh
 chmod +x setup_supervisor.sh
 ./setup_supervisor.sh
 
-# 8. Run the beautiful installation wizard 🎨
+# 8. Run the beautiful installation wizard, and answer yes to all prompts 🎨
 php artisan v8core:install
 ```
 
@@ -248,7 +269,7 @@ php artisan v8core:install
 
 ### 🔧 Final Configuration
 ```bash
-# Update Apache virtual host
+# Update Apache virtual host to your server's FQDN
 # For CentOS/RHEL:
 sudo nano /etc/httpd/conf.d/rconfig-vhost.conf
 
@@ -283,6 +304,18 @@ php artisan rconfig:clear-all
 
 ---
 
+### 🔐 SSL / TLS Setup
+
+rConfig should be served over HTTPS in any non-trivial environment. Browser session cookies, SAML/OAuth callbacks, and the SPA's same-origin auth all behave best on a properly certified domain.
+
+For step-by-step instructions covering self-signed certificates, Let's Encrypt, and reverse-proxy termination, see the official guide:
+
+👉 **[SSL Setup Guide → v8coredocs.rconfig.com/auth-security/ssl-setup](https://v8coredocs.rconfig.com/auth-security/ssl-setup/)**
+
+After enabling SSL, make sure your `APP_URL` in `.env` uses `https://` and matches the certificate's hostname.
+
+---
+
 ### 🎊 Access Your Installation
 
 Open your browser and navigate to: `https://your-server.domain.com`
@@ -294,40 +327,7 @@ Open your browser and navigate to: `https://your-server.domain.com`
 > ⚠️ **Security Notice:** Change or remove these credentials immediately after creating a new admin user!
 
 <p align="right">(<a href="#readme-top">⬆ back to top</a>)</p>
-
----
-
-## 🐳 Docker Installation
-
-Running rConfig v8 Core in Docker provides:
-
-- ✨ **Easy Setup** - Get started in minutes
-- 🔒 **Isolation** - Clean containerized environment  
-- 🚚 **Portability** - Move between systems easily
-- 📦 **Consistency** - Same behavior everywhere
-
-### Docker Repository
-
-We maintain a dedicated Docker repository for rConfig v8 Core:
-
-**👉 [rconfig8coredocker](https://github.com/rconfig/rconfig8coredocker)**
-
-### Quick Docker Setup
-```bash
-# Clone the Docker repository
-git clone https://github.com/rconfig/rconfig8coredocker.git
-cd rconfig8coredocker
-
-# Build and start containers
-docker-compose up -d
-
-# Access at http://localhost:8080
-```
-
-📖 **Full Docker documentation:** [rconfig8coredocker repository](https://github.com/rconfig/rconfig8coredocker)
-
-<p align="right">(<a href="#readme-top">⬆ back to top</a>)</p>
-
+ 
 ---
 
 ## 🔄 Updating
