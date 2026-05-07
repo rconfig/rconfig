@@ -149,15 +149,27 @@ For Docker installation, please use our dedicated Docker repository:
 **👉 [rconfig8coredocker](https://github.com/rconfig/rconfig8coredocker)**
 
 ```bash
+# install git and docker if you don't have them already
+# For CentOS/RHEL/Rocky:
+sudo yum install -y git docker docker-compose
+sudo systemctl start docker
+sudo systemctl enable docker
+# For Ubuntu:
+
+sudo apt-get update
+sudo apt-get install -y git docker.io docker-compose
+sudo systemctl start docker
+sudo systemctl enable docker
+
 # Clone the Docker repository
 git clone https://github.com/rconfig/rconfig8coredocker.git
 cd rconfig8coredocker
 
-# Start the containers
-docker-compose up -d
+## Follow Steps in the official documentation for docker setup: https://v8coredocs.rconfig.com/installation-upgrades/v8-core/docker-setup/
 
-# Access at http://localhost:8080
 ```
+
+To complete the setup, follow the remaining instructions in the V8 Core Docker documentation: [https://v8coredocs.rconfig.com/getting-started/docker-installation/](https://v8coredocs.rconfig.com/installation-upgrades/v8-core/docker-setup/)
 
 **Default credentials:**
 - 📧 Email: `admin@domain.com`
