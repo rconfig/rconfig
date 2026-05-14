@@ -98,8 +98,6 @@ Full V8Core documentation: [https://v8coredocs.rconfig.com/getting-started/](htt
 - ✅ **Multi-Vendor Support** - Cisco, Juniper, HP, Dell, and more
 - ✅ **Unlimited Devices** - No artificial limits
 - ✅ **Scheduled Tasks** - Automated backup scheduling
-- ✅ **Version Control** - Track configuration changes over time
-- ✅ **Search & Compare** - Powerful config search and diff tools
 
 </td>
 <td width="50%">
