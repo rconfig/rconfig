@@ -111,6 +111,7 @@ class CommandsControllerTest extends TestCase
         $response = $this->json('post', '/api/commands', [
             'command' => $command->command,
             'description' => $command->description,
+            'base64' => true,
             'categoryArray' => $categories->pluck('id')->toArray(),
         ]);
 
@@ -125,6 +126,7 @@ class CommandsControllerTest extends TestCase
         $this->assertDatabaseHas('commands', [
             'command' => $command->command,
             'description' => $command->description,
+            'base64' => true,
         ]);
     }
 
@@ -145,6 +147,7 @@ class CommandsControllerTest extends TestCase
         $response = $this->json('post', '/api/commands', [
             'command' => $command->command,
             'description' => $command->description,
+            'base64' => true,
             'categoryArray' => $categories->pluck('id')->toArray(),
         ]);
         $response->assertStatus(200);
@@ -158,6 +161,7 @@ class CommandsControllerTest extends TestCase
         $this->assertDatabaseHas('commands', [
             'command' => $command->command,
             'description' => $command->description,
+            'base64' => true,
         ]);
 
         $categories2 = Category::factory(3)->create();
@@ -165,6 +169,7 @@ class CommandsControllerTest extends TestCase
         $response = $this->json('PATCH', '/api/commands/' . $insertedComand->id, [
             'command' => 'new command',
             'description' => 'new description',
+            'base64' => true,
             'categoryArray' => $categories2->pluck('id')->toArray(),
         ]);
         $response->assertStatus(200);
@@ -172,6 +177,7 @@ class CommandsControllerTest extends TestCase
         $response = $this->json('PATCH', '/api/commands/' . $insertedComand->id, [
             'command' => 'a new command name',
             'description' => 'a new description name',
+            'base64' => true,
             'categoryArray' => $categories2->pluck('id')->toArray(),
         ]);
 
@@ -187,6 +193,21 @@ class CommandsControllerTest extends TestCase
             'id' => $insertedComand->id,
             'command' => 'a new command name',
             'description' => 'a new description name',
+            'base64' => true,
+        ]);
+
+        $response = $this->json('PATCH', '/api/commands/' . $insertedComand->id, [
+            'command' => 'a new command name',
+            'description' => 'a new description name',
+            'base64' => false,
+            'categoryArray' => $categories2->pluck('id')->toArray(),
+        ]);
+
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas('commands', [
+            'id' => $insertedComand->id,
+            'base64' => false,
         ]);
     }
 

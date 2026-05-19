@@ -175,9 +175,19 @@ class ConfigControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_show_single_config()
+    public function test_config_has_default_values_for_base64_and_ext()
     {
         $config = Config::factory()->create();
+        $this->assertDatabaseHas('configs', [
+            'id' => $config->id,
+            'base64' => false,
+            'ext' => null,
+        ]);
+    }
+
+    public function test_show_single_config()
+    {
+        $config = Config::factory()->create(['base64' => true, 'ext' => 'tar.gz']);
         $response = $this->get('/api/configs/' . $config->id);
         // dd($response);
         $response->assertStatus(200);
@@ -186,7 +196,9 @@ class ConfigControllerTest extends TestCase
             'id' => $config->id,
             'device_name' => $config->device_name,
             'device_category' => $config->device_category,
-        ]);
+            'base64' => true,
+            'ext' => 'tar.gz',
+            ]);
     }
 
     public function test_get_single_config_file_contents_and_response_time_for_large_file()
@@ -259,6 +271,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-15 17:05:48',
                 'updated_at' => '2022-01-15 17:05:48',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -276,6 +290,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-15 17:05:48',
                 'updated_at' => '2022-01-15 17:05:48',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -293,6 +309,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-15 17:05:48',
                 'updated_at' => '2022-01-15 17:05:48',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -310,6 +328,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-15 17:07:09',
                 'updated_at' => '2022-01-15 17:07:09',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -327,6 +347,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-15 17:07:09',
                 'updated_at' => '2022-01-15 17:07:09',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -344,6 +366,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-15 17:07:09',
                 'updated_at' => '2022-01-15 17:07:09',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -361,6 +385,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-15 17:07:40',
                 'updated_at' => '2022-01-15 17:07:40',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -378,6 +404,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-15 17:07:40',
                 'updated_at' => '2022-01-15 17:07:40',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -395,6 +423,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-15 17:17:27',
                 'updated_at' => '2022-01-15 17:17:27',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -412,6 +442,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-15 17:17:27',
                 'updated_at' => '2022-01-15 17:17:27',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -429,6 +461,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-15 17:17:34',
                 'updated_at' => '2022-01-15 17:17:34',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -446,6 +480,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-15 17:17:34',
                 'updated_at' => '2022-01-15 17:17:34',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1002,
@@ -463,6 +499,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-15 17:17:34',
                 'updated_at' => '2022-01-15 17:17:34',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -480,6 +518,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-17 17:08:23',
                 'updated_at' => '2022-01-17 17:08:23',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -497,6 +537,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-17 17:08:23',
                 'updated_at' => '2022-01-17 17:08:23',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -514,6 +556,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-17 17:08:23',
                 'updated_at' => '2022-01-17 17:08:23',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -531,6 +575,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-17 17:09:54',
                 'updated_at' => '2022-01-17 17:09:54',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -548,6 +594,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-17 17:09:54',
                 'updated_at' => '2022-01-17 17:09:54',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -565,6 +613,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-17 17:09:54',
                 'updated_at' => '2022-01-17 17:09:54',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -582,6 +632,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-17 17:10:03',
                 'updated_at' => '2022-01-17 17:10:03',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -599,6 +651,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-17 17:10:03',
                 'updated_at' => '2022-01-17 17:10:03',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -616,6 +670,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-17 17:10:03',
                 'updated_at' => '2022-01-17 17:10:03',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -633,6 +689,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-17 17:10:03',
                 'updated_at' => '2022-01-17 17:10:03',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -650,6 +708,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-17 17:10:03',
                 'updated_at' => '2022-01-17 17:10:03',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1001,
@@ -667,6 +727,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-17 17:10:03',
                 'updated_at' => '2022-01-17 17:10:03',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1002,
@@ -684,6 +746,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-17 17:10:03',
                 'updated_at' => '2022-01-17 17:10:03',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1003,
@@ -701,6 +765,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-17 17:10:03',
                 'updated_at' => '2022-01-17 17:10:03',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
             [
                 'device_id' => 1004,
@@ -718,6 +784,8 @@ class ConfigControllerTest extends TestCase
                 'duration' => 1,
                 'created_at' => '2022-01-17 17:10:03',
                 'updated_at' => '2022-01-17 17:10:03',
+                'base64' => true,
+                'ext' => 'tar.gz'
             ],
         ];
         Config::insert($configs);
