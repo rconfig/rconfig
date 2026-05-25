@@ -1,0 +1,271 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Called ''take'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 1
+			path: app/Console/Commands/rConfigActivityLogArchive.php
+
+		-
+			message: '#^Called ''where'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 1
+			path: app/Console/Commands/rConfigReportLastDownload.php
+
+		-
+			message: '#^Call to an undefined method App\\Console\\Kernel\:\:purge_configs\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Console/Kernel.php
+
+		-
+			message: '#^Class App\\Console\\MonitoredScheduledTaskLogItem not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Console/Kernel.php
+
+		-
+			message: '#^Instantiated class App\\CustomClasses\\Exception not found\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/CustomClasses/CronSchedule.php
+
+		-
+			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:advanceItem\(\) cannot be final as it is never overridden by other classes\.$#'
+			identifier: method.finalPrivate
+			count: 1
+			path: app/CustomClasses/CronSchedule.php
+
+		-
+			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:classIsSingleFixed\(\) cannot be final as it is never overridden by other classes\.$#'
+			identifier: method.finalPrivate
+			count: 1
+			path: app/CustomClasses/CronSchedule.php
+
+		-
+			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:classIsSpecified\(\) cannot be final as it is never overridden by other classes\.$#'
+			identifier: method.finalPrivate
+			count: 1
+			path: app/CustomClasses/CronSchedule.php
+
+		-
+			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:cronCreateItems\(\) cannot be final as it is never overridden by other classes\.$#'
+			identifier: method.finalPrivate
+			count: 1
+			path: app/CustomClasses/CronSchedule.php
+
+		-
+			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:cronInterpret\(\) cannot be final as it is never overridden by other classes\.$#'
+			identifier: method.finalPrivate
+			count: 1
+			path: app/CustomClasses/CronSchedule.php
+
+		-
+			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:dtAsString\(\) cannot be final as it is never overridden by other classes\.$#'
+			identifier: method.finalPrivate
+			count: 1
+			path: app/CustomClasses/CronSchedule.php
+
+		-
+			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:dtFromParameters\(\) cannot be final as it is never overridden by other classes\.$#'
+			identifier: method.finalPrivate
+			count: 1
+			path: app/CustomClasses/CronSchedule.php
+
+		-
+			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:getClass\(\) cannot be final as it is never overridden by other classes\.$#'
+			identifier: method.finalPrivate
+			count: 1
+			path: app/CustomClasses/CronSchedule.php
+
+		-
+			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:getEarliestItem\(\) cannot be final as it is never overridden by other classes\.$#'
+			identifier: method.finalPrivate
+			count: 1
+			path: app/CustomClasses/CronSchedule.php
+
+		-
+			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:getLatestItem\(\) cannot be final as it is never overridden by other classes\.$#'
+			identifier: method.finalPrivate
+			count: 1
+			path: app/CustomClasses/CronSchedule.php
+
+		-
+			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:initLang\(\) cannot be final as it is never overridden by other classes\.$#'
+			identifier: method.finalPrivate
+			count: 1
+			path: app/CustomClasses/CronSchedule.php
+
+		-
+			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:natlangApply\(\) cannot be final as it is never overridden by other classes\.$#'
+			identifier: method.finalPrivate
+			count: 1
+			path: app/CustomClasses/CronSchedule.php
+
+		-
+			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:natlangElementDayOfMonth\(\) cannot be final as it is never overridden by other classes\.$#'
+			identifier: method.finalPrivate
+			count: 1
+			path: app/CustomClasses/CronSchedule.php
+
+		-
+			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:natlangElementHour\(\) cannot be final as it is never overridden by other classes\.$#'
+			identifier: method.finalPrivate
+			count: 1
+			path: app/CustomClasses/CronSchedule.php
+
+		-
+			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:natlangElementMinute\(\) cannot be final as it is never overridden by other classes\.$#'
+			identifier: method.finalPrivate
+			count: 1
+			path: app/CustomClasses/CronSchedule.php
+
+		-
+			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:natlangElementMonth\(\) cannot be final as it is never overridden by other classes\.$#'
+			identifier: method.finalPrivate
+			count: 1
+			path: app/CustomClasses/CronSchedule.php
+
+		-
+			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:natlangElementYear\(\) cannot be final as it is never overridden by other classes\.$#'
+			identifier: method.finalPrivate
+			count: 1
+			path: app/CustomClasses/CronSchedule.php
+
+		-
+			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:natlangPad2\(\) cannot be final as it is never overridden by other classes\.$#'
+			identifier: method.finalPrivate
+			count: 1
+			path: app/CustomClasses/CronSchedule.php
+
+		-
+			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:natlangRange\(\) cannot be final as it is never overridden by other classes\.$#'
+			identifier: method.finalPrivate
+			count: 1
+			path: app/CustomClasses/CronSchedule.php
+
+		-
+			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:recedeItem\(\) cannot be final as it is never overridden by other classes\.$#'
+			identifier: method.finalPrivate
+			count: 1
+			path: app/CustomClasses/CronSchedule.php
+
+		-
+			message: '#^Relation ''command'' is not found in App\\Models\\Category model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/CustomClasses/DeviceRecordPrepare.php
+
+		-
+			message: '#^Relation ''device'' is not found in App\\Models\\Category model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/CustomClasses/GetAndCheckCategoryIds.php
+
+		-
+			message: '#^Relation ''category'' is not found in App\\Models\\Device model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/CustomClasses/GetAndCheckDeviceIds.php
+
+		-
+			message: '#^Relation ''device'' is not found in App\\Models\\Tag model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/CustomClasses/GetAndCheckTagIds.php
+
+		-
+			message: '#^Relation ''device'' is not found in App\\Models\\Task model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/CustomClasses/GetAndCheckTaskIds.php
+
+		-
+			message: '#^Access to an undefined property App\\CustomClasses\\PurgeOperations\:\:\$username\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/CustomClasses/PurgeOperations.php
+
+		-
+			message: '#^Function backup_path not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: app/CustomClasses/PurgeOperations.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\DeviceCommentController\:\:index\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/DeviceCommentController.php
+
+		-
+			message: '#^Relation ''user'' is not found in App\\Models\\DeviceComment model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: app/Http/Controllers/Api/DeviceCommentController.php
+
+		-
+			message: '#^Relation ''devices'' is not found in App\\Models\\DeviceModel model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Http/Controllers/Api/DeviceModelController.php
+
+		-
+			message: '#^Called ''Model\:\:make\(\)'' which performs unnecessary work, use ''new Model\(\)''\.$#'
+			identifier: larastan.noModelMake
+			count: 1
+			path: app/Http/Controllers/Api/SettingEmailController.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Controllers\\Api\\TrackedJobController\:\:\$model\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/Api/TrackedJobController.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Controllers\\Api\\TrackedJobController\:\:\$modelname\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/TrackedJobController.php
+
+		-
+			message: '#^Array has 2 duplicate keys with value ''guest'' \(''guest'', ''guest''\)\.$#'
+			identifier: array.duplicateKey
+			count: 1
+			path: app/Http/Kernel.php
+
+		-
+			message: '#^Class App\\Http\\Middleware\\ApiV1TokenAuth not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Kernel.php
+
+		-
+			message: '#^Array has 2 duplicate keys with value ''device_category_id'' \(''device_category_id'', ''device_category_id''\)\.$#'
+			identifier: array.duplicateKey
+			count: 2
+			path: app/Http/Requests/StoreDeviceRequest.php
+
+		-
+			message: '#^Class App\\Models\\DeviceModels not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Models/Device.php
+
+		-
+			message: '#^Deprecated in PHP 8\.4\: Parameter \#1 \$exception \(string\) is implicitly nullable via default value null\.$#'
+			identifier: parameter.implicitlyNullable
+			count: 1
+			path: app/Models/TrackedJob.php
+
+		-
+			message: '#^Deprecated in PHP 8\.4\: Parameter \#1 \$message \(string\) is implicitly nullable via default value null\.$#'
+			identifier: parameter.implicitlyNullable
+			count: 1
+			path: app/Models/TrackedJob.php
+
+		-
+			message: '#^Relation ''command'' is not found in App\\Models\\Category model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Rules/CategoryHasCommands.php

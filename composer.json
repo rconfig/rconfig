@@ -48,6 +48,7 @@
         "laravel/pint": "^1.10",
         "mockery/mockery": "^1.5.0",
         "nunomaduro/collision": "^8.1.1",
+        "phpstan/phpstan": "^2.1",
         "phpunit/php-code-coverage": "^12.3.1",
         "phpunit/phpunit": "^12.2.7"
     },
@@ -81,7 +82,8 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
-        ]
+        ],
+        "stan": "vendor/bin/phpstan analyse --memory-limit=256M"
     },
     "extra": {
         "laravel": {
