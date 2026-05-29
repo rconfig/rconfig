@@ -15,6 +15,8 @@ final class StoreSettingsEmailDTO extends DtoBase
     public $mail_password;
     public $mail_driver;
     public $mail_encryption;
+    public int $mail_verify_peer;
+    public int $mail_auto_tls;
 
     public function __construct(array $parameters = [])
     {
@@ -27,5 +29,7 @@ final class StoreSettingsEmailDTO extends DtoBase
         $this->mail_password = $parameters['mail_password'];
         $this->mail_driver = $parameters['mail_driver'];
         $this->mail_encryption = $parameters['mail_encryption'];
+        $this->mail_verify_peer = $parameters['mail_verify_peer'];
+        $this->mail_auto_tls = $parameters['mail_auto_tls'];
     }
 }

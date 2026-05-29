@@ -2,8 +2,11 @@
 
 namespace Tests\Fasttests\ControllersTests\Api;
 
+use App\Models\Setting;
 use App\Models\User;
+use App\Services\Email\MailConfigService;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
 
@@ -37,17 +40,27 @@ class SettingsEmailControllerTest extends TestCase
             'mail_password' => $json->mail_password,
             'mail_driver' => $json->mail_driver,
             'mail_encryption' => $json->mail_encryption,
+            'mail_verify_peer' => $json->mail_verify_peer,
+            'mail_auto_tls' => $json->mail_auto_tls,
         ]);
     }
 
     public function test_get_smtp_settings_from_config_cache()
     {
+        // Mail config is loaded from the database lazily by MailConfigService when
+        // the mail system is resolved, so trigger it explicitly here.
+        Cache::forget('mail_settings');
+        app()->forgetInstance(MailConfigService::class);
+        app(MailConfigService::class)->configure();
+
+        $setting = Setting::first();
         $cached = Config::get('mail');
 
-        $this->assertEquals('smtp', $cached['driver']);
-        $this->assertEquals('devmailer.rconfig.com', $cached['host']);
-        $this->assertEquals(null, $cached['username']);
-        $this->assertEquals(false, $cached['verify_peer']); // bug: #160
+        $this->assertEquals('smtp', $cached['mailers']['smtp']['transport']);
+        $this->assertEquals($setting->mail_host, $cached['mailers']['smtp']['host']);
+        $this->assertEquals($setting->mail_username, $cached['mailers']['smtp']['username']);
+        $this->assertEquals(false, $cached['mailers']['smtp']['verify_peer']); // bug: #160
+        $this->assertEquals(false, $cached['mailers']['smtp']['auto_tls']);
     }
 
     public function test_smtp_required_fields()
@@ -92,6 +105,8 @@ class SettingsEmailControllerTest extends TestCase
         $smtp_array['mail_password'] = $this->faker->password;
         $smtp_array['mail_driver'] = 'smtp';
         $smtp_array['mail_encryption'] = 'tls';
+        $smtp_array['mail_verify_peer'] = 1;
+        $smtp_array['mail_auto_tls'] = 1;
 
         $response = $this->patch('/api/settings/email/1', $smtp_array);
         $response->assertStatus(200);
@@ -103,6 +118,8 @@ class SettingsEmailControllerTest extends TestCase
             'mail_from_email' => $smtp_array['mail_from_email'],
             'mail_to_email' => $smtp_array['mail_to_email'],
             'mail_encryption' => $smtp_array['mail_encryption'],
+            'mail_verify_peer' => 1,
+            'mail_auto_tls' => 1,
         ]);
     }
 

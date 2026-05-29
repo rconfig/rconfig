@@ -4,7 +4,6 @@ use App\Providers\AppServiceProvider;
 use App\Providers\EventServiceProvider;
 use App\Providers\HealthCheckProvider;
 use App\Providers\HorizonServiceProvider;
-use App\Providers\rConfigMailConfigServiceProvider;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\AuthServiceProvider;
 use Illuminate\Auth\Passwords\PasswordResetServiceProvider;
@@ -261,7 +260,6 @@ return [
         EventServiceProvider::class,
         HorizonServiceProvider::class,
         RouteServiceProvider::class,
-        rConfigMailConfigServiceProvider::class,
         HealthCheckProvider::class,
     ],
 

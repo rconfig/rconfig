@@ -1,5 +1,7 @@
 <script setup>
+import { computed } from "vue";
 import Spinner from "@/pages/Shared/Icon/Spinner.vue";
+import HelpPopover from "@/pages/Shared/Popover/HelpPopover.vue";
 import { InputPassword } from "@/components/ui/input-password";
 import { Mail, AlertCircle } from "lucide-vue-next";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -9,6 +11,24 @@ import { useSystemSettingsEmail } from "@/pages/Settings/Panels/Components/useSy
 const { settings, test1Loading, test2Loading, testEmail, updateEmail } = useSystemSettingsEmail();
 
 const props = defineProps({});
+
+const isVerifyPeerEnabled = computed(() => Number(settings.value.mail_verify_peer ?? 0) === 1);
+const isAutoTlsEnabled = computed(() => Number(settings.value.mail_auto_tls ?? 0) === 1);
+
+const verifyPeerLabel = computed(() => (isVerifyPeerEnabled.value ? "Disable Verify Peer" : "Enable Verify Peer"));
+const autoTlsLabel = computed(() => (isAutoTlsEnabled.value ? "Disable Auto TLS" : "Enable Auto TLS"));
+
+const verifyPeerHelpContent = computed(() =>
+	isVerifyPeerEnabled.value
+		? "Verify Peer is currently enabled. SMTP certificates must validate against a trusted CA; this is recommended for production mail servers."
+		: "Verify Peer is currently disabled. SMTP certificate validation is bypassed; this is usually only appropriate for self-signed or lab environments.",
+);
+
+const autoTlsHelpContent = computed(() =>
+	isAutoTlsEnabled.value
+		? "Auto TLS is currently enabled. The mailer will attempt STARTTLS when supported by the SMTP server, which is recommended in most environments."
+		: "Auto TLS is currently disabled. The connection will not auto-upgrade to TLS (STARTTLS), which may leave SMTP traffic unencrypted.",
+);
 </script>
 
 <template>
@@ -108,6 +128,28 @@ const props = defineProps({});
 					</div>
 				</div>
 			</transition>
+
+			<div class="grid items-center grid-cols-4 gap-4">
+				<Label for="mail_verify_peer" class="text-right">
+					{{ verifyPeerLabel }}
+					<HelpPopover title="Verify Peer" :content="verifyPeerHelpContent" />
+				</Label>
+				<label class="inline-flex items-center cursor-pointer">
+					<input id="mail_verify_peer" type="checkbox" :true-value="1" :false-value="0" v-model="settings.mail_verify_peer" class="sr-only peer" />
+					<div class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-0 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+				</label>
+			</div>
+
+			<div class="grid items-center grid-cols-4 gap-4">
+				<Label for="mail_auto_tls" class="text-right">
+					{{ autoTlsLabel }}
+					<HelpPopover title="Auto TLS" :content="autoTlsHelpContent" />
+				</Label>
+				<label class="inline-flex items-center cursor-pointer">
+					<input id="mail_auto_tls" type="checkbox" :true-value="1" :false-value="0" v-model="settings.mail_auto_tls" class="sr-only peer" />
+					<div class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-0 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+				</label>
+			</div>
 		</div>
 
 		<div class="flex justify-between">

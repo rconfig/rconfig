@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Notifications\TestMailNotification;
 use App\Traits\RespondsWithHttpStatus;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
@@ -30,6 +31,9 @@ class SettingEmailController extends ApiBaseController
     public function update($id, StoreSettingsEmailRequest $request)
     {
         parent::updateResource($id, $request->toDTO()->toArray(), 1);
+
+        // Mail settings are cached on use by App\Services\Email\MailConfigService, so clear them here
+        Cache::forget('mail_settings');
 
         if (! App()->environment('testing')) {
             Artisan::call('config:cache'); // cannot to a config:cache when testing
