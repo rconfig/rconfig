@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders\testdata;
+namespace Database\Seeders\testdata\Devices;
 
 use App\Models\Device;
 use Faker\Factory;
@@ -12,10 +12,8 @@ class MikrotikDeviceSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         $faker = Factory::create();
         $device_id = 20001;
@@ -95,6 +93,9 @@ class MikrotikDeviceSeeder extends Seeder
             'device_version' => '',
             'device_added_by' => 1,
             'status' => 1,
+            'last_seen' => '2023-11-10 13:57:49',
+            'created_at' => '2023-11-10 10:34:20',
+            'updated_at' => '2023-11-10 10:57:49',
         ]);
     }
 }
