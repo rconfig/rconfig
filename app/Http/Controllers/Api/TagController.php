@@ -22,10 +22,10 @@ class TagController extends ApiBaseController
         $perPage = (int) $request->perPage ?: 10;
 
         $query = QueryBuilder::for(Tag::class)
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::custom('q', new FilterMultipleFields, 'tagname'),
             ])
-            ->allowedSorts(['id', 'tagname', 'created_at'])
+            ->allowedSorts(...['id', 'tagname', 'created_at'])
             ->with(['device:id,device_name']);
 
         $result = $query->paginate($perPage);

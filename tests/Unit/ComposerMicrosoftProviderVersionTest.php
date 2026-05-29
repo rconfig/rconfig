@@ -11,6 +11,6 @@ class ComposerMicrosoftProviderVersionTest extends TestCase
         $composer = json_decode(file_get_contents(base_path('composer.json')), true);
         $require = $composer['require'] ?? [];
         $this->assertArrayHasKey('socialiteproviders/microsoft', $require, 'Missing socialiteproviders/microsoft in composer.json');
-        $this->assertEquals('4.6.0', $require['socialiteproviders/microsoft'], 'socialiteproviders/microsoft must be version 4.6.0');
+        $this->assertEquals('^4.9', $require['socialiteproviders/microsoft'], 'socialiteproviders/microsoft must be constrained to ^4.9');
     }
 }

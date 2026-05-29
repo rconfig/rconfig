@@ -26,10 +26,10 @@ class CommandController extends ApiBaseController
         $perPage = (int) $request->perPage ?: 10;
 
         $query = QueryBuilder::for(Command::class)
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::custom('q', new FilterMultipleFields, 'command'),
             ])
-            ->allowedSorts(['id', 'command', 'created_at'])
+            ->allowedSorts(...['id', 'command', 'created_at'])
             ->with('category');
 
         $result = $query->paginate($perPage);

@@ -7,10 +7,10 @@ use Spatie\QueryBuilder\Filters\Filter;
 
 class QueryFilterMultipleFields implements Filter
 {
-    public function __invoke(Builder $query, $value, string $property): Builder
+    public function __invoke(Builder $query, mixed $value, string $property): void
     {
         $fields = array_map('trim', explode(',', $property));
-        $value = '%' . strtolower($value) . '%';
+        $value = '%' . strtolower((string) $value) . '%';
 
         // Create a grouped where clause to properly handle OR conditions
         $query->where(function ($subQuery) use ($fields, $value) {
@@ -18,8 +18,6 @@ class QueryFilterMultipleFields implements Filter
                 $this->handleMySqlField($subQuery, $field, $value);
             }
         });
-
-        return $query;
     }
 
     /**

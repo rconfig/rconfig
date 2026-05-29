@@ -22,11 +22,11 @@ class TaskReportController extends ApiBaseController
 
         try {
             $query = QueryBuilder::for($this->model::class)
-                ->allowedFilters([
+                ->allowedFilters(...[
                     AllowedFilter::custom('q', new FilterMultipleFields, 'report_id, task_id, task_name, task_type'),
                 ])
                 ->defaultSort('-created_at')
-                ->allowedSorts(['id', 'report_name', 'task_id', 'created_at'])
+                ->allowedSorts(...['id', 'report_name', 'task_id', 'created_at'])
                 ->paginate($request->perPage ?? 10);
         } catch (\Exception $e) {
             return $this->failureResponse($e->getMessage());

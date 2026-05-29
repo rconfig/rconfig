@@ -20,9 +20,9 @@ class DeviceCredentialsController extends ApiBaseController
 
         $response = QueryBuilder::for(DeviceCredentials::class)
             ->with('device')
-            ->allowedFilters(['cred_name'])
+            ->allowedFilters(...['cred_name'])
             ->defaultSort('-id')
-            ->allowedSorts(['id', 'cred_name'])
+            ->allowedSorts(...['id', 'cred_name'])
             ->paginate((int) $request->perPage);
 
         return response()->json($response);

@@ -27,12 +27,12 @@ class TaskController extends ApiBaseController
         $searchCols = ['id', 'task_name'];
 
         $result = QueryBuilder::for(Task::class)
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::custom('q', new FilterMultipleFields, 'task_name', 'task_command'),
                 AllowedFilter::partial('task_command'),
             ])
             ->defaultSort('-id')
-            ->allowedSorts(['id', 'task_name', 'created_at'])
+            ->allowedSorts(...['id', 'task_name', 'created_at'])
             ->paginate($request->perPage ?? 10);
 
         $result->map(function ($item) {
