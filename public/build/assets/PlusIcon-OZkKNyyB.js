@@ -1,1 +1,0 @@
-import{Ja as e,Oa as t,Ua as n,Ut as r,da as i,la as a,qa as o}from"./app-Dqq6wGjs.js";var s={__name:`PlusIcon`,props:{size:{type:[Number,String],default:16},class:{type:String,default:``}},setup(s){n(!1);let c=s,l=a(()=>`size-4 text-muted-foreground ${c.class}`);return(n,a)=>(t(),i(o(r),{size:s.size,class:e(l.value)},null,8,[`size`,`class`]))}};export{s as default};

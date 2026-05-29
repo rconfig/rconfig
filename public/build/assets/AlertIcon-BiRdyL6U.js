@@ -1,0 +1,1 @@
+import{Fa as e,eo as t,gr as n,to as r,va as i}from"./app-BTCtwzbT.js";var a={__name:`AlertIcon`,props:{width:{type:Number,default:16},height:{type:Number,default:16},class:{type:String,default:``}},setup(a){return(o,s)=>(e(),i(t(n),{width:a.width,height:a.height,class:r(a.class)},null,8,[`width`,`height`,`class`]))}};export{a as default};
