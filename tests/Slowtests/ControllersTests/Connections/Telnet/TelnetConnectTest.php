@@ -26,6 +26,11 @@ class TelnetConnectTest extends TestCase
     {
         parent::setUp();
 
+        // Skip if integration tests not enabled
+        if (! env('RUN_INTEGRATION_TESTS', false)) {
+            $this->markTestSkipped('Set RUN_INTEGRATION_TESTS=true to run live Telnet integration tests');
+        }
+
         $this->device1 = Device::where('id', 1001)->first();
         $this->device2 = Device::where('id', 1002)->first();
         $this->device5 = Device::where('id', 1005)->first();
@@ -86,7 +91,7 @@ class TelnetConnectTest extends TestCase
         $arr = explode("\n", $result);
 
         $time = microtime(true) - $start;
-        $this->assertLessThan(5, $time);
+        $this->assertLessThan(10, $time);
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output

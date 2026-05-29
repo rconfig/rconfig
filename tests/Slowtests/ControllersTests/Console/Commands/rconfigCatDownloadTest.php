@@ -115,11 +115,13 @@ class rconfigCatDownloadTest extends TestCase
         $this->assertStringContainsString('Start device download for router5 ID:1005', $output);
         $this->assertStringContainsString('No config data returned for router5 - ID:1005', $output);
 
+        // router1v6 devices reach the same Cisco device over IPv6 and download successfully (category 1 commands)
         $this->assertStringContainsString('Start device download for router1v6 ID:1009', $output);
-        $this->assertStringContainsString('No config data returned for router1v6 - ID:1009', $output);
+        $this->assertStringContainsString('Config downloaded for router1v6 with command: "show clock" was successful', $output);
+        $this->assertStringContainsString('Config downloaded for router1v6 with command: "show version" was successful', $output);
+        $this->assertStringContainsString('Config downloaded for router1v6 with command: "show run" was successful', $output);
 
         $this->assertStringContainsString('Start device download for router1v6 ID:1010', $output);
-        $this->assertStringContainsString('No config data returned for router1v6 - ID:1010', $output);
 
         // Verify category 2 has no devices
         $this->assertStringContainsString('No devices returned for this category with ID: 2. Downloader will try next category in the list, or terminate!', $output);

@@ -8,7 +8,9 @@ class StorageTest extends TestCase
 {
     public function test_get_rconfig_appdir_paths()
     {
-        $this->assertEquals(rconfig_appdir_path(), '/var/www/html/rconfig'); // in dev
-        $this->assertEquals(rconfig_appdir_storage_path(), '/var/www/html/rconfig/storage'); // in dev
+        $appDirPath = config('rConfig.app_dir_path');
+
+        $this->assertEquals($appDirPath, rconfig_appdir_path());
+        $this->assertEquals($appDirPath . '/storage', rconfig_appdir_storage_path());
     }
 }

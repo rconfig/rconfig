@@ -61,6 +61,7 @@ class TaskReportControllerTest extends TestCase
         $report_data = collect();
 
         $report_data->report_id = (string) Str::uuid();
+        $report_data->report_name = "device_download_report_{$task->id}";
         $report_data->task_type = 'Task Download Report';
         $report_data->task = $task;
         $report_data->start_time = Carbon::now();

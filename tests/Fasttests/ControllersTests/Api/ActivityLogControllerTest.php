@@ -30,7 +30,7 @@ class ActivityLogControllerTest extends TestCase
     public function test_get_all_logs()
     {
         $logs = collect(range(1, 100))
-            ->map(fn() => [
+            ->map(fn () => [
                 'description' => $this->faker->sentence(),
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -258,7 +258,7 @@ class ActivityLogControllerTest extends TestCase
     public function test_load_more_mode_caps_per_page_at_50()
     {
         // Create 200 logs for testing pagination
-        $logs = collect(range(1, 200))->map(fn($i) => [
+        $logs = collect(range(1, 200))->map(fn ($i) => [
             'description' => "Test log entry {$i}",
             'log_name' => $this->faker->randomElement(['info', 'warn', 'error']),
             'subject_type' => null,
