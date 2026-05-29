@@ -15,7 +15,7 @@ class TasksControllerTest extends TestCase
     protected $user;
     protected $validationTestArr;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
         $this->beginTransaction();

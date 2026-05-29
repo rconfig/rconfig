@@ -25,7 +25,7 @@ class rconfigTaskDownloadTest extends TestCase
     protected $device1_params_object;
     protected $transactionStarted = false;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
 

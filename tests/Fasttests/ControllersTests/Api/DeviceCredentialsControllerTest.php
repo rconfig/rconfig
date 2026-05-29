@@ -15,7 +15,7 @@ class DeviceCredentialsControllerTest extends TestCase
     protected $user2;
     protected $devices;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
         $this->user = User::factory()->create();

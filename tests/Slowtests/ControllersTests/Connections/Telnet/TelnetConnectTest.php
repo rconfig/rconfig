@@ -22,7 +22,7 @@ class TelnetConnectTest extends TestCase
     protected $device5;
     protected $device1_params_object;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
 

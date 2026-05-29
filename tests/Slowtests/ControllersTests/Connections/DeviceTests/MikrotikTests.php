@@ -14,7 +14,7 @@ class MikrotikTests extends TestCase
     protected $device;
     protected $template_filename;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
 

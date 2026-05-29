@@ -13,7 +13,7 @@ class TemplateGithubControllerTest extends TestCase
     protected $user;
     protected $templatesDstDir;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
         $this->beginTransaction();

@@ -8,7 +8,7 @@ class TimezoneListTest extends TestCase
 {
     protected array $timezones;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
         $this->timezones = require app_path('Http/Controllers/Api/timezone_list.php');

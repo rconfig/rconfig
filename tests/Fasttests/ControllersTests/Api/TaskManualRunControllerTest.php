@@ -21,7 +21,7 @@ class TaskManualRunControllerTest extends TestCase
     protected $user2;
     protected $report_data;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
         $this->user = User::factory()->create();

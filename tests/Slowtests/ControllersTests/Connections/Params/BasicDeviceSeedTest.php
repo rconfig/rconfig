@@ -11,7 +11,7 @@ class BasicDeviceSeedTest extends TestCase
     protected $user;
     protected $device;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
         $this->device = Device::where('id', 1001)->first();

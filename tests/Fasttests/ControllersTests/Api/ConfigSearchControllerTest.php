@@ -12,7 +12,7 @@ class ConfigSearchControllerTest extends TestCase
     protected $user;
     protected $strategy;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
         $this->user = User::factory()->create();

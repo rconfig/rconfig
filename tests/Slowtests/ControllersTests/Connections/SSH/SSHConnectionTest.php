@@ -21,7 +21,7 @@ class SSHConnectionTest extends TestCase
     protected $device6;
     protected $device11;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
         $this->device3 = Device::where('id', 1003)->first();

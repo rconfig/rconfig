@@ -20,7 +20,7 @@ class rconfigCatDownloadTest extends TestCase
     protected $device5;
     protected $device1_params_object;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
         $this->device1 = Device::where('id', 1001)->first();

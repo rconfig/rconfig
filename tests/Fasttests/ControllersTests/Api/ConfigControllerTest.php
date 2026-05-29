@@ -13,7 +13,7 @@ class ConfigControllerTest extends TestCase
     // this entire config controller is based on fake device 1001
     protected $user;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
         $this->beginTransaction();
