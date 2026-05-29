@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Casts\EncryptStringCast;
-use App\Models\Device;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

@@ -41,8 +41,6 @@ class StoreTagRequest extends FormRequest
 
     /**
      * Build and return a DTO.
-     *
-     * @return StoreTagDTO
      */
     public function toDTO(): StoreTagDTO
     {

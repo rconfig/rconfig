@@ -48,7 +48,7 @@
         "laravel/pint": "^1.10",
         "mockery/mockery": "^1.5.0",
         "nunomaduro/collision": "^8.1.1",
-        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan": "^2.2",
         "phpunit/php-code-coverage": "^12.3.1",
         "phpunit/phpunit": "^12.2.7"
     },

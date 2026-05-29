@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DeviceModel extends Model
 {
@@ -23,8 +24,7 @@ class DeviceModel extends Model
         });
     }
 
-
-    public function devices()
+    public function devices(): HasMany
     {
         return $this->hasMany(Device::class, 'device_model', 'name');
     }
@@ -75,7 +75,7 @@ class DeviceModel extends Model
 
     public function getDevicesCountFast()
     {
-        return \App\Models\Device::where('device_model', $this->name)->count();
+        return Device::where('device_model', $this->name)->count();
     }
 
     public function canBeDeleted()
@@ -85,7 +85,7 @@ class DeviceModel extends Model
 
     public function getDeviceNames()
     {
-        return \App\Models\Device::where('device_model', $this->name)
+        return Device::where('device_model', $this->name)
             ->pluck('device_name');
     }
 

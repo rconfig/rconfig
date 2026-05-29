@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\TrackedJob;
-use App\Traits\RespondsWithHttpStatus;
+use Illuminate\Http\Response;
 
-class TrackedJobController extends Controller
+class TrackedJobController extends ApiBaseController
 {
-    use RespondsWithHttpStatus;
-
     public function __construct(TrackedJob $model, $modelname = 'tracked_job')
     {
         $this->model = $model;
@@ -19,10 +16,10 @@ class TrackedJobController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
+     * @param  int  $id
+     * @return Response
      */
-    public function show($id)
+    public function show($id, $relationship = null, $withCount = null)
     {
         $result = $this->model::where('device_id', $id)->orderBy('id', 'desc')->first();
 

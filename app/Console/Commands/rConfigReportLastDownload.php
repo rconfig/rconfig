@@ -44,7 +44,7 @@ class rConfigReportLastDownload extends Command
         $collection = collect();
         foreach ($devices as $key => $value) {
             $uniqueCommandsCount = Config::select('command')->where('device_id', $value->id)->distinct('command')->count();
-            $collection->push(Config::all()->where('device_id', $value->id)->sortByDesc('created_at')->take($uniqueCommandsCount));
+            $collection->push(Config::where('device_id', $value->id)->orderByDesc('created_at')->take($uniqueCommandsCount)->get());
         }
 
         $flattenedCollection = $collection->flatten();

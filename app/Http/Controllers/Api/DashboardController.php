@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Config;
 use App\Models\ConfigSummary;
 use App\Models\Device;
-use App\Models\Task;
 use App\Services\Utilities\ServerTimeService;
 use App\Traits\RespondsWithHttpStatus;
 use Illuminate\Support\Facades\Cache;

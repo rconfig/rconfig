@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\StoreSettingsBannerRequest;
 use App\Models\Setting;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class SettingBannerController extends ApiBaseController
 {
@@ -16,8 +18,8 @@ class SettingBannerController extends ApiBaseController
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Setting  $id
-     * @return \Illuminate\Http\Response
+     * @param  Setting  $id
+     * @return Response
      */
     public function show($id, $relationship = null, $withCount = null)
     {
@@ -27,9 +29,9 @@ class SettingBannerController extends ApiBaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Setting  $id
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @param  Setting  $id
+     * @return Response
      */
     public function update($id, StoreSettingsBannerRequest $request)
     {

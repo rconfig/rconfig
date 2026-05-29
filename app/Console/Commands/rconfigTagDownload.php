@@ -12,9 +12,7 @@ class rconfigTagDownload extends Command
     protected $signature = 'rconfig:download-tag
                             {tagid*}
                             {--d|debug : rConfig debugging output}';
-
     protected $eventtype = 'rconfig:download-tag';
-
     protected $description = 'Download configurations for devices with one or multiple tags';
 
     public function handle()
@@ -55,7 +53,7 @@ class rconfigTagDownload extends Command
                 }
             }
 
-            if (!isDocker()) {
+            if (! isDocker()) {
                 if (app()->runningInConsole()) {
                     custom_chown(storage_path());
                 }

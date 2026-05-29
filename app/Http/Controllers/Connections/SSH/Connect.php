@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Connections\SSH;
 
 use App\CustomClasses\SetDeviceStatus;
-use App\Models\User;
-use App\Notifications\DBDeviceConnectionFailureNotification;
 use App\Enums\NotificationType;
+use App\Notifications\DBDeviceConnectionFailureNotification;
 use App\Traits\NotificationDispatcher;
 use phpseclib3\Net\SSH2;
 
@@ -75,7 +74,6 @@ class Connect
     public $splashScreenReadToText;
     public $splashScreenSendControlCode;
 
-
     public function __construct(object $deviceParamsObject, $debug)
     {
         // dd($deviceParamsObject);
@@ -115,7 +113,7 @@ class Connect
         $this->device_id = $deviceParamsObject->deviceparams['id'];
         $this->hostname = $deviceParamsObject->deviceparams['device_ip'];
         if (filter_var($this->hostname, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-            //setup ipv6 string for fsockopen
+            // setup ipv6 string for fsockopen
             $this->hostname = '[' . $this->hostname . ']';
         }
         $this->username = $deviceParamsObject->deviceparams['device_username'];
@@ -174,7 +172,7 @@ class Connect
     private function SSHdebuggingCheck()
     {
         // debugging check - real time output on CLI
-        if ($this->cliDebugStatus && !defined('NET_SSH2_LOGGING')) {
+        if ($this->cliDebugStatus && ! defined('NET_SSH2_LOGGING')) {
             define('NET_SSH2_LOGGING', SSH2::LOG_COMPLEX);
         }
     }

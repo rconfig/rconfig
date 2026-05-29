@@ -12,9 +12,7 @@ class rconfigCatDownload extends Command
     protected $signature = 'rconfig:download-category
                             {catid*}
                             {--d|debug : rConfig debugging output}';
-
     protected $eventtype = 'rconfig:download-category';
-
     protected $description = 'Download configurations for one or multiple categories of devices';
 
     public function __construct()
@@ -60,7 +58,7 @@ class rconfigCatDownload extends Command
                 }
             }
 
-            if (!isDocker()) {
+            if (! isDocker()) {
                 if (app()->runningInConsole()) {
                     custom_chown(storage_path());
                 }

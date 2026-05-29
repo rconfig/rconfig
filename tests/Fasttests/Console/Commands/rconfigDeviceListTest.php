@@ -2,6 +2,7 @@
 
 namespace Tests\Fasttests\Console\Commands;
 
+use App\Console\Commands\rconfigDeviceList;
 use App\Models\Device;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
@@ -9,7 +10,6 @@ use Tests\TestCase;
 class rconfigDeviceListTest extends TestCase
 {
     protected $user;
-
     protected $output;
 
     public function setUp(): void
@@ -17,9 +17,9 @@ class rconfigDeviceListTest extends TestCase
         parent::setUp();
     }
 
-    public function test_it_has_rconfigDeviceList_command()
+    public function test_it_has_rconfig_device_list_command()
     {
-        $this->assertTrue(class_exists(\App\Console\Commands\rconfigDeviceList::class));
+        $this->assertTrue(class_exists(rconfigDeviceList::class));
     }
 
     public function test_list_devices_command()

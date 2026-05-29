@@ -3,6 +3,7 @@
 namespace Database\Seeders\demodata;
 
 use App\Models\Task;
+use Faker\Factory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -17,7 +18,7 @@ class DemoTaskSeeder extends Seeder
      */
     public function run()
     {
-        $this->faker = \Faker\Factory::create();
+        $this->faker = Factory::create();
 
         Task::insert([
             'id' => 618485,

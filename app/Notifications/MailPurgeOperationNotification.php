@@ -11,7 +11,6 @@ class MailPurgeOperationNotification extends Notification
     use Queueable;
 
     protected $username;
-
     protected $msg;
 
     public function __construct($msg, $username)
@@ -28,12 +27,12 @@ class MailPurgeOperationNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('rConfig Data Purge Notification')
-                    ->greeting('rConfig Data Purge Notification!')
-                    ->line('Hello '.$this->username.',')
-                    ->line($this->msg.'.')
-                    ->action('View logs', url('/settings-logs'))
-                    ->line('Thank you for using rConfig!');
+            ->subject('rConfig Data Purge Notification')
+            ->greeting('rConfig Data Purge Notification!')
+            ->line('Hello ' . $this->username . ',')
+            ->line($this->msg . '.')
+            ->action('View logs', url('/settings-logs'))
+            ->line('Thank you for using rConfig!');
     }
 
     public function toArray($notifiable)

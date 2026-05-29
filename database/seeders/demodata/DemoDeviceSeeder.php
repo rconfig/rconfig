@@ -4,6 +4,7 @@ namespace Database\Seeders\demodata;
 
 use App\Models\Config;
 use App\Models\Device;
+use Faker\Factory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -20,7 +21,7 @@ class DemoDeviceSeeder extends Seeder
      */
     public function run()
     {
-        $this->faker = \Faker\Factory::create();
+        $this->faker = Factory::create();
 
         // create an array from 1 - 25
         $d = 1;
@@ -120,7 +121,7 @@ class DemoDeviceSeeder extends Seeder
             }
 
             foreach ($configFiles as $configFile) {
-                if (!File::exists(config_data_path() . $configFile)) {
+                if (! File::exists(config_data_path() . $configFile)) {
                     File::copy(rconfig_appdir_path() . '/database/seeders/demodata/democonfigs/' . $configFile, config_data_path() . $configFile);
                 }
             }
@@ -142,7 +143,7 @@ class DemoDeviceSeeder extends Seeder
                 'type' => 'device_download',
                 'download_status' => 2,
                 'report_id' => null,
-                'config_location' => !empty($configFiles) ? config_data_path() . $configFiles[0] : null,
+                'config_location' => ! empty($configFiles) ? config_data_path() . $configFiles[0] : null,
                 'config_filename' => 'showclock_1609.txt',
                 'config_filesize' => 33,
                 'start_time' => $datetime,
@@ -159,7 +160,7 @@ class DemoDeviceSeeder extends Seeder
                 'type' => 'device_download',
                 'download_status' => 1,
                 'report_id' => null,
-                'config_location' => !empty($configFiles) ? config_data_path() . $configFiles[1] : null,
+                'config_location' => ! empty($configFiles) ? config_data_path() . $configFiles[1] : null,
                 'config_filename' => 'showversion_1609.txt',
                 'config_filesize' => 2353,
                 'start_time' => $datetime,
@@ -176,7 +177,7 @@ class DemoDeviceSeeder extends Seeder
                 'type' => 'device_download',
                 'download_status' => 1,
                 'report_id' => null,
-                'config_location' => !empty($configFiles) ? config_data_path() . $configFiles[2] : null,
+                'config_location' => ! empty($configFiles) ? config_data_path() . $configFiles[2] : null,
                 'config_filename' => 'showrun_1609.txt',
                 'config_filesize' => 6129,
                 'start_time' => $datetime,
@@ -193,7 +194,7 @@ class DemoDeviceSeeder extends Seeder
                 'type' => 'device_download',
                 'download_status' => 1,
                 'report_id' => null,
-                'config_location' => !empty($configFiles) ? config_data_path() . $configFiles[3] : null,
+                'config_location' => ! empty($configFiles) ? config_data_path() . $configFiles[3] : null,
                 'config_filename' => 'Showiproute_846.txt',
                 'config_filesize' => 2405,
                 'start_time' => $datetime,
@@ -207,7 +208,7 @@ class DemoDeviceSeeder extends Seeder
 
     public function activity_log($deviceid, $device_name, $datetime)
     {
-        return  [
+        return [
             [
                 'log_name' => 'info',
                 'description' => 'Manual config download job completed for Device ID:' . $deviceid,

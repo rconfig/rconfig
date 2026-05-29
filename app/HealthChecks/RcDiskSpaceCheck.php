@@ -3,12 +3,13 @@
 namespace App\HealthChecks;
 
 use Spatie\Health\Checks\Checks\UsedDiskSpaceCheck;
+use Symfony\Component\Process\Process;
 
 class RcDiskSpaceCheck extends UsedDiskSpaceCheck
 {
     protected function getDiskUsagePercentage(): int
     {
-        $process = \Symfony\Component\Process\Process::fromShellCommandline(
+        $process = Process::fromShellCommandline(
             'df -P ' . ($this->filesystemName ?: '.')
         );
 

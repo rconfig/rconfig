@@ -31,7 +31,7 @@ class TimezoneListTest extends TestCase
         $invalidTimezones = [];
 
         foreach (array_keys($this->timezones) as $timezone) {
-            if (!in_array($timezone, $validTimezones)) {
+            if (! in_array($timezone, $validTimezones)) {
                 $invalidTimezones[] = $timezone;
             }
         }

@@ -2,11 +2,10 @@
 
 namespace Tests\Fasttests\ControllersTests\Api;
 
-use App\Models\User;
-
 use App\Jobs\TaskReportJob;
 use App\Models\Config;
 use App\Models\Taskdownloadreport;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -54,7 +53,7 @@ class TaskReportControllerTest extends TestCase
 
     public function test_can_save_a_report()
     {
-        $task = new stdClass();
+        $task = new stdClass;
         $task->id = 515151;
         $task->task_name = 'test_task';
         $task->task_desc = 'test_desc';
@@ -62,6 +61,7 @@ class TaskReportControllerTest extends TestCase
         $report_data = collect();
 
         $report_data->report_id = (string) Str::uuid();
+        $report_data->report_name = "device_download_report_{$task->id}";
         $report_data->task_type = 'Task Download Report';
         $report_data->task = $task;
         $report_data->start_time = Carbon::now();

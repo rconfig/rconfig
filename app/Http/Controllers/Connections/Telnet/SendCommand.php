@@ -7,10 +7,7 @@ use Illuminate\Support\Str;
 class SendCommand extends Read
 {
     protected $send;
-
     protected $read;
-
-
     protected $connectionObj;
 
     public function __construct(object $connectionObj)
@@ -44,7 +41,7 @@ class SendCommand extends Read
 
     private function dropFirstAndLastLinesFromArray()
     {
-        array_shift($this->read->data); //drops the command that was run from the output
+        array_shift($this->read->data); // drops the command that was run from the output
         array_pop($this->read->data); // removes last line, usually a prompt
     }
 

@@ -37,6 +37,7 @@ class TaskController extends ApiBaseController
 
         $result->map(function ($item) {
             $item['cron_plain'] = CronTranslator::translate(implode(' ', $item['task_cron']));
+
             return $item;
         });
 

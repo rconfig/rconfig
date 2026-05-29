@@ -12,7 +12,6 @@ use Tests\TestCase;
 class MikrotikTests extends TestCase
 {
     protected $device;
-
     protected $template_filename;
 
     public function setUp(): void
@@ -84,7 +83,6 @@ class MikrotikTests extends TestCase
 
         $this->assertStringContainsString('0  R  ether1                              ether            1500', $this->return_file_contents($devicerecord['commands'][5190])); // top of the config
         $this->assertStringContainsString('11     pppoe-out1                          pppoe-out', $this->return_file_contents($devicerecord['commands'][5190])); // top of the config
-
 
         $this->assertGreaterThan(0, count($arr));
         $this->assertStringContainsString($arr[0], 'Start rconfig:download-device IDs:' . $this->device->id);

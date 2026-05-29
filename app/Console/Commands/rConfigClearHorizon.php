@@ -41,10 +41,10 @@ class rConfigClearHorizon extends Command
         $this->call('queue:flush');
         $this->call('queue:restart');
         Redis::connection()
-            ->del([config('horizon.prefix').'failed:*']);
+            ->del([config('horizon.prefix') . 'failed:*']);
         $this->info('each individual failed job flushed');
         Redis::connection()
-            ->del([config('horizon.prefix').'failed_jobs']);
+            ->del([config('horizon.prefix') . 'failed_jobs']);
         $this->info('failed_jobs flushed');
         Redis::command('flushdb');
     }

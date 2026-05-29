@@ -11,7 +11,6 @@ use Tests\TestCase;
 
 class rconfigDeviceDownloadTest extends TestCase
 {
-
     protected $user;
     protected $device;
     protected $device1;
@@ -59,7 +58,7 @@ class rconfigDeviceDownloadTest extends TestCase
             'status' => 1,
         ]);
 
-        //endtime
+        // endtime
         $end = microtime(true);
         $time = $end - $start;
 

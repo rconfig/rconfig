@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\DataTransferObjects;
 
-use App\DataTransferObjects\DtoBase;
-
 final class StoreDeviceCredentialDTO extends DtoBase
 {
     public string $cred_name;

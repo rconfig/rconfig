@@ -3,7 +3,6 @@
 namespace Tests\Fasttests\ControllersTests\Api;
 
 use App\Models\User;
-
 use Tests\TestCase;
 
 class SystemHealthControllerTest extends TestCase
@@ -16,7 +15,6 @@ class SystemHealthControllerTest extends TestCase
         $this->user = User::factory()->create();
         $this->actingAs($this->user);
     }
-
 
     public function test_sys_environment_latest()
     {

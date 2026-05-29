@@ -5,6 +5,7 @@ namespace Tests\Slowtests\ControllersTests\Connections\SSH;
 use App\CustomClasses\DeviceRecordPrepare;
 use App\Http\Controllers\Connections\MainConnectionManager;
 use App\Models\Device;
+use App\Models\Template;
 use App\Services\Config\FileOperations;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Crypt;
@@ -53,16 +54,16 @@ class SSHConnectionTest extends TestCase
         $this->assertGreaterThan(0, count($devicerecord['commands']));
     }
 
-    public function test_full_SSH_download_from_device3_direct_from_classes()
+    public function test_full_ss_h_download_from_device3_direct_from_classes()
     {
-        //start timer
+        // start timer
         $start = microtime(true);
 
         $devicerecord = (new DeviceRecordPrepare($this->device3))->DeviceRecordToArray();
         $connectionObj = new MainConnectionManager($devicerecord, 0);
         $configsArray = $connectionObj->setupConnectAndReturnOutput();
 
-        //end timer
+        // end timer
         $time = microtime(true) - $start;
         $this->assertLessThan(5, $time);
 
@@ -71,7 +72,7 @@ class SSHConnectionTest extends TestCase
 
     public function test_check_device_can_override_connection_template_port_but_fails_connection()
     {
-        //start timer
+        // start timer
         $start = microtime(true);
 
         $devicerecord = (new DeviceRecordPrepare($this->device3))->DeviceRecordToArray();
@@ -83,14 +84,14 @@ class SSHConnectionTest extends TestCase
         $configsArray = $connectionObj->setupConnectAndReturnOutput();
         $this->assertEquals('There was an authentication or connection issue with router3', $configsArray['failure']);
 
-        //end timer
+        // end timer
         $time = microtime(true) - $start;
         $this->assertLessThan(5, $time);
     }
 
     public function test_check_device_can_override_connection_template_port_but_passes_connection()
     {
-        //start timer
+        // start timer
         $start = microtime(true);
 
         $devicerecord = (new DeviceRecordPrepare($this->device3))->DeviceRecordToArray();
@@ -101,22 +102,22 @@ class SSHConnectionTest extends TestCase
 
         $configsArray = $connectionObj->setupConnectAndReturnOutput();
 
-        //end timer
+        // end timer
         $time = microtime(true) - $start;
         $this->assertLessThan(5, $time);
 
         $this->assertGreaterThan(0, count($configsArray));
     }
 
-    public function test_full_SSH_download_from_device4_direct_from_classes()
+    public function test_full_ss_h_download_from_device4_direct_from_classes()
     {
-        //start timer
+        // start timer
         $start = microtime(true);
         $devicerecord = (new DeviceRecordPrepare($this->device4))->DeviceRecordToArray();
         $connectionObj = new MainConnectionManager($devicerecord, 0);
         $configsArray = $connectionObj->setupConnectAndReturnOutput();
 
-        //end timer
+        // end timer
         $time = microtime(true) - $start;
         $this->assertLessThan(5, $time);
         $this->assertGreaterThan(0, count($configsArray));
@@ -124,9 +125,9 @@ class SSHConnectionTest extends TestCase
 
     public function test_established_connection_has_options_params_if_they_are_set_in_the_template()
     {
-        //start timer
+        // start timer
         $start = microtime(true);
-        $template = \App\Models\Template::factory()->create([
+        $template = Template::factory()->create([
             'id' => 2000,
             'fileName' => '/app/rconfig/templates/fake_template_with_options.yml',
             'templateName' => 'Fake Template with Options Set',
@@ -135,7 +136,7 @@ class SSHConnectionTest extends TestCase
         if (file_exists(base_path('tests/storage/fake_template_with_options.yml'))) {
             $this->assertTrue(true);
         }
-        if (!copy(base_path('tests/storage/fake_template_with_options.yml'), storage_path() . '/app/rconfig/templates//fake_template_with_options.yml')) {
+        if (! copy(base_path('tests/storage/fake_template_with_options.yml'), storage_path() . '/app/rconfig/templates//fake_template_with_options.yml')) {
             $this->assertTrue(false);
             // echo "failed to copy $file...\n";
         }
@@ -147,7 +148,7 @@ class SSHConnectionTest extends TestCase
         $connectionObj = new MainConnectionManager($devicerecord, 0);
         $result = $connectionObj->getAllConnectionParamsArray();
 
-        //end timer
+        // end timer
         $time = microtime(true) - $start;
         $this->assertLessThan(5, $time);
         $this->assertIsObject($result);
@@ -155,12 +156,12 @@ class SSHConnectionTest extends TestCase
         $this->assertEquals($result->options['setWindowSize'][0], 240);
 
         unlink(storage_path() . '/app/rconfig/templates/fake_template_with_options.yml');
-        if (!file_exists(storage_path() . '/app/rconfig/templates/fake_template_with_options.yml')) {
+        if (! file_exists(storage_path() . '/app/rconfig/templates/fake_template_with_options.yml')) {
             $this->assertTrue(true);
         }
     }
 
-    public function test_full_ssh_download_and_file_exists_check_from_command_no_enable_SSH_template_and_regex_prompt()
+    public function test_full_ssh_download_and_file_exists_check_from_command_no_enable_ss_h_template_and_regex_prompt()
     {
         $start = microtime(true);
         $this->device3['device_main_prompt'] = '.*router.*#';
@@ -172,7 +173,7 @@ class SSHConnectionTest extends TestCase
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output
-            if (!empty($match)) {
+            if (! empty($match)) {
                 $this->assertTrue($this->downloaded_file_exists_on_disk($this->device3, $match[0]));
             }
         }
@@ -191,7 +192,7 @@ class SSHConnectionTest extends TestCase
         $this->assertStringContainsString('r1#', $this->device3['device_main_prompt']);
     }
 
-    public function test_full_ssh_download_and_file_exists_check_from_command_no_enable_SSH_template()
+    public function test_full_ssh_download_and_file_exists_check_from_command_no_enable_ss_h_template()
     {
         $start = microtime(true);
 
@@ -201,7 +202,7 @@ class SSHConnectionTest extends TestCase
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output
-            if (!empty($match)) {
+            if (! empty($match)) {
                 $this->assertTrue($this->downloaded_file_exists_on_disk($this->device3, $match[0]));
             }
         }
@@ -217,7 +218,7 @@ class SSHConnectionTest extends TestCase
         ]);
     }
 
-    public function test_V6_full_ssh_download_and_file_exists_check_from_command_no_enable_SSH_template()
+    public function test_v6_full_ssh_download_and_file_exists_check_from_command_no_enable_ss_h_template()
     {
         $start = microtime(true);
 
@@ -230,7 +231,7 @@ class SSHConnectionTest extends TestCase
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output
-            if (!empty($match)) {
+            if (! empty($match)) {
                 $this->assertTrue($this->downloaded_file_exists_on_disk($this->device3, $match[0]));
             }
         }
@@ -244,7 +245,7 @@ class SSHConnectionTest extends TestCase
         ]);
     }
 
-    public function test_full_ssh_download_and_file_exists_check_from_device4_from_command_enable_SSH_template()
+    public function test_full_ssh_download_and_file_exists_check_from_device4_from_command_enable_ss_h_template()
     {
         $start = microtime(true);
         Artisan::call('rconfig:download-device 1004');
@@ -256,7 +257,7 @@ class SSHConnectionTest extends TestCase
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output
-            if (!empty($match)) {
+            if (! empty($match)) {
                 $this->assertTrue($this->downloaded_file_exists_on_disk($this->device4, $match[0]));
             }
         }

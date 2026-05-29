@@ -7,7 +7,6 @@ use App\Rules\TaskCronIsCorrectFormat;
 use App\Rules\TaskDownloadCategoryHasCategories;
 use App\Rules\TaskDownloadDeviceHasDevices;
 use App\Rules\TaskDownloadTagHasTags;
-use App\Rules\TaskPurgeDoesNotHaveDaysValue;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateTaskRequest extends FormRequest
@@ -70,8 +69,6 @@ class UpdateTaskRequest extends FormRequest
 
     /**
      * Build and return a DTO.
-     *
-     * @return StoreTaskDTO
      */
     public function toDTO(): StoreTaskDTO
     {

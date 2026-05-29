@@ -9,7 +9,6 @@ use Illuminate\Console\Command;
 class MonitoredTaskSync extends Command
 {
     protected $signature = 'rconfig:sync-tasks';
-
     public $description = 'Sync the schedule of the app with the schedule monitor';
 
     public function handle()
@@ -20,7 +19,7 @@ class MonitoredTaskSync extends Command
 
         $monitoredScheduledTasksCount = MonitoredScheduledTasks::count();
 
-        $this->info('Syncing '.$monitoredScheduledTasksCount.' tasks...');
+        $this->info('Syncing ' . $monitoredScheduledTasksCount . ' tasks...');
     }
 
     protected function syncScheduledTasksWithDatabase(): self

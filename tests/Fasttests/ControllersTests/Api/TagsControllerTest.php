@@ -5,7 +5,6 @@ namespace Tests\Fasttests\ControllersTests\Api;
 use App\Models\Device;
 use App\Models\Tag;
 use App\Models\User;
-use Psy\VarDumper\Dumper;
 use Tests\TestCase;
 
 class TagsControllerTest extends TestCase

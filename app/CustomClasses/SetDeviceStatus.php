@@ -8,7 +8,6 @@ use Carbon\Carbon;
 class SetDeviceStatus
 {
     protected $status;
-
     protected $deviceid;
 
     public function __construct($deviceid, $status)

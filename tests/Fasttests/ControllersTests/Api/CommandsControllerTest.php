@@ -39,7 +39,7 @@ class CommandsControllerTest extends TestCase
         $response->assertJson(['command' => $command->command]);
     }
 
-    public function test_show_single_command_with_categoryArray()
+    public function test_show_single_command_with_category_array()
     {
         $category = Category::factory()->create();
         $command = Command::factory()->create();
@@ -189,7 +189,6 @@ class CommandsControllerTest extends TestCase
             'description' => 'a new description name',
         ]);
     }
-
 
     public function test_delete_command()
     {

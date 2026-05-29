@@ -20,6 +20,7 @@ class TestdataDatabaseSeeder extends Seeder
             DeviceTableSeeder::class,
             HealthCheckResultsSeeder::class,
             MikrotikDeviceSeeder::class,
+            NotificationDefaultsSeeder::class,
         ]);
     }
 }

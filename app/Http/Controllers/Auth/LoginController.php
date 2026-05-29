@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Banner;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -54,7 +55,7 @@ class LoginController extends Controller
     {
         $user = null;
 
-        if (!$user) {
+        if (! $user) {
             $msg = 'Authenticating user  (' . $request->username . ') against database.';
             activityLogIt(__CLASS__, __FUNCTION__, 'info', $msg, 'authentication');
 
@@ -90,7 +91,7 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
-        $banner = \App\Models\Banner::select('login_banner')->get();
+        $banner = Banner::select('login_banner')->get();
         $login_banner = $banner[0]->login_banner;
 
         return view('auth.login', compact('login_banner'));
@@ -140,10 +141,9 @@ class LoginController extends Controller
     /**
      * Validate the user login request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return void
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     private function validateLogin(Request $request)
     {
@@ -156,10 +156,9 @@ class LoginController extends Controller
     /**
      * Redirect the user after determining they are locked out.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     private function sendLockoutResponse(Request $request)
     {
@@ -178,10 +177,9 @@ class LoginController extends Controller
     /**
      * Get the failed login response instance.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     protected function sendFailedLoginResponse(Request $request)
     {

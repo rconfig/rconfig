@@ -2,6 +2,7 @@
 
 namespace Tests\Fasttests\ServiceTests\SocialAuth;
 
+use App\Models\User;
 use App\Services\SocialAuth\Saml2Auth;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
@@ -9,7 +10,7 @@ use Tests\TestCase;
 
 class Saml2AuthTest extends TestCase
 {
-    /** @var \App\Models\User */
+    /** @var User */
     protected $user;
 
     public function setUp(): void

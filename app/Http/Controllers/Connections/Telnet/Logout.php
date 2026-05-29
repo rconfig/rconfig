@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Connections\Telnet;
 class Logout
 {
     protected $connectionObj;
-
     protected $quit;
 
     public function __construct(object $connectionObj)

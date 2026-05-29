@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Requests\StoreDeviceRequest;
 use App\Http\Controllers\QueryFilters\QueryFilterMultipleFields;
+use App\Http\Requests\StoreDeviceRequest;
 use App\Jobs\CheckDeviceReachabilityJob;
 use App\Jobs\DownloadConfigNowJob;
-use App\Traits\MaskableCredentials;
 use App\Models\Device;
+use App\Traits\MaskableCredentials;
 use App\Traits\RespondsWithHttpStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
@@ -139,7 +139,7 @@ class DeviceController extends ApiBaseController
 
     public function store(StoreDeviceRequest $request)
     {
-        
+
         $updateArray = $request->toDTO()->toArray();
 
         unset(

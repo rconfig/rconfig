@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Validation\Rule;
 use App\DataTransferObjects\StoreDeviceModelDTO;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreDeviceModelRequest extends FormRequest
 {
@@ -28,7 +28,7 @@ class StoreDeviceModelRequest extends FormRequest
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'name' => [
-                    'required', 
+                    'required',
                     'string',
                     'max:255',
                     'min:1',

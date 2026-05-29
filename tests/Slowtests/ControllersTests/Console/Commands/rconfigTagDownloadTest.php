@@ -13,11 +13,8 @@ use Tests\TestCase;
 class rconfigTagDownloadTest extends TestCase
 {
     protected $user;
-
     protected $device;
-
     protected $tags;
-
     protected $device1_params_object;
 
     public function setUp(): void
@@ -63,7 +60,7 @@ class rconfigTagDownloadTest extends TestCase
         $this->assertStringContainsString($arr[0], 'Start rconfig:download-tag IDs:1010');
         $this->assertStringContainsString($arr[1], 'No devices returned for this category with ID: 1010. Downloader will try next category in the list, or terminate!');
     }
- 
+
     public function test_full_telnet_download_for_given_tags()
     {
         Artisan::call('rconfig:download-tag 1001 1002');
@@ -72,7 +69,7 @@ class rconfigTagDownloadTest extends TestCase
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output
-            if (!empty($match)) {
+            if (! empty($match)) {
                 $this->assertTrue($this->downloaded_file_exists_on_disk($this->device2, $match[0]));
             }
         }

@@ -38,6 +38,11 @@ class ConfigActionsControllerTest extends TestCase
     public function test_purge_failed_config()
     {
 
+        // Capture any pre-existing configs for this device so counts stay correct
+        // regardless of data already present for device 1001.
+        $initialTotal = Config::where('device_id', 1001)->count();
+        $initialNonFailed = Config::where('device_id', 1001)->where('download_status', '!=', 0)->count();
+
         $configs = Config::factory(50)->create(['device_id' => 1001, 'type' => 'device_download', 'download_status' => 0]);
         $failedConfigsCnt = $configs->where('download_status', 0)->where('device_id', 1001)->count();
         $this->assertEquals(50, $failedConfigsCnt);
@@ -51,11 +56,16 @@ class ConfigActionsControllerTest extends TestCase
         $this->assertEquals(50, $unkownConfigsCnt);
 
         $totalConfigsCount = Config::where('device_id', 1001)->count();
-        $this->assertEquals(150, $totalConfigsCount);
+        $this->assertEquals($initialTotal + 150, $totalConfigsCount);
 
         $response = $this->json('post', '/api/device/purge-failed-configs', ['device_id' => 1001]);
-        $remainingFailedConfigsCnt = Config::where('device_id', 1001)->count();
-        $this->assertEquals(100, $remainingFailedConfigsCnt);
+        $response->assertStatus(200);
+
+        // Purge removes every download_status === 0 config for the device, so none remain.
+        // The 100 non-failed configs created here survive, on top of any pre-existing non-failed ones.
+        $this->assertEquals(0, Config::where('device_id', 1001)->where('download_status', 0)->count());
+        $remainingConfigsCnt = Config::where('device_id', 1001)->count();
+        $this->assertEquals($initialNonFailed + 100, $remainingConfigsCnt);
     }
 
     protected function tearDown(): void

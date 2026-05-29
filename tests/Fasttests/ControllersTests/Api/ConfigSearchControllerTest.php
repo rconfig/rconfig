@@ -17,7 +17,7 @@ class ConfigSearchControllerTest extends TestCase
         parent::setUp();
         $this->user = User::factory()->create();
         $this->actingAs($this->user);
-        $this->strategy = new LatestSearchStrategyNew();
+        $this->strategy = new LatestSearchStrategyNew;
         Config::truncate();
     }
 
@@ -28,7 +28,7 @@ class ConfigSearchControllerTest extends TestCase
             'device_name' => 'router1',
             'device_category' => 'Routers',
             'command' => 'show run',
-            'config_location' => '/var/www/html/rconfig/tests/storage/configsearch/fake1.txt',
+            'config_location' => base_path('tests/storage/configsearch/fake1.txt'),
             'start_time' => now(),
             'latest_version' => 1,
             'created_at' => now(),
@@ -49,7 +49,7 @@ class ConfigSearchControllerTest extends TestCase
             'device_name' => 'router1',
             'device_category' => 'Routers',
             'command' => 'show run',
-            'config_location' => '/var/www/html/rconfig/tests/storage/configsearch/fake1.txt',
+            'config_location' => base_path('tests/storage/configsearch/fake1.txt'),
             'start_time' => now(),
             'latest_version' => 1,
             'created_at' => now(),
@@ -74,7 +74,7 @@ class ConfigSearchControllerTest extends TestCase
             'device_name' => 'router1',
             'device_category' => 'Routers',
             'command' => 'show run',
-            'config_location' => '/var/www/html/rconfig/tests/storage/configsearch/fake1.txt',
+            'config_location' => base_path('tests/storage/configsearch/fake1.txt'),
             'start_time' => now(),
             'latest_version' => 1,
             'created_at' => now(),
@@ -114,7 +114,7 @@ class ConfigSearchControllerTest extends TestCase
                 'device_name' => 'router1',
                 'device_category' => 'Routers',
                 'command' => 'show run',
-                'config_location' => '/var/www/html/rconfig/tests/storage/configsearch/fake1.txt',
+                'config_location' => base_path('tests/storage/configsearch/fake1.txt'),
                 'start_time' => now(),
                 'latest_version' => 1,
                 'created_at' => now(),
@@ -124,7 +124,7 @@ class ConfigSearchControllerTest extends TestCase
                 'device_name' => 'switch1',
                 'device_category' => 'Switches',
                 'command' => 'show run',
-                'config_location' => '/var/www/html/rconfig/tests/storage/configsearch/fake1.txt',
+                'config_location' => base_path('tests/storage/configsearch/fake1.txt'),
                 'start_time' => now(),
                 'latest_version' => 1,
                 'created_at' => now(),
@@ -147,7 +147,7 @@ class ConfigSearchControllerTest extends TestCase
 
         $this->assertCount(1, $routerResult);
         $this->assertEquals('router1', $routerResult[0]['device_name']);
-        
+
         $this->assertCount(1, $switchResult);
         $this->assertEquals('switch1', $switchResult[0]['device_name']);
     }
@@ -159,7 +159,7 @@ class ConfigSearchControllerTest extends TestCase
             'device_name' => 'router1',
             'device_category' => 'Routers',
             'command' => 'show run',
-            'config_location' => '/var/www/html/rconfig/tests/storage/configsearch/fake1.txt',
+            'config_location' => base_path('tests/storage/configsearch/fake1.txt'),
             'start_time' => now(),
             'latest_version' => 1,
             'created_at' => now(),
@@ -181,11 +181,11 @@ class ConfigSearchControllerTest extends TestCase
 
         $this->assertNotEmpty($resultWithoutContext);
         $this->assertNotEmpty($resultWithContext);
-        
+
         // Context result should have more lines
         $contextLines = explode("\n", $resultWithContext[0]['context']);
         $noContextLines = explode("\n", $resultWithoutContext[0]['context']);
-        
+
         $this->assertGreaterThan(count($noContextLines), count($contextLines));
     }
 
@@ -197,7 +197,7 @@ class ConfigSearchControllerTest extends TestCase
                 'device_name' => 'router1',
                 'device_category' => 'Routers',
                 'command' => 'show run',
-                'config_location' => '/var/www/html/rconfig/tests/storage/configsearch/fake1.txt',
+                'config_location' => base_path('tests/storage/configsearch/fake1.txt'),
                 'start_time' => now()->subDay(),
                 'latest_version' => 0,
                 'created_at' => now()->subDay(),
@@ -207,7 +207,7 @@ class ConfigSearchControllerTest extends TestCase
                 'device_name' => 'router1',
                 'device_category' => 'Routers',
                 'command' => 'show run',
-                'config_location' => '/var/www/html/rconfig/tests/storage/configsearch/fake1.txt',
+                'config_location' => base_path('tests/storage/configsearch/fake1.txt'),
                 'start_time' => now(),
                 'latest_version' => 1,
                 'created_at' => now(),
@@ -231,7 +231,7 @@ class ConfigSearchControllerTest extends TestCase
         $this->assertCount(1, $latestOnlyResult);
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         Config::truncate();
         parent::tearDown();

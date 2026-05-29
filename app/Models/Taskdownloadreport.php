@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
@@ -16,7 +17,7 @@ class Taskdownloadreport extends Model
     {
         $timezone = Config::get('app.timezone');
 
-        return \Carbon\Carbon::createFromTimestamp(strtotime($value))
+        return Carbon::createFromTimestamp(strtotime($value))
             // ->timezone($timezone)
             ->addHours($timezone)
             ->format('M d, Y G:iA'); // Feb 23, 2015 12:32 am

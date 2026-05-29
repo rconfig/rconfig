@@ -6,9 +6,9 @@ use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Response;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -105,7 +105,7 @@ class UserController extends ApiBaseController
         $request->validate([
             'name' => 'required|string|max:255',
             'url' => 'required|url',
-            'icon' => 'required|string|max:255'
+            'icon' => 'required|string|max:255',
         ]);
 
         $user = Auth::user();
@@ -153,8 +153,10 @@ class UserController extends ApiBaseController
     public function getExternalLinks($id)
     {
         $user = User::findOrFail($id);
+
         return response()->json($user->external_links);
     }
+
     public function changePassword(Request $request, $userid)
     {
         $validator = Validator::make($request->all(), [

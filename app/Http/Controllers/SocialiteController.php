@@ -8,6 +8,7 @@ use App\Services\SocialAuth\MicrosoftAuth;
 use App\Services\SocialAuth\OktaAuth;
 use App\Services\SocialAuth\Saml2Auth;
 use App\Services\UserLog\UserLogActivity;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -25,7 +26,7 @@ class SocialiteController
                 ->with('message', 'The socialite provider is not supported yet, or is blank.');
         }
 
-        return Socialite::driver($provider)->setHttpClient(new \GuzzleHttp\Client(['verify' => false]))->redirect();
+        return Socialite::driver($provider)->setHttpClient(new Client(['verify' => false]))->redirect();
     }
 
     public function callback($provider, Request $request)

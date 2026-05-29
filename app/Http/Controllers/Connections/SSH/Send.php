@@ -24,6 +24,7 @@ class Send
     public function sendControlCode($code)
     {
         sleep(1);
+
         return $this->connectionObj->connection->write($code);
     }
 }

@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class DeviceCredentialsControllerTest extends TestCase
 {
-    /** @var \App\Models\User */
+    /** @var User */
     protected $user;
 
     protected $user2;

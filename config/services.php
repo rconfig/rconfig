@@ -1,5 +1,7 @@
 <?php
 
+use LightSaml\SamlConstants;
+
 return [
 
     /*
@@ -53,8 +55,8 @@ return [
         'sp_certificate' => env('SAML2_SP_CERTIFICATE') ? file_get_contents(env('SAML2_SP_CERTIFICATE')) : null,
         'sp_private_key' => env('SAML2_SP_KEY') ? file_get_contents(env('SAML2_SP_KEY')) : null,
         'sp_sign_assertions' => true, // or false to disable assertion signing
-        'sp_default_binding_method' => \LightSaml\SamlConstants::BINDING_SAML2_HTTP_POST,
-        'sp_name_id_format' => \LightSaml\SamlConstants::NAME_ID_FORMAT_UNSPECIFIED,
+        'sp_default_binding_method' => SamlConstants::BINDING_SAML2_HTTP_POST,
+        'sp_name_id_format' => SamlConstants::NAME_ID_FORMAT_UNSPECIFIED,
         'sp_sls' => 'auth/saml2/logout',
         'sp_acs' => 'auth/callback/saml2',
     ],

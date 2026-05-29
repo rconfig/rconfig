@@ -2,8 +2,8 @@
 
 namespace Tests\Fasttests\ControllersTests\Api;
 
-use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class UsersControllerTest extends TestCase
@@ -145,7 +145,7 @@ class UsersControllerTest extends TestCase
         ]);
 
         $response->assertStatus(200);
-        
+
         $this->user->refresh();
         $this->assertNotNull($this->user->external_links);
         $this->assertCount(1, $this->user->external_links);
@@ -158,7 +158,7 @@ class UsersControllerTest extends TestCase
             ['name' => 'GitHub', 'url' => 'https://github.com', 'icon' => 'github'],
             ['name' => 'Twitter', 'url' => 'https://twitter.com', 'icon' => 'twitter'],
         ];
-        
+
         $this->user->external_links = $links;
         $this->user->save();
 

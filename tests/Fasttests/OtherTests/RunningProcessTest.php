@@ -2,6 +2,7 @@
 
 namespace Tests\Fasttests\OtherTests;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
@@ -14,7 +15,7 @@ class RunningProcessTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = \App\Models\User::factory()->create();
+        $this->user = User::factory()->create();
         $this->actingAs($this->user);
     }
 

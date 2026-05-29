@@ -20,7 +20,7 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
 
     /* SETTINGS ROUTES */
     loadRoutesFrom('/api_modules/settings.php');
-    
+
     /* INTEGRATIONS ROUTES */
     loadRoutesFrom('/api_modules/integrations.php');
 

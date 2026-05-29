@@ -23,17 +23,11 @@ class DeviceDownloadJob extends Command
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $output;
-
     protected $eventtype;
-
     protected $devicerecord;
-
     protected $debug;
-
     protected $report_id;
-
     protected $parent_function;
-
     protected $parent_class;
 
     public function __construct($devicerecord, $eventtype, $debug, $report_id = null)

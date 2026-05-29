@@ -10,7 +10,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreDeviceRequest extends FormRequest
 {
-
     public function authorize()
     {
         return auth()->check(); // returning true if user is logged in
@@ -57,8 +56,7 @@ class StoreDeviceRequest extends FormRequest
                 'device_vendor' => 'required',
                 'device_cred_id' => new DeviceCredIdIsValid,
                 'device_model' => 'required|max:255|min:2',
-                'device_category_id' => 'required|max:255',
-                'device_category_id' => new CategoryHasCommands,
+                'device_category_id' => ['required', 'max:255', new CategoryHasCommands],
                 'device_tags' => 'required',
                 'device_template' => 'required',
                 'device_main_prompt' => 'required',
@@ -73,8 +71,7 @@ class StoreDeviceRequest extends FormRequest
                 'device_vendor' => 'required',
                 'device_cred_id' => new DeviceCredIdIsValid,
                 'device_model' => 'required|max:255|min:2',
-                'device_category_id' => 'required|max:255',
-                'device_category_id' => new CategoryHasCommands,
+                'device_category_id' => ['required', 'max:255', new CategoryHasCommands],
                 'device_tags' => 'required|max:255',
                 'device_template' => 'required',
                 'device_main_prompt' => 'required',
@@ -86,8 +83,6 @@ class StoreDeviceRequest extends FormRequest
 
     /**
      * Build and return a DTO.
-     *
-     * @return StoreDeviceDTO
      */
     public function toDTO(): StoreDeviceDTO
     {

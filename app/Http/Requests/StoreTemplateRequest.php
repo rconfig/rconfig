@@ -7,7 +7,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreTemplateRequest extends FormRequest
 {
-
     public function authorize()
     {
         return auth()->check(); // returning true if user is logged in

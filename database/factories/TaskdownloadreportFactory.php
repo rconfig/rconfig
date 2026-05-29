@@ -22,7 +22,7 @@ class TaskdownloadreportFactory extends Factory
             'task_name' => $this->faker->word,
             'task_desc' => $this->faker->sentence,
             'task_type' => $this->faker->word,
-            'file_name' => $report_id.'.html',
+            'file_name' => $report_id . '.html',
             'start_time' => Carbon::now(),
             'end_time' => Carbon::now()->addSeconds(59),
             'duration' => $this->faker->randomDigit(),

@@ -6,6 +6,8 @@ use App\CustomClasses\GetAndCheckCategoryIds;
 use App\CustomClasses\GetAndCheckTagIds;
 use App\CustomClasses\GetAndCheckTaskIds;
 use App\Http\Controllers\Connections\Params\DeviceParams;
+use App\Jobs\SendTaskReportNotificationJob;
+use App\Jobs\TaskCompleteNotificationJob;
 use App\Models\Device;
 use App\Models\Taskdownloadreport;
 use App\Models\User;
@@ -26,6 +28,11 @@ class rconfigTaskDownloadTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+
+        // Skip if integration tests not enabled
+        if (! env('RUN_INTEGRATION_TESTS', false)) {
+            $this->markTestSkipped('Set RUN_INTEGRATION_TESTS=true to run live task download integration tests');
+        }
 
         $this->beginTransaction();
         $this->transactionStarted = true;
@@ -82,7 +89,7 @@ class rconfigTaskDownloadTest extends TestCase
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output
-            if (!empty($match)) {
+            if (! empty($match)) {
                 $this->assertTrue($this->downloaded_file_exists_on_disk($this->device2, $match[0]));
             }
         }
@@ -131,7 +138,7 @@ class rconfigTaskDownloadTest extends TestCase
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output
-            if (!empty($match)) {
+            if (! empty($match)) {
                 $this->assertTrue($this->downloaded_file_exists_on_disk($this->device2, $match[0]));
             }
         }
@@ -160,7 +167,7 @@ class rconfigTaskDownloadTest extends TestCase
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output
-            if (!empty($match)) {
+            if (! empty($match)) {
                 $this->assertTrue($this->downloaded_file_exists_on_disk($this->device2, $match[0]));
             }
         }
@@ -235,7 +242,7 @@ class rconfigTaskDownloadTest extends TestCase
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output
-            if (!empty($match)) {
+            if (! empty($match)) {
                 $this->assertTrue($this->downloaded_file_exists_on_disk($this->device2, $match[0]));
             }
         }
@@ -243,27 +250,29 @@ class rconfigTaskDownloadTest extends TestCase
         // Verify expected output messages
         $this->assertStringContainsString('This operation can take some time, depending on how many devices are configured for this task!!!', $output);
         $this->assertStringContainsString('Start rconfig:download-task IDs:777777', $output);
-        
+
         // Successful downloads (router1-4)
         $this->assertStringContainsString('Start device download for router1 ID:1001', $output);
         $this->assertStringContainsString('Config downloaded for router1 with command: "show clock" was successful', $output);
         $this->assertStringContainsString('Config downloaded for router1 with command: "show version" was successful', $output);
         $this->assertStringContainsString('Config downloaded for router1 with command: "show run" was successful', $output);
-        
+
         $this->assertStringContainsString('Start device download for router2 ID:1002', $output);
         $this->assertStringContainsString('Start device download for router3 ID:1003', $output);
         $this->assertStringContainsString('Start device download for router4 ID:1004', $output);
-        
-        // Failed downloads (router5 and router1v6 devices)
+
+        // Failed downloads (router5)
         $this->assertStringContainsString('Start device download for router5 ID:1005', $output);
         $this->assertStringContainsString('No config data returned for router5 - ID:1005', $output);
-        
+
+        // router1v6 devices reach the same Cisco device over IPv6 and download successfully (category 1 commands)
         $this->assertStringContainsString('Start device download for router1v6 ID:1009', $output);
-        $this->assertStringContainsString('No config data returned for router1v6 - ID:1009', $output);
-        
+        $this->assertStringContainsString('Config downloaded for router1v6 with command: "show clock" was successful', $output);
+        $this->assertStringContainsString('Config downloaded for router1v6 with command: "show version" was successful', $output);
+        $this->assertStringContainsString('Config downloaded for router1v6 with command: "show run" was successful', $output);
+
         $this->assertStringContainsString('Start device download for router1v6 ID:1010', $output);
-        $this->assertStringContainsString('No config data returned for router1v6 - ID:1010', $output);
-        
+
         // Verify successful devices have status 1
         $this->assertDatabaseHas('devices', [
             'id' => 1001,
@@ -281,19 +290,19 @@ class rconfigTaskDownloadTest extends TestCase
             'id' => 1004,
             'status' => 1,
         ]);
-        
+        $this->assertDatabaseHas('devices', [
+            'id' => 1009,
+            'status' => 1,  // IPv6 device reachable
+        ]);
+        $this->assertDatabaseHas('devices', [
+            'id' => 1010,
+            'status' => 1,  // IPv6 device reachable
+        ]);
+
         // Verify failed devices have status 0
         $this->assertDatabaseHas('devices', [
             'id' => 1005,
             'status' => 0,  // Unreachable IP
-        ]);
-        $this->assertDatabaseHas('devices', [
-            'id' => 1009,
-            'status' => 0,  // IPv6 unreachable
-        ]);
-        $this->assertDatabaseHas('devices', [
-            'id' => 1010,
-            'status' => 0,  // IPv6 unreachable
         ]);
     }
 
@@ -318,7 +327,7 @@ class rconfigTaskDownloadTest extends TestCase
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output
-            if (!empty($match)) {
+            if (! empty($match)) {
                 $this->assertTrue($this->downloaded_file_exists_on_disk($this->device2, $match[0]));
             }
         }
@@ -339,7 +348,7 @@ class rconfigTaskDownloadTest extends TestCase
             'verbose_download_report_notify' => 0,
         ]);
 
-        \Queue::assertPushed(\App\Jobs\TaskCompleteNotificationJob::class, 1);
+        \Queue::assertPushed(TaskCompleteNotificationJob::class, 1);
 
         $this->assertDatabaseHas('notifications', [
             'type' => 'App\Notifications\DBDeviceConnectionFailureNotification',
@@ -371,7 +380,7 @@ class rconfigTaskDownloadTest extends TestCase
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output
-            if (!empty($match)) {
+            if (! empty($match)) {
                 $this->assertTrue($this->downloaded_file_exists_on_disk($this->device2, $match[0]));
             }
         }
@@ -391,7 +400,7 @@ class rconfigTaskDownloadTest extends TestCase
             'download_report_notify' => 1,
             'verbose_download_report_notify' => 0,
         ]);
-        \Queue::assertPushed(\App\Jobs\SendTaskReportNotificationJob::class, 1);
+        \Queue::assertPushed(SendTaskReportNotificationJob::class, 1);
 
         $this->assertDatabaseHas('notifications', [
             'notifiable_id' => 1,

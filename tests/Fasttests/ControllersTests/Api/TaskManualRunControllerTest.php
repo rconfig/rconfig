@@ -2,10 +2,10 @@
 
 namespace Tests\Fasttests\ControllersTests\Api;
 
+use App\Jobs\TaskCompleteNotificationJob;
 use App\Models\Setting;
 use App\Models\User;
 use App\Notifications\MailTaskCompleteNotification;
-use Artisan;
 use Carbon\Carbon;
 use Illuminate\Queue\WorkerOptions;
 use Illuminate\Support\Facades\Notification;
@@ -76,7 +76,7 @@ class TaskManualRunControllerTest extends TestCase
      *
      * @param  string  $className
      * @param  string  $propertyName
-     * @return	ReflectionProperty
+     * @return ReflectionProperty
      */
     public function getPrivateProperty($className, $propertyName)
     {
@@ -128,7 +128,6 @@ class TaskManualRunControllerTest extends TestCase
         config(['queue.default' => 'sync']);
     }
 
-
     // functions below used from https://github.com/laravel/horizon/tree/4.x/tests/Slowtests for testing queues
     protected function work($times = 1)
     {
@@ -158,8 +157,8 @@ class TaskManualRunControllerTest extends TestCase
     {
         Queue::fake();
 
-        dispatch(new \App\Jobs\TaskCompleteNotificationJob($this->report_data));
-        Queue::assertPushed(\App\Jobs\TaskCompleteNotificationJob::class);
+        dispatch(new TaskCompleteNotificationJob($this->report_data));
+        Queue::assertPushed(TaskCompleteNotificationJob::class);
     }
 
     public function test_mail_task_complete_notification_sent_to_all_users()
@@ -234,8 +233,6 @@ class TaskManualRunControllerTest extends TestCase
 
     /**
      * Tear down the test case.
-     *
-     * @return void
      */
     protected function tearDown(): void
     {

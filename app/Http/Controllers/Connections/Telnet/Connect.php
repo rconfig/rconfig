@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Connections\Telnet;
 
 use App\CustomClasses\SetDeviceStatus;
-use App\Models\User;
-use App\Notifications\DBDeviceConnectionFailureNotification;
 use App\Enums\NotificationType;
+use App\Notifications\DBDeviceConnectionFailureNotification;
 use App\Traits\NotificationDispatcher;
 
 class Connect
@@ -55,7 +54,6 @@ class Connect
     public $commands;
     public $command;
 
-
     /* OPTIONS */
     public $AnsiHost;
     public $setWindowSize;
@@ -99,7 +97,7 @@ class Connect
         $this->device_id = $deviceParamsObject->deviceparams['id'];
         $this->hostname = $deviceParamsObject->deviceparams['device_ip'];
         if (filter_var($this->hostname, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-            //setup ipv6 string for fsockopen
+            // setup ipv6 string for fsockopen
             $this->hostname = '[' . $this->hostname . ']';
         }
         $this->username = $deviceParamsObject->deviceparams['device_username'];

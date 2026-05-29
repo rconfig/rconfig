@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Models\MonitoredScheduledTaskLogItems;
 use App\Models\Task;
 use App\Traits\LogsTaskActivity;
 use Illuminate\Console\Scheduling\Schedule;
@@ -9,6 +10,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Schema;
 use Spatie\Health\Commands\RunHealthChecksCommand;
 use Spatie\Health\Commands\ScheduleCheckHeartbeatCommand;
+use Spatie\Health\Models\HealthCheckResultHistoryItem;
 
 class Kernel extends ConsoleKernel
 {
@@ -35,7 +37,6 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
@@ -56,21 +57,15 @@ class Kernel extends ConsoleKernel
 
                 // Use the scheduler to add the task at its desired frequency
                 $executionStartTime = microtime(true);
-                if ($task->task_command === 'rconfig:purge-configs') {
-                    $this->purge_configs($executionStartTime, $task);
-                } else {
-                    // everything other than backup jobs
-                    $this->download_task($executionStartTime, $task);
-                }
-                // exec('chown -R apache /var/www/html');
+                $this->download_task($executionStartTime, $task);
             }
         }
 
         $schedule->command(RunHealthChecksCommand::class)->everyFiveMinutes();
         $schedule->command(ScheduleCheckHeartbeatCommand::class)->everyFiveMinutes();
         $schedule->command('queue:prune-batches --hours=48 --unfinished=72')->daily();
-        $schedule->command('model:prune', ['--model' => MonitoredScheduledTaskLogItem::class])->daily();
-        $schedule->command('model:prune', ['--model' => \Spatie\Health\Models\HealthCheckResultHistoryItem::class])->daily();
+        $schedule->command('model:prune', ['--model' => MonitoredScheduledTaskLogItems::class])->daily();
+        $schedule->command('model:prune', ['--model' => HealthCheckResultHistoryItem::class])->daily();
         $this->schedule->command('rconfig:config-summaries-sync')->dailyAt('3:00');
     }
 
@@ -88,7 +83,7 @@ class Kernel extends ConsoleKernel
                 $this->logTaskStarted($task->id);
             })
             ->appendOutputTo(storage_path() . '/logs/laravel.log')
-            ->after(function () use ($task, $executionStartTime) {
+            ->after(function () use ($task) {
                 $logmsg = 'Task command "' . $task->task_command . ' ' . $task->id . '" was run with ID:' . $task->id;
                 activityLogIt(__CLASS__, __FUNCTION__, 'info', $logmsg, 'cron_scheduler');
                 $this->logTaskFinished($task->id);

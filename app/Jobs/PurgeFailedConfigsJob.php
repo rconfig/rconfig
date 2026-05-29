@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Models\User;
 use App\Enums\NotificationType;
 use App\Notifications\DBNotification;
 use App\Traits\NotificationDispatcher;
@@ -27,10 +26,10 @@ class PurgeFailedConfigsJob implements ShouldQueue
 
     public function handle()
     {
-        $command = 'rconfig:purge-failedconfigs '.$this->device_id;
+        $command = 'rconfig:purge-failedconfigs ' . $this->device_id;
 
         Artisan::call($command);
-        $logmsg = 'A purge job for invalid or failed configs was run for device: '.$this->device_id;
+        $logmsg = 'A purge job for invalid or failed configs was run for device: ' . $this->device_id;
 
         $this->sendToDefaultChannels(
             NotificationType::CONFIG_PURGE_FAILED_COMPLETED,

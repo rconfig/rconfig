@@ -7,6 +7,7 @@ use App\Notifications\DBPurgeOperationNotification;
 use App\Notifications\MailPurgeOperationNotification;
 use File;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 use Validator;
 
@@ -20,10 +21,10 @@ class PurgeOperations
 
         switch ($request->purgetype) {
             case 'backup':
-                $files = File::allFiles(backup_path());
+                $files = File::allFiles(storage_path('app/rconfig/backups'));
                 break;
             case 'settings':
-                $files = File::allFiles(storage_path().'/logs');
+                $files = File::allFiles(storage_path() . '/logs');
                 break;
         }
 
@@ -39,7 +40,7 @@ class PurgeOperations
 
             File::delete($purgelist);
 
-            $msg = $request->purgetype.' files older than '.$request->days.' days are now purged.';
+            $msg = $request->purgetype . ' files older than ' . $request->days . ' days are now purged.';
             $output = [
                 'success' => true,
                 'data' => '',
@@ -48,8 +49,9 @@ class PurgeOperations
 
             // send notification
             try {
-                Notification::send(User::allUsersAndRecipients(), new MailPurgeOperationNotification($msg, $this->username));
-                Notification::send(User::all(), new DBPurgeOperationNotification($msg, $this->username));
+                $username = Auth::user()->username;
+                Notification::send(User::allUsersAndRecipients(), new MailPurgeOperationNotification($msg, $username));
+                Notification::send(User::all(), new DBPurgeOperationNotification($msg, $username));
 
                 $responseArray = ['success' => 200, 'msg' => $msg];
                 activityLogIt(__CLASS__, __FUNCTION__, 'warn', $responseArray['msg'], 'purge');
@@ -57,7 +59,7 @@ class PurgeOperations
                 activityLogIt(__CLASS__, __FUNCTION__, 'error', $e->getMessage(), 'purge');
             }
         } else {
-            //LOGGING
+            // LOGGING
             $output = [
                 'success' => false,
                 'msg' => 'No files found!',

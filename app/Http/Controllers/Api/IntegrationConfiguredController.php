@@ -18,7 +18,7 @@ class IntegrationConfiguredController extends ApiBaseController
 
     public function index(Request $request, $searchCols = null, $relationship = null, $withCount = null)
     {
-        //$this->authorize('integrationconfigured.view');
+        // $this->authorize('integrationconfigured.view');
 
         $searchCols = ['name'];
 

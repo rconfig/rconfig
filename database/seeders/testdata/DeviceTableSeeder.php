@@ -18,7 +18,8 @@ class DeviceTableSeeder extends Seeder
     public function run()
     {
         $dev_cisco_ip = '10.1.1.170';
-        $dev_cisco_ipv6 = '2001:bb6:788a:8000:6273:5cff:fed9:4c01';
+        $dev_cisco_ipv6 = '2a01:ac:1000:700::170';
+
         // telnet no enable template
         Device::create([
             'id' => 1001,
@@ -75,7 +76,6 @@ class DeviceTableSeeder extends Seeder
             'device_added_by' => 1,
             'status' => 1,
         ]);
-
 
         // SSH enable template
         Device::create([
@@ -364,7 +364,7 @@ class DeviceTableSeeder extends Seeder
             'device_id' => '1008',
         ]);
 
-        //seed tags and relationships
+        // seed tags and relationships
         DB::table('tags')->insert([
             'id' => 1001,
             'tagname' => 'devtag1',
@@ -403,7 +403,7 @@ class DeviceTableSeeder extends Seeder
             'tag_id' => 55,
         ]);
 
-        //Seed tasks and relationships
+        // Seed tasks and relationships
         DB::table('tasks')->insert([
             'id' => 555555,
             'task_name' => 'DevTask1',

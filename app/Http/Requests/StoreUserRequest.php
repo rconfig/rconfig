@@ -49,8 +49,6 @@ class StoreUserRequest extends FormRequest
 
     /**
      * Build and return a DTO.
-     *
-     * @return StoreUserDTO
      */
     public function toDTO(): StoreUserDTO
     {

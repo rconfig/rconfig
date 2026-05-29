@@ -55,6 +55,7 @@ class Login
         $this->connectionObj->connection->write($this->connectionObj->username . "\n");
         $this->connectionObj->connection->read('~' . $this->connectionObj->passwordPrompt . '~', SSH2::READ_REGEX);
         $this->connectionObj->connection->write($this->connectionObj->password . "\n");
+
         return true;
     }
 

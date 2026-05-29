@@ -3,6 +3,7 @@
 namespace App\Services\SocialAuth;
 
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -13,7 +14,7 @@ class GoogleAuth
 
         $authedUser = SocialAuthHandler::checkErrors($request, 'google');
 
-        if ($authedUser instanceof \Illuminate\Http\RedirectResponse) {
+        if ($authedUser instanceof RedirectResponse) {
             // checks if the user is an instance of RedirectResponse meaning there was an error in the SocialAuthHandler method
             return $authedUser;
         }

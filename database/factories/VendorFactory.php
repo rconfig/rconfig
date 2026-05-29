@@ -14,7 +14,7 @@ class VendorFactory extends Factory
     public function definition()
     {
         return [
-            'vendorName' => $this->faker->firstNameMale.$this->faker->randomNumber(9),
+            'vendorName' => $this->faker->firstNameMale . $this->faker->randomNumber(9),
         ];
     }
 }

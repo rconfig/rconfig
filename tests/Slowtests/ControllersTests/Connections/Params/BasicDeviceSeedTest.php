@@ -9,7 +9,6 @@ use Tests\TestCase;
 class BasicDeviceSeedTest extends TestCase
 {
     protected $user;
-
     protected $device;
 
     public function setUp(): void

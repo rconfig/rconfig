@@ -3,6 +3,7 @@
 namespace Database\Seeders\testdata;
 
 use App\Models\Device;
+use Faker\Factory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -16,7 +17,7 @@ class MikrotikDeviceSeeder extends Seeder
      */
     public function run()
     {
-        $faker = \Faker\Factory::create();
+        $faker = Factory::create();
         $device_id = 20001;
         $cat_id = 20001;
         $command_id = 5189;

@@ -4,9 +4,7 @@ namespace Tests\Fasttests\ControllersTests\Api;
 
 use App\Models\Config;
 use App\Models\User;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 
@@ -224,7 +222,7 @@ class ConfigControllerTest extends TestCase
     public function test_delete_config()
     {
         $config = Config::factory()->create();
-        if (!File::exists($config->config_location)) {
+        if (! File::exists($config->config_location)) {
             File::makeDirectory(dirname($config->config_location), 0777, true, true);
         }
 
@@ -726,7 +724,7 @@ class ConfigControllerTest extends TestCase
     protected function tearDown(): void
     {
         Config::query()->delete();
-        
+
         $this->rollBackTransaction();
         parent::tearDown();
     }

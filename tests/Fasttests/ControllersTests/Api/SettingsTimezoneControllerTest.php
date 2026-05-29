@@ -3,13 +3,11 @@
 namespace Tests\Fasttests\ControllersTests\Api;
 
 use App\Models\User;
-
 use Tests\TestCase;
 
 class SettingsTimezoneControllerTest extends TestCase
 {
     protected $user;
-
     protected $setting;
 
     public function setUp(): void

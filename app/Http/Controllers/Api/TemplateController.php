@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\StoreTemplateRequest;
 use App\Models\Template;
+use App\Services\Templates\TemplateReformatter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -139,7 +139,7 @@ class TemplateController extends ApiBaseController
 
     public function sanitizeFileName($fileName)
     {
-        $reformatter = new \App\Services\Templates\TemplateReformatter;
+        $reformatter = new TemplateReformatter;
         $filename = $reformatter->sanitizeFileName($fileName);
 
         return $filename;
@@ -151,7 +151,7 @@ class TemplateController extends ApiBaseController
         $storage_dir = storage_path() . '/app/rconfig/templates/';
         $filePath = $storage_dir . $fileName;
 
-        $reformatter = new \App\Services\Templates\TemplateReformatter;
+        $reformatter = new TemplateReformatter;
         $reformattedContent = $reformatter->reformatTemplateFile($filePath);
 
         if ($reformattedContent === false) {

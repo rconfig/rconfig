@@ -2,16 +2,17 @@
 
 namespace Tests\Fasttests\ControllersTests\Api;
 
-use App\Models\User;
-
+use App\Models\Category;
+use App\Models\Device;
+use App\Models\Tag;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class TasksControllerTest extends TestCase
 {
     protected $user;
-
     protected $validationTestArr;
 
     public function setUp(): void
@@ -41,11 +42,11 @@ class TasksControllerTest extends TestCase
 
     public function test_delete_task_and_a_test_relationship()
     {
-        $task = \App\Models\Task::factory()->make();
+        $task = Task::factory()->make();
         $task->task_cron = ['0', '0', '1', '1', '*'];
         $task->task_name = $task->task_name . '-' . rand(1000, 10000);
 
-        $tags = \App\Models\Tag::factory(3)->create();
+        $tags = Tag::factory(3)->create();
         $response = $this->json('post', '/api/tasks', [
             'task_name' => $task->task_name,
             'task_desc' => $task->task_desc,
@@ -53,7 +54,7 @@ class TasksControllerTest extends TestCase
             'task_cron' => ['0', '0', '1', '1', '*'],
             'category' => $task->category,
             'device' => ['1', '2'],
-            'task_tags' => $tags,
+            'tag' => $tags,
             'task_email_notify' => $task->task_email_notify,
             'download_report_notify' => $task->download_report_notify,
             'verbose_download_report_notify' => $task->verbose_download_report_notify,
@@ -216,10 +217,9 @@ class TasksControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-
     public function test_show_single_task()
     {
-        $task = \App\Models\Task::factory()->create();
+        $task = Task::factory()->create();
         $response = $this->get('/api/tasks/' . $task->id);
 
         $response->assertJson(['task_name' => $task->task_name]);
@@ -228,7 +228,7 @@ class TasksControllerTest extends TestCase
 
     public function test_get_all_tasks()
     {
-        $task = \App\Models\Task::factory(100)->create();
+        $task = Task::factory(100)->create();
         $response = $this->get('/api/tasks?page=1&perPage=100');
         $response->assertStatus(200);
 
@@ -238,8 +238,8 @@ class TasksControllerTest extends TestCase
 
     public function test_get_all_tasks_with_filters()
     {
-        $task = \App\Models\Task::factory(10)->create();
-        $task = \App\Models\Task::factory()->create([
+        $task = Task::factory(10)->create();
+        $task = Task::factory()->create([
             'task_name' => 'test-task',
         ]);
         $response = $this->get('/api/tasks?page=1&perPage=100&filter[q]=' . $task->task_name);
@@ -364,7 +364,7 @@ class TasksControllerTest extends TestCase
 
     public function test_create_task()
     {
-        $task = \App\Models\Task::factory()->make();
+        $task = Task::factory()->make();
 
         $response = $this->json('post', '/api/tasks', $task->toArray());
         $response->assertStatus(200);
@@ -381,10 +381,9 @@ class TasksControllerTest extends TestCase
         ]);
     }
 
-
     public function test_create_task_is_paused_is_false_by_default()
     {
-        $task = \App\Models\Task::factory()->make([
+        $task = Task::factory()->make([
             'is_paused' => 0,
         ]);
 
@@ -401,7 +400,7 @@ class TasksControllerTest extends TestCase
 
     public function test_can_toggle_is_paused_on_a_task()
     {
-        $task = \App\Models\Task::factory()->create([
+        $task = Task::factory()->create([
             'is_paused' => 0,
         ]);
 
@@ -418,7 +417,7 @@ class TasksControllerTest extends TestCase
 
     public function test_edit_task_with_null_description()
     {
-        $task = \App\Models\Task::factory()->create();
+        $task = Task::factory()->create();
 
         $response = $this->json('patch', '/api/tasks/' . $task->id, [
             'id' => $task->id,
@@ -452,7 +451,7 @@ class TasksControllerTest extends TestCase
 
     public function test_edit_task()
     {
-        $task = \App\Models\Task::factory()->create();
+        $task = Task::factory()->create();
 
         $response = $this->json('patch', '/api/tasks/' . $task->id, [
             'id' => $task->id,
@@ -485,7 +484,7 @@ class TasksControllerTest extends TestCase
 
     public function test_delete_task()
     {
-        $task = \App\Models\Task::factory()->create();
+        $task = Task::factory()->create();
 
         $this->delete('/api/tasks/' . $task->id);
 
@@ -494,11 +493,11 @@ class TasksControllerTest extends TestCase
 
     public function test_test_tag_relationship()
     {
-        $task = \App\Models\Task::factory()->make(['task_command' => 'rconfig:download-tag']);
+        $task = Task::factory()->make(['task_command' => 'rconfig:download-tag']);
         $task->task_cron = ['0', '0', '1', '1', '*'];
         $task->task_name = $task->task_name . '-' . rand(1000, 10000);
 
-        $tags = \App\Models\Tag::factory(3)->create();
+        $tags = Tag::factory(3)->create();
         $response = $this->json('post', '/api/tasks', [
             'task_name' => $task->task_name,
             'task_desc' => $task->task_desc,
@@ -506,7 +505,7 @@ class TasksControllerTest extends TestCase
             'task_cron' => ['0', '0', '1', '1', '*'],
             'category' => $task->category,
             'device' => null,
-            'task_tags' => $tags,
+            'tag' => $tags,
             'task_email_notify' => $task->task_email_notify,
             'download_report_notify' => $task->download_report_notify,
             'verbose_download_report_notify' => $task->verbose_download_report_notify,
@@ -531,11 +530,11 @@ class TasksControllerTest extends TestCase
 
     public function test_device_relationship()
     {
-        $task = \App\Models\Task::factory()->make();
+        $task = Task::factory()->make();
         $task->task_cron = ['0', '0', '1', '1', '*'];
         $task->task_name = $task->task_name . '-' . rand(1000, 10000);
 
-        $devices = \App\Models\Device::factory(3)->create();
+        $devices = Device::factory(3)->create();
         $response = $this->json('post', '/api/tasks', [
             'task_name' => $task->task_name,
             'task_desc' => $task->task_desc,
@@ -568,11 +567,11 @@ class TasksControllerTest extends TestCase
 
     public function test_category_relationship()
     {
-        $task = \App\Models\Task::factory()->make();
+        $task = Task::factory()->make();
         $task->task_cron = ['0', '0', '1', '1', '*'];
         $task->task_name = $task->task_name . '-' . rand(1000, 10000);
 
-        $categories = \App\Models\Category::factory(3)->create();
+        $categories = Category::factory(3)->create();
         $response = $this->json('post', '/api/tasks', [
             'task_name' => $task->task_name,
             'task_desc' => $task->task_desc,
@@ -605,7 +604,7 @@ class TasksControllerTest extends TestCase
 
     public function test_task_finished_relationship()
     {
-        $task = \App\Models\Task::factory()->create();
+        $task = Task::factory()->create();
         $this->post('/api/tasks', $task->toArray());
 
         $this->assertDatabaseHas('tasks', [

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller as Controller;
+use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Traits\RespondsWithHttpStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 
 class ApiBaseController extends Controller
@@ -13,11 +15,8 @@ class ApiBaseController extends Controller
     use RespondsWithHttpStatus;
 
     protected $query;
-
     protected $model;
-
     protected $modelname;
-
     protected $matchThese;
 
     public function __construct(Model $model, $modelname)
@@ -30,7 +29,7 @@ class ApiBaseController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request, $searchCols, $relationship = null, $withCount = null)
     {
@@ -77,7 +76,7 @@ class ApiBaseController extends Controller
             foreach ($searchCols as $col) {
                 $this->matchThese[] = [$col, 'like', '%' . $filter . '%'];
             }
-            //Add Conditions
+            // Add Conditions
             foreach ($this->matchThese as $key => $matchThis) {
                 if ($key === array_key_first($this->matchThese)) {
                     $this->query->where($matchThis[0], $matchThis[1], $matchThis[2]);
@@ -93,8 +92,8 @@ class ApiBaseController extends Controller
      * In order to avoid an inherant bug in laravel, we need to pass the request array directly to a newly name method.
      * Thats why this is called StoreResource instead of Store.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @return Response
      */
     public function storeResource($request, $return = 0)
     {
@@ -109,8 +108,8 @@ class ApiBaseController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
+     * @param  User  $user
+     * @return Response
      */
     public function show($id, $relationship = null, $withCount = null)
     {
@@ -137,9 +136,9 @@ class ApiBaseController extends Controller
      * In order to avoid an inherant bug in laravel, we need to pass the request array directly to a newly name method.
      * Thats why this is called UpdateResource instead of Update.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @param  User  $user
+     * @return Response
      */
     public function updateResource($id, $request, $return = 0)
     {
@@ -157,7 +156,7 @@ class ApiBaseController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id, $return = 0)
     {

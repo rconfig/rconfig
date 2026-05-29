@@ -41,8 +41,6 @@ class StoreVendorRequest extends FormRequest
 
     /**
      * Build and return a DTO.
-     *
-     * @return StoreVendorDTO
      */
     public function toDTO(): StoreVendorDTO
     {

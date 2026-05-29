@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\DeviceComment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\DeviceComment>
+ * @extends Factory<DeviceComment>
  */
 class DeviceCommentFactory extends Factory
 {

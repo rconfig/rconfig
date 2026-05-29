@@ -4,6 +4,7 @@ use App\Models\User;
 use App\Notifications\DBNotification;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
+use Spatie\Activitylog\Contracts\Activity;
 
 /**
  * Return active class if current path begins with this path.
@@ -38,6 +39,7 @@ function setPageName($path)
 function setPagePath($path)
 {
     $title = str_replace('-', ' ', $path);
+
     // $title = ucwords($title);
     return $title;
 }
@@ -47,11 +49,12 @@ function isTrue($value): bool
     return $value === 'true' || $value === true || $value === 1 || $value === '1';
 }
 
-if (!function_exists('getComposerVersion')) {
+if (! function_exists('getComposerVersion')) {
     function getComposerVersion()
     {
         $composerFile = base_path('composer.json');
         $composerData = json_decode(file_get_contents($composerFile), true);
+
         return $composerData['version'] ?? '8.0.0';  // Default version if not found
     }
 }
@@ -108,7 +111,7 @@ function custom_chown($path)
 
 function isDocker(): bool
 {
-    return is_file("/.dockerenv");
+    return is_file('/.dockerenv');
 }
 
 function formatSize($bytes)
@@ -118,7 +121,6 @@ function formatSize($bytes)
 
     return round($bytes, 2) . ' ' . $types[$i];
 }
-
 
 function ping($host)
 {
@@ -141,7 +143,7 @@ function diskInfo()
 {
     /* get disk space free (in bytes) */
     $df = disk_free_space('/');
-    /* and get disk space total (in bytes)  */
+    /* and get disk space total (in bytes) */
     $dt = disk_total_space('/');
     /* now we calculate the disk space used (in bytes) */
     $du = $dt - $df;
@@ -186,7 +188,7 @@ function activityLogIt($class, $function, $log_name, $description, $event_type, 
 {
     // test covered
     activity($log_name)
-        ->tap(function (Spatie\Activitylog\Contracts\Activity $activity) use ($class, $function, $event_type, $device_name, $device_id, $connection_category, $connection_ids) {
+        ->tap(function (Activity $activity) use ($class, $function, $event_type, $device_name, $device_id, $connection_category, $connection_ids) {
             $activity->event_type = $event_type;
             $activity->device_name = $device_name;
             $activity->device_id = $device_id;

@@ -2,6 +2,7 @@
 
 namespace Tests\Fasttests\ControllersTests\Api;
 
+use App\Http\Controllers\Api\TemplateController;
 use App\Models\Device;
 use App\Models\Template;
 use App\Models\User;
@@ -16,7 +17,7 @@ class TemplatesControllerTest extends TestCase
     {
         parent::setUp();
         $this->beginTransaction();
-        
+
         $this->user = User::factory()->create();
         $this->actingAs($this->user);
     }
@@ -66,7 +67,7 @@ class TemplatesControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-   public function test_edit_template()
+    public function test_edit_template()
     {
         // Ensure the templates directory exists
         $templatesDir = storage_path('app/rconfig/templates');
@@ -186,7 +187,7 @@ class TemplatesControllerTest extends TestCase
         $device->category()->detach($template->id);
     }
 
-    public function test_deleteMany_returns_error_if_any_template_has_device_relationship()
+    public function test_delete_many_returns_error_if_any_template_has_device_relationship()
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Cannot delete template with related devices.');
@@ -230,7 +231,7 @@ class TemplatesControllerTest extends TestCase
 
     public function test_sanitize_file_name()
     {
-        $controller = new \App\Http\Controllers\Api\TemplateController(new \App\Models\Template);
+        $controller = new TemplateController(new Template);
         // Test with spaces - should be converted to underscores
         $result = $controller->sanitizeFileName('test file name');
         $this->assertEquals('test_file_name.yml', $result);
@@ -262,7 +263,7 @@ class TemplatesControllerTest extends TestCase
         $this->assertStringContainsString('file', $result);
         $this->assertStringContainsString('name', $result);
     }
-    
+
     protected function tearDown(): void
     {
         $this->rollBackTransaction();

@@ -3,6 +3,7 @@
 namespace Tests\Fasttests\ControllersTests\Api;
 
 use App\Models\User;
+use App\Models\Vendor;
 use Tests\TestCase;
 
 class VendorsControllerTest extends TestCase
@@ -29,7 +30,7 @@ class VendorsControllerTest extends TestCase
 
     public function test_show_single_vendor()
     {
-        $vendor = \App\Models\Vendor::factory()->create();
+        $vendor = Vendor::factory()->create();
         $response = $this->get('/api/vendors/' . $vendor->id);
 
         $response->assertJson(['vendorName' => $vendor->vendorName]);
@@ -37,7 +38,7 @@ class VendorsControllerTest extends TestCase
 
     public function test_get_all_vendors()
     {
-        $vendor = \App\Models\Vendor::factory(100)->create();
+        $vendor = Vendor::factory(100)->create();
         $response = $this->get('/api/vendors?page=1&perPage=100');
         $this->assertEquals(100, count($response['data']));
         $response->assertStatus(200);
@@ -45,7 +46,7 @@ class VendorsControllerTest extends TestCase
 
     public function test_create_vendor()
     {
-        $vendor = \App\Models\Vendor::factory()->create();
+        $vendor = Vendor::factory()->create();
         $this->post('/api/vendors', $vendor->toArray());
 
         $this->assertDatabaseHas('vendors', [
@@ -56,7 +57,7 @@ class VendorsControllerTest extends TestCase
 
     public function test_edit_vendor()
     {
-        $vendor = \App\Models\Vendor::factory()->create();
+        $vendor = Vendor::factory()->create();
 
         $response = $this->patch('/api/vendors/' . $vendor->id, [
             'vendorName' => 'a-new-vendor-name',
@@ -70,7 +71,7 @@ class VendorsControllerTest extends TestCase
 
     public function test_delete_vendor()
     {
-        $vendor = \App\Models\Vendor::factory()->create();
+        $vendor = Vendor::factory()->create();
 
         $this->delete('/api/vendors/' . $vendor->id);
 

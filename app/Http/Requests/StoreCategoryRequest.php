@@ -41,8 +41,6 @@ class StoreCategoryRequest extends FormRequest
 
     /**
      * Build and return a DTO.
-     *
-     * @return StoreCategoryDTO
      */
     public function toDTO(): StoreCategoryDTO
     {

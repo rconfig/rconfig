@@ -9,7 +9,6 @@ use Tests\TestCase;
 class DeviceParamsTest extends TestCase
 {
     protected $user;
-
     protected $device;
 
     public function setUp(): void
@@ -18,7 +17,7 @@ class DeviceParamsTest extends TestCase
         $this->device = Device::where('id', 1001)->first();
     }
 
-     public function test_returns_formatted_device_params_object()
+    public function test_returns_formatted_device_params_object()
     {
         $device_params = new DeviceParams($this->device->toArray());
         $result = $device_params->getAllDeviceParams();

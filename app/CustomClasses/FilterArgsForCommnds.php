@@ -6,9 +6,7 @@ class FilterArgsForCommnds
 {
     private $args;
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function sanitize($args)
     {
@@ -19,14 +17,14 @@ class FilterArgsForCommnds
                 return $item;
             }
             if (is_string($item) && ctype_digit($item)) {
-                return (int)$item;
+                return (int) $item;
             }
 
             \Log::debug('[DeviceIdSanitizer] Invalid device ID encountered during sanitization', ['item' => $item]);
+
             return null;
         }, $this->args);
         // Remove nulls and non-integers
-
 
         return array_values(array_filter($filtered, function ($item) {
             return is_int($item);

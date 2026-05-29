@@ -41,6 +41,7 @@ class ActivityLogController extends ApiBaseController
         if ($isLoadMoreMode) {
             $response->appends(['loadMore' => true]);
         }
+
         return response()->json($response);
     }
 

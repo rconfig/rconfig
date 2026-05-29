@@ -1,214 +1,34 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Called ''take'' on Laravel collection, but could have been retrieved as a query\.$#'
-			identifier: larastan.noUnnecessaryCollectionCall
-			count: 1
-			path: app/Console/Commands/rConfigActivityLogArchive.php
-
-		-
 			message: '#^Called ''where'' on Laravel collection, but could have been retrieved as a query\.$#'
 			identifier: larastan.noUnnecessaryCollectionCall
 			count: 1
-			path: app/Console/Commands/rConfigReportLastDownload.php
+			path: app/Console/Commands/Reports/ReportLastDownloadCmd.php
 
 		-
-			message: '#^Call to an undefined method App\\Console\\Kernel\:\:purge_configs\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Console/Kernel.php
-
-		-
-			message: '#^Class App\\Console\\MonitoredScheduledTaskLogItem not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/Console/Kernel.php
-
-		-
-			message: '#^Instantiated class App\\CustomClasses\\Exception not found\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/CustomClasses/CronSchedule.php
-
-		-
-			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:advanceItem\(\) cannot be final as it is never overridden by other classes\.$#'
-			identifier: method.finalPrivate
-			count: 1
-			path: app/CustomClasses/CronSchedule.php
-
-		-
-			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:classIsSingleFixed\(\) cannot be final as it is never overridden by other classes\.$#'
-			identifier: method.finalPrivate
-			count: 1
-			path: app/CustomClasses/CronSchedule.php
-
-		-
-			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:classIsSpecified\(\) cannot be final as it is never overridden by other classes\.$#'
-			identifier: method.finalPrivate
-			count: 1
-			path: app/CustomClasses/CronSchedule.php
-
-		-
-			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:cronCreateItems\(\) cannot be final as it is never overridden by other classes\.$#'
-			identifier: method.finalPrivate
-			count: 1
-			path: app/CustomClasses/CronSchedule.php
-
-		-
-			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:cronInterpret\(\) cannot be final as it is never overridden by other classes\.$#'
-			identifier: method.finalPrivate
-			count: 1
-			path: app/CustomClasses/CronSchedule.php
-
-		-
-			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:dtAsString\(\) cannot be final as it is never overridden by other classes\.$#'
-			identifier: method.finalPrivate
-			count: 1
-			path: app/CustomClasses/CronSchedule.php
-
-		-
-			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:dtFromParameters\(\) cannot be final as it is never overridden by other classes\.$#'
-			identifier: method.finalPrivate
-			count: 1
-			path: app/CustomClasses/CronSchedule.php
-
-		-
-			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:getClass\(\) cannot be final as it is never overridden by other classes\.$#'
-			identifier: method.finalPrivate
-			count: 1
-			path: app/CustomClasses/CronSchedule.php
-
-		-
-			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:getEarliestItem\(\) cannot be final as it is never overridden by other classes\.$#'
-			identifier: method.finalPrivate
-			count: 1
-			path: app/CustomClasses/CronSchedule.php
-
-		-
-			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:getLatestItem\(\) cannot be final as it is never overridden by other classes\.$#'
-			identifier: method.finalPrivate
-			count: 1
-			path: app/CustomClasses/CronSchedule.php
-
-		-
-			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:initLang\(\) cannot be final as it is never overridden by other classes\.$#'
-			identifier: method.finalPrivate
-			count: 1
-			path: app/CustomClasses/CronSchedule.php
-
-		-
-			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:natlangApply\(\) cannot be final as it is never overridden by other classes\.$#'
-			identifier: method.finalPrivate
-			count: 1
-			path: app/CustomClasses/CronSchedule.php
-
-		-
-			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:natlangElementDayOfMonth\(\) cannot be final as it is never overridden by other classes\.$#'
-			identifier: method.finalPrivate
-			count: 1
-			path: app/CustomClasses/CronSchedule.php
-
-		-
-			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:natlangElementHour\(\) cannot be final as it is never overridden by other classes\.$#'
-			identifier: method.finalPrivate
-			count: 1
-			path: app/CustomClasses/CronSchedule.php
-
-		-
-			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:natlangElementMinute\(\) cannot be final as it is never overridden by other classes\.$#'
-			identifier: method.finalPrivate
-			count: 1
-			path: app/CustomClasses/CronSchedule.php
-
-		-
-			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:natlangElementMonth\(\) cannot be final as it is never overridden by other classes\.$#'
-			identifier: method.finalPrivate
-			count: 1
-			path: app/CustomClasses/CronSchedule.php
-
-		-
-			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:natlangElementYear\(\) cannot be final as it is never overridden by other classes\.$#'
-			identifier: method.finalPrivate
-			count: 1
-			path: app/CustomClasses/CronSchedule.php
-
-		-
-			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:natlangPad2\(\) cannot be final as it is never overridden by other classes\.$#'
-			identifier: method.finalPrivate
-			count: 1
-			path: app/CustomClasses/CronSchedule.php
-
-		-
-			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:natlangRange\(\) cannot be final as it is never overridden by other classes\.$#'
-			identifier: method.finalPrivate
-			count: 1
-			path: app/CustomClasses/CronSchedule.php
-
-		-
-			message: '#^Private method App\\CustomClasses\\CronSchedule\:\:recedeItem\(\) cannot be final as it is never overridden by other classes\.$#'
-			identifier: method.finalPrivate
-			count: 1
-			path: app/CustomClasses/CronSchedule.php
-
-		-
-			message: '#^Relation ''command'' is not found in App\\Models\\Category model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/CustomClasses/DeviceRecordPrepare.php
-
-		-
-			message: '#^Relation ''device'' is not found in App\\Models\\Category model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/CustomClasses/GetAndCheckCategoryIds.php
-
-		-
-			message: '#^Relation ''category'' is not found in App\\Models\\Device model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/CustomClasses/GetAndCheckDeviceIds.php
-
-		-
-			message: '#^Relation ''device'' is not found in App\\Models\\Tag model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/CustomClasses/GetAndCheckTagIds.php
-
-		-
-			message: '#^Relation ''device'' is not found in App\\Models\\Task model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/CustomClasses/GetAndCheckTaskIds.php
-
-		-
-			message: '#^Access to an undefined property App\\CustomClasses\\PurgeOperations\:\:\$username\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/CustomClasses/PurgeOperations.php
-
-		-
-			message: '#^Function backup_path not found\.$#'
+			message: '#^Function snmp_trap_path not found\.$#'
 			identifier: function.notFound
 			count: 1
-			path: app/CustomClasses/PurgeOperations.php
+			path: app/Console/Commands/Snmp/ManageSnmpTrapRegistry.php
 
 		-
-			message: '#^Method App\\Http\\Controllers\\Api\\DeviceCommentController\:\:index\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
+			message: '#^Static call to instance method Prism\\Prism\\Prism\:\:text\(\)\.$#'
+			identifier: method.staticCall
 			count: 1
-			path: app/Http/Controllers/Api/DeviceCommentController.php
+			path: app/Http/Controllers/Api/ChatAIController.php
 
 		-
-			message: '#^Relation ''user'' is not found in App\\Models\\DeviceComment model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/Api/DeviceCommentController.php
-
-		-
-			message: '#^Relation ''devices'' is not found in App\\Models\\DeviceModel model\.$#'
-			identifier: larastan.relationExistence
+			message: '#^Access to an undefined property App\\Http\\Controllers\\Api\\EocRecheckController\:\:\$model\.$#'
+			identifier: property.notFound
 			count: 1
-			path: app/Http/Controllers/Api/DeviceModelController.php
+			path: app/Http/Controllers/Api/EocRecheckController.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Controllers\\Api\\EocRecheckController\:\:\$modelname\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/EocRecheckController.php
 
 		-
 			message: '#^Called ''Model\:\:make\(\)'' which performs unnecessary work, use ''new Model\(\)''\.$#'
@@ -217,55 +37,133 @@ parameters:
 			path: app/Http/Controllers/Api/SettingEmailController.php
 
 		-
-			message: '#^Access to an undefined property App\\Http\\Controllers\\Api\\TrackedJobController\:\:\$model\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/Http/Controllers/Api/TrackedJobController.php
+			message: '#^Method App\\Http\\Controllers\\Api\\SettingsPurgeController\:\:destroy\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/SettingsPurgeController.php
 
 		-
-			message: '#^Access to an undefined property App\\Http\\Controllers\\Api\\TrackedJobController\:\:\$modelname\.$#'
+			message: '#^Access to undefined constant Illuminate\\Support\\Facades\\Response\:\:HTTP_NOT_FOUND\.$#'
+			identifier: classConstant.notFound
+			count: 1
+			path: app/Http/Controllers/Api/UserController.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Controllers\\Api\\v1\\ConfigsController\:\:\$query\.$#'
 			identifier: property.notFound
 			count: 1
-			path: app/Http/Controllers/Api/TrackedJobController.php
+			path: app/Http/Controllers/Api/v1/ConfigsController.php
 
 		-
-			message: '#^Array has 2 duplicate keys with value ''guest'' \(''guest'', ''guest''\)\.$#'
-			identifier: array.duplicateKey
-			count: 1
-			path: app/Http/Kernel.php
-
-		-
-			message: '#^Class App\\Http\\Middleware\\ApiV1TokenAuth not found\.$#'
+			message: '#^Instantiated class App\\DataTransferObjects\\StoreSnmpResultDTO not found\.$#'
 			identifier: class.notFound
 			count: 1
-			path: app/Http/Kernel.php
+			path: app/Http/Requests/StoreSnmpResultRequest.php
 
 		-
-			message: '#^Array has 2 duplicate keys with value ''device_category_id'' \(''device_category_id'', ''device_category_id''\)\.$#'
-			identifier: array.duplicateKey
-			count: 2
-			path: app/Http/Requests/StoreDeviceRequest.php
-
-		-
-			message: '#^Class App\\Models\\DeviceModels not found\.$#'
+			message: '#^Method App\\Http\\Requests\\StoreSnmpResultRequest\:\:toDTO\(\) has invalid return type App\\DataTransferObjects\\StoreSnmpResultDTO\.$#'
 			identifier: class.notFound
 			count: 1
-			path: app/Models/Device.php
+			path: app/Http/Requests/StoreSnmpResultRequest.php
 
 		-
-			message: '#^Deprecated in PHP 8\.4\: Parameter \#1 \$exception \(string\) is implicitly nullable via default value null\.$#'
-			identifier: parameter.implicitlyNullable
+			message: '#^Called ''pluck'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 2
+			path: app/Models/ConfigChange.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
 			count: 1
-			path: app/Models/TrackedJob.php
+			path: app/Models/User.php
 
 		-
-			message: '#^Deprecated in PHP 8\.4\: Parameter \#1 \$message \(string\) is implicitly nullable via default value null\.$#'
-			identifier: parameter.implicitlyNullable
+			message: '#^Class App\\Services\\Snmp\\Traps\\SnmpTrapServices\\DeviceResolverService not found\.$#'
+			identifier: class.notFound
+			count: 4
+			path: app/Providers/SnmpTrapServiceProvider.php
+
+		-
+			message: '#^Class App\\Services\\Snmp\\Traps\\SnmpTrapServices\\SnmpTrapParser not found\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Providers/SnmpTrapServiceProvider.php
+
+		-
+			message: '#^Class App\\Services\\Snmp\\Traps\\SnmpTrapServices\\TrapFilterService not found\.$#'
+			identifier: class.notFound
+			count: 7
+			path: app/Providers/SnmpTrapServiceProvider.php
+
+		-
+			message: '#^Class App\\Services\\Snmp\\Traps\\SnmpTrapServices\\TrapLoggingService not found\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Providers/SnmpTrapServiceProvider.php
+
+		-
+			message: '#^Class App\\Services\\Snmp\\Traps\\SnmpTrapServices\\TrapProcessorService not found\.$#'
+			identifier: class.notFound
 			count: 1
-			path: app/Models/TrackedJob.php
+			path: app/Providers/SnmpTrapServiceProvider.php
 
 		-
-			message: '#^Relation ''command'' is not found in App\\Models\\Category model\.$#'
+			message: '#^Class App\\Services\\Snmp\\Traps\\TrapProcessor not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Providers/SnmpTrapServiceProvider.php
+
+		-
+			message: '#^Instantiated class App\\Services\\Snmp\\Traps\\SnmpTrapServices\\TrapProcessorService not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Providers/SnmpTrapServiceProvider.php
+
+		-
+			message: '#^Instantiated class App\\Services\\Snmp\\Traps\\TrapProcessor not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Providers/SnmpTrapServiceProvider.php
+
+		-
+			message: '#^Relation ''agent'' is not found in App\\Models\\Task model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
-			path: app/Rules/CategoryHasCommands.php
+			path: app/Services/Connections/GetAndCheckTaskIds.php
+
+		-
+			message: '#^Undefined variable\: \$result$#'
+			identifier: variable.undefined
+			count: 2
+			path: app/Services/Connections/Telnet/SendCommand.php
+
+		-
+			message: '#^Class App\\Services\\DeviceLoaders\\requests\\StoreDeviceRequest referenced with incorrect case\: App\\Services\\DeviceLoaders\\Requests\\StoreDeviceRequest\.$#'
+			identifier: class.nameCase
+			count: 1
+			path: app/Services/DeviceLoaders/UiDeviceLoadStrategy.php
+
+		-
+			message: '#^Relation ''agent'' is not found in App\\Models\\Device model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Services/DeviceProfiles/DeviceProfileInferenceService.php
+
+		-
+			message: '#^Relation ''agent'' is not found in App\\Models\\DeviceProfile model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Services/DeviceProfiles/DeviceProfileInferenceService.php
+
+		-
+			message: '#^Call to an undefined method App\\Services\\Integrations\\Zbx\\Zbx5\\HostGroupTagAppender\:\:fixSequenceAndRetry\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Services/Integrations/Zbx/Zbx5/HostGroupTagAppender.php
+
+		-
+			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+			identifier: larastan.noEnvCallsOutsideOfConfig
+			count: 6
+			path: app/Support/Saml/SamlConfigResolver.php

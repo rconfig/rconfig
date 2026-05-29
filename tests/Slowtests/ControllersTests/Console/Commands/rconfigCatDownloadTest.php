@@ -13,17 +13,11 @@ use Tests\TestCase;
 class rconfigCatDownloadTest extends TestCase
 {
     protected $user;
-
     protected $device;
-
     protected $device1;
-
     protected $device2;
-
     protected $device3;
-
     protected $device5;
-
     protected $device1_params_object;
 
     public function setUp(): void
@@ -65,10 +59,10 @@ class rconfigCatDownloadTest extends TestCase
         $this->assertCount(2, $categoryrecords);
         $this->assertGreaterThan(1, $categoryrecords[0]->device->count());
     }
- 
-    public function test_full_telnet_and_SSH_download_for_given_categories()
+
+    public function test_full_telnet_and_ss_h_download_for_given_categories()
     {
-        $this->log_message_during_test(substr(strrchr(__CLASS__, "\\"), 1) . '/' . __FUNCTION__, 'This test will take around 20 seconds to complete.');
+        $this->log_message_during_test(substr(strrchr(__CLASS__, '\\'), 1) . '/' . __FUNCTION__, 'This test will take around 20 seconds to complete.');
 
         $this->add_5_sec_timeout_telnet_noenable_template();
 
@@ -84,7 +78,7 @@ class rconfigCatDownloadTest extends TestCase
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match);
-            if (!empty($match)) {
+            if (! empty($match)) {
                 $this->assertTrue($this->downloaded_file_exists_on_disk($this->device2, $match[0]));
             }
         }
@@ -92,47 +86,49 @@ class rconfigCatDownloadTest extends TestCase
         $output = implode("\n", $arr);
 
         $this->assertGreaterThan(0, count($arr));
-        
+
         // Verify category start
         $this->assertStringContainsString('Start rconfig:download-category IDs:1 2', $output);
-        
+
         // Verify successful downloads (router1-4)
         $this->assertStringContainsString('Start device download for router1 ID:1001', $output);
         $this->assertStringContainsString('Config downloaded for router1 with command: "show clock" was successful', $output);
         $this->assertStringContainsString('Config downloaded for router1 with command: "show version" was successful', $output);
         $this->assertStringContainsString('Config downloaded for router1 with command: "show run" was successful', $output);
-        
+
         $this->assertStringContainsString('Start device download for router2 ID:1002', $output);
         $this->assertStringContainsString('Config downloaded for router2 with command: "show clock" was successful', $output);
         $this->assertStringContainsString('Config downloaded for router2 with command: "show version" was successful', $output);
         $this->assertStringContainsString('Config downloaded for router2 with command: "show run" was successful', $output);
-        
+
         $this->assertStringContainsString('Start device download for router3 ID:1003', $output);
         $this->assertStringContainsString('Config downloaded for router3 with command: "show clock" was successful', $output);
         $this->assertStringContainsString('Config downloaded for router3 with command: "show version" was successful', $output);
         $this->assertStringContainsString('Config downloaded for router3 with command: "show run" was successful', $output);
-        
+
         $this->assertStringContainsString('Start device download for router4 ID:1004', $output);
         $this->assertStringContainsString('Config downloaded for router4 with command: "show clock" was successful', $output);
         $this->assertStringContainsString('Config downloaded for router4 with command: "show version" was successful', $output);
         $this->assertStringContainsString('Config downloaded for router4 with command: "show run" was successful', $output);
-        
+
         // Verify failed/unreachable downloads
         $this->assertStringContainsString('Start device download for router5 ID:1005', $output);
         $this->assertStringContainsString('No config data returned for router5 - ID:1005', $output);
-        
+
+        // router1v6 devices reach the same Cisco device over IPv6 and download successfully (category 1 commands)
         $this->assertStringContainsString('Start device download for router1v6 ID:1009', $output);
-        $this->assertStringContainsString('No config data returned for router1v6 - ID:1009', $output);
-        
+        $this->assertStringContainsString('Config downloaded for router1v6 with command: "show clock" was successful', $output);
+        $this->assertStringContainsString('Config downloaded for router1v6 with command: "show version" was successful', $output);
+        $this->assertStringContainsString('Config downloaded for router1v6 with command: "show run" was successful', $output);
+
         $this->assertStringContainsString('Start device download for router1v6 ID:1010', $output);
-        $this->assertStringContainsString('No config data returned for router1v6 - ID:1010', $output);
-        
+
         // Verify category 2 has no devices
         $this->assertStringContainsString('No devices returned for this category with ID: 2. Downloader will try next category in the list, or terminate!', $output);
-        
+
         // Verify end message
         $this->assertStringContainsString('End rconfig:download-category', $output);
-        
+
         // Verify database status for successful device
         $this->assertDatabaseHas('devices', [
             'id' => 1001,

@@ -38,19 +38,19 @@ class SaveConfigsToDiskAndDb
 
         if ($this->configsArray != 0 || $this->configsArray != null) {
             $fileops = new FileOperations(
-                    $this->commandName,
-                    $device_category,
-                    $this->devicerecord['device_name'],
-                    $this->devicerecord['id'],
-                    config_data_path(),
-                    $this->type
+                $this->commandName,
+                $device_category,
+                $this->devicerecord['device_name'],
+                $this->devicerecord['id'],
+                config_data_path(),
+                $this->type
             );
             $savedFileInfo = $fileops->saveFile($this->configsArray);
         }
 
         Config::where('device_id', $this->devicerecord['id'])
-                ->where('command', $this->commandName)
-                ->update(['latest_version' => 0]);
+            ->where('command', $this->commandName)
+            ->update(['latest_version' => 0]);
 
         $this->model->device_id = $this->devicerecord['id'];
         $this->model->device_name = $this->devicerecord['device_name'];

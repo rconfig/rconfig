@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\MonitoredScheduledTaskLogItems;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class MonitoredScheduledTaskLogItemController extends ApiBaseController
 {
@@ -16,7 +17,7 @@ class MonitoredScheduledTaskLogItemController extends ApiBaseController
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request, $searchCols = null, $relationship = null, $withCount = null)
     {
@@ -26,8 +27,8 @@ class MonitoredScheduledTaskLogItemController extends ApiBaseController
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\MonitoredScheduledTaskLogItems  $tag
-     * @return \Illuminate\Http\Response
+     * @param  MonitoredScheduledTaskLogItems  $tag
+     * @return Response
      */
     public function show($id, $relationship = null, $withCount = null)
     {
@@ -40,7 +41,7 @@ class MonitoredScheduledTaskLogItemController extends ApiBaseController
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id, $return = 0)
     {

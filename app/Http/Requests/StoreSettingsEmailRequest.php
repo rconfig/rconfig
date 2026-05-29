@@ -55,8 +55,6 @@ class StoreSettingsEmailRequest extends FormRequest
 
     /**
      * Build and return a DTO.
-     *
-     * @return StoreSettingsEmailDTO
      */
     public function toDTO(): StoreSettingsEmailDTO
     {

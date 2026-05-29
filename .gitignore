@@ -7,6 +7,7 @@
 .env
 .env.backup
 .env.testing
+.phpstan/
 
 /.idea
 /.vscode
@@ -21,11 +22,14 @@ horizon.log
 npm-debug.log
 yarn-error.log
 
+# Local, non public Claude guidance (edition boundary, Pro comparison notes)
+CLAUDE.local.md
+.claude/settings.local.json
+
 .editorconfig 
 .eslintrc.js
 .prettierrc 
 .styleci.yml 
 jsconfig.json 
-pint.json 
 supervisord.pid
 

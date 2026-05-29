@@ -33,6 +33,7 @@ class RancidToRconfigDeviceLoadCommand extends Command
      * RANCID base directory path
      */
     protected $rancidBasePath = null;
+
     protected $varPath = null;
 
     /**
@@ -153,9 +154,10 @@ class RancidToRconfigDeviceLoadCommand extends Command
         if (! File::exists($varPath)) {
             $varPath = $this->rancidBasePath;
             info('Using RHEL/Rocky Linux structure (groups directly under base path)');
-            
+
             if (! File::exists($varPath)) {
                 error('RANCID directory not found: ' . $varPath);
+
                 return 1;
             }
         }
@@ -621,7 +623,7 @@ class RancidToRconfigDeviceLoadCommand extends Command
             throw new \Exception('Import cannot continue: No device credentials found');
         }
 
-        info("Select a default credential to use for devices without specific credentials in .cloginrc:");
+        info('Select a default credential to use for devices without specific credentials in .cloginrc:');
 
         $options = [];
 

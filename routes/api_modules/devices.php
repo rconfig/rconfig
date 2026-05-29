@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\Api\DeviceInventoryExporter;
 use Illuminate\Support\Facades\Route;
 

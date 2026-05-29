@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Api\ApiBaseController;
-use App\Http\Requests\StoreDeviceCommentRequest;
-use App\Http\Requests\UpdateDeviceCommentRequest;
 use App\Models\DeviceComment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -17,8 +14,10 @@ class DeviceCommentController extends ApiBaseController
         $this->modelname = $modelname;
     }
 
-    public function index(Request $request, $searchCols = null, $relationship = null, $withCount = null) {}
-
+    public function index(Request $request, $searchCols = null, $relationship = null, $withCount = null)
+    {
+        return response()->json([]);
+    }
 
     public function store(Request $request)
     {
@@ -39,12 +38,14 @@ class DeviceCommentController extends ApiBaseController
     public function activeCommentsByDeviceId($devieid)
     {
         $comments = DeviceComment::where('device_id', $devieid)->where('is_open', 1)->with('user')->orderBy('id', 'desc')->get();
+
         return response()->json($comments);
     }
 
     public function closedCommentsByDeviceId($devieid)
     {
         $comments = DeviceComment::where('device_id', $devieid)->where('is_open', 0)->with('user')->orderBy('id', 'desc')->get();
+
         return response()->json($comments);
     }
 
@@ -56,7 +57,6 @@ class DeviceCommentController extends ApiBaseController
 
         return $this->successResponse('Comment resolved successfully!');
     }
-
 
     public function edit(DeviceComment $deviceComment)
     {

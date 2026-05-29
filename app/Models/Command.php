@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Laravel\Scout\Searchable;
 
 class Command extends BaseModel
 {
@@ -17,7 +16,7 @@ class Command extends BaseModel
     protected function viewUrl(): Attribute
     {
         return Attribute::make(
-            get: fn() => '/commands',
+            get: fn () => '/commands',
         );
     }
 

@@ -1,12 +1,15 @@
 <?php
+
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\SocialiteController;
+use App\Http\Controllers\SpaController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /* AUTHENTICATION */
 
 Auth::routes(['register' => false]);
-Route::get('/logged-out', [App\Http\Controllers\Auth\LoginController::class, 'showLoggedOut']);
+Route::get('/logged-out', [LoginController::class, 'showLoggedOut']);
 
 /* SOCIALITE AUTHENTICATION */
 Route::get('/auth/saml2/metadata', function () {
@@ -20,11 +23,10 @@ Auth::routes();
 Route::get('auth/redirect/{provider}', SocialiteController::class . '@redirect');
 Route::get('auth/callback/{provider}', SocialiteController::class . '@callback');
 
-
 Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/download-export', 'App\Http\Controllers\FileDownloadController@download_export');
 
     /* SPA VUE ROUTE */
-    Route::get('/{any}', [App\Http\Controllers\SpaController::class, 'index'])->where('any', '^(?!api\/)[\/\w\.-]*');
+    Route::get('/{any}', [SpaController::class, 'index'])->where('any', '^(?!api\/)[\/\w\.-]*');
 });
