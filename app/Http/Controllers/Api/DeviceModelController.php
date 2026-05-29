@@ -25,11 +25,11 @@ class DeviceModelController extends ApiBaseController
         $perPage = (int) $request->perPage ?: 15;
 
         $query = QueryBuilder::for(DeviceModel::class)
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::custom('q', new FilterMultipleFields, 'name'),
                 AllowedFilter::custom('with_devices', new WithDevicesFilter),
             ])
-            ->allowedSorts(['id', 'name', 'created_at', 'devices_count'])
+            ->allowedSorts(...['id', 'name', 'created_at', 'devices_count'])
             ->withCount('devices');
 
         // Filter by devices if requested

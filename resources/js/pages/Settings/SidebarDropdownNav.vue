@@ -16,6 +16,10 @@ const sections = computed(() => [
 				href: "/settings/system",
 			},
 			{
+				title: "Update",
+				href: "/settings/update",
+			},
+			{
 				title: "Upgrade",
 				href: "/settings/upgrade",
 			},

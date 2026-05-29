@@ -30,6 +30,8 @@ export function useSystemSettingsEmail() {
 				mail_to_email: settings.value.mail_to_email,
 				mail_authcheck: settings.value.mail_authcheck,
 				mail_encryption: settings.value.mail_encryption,
+				mail_verify_peer: settings.value.mail_verify_peer ?? 0,
+				mail_auto_tls: settings.value.mail_auto_tls ?? 0,
 			})
 			.then((response) => {
 				toastSuccess(response.data.message);

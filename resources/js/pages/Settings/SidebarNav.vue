@@ -2,7 +2,7 @@
 import { ref, watch, computed } from "vue";
 import { useRouter } from "vue-router";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { FileCode2, Bug, FileText, Save, BetweenHorizontalStart, CircleFadingArrowUp, Info, CloudUpload, ChevronRight, ChevronDown, Settings, Shield, Key, Users } from "lucide-vue-next";
+import { FileCode2, Bug, FileText, Save, BetweenHorizontalStart, CircleFadingArrowUp, Info, CloudUpload, CloudDownload, ChevronRight, ChevronDown, Settings, Shield, Key, Users } from "lucide-vue-next";
 
 const props = defineProps({
 	settingsActivePane: String,
@@ -47,6 +47,11 @@ const sections = computed(() => [
 				title: "System",
 				href: "/settings/system",
 				icon: Settings,
+			},
+			{
+				title: "Update",
+				href: "/settings/update",
+				icon: CloudDownload,
 			},
 			{
 				title: "Upgrade",

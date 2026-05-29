@@ -39,6 +39,8 @@ class StoreSettingsEmailRequest extends FormRequest
                     'mail_from_email' => 'required|min:3|max:255|email',
                     'mail_to_email' => 'required|min:3|max:255',
                     'mail_encryption' => 'required|min:3|max:255',
+                    'mail_verify_peer' => 'nullable|boolean',
+                    'mail_auto_tls' => 'nullable|boolean',
                 ];
             } else {
                 $rules = [
@@ -46,6 +48,8 @@ class StoreSettingsEmailRequest extends FormRequest
                     'mail_port' => 'required|min:1|max:255',
                     'mail_from_email' => 'required|min:3|max:255|email',
                     'mail_to_email' => 'required|min:3|max:255',
+                    'mail_verify_peer' => 'nullable|boolean',
+                    'mail_auto_tls' => 'nullable|boolean',
                 ];
             }
         }
@@ -68,6 +72,8 @@ class StoreSettingsEmailRequest extends FormRequest
             'mail_password' => $this->mail_password,
             'mail_driver' => $this->mail_driver,
             'mail_encryption' => $this->mail_authcheck === false ? null : $this->mail_encryption,
+            'mail_verify_peer' => (int) $this->boolean('mail_verify_peer'),
+            'mail_auto_tls' => (int) $this->boolean('mail_auto_tls'),
         ]);
     }
 }

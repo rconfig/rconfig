@@ -1,8 +1,7 @@
+import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
-import autoprefixer from 'autoprefixer';
-import tailwindcss from 'tailwindcss';
 
 export default defineConfig({
   base: '',
@@ -20,6 +19,7 @@ export default defineConfig({
     }
   },
   plugins: [
+    tailwindcss(),
     laravel({
       input: ['resources/css/global.css', 'resources/js/app.js'],
       refresh: true
@@ -34,14 +34,16 @@ export default defineConfig({
     })
   ],
   build: {
-    chunkSizeWarningLimit: 3500
-  },
-  css: {
-    postcss: {
-      plugins: [
-        tailwindcss,
-        autoprefixer({}) // add options if needed
-      ]
+    // Monaco's editor.api2 chunk is inherently large and already code-split out.
+    chunkSizeWarningLimit: 4000,
+    rollupOptions: {
+      // Quiet Rolldown diagnostics that aren't actionable for us:
+      // - invalidAnnotation: stray /* #__PURE__ */ comments inside prebuilt @vueuse/core
+      // - pluginTimings: build-time profiling report
+      checks: {
+        invalidAnnotation: false,
+        pluginTimings: false
+      }
     }
   }
 });

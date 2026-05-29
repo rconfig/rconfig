@@ -29,7 +29,7 @@ class ConfigController extends ApiBaseController
         }
 
         $response = QueryBuilder::for(Config::class)
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::custom('q', new FilterMultipleFields, 'id, device_name'),
                 AllowedFilter::exact('download_status'),
                 AllowedFilter::exact('command'),
@@ -76,7 +76,7 @@ class ConfigController extends ApiBaseController
         $perPage = (int) $request->perPage;
 
         $query = QueryBuilder::for(Config::class)
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::custom('q', new FilterMultipleFields, 'id, command, device_name'),
                 AllowedFilter::exact('device_id'),
                 AllowedFilter::exact('latest_version'),

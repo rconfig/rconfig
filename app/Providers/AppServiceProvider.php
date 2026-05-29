@@ -5,7 +5,10 @@ namespace App\Providers;
 use App\Models\Device;
 use App\Models\TrackedJob;
 use App\Observers\DeviceObserver;
+use App\Services\Email\MailConfigService;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
+use Illuminate\Contracts\Mail\Factory as MailFactory;
+use Illuminate\Mail\MailManager;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
@@ -21,10 +24,36 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * Register any application services.
-     *
-     * @return void
      */
-    public function register() {}
+    public function register(): void
+    {
+        // Mail configuration service
+        $this->app->singleton(MailConfigService::class);
+
+        $this->configureMailLazyLoading();
+    }
+
+    /**
+     * Configure lazy loading of mail configuration.
+     *
+     * Mail settings are loaded from the database only when the mail system
+     * is actually used, rather than on every request. This avoids unnecessary
+     * database queries on requests that never send mail.
+     *
+     * The MailConfigService is registered as a singleton and triggered via
+     * afterResolving hooks when MailFactory, MailManager, or the mailer alias
+     * is resolved by the container.
+     */
+    protected function configureMailLazyLoading(): void
+    {
+        $configure = function () {
+            $this->app->make(MailConfigService::class)->configure();
+        };
+
+        $this->app->afterResolving(MailFactory::class, $configure);
+        $this->app->afterResolving(MailManager::class, $configure);
+        $this->app->afterResolving('mailer', $configure);
+    }
 
     /**
      * Bootstrap any application services.

@@ -1,25 +1,139 @@
+@import 'tailwindcss';
+
 /* Local fonts - self-hosted for offline installations */
-@import './fonts.css';
+@import './fonts.css' layer(base);
 
 /* https://ui.shadcn.com/colors */
 
 /* module imports - must be first */
-@import './animations.css';
-@import './button.css';
-@import './config_diff.css';
-@import './dialog.css';
-@import './nav.css';
-@import './panels.css';
-@import './pre-style.css';
-@import './policy_blocks.css';
-@import './scrollbar.css';
-@import './tables.css';
-@import './toast.css';
-@import './typography.css';
+@import './animations.css' layer(base);
+@import './button.css' layer(base);
+@import './config_diff.css' layer(base);
+@import './dialog.css' layer(base);
+@import './nav.css' layer(base);
+@import './panels.css' layer(base);
+@import './pre-style.css' layer(base);
+@import './policy_blocks.css' layer(base);
+@import './scrollbar.css' layer(base);
+@import './tables.css' layer(base);
+@import './toast.css' layer(base);
+@import './typography.css' layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@source "../vendor/laravel/framework/src/Illuminate/Pagination/resources/views";
+@source "../storage/framework/views";
+@source inline("dark text-blue-400 text-orange-400 text-green-400 bg-rcgray-800");
+
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --breakpoint-2xl: 87.5rem;
+
+  --font-sora: 'Sora', sans-serif;
+  --font-jakarta: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+
+  --color-rcgray-50: #f9fafb;
+  --color-rcgray-100: #f4f5f7;
+  --color-rcgray-200: #e5e7eb;
+  --color-rcgray-300: #d2d6dc;
+  --color-rcgray-400: #9fa6b2;
+  --color-rcgray-500: #6b7280;
+  --color-rcgray-600: #313337;
+  --color-rcgray-700: #24262a;
+  --color-rcgray-800: #232529;
+  --color-rcgray-850: #1f2125;
+  --color-rcgray-900: #1b1d21;
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-warning: hsl(41, 100%, 36%);
+  --color-warning-foreground: hsl(46, 100%, 45%);
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-collapsible-down: collapsible-down 0.2s ease-in-out;
+  --animate-collapsible-up: collapsible-up 0.2s ease-in-out;
+  --animate-spin-slow: spin 3s linear infinite;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+
+    to {
+      height: 0;
+    }
+  }
+
+  @keyframes collapsible-down {
+    from {
+      height: 0;
+    }
+
+    to {
+      height: var(--radix-collapsible-content-height);
+    }
+  }
+
+  @keyframes collapsible-up {
+    from {
+      height: var(--radix-collapsible-content-height);
+    }
+
+    to {
+      height: 0;
+    }
+  }
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+}
+
+/* Preserve the v3 default border color (Tailwind v4 changed it to currentColor). */
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
 
 @layer base {
   :root {
@@ -80,10 +194,10 @@
     --color-info-close-hover-icon: #2563eb;
     --color-info-close-ripple: rgba(59, 130, 246, 0.1);
 
-    --radius-md: 0.375rem;
+    --rc-radius-md: 0.375rem;
     --shadow-info: 0 8px 16px rgba(59, 130, 246, 0.15);
     --shadow-info-hover: 0 10px 20px rgba(59, 130, 246, 0.25);
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --rc-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
 
     /* Danger colors for light mode */
     --color-danger-border: #ef4444;
@@ -225,8 +339,8 @@
     --color-default-bg-middle: rgba(229, 231, 235, 0.377); /* Semi-transparent gray */
     --color-default-bg-end: #d1d5db8e; /* Darker gray */
 
-    --radius-md: 8px;
-    --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.1);
+    --rc-radius-md: 8px;
+    --rc-shadow-xs: 0 1px 4px rgba(0, 0, 0, 0.1);
      /* toast */
 
   }

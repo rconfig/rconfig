@@ -32,7 +32,7 @@ class ActivityLogController extends ApiBaseController
         }
 
         $response = QueryBuilder::for(ActivityLog::class)
-            ->allowedFilters(['description', 'log_name', 'device_id', 'event_type'])
+            ->allowedFilters(...['description', 'log_name', 'device_id', 'event_type'])
             ->defaultSort('-id')
             ->allowedSorts('id', 'log_name')
             ->paginate($perPage);

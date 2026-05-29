@@ -1,0 +1,1 @@
+import{Fa as e,an as t,eo as n,va as r}from"./app-BTCtwzbT.js";var i={__name:`AgentLogIcon`,props:{height:{type:Number,default:24},width:{type:Number,default:24}},setup(i){return(a,o)=>(e(),r(n(t),{width:i.width,height:i.height,class:`text-blue-400`},null,8,[`width`,`height`]))}};export{i as default};

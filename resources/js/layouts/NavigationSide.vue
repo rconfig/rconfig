@@ -302,6 +302,8 @@ const toggleFavorite = (viewId) => {
 </template>
 
 <style scoped>
+@reference "../../css/global.css";
+
 .active-nav {
 	@apply font-semibold text-sm bg-rcgray-600;
 }

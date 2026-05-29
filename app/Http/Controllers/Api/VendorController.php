@@ -22,11 +22,11 @@ class VendorController extends ApiBaseController
 
         $query = QueryBuilder::for($this->model::class)
             ->with(['device:id,device_name'])
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::custom('q', new FilterMultipleFields, 'vendorName'),
             ])
             ->defaultSort('-id')
-            ->allowedSorts(['id', 'vendorName', 'created_at', 'updated_at'])
+            ->allowedSorts(...['id', 'vendorName', 'created_at', 'updated_at'])
             ->paginate($request->perPage ?? 10);
 
         return response()->json($query);

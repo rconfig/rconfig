@@ -76,6 +76,13 @@ export default [
 		meta: { rbacViewName: "Setting", pageTitleKey: "SettingsUpgrade" },
 	},
 	{
+		path: "/settings/update",
+		name: "settings-update",
+		component: () => import("@/pages/Settings/Main.vue"),
+		props: { update: true },
+		meta: { rbacViewName: "Setting", pageTitleKey: "SettingsUpdate" },
+	},
+	{
 		path: "/settings/about",
 		name: "settings-about",
 		component: () => import("@/pages/Settings/Main.vue"),

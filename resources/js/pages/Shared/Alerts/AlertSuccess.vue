@@ -59,7 +59,7 @@ function handleClose() {
 	border-left: 4px solid var(--color-success-border);
 	background: linear-gradient(to right, var(--color-success-bg-start), var(--color-success-bg-middle), var(--color-success-bg-end));
 	color: var(--color-success-foreground);
-	border-radius: var(--radius-md);
+	border-radius: var(--rc-radius-md);
 	/* box-shadow: var(--shadow-success); */
 	/* backdrop-blur: 2px; */
 	overflow: hidden;
@@ -105,7 +105,7 @@ function handleClose() {
 	background: var(--color-success-icon-bg);
 	padding: 0.375rem;
 	border-radius: 9999px;
-	box-shadow: var(--shadow-sm);
+	box-shadow: var(--rc-shadow-xs);
 }
 
 .alert-icon-pulse {
@@ -195,7 +195,7 @@ function handleClose() {
 	border-radius: 9999px;
 	color: var(--color-success-close-icon);
 	background-color: var(--color-success-close-bg);
-	box-shadow: var(--shadow-sm);
+	box-shadow: var(--rc-shadow-xs);
 	margin-top: 0.25rem;
 	align-self: flex-start;
 	overflow: hidden;

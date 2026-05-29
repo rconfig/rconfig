@@ -37,7 +37,6 @@ const configSearch = () => {
 const openSettings = () => {
 	router.push({ name: "settings" });
 };
-
 </script>
 
 <template>

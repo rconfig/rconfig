@@ -26,6 +26,8 @@ class SettingFactory extends Factory
             'mail_password' => Crypt::encrypt(env('MAIL_PASSWORD')),
             'mail_driver' => \Config::get('MAIL_DRIVER', 'smtp'),
             'mail_encryption' => \Config::get('MAIL_ENCRYPTION', 'tls'),
+            'mail_verify_peer' => 0,
+            'mail_auto_tls' => 0,
             'defaultDeviceUsername' => $this->faker->userName,
             'defaultDevicePassword' => $this->faker->password,
             'defaultEnablePassword' => $this->faker->password,

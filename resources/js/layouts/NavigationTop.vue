@@ -7,9 +7,10 @@ import { ref, computed, onMounted, inject } from "vue";
 import { usePanelStore } from "@/stores/panelStore"; // Import the Pinia store
 import { useRoute, useRouter } from "vue-router";
 import { useToaster } from "@/composables/useToaster";
-import { HelpCircle, Sun, Moon, MoreVertical, Paintbrush, Star } from "lucide-vue-next";
+import { HelpCircle, Sun, Moon, MoreVertical, Paintbrush, Star, ArrowUpCircle, CheckCircle2, HelpCircle as HelpCircleIcon } from "lucide-vue-next";
 import { Lock } from "lucide-vue-next";
 import GenericPopover from "@/pages/Shared/Popover/GeneralPopover.vue";
+import { useVersionCheck } from "@/composables/useVersionCheck";
 
 const colorMode = inject("colorMode");
 const panelStore = usePanelStore(); // Access the panel store
@@ -22,6 +23,8 @@ const serverDisplayColor = inject("serverDisplayColor");
 const serverDisplaySize = inject("serverDisplaySize");
 const loading = ref(true);
 const isHttpsDisabled = ref(false);
+
+const { currentVersion, latestVersion, updateAvailable, reachable, checked, consecutiveFailures, fetchVersionStatus } = useVersionCheck();
 
 //Flag to control dark mode enforcement - set to true for now.
 //When we want to enable light mode in the future, set this to false
@@ -40,12 +43,49 @@ onMounted(() => {
 		document.documentElement.classList.add("dark");
 	}
 	checkHttpsStatus();
+	fetchVersionStatus();
 });
 
 function checkHttpsStatus() {
 	isHttpsDisabled.value = window.location.protocol !== 'https:';
 	loading.value = false;
 }
+
+function navToUpdate() {
+	router.push({ name: "settings-update" });
+}
+
+// Version status pill presentation: update available / up to date / unknown.
+// A failed last check is surfaced as a hint appended to the tooltip when a
+// previously known version is still being shown.
+const versionStatus = computed(() => {
+	const staleHint = !reachable.value && consecutiveFailures.value > 0 ? ` (last check failed, ${consecutiveFailures.value}x)` : "";
+
+	if (!checked.value || !latestVersion.value) {
+		return {
+			icon: HelpCircleIcon,
+			label: reachable.value === false && checked.value ? "Couldn't reach GitHub to check for updates" : "Checking for updates…",
+			classes: "bg-rcgray-700/40 border-rcgray-600 text-rcgray-300 hover:bg-rcgray-700/60",
+			iconClasses: "text-rcgray-400",
+		};
+	}
+
+	if (updateAvailable.value) {
+		return {
+			icon: ArrowUpCircle,
+			label: `Update available: ${latestVersion.value}${staleHint}`,
+			classes: "bg-amber-100 dark:bg-amber-900/30 border-amber-300 dark:border-amber-700 text-amber-700 dark:text-amber-300 hover:bg-amber-200 dark:hover:bg-amber-900/50",
+			iconClasses: "text-amber-500 dark:text-amber-400 animate-pulse",
+		};
+	}
+
+	return {
+		icon: CheckCircle2,
+		label: `Up to date: ${currentVersion.value}${staleHint}`,
+		classes: "bg-green-100 dark:bg-green-900/30 border-green-300 dark:border-green-700 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-900/50",
+		iconClasses: "text-green-600 dark:text-green-400",
+	};
+});
 
 const breadcrumbs = computed(() => {
 	return route.meta.breadcrumb || [];
@@ -190,6 +230,21 @@ const showServerName = computed(() => {
 
 				<Skeleton v-if="loading" class="h-5 w-20 rounded-md" />
 				<!-- End HTTPS Status Section -->
+
+				<!-- Version Status Section -->
+				<TooltipProvider>
+					<Tooltip>
+						<TooltipTrigger as-child>
+							<div @click="navToUpdate()" :class="['flex items-center gap-1 px-2 py-1 rounded-md border cursor-pointer transition-colors', versionStatus.classes]">
+								<component :is="versionStatus.icon" size="14" :class="versionStatus.iconClasses" />
+							</div>
+						</TooltipTrigger>
+						<TooltipContent class="text-white bg-rcgray-800 border border-blue-500/30">
+							<p>{{ versionStatus.label }}</p>
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
+				<!-- End Version Status Section -->
 
 				<TooltipProvider>
 					<Tooltip>
