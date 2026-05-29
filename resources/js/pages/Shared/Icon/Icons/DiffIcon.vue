@@ -49,6 +49,8 @@ const combinedClass = computed(() => {
 </template>
 
 <style scoped>
+@reference "../../../../../css/global.css";
+
 .diff-icon {
     @apply text-current;
 }

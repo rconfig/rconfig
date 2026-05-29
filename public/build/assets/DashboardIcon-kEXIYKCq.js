@@ -1,0 +1,1 @@
+import{Ja as e,Oa as t,da as n,ln as r,qa as i}from"./app-Dqq6wGjs.js";var a={__name:`DashboardIcon`,props:{height:{type:Number,default:16},width:{type:Number,default:16},class:{type:String,default:``}},setup(a){return(o,s)=>(t(),n(i(r),{width:a.width,height:a.height,color:`#c8d1f3`,class:e(a.class)},null,8,[`width`,`height`,`class`]))}};export{a as default};

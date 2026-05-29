@@ -1,21 +1,39 @@
-import autoprefixer from 'autoprefixer';
+import tailwindcss from '@tailwindcss/vite';
+import dotenv from 'dotenv';
 import fs from 'fs';
 import laravel from 'laravel-vite-plugin';
-import tailwindcss from 'tailwindcss';
 import vue from '@vitejs/plugin-vue';
 import { defineConfig } from 'vite';
+
+// Load environment variables from the matching .env file.
+// Override which file is loaded with the DEV_ENV environment variable.
+const envFile = `.env.${process.env.DEV_ENV || 'development'}`;
+dotenv.config({ path: envFile });
+
+// Example contents of .env.development (this file is gitignored, per machine):
+// VITE_HOST=v8core.dev.rconfig.com
+// VITE_HTTPS_KEY_PATH=/etc/httpd/ssl/v8core.dev.rconfig.com.key
+// VITE_HTTPS_CERT_PATH=/etc/httpd/ssl/v8core.dev.rconfig.com.crt
+// If the cert vars are unset, the dev server falls back to http (https: false).
+
+const host = process.env.VITE_HOST || 'localhost';
+const httpsKeyPath = process.env.VITE_HTTPS_KEY_PATH;
+const httpsCertPath = process.env.VITE_HTTPS_CERT_PATH;
 
 export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 3600,
     hmr: {
-      host: 'lyra.rconfig.com'
+      host: host
     },
-    https: {
-      key: fs.readFileSync(`/etc/letsencrypt/live/lyra.rconfig.com/privkey.pem`),
-      cert: fs.readFileSync(`/etc/letsencrypt/live/lyra.rconfig.com/fullchain.pem`)
-    }
+    https:
+      httpsKeyPath && httpsCertPath
+        ? {
+            key: fs.readFileSync(httpsKeyPath),
+            cert: fs.readFileSync(httpsCertPath)
+          }
+        : false
   },
   resolve: {
     alias: {
@@ -24,6 +42,7 @@ export default defineConfig({
     }
   },
   plugins: [
+    tailwindcss(),
     laravel({
       input: ['resources/css/global.css', 'resources/js/app.js'],
       refresh: true
@@ -39,13 +58,5 @@ export default defineConfig({
   ],
   build: {
     chunkSizeWarningLimit: 3500
-  },
-  css: {
-    postcss: {
-      plugins: [
-        tailwindcss,
-        autoprefixer({}) // add options if needed
-      ]
-    }
   }
 });

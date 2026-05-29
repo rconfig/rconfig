@@ -6,6 +6,7 @@
 /vendor
 .env
 .env.backup
+.env.development
 .env.testing
 .phpstan/
 

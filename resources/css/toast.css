@@ -3,32 +3,32 @@
     background: linear-gradient(to right, var(--color-success-bg-start), var(--color-success-bg-middle), var(--color-success-bg-end));
     border-left: 4px solid var(--color-success-border);
     color: white;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
+    border-radius: var(--rc-radius-md);
+    box-shadow: var(--rc-shadow-xs);
 }
 
 .toast-error {
     background: linear-gradient(to right, var(--color-error-bg-start), var(--color-error-bg-middle), var(--color-error-bg-end));
     border-left: 4px solid var(--color-error-border);
     color: white;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
+    border-radius: var(--rc-radius-md);
+    box-shadow: var(--rc-shadow-xs);
 }
 
 .toast-warning {
     background: linear-gradient(to right, var(--color-warning-bg-start), var(--color-warning-bg-middle), var(--color-warning-bg-end));
     border-left: 4px solid var(--color-warning-border);
     color: white;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
+    border-radius: var(--rc-radius-md);
+    box-shadow: var(--rc-shadow-xs);
 }
 
 .toast-info {
     background: linear-gradient(to right, var(--color-info-bg-start), var(--color-info-bg-middle), var(--color-info-bg-end));
     border-left: 4px solid var(--color-info-border);
     color: white;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
+    border-radius: var(--rc-radius-md);
+    box-shadow: var(--rc-shadow-xs);
 }
 
 /* Default Toast with Gray Gradient */
@@ -36,6 +36,6 @@
     background: linear-gradient(to right, var(--color-info-bg-start), var(--color-info-bg-middle), var(--color-info-bg-end));
     border-left: 4px solid var(--color-info-border);
     color: white;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
+    border-radius: var(--rc-radius-md);
+    box-shadow: var(--rc-shadow-xs);
 }

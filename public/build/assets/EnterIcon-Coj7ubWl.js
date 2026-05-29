@@ -1,0 +1,1 @@
+import{Ln as e,Oa as t,da as n,qa as r}from"./app-Dqq6wGjs.js";var i={__name:`EnterIcon`,props:{width:{type:[String,Number],default:16},height:{type:[String,Number],default:16},color:{type:String,default:`currentColor`}},setup(i){return(a,o)=>(t(),n(r(e),{width:i.width,height:i.height,color:i.color},null,8,[`width`,`height`,`color`]))}};export{i as default};

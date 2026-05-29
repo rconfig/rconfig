@@ -52,9 +52,8 @@ const router = createRouter({
 });
 
 // Navigation guard to set page title
-router.beforeEach((to, from, next) => {
+router.beforeEach((to) => {
 	document.title = generatePageTitle(to);
-	next();
 });
 
 // Set default title on router ready

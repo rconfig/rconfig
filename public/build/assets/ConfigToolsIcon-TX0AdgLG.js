@@ -1,0 +1,1 @@
+import{Ct as e,Ja as t,Oa as n,da as r,qa as i}from"./app-Dqq6wGjs.js";var a={__name:`ConfigToolsIcon`,props:{height:{type:Number,default:16},width:{type:Number,default:16},colorClass:{type:String,default:`text-blue-300`}},setup(a){return(o,s)=>(n(),r(i(e),{width:a.width,height:a.height,class:t(a.colorClass)},null,8,[`width`,`height`,`class`]))}};export{a as default};
