@@ -1,8 +1,23 @@
 includes:
     - vendor/larastan/larastan/extension.neon
     - phpstan-baseline.neon
-    
+
 parameters:
     level: 0
+
+    # Stable, repo-relative location for the result cache so CI can cache it between runs.
+    tmpDir: .phpstan
+
     paths:
         - app/
+
+    # rconfighub/vector-server-pkg is an optional package that is intentionally kept out
+    # of CI (.github/workflows/check-composer.yml forbids it in composer.json/lock). PHPStan can't
+    # resolve its classes on the runner, so ignore the resulting unknown-class errors. They never
+    # fire locally where the package is installed, hence reportUnmatchedIgnoredErrors is disabled.
+    reportUnmatchedIgnoredErrors: false
+
+    ignoreErrors:
+        -
+            identifier: class.notFound
+            message: '#unknown class Rconfig\\VectorServer\\#'

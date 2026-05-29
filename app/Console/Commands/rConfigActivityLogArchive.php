@@ -50,7 +50,7 @@ class rConfigActivityLogArchive extends Command
 
         if (!empty($rows)) {
             $count = $rows;
-            ActivityLog::all()->take($count[0])
+            ActivityLog::query()->take($count[0])->get()
                 ->each(function ($oldRecord) {
                     $newRecord = $oldRecord->replicate();
                     $newRecord['original_id'] = $oldRecord->id;
