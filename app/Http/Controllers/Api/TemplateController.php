@@ -25,10 +25,10 @@ class TemplateController extends ApiBaseController
         $perPage = (int) $request->perPage ?: 10;
 
         $query = QueryBuilder::for(Template::class)
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::custom('q', new FilterMultipleFields, implode(',', $searchCols)),
             ])
-            ->allowedSorts(['id', 'fileName', 'templateName', 'created_at'])
+            ->allowedSorts(...['id', 'fileName', 'templateName', 'created_at'])
             ->with(['device:id,device_name']);
 
         $result = $query->paginate($perPage);

@@ -59,7 +59,7 @@ class DeviceController extends ApiBaseController
         }
 
         $query = QueryBuilder::for(Device::class)
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::custom('q', new QueryFilterMultipleFields, 'id, device_name, device_ip, device_model'),
                 AllowedFilter::exact('category', 'category.id'),
                 AllowedFilter::exact('vendor', 'vendor.id'),
@@ -67,9 +67,9 @@ class DeviceController extends ApiBaseController
                 AllowedFilter::exact('device_model'),
                 AllowedFilter::exact('status'),
             ])
-            ->allowedFields($allowedFields)
+            ->allowedFields(...$allowedFields)
             ->with($relationships)
-            ->allowedSorts([
+            ->allowedSorts(...[
                 'id',
                 'created_at',
                 'device_name',
@@ -104,7 +104,7 @@ class DeviceController extends ApiBaseController
         $devices = QueryBuilder::for(Device::class)
             ->select(['id', 'device_name']) // Only fetch needed fields
             ->allowedSorts('device_name')
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::partial('device_name'),
                 AllowedFilter::exact('id'),
             ])

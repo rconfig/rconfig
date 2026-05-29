@@ -20,9 +20,9 @@ class CategoryController extends ApiBaseController
 
         $response = QueryBuilder::for(Category::class)
             ->with('command', 'device')
-            ->allowedFilters(['categoryName'])
+            ->allowedFilters(...['categoryName'])
             ->defaultSort('-id')
-            ->allowedSorts(['id', 'categoryName'])
+            ->allowedSorts(...['id', 'categoryName'])
             ->paginate((int) $request->perPage);
 
         return response()->json($response);

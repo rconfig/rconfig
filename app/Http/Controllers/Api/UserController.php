@@ -24,11 +24,11 @@ class UserController extends ApiBaseController
     {
 
         $query = QueryBuilder::for($this->model::class)
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::custom('q', new FilterMultipleFields, 'id, name, username, email'),
             ])
             ->defaultSort('-id')
-            ->allowedSorts(['id', 'email', 'name', 'last_login'])
+            ->allowedSorts(...['id', 'email', 'name', 'last_login'])
             ->paginate($request->perPage ?? 10);
 
         return response()->json($query);
