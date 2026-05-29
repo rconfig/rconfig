@@ -15,6 +15,7 @@ Route::get('/auth/providers', function () {
 Route::namespace('Api')->middleware('auth:api')->group(function () {
 
     /* UPDATES ROUTES */
+    loadRoutesFrom('/api_modules/updates.php');
 
     Route::resource('tracked-jobs', 'TrackedJobController')->only(['show']);
 

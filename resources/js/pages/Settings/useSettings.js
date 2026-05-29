@@ -10,6 +10,7 @@ import ScheduledTasksTable from '@/pages/Settings/Panels/ScheduledTasksTable.vue
 import AboutPanel from '@/pages/Settings/Panels/AboutPanel.vue';
 import LogsPanel from '@/pages/Settings/Panels/LogsPanel.vue';
 import UpgradePanel from '@/pages/Settings/Panels/UpgradePanel.vue';
+import UpdatePanel from '@/pages/Settings/Panels/UpdatePanel.vue';
 import { useRoute } from 'vue-router'; // Import the useRoute from Vue Router
 
 export function useSettings() {
@@ -26,7 +27,8 @@ export function useSettings() {
 		'/settings/about': AboutPanel,
 		'/settings/logs': LogsPanel,
 		"/settings/scheduled-tasks": ScheduledTasksTable,
-		'/settings/upgrade': UpgradePanel
+		'/settings/upgrade': UpgradePanel,
+		'/settings/update': UpdatePanel
 	};
 
 	function setForm(e) {

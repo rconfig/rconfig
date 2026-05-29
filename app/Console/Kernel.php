@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\CheckForUpdateJob;
 use App\Models\MonitoredScheduledTaskLogItems;
 use App\Models\Task;
 use App\Traits\LogsTaskActivity;
@@ -67,6 +68,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('model:prune', ['--model' => MonitoredScheduledTaskLogItems::class])->daily();
         $schedule->command('model:prune', ['--model' => HealthCheckResultHistoryItem::class])->daily();
         $this->schedule->command('rconfig:config-summaries-sync')->dailyAt('3:00');
+        $schedule->job(new CheckForUpdateJob)->weeklyOn(6, '03:00')->withoutOverlapping();
     }
 
     private function download_task($executionStartTime, $task)
