@@ -59,7 +59,7 @@ class TrackedJob extends BaseModel
         ]);
     }
 
-    public function markAsFinished(string $message = null): bool
+    public function markAsFinished(?string $message = null): bool
     {
         if ($message) {
             $this->setOutput($message);
@@ -71,7 +71,7 @@ class TrackedJob extends BaseModel
         ]);
     }
 
-    public function markAsFailed(string $exception = null): bool
+    public function markAsFailed(?string $exception = null): bool
     {
         if ($exception) {
             $this->setOutput($exception);

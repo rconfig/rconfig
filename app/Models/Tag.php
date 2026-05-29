@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Tag extends BaseModel
 {
@@ -41,7 +42,7 @@ class Tag extends BaseModel
         return $this->belongsToMany('App\Models\Device')->count();
     }
 
-    public function Device()
+    public function Device(): BelongsToMany
     {
         return $this->belongsToMany('App\Models\Device')->where('status', '!=', 100);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Models\MonitoredScheduledTaskLogItems;
 use App\Models\Task;
 use App\Traits\LogsTaskActivity;
 use Illuminate\Console\Scheduling\Schedule;
@@ -56,20 +57,14 @@ class Kernel extends ConsoleKernel
 
                 // Use the scheduler to add the task at its desired frequency
                 $executionStartTime = microtime(true);
-                if ($task->task_command === 'rconfig:purge-configs') {
-                    $this->purge_configs($executionStartTime, $task);
-                } else {
-                    // everything other than backup jobs
-                    $this->download_task($executionStartTime, $task);
-                }
-                // exec('chown -R apache /var/www/html');
+                $this->download_task($executionStartTime, $task);
             }
         }
 
         $schedule->command(RunHealthChecksCommand::class)->everyFiveMinutes();
         $schedule->command(ScheduleCheckHeartbeatCommand::class)->everyFiveMinutes();
         $schedule->command('queue:prune-batches --hours=48 --unfinished=72')->daily();
-        $schedule->command('model:prune', ['--model' => MonitoredScheduledTaskLogItem::class])->daily();
+        $schedule->command('model:prune', ['--model' => MonitoredScheduledTaskLogItems::class])->daily();
         $schedule->command('model:prune', ['--model' => \Spatie\Health\Models\HealthCheckResultHistoryItem::class])->daily();
         $this->schedule->command('rconfig:config-summaries-sync')->dailyAt('3:00');
     }

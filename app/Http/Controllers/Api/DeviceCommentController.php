@@ -17,7 +17,10 @@ class DeviceCommentController extends ApiBaseController
         $this->modelname = $modelname;
     }
 
-    public function index(Request $request, $searchCols = null, $relationship = null, $withCount = null) {}
+    public function index(Request $request, $searchCols = null, $relationship = null, $withCount = null)
+    {
+        return response()->json([]);
+    }
 
 
     public function store(Request $request)

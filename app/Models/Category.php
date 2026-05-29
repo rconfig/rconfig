@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Category extends BaseModel
 {
@@ -38,12 +39,12 @@ class Category extends BaseModel
         return $this->belongsToMany('App\Models\Device', 'category_device', 'category_id', 'device_id')->count();
     }
 
-    public function device()
+    public function device(): BelongsToMany
     {
         return $this->belongsToMany('App\Models\Device')->where('status', '!=', 100);
     }
 
-    public function command()
+    public function command(): BelongsToMany
     {
         return $this->belongsToMany('App\Models\Command');
     }

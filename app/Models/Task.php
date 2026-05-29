@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Task extends BaseModel
 {
@@ -35,17 +36,17 @@ class Task extends BaseModel
         return explode(' ', trim($value));
     }
 
-    public function tag()
+    public function tag(): BelongsToMany
     {
         return $this->belongsToMany('App\Models\Tag');
     }
 
-    public function device()
+    public function device(): BelongsToMany
     {
         return $this->belongsToMany('App\Models\Device');
     }
 
-    public function category()
+    public function category(): BelongsToMany
     {
         return $this->belongsToMany('App\Models\Category');
     }
