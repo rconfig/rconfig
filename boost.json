@@ -1,0 +1,19 @@
+{
+    "agents": [
+        "claude_code",
+        "copilot",
+        "codex",
+        "gemini"
+    ],
+    "cloud": false,
+    "guidelines": true,
+    "mcp": true,
+    "nightwatch": false,
+    "sail": false,
+    "skills": [
+        "laravel-best-practices",
+        "configuring-horizon",
+        "socialite-development",
+        "tailwindcss-development"
+    ]
+}

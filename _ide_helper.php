@@ -5,7 +5,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 12.56.0.
+ * Generated for Laravel 12.61.0.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -10695,6 +10695,497 @@ namespace Illuminate\Support\Facades {
 
             }
     /**
+     * @method static void alwaysFrom(string $address, string|null $name = null)
+     * @method static void alwaysReplyTo(string $address, string|null $name = null)
+     * @method static void alwaysReturnPath(string $address)
+     * @method static void alwaysTo(string $address, string|null $name = null)
+     * @method static \Illuminate\Mail\SentMessage|null html(string $html, mixed $callback)
+     * @method static \Illuminate\Mail\SentMessage|null plain(string $view, array $data, mixed $callback)
+     * @method static string render(string|array $view, array $data = [])
+     * @method static mixed onQueue(\BackedEnum|string|null $queue, \Illuminate\Contracts\Mail\Mailable $view)
+     * @method static mixed queueOn(string $queue, \Illuminate\Contracts\Mail\Mailable $view)
+     * @method static mixed laterOn(string $queue, \DateTimeInterface|\DateInterval|int $delay, \Illuminate\Contracts\Mail\Mailable $view)
+     * @method static \Symfony\Component\Mailer\Transport\TransportInterface getSymfonyTransport()
+     * @method static \Illuminate\Contracts\View\Factory getViewFactory()
+     * @method static void setSymfonyTransport(\Symfony\Component\Mailer\Transport\TransportInterface $transport)
+     * @method static \Illuminate\Mail\Mailer setQueue(\Illuminate\Contracts\Queue\Factory $queue)
+     * @method static void macro(string $name, object|callable $macro)
+     * @method static void mixin(object $mixin, bool $replace = true)
+     * @method static bool hasMacro(string $name)
+     * @method static void flushMacros()
+     * @see \Illuminate\Mail\MailManager
+     * @see \Illuminate\Support\Testing\Fakes\MailFake
+     */
+    class Mail {
+        /**
+         * Get a mailer instance by name.
+         *
+         * @param string|null $name
+         * @return \Illuminate\Contracts\Mail\Mailer
+         * @static
+         */
+        public static function mailer($name = null)
+        {
+            /** @var \Illuminate\Mail\MailManager $instance */
+            return $instance->mailer($name);
+        }
+
+        /**
+         * Get a mailer driver instance.
+         *
+         * @param string|null $driver
+         * @return \Illuminate\Mail\Mailer
+         * @static
+         */
+        public static function driver($driver = null)
+        {
+            /** @var \Illuminate\Mail\MailManager $instance */
+            return $instance->driver($driver);
+        }
+
+        /**
+         * Build a new mailer instance.
+         *
+         * @param array $config
+         * @return \Illuminate\Mail\Mailer
+         * @static
+         */
+        public static function build($config)
+        {
+            /** @var \Illuminate\Mail\MailManager $instance */
+            return $instance->build($config);
+        }
+
+        /**
+         * Create a new transport instance.
+         *
+         * @param array $config
+         * @return \Symfony\Component\Mailer\Transport\TransportInterface
+         * @throws \InvalidArgumentException
+         * @static
+         */
+        public static function createSymfonyTransport($config)
+        {
+            /** @var \Illuminate\Mail\MailManager $instance */
+            return $instance->createSymfonyTransport($config);
+        }
+
+        /**
+         * Get the default mail driver name.
+         *
+         * @return string
+         * @static
+         */
+        public static function getDefaultDriver()
+        {
+            /** @var \Illuminate\Mail\MailManager $instance */
+            return $instance->getDefaultDriver();
+        }
+
+        /**
+         * Set the default mail driver name.
+         *
+         * @param string $name
+         * @return void
+         * @static
+         */
+        public static function setDefaultDriver($name)
+        {
+            /** @var \Illuminate\Mail\MailManager $instance */
+            $instance->setDefaultDriver($name);
+        }
+
+        /**
+         * Disconnect the given mailer and remove from local cache.
+         *
+         * @param string|null $name
+         * @return void
+         * @static
+         */
+        public static function purge($name = null)
+        {
+            /** @var \Illuminate\Mail\MailManager $instance */
+            $instance->purge($name);
+        }
+
+        /**
+         * Register a custom transport creator Closure.
+         *
+         * @param string $driver
+         * @param \Closure $callback
+         * @return \Illuminate\Mail\MailManager
+         * @static
+         */
+        public static function extend($driver, $callback)
+        {
+            /** @var \Illuminate\Mail\MailManager $instance */
+            return $instance->extend($driver, $callback);
+        }
+
+        /**
+         * Get the application instance used by the manager.
+         *
+         * @return \Illuminate\Contracts\Foundation\Application
+         * @static
+         */
+        public static function getApplication()
+        {
+            /** @var \Illuminate\Mail\MailManager $instance */
+            return $instance->getApplication();
+        }
+
+        /**
+         * Set the application instance used by the manager.
+         *
+         * @param \Illuminate\Contracts\Foundation\Application $app
+         * @return \Illuminate\Mail\MailManager
+         * @static
+         */
+        public static function setApplication($app)
+        {
+            /** @var \Illuminate\Mail\MailManager $instance */
+            return $instance->setApplication($app);
+        }
+
+        /**
+         * Forget all of the resolved mailer instances.
+         *
+         * @return \Illuminate\Mail\MailManager
+         * @static
+         */
+        public static function forgetMailers()
+        {
+            /** @var \Illuminate\Mail\MailManager $instance */
+            return $instance->forgetMailers();
+        }
+
+        /**
+         * Assert if a mailable was sent based on a truth-test callback.
+         *
+         * @param string|\Closure $mailable
+         * @param callable|array|string|int|null $callback
+         * @return void
+         * @static
+         */
+        public static function assertSent($mailable, $callback = null)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            $instance->assertSent($mailable, $callback);
+        }
+
+        /**
+         * Assert if a mailable was sent a number of times.
+         *
+         * @param string $mailable
+         * @param int $times
+         * @return void
+         * @static
+         */
+        public static function assertSentTimes($mailable, $times = 1)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            $instance->assertSentTimes($mailable, $times);
+        }
+
+        /**
+         * Determine if a mailable was not sent or queued to be sent based on a truth-test callback.
+         *
+         * @param string|\Closure $mailable
+         * @param callable|null $callback
+         * @return void
+         * @static
+         */
+        public static function assertNotOutgoing($mailable, $callback = null)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            $instance->assertNotOutgoing($mailable, $callback);
+        }
+
+        /**
+         * Determine if a mailable was not sent based on a truth-test callback.
+         *
+         * @param string|\Closure $mailable
+         * @param callable|array|string|null $callback
+         * @return void
+         * @static
+         */
+        public static function assertNotSent($mailable, $callback = null)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            $instance->assertNotSent($mailable, $callback);
+        }
+
+        /**
+         * Assert that no mailables were sent or queued to be sent.
+         *
+         * @return void
+         * @static
+         */
+        public static function assertNothingOutgoing()
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            $instance->assertNothingOutgoing();
+        }
+
+        /**
+         * Assert that no mailables were sent.
+         *
+         * @return void
+         * @static
+         */
+        public static function assertNothingSent()
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            $instance->assertNothingSent();
+        }
+
+        /**
+         * Assert if a mailable was queued based on a truth-test callback.
+         *
+         * @param string|\Closure $mailable
+         * @param callable|array|string|int|null $callback
+         * @return void
+         * @static
+         */
+        public static function assertQueued($mailable, $callback = null)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            $instance->assertQueued($mailable, $callback);
+        }
+
+        /**
+         * Determine if a mailable was not queued based on a truth-test callback.
+         *
+         * @param string|\Closure $mailable
+         * @param callable|array|string|null $callback
+         * @return void
+         * @static
+         */
+        public static function assertNotQueued($mailable, $callback = null)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            $instance->assertNotQueued($mailable, $callback);
+        }
+
+        /**
+         * Assert that no mailables were queued.
+         *
+         * @return void
+         * @static
+         */
+        public static function assertNothingQueued()
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            $instance->assertNothingQueued();
+        }
+
+        /**
+         * Assert the total number of mailables that were sent.
+         *
+         * @param int $count
+         * @return void
+         * @static
+         */
+        public static function assertSentCount($count)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            $instance->assertSentCount($count);
+        }
+
+        /**
+         * Assert the total number of mailables that were queued.
+         *
+         * @param int $count
+         * @return void
+         * @static
+         */
+        public static function assertQueuedCount($count)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            $instance->assertQueuedCount($count);
+        }
+
+        /**
+         * Assert the total number of mailables that were sent or queued.
+         *
+         * @param int $count
+         * @return void
+         * @static
+         */
+        public static function assertOutgoingCount($count)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            $instance->assertOutgoingCount($count);
+        }
+
+        /**
+         * Get all of the mailables matching a truth-test callback.
+         *
+         * @param string|\Closure $mailable
+         * @param callable|null $callback
+         * @return \Illuminate\Support\Collection
+         * @static
+         */
+        public static function sent($mailable, $callback = null)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            return $instance->sent($mailable, $callback);
+        }
+
+        /**
+         * Determine if the given mailable has been sent.
+         *
+         * @param string $mailable
+         * @return bool
+         * @static
+         */
+        public static function hasSent($mailable)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            return $instance->hasSent($mailable);
+        }
+
+        /**
+         * Get all of the queued mailables matching a truth-test callback.
+         *
+         * @param string|\Closure $mailable
+         * @param callable|null $callback
+         * @return \Illuminate\Support\Collection
+         * @static
+         */
+        public static function queued($mailable, $callback = null)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            return $instance->queued($mailable, $callback);
+        }
+
+        /**
+         * Determine if the given mailable has been queued.
+         *
+         * @param string $mailable
+         * @return bool
+         * @static
+         */
+        public static function hasQueued($mailable)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            return $instance->hasQueued($mailable);
+        }
+
+        /**
+         * Begin the process of mailing a mailable class instance.
+         *
+         * @param mixed $users
+         * @return \Illuminate\Mail\PendingMail
+         * @static
+         */
+        public static function to($users)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            return $instance->to($users);
+        }
+
+        /**
+         * Begin the process of mailing a mailable class instance.
+         *
+         * @param mixed $users
+         * @return \Illuminate\Mail\PendingMail
+         * @static
+         */
+        public static function cc($users)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            return $instance->cc($users);
+        }
+
+        /**
+         * Begin the process of mailing a mailable class instance.
+         *
+         * @param mixed $users
+         * @return \Illuminate\Mail\PendingMail
+         * @static
+         */
+        public static function bcc($users)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            return $instance->bcc($users);
+        }
+
+        /**
+         * Send a new message with only a raw text part.
+         *
+         * @param string $text
+         * @param \Closure|string $callback
+         * @return void
+         * @static
+         */
+        public static function raw($text, $callback)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            $instance->raw($text, $callback);
+        }
+
+        /**
+         * Send a new message using a view.
+         *
+         * @param \Illuminate\Contracts\Mail\Mailable|string|array $view
+         * @param array $data
+         * @param \Closure|string|null $callback
+         * @return mixed|void
+         * @static
+         */
+        public static function send($view, $data = [], $callback = null)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            return $instance->send($view, $data, $callback);
+        }
+
+        /**
+         * Send a new message synchronously using a view.
+         *
+         * @param \Illuminate\Contracts\Mail\Mailable|string|array $mailable
+         * @param array $data
+         * @param \Closure|string|null $callback
+         * @return void
+         * @static
+         */
+        public static function sendNow($mailable, $data = [], $callback = null)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            $instance->sendNow($mailable, $data, $callback);
+        }
+
+        /**
+         * Queue a new message for sending.
+         *
+         * @param \Illuminate\Contracts\Mail\Mailable|string|array $view
+         * @param string|null $queue
+         * @return mixed
+         * @static
+         */
+        public static function queue($view, $queue = null)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            return $instance->queue($view, $queue);
+        }
+
+        /**
+         * Queue a new e-mail message for sending after (n) seconds.
+         *
+         * @param \DateTimeInterface|\DateInterval|int $delay
+         * @param \Illuminate\Contracts\Mail\Mailable|string|array $view
+         * @param string|null $queue
+         * @return mixed
+         * @static
+         */
+        public static function later($delay, $view, $queue = null)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            return $instance->later($delay, $view, $queue);
+        }
+
+            }
+    /**
      * @see \Illuminate\Notifications\ChannelManager
      * @see \Illuminate\Support\Testing\Fakes\NotificationFake
      */
@@ -12606,7 +13097,6 @@ namespace Illuminate\Support\Facades {
 
             }
     /**
-     * @method static \BackedEnum|(\BackedEnum|null enum(string $key, string $enumClass, \BackedEnum|null $default = null)
      * @see \Illuminate\Http\Request
      */
     class Request {
@@ -13585,10 +14075,6 @@ namespace Illuminate\Support\Facades {
          * header value is a comma+space separated list of IP addresses, the left-most
          * being the original client, and each successive proxy that passed the request
          * adding the IP address where it received the request from.
-         *
-         * If your reverse proxy uses a different header name than "X-Forwarded-For",
-         * ("Client-Ip" for instance), configure it via the $trustedHeaderSet
-         * argument of the Request::setTrustedProxies() method instead.
          *
          * @see getClientIps()
          * @see https://wikipedia.org/wiki/X-Forwarded-For
@@ -18820,6 +19306,7 @@ namespace Illuminate\Support\Facades {
          * @param array $headers
          * @param string|null $disposition
          * @return \Symfony\Component\HttpFoundation\StreamedResponse
+         * @throws UnableToRetrieveMetadata
          * @static
          */
         public static function response($path, $name = null, $headers = [], $disposition = 'inline')
@@ -18837,6 +19324,7 @@ namespace Illuminate\Support\Facades {
          * @param string|null $name
          * @param array $headers
          * @return \Symfony\Component\HttpFoundation\StreamedResponse
+         * @throws UnableToRetrieveMetadata
          * @static
          */
         public static function serve($request, $path, $name = null, $headers = [])
@@ -18853,6 +19341,7 @@ namespace Illuminate\Support\Facades {
          * @param string|null $name
          * @param array $headers
          * @return \Symfony\Component\HttpFoundation\StreamedResponse
+         * @throws UnableToRetrieveMetadata
          * @static
          */
         public static function download($path, $name = null, $headers = [])
@@ -19051,6 +19540,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $path
          * @return string|false
+         * @throws UnableToRetrieveMetadata
          * @static
          */
         public static function mimeType($path)
@@ -23274,7 +23764,7 @@ namespace  {
          * @param string $pageName
          * @param int|null $page
          * @param \Closure|int|null $total
-         * @return \Illuminate\Pagination\LengthAwarePaginator
+         * @return \Illuminate\Pagination\LengthAwarePaginator<int, TModel>
          * @throws \InvalidArgumentException
          * @static
          */
@@ -23291,7 +23781,7 @@ namespace  {
          * @param array|string $columns
          * @param string $pageName
          * @param int|null $page
-         * @return \Illuminate\Contracts\Pagination\Paginator
+         * @return \Illuminate\Pagination\Paginator<int, TModel>
          * @static
          */
         public static function simplePaginate($perPage = null, $columns = [], $pageName = 'page', $page = null)
@@ -23307,7 +23797,7 @@ namespace  {
          * @param array|string $columns
          * @param string $cursorName
          * @param \Illuminate\Pagination\Cursor|string|null $cursor
-         * @return \Illuminate\Contracts\Pagination\CursorPaginator
+         * @return \Illuminate\Pagination\CursorPaginator<int, TModel>
          * @static
          */
         public static function cursorPaginate($perPage = null, $columns = [], $cursorName = 'cursor', $cursor = null)
