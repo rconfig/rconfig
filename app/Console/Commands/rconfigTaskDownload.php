@@ -18,7 +18,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class rconfigTaskDownload extends Command
@@ -26,15 +25,10 @@ class rconfigTaskDownload extends Command
     protected $signature = 'rconfig:download-task
                             {taskid*}
                             {--d|debug : rConfig debugging output}';
-
     protected $eventtype = 'rconfig:download-task';
-
     protected $description = 'Download configurations for devices with one or multiple tasks';
-
     protected $report_data;
-
     protected $devicerecords;
-
     protected $debug;
 
     public function __construct()
@@ -72,11 +66,11 @@ class rconfigTaskDownload extends Command
             $this->report_data->task = $task;
             $this->report_data->start_time = Carbon::now();
 
-            //CATEGORY BELOW HERE
+            // CATEGORY BELOW HERE
             if ($task->category->count() > 0) {
                 $categoryrecords = (new GetAndCheckCategoryIds($task->category->pluck('id')->toArray()))->GetCategoryRecords();
 
-                if (!$this->checkRecordCount(count($categoryrecords))) {
+                if (! $this->checkRecordCount(count($categoryrecords))) {
                     return;
                 }
 
@@ -90,10 +84,10 @@ class rconfigTaskDownload extends Command
                 }
             }
 
-            //TAGS BELOW HERE
+            // TAGS BELOW HERE
             if ($task->tag->count() > 0) {
                 $tagrecords = (new GetAndCheckTagIds($task->tag->pluck('id')->toArray()))->GetTagRecords();
-                if (!$this->checkRecordCount(count($tagrecords))) {
+                if (! $this->checkRecordCount(count($tagrecords))) {
                     return;
                 }
 
@@ -107,10 +101,10 @@ class rconfigTaskDownload extends Command
                 }
             }
 
-            //DEVICES BELOW HERE
+            // DEVICES BELOW HERE
             if ($task->device->count() > 0) {
                 $this->devicerecords = (new GetAndCheckDeviceIds($task->device->pluck('id')->toArray()))->GetDeviceRecords();
-                if (!$this->checkRecordCount(count($this->devicerecords))) {
+                if (! $this->checkRecordCount(count($this->devicerecords))) {
                     return;
                 }
 
@@ -121,7 +115,7 @@ class rconfigTaskDownload extends Command
                 }
             }
 
-            if (!isDocker()) {
+            if (! isDocker()) {
                 if (app()->runningInConsole()) {
                     custom_chown(storage_path());
                 }
@@ -183,8 +177,8 @@ class rconfigTaskDownload extends Command
         $this->info('Total device download jobs: ' . $batch->totalJobs);
         $this->info('');
 
-        if (!\App::runningUnitTests()) {
-            while (($batch = $batch->fresh()) && !$batch->finished()) {
+        if (! \App::runningUnitTests()) {
+            while (($batch = $batch->fresh()) && ! $batch->finished()) {
                 // dump('Pending: ' . $batch->pendingJobs);
                 // dump('Status: ' . $batch->finished());
                 $progress->setProgress($batch->progress());

@@ -2,17 +2,16 @@
 
 namespace Tests\Fasttests\ControllersTests\Api;
 
-use App\Models\User;
 use App\Models\Device;
-
+use App\Models\User;
 use Tests\TestCase;
 
 class DashboardControllerTest extends TestCase
 {
-    /** @var \App\Models\User */
+    /** @var User */
     protected $user;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->beginTransaction();
@@ -36,12 +35,12 @@ class DashboardControllerTest extends TestCase
             'url',
             'systemUptime',
         ];
-        
+
         $dbDriver = config('database.default');
         if (in_array($dbDriver, ['mysql', 'test_mysql']) || strpos($dbDriver, 'pgsql') !== false) {
             $expectedStructure[] = 'MySQLVersion';
         }
-        
+
         $response->assertJsonStructure($expectedStructure);
     }
 
@@ -89,7 +88,7 @@ class DashboardControllerTest extends TestCase
         Device::factory()->count(3)->create(['status' => Device::STATUS_UNREACHABLE]);
 
         $response = $this->json('get', '/api/dashboard/configinfo');
-        
+
         $response->assertStatus(200);
         $response->assertJsonStructure([
             'success',

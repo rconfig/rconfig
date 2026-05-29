@@ -25,9 +25,7 @@ class TrackedJob extends BaseModel
     const STATUS_FAILED = 'failed';
 
     protected $table = 'tracked_jobs';
-
     protected $keyType = 'int';
-
     protected $fillable = [
         'trackable_id',
         'trackable_type',
@@ -40,7 +38,6 @@ class TrackedJob extends BaseModel
         'started_at',
         'finished_at',
     ];
-
     protected $casts = [
         'started_at' => 'datetime',
         'finished_at' => 'datetime',
@@ -94,6 +91,7 @@ class TrackedJob extends BaseModel
             $device_id = $this->accessProtected(unserialize($payload['data']['command']), 'devicerecord');
             $device_id = $device_id->id;
         }
+
         // dump(unserialize($payload['data']['command']));
         return $this->update([
             'payload' => json_encode($payload),
@@ -111,8 +109,6 @@ class TrackedJob extends BaseModel
 
     /**
      * Whether the job has already started.
-     *
-     * @return bool
      */
     public function hasStarted(): bool
     {
@@ -122,7 +118,6 @@ class TrackedJob extends BaseModel
     /**
      * Get the duration of the job, in human diff.
      *
-     * @return string
      *
      * @throws \Exception
      */

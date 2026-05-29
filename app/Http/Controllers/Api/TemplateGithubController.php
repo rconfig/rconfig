@@ -16,7 +16,6 @@ class TemplateGithubController extends Controller
     use RespondsWithHttpStatus;
 
     private $username;
-
     private $repo;
 
     public function __construct()
@@ -48,7 +47,7 @@ class TemplateGithubController extends Controller
             //  https://api.github.com/repos/OWNER/REPO/contents/PATH
             $response = Http::get('https://api.github.com/repos/' . $this->username . '/' . $this->repo . '/contents/')->throw();
             // dd($response->json());
-            $result  = $response->json();
+            $result = $response->json();
             $result['msg'] = 'Successfully connected to rConfig Templates Github repo';
 
             return $this->successResponse('Success', $result);

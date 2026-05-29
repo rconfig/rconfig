@@ -14,7 +14,7 @@ class SystemHealthController extends Controller
     public function healthLatest()
     {
 
-        if (!$latestItem = (HealthCheckResultHistoryItem::latest()->first())) {
+        if (! $latestItem = (HealthCheckResultHistoryItem::latest()->first())) {
             return null;
         }
 

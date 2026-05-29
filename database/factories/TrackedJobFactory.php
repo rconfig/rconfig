@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\TrackedJob;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\TrackedJob>
+ * @extends Factory<TrackedJob>
  */
 class TrackedJobFactory extends Factory
 {

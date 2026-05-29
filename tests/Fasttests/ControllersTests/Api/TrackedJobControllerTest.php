@@ -2,15 +2,15 @@
 
 namespace Tests\Fasttests\ControllersTests\Api;
 
+use App\Models\TrackedJob;
 use App\Models\User;
-
 use Tests\TestCase;
 
 class TrackedJobControllerTest extends TestCase
 {
     protected $user;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->user = User::factory()->create();
@@ -19,8 +19,8 @@ class TrackedJobControllerTest extends TestCase
 
     public function test_show_single_latest_tracked_job()
     {
-        $job = \App\Models\TrackedJob::factory(100)->create();
-        $response = $this->get('/api/tracked-jobs/'.$job[0]->device_id);
+        $job = TrackedJob::factory(100)->create();
+        $response = $this->get('/api/tracked-jobs/' . $job[0]->device_id);
 
         $response->assertStatus(200);
 

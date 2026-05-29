@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\DataTransferObjects;
 
-use App\DataTransferObjects\DtoBase;
-
 final class StoreUserDTO extends DtoBase
 {
     public string $name;
@@ -16,7 +14,6 @@ final class StoreUserDTO extends DtoBase
     public bool $get_notifications;
     public bool $is_socialite;
     public bool $is_socialite_approved;
-    
 
     public function __construct(array $parameters = [])
     {
@@ -28,5 +25,5 @@ final class StoreUserDTO extends DtoBase
         $this->get_notifications = $parameters['get_notifications'];
         $this->is_socialite = $parameters['is_socialite'];
         $this->is_socialite_approved = $parameters['is_socialite_approved'];
-       }
+    }
 }

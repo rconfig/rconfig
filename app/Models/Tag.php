@@ -33,7 +33,7 @@ class Tag extends BaseModel
     protected function viewUrl(): Attribute
     {
         return Attribute::make(
-            get: fn() => '/tags',
+            get: fn () => '/tags',
         );
     }
 

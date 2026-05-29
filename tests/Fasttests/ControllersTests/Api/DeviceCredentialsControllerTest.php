@@ -9,13 +9,13 @@ use Tests\TestCase;
 
 class DeviceCredentialsControllerTest extends TestCase
 {
-    /** @var \App\Models\User */
+    /** @var User */
     protected $user;
 
     protected $user2;
     protected $devices;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->user = User::factory()->create();

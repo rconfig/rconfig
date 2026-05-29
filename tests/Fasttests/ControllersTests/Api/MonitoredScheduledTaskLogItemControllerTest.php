@@ -2,28 +2,29 @@
 
 namespace Tests\Fasttests\ControllersTests\Api;
 
+use App\Models\MonitoredScheduledTaskLogItems;
+use App\Models\MonitoredScheduledTasks;
 use App\Models\User;
-
 use Tests\TestCase;
 
 class MonitoredScheduledTaskLogItemControllerTest extends TestCase
 {
     protected $user;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->user = User::factory()->create();
         $this->actingAs($this->user);
     }
 
-    public function test_show_single_taskLogItem()
+    public function test_show_single_task_log_item()
     {
-        \App\Models\MonitoredScheduledTasks::factory()->create(['task_id' => 555555]);
-        \App\Models\MonitoredScheduledTasks::factory()->create(['task_id' => 444444]);
+        MonitoredScheduledTasks::factory()->create(['task_id' => 555555]);
+        MonitoredScheduledTasks::factory()->create(['task_id' => 444444]);
 
-        \App\Models\MonitoredScheduledTaskLogItems::factory(100)->create();
-        \App\Models\MonitoredScheduledTaskLogItems::factory(50)->create(['task_id' => 555555]);
+        MonitoredScheduledTaskLogItems::factory(100)->create();
+        MonitoredScheduledTaskLogItems::factory(50)->create(['task_id' => 555555]);
 
         $response = $this->get('/api/tasks/monitored/444444');
 
@@ -45,11 +46,11 @@ class MonitoredScheduledTaskLogItemControllerTest extends TestCase
         $this->assertEquals(15, count($response['data']));
     }
 
-    public function test_get_all_taskLogItem()
+    public function test_get_all_task_log_item()
     {
-        \App\Models\MonitoredScheduledTasks::factory()->create(['task_id' => 444444]);
+        MonitoredScheduledTasks::factory()->create(['task_id' => 444444]);
 
-        \App\Models\MonitoredScheduledTaskLogItems::factory(100)->create(['task_id' => 444444]);
+        MonitoredScheduledTaskLogItems::factory(100)->create(['task_id' => 444444]);
 
         $response = $this->get('/api/tasks/monitored/?page=1&perPage=100');
         $response->assertJsonStructure([

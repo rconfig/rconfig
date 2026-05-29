@@ -26,16 +26,16 @@ class FileOperations
     /**
      * Class Constructor
      *
-     * @param  string  $date Full date in 'Ymd' format
-     * @param  string  $year Year in 'Y' format
-     * @param  string  $year month in 'm' format
-     * @param  string  $day month in 'd' format
-     * @param  string  $catfolder Device category name folder
-     * @param  string  $hostfolder Device name folder
-     * @param  string  $yearfolder Year folder
-     * @param  string  $monthfolder Month folder
-     * @param  string  $todayfolder Todays Date folder
-     * @return object  file object
+     * @param  string  $date  Full date in 'Ymd' format
+     * @param  string  $year  Year in 'Y' format
+     * @param  string  $year  month in 'm' format
+     * @param  string  $day  month in 'd' format
+     * @param  string  $catfolder  Device category name folder
+     * @param  string  $hostfolder  Device name folder
+     * @param  string  $yearfolder  Year folder
+     * @param  string  $monthfolder  Month folder
+     * @param  string  $todayfolder  Todays Date folder
+     * @return object file object
      */
     public function __construct($command, $catName, $deviceName, $deviceId, $data_basedir, $type)
     {
@@ -67,7 +67,7 @@ class FileOperations
 
         $downloadStatus = true;
 
-        if (!file_exists($fullpath) || filesize($fullpath) == 0) {
+        if (! file_exists($fullpath) || filesize($fullpath) == 0) {
             $logmsg = $this->_deviceName . ' - Could not save the file for command: ' . $this->_command . '. Or the configuration was blank.';
             dump($logmsg);
             activityLogIt(__CLASS__, __FUNCTION__, 'error', $logmsg, 'connection', $this->_deviceName, $this->_deviceid, 'device');

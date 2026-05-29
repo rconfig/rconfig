@@ -10,7 +10,6 @@ class DBDeviceConnectionFailureNotification extends Notification
     use Queueable;
 
     protected $msg;
-
     protected $deviceid;
 
     public function __construct($logmsg, $deviceid)

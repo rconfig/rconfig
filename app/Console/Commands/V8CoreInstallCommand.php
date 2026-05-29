@@ -39,36 +39,42 @@ class V8CoreInstallCommand extends Command
         // Step 1: Package discovery
         $this->components->task('Discovering packages', function () {
             sleep(1);
+
             return true;
         });
 
         // Step 2: Generate key
         $this->components->task('Generating application key', function () {
             Artisan::call('key:generate', [], $this->output);
+
             return true;
         });
 
         // Step 3: Run migrations
         $this->components->task('Running database migrations', function () {
             Artisan::call('migrate', ['--force' => true], $this->output);
+
             return true;
         });
 
         // Step 5: Clear cache
         $this->components->task('Clearing application cache', function () {
             Artisan::call('rconfig:clear-all', [], $this->output);
+
             return true;
         });
 
         // Step 6: Sync tasks
         $this->components->task('Synchronizing scheduled tasks', function () {
             Artisan::call('rconfig:sync-tasks', [], $this->output);
+
             return true;
         });
 
         // Step 7: Optimize
         $this->components->task('Optimizing application', function () {
             Artisan::call('optimize', [], $this->output);
+
             return true;
         });
 
@@ -117,9 +123,9 @@ class V8CoreInstallCommand extends Command
             shell_exec("crontab $tempFile");
             unlink($tempFile);
 
-            $this->components->success("Cron entry added successfully!");
+            $this->components->success('Cron entry added successfully!');
         } else {
-            $this->components->info("Cron entry already exists");
+            $this->components->info('Cron entry already exists');
         }
 
         $this->newLine();
@@ -132,10 +138,10 @@ class V8CoreInstallCommand extends Command
         $url = 'https://github.com/rconfig/rconfig';
 
         $this->newLine();
-        $this->components->info("⭐ Show your support by starring our repo!");
+        $this->components->info('⭐ Show your support by starring our repo!');
         $this->line("   <fg=cyan>$url</>");
         $this->newLine();
-        $this->line("   <fg=yellow>→ Copy the link above and open it in your browser</>");
+        $this->line('   <fg=yellow>→ Copy the link above and open it in your browser</>');
         $this->newLine();
     }
 

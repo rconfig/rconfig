@@ -2,11 +2,10 @@
 
 namespace Tests\Fasttests\ControllersTests\Api;
 
-use App\Models\User;
-
 use App\Jobs\TaskReportJob;
 use App\Models\Config;
 use App\Models\Taskdownloadreport;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -17,7 +16,7 @@ class TaskReportControllerTest extends TestCase
 {
     protected $user;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->beginTransaction();
@@ -54,7 +53,7 @@ class TaskReportControllerTest extends TestCase
 
     public function test_can_save_a_report()
     {
-        $task = new stdClass();
+        $task = new stdClass;
         $task->id = 515151;
         $task->task_name = 'test_task';
         $task->task_desc = 'test_desc';

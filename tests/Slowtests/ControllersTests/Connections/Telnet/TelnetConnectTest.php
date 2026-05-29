@@ -16,18 +16,13 @@ use Tests\TestCase;
 class TelnetConnectTest extends TestCase
 {
     protected $user;
-
     protected $device;
-
     protected $device1;
-
     protected $device2;
-
     protected $device5;
-
     protected $device1_params_object;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -95,7 +90,7 @@ class TelnetConnectTest extends TestCase
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output
-            if (!empty($match)) {
+            if (! empty($match)) {
                 $this->assertTrue($this->downloaded_file_exists_on_disk($this->device2, $match[0]));
             }
         }
@@ -114,7 +109,7 @@ class TelnetConnectTest extends TestCase
         ]);
     }
 
-    public function test_V6_full_telnet_download_and_file_exists_check_from_device_from_command_no_enable_template()
+    public function test_v6_full_telnet_download_and_file_exists_check_from_device_from_command_no_enable_template()
     {
         $start = microtime(true);
 
@@ -127,7 +122,7 @@ class TelnetConnectTest extends TestCase
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output
-            if (!empty($match)) {
+            if (! empty($match)) {
                 $this->assertTrue($this->downloaded_file_exists_on_disk($this->device2, $match[0]));
             }
         }
@@ -168,7 +163,7 @@ class TelnetConnectTest extends TestCase
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output
-            if (!empty($match)) {
+            if (! empty($match)) {
                 $this->assertTrue($this->downloaded_file_exists_on_disk($this->device2, $match[0]));
             }
         }
@@ -177,7 +172,6 @@ class TelnetConnectTest extends TestCase
         $this->assertStringContainsString($arr[0], 'Start rconfig:download-device IDs:10011');
         $this->assertStringContainsString($arr[1], 'Start device download for router1 ID:10011');
         $this->assertStringContainsString($arr[2], 'No config data returned for router1 - ID:10011. Check your logs for more information');
-
 
         $this->assertDatabaseHas('devices', [
             'id' => 10011,
@@ -213,7 +207,7 @@ class TelnetConnectTest extends TestCase
 
         foreach ($arr as $line) {
             preg_match('/"([^"]+)"/', $line, $match); // get the command from between the quotes in the returned output
-            if (!empty($match)) {
+            if (! empty($match)) {
                 $this->assertTrue($this->downloaded_file_exists_on_disk($this->device2, $match[0]));
             }
         }
@@ -246,7 +240,7 @@ class TelnetConnectTest extends TestCase
 
         $this->remove_5_sec_timeout_telnet_noenable_template();
 
-        //assert log has
+        // assert log has
         $this->assertDatabaseHas('activity_log', [
             'device_id' => 1005,
             'event_type' => 'connection',

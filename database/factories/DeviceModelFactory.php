@@ -4,10 +4,9 @@ namespace Database\Factories;
 
 use App\Models\DeviceModel;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\DeviceModel>
+ * @extends Factory<DeviceModel>
  */
 class DeviceModelFactory extends Factory
 {

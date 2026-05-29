@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Str;
+use Laravel\Scout\Jobs\MakeSearchable;
+use Laravel\Scout\Jobs\RemoveFromSearch;
 
 return [
 
@@ -119,8 +121,8 @@ return [
     */
 
     'silenced' => [
-        Laravel\Scout\Jobs\MakeSearchable::class,
-        Laravel\Scout\Jobs\RemoveFromSearch::class,
+        MakeSearchable::class,
+        RemoveFromSearch::class,
     ],
 
     /*

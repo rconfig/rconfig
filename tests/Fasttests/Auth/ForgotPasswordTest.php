@@ -2,8 +2,9 @@
 
 namespace Tests\Fasttests\Auth;
 
-//https://github.com/DCzajkowski/auth-tests
+// https://github.com/DCzajkowski/auth-tests
 
+use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -27,7 +28,7 @@ class ForgotPasswordTest extends TestCase
         return route('password.email');
     }
 
-    public function testUserCanViewAnEmailPasswordForm()
+    public function test_user_can_view_an_email_password_form()
     {
         $response = $this->get($this->passwordRequestRoute());
 
@@ -35,11 +36,11 @@ class ForgotPasswordTest extends TestCase
         $response->assertViewIs('auth.passwords.email');
     }
 
-    public function testUserReceivesAnEmailWithAPasswordResetLink()
+    public function test_user_receives_an_email_with_a_password_reset_link()
     {
         $this->withoutMiddleware();
         Notification::fake();
-        $user = \App\Models\User::factory()->create([
+        $user = User::factory()->create([
             'email' => 'john@example.com',
         ]);
         $response = $this->post($this->passwordEmailPostRoute(), [
@@ -52,7 +53,7 @@ class ForgotPasswordTest extends TestCase
         });
     }
 
-    public function testUserDoesNotReceiveEmailWhenNotRegistered()
+    public function test_user_does_not_receive_email_when_not_registered()
     {
         $this->withoutMiddleware();
         Notification::fake();
@@ -63,10 +64,10 @@ class ForgotPasswordTest extends TestCase
 
         $response->assertRedirect($this->passwordEmailGetRoute());
         $response->assertSessionHasErrors('email');
-        Notification::assertNotSentTo(\App\Models\User::factory()->make(['email' => 'nobody@example.com']), ResetPassword::class);
+        Notification::assertNotSentTo(User::factory()->make(['email' => 'nobody@example.com']), ResetPassword::class);
     }
 
-    public function testEmailIsRequired()
+    public function test_email_is_required()
     {
         $this->withoutMiddleware();
         $response = $this->from($this->passwordEmailGetRoute())->post($this->passwordEmailPostRoute(), []);
@@ -75,7 +76,7 @@ class ForgotPasswordTest extends TestCase
         $response->assertSessionHasErrors('email');
     }
 
-    public function testEmailIsAValidEmail()
+    public function test_email_is_a_valid_email()
     {
         $this->withoutMiddleware();
         $response = $this->from($this->passwordEmailGetRoute())->post($this->passwordEmailPostRoute(), [

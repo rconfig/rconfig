@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\NotificationEnumsController;
-use App\Http\Controllers\Api\UserNotificationPreferencesController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\UserNotificationPreferencesController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(UserController::class)->prefix('user')->group(function () {

@@ -5,7 +5,7 @@ use Qruto\Flora\Run;
 
 App::install(
     'production',
-    fn(Run $run) => $run
+    fn (Run $run) => $run
         ->command('key:generate', ['--force' => true])
         ->command('migrate', ['--force' => true])
         ->command('rconfig:clear-all')

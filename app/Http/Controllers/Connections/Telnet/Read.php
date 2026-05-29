@@ -11,17 +11,11 @@ class Read
     //     'chr(8)'
     // ];
     protected $connection;
-
     protected $cliDebugStatus;
-
     protected $pagerPrompt;
-
     private $character;
-
     protected $data;
-
     private $prompt;
-
     protected $send;
 
     public function __construct($connectionObj)
@@ -34,7 +28,7 @@ class Read
     /**
      * Read from socket until $prompt
      *
-     * @param  string  $prompt Single character or string
+     * @param  string  $prompt  Single character or string
      */
     public function readTo($prompt)
     {
@@ -59,6 +53,7 @@ class Read
             if ($this->cliDebugStatus) {
                 dump($this->data);
             }
+
             return true;
         }
         // $this->keystrokeOnMatchToPageDownConfig();
@@ -77,7 +72,7 @@ class Read
 
     private function errorIfNoConnection()
     {
-        if (!$this->connection) {
+        if (! $this->connection) {
             throw new \Exception('Telnet connection failed');
         }
     }

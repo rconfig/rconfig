@@ -12,12 +12,12 @@ class ConfigSearchControllerTest extends TestCase
     protected $user;
     protected $strategy;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->user = User::factory()->create();
         $this->actingAs($this->user);
-        $this->strategy = new LatestSearchStrategyNew();
+        $this->strategy = new LatestSearchStrategyNew;
         Config::truncate();
     }
 
@@ -147,7 +147,7 @@ class ConfigSearchControllerTest extends TestCase
 
         $this->assertCount(1, $routerResult);
         $this->assertEquals('router1', $routerResult[0]['device_name']);
-        
+
         $this->assertCount(1, $switchResult);
         $this->assertEquals('switch1', $switchResult[0]['device_name']);
     }
@@ -181,11 +181,11 @@ class ConfigSearchControllerTest extends TestCase
 
         $this->assertNotEmpty($resultWithoutContext);
         $this->assertNotEmpty($resultWithContext);
-        
+
         // Context result should have more lines
         $contextLines = explode("\n", $resultWithContext[0]['context']);
         $noContextLines = explode("\n", $resultWithoutContext[0]['context']);
-        
+
         $this->assertGreaterThan(count($noContextLines), count($contextLines));
     }
 
@@ -231,7 +231,7 @@ class ConfigSearchControllerTest extends TestCase
         $this->assertCount(1, $latestOnlyResult);
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         Config::truncate();
         parent::tearDown();

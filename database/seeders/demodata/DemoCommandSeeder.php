@@ -30,11 +30,11 @@ class DemoCommandSeeder extends Seeder
 
         Command::create(
             [
-                "id" => 6001,
-                "command" => "Show ip route",
-                "description" => "Show ip route",
-                "created_at" => "2023-03-11 08:45:53",
-                "updated_at" => "2023-03-11 08:45:53",
+                'id' => 6001,
+                'command' => 'Show ip route',
+                'description' => 'Show ip route',
+                'created_at' => '2023-03-11 08:45:53',
+                'updated_at' => '2023-03-11 08:45:53',
             ]
         );
 

@@ -3,6 +3,7 @@
 namespace Database\Seeders\demodata;
 
 use App\Models\Taskdownloadreport;
+use Faker\Factory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
 
@@ -17,14 +18,14 @@ class DemoTaskReportSeeder extends Seeder
      */
     public function run()
     {
-        $this->faker = \Faker\Factory::create();
+        $this->faker = Factory::create();
 
         $d = 1;
         $reports = [];
 
         for ($d = 1; $d < 26; $d++) {
             $uuid = $this->faker->uuid();
-            $datetime = $this->faker->dateTimeBetween('-'.$d.' weeks', '-'.$d - 1 .' weeks');
+            $datetime = $this->faker->dateTimeBetween('-' . $d . ' weeks', '-' . $d - 1 . ' weeks');
 
             $task = [];
             if ($d % 2 == 0) {
@@ -72,10 +73,10 @@ class DemoTaskReportSeeder extends Seeder
                 ]
             );
             if ($report['task_id'] === 836229) {
-                File::copy(rconfig_appdir_path().'/database/seeders/demodata/demoreports/836229.html', report_path().$report['report_id'].'.html');
+                File::copy(rconfig_appdir_path() . '/database/seeders/demodata/demoreports/836229.html', report_path() . $report['report_id'] . '.html');
             }
             if ($report['task_id'] === 618485) {
-                File::copy(rconfig_appdir_path().'/database/seeders/demodata/demoreports/618485.html', report_path().$report['report_id'].'.html');
+                File::copy(rconfig_appdir_path() . '/database/seeders/demodata/demoreports/618485.html', report_path() . $report['report_id'] . '.html');
             }
         }
 

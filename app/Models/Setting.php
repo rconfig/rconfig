@@ -11,9 +11,7 @@ class Setting extends Model
     use HasFactory;
 
     public $table = 'settings';
-
     protected $guarded = [];
-
     protected $casts = [
         'defaultDevicePassword' => EncryptStringCast::class,
         'defaultEnablePassword' => EncryptStringCast::class,

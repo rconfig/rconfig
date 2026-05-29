@@ -12,9 +12,7 @@ class MailConfigDownloadNotification extends Notification
     use Queueable;
 
     protected $device_id;
-
     protected $username;
-
     protected $seconds;
 
     public function __construct($device_id, $seconds, $username)

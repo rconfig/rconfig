@@ -20,7 +20,7 @@ class QuickSearchController extends Controller
         $query = $request->input('q');
 
         // Ensure the query is not empty
-        if (!$query) {
+        if (! $query) {
             return response()->json(['error' => 'No search query provided'], 400);
         }
 

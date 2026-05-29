@@ -24,7 +24,6 @@ class DeviceModel extends Model
         });
     }
 
-
     public function devices(): HasMany
     {
         return $this->hasMany(Device::class, 'device_model', 'name');
@@ -76,7 +75,7 @@ class DeviceModel extends Model
 
     public function getDevicesCountFast()
     {
-        return \App\Models\Device::where('device_model', $this->name)->count();
+        return Device::where('device_model', $this->name)->count();
     }
 
     public function canBeDeleted()
@@ -86,7 +85,7 @@ class DeviceModel extends Model
 
     public function getDeviceNames()
     {
-        return \App\Models\Device::where('device_model', $this->name)
+        return Device::where('device_model', $this->name)
             ->pluck('device_name');
     }
 

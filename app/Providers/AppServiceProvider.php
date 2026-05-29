@@ -28,8 +28,6 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
     public function boot(): void
     {
@@ -39,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
         $this->logViewerAuthCheck();
         $this->configureQueueLogging();
     }
+
     protected function registerIdeHelper(): void
     {
         if ($this->app->environment('local')) {

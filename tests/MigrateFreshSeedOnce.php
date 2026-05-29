@@ -3,7 +3,6 @@
 namespace Tests;
 
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Config;
 
 trait MigrateFreshSeedOnce
 {
@@ -16,14 +15,12 @@ trait MigrateFreshSeedOnce
 
     /**
      * After the first run of setUp "migrate:fresh --seed"
-     *
-     * @return void
      */
     public function setUp(): void
     {
         parent::setUp();
 
-        if (!static::$setUpHasRunOnce) {
+        if (! static::$setUpHasRunOnce) {
             Artisan::call('migrate:fresh');
             Artisan::call(
                 'db:seed',

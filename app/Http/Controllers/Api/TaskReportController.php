@@ -54,9 +54,9 @@ class TaskReportController extends ApiBaseController
 
         if (File::exists($model->config_location)) {
             File::delete($model->config_location);
-            $logmsg = 'Config File : '.$model->config_location.' was deleted';
+            $logmsg = 'Config File : ' . $model->config_location . ' was deleted';
         } else {
-            $logmsg = 'Unable to find file from path: '.$model->config_location;
+            $logmsg = 'Unable to find file from path: ' . $model->config_location;
             $this->failureResponse($logmsg);
         }
 

@@ -70,7 +70,7 @@ class ConfigController extends ApiBaseController
     }
 
     public function getAllById($id, Request $request)
-    {   
+    {
         $sortCol = $request->sortCol != '' ? $request->sortCol : 'created_at';
         $sortOrd = $request->sortOrd != '' ? $request->sortOrd : 'desc';
         $perPage = (int) $request->perPage;

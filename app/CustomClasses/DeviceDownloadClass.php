@@ -13,17 +13,11 @@ use Illuminate\Support\Facades\Redis;
 class DeviceDownloadClass extends Command
 {
     protected $output;
-
     protected $eventtype;
-
     protected $devicerecords;
-
     protected $debug;
-
     protected $report_id;
-
     protected $parent_function;
-
     protected $parent_class;
 
     public function __construct($devicerecords, $eventtype, $debug, $report_id = null)

@@ -11,13 +11,9 @@ use App\Http\Controllers\Connections\Telnet\SendCommand;
 class TelnetConnectionManager
 {
     protected $deviceParamsObject;
-
     protected $connectionObj;
-
     protected $loginObj;
-
     protected $SendCommandObj;
-
     protected $debug;
 
     public function __construct($deviceParamsObject, $debug)
@@ -55,7 +51,7 @@ class TelnetConnectionManager
     {
         $this->loginObj = new Login($this->connectionObj);
 
-        if (!$this->loginObj->login()) {
+        if (! $this->loginObj->login()) {
             (new SetDeviceStatus($this->connectionObj->device_id, 0))->setDeviceStatus();
             $logmsg = 'There was an authentication or connection issue with ' . $this->deviceParamsObject->deviceparams['device_name'];
             activityLogIt(__CLASS__, __FUNCTION__, 'error', $logmsg, 'connection', $this->connectionObj->hostname, $this->connectionObj->device_id, 'device');

@@ -8,13 +8,9 @@ use phpseclib3\Net\SSH2;
 class SendCommand
 {
     protected $send;
-
     protected $read;
-
     protected $sendSnippet;
-
     protected $connectionObj;
-
     protected $data;
 
     public function __construct(object $connectionObj)
@@ -59,7 +55,7 @@ class SendCommand
 
     private function ansiShowCommand($command)
     {
-        $ansi = new ANSI();
+        $ansi = new ANSI;
         if (isset($this->connectionObj->connection->setTerminalDimensions)) {
             $ansi->setDimensions($this->connectionObj->connection->setTerminalDimensions[0], $this->connectionObj->connection->setTerminalDimensions[1]);
         }
@@ -129,7 +125,7 @@ class SendCommand
 
     public function dropFirstAndLastLinesFromArray()
     {
-        array_shift($this->data); //drops the command that was run from the output
+        array_shift($this->data); // drops the command that was run from the output
         array_pop($this->data); // removes last line, usually a prompt
     }
 

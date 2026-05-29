@@ -30,5 +30,4 @@ trait MaskableCredentials
     {
         return Str::mask($field, '*', 2);
     }
-
 }

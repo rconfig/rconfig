@@ -2,14 +2,13 @@
 
 namespace App\Services\Config\Search\SearchStrategies;
 
-
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
 class LatestSearchStrategyNew
 {
-
     public function searchConfigurations(array $searchParams): array
     {
         $configs = $this->getFilteredConfigs($searchParams);
@@ -24,7 +23,7 @@ class LatestSearchStrategyNew
     /**
      * Get filtered configurations based on search parameters
      */
-    private function getFilteredConfigs(array $params): \Illuminate\Support\Collection
+    private function getFilteredConfigs(array $params): Collection
     {
         $query = DB::table('configs')
             ->orderBy('created_at', 'desc');
@@ -88,7 +87,7 @@ class LatestSearchStrategyNew
     /**
      * Search for the specified string within configuration files
      */
-    private function searchInConfigs(\Illuminate\Support\Collection $configs, array $params): array
+    private function searchInConfigs(Collection $configs, array $params): array
     {
         $searchOptions = $this->extractSearchOptions($params);
         $matches = [];

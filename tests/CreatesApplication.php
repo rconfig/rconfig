@@ -3,14 +3,15 @@
 namespace Tests;
 
 use Illuminate\Contracts\Console\Kernel;
-use Illuminate\Support\Facades\Config;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Artisan;
 
 trait CreatesApplication
 {
     /**
      * Creates the application.
      *
-     * @return \Illuminate\Foundation\Application
+     * @return Application
      */
     public function createApplication()
     {
@@ -32,7 +33,7 @@ trait CreatesApplication
     {
         $commands = ['clear-compiled', 'cache:clear', 'view:clear', 'config:clear', 'route:clear'];
         foreach ($commands as $command) {
-            \Illuminate\Support\Facades\Artisan::call($command);
+            Artisan::call($command);
         }
     }
 }

@@ -16,7 +16,7 @@ class rConfigMailConfigServiceProvider extends ServiceProvider
                 return Setting::where('id', 1)->first();
             });
 
-            if ($settings) { //checking if table is not empty
+            if ($settings) { // checking if table is not empty
                 // mail_password decrypted at the model
                 $config = [
                     'driver' => $settings->mail_driver,
@@ -35,7 +35,5 @@ class rConfigMailConfigServiceProvider extends ServiceProvider
         }
     }
 
-    public function register()
-    {
-    }
+    public function register() {}
 }

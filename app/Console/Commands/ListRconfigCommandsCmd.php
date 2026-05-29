@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 
 use function Laravel\Prompts\table;
-use function Laravel\Prompts\text;
 
 class ListRconfigCommandsCmd extends Command
 {
@@ -28,7 +27,7 @@ class ListRconfigCommandsCmd extends Command
             ->toArray();
 
         if (empty($rows)) {
-            $this->warn("No rconfig commands found");
+            $this->warn('No rconfig commands found');
 
             return self::SUCCESS;
         }

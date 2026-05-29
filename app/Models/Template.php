@@ -28,7 +28,7 @@ class Template extends BaseModel
     protected function viewUrl(): Attribute
     {
         return Attribute::make(
-            get: fn() => '/templates',
+            get: fn () => '/templates',
         );
     }
 

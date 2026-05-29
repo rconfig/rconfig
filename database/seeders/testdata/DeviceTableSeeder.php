@@ -76,7 +76,6 @@ class DeviceTableSeeder extends Seeder
             'status' => 1,
         ]);
 
-
         // SSH enable template
         Device::create([
             'id' => 1004,
@@ -364,7 +363,7 @@ class DeviceTableSeeder extends Seeder
             'device_id' => '1008',
         ]);
 
-        //seed tags and relationships
+        // seed tags and relationships
         DB::table('tags')->insert([
             'id' => 1001,
             'tagname' => 'devtag1',
@@ -403,7 +402,7 @@ class DeviceTableSeeder extends Seeder
             'tag_id' => 55,
         ]);
 
-        //Seed tasks and relationships
+        // Seed tasks and relationships
         DB::table('tasks')->insert([
             'id' => 555555,
             'task_name' => 'DevTask1',

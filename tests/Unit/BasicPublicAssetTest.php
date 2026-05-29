@@ -207,12 +207,12 @@ class BasicPublicAssetTest extends TestCase
 
     /**
      * Test that Horizon layout file exists and uses local fonts.
-     * 
-     * Reason: Laravel Horizon (queue monitoring dashboard) ships with external font references 
-     * by default (fonts.bunny.net for Figtree font). For offline installations where external 
-     * CDNs are unreachable, this causes 20-30+ second page load delays. We override the vendor 
-     * layout to use our local fonts.css (public/fonts/fonts.css) which includes self-hosted 
-     * Figtree fonts. This test ensures the override exists and doesn't reference external 
+     *
+     * Reason: Laravel Horizon (queue monitoring dashboard) ships with external font references
+     * by default (fonts.bunny.net for Figtree font). For offline installations where external
+     * CDNs are unreachable, this causes 20-30+ second page load delays. We override the vendor
+     * layout to use our local fonts.css (public/fonts/fonts.css) which includes self-hosted
+     * Figtree fonts. This test ensures the override exists and doesn't reference external
      * font services.
      */
     public function test_horizon_layout_exists_and_uses_local_fonts()
@@ -236,7 +236,7 @@ class BasicPublicAssetTest extends TestCase
 
     /**
      * Test that no external font CDN references exist in any view files.
-     * 
+     *
      * Reason: External font CDN references (Google Fonts, Bunny Fonts, etc.) cause significant
      * performance issues in offline or air-gapped installations where these services are unreachable.
      * This test scans all Blade view files to ensure no external font CDNs are referenced.

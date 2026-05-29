@@ -8,8 +8,7 @@ use Tests\TestCase;
 
 class DeviceIpIsValidTest extends TestCase
 {
-
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
@@ -17,6 +16,7 @@ class DeviceIpIsValidTest extends TestCase
     protected function makeValidator(array $data): \Illuminate\Contracts\Validation\Validator
     {
         $rule = ['ip_address' => [new DeviceIpIsValid]];
+
         return Validator::make($data, $rule);
     }
 

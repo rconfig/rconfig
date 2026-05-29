@@ -11,7 +11,6 @@ use Tests\TestCase;
 
 class rconfigDeviceDownloadTest extends TestCase
 {
-
     protected $user;
     protected $device;
     protected $device1;
@@ -20,7 +19,7 @@ class rconfigDeviceDownloadTest extends TestCase
     protected $device5;
     protected $device1_params_object;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->device1 = Device::where('id', 1001)->first();
@@ -59,7 +58,7 @@ class rconfigDeviceDownloadTest extends TestCase
             'status' => 1,
         ]);
 
-        //endtime
+        // endtime
         $end = microtime(true);
         $time = $end - $start;
 

@@ -405,7 +405,7 @@ class OxidizedToRconfigMappingsCommand extends Command
 
         // Update tags with multiselect
         $tagOptions = [];
-        $tags = \App\Models\Tag::all(['id', 'tagname']);
+        $tags = Tag::all(['id', 'tagname']);
         foreach ($tags as $tag) {
             $tagOptions[$tag->id] = $tag->tagname;
         }
@@ -420,7 +420,7 @@ class OxidizedToRconfigMappingsCommand extends Command
                 } else {
                     // If tags are stored as strings, try to find their IDs
                     foreach ($current['tags'] as $tagName) {
-                        $tag = \App\Models\Tag::where('tagname', $tagName)->first();
+                        $tag = Tag::where('tagname', $tagName)->first();
                         if ($tag) {
                             $currentTagIds[] = $tag->id;
                         }

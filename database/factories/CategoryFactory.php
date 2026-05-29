@@ -26,8 +26,7 @@ class CategoryFactory extends Factory
         return [
             'categoryName' => $this->faker->firstName . mt_rand(1000000, 9999999),
             'categoryDescription' => $this->faker->sentence,
-            'badgeColor' =>
-            $this->faker->randomElement($badgecolors),
+            'badgeColor' => $this->faker->randomElement($badgecolors),
         ];
     }
 }

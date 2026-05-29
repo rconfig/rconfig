@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\TrackedJob;
+use Illuminate\Http\Response;
 
 class TrackedJobController extends ApiBaseController
 {
@@ -16,7 +17,7 @@ class TrackedJobController extends ApiBaseController
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id, $relationship = null, $withCount = null)
     {

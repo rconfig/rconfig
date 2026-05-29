@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use App\Casts\EncryptStringCast;
-use App\Models\DeviceComment;
-use App\Models\DeviceCredentials;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -22,22 +20,20 @@ class Device extends BaseModel
     public const STATUS_DISABLED = 100;
 
     protected $searchableColumns = ['deviceName', 'deviceIpAddr'];
-
     protected $casts = [
         'device_password' => EncryptStringCast::class,
         'device_enable_password' => EncryptStringCast::class,
     ];
-
     protected $guarded = [];
 
-    //Make it available in the json response
+    // Make it available in the json response
     protected $appends = ['view_url'];
 
     // view url for search results
     protected function viewUrl(): Attribute
     {
         return Attribute::make(
-            get: fn() => '/device/view/' . $this->id,
+            get: fn () => '/device/view/' . $this->id,
         );
     }
 

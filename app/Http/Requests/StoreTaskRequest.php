@@ -71,8 +71,6 @@ class StoreTaskRequest extends FormRequest
 
     /**
      * Build and return a DTO.
-     *
-     * @return StoreTaskDTO
      */
     public function toDTO(): StoreTaskDTO
     {

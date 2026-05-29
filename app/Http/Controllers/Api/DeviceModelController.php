@@ -69,7 +69,7 @@ class DeviceModelController extends ApiBaseController
         $distinctDeviceModels = Device::distinct()->pluck('device_model');
 
         foreach ($distinctDeviceModels as $deviceModel) {
-            if (!DeviceModel::where('name', $deviceModel)->exists()) {
+            if (! DeviceModel::where('name', $deviceModel)->exists()) {
                 DeviceModel::create(['name' => $deviceModel]);
             }
         }

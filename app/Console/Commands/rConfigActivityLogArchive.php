@@ -48,7 +48,7 @@ class rConfigActivityLogArchive extends Command
             return 0;
         }
 
-        if (!empty($rows)) {
+        if (! empty($rows)) {
             $count = $rows;
             ActivityLog::query()->take($count[0])->get()
                 ->each(function ($oldRecord) {
@@ -63,7 +63,7 @@ class rConfigActivityLogArchive extends Command
             $logmsg = $count[0] . ' logs entries sent to activity log archive table!';
         }
 
-        if (!empty($days)) {
+        if (! empty($days)) {
             $count = $days;
 
             ActivityLog::query()

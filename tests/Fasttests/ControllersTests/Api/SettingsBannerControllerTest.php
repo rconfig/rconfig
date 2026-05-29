@@ -3,7 +3,6 @@
 namespace Tests\Fasttests\ControllersTests\Api;
 
 use App\Models\User;
-
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
@@ -12,10 +11,9 @@ class SettingsBannerControllerTest extends TestCase
     use WithFaker;
 
     protected $user;
-
     protected $setting;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->user = User::factory()->create();

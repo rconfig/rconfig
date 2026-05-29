@@ -16,12 +16,10 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $guarded = [];
-
     protected $hidden = [
         'password',
         'remember_token',
     ];
-
     protected $casts = [
         'email_verified_at' => 'datetime',
         'external_links' => 'array',
@@ -31,14 +29,14 @@ class User extends Authenticatable
         'is_socialite_approved' => 'integer',
     ];
 
-    //Make it available in the json response
+    // Make it available in the json response
     protected $appends = ['view_url'];
 
     // view url for search results
     protected function viewUrl(): Attribute
     {
         return Attribute::make(
-            get: fn() => '/settings/users',
+            get: fn () => '/settings/users',
         );
     }
 
@@ -135,7 +133,7 @@ class User extends Authenticatable
 
     public function getAllNotificationPreferences(): array
     {
-         $preferences = [];
+        $preferences = [];
         foreach (NotificationType::cases() as $type) {
             foreach (NotificationChannel::cases() as $channel) {
                 $preferences[$type->value][$channel->value] = $this->getNotificationPreference($type, $channel);

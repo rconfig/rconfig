@@ -12,6 +12,7 @@ class DeviceIpIsValid implements ValidationRule
         // Ensure the value is not null or empty
         if (is_null($value) || trim($value) === '') {
             $fail('The :attribute is required.');
+
             return;
         }
 
@@ -19,7 +20,7 @@ class DeviceIpIsValid implements ValidationRule
         $value = trim($value);
 
         // Check if it's a valid IP address or hostname/FQDN
-        if (!$this->isValidIpAddress($value) && !$this->isValidHostname($value)) {
+        if (! $this->isValidIpAddress($value) && ! $this->isValidHostname($value)) {
             $fail('The :attribute must be a valid IP address or FQDN/Hostname.');
         }
     }

@@ -18,7 +18,7 @@ return new class extends Migration
 
         // For existing records, set report_name to report_id
         DB::table('taskdownloadreports')->update([
-            'report_name' => DB::raw('report_id')
+            'report_name' => DB::raw('report_id'),
         ]);
     }
 

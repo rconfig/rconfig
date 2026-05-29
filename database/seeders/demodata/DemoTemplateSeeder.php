@@ -20,9 +20,9 @@ class DemoTemplateSeeder extends Seeder
             Template::create($template);
         }
         foreach ($this->templateUrls() as $template) {
-            if (! File::exists(templates_path().basename($template['fileName']))) {
+            if (! File::exists(templates_path() . basename($template['fileName']))) {
                 $response = Http::get($template['url']);
-                File::put(templates_path().basename($template['fileName']), $response->body());
+                File::put(templates_path() . basename($template['fileName']), $response->body());
             }
         }
     }

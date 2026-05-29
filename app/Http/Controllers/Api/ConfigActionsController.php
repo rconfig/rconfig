@@ -5,13 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Jobs\DownloadConfigNowJob;
 use App\Jobs\PurgeFailedConfigsJob;
 use App\Models\Config;
+use App\Services\UserLog\UserLogActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Services\UserLog\UserLogActivity;
 
 class ConfigActionsController extends ApiBaseController
 {
-
     protected $model;
     protected $modelname;
 

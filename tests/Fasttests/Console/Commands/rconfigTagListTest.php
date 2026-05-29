@@ -2,23 +2,23 @@
 
 namespace Tests\Fasttests\Console\Commands;
 
+use App\Console\Commands\rconfigTagList;
 use Artisan;
 use Tests\TestCase;
 
 class rconfigTagListTest extends TestCase
 {
     protected $user;
-
     protected $output;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
 
-    public function test_it_has_rconfigTagList_command()
+    public function test_it_has_rconfig_tag_list_command()
     {
-        $this->assertTrue(class_exists(\App\Console\Commands\rconfigTagList::class));
+        $this->assertTrue(class_exists(rconfigTagList::class));
     }
 
     public function test_list_tags_command()

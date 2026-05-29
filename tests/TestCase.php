@@ -3,12 +3,12 @@
 namespace Tests;
 
 use App\Models\Template;
-use Tests\Traits\ManagesTransactions;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Tests\Traits\ManagesTransactions;
 
 abstract class TestCase extends BaseTestCase
 {
-    use MigrateFreshSeedOnce, CreatesApplication, ManagesTransactions;
+    use CreatesApplication, ManagesTransactions, MigrateFreshSeedOnce;
 
     public function actingAs($user, $guard = null)
     {
@@ -29,7 +29,6 @@ abstract class TestCase extends BaseTestCase
         fwrite(STDOUT, $message . "\n");
         fwrite(STDOUT, '----------------------------' . "\n");
     }
-
 
     public function add_5_sec_timeout_telnet_noenable_template()
     {
@@ -57,7 +56,7 @@ abstract class TestCase extends BaseTestCase
         if (file_exists(base_path('tests/storage/' . $filename))) {
             $this->assertTrue(true);
         }
-        if (!copy(base_path('tests/storage/' . $filename), storage_path() . '/app/rconfig/templates/' . $filename)) {
+        if (! copy(base_path('tests/storage/' . $filename), storage_path() . '/app/rconfig/templates/' . $filename)) {
             $this->assertTrue(false);
             // echo "failed to copy $file...\n";
         }
@@ -70,7 +69,7 @@ abstract class TestCase extends BaseTestCase
     {
         // remove the test template from storage
         unlink(storage_path() . '/app/rconfig/templates/' . $newfilename);
-        if (!file_exists(storage_path() . '/app/rconfig/templates/' . $newfilename)) {
+        if (! file_exists(storage_path() . '/app/rconfig/templates/' . $newfilename)) {
             $this->assertTrue(true);
         }
 

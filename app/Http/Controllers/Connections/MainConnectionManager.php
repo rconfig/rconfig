@@ -7,13 +7,9 @@ use App\Http\Controllers\Connections\Params\DeviceParams;
 class MainConnectionManager
 {
     protected $deviceRecord;
-
     protected $deviceParamsObject;
-
     protected $telnetConnection;
-
     protected $sshConnection;
-
     protected $debug;
 
     public function __construct(array $deviceRecord, $debug)
@@ -35,7 +31,7 @@ class MainConnectionManager
 
             return $this->sshConnection->SshConnectionAndOutput();
         } else {
-            throw new \Exception('Error Processing '.__CLASS__.' - '.__FUNCTION__.' Request. Your rConfig template file could be invalid.', 1);
+            throw new \Exception('Error Processing ' . __CLASS__ . ' - ' . __FUNCTION__ . ' Request. Your rConfig template file could be invalid.', 1);
         }
     }
 

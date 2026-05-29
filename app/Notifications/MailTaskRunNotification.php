@@ -10,7 +10,6 @@ use Log;
 class MailTaskRunNotification extends Notification
 {
     protected $task;
-
     protected $seconds;
 
     public function __construct($seconds, $task)

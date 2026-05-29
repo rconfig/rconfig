@@ -41,8 +41,6 @@ class StoreSettingsBannerRequest extends FormRequest
 
     /**
      * Build and return a DTO.
-     *
-     * @return StoreSettingsBannerDTO
      */
     public function toDTO(): StoreSettingsBannerDTO
     {

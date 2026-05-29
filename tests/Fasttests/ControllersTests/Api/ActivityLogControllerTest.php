@@ -12,11 +12,11 @@ use Tests\TestCase;
 
 class ActivityLogControllerTest extends TestCase
 {
-    use withFaker;
+    use WithFaker;
 
     protected $user;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->beginTransaction();
@@ -131,7 +131,6 @@ class ActivityLogControllerTest extends TestCase
         $response->assertSee('log_name');
     }
 
-
     public function test_clear_logs_by_deviceid()
     {
         $device_name = $this->faker->name;
@@ -151,6 +150,7 @@ class ActivityLogControllerTest extends TestCase
         $response->assertStatus(200);
         $this->assertCount(0, $response->json());
     }
+
     public function test_delete_log_entry()
     {
         $descr = $this->faker->sentence;
@@ -181,7 +181,7 @@ class ActivityLogControllerTest extends TestCase
         ]);
 
         $logLast480 = ActivityLog::orderBy('id', 'desc')->take(480)->get();
-        $this->assertCount(480, $logLast480); //+1 for system log added at archive job
+        $this->assertCount(480, $logLast480); // +1 for system log added at archive job
 
         $output = Artisan::call('rconfig:archive-logs --rows=480');
         $result = Artisan::output();
@@ -241,7 +241,7 @@ class ActivityLogControllerTest extends TestCase
         $arr = explode("\n", $result);
         $this->assertStringContainsString($arr[0], 'logs older than 10 days sent to activity log archive table!');
 
-        $this->assertGreaterThan(500, ActivityLog::count()); //+1 for the archive commands log entry
+        $this->assertGreaterThan(500, ActivityLog::count()); // +1 for the archive commands log entry
         $this->assertGreaterThan(479, count(ActivityLogArchive::all()));
 
         $this->assertDatabaseMissing('activity_log_archives', [
@@ -316,7 +316,7 @@ class ActivityLogControllerTest extends TestCase
     }
 
     // tearDown
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         $this->rollBackTransaction();
         parent::tearDown();

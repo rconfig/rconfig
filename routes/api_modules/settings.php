@@ -13,7 +13,7 @@ Route::prefix('settings')->group(function () {
     Route::resource('/debug', 'SettingDebugController')->only(['show', 'update']);
     Route::get('/socialite-status', 'SettingSSOController@show');
 
-    /* SETTINGS SPECIFIC ROUTES*/
+    /* SETTINGS SPECIFIC ROUTES */
     Route::get('/get-timezone-list', 'SettingTimezoneController@getTimezoneList');
     Route::get('/test-email', 'SettingEmailController@TestMail');
     Route::get('/test-notification', 'SettingEmailController@TestMailNotifications');

@@ -9,10 +9,10 @@ use Tests\TestCase;
 
 class DeviceModelControllerTest extends TestCase
 {
-    /** @var \App\Models\User */
+    /** @var User */
     protected $user;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->beginTransaction();
@@ -44,7 +44,7 @@ class DeviceModelControllerTest extends TestCase
 
         $response = $this->get('/api/device-models');
         $response->assertStatus(200);
-        
+
         $model = collect($response['data'])->firstWhere('name', 'Cisco 3850');
         $this->assertEquals(3, $model['devices_count']);
     }
@@ -53,12 +53,12 @@ class DeviceModelControllerTest extends TestCase
     {
         $modelWithDevices = DeviceModel::factory()->create(['name' => 'Model With Devices']);
         $modelWithoutDevices = DeviceModel::factory()->create(['name' => 'Model Without Devices']);
-        
+
         Device::factory()->create(['device_model' => 'Model With Devices']);
 
         $response = $this->get('/api/device-models?filter[with_devices]=1');
         $response->assertStatus(200);
-        
+
         $modelNames = collect($response['data'])->pluck('name');
         $this->assertTrue($modelNames->contains('Model With Devices'));
         $this->assertFalse($modelNames->contains('Model Without Devices'));
@@ -95,7 +95,7 @@ class DeviceModelControllerTest extends TestCase
         $response = $this->json('post', '/api/device-models', [
             'name' => 'Cisco ASR 1001-X',
         ]);
-        
+
         $response->assertStatus(200);
         $response->assertJsonStructure(['success', 'data', 'message']);
         $response->assertJson(['success' => true]);
@@ -175,10 +175,10 @@ class DeviceModelControllerTest extends TestCase
         $deviceModel = DeviceModel::factory()->create();
 
         $response = $this->delete('/api/device-models/' . $deviceModel->id);
-        
+
         $response->assertStatus(200);
         $this->assertStringContainsString('deleted successfully', $response->json('message'));
-        
+
         // Check for soft delete
         $this->assertDatabaseMissing('device_models', ['id' => $deviceModel->id]);
     }
@@ -214,7 +214,7 @@ class DeviceModelControllerTest extends TestCase
 
         $this->assertDatabaseMissing('device_models', ['id' => $deviceModel1->id]);
         $this->assertDatabaseMissing('device_models', ['id' => $deviceModel2->id]);
-        
+
         // deviceModel3 should not be deleted
         $this->assertDatabaseHas('device_models', [
             'id' => $deviceModel3->id,
@@ -227,7 +227,7 @@ class DeviceModelControllerTest extends TestCase
 
         $response = $this->get('/api/device-models?perPage=15');
         $response->assertStatus(200);
-        
+
         $this->assertEquals(15, count($response['data']));
         $this->assertArrayHasKey('current_page', $response->json());
         $this->assertArrayHasKey('last_page', $response->json());
@@ -269,14 +269,14 @@ class DeviceModelControllerTest extends TestCase
     {
         $model1 = DeviceModel::factory()->create(['name' => 'Model 1']);
         $model2 = DeviceModel::factory()->create(['name' => 'Model 2']);
-        
+
         Device::factory(5)->create(['device_model' => 'Model 1']);
         Device::factory(2)->create(['device_model' => 'Model 2']);
 
         $response = $this->get('/api/device-models?sort=-devices_count');
         $response->assertStatus(200);
         $data = $response->json('data');
-        
+
         // Model 1 should be first (has more devices)
         $firstModel = collect($data)->firstWhere('name', 'Model 1');
         $this->assertEquals(5, $firstModel['devices_count']);
@@ -295,7 +295,7 @@ class DeviceModelControllerTest extends TestCase
         ]);
 
         $response->assertStatus(200);
-        
+
         $this->assertDatabaseHas('device_models', [
             'name' => 'Cisco 2960', // Should be trimmed
         ]);
@@ -307,7 +307,7 @@ class DeviceModelControllerTest extends TestCase
         // Create devices with models that don't exist in device_models table
         Device::factory()->create(['device_model' => 'Unique Model A']);
         Device::factory()->create(['device_model' => 'Unique Model B']);
-        
+
         // For now, just verify the devices exist
         $this->assertDatabaseHas('devices', ['device_model' => 'Unique Model A']);
         $this->assertDatabaseHas('devices', ['device_model' => 'Unique Model B']);
@@ -384,7 +384,7 @@ class DeviceModelControllerTest extends TestCase
                     'devices_count',
                     'created_at',
                     'updated_at',
-                ]
+                ],
             ],
             'current_page',
             'per_page',

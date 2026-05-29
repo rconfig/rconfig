@@ -54,7 +54,7 @@ trait LogsTaskActivity
 
     private function logTaskFailed($task_id)
     {
-        \Log::info('logTaskFailed: '.$task_id);
+        \Log::info('logTaskFailed: ' . $task_id);
         $this->monitoredTask = MonitoredScheduledTasks::where('task_id', $task_id);
 
         $this->checkIfNullAndReSyncTasks($task_id);

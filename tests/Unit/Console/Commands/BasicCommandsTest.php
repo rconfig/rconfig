@@ -7,15 +7,14 @@ use Tests\TestCase;
 class BasicCommandsTest extends TestCase
 {
     protected $user;
-
     protected $output;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
 
-     public function test_basic_command_functionality()
+    public function test_basic_command_functionality()
     {
         $this->artisan('help')->expectsOutput('Description:')->expectsOutput('Arguments:')->assertExitCode(0);
     }

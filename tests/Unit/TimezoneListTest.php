@@ -8,7 +8,7 @@ class TimezoneListTest extends TestCase
 {
     protected array $timezones;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->timezones = require app_path('Http/Controllers/Api/timezone_list.php');
@@ -31,7 +31,7 @@ class TimezoneListTest extends TestCase
         $invalidTimezones = [];
 
         foreach (array_keys($this->timezones) as $timezone) {
-            if (!in_array($timezone, $validTimezones)) {
+            if (! in_array($timezone, $validTimezones)) {
                 $invalidTimezones[] = $timezone;
             }
         }

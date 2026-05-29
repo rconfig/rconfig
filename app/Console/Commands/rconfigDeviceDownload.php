@@ -12,9 +12,7 @@ class rconfigDeviceDownload extends Command
     protected $signature = 'rconfig:download-device
                             {deviceid*}
                             {--d|debug : rConfig debugging output}';
-
     protected $eventtype = 'rconfig:download-device';
-
     protected $description = 'Download configurations for one or multiple devices via the CLI';
     protected $devicerecords;
 
@@ -57,7 +55,7 @@ class rconfigDeviceDownload extends Command
 
         $this->info('End ' . $this->eventtype . '');
 
-        if (!isDocker()) {
+        if (! isDocker()) {
             if (app()->runningInConsole()) {
                 custom_chown(storage_path());
             }

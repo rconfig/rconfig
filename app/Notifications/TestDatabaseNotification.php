@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use Faker\Factory;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
@@ -18,7 +19,7 @@ class TestDatabaseNotification extends Notification
      */
     public function __construct()
     {
-        $this->faker = \Faker\Factory::create();
+        $this->faker = Factory::create();
     }
 
     /**
@@ -41,7 +42,7 @@ class TestDatabaseNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'title' => 'PHPUnit Test Notification - '.$this->faker->randomNumber($nbDigits = 3),
+            'title' => 'PHPUnit Test Notification - ' . $this->faker->randomNumber($nbDigits = 3),
             'description' => 'PHPUnit Test Notification Description',
             'category' => 'system',
             'severity' => 'info',

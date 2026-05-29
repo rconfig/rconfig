@@ -41,8 +41,6 @@ class StoreSettingsTimezoneRequest extends FormRequest
 
     /**
      * Build and return a DTO.
-     *
-     * @return StoreSettingsTimezoneDTO
      */
     public function toDTO(): StoreSettingsTimezoneDTO
     {

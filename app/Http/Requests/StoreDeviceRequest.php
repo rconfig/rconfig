@@ -10,7 +10,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreDeviceRequest extends FormRequest
 {
-
     public function authorize()
     {
         return auth()->check(); // returning true if user is logged in
@@ -84,8 +83,6 @@ class StoreDeviceRequest extends FormRequest
 
     /**
      * Build and return a DTO.
-     *
-     * @return StoreDeviceDTO
      */
     public function toDTO(): StoreDeviceDTO
     {

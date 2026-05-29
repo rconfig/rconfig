@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\QueryFilters;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\Filters\Filter;
 
 class QueryFilterMultipleFields implements Filter

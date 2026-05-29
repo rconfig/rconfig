@@ -2,6 +2,7 @@
 
 namespace Tests\Fasttests\Console\Commands;
 
+use App\Console\Commands\rconfigTaskList;
 use App\Models\Task;
 use Artisan;
 use Tests\TestCase;
@@ -10,14 +11,14 @@ class rconfigTaskListTest extends TestCase
 {
     protected $output;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
 
-    public function test_it_has_rconfigTaskList_command()
+    public function test_it_has_rconfig_task_list_command()
     {
-        $this->assertTrue(class_exists(\App\Console\Commands\rconfigTaskList::class));
+        $this->assertTrue(class_exists(rconfigTaskList::class));
     }
 
     public function test_list_tasks_command()

@@ -13,7 +13,7 @@ class CategoryControllerTest extends TestCase
 {
     protected $user;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->beginTransaction();
@@ -92,7 +92,7 @@ class CategoryControllerTest extends TestCase
 
     public function test_create_category_does_not_require_description()
     {
-        $category = \App\Models\Category::factory()->make([
+        $category = Category::factory()->make([
             'categoryDescription' => null,
         ]);
 
@@ -197,7 +197,7 @@ class CategoryControllerTest extends TestCase
         $command->category()->detach($category->id);
     }
 
-    public function test_deleteMany_returns_error_if_any_category_has_device_relationship()
+    public function test_delete_many_returns_error_if_any_category_has_device_relationship()
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Cannot delete command group with related devices.');

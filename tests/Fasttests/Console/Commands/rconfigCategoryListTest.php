@@ -2,23 +2,23 @@
 
 namespace Tests\Fasttests\Console\Commands;
 
+use App\Console\Commands\rconfigCatList;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
 class rconfigCategoryListTest extends TestCase
 {
     protected $user;
-
     protected $output;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
 
-    public function test_it_has_rconfigCategoryList_command()
+    public function test_it_has_rconfig_category_list_command()
     {
-        $this->assertTrue(class_exists(\App\Console\Commands\rconfigCatList::class));
+        $this->assertTrue(class_exists(rconfigCatList::class));
     }
 
     public function test_list_category_command()

@@ -60,7 +60,7 @@ class rconfigClearAll extends Command
         Artisan::call('queue:restart');
         $this->info('------  Queues Restarted!  ------');
 
-        if (!getenv('IS_DOCKER')) {
+        if (! getenv('IS_DOCKER')) {
             echo exec('sudo supervisorctl update') . PHP_EOL;
             echo exec('sudo supervisorctl reread') . PHP_EOL;
             echo exec('if [ -f /etc/redhat-release ]; then systemctl restart supervisord; fi;') . PHP_EOL;
@@ -68,7 +68,7 @@ class rconfigClearAll extends Command
 
             custom_chown(rconfig_appdir_path());
         }
-        if (getenv('IS_DOCKER') ===  "true") {
+        if (getenv('IS_DOCKER') === 'true') {
             chmod('/var/www/html/storage', 0777);
         }
 

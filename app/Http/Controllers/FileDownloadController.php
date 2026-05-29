@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Traits\RespondsWithHttpStatus;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class FileDownloadController extends Controller
 {

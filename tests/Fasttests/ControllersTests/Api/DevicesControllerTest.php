@@ -3,7 +3,6 @@
 namespace Tests\Fasttests\ControllersTests\Api;
 
 use App\Jobs\DownloadConfigNowJob;
-use App\Models\DeviceModel;
 use App\Models\Category;
 use App\Models\Command;
 use App\Models\Config as DeviceConfig;
@@ -13,7 +12,6 @@ use App\Models\Template;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Observers\DeviceObserver;
-use App\Services\Device\PingService;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Queue;
@@ -23,7 +21,7 @@ class DevicesControllerTest extends TestCase
 {
     protected $user;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->beginTransaction();
@@ -288,7 +286,7 @@ class DevicesControllerTest extends TestCase
             }
 
             $hasLockTimeout = str_contains((string) $response->getContent(), 'Lock wait timeout exceeded');
-            if (!$hasLockTimeout || $attempt === 3) {
+            if (! $hasLockTimeout || $attempt === 3) {
                 break;
             }
         }

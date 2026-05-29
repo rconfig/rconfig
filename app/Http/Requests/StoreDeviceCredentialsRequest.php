@@ -12,7 +12,6 @@ class StoreDeviceCredentialsRequest extends FormRequest
         return auth()->check(); // returning true if user is logged in
     }
 
-
     public function rules()
     {
         if ($this->getMethod() == 'POST') {

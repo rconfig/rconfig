@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\ArchiveLogsJob;
-use App\Jobs\BackupRun;
 use App\Jobs\TaskDownloadRun;
 use App\Models\Task;
 use App\Models\User;
@@ -13,10 +11,8 @@ use App\Notifications\MailTaskRunNotification;
 use App\Traits\LogsTaskActivity;
 use App\Traits\RespondsWithHttpStatus;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Str;
 
 class TaskManualRunController extends Controller
 {
@@ -28,7 +24,7 @@ class TaskManualRunController extends Controller
      * Run the specified task.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function runManualTask(Request $request)
     {

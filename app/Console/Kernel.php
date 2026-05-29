@@ -10,6 +10,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Schema;
 use Spatie\Health\Commands\RunHealthChecksCommand;
 use Spatie\Health\Commands\ScheduleCheckHeartbeatCommand;
+use Spatie\Health\Models\HealthCheckResultHistoryItem;
 
 class Kernel extends ConsoleKernel
 {
@@ -36,7 +37,6 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
@@ -65,7 +65,7 @@ class Kernel extends ConsoleKernel
         $schedule->command(ScheduleCheckHeartbeatCommand::class)->everyFiveMinutes();
         $schedule->command('queue:prune-batches --hours=48 --unfinished=72')->daily();
         $schedule->command('model:prune', ['--model' => MonitoredScheduledTaskLogItems::class])->daily();
-        $schedule->command('model:prune', ['--model' => \Spatie\Health\Models\HealthCheckResultHistoryItem::class])->daily();
+        $schedule->command('model:prune', ['--model' => HealthCheckResultHistoryItem::class])->daily();
         $this->schedule->command('rconfig:config-summaries-sync')->dailyAt('3:00');
     }
 
@@ -83,7 +83,7 @@ class Kernel extends ConsoleKernel
                 $this->logTaskStarted($task->id);
             })
             ->appendOutputTo(storage_path() . '/logs/laravel.log')
-            ->after(function () use ($task, $executionStartTime) {
+            ->after(function () use ($task) {
                 $logmsg = 'Task command "' . $task->task_command . ' ' . $task->id . '" was run with ID:' . $task->id;
                 activityLogIt(__CLASS__, __FUNCTION__, 'info', $logmsg, 'cron_scheduler');
                 $this->logTaskFinished($task->id);

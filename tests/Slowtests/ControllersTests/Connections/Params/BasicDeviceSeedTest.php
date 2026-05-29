@@ -9,10 +9,9 @@ use Tests\TestCase;
 class BasicDeviceSeedTest extends TestCase
 {
     protected $user;
-
     protected $device;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->device = Device::where('id', 1001)->first();

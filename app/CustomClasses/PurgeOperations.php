@@ -24,7 +24,7 @@ class PurgeOperations
                 $files = File::allFiles(storage_path('app/rconfig/backups'));
                 break;
             case 'settings':
-                $files = File::allFiles(storage_path().'/logs');
+                $files = File::allFiles(storage_path() . '/logs');
                 break;
         }
 
@@ -40,7 +40,7 @@ class PurgeOperations
 
             File::delete($purgelist);
 
-            $msg = $request->purgetype.' files older than '.$request->days.' days are now purged.';
+            $msg = $request->purgetype . ' files older than ' . $request->days . ' days are now purged.';
             $output = [
                 'success' => true,
                 'data' => '',
@@ -59,7 +59,7 @@ class PurgeOperations
                 activityLogIt(__CLASS__, __FUNCTION__, 'error', $e->getMessage(), 'purge');
             }
         } else {
-            //LOGGING
+            // LOGGING
             $output = [
                 'success' => false,
                 'msg' => 'No files found!',

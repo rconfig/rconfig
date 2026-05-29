@@ -8,9 +8,7 @@ use Illuminate\Support\Facades\File;
 class rConfigCloneTemplates extends Command
 {
     protected $signature = 'rconfig:clone-templates';
-
     protected $hidden = true;
-
     protected $description = 'Clone templates from git repo https://github.com/rconfig/rconfig-templates';
 
     public function __construct()
@@ -25,7 +23,7 @@ class rConfigCloneTemplates extends Command
      */
     public function handle()
     {
-        $dstDir = templates_path().'rConfig-templates';
+        $dstDir = templates_path() . 'rConfig-templates';
 
         if (is_dir($dstDir)) {
             File::deleteDirectory($dstDir);
@@ -33,7 +31,7 @@ class rConfigCloneTemplates extends Command
 
         if (! is_dir($dstDir)) {
             mkdir($dstDir);
-            $gitCmd = 'git -C '.templates_path().' clone https://github.com/rconfig/rConfig-templates.git';
+            $gitCmd = 'git -C ' . templates_path() . ' clone https://github.com/rconfig/rConfig-templates.git';
             // dd($gitCmd);
             exec($gitCmd);
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Fasttests\OtherTests;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
@@ -11,14 +12,14 @@ class StorageTest extends TestCase
 
     protected $user;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->user = \App\Models\User::factory()->create();
+        $this->user = User::factory()->create();
         $this->actingAs($this->user);
     }
 
-     public function test_get_rconfig_appdir_paths()
+    public function test_get_rconfig_appdir_paths()
     {
         $this->assertEquals(rconfig_appdir_path(), '/var/www/html/rconfig'); // in dev
         $this->assertEquals(rconfig_appdir_storage_path(), '/var/www/html/rconfig/storage'); // in dev

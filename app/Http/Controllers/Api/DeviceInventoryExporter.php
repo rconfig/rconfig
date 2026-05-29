@@ -19,7 +19,6 @@ class DeviceInventoryExporter extends Controller
 
         $devices = $this->fetchDevices($excludeFields);
 
-
         if ($devices->isEmpty()) {
             return $this->failureResponse('No device inventory data found', 422);
         }
@@ -79,7 +78,7 @@ class DeviceInventoryExporter extends Controller
         $exported = Excel::store(new DeviceInventoryExport($devices), $filename, 'rconfig_exports');
 
         if ($exported) {
-            $logmsg = $filename . ' exported ' ;
+            $logmsg = $filename . ' exported ';
             activityLogIt(__CLASS__, __FUNCTION__, 'info', $logmsg, 'export');
         }
 

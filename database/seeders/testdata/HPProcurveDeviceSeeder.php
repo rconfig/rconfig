@@ -3,6 +3,7 @@
 namespace Database\Seeders\testdata;
 
 use App\Models\Device;
+use Faker\Factory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -16,7 +17,7 @@ class HPProcurveDeviceSeeder extends Seeder
      */
     public function run()
     {
-        $faker = \Faker\Factory::create();
+        $faker = Factory::create();
         $device_id = 30001;
         $cat_id = 30001;
         $command_id = 5189;
@@ -24,7 +25,7 @@ class HPProcurveDeviceSeeder extends Seeder
         $template_url = 'https://raw.githubusercontent.com/rconfig/rConfig-templates/master/HP/hp-procurve-ssh-noenable-v2.yml';
         $template_contents = file_get_contents($template_url);
         $filename = basename($template_url);
-        File::put(templates_path().$filename, $template_contents);
+        File::put(templates_path() . $filename, $template_contents);
 
         DB::table('categories')->insert([
             'id' => $cat_id,
@@ -65,7 +66,7 @@ class HPProcurveDeviceSeeder extends Seeder
 
         DB::table('templates')->insert([
             'id' => $template_id,
-            'fileName' => '/app/rconfig/templates/'.$filename,
+            'fileName' => '/app/rconfig/templates/' . $filename,
         ]);
 
         DB::table('device_template')->insert([

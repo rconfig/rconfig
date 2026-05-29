@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Requests\StoreCommandRequest;
-use App\Models\Command;
 use App\Models\Notification;
 use App\Traits\RespondsWithHttpStatus;
 use Illuminate\Http\Request;

@@ -10,13 +10,9 @@ class DBNotification extends Notification
     use Queueable;
 
     protected $title;
-
     protected $description;
-
     protected $category;
-
     protected $severity;
-
     protected $icon;
 
     public function __construct($title, $description, $category, $severity, $icon)

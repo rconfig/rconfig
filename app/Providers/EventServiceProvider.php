@@ -2,19 +2,15 @@
 
 namespace App\Providers;
 
-use App\Listeners\BackupZipWasCreatedListener;
-use App\Listeners\CleanupWasSuccessfulListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Event;
 use SocialiteProviders\Google\GoogleExtendSocialite;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 use SocialiteProviders\Microsoft\MicrosoftExtendSocialite;
 use SocialiteProviders\Okta\OktaExtendSocialite;
 use SocialiteProviders\Saml2\Saml2ExtendSocialite;
-use Illuminate\Support\Facades\Event;
-use Spatie\Backup\Events\BackupZipWasCreated;
-use Spatie\Backup\Events\CleanupWasSuccessful;
 
 class EventServiceProvider extends ServiceProvider
 {

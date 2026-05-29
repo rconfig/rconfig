@@ -3,6 +3,7 @@
 namespace Tests\Fasttests\Auth;
 
 // https://github.com/DCzajkowski/auth-tests
+use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Password;
@@ -35,9 +36,9 @@ class ResetPasswordTest extends TestCase
         return 'dashboard';
     }
 
-    public function testUserCanViewAPasswordResetForm()
+    public function test_user_can_view_a_password_reset_form()
     {
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
 
         $response = $this->get($this->passwordResetGetRoute($token = $this->getValidToken($user)));
 
@@ -46,10 +47,10 @@ class ResetPasswordTest extends TestCase
         // $response->assertViewHas('token', $token);
     }
 
-    public function testUserCanResetPasswordWithValidToken()
+    public function test_user_can_reset_password_with_valid_token()
     {
         Event::fake();
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
 
         $response = $this->post($this->passwordResetPostRoute(), [
             'token' => $this->getValidToken($user),
@@ -66,9 +67,9 @@ class ResetPasswordTest extends TestCase
         });
     }
 
-    public function testUserCannotResetPasswordWithInvalidToken()
+    public function test_user_cannot_reset_password_with_invalid_token()
     {
-        $user = \App\Models\User::factory()->create([
+        $user = User::factory()->create([
             'password' => bcrypt('old-password'),
         ]);
 
@@ -84,9 +85,9 @@ class ResetPasswordTest extends TestCase
         $this->assertGuest();
     }
 
-    public function testUserCannotResetPasswordWithoutProvidingANewPassword()
+    public function test_user_cannot_reset_password_without_providing_a_new_password()
     {
-        $user = \App\Models\User::factory()->create([
+        $user = User::factory()->create([
             'password' => bcrypt('old-password'),
         ]);
 
@@ -105,9 +106,9 @@ class ResetPasswordTest extends TestCase
         $this->assertGuest();
     }
 
-    public function testUserCannotResetPasswordWithoutProvidingAnEmail()
+    public function test_user_cannot_reset_password_without_providing_an_email()
     {
-        $user = \App\Models\User::factory()->create([
+        $user = User::factory()->create([
             'password' => bcrypt('old-password'),
         ]);
 

@@ -11,16 +11,14 @@ class Task extends BaseModel
     use HasFactory;
 
     protected $guarded = [];
-
     protected $casts = [
         'task_email_notify' => 'boolean',
         'download_report_notify' => 'boolean',
         'verbose_download_report_notify' => 'boolean',
     ];
-
     protected $with = ['device', 'category', 'tag', 'finished'];
 
-    //Make it available in the json response
+    // Make it available in the json response
     protected $appends = ['view_url'];
 
     // view url for search results

@@ -21,17 +21,17 @@ class SettingEmailController extends ApiBaseController
         $this->model = $model;
         $this->modelname = $modelname;
     }
- 
+
     public function show($id, $relationship = null, $withCount = null)
     {
         return parent::show($id);
     }
- 
+
     public function update($id, StoreSettingsEmailRequest $request)
     {
         parent::updateResource($id, $request->toDTO()->toArray(), 1);
 
-        if (!App()->environment('testing')) {
+        if (! App()->environment('testing')) {
             Artisan::call('config:cache'); // cannot to a config:cache when testing
         }
 
@@ -43,7 +43,7 @@ class SettingEmailController extends ApiBaseController
         try {
             $users = $this->makeRecipients();
             foreach ($users as $user) {
-                Notification::send($user, new TestMailNotification());
+                Notification::send($user, new TestMailNotification);
             }
 
             return $this->successResponse('Test notification sent successfully!');
@@ -74,7 +74,7 @@ class SettingEmailController extends ApiBaseController
 
     private function makeRecipients()
     {
-        if (!$this->show(1)->mail_to_email) {
+        if (! $this->show(1)->mail_to_email) {
             return $this->failureResponse('Invalid recipient email address');
         }
 

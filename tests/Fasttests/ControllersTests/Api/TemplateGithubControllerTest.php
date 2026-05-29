@@ -11,10 +11,9 @@ use Tests\TestCase;
 class TemplateGithubControllerTest extends TestCase
 {
     protected $user;
-
     protected $templatesDstDir;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->beginTransaction();
