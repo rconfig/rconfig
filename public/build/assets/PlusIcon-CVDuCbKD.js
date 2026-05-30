@@ -1,1 +1,0 @@
-import{Fa as e,Gt as t,Xa as n,eo as r,ga as i,to as a,va as o}from"./app-BTCtwzbT.js";var s={__name:`PlusIcon`,props:{size:{type:[Number,String],default:16},class:{type:String,default:``}},setup(s){n(!1);let c=s,l=i(()=>`size-4 text-muted-foreground ${c.class}`);return(n,i)=>(e(),o(r(t),{size:s.size,class:a(l.value)},null,8,[`size`,`class`]))}};export{s as default};

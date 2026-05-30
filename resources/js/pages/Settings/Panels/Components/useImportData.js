@@ -42,8 +42,8 @@ export function useImportData() {
 	const getCurrentStep = () => steps.find((s) => s.step === currentStep.value);
 
 	function downloadTemplate() {
-		const templateUrl = "https://dl.rconfig.com/downloads/device_import_template.xlsx";
-		window.open(templateUrl, "_blank");
+		// Generated locally so the template columns always match the importer.
+		window.open("/download-import-template", "_blank");
 	}
 
 	// File upload state
