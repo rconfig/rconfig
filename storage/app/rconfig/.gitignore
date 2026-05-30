@@ -2,3 +2,5 @@ example.txt
 oxidized_mappings.json
 #ignore mysql dir
 mysql/
+exports/
+exports/**
