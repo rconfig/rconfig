@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\DataImport;
+namespace App\Console\Commands\DataImport\Rancid;
 
 use App\Models\DeviceCredentials;
 use Carbon\Carbon;

@@ -57,6 +57,8 @@ npm run build    # production build
 
 If a front end change is not visible, the user may need to run `npm run dev` or `npm run build`.
 
+**Never run `npm run build` or `npm run dev` yourself.** The user always runs these manually. After making front end changes, just tell the user to rebuild; do not invoke either command.
+
 ### Testing
 
 This project uses PHPUnit. All tests are PHPUnit classes. If you see a test written for Pest, convert it to PHPUnit.
@@ -306,7 +308,7 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 
 ## Vite Error
 
-- If you receive an "Illuminate\Foundation\ViteException: Unable to locate file in Vite manifest" error, you can run `npm run build` or ask the user to run `npm run dev` or `composer run dev`.
+- If you receive an "Illuminate\Foundation\ViteException: Unable to locate file in Vite manifest" error, ask the user to run `npm run dev`, `npm run build`, or `composer run dev`. Do not run these yourself.
 
 === laravel/v12 rules ===
 

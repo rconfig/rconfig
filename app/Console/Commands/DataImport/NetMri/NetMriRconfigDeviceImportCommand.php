@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\DataImport;
+namespace App\Console\Commands\DataImport\NetMri;
 
 use App\Models\Category;
 use App\Models\Device;
@@ -21,21 +21,17 @@ use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
 use function Laravel\Prompts\warning;
 
-class RancidRconfigDeviceImportCommand extends Command
+class NetMriRconfigDeviceImportCommand extends Command
 {
-    protected $signature = 'rconfig:rancid-import-devices
+    protected $signature = 'rconfig:netmri-import-devices
                             {file? : Path to the JSON import file}
                             {--group=1 : Default device group ID to assign devices to}
                             {--dry-run : Validate the import without making changes}
                             {--info : Display information about this command}';
-    protected $description = 'Import devices from RANCID JSON file to rConfig database';
+    protected $description = 'Import devices from NetMRI JSON file to rConfig database';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
-        // Show info or menu if no file is provided
         if ($this->option('info') || ! $this->argument('file')) {
             $this->showStartMenu();
 
@@ -45,12 +41,9 @@ class RancidRconfigDeviceImportCommand extends Command
         return $this->importDevices();
     }
 
-    /**
-     * Show the start menu with options
-     */
     protected function showStartMenu()
     {
-        note('rConfig RANCID Device Import Utility');
+        note('rConfig NetMRI Device Import Utility');
 
         $options = [
             'info' => 'Show information about this command',
@@ -77,7 +70,6 @@ class RancidRconfigDeviceImportCommand extends Command
 
                     return;
                 }
-
                 $this->input->setArgument('file', $filePath);
                 $this->importDevices();
                 break;
@@ -104,20 +96,17 @@ class RancidRconfigDeviceImportCommand extends Command
         }
     }
 
-    /**
-     * Display detailed information about the command
-     */
     protected function showInfo()
     {
-        info('===== rConfig RANCID Device Import Tool =====');
+        info('===== rConfig NetMRI Device Import Tool =====');
 
         note('PURPOSE:');
-        $this->line('This command imports devices from a JSON file (created by rconfig:rancid-load-devices)');
+        $this->line('This command imports devices from a JSON file (created by rconfig:netmri-load-devices)');
         $this->line('into the rConfig database. It validates device data and creates all necessary');
         $this->line('relationships with templates, vendors, categories, and credentials.');
 
         note('PREREQUISITES:');
-        $this->line('1. A valid JSON import file (created by rconfig:rancid-load-devices)');
+        $this->line('1. A valid JSON import file (created by rconfig:netmri-load-devices)');
         $this->line('2. Existing templates, vendors, and categories in the rConfig database');
         $this->line('3. Valid credential sets for the devices');
 
@@ -126,7 +115,7 @@ class RancidRconfigDeviceImportCommand extends Command
         $this->line('- Validates all data before import');
         $this->line('- Supports dry-run mode to check for issues without making changes');
         $this->line('- Automatically assigns devices to groups');
-        $this->line('- Creates device-tag relationships');
+        $this->line('- Creates device-tag relationships including site/zone tags');
         $this->line('- Skips devices that already exist (based on name or IP)');
 
         note('JSON FORMAT:');
@@ -137,32 +126,29 @@ class RancidRconfigDeviceImportCommand extends Command
         $this->line('- template_id: Valid template ID');
         $this->line('- vendor_id: Valid vendor ID');
         $this->line('- device_category_id: Valid category ID');
+        $this->line('- device_cred_id: Credential set ID');
         $this->line('- prompts: Object with device_enable_prompt and device_main_prompt');
         $this->line('- tags: Array of tag IDs');
-        $this->line('- device_cred_id: Credential set ID (or 0 for direct credentials)');
-        $this->line('- connection_type: "ssh" or "telnet"');
-        $this->line('- port: Connection port number');
-        $this->line('- rancid_group: Original RANCID group name (for reference)');
+        $this->line('- netmri_site: Original NetMRI site (for reference)');
+        $this->line('- netmri_zone: Original NetMRI zone (for reference)');
 
         note('USAGE:');
-        $this->line('php artisan rconfig:rancid-import-devices /path/to/file.json');
-        $this->line('php artisan rconfig:rancid-import-devices --latest');
-        $this->line('php artisan rconfig:rancid-import-devices --dry-run /path/to/file.json');
-        $this->line('php artisan rconfig:rancid-import-devices --group=2 /path/to/file.json');
+        $this->line('php artisan rconfig:netmri-import-devices /path/to/file.json');
+        $this->line('php artisan rconfig:netmri-import-devices --latest');
+        $this->line('php artisan rconfig:netmri-import-devices --dry-run /path/to/file.json');
+        $this->line('php artisan rconfig:netmri-import-devices --group=2 /path/to/file.json');
 
         note('RELATED COMMANDS:');
-        $this->line('rconfig:rancid-device-mappings  - Manage device type mappings');
-        $this->line('rconfig:rancid-load-devices     - Create rConfig compatible JSON from RANCID');
-        $this->line('rconfig:rancid-import-devices   - Import JSON to rConfig database');
+        $this->line('rconfig:netmri-connection       - Manage NetMRI API connection');
+        $this->line('rconfig:netmri-device-mappings  - Manage device type mappings');
+        $this->line('rconfig:netmri-load-devices     - Load devices from NetMRI');
+        $this->line('rconfig:netmri-import-devices   - Import devices to rConfig');
 
         if (confirm('Return to menu?')) {
             $this->showStartMenu();
         }
     }
 
-    /**
-     * Find the latest import file in the temp directory
-     */
     protected function findLatestImportFile()
     {
         $path = storage_path('app/rconfig/tempdir');
@@ -172,7 +158,6 @@ class RancidRconfigDeviceImportCommand extends Command
             return null;
         }
 
-        // Sort files by modification time, newest first
         usort($files, function ($a, $b) {
             return filemtime($b) - filemtime($a);
         });
@@ -180,9 +165,6 @@ class RancidRconfigDeviceImportCommand extends Command
         return $files[0];
     }
 
-    /**
-     * Display all available import files and let user select one
-     */
     protected function selectImportFile()
     {
         $path = storage_path('app/rconfig/tempdir');
@@ -194,19 +176,16 @@ class RancidRconfigDeviceImportCommand extends Command
             return null;
         }
 
-        // Sort files by modification time, newest first
         usort($files, function ($a, $b) {
             return filemtime($b) - filemtime($a);
         });
 
-        // Prepare options for selection menu
         $options = [];
         foreach ($files as $file) {
             $modTime = date('Y-m-d H:i:s', filemtime($file));
             $fileName = basename($file);
             $size = round(filesize($file) / 1024, 2) . ' KB';
 
-            // Try to get the device count from the file
             $deviceCount = '?';
             try {
                 $data = json_decode(File::get($file), true);
@@ -214,7 +193,7 @@ class RancidRconfigDeviceImportCommand extends Command
                     $deviceCount = count($data);
                 }
             } catch (\Exception $e) {
-                // Silently ignore errors
+                // Silently ignore
             }
 
             $options[$file] = "$fileName ($modTime, $size, $deviceCount devices)";
@@ -240,9 +219,6 @@ class RancidRconfigDeviceImportCommand extends Command
         return $selected;
     }
 
-    /**
-     * Main import process
-     */
     protected function importDevices()
     {
         $inputFile = $this->argument('file');
@@ -333,7 +309,6 @@ class RancidRconfigDeviceImportCommand extends Command
 
         // Import valid devices to database
         $importedCount = 0;
-        $failedCount = 0;
         $skipCount = 0;
 
         if (empty($validDevices)) {
@@ -342,7 +317,6 @@ class RancidRconfigDeviceImportCommand extends Command
             return 1;
         }
 
-        // Use transaction to ensure data consistency
         DB::beginTransaction();
 
         try {
@@ -357,7 +331,6 @@ class RancidRconfigDeviceImportCommand extends Command
                 if ($existingDevice) {
                     $skipCount++;
                     $bar->advance();
-
                     continue;
                 }
 
@@ -371,12 +344,8 @@ class RancidRconfigDeviceImportCommand extends Command
                 $device->device_template = $deviceData['template_id'];
                 $device->device_category_id = $deviceData['device_category_id'];
                 $device->device_cred_id = $deviceData['device_cred_id'];
-                $device->status = 1; // Enable by default
-                $device->device_username = $deviceData['device_username'] ?? null;
-                $device->device_password = $deviceData['device_password'] ?? null;
-                $device->device_enable_password = $deviceData['device_enable_password'] ?? null;
+                $device->status = 1;
 
-                // Save device
                 $device->save();
 
                 // Add relationships
@@ -391,7 +360,6 @@ class RancidRconfigDeviceImportCommand extends Command
 
             $bar->finish();
 
-            // Commit transaction
             DB::commit();
 
             info('Import completed successfully!');
@@ -400,20 +368,14 @@ class RancidRconfigDeviceImportCommand extends Command
             if ($skipCount > 0) {
                 note("Skipped: $skipCount devices (already exist)");
             }
-
-            if ($failedCount > 0) {
-                warning("Failed: $failedCount devices");
-            }
         } catch (\Exception $e) {
-            // Roll back transaction on error
             DB::rollBack();
             error('Import failed: ' . $e->getMessage());
-            Log::error('RANCID device import failed: ' . $e->getMessage());
+            Log::error('NetMRI device import failed: ' . $e->getMessage());
 
             return 1;
         }
 
-        // Ask to return to menu
         if (confirm('Return to main menu?')) {
             $this->showStartMenu();
         }
@@ -421,9 +383,6 @@ class RancidRconfigDeviceImportCommand extends Command
         return 0;
     }
 
-    /**
-     * Validate a device before import
-     */
     protected function validateDevice($device, $index)
     {
         $errors = [];
@@ -436,10 +395,11 @@ class RancidRconfigDeviceImportCommand extends Command
             'template_id' => 'Template ID',
             'vendor_id' => 'Vendor ID',
             'device_category_id' => 'Category ID',
+            'device_cred_id' => 'Credential ID',
         ];
 
         foreach ($requiredFields as $field => $label) {
-            if (! isset($device[$field]) || empty($device[$field])) {
+            if (! isset($device[$field]) || (empty($device[$field]) && $device[$field] !== 0)) {
                 $errors[] = "$label is missing";
             }
         }
@@ -477,6 +437,13 @@ class RancidRconfigDeviceImportCommand extends Command
             }
         }
 
+        if (isset($device['device_cred_id']) && is_numeric($device['device_cred_id']) && $device['device_cred_id'] > 0) {
+            $credential = DeviceCredentials::find($device['device_cred_id']);
+            if (! $credential) {
+                $errors[] = "Credential set ID {$device['device_cred_id']} not found";
+            }
+        }
+
         // Validate prompts
         if (! isset($device['prompts']) || ! is_array($device['prompts'])) {
             $errors[] = 'Prompts missing or invalid';
@@ -486,25 +453,6 @@ class RancidRconfigDeviceImportCommand extends Command
             }
             if (! isset($device['prompts']['device_enable_prompt']) || empty($device['prompts']['device_enable_prompt'])) {
                 $errors[] = 'Enable prompt is required';
-            }
-        }
-
-        // Validate credentials
-        if (isset($device['device_cred_id'])) {
-            if ($device['device_cred_id'] === 0) {
-                // Using direct credentials - check if they are provided
-                if (! isset($device['device_username']) || empty($device['device_username'])) {
-                    $errors[] = 'Username is required when using direct credentials';
-                }
-                if (! isset($device['device_password']) || empty($device['device_password'])) {
-                    $errors[] = 'Password is required when using direct credentials';
-                }
-            } else {
-                // Using credential set - check if it exists
-                $credential = DeviceCredentials::find($device['device_cred_id']);
-                if (! $credential) {
-                    $errors[] = "Credential set ID {$device['device_cred_id']} not found";
-                }
             }
         }
 

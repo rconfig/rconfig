@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\DataImport;
+namespace App\Console\Commands\DataImport\Oxidized;
 
 use App\Models\Category;
 use App\Models\Tag;
