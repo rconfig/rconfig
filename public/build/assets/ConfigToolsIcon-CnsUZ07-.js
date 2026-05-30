@@ -1,1 +1,0 @@
-import{Ra as e,Tt as t,io as n,ro as r,xa as i}from"./app-DhS-qlW-.js";var a={__name:`ConfigToolsIcon`,props:{height:{type:Number,default:16},width:{type:Number,default:16},colorClass:{type:String,default:`text-blue-300`}},setup(a){return(o,s)=>(e(),i(r(t),{width:a.width,height:a.height,class:n(a.colorClass)},null,8,[`width`,`height`,`class`]))}};export{a as default};

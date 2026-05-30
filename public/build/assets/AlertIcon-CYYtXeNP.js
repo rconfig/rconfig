@@ -1,0 +1,1 @@
+import{Ra as e,io as t,ro as n,vr as r,xa as i}from"./app-Br9w2llc.js";var a={__name:`AlertIcon`,props:{width:{type:Number,default:16},height:{type:Number,default:16},class:{type:String,default:``}},setup(a){return(o,s)=>(e(),i(n(r),{width:a.width,height:a.height,class:t(a.class)},null,8,[`width`,`height`,`class`]))}};export{a as default};
