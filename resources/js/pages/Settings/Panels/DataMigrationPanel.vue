@@ -1,7 +1,42 @@
 <script setup>
 import { Separator } from "@/components/ui/separator";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ExternalLink, Boxes, Database, TimerReset } from "lucide-vue-next";
+import { Card, CardContent } from "@/components/ui/card";
+import { ExternalLink, Boxes, Database, Network } from "lucide-vue-next";
+
+const importOptions = [
+	{
+		key: "oxidized",
+		name: "OXIDIZED",
+		docsPath: "/integrations/oxidized-import/",
+		logoSrc: "/images/logos/oxidized.svg",
+		Icon: Boxes,
+		description: "Bring your existing Oxidized inventory into rConfig quickly and safely. This CLI tool supports both bulk migrations and targeted imports of specific device groups, keeping your cutover predictable, repeatable, and easy to validate.",
+	},
+	{
+		key: "rancid",
+		name: "RANCID",
+		docsPath: "/integrations/rancid-import/",
+		logoSrc: "/images/logos/rancid.svg",
+		Icon: Database,
+		description: "Import devices from RANCID into rConfig with precision and speed. Migrate entire estates or specific device groups while preserving structure, making it simple to transition without surprises.",
+	},
+	{
+		key: "netmri",
+		name: "NETMRI",
+		docsPath: "/integrations/netmri-import/",
+		logoSrc: "/images/logos/netmri.svg",
+		Icon: Network,
+		description: "Move from NetMRI to rConfig with a clean, auditable import. Pull in device inventory and core metadata so you can start collecting configs immediately after cutover.",
+	},
+	{
+		key: "solarwinds",
+		name: "SolarWinds NCM",
+		docsPath: "/integrations/solarwinds-ncm-import/",
+		logoSrc: "/images/logos/solarwinds.svg",
+		Icon: Network,
+		description: "Seamlessly transition from SolarWinds NCM to rConfig. Import your device inventory and essential metadata to quickly establish your configuration management workflows in rConfig.",
+	},
+];
 
 function openExtLink(url) {
 	window.open(url, "_blank");
@@ -19,8 +54,6 @@ function openExtLink(url) {
 					Migrating to rConfig? These tools allow you to import devices from other Network Configuration Management (NCM) systems into rConfig. Choose from the available import options below to get started.
 				</p>
 
-				<div class="grid w-full max-w-full items-center gap-1.5 text-muted-foreground text-md"></div>
-
 				<Separator class="my-6" />
 
 				<div class="flex items-start gap-4">
@@ -28,18 +61,18 @@ function openExtLink(url) {
 						<Card class="mt-4">
 							<CardContent>
 								<div class="space-y-6 mt-4">
-									<!-- DEVICE SYNC -->
-									<div class="rounded-md border p-4">
+									<div v-for="opt in importOptions" :key="opt.key" class="rounded-md border p-4">
 										<div class="flex items-center">
 											<div class="flex-shrink-0">
-												<Boxes />
+												<img :src="opt.logoSrc" :alt="opt.name + ' logo'" class="h-7 w-7" loading="lazy" />
 											</div>
 											<div class="ml-2 flex items-center justify-between w-full">
-												<div>
-													<h3 class="text-sm font-medium text-muted-foreground">OXIDIZED</h3>
+												<div class="flex items-center gap-2">
+													<h3 class="text-sm font-medium text-muted-foreground">{{ opt.name }}</h3>
+													<component :is="opt.Icon" class="h-4 w-4 text-muted-foreground" />
 												</div>
-												<div class="flex items-center justify-end w-full">
-													<Button variant="outline" size="sm" @click="openExtLink($rconfigDocsUrl + '/integrations/data-import/oxydized-import/')" class="flex items-center gap-1 text-xs">
+												<div class="flex items-center justify-end">
+													<Button variant="outline" size="sm" @click="openExtLink($rconfigDocsUrl + opt.docsPath)" class="flex items-center gap-1 text-xs">
 														Configure
 														<ExternalLink class="w-4 h-4" />
 													</Button>
@@ -47,75 +80,13 @@ function openExtLink(url) {
 											</div>
 										</div>
 										<p class="mt-2 text-sm text-rcgray-300">
-											Import devices from Oxidized into rConfig with precision and speed. This CLI tool enables both bulk migrations and targeted imports of specific device groups, giving you complete control over your transition.
+											{{ opt.description }}
 										</p>
 									</div>
 								</div>
 							</CardContent>
 						</Card>
 					</div>
-				</div>
-				<Separator class="my-6" />
-
-                <div class="flex items-start gap-4">
-					<div class="w-full">
-						<Card class="mt-4">
-							<CardContent>
-								<div class="space-y-6 mt-4">
-									<!-- DEVICE SYNC -->
-									<div class="rounded-md border p-4">
-										<div class="flex items-center">
-											<div class="flex-shrink-0">
-												<Database color="#f5a97f" />
-											</div>
-											<div class="ml-2 flex items-center justify-between w-full">
-												<div>
-													<h3 class="text-sm font-medium text-muted-foreground">RANCID</h3>
-												</div>
-												<div class="flex items-center justify-end w-full">
-													<Button variant="outline" size="sm" @click="openExtLink($rconfigDocsUrl + '/integrations/data-import/rancid-import/')" class="flex items-center gap-1 text-xs">
-														Configure
-														<ExternalLink class="w-4 h-4" />
-													</Button>
-												</div>
-											</div>
-										</div>
-										<p class="mt-2 text-sm text-rcgray-300">
-											Import devices from Rancid into rConfig with precision and speed. This CLI tool enables both bulk migrations and targeted imports of specific device groups, giving you complete control over your transition.
-										</p>
-									</div>
-								</div>
-							</CardContent>
-						</Card>
-					</div>
-				</div>
-                <Separator class="my-6" />
-				<!-- Cards Section - Similar to Integrations/Main.vue -->
-				<div class="grid grid-cols-1 gap-6">
-					<!-- Placeholder Card for Future Import Options -->
-					<Card class="opacity-50">
-						<CardHeader>
-							<div class="flex items-center justify-between">
-								<div>
-									<CardTitle>More Options Coming</CardTitle>
-									<CardDescription class="mt-1.5">Additional import tools</CardDescription>
-								</div>
-								<div class="h-8 w-8 rounded-full flex items-center justify-center bg-primary/10">
-									<TimerReset class="h-4 w-4 text-primary" />
-								</div>
-							</div>
-						</CardHeader>
-						<CardContent>
-							<p class="text-sm text-muted-foreground">
-								More import options for additional NCM systems coming soon.
-							</p>
-						</CardContent>
-						<!-- <CardFooter>
-							<Button variant="outline" class="w-full" disabled>
-								<span class="mr-auto">Coming Soon</span>
-							</Button>
-						</CardFooter> -->
-					</Card>
 				</div>
 			</div>
 		</div>

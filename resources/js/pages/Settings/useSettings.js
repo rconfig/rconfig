@@ -5,6 +5,7 @@ import SystemSettingsPanel from '@/pages/Settings/Panels/SystemSettingsPanel.vue
 import CredentialsPanel from '@/pages/Settings/Panels/CredentialsPanel.vue';
 import SecurityPanel from '@/pages/Settings/Panels/SecurityPanel.vue';
 import DataMigrationPanel from "@/pages/Settings/Panels/DataMigrationPanel.vue";
+import ImportExportPanel from "@/pages/Settings/Panels/ImportExportPanel.vue";
 import LoggingDebuggingPanel from "@/pages/Settings/Panels/LoggingDebuggingPanel.vue";
 import ScheduledTasksTable from '@/pages/Settings/Panels/ScheduledTasksTable.vue';
 import AboutPanel from '@/pages/Settings/Panels/AboutPanel.vue';
@@ -23,6 +24,7 @@ export function useSettings() {
 		'/settings/credentials': CredentialsPanel,
 		'/settings/debugging': LoggingDebuggingPanel,
 		"/settings/data-migration": DataMigrationPanel,
+		"/settings/import-export": ImportExportPanel,
 		'/settings/security': SecurityPanel,
 		'/settings/about': AboutPanel,
 		'/settings/logs': LogsPanel,

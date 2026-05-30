@@ -26,6 +26,7 @@ Route::get('auth/callback/{provider}', SocialiteController::class . '@callback')
 Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/download-export', 'App\Http\Controllers\FileDownloadController@download_export');
+    Route::get('/download-import-template', 'App\Http\Controllers\FileDownloadController@download_device_import_template');
 
     /* SPA VUE ROUTE */
     Route::get('/{any}', [SpaController::class, 'index'])->where('any', '^(?!api\/)[\/\w\.-]*');

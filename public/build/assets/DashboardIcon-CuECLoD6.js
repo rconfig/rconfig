@@ -1,1 +1,0 @@
-import{Fa as e,dn as t,eo as n,to as r,va as i}from"./app-BTCtwzbT.js";var a={__name:`DashboardIcon`,props:{height:{type:Number,default:16},width:{type:Number,default:16},class:{type:String,default:``}},setup(a){return(o,s)=>(e(),i(n(t),{width:a.width,height:a.height,color:`#c8d1f3`,class:r(a.class)},null,8,[`width`,`height`,`class`]))}};export{a as default};

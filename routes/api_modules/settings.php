@@ -18,4 +18,12 @@ Route::prefix('settings')->group(function () {
     Route::get('/test-email', 'SettingEmailController@TestMail');
     Route::get('/test-notification', 'SettingEmailController@TestMailNotifications');
     Route::get('/schedule/list', 'ScheduleController@list');
+
+    Route::prefix('/export')->group(function () {
+        Route::get('/list-tables', 'ExportController@listTables');
+        Route::get('/get-table/{table}', 'ExportController@export');
+    });
+    Route::prefix('/import')->group(function () {
+        Route::post('/devices', 'DeviceImportController@importDeviceFile');
+    });
 });

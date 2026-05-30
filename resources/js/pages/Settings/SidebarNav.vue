@@ -2,7 +2,7 @@
 import { ref, watch, computed } from "vue";
 import { useRouter } from "vue-router";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { FileCode2, Bug, FileText, Save, BetweenHorizontalStart, CircleFadingArrowUp, Info, CloudUpload, CloudDownload, ChevronRight, ChevronDown, Settings, Shield, Key, Users } from "lucide-vue-next";
+import { FileCode2, Bug, FileText, Save, BetweenHorizontalStart, CircleFadingArrowUp, Info, CloudUpload, CloudDownload, ChevronRight, ChevronDown, Settings, Shield, Key, Users, ArrowDownUp } from "lucide-vue-next";
 
 const props = defineProps({
 	settingsActivePane: String,
@@ -84,6 +84,11 @@ const sections = computed(() => [
 				title: "Data Migration",
 				href: "/settings/data-migration",
 				icon: BetweenHorizontalStart,
+			},
+			{
+				title: "Import / Export",
+				href: "/settings/import-export",
+				icon: ArrowDownUp,
 			},
 		],
 	},

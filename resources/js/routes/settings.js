@@ -48,6 +48,13 @@ export default [
 		meta: { rbacViewName: "Setting", pageTitleKey: "SettingsDataMigration" },
 	},
 	{
+		path: "/settings/import-export",
+		name: "settings-import-export",
+		component: () => import("@/pages/Settings/Main.vue"),
+		props: { importExport: true },
+		meta: { rbacViewName: "Setting", pageTitleKey: "SettingsImportExport" },
+	},
+	{
 		path: "/settings/debugging",
 		name: "settings-debugging",
 		component: () => import("@/pages/Settings/Main.vue"),
