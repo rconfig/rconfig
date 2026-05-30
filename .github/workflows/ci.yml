@@ -51,8 +51,8 @@ jobs:
           } >> .env
 
       - name: Install Composer dependencies
-        # ramsey/composer-install v3.2.1
-        uses: ramsey/composer-install@a8d0d959dab41457692a5e2041bd9b757a119e3f
+        # ramsey/composer-install v4.0.0 (uses actions/cache v5, runs on Node 24)
+        uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda
 
       - name: Run Pint
         run: vendor/bin/pint --test
@@ -88,8 +88,8 @@ jobs:
           } >> .env
 
       - name: Install Composer dependencies
-        # ramsey/composer-install v3.2.1
-        uses: ramsey/composer-install@a8d0d959dab41457692a5e2041bd9b757a119e3f
+        # ramsey/composer-install v4.0.0 (uses actions/cache v5, runs on Node 24)
+        uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda
 
       - name: Cache PHPStan result cache
         # actions/cache v5.0.5 (runs on Node 24)
