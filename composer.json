@@ -2,7 +2,7 @@
     "name": "rconfig/rconfig",
     "type": "project",
     "description": "rConfig V8 Core",
-    "version": "8.1.0",
+    "version": "8.1.1",
     "keywords": [
         "framework",
         "laravel"
@@ -71,7 +71,7 @@
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",
-            "@php artisan ide-helper:generate --ansi"
+            "@php -r \"file_exists('vendor/barryvdh/laravel-ide-helper') && passthru('php artisan ide-helper:generate --ansi');\""
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
