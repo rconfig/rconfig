@@ -5,9 +5,13 @@ namespace App\Jobs;
 use App\CustomClasses\DeviceRecordPrepare;
 use App\CustomClasses\SaveConfigsToDiskAndDb;
 use App\CustomClasses\SetDeviceStatus;
+use App\Enums\NotificationChannel;
+use App\Enums\NotificationType;
 use App\Http\Controllers\Connections\MainConnectionManager;
-use App\Models\User;
 use App\Notifications\DBDeviceConnectionFailureNotification;
+use App\Notifications\DBNotification;
+use App\Notifications\MailDeviceConnectionFailureNotification;
+use App\Traits\NotificationDispatcher;
 use Carbon\Carbon;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
@@ -15,12 +19,11 @@ use Illuminate\Console\Command;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Redis;
 
 class DeviceDownloadJob extends Command
 {
-    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Batchable, Dispatchable, InteractsWithQueue, NotificationDispatcher, Queueable, SerializesModels;
 
     protected $output;
     protected $eventtype;
@@ -63,7 +66,7 @@ class DeviceDownloadJob extends Command
         if ($configsArray === false || isset($configsArray['failure'])) {
             $this->devicerecord['end_time'] = Carbon::now();
             $logmsg = 'No config data returned for ' . ($this->devicerecord['device_name'] . ' - ID:' . $this->devicerecord['id'] . '. Check your logs for more information');
-            Notification::send(User::all(), new DBDeviceConnectionFailureNotification($logmsg, $this->devicerecord['id']));
+            $this->sendDeviceConnectionFailureNotifications($logmsg);
 
             $configSaveResult = (new SaveConfigsToDiskAndDb('device_download', 'Failed config download', 0, $this->devicerecord, $this->report_id))->saveConfigs();
 
@@ -95,5 +98,28 @@ class DeviceDownloadJob extends Command
         Redis::set('download-now-' . $this->devicerecord['id'], 'false');
 
         return $this->output;
+    }
+
+    /**
+     * Dispatch device connection failure notifications, honouring each user's
+     * per-channel preferences. Sends an in-app (DB) alert and an email alert
+     * only to the users who have opted in to each channel.
+     */
+    protected function sendDeviceConnectionFailureNotifications(string $logmsg): void
+    {
+        $deviceId = $this->devicerecord['id'];
+
+        $this->sendToSingleChannel(
+            NotificationType::CONNECTION_DEVICE_FAILURE,
+            NotificationChannel::DB,
+            new DBDeviceConnectionFailureNotification($logmsg, $deviceId)
+        );
+
+        $this->sendNotificationWithErrorFallback(
+            NotificationType::CONNECTION_DEVICE_FAILURE,
+            new MailDeviceConnectionFailureNotification($logmsg, $deviceId),
+            [NotificationChannel::MAIL],
+            new DBNotification('Notification error', 'Could not send device connection failure email notification', 'system', 'error', 'pficon-error-circle-o')
+        );
     }
 }
