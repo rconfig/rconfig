@@ -1,0 +1,29 @@
+# rConfig connection template – DO NOT EDIT DIRECTLY
+## Template Notes:
+## - All free text values must be wrapped in double quotes: " "
+## - Documentation: https://v8coredocs.rconfig.com/devices/templates/
+## - Community templates and contributions: https://github.com/rconfig/rConfig-templates
+
+main:
+  name: "Cisco IOS - TELNET - No Enable - test 2500"              # Cisco IOS via TELNET without enable mode
+  desc: "Cisco IOS TELNET based connection without enable mode"
+
+connect:
+  timeout: 10                                         # Connection timeout (in seconds)
+  protocol: telnet                                    # Protocol: telnet
+  port: 23                                            # Port number
+
+auth:
+  username: "User:"                               # Username prompt
+  password: "Password:"            # Password prompt
+  enable: off                                         # Enable mode not required
+  enableCmd: "enable"                                 # Enable command (ignored if enable is off)
+
+config:
+  linebreak: "\r\n"                                      # Linebreak format (default: 'n')
+  paging: off                                       # Disable CLI paging
+  pagingCmd: "config paging disable"                      # Command to disable paging
+  pagerPrompt: ""                                     # DEPRECATED: This value is ignored
+  saveConfig: "wr mem"                                # Command to save configuration
+  exitCmd: "logout"                                     # Command to exit session
+  setWindowSize: [240, 2048]                          # Terminal window size

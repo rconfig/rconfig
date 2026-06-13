@@ -1,0 +1,26 @@
+# rConfig connection template – DO NOT EDIT DIRECTLY
+## Template Notes:
+## - All free text values must be wrapped in double quotes: " "
+## - Documentation: https://v8coredocs.rconfig.com/devices/templates/
+## - Community templates and contributions: https://github.com/rconfig/rConfig-templates
+
+main:
+  name: "SSH Private Key Template"         # Unique name for this template
+  desc: "SSH Private Key Template"         # UI description
+
+connect:
+  timeout: 10                              # Connection timeout (in seconds)
+  protocol: ssh                            # Protocol to use: 'telnet' or 'ssh'
+  port: 22                                 # Port number for connection (1–65535)
+
+auth:
+  sshPrivKey: on                           # SSH Private Key authentication enabled
+  username: "Username:"                    # Prompt string for username
+  password: "Password:"                    # Prompt string for password
+  enable: off                              # Enable mode? Set to 'on' or 'off'
+
+config:
+  linebreak: "n"                           # Linebreak setting: 'n' (default) or 'r'
+  paging: off                              # Set to 'on' to disable paging
+  saveConfig: "wr mem"                     # Command to save running config
+  exitCmd: "quit"                          # Command to end session
