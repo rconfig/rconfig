@@ -7,6 +7,8 @@ use App\Models\Config;
 use App\Models\Taskdownloadreport;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Config as ConfigFacade;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use stdClass;
@@ -76,6 +78,67 @@ class TaskReportControllerTest extends TestCase
         $this->assertFileExists(report_path() . $report_data->file_name);
         File::delete(report_path() . $report_data->file_name);
         $this->assertFileDoesNotExist(report_path() . $report_data->file_name);
+    }
+
+    /**
+     * Regression for issue #251: the report download time must be rendered in the
+     * configured application timezone, not UTC. Previously the accessor called
+     * ->addHours($timezone) with a timezone string, which cast to 0 and disabled
+     * the conversion, so reports showed UTC and tasks appeared to run at the wrong time.
+     */
+    public function test_created_at_is_rendered_in_configured_timezone()
+    {
+        $originalDefault = date_default_timezone_get();
+
+        try {
+            // Simulate a user whose configured timezone has a non-zero UTC offset.
+            ConfigFacade::set('app.timezone', 'Europe/Rome');
+            date_default_timezone_set('Europe/Rome');
+
+            $report = Taskdownloadreport::factory()->create();
+
+            // Force a known local wall-clock time (02:00 Rome local on a CEST date, UTC+2).
+            DB::table('taskdownloadreports')
+                ->where('id', $report->id)
+                ->update(['created_at' => '2026-06-13 02:00:00']);
+
+            $rendered = Taskdownloadreport::find($report->id)->created_at;
+
+            // It must show the local time the task ran, not the UTC equivalent.
+            $this->assertSame('Jun 13, 2026 2:00AM', $rendered);
+            $this->assertNotSame('Jun 13, 2026 0:00AM', $rendered);
+        } finally {
+            date_default_timezone_set($originalDefault);
+        }
+    }
+
+    /**
+     * The report time must reflect the local wall-clock value as stored, even when the
+     * UTC equivalent falls on the previous day. The old code rendered the UTC value,
+     * which could roll the date back a day for positive offsets.
+     */
+    public function test_created_at_renders_local_time_across_date_rollover()
+    {
+        $originalDefault = date_default_timezone_get();
+
+        try {
+            // Sydney is UTC+10 in June, so 09:15 local is 23:15 UTC on the previous day.
+            ConfigFacade::set('app.timezone', 'Australia/Sydney');
+            date_default_timezone_set('Australia/Sydney');
+
+            $report = Taskdownloadreport::factory()->create();
+            DB::table('taskdownloadreports')
+                ->where('id', $report->id)
+                ->update(['created_at' => '2026-06-13 09:15:00']);
+
+            $rendered = Taskdownloadreport::find($report->id)->created_at;
+
+            $this->assertSame('Jun 13, 2026 9:15AM', $rendered);
+            // The old UTC rendering would have been the previous day.
+            $this->assertNotSame('Jun 12, 2026 11:15PM', $rendered);
+        } finally {
+            date_default_timezone_set($originalDefault);
+        }
     }
 
     protected function tearDown(): void

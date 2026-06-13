@@ -13,14 +13,18 @@ class Taskdownloadreport extends Model
 
     protected $dates = ['created_at', 'updated_at', 'start_time', 'end_time'];
 
-    public function getCreatedAtAttribute($value)
+    /**
+     * Render the report's created_at in the application's configured timezone.
+     *
+     * The stored value is reinterpreted onto the configured timezone so the
+     * download time shown in task reports matches local time rather than UTC.
+     */
+    public function getCreatedAtAttribute(?string $value): string
     {
         $timezone = Config::get('app.timezone');
 
-        return Carbon::createFromTimestamp(strtotime($value))
-            // ->timezone($timezone)
-            ->addHours($timezone)
-            ->format('M d, Y G:iA'); // Feb 23, 2015 12:32 am
-        // ->toDateTimeString();
+        return Carbon::createFromTimestamp(strtotime((string) $value))
+            ->setTimezone($timezone)
+            ->format('M d, Y G:iA'); // Jun 13, 2026 2:00AM
     }
 }
