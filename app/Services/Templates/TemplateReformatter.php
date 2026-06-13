@@ -159,7 +159,7 @@ class TemplateReformatter
             // Parse key-value pairs
             if ($currentSection && preg_match('/^([a-zA-Z][a-zA-Z0-9]*)\s*:\s*(.*)$/', $trimmed, $matches)) {
                 $key = $matches[1];
-                $value = $matches[2];
+                $value = $this->stripInlineComment($matches[2]);
 
                 // Handle array values like [240, 2048]
                 if (preg_match('/^\[(.*)\]$/', $value, $arrayMatches)) {
@@ -213,6 +213,36 @@ class TemplateReformatter
         }
 
         return implode("\n", $output);
+    }
+
+    /**
+     * Strips a trailing inline comment from a raw value while preserving any
+     * '#' that appears inside a quoted string.
+     *
+     * @param  string  $value  The raw value portion captured after the key
+     * @return string The value with any inline comment removed
+     */
+    private function stripInlineComment(string $value): string
+    {
+        $value = trim($value);
+
+        if ($value === '') {
+            return '';
+        }
+
+        $quote = $value[0];
+
+        if ($quote === '"' || $quote === '\'') {
+            $closingPos = strpos($value, $quote, 1);
+
+            if ($closingPos !== false) {
+                // Keep the quoted segment and drop anything after the closing quote
+                return substr($value, 0, $closingPos + 1);
+            }
+        }
+
+        // Unquoted value: an inline comment is whitespace followed by '#'
+        return trim(preg_replace('/\s+#.*$/s', '', $value));
     }
 
     private function formatValue($value): string

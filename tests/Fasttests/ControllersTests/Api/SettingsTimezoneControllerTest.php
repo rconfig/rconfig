@@ -60,4 +60,21 @@ class SettingsTimezoneControllerTest extends TestCase
         $this->assertEquals('Europe/Dublin', \Config::get('app.timezone'));
         $this->assertEquals('Europe/Dublin', env('TIMEZONE'));
     }
+
+    /**
+     * Regression for issue #251: an invalid timezone must be rejected. If it reached
+     * app.timezone the scheduler would silently fall back to UTC and run tasks at the
+     * wrong time.
+     */
+    public function test_update_timezone_rejects_invalid_timezone()
+    {
+        $response = $this->patchJson('/api/settings/timezone/1', ['timezone' => 'Not/AZone']);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('timezone');
+        $this->assertDatabaseMissing('settings', [
+            'id' => 1,
+            'timezone' => 'Not/AZone',
+        ]);
+    }
 }
