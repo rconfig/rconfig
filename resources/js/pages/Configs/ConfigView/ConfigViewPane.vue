@@ -1,6 +1,8 @@
 <script setup>
 import ConfigSummaryPanel from "@/pages/Configs/ConfigView/ConfigSummaryPanel.vue";
 import ConfigViewMainPanel from "@/pages/Configs/ConfigView/ConfigViewMainPanel.vue";
+import ConfigHistoryPanel from "@/pages/Configs/ConfigView/ConfigHistoryPanel.vue";
+import ConfigChangesPanel from "@/pages/Configs/ConfigView/ConfigChangesPanel.vue";
 import ConfigViewPaneDropdown from "@/pages/Configs/ConfigView/ConfigViewPaneDropdown.vue";
 import DetailsViewLeftNav from "@/pages/Inventory/Shared/Navs/DetailsViewLeftNav.vue";
 import Loading from "@/pages/Shared/Loaders/Loading.vue";
@@ -67,6 +69,7 @@ function close() {
 					<ScrollArea class="max-h-[83vh] w-full rounded-md border smooth-scroll overflow-y-auto">
 						<DetailsViewLeftNav @closeNav="closeNav" @selectLeftNavView="selectLeftNavView" :selectedNav="leftNavSelected" :deviceId="configId" context="config" />
 						<ConfigSummaryPanel class="p-2" v-if="leftNavSelected === 'details'" :isLoading="isLoading" :configData="configData" />
+						<ConfigHistoryPanel v-if="leftNavSelected === 'configHistory'" :isLoading="isLoading" :configData="configData" @viewConfig="handleViewConfig" @viewConfigChanges="handleViewConfigChanges" />
 					</ScrollArea>
 				</ResizablePanel>
 				<ResizableHandle with-handle />
@@ -75,7 +78,8 @@ function close() {
 						<div class="flex items-center justify-center" style="height: 60vh;" v-if="isLoading">
 							<Loading class="flex justify-center" />
 						</div>
-						<ConfigViewMainPanel class="p-2" v-if="!isLoading && configData && !showChangesPanel" :deviceId="configData.device_id" :deviceName="configData.device_name" :configId="viewConfigId" :selectedConfigVersion="selectedConfigVersion" :key="viewConfigId" style="height: 60vh;" />
+						<ConfigViewMainPanel class="p-2" v-if="!isLoading && configData && !showChangesPanel" :deviceId="configData.device_id" :deviceName="configData.device_name" :configId="viewConfigId" :selectedConfigVersion="selectedConfigVersion || configData.config_version" :key="viewConfigId" style="height: 60vh;" />
+						<ConfigChangesPanel class="p-2" v-if="!isLoading && configData && showChangesPanel" :configId="changesConfigId" @backToConfig="handleBackToConfig" :key="'changes-' + changesConfigId" />
 					</ScrollArea>
 				</ResizablePanel>
 			</ResizablePanelGroup>

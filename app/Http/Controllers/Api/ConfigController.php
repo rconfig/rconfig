@@ -123,6 +123,34 @@ class ConfigController extends ApiBaseController
         }
     }
 
+    public function getConfigHistory($id, $command, Request $request)
+    {
+        $perPage = (int) $request->perPage;
+
+        // Pick one representative config per version: prefer latest_version=1,
+        // then any config that produced a change record, then the highest id.
+        $subquery = DB::table('configs')
+            ->leftJoin('config_changes', 'configs.id', '=', 'config_changes.current_config_id')
+            ->select(
+                'configs.config_version',
+                DB::raw('COALESCE(
+                    MAX(CASE WHEN configs.latest_version = 1 THEN configs.id END),
+                    MAX(CASE WHEN config_changes.id IS NOT NULL THEN configs.id END),
+                    MAX(configs.id)
+                ) as chosen_id')
+            )
+            ->where('configs.device_id', $id)
+            ->where('configs.command', 'LIKE', '%' . $command . '%')
+            ->where('configs.download_status', 1)
+            ->groupBy('configs.config_version');
+
+        return Config::joinSub($subquery, 'latest_configs', function ($join) {
+            $join->on('configs.id', '=', 'latest_configs.chosen_id');
+        })
+            ->orderBy('configs.config_version', 'desc')
+            ->paginate($perPage ?: 10);
+    }
+
     public function getDistinctCommands($id)
     {
         if ($id == 0) {

@@ -1,0 +1,1 @@
+import{Da as e,Wa as t,lo as n,uo as r,wr as i}from"./app-DHRl4gvJ.js";var a={__name:`AlertIcon`,props:{width:{type:Number,default:16},height:{type:Number,default:16},class:{type:String,default:``}},setup(a){return(o,s)=>(t(),e(n(i),{width:a.width,height:a.height,class:r(a.class)},null,8,[`width`,`height`,`class`]))}};export{a as default};

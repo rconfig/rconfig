@@ -69,7 +69,8 @@ watch(selectedRows, val => {
                   <span class="ml-2">Name</span>
                 </Button>
               </TableHead>
-              <TableHead class="w-[30%]">Command</TableHead>
+              <TableHead class="w-[25%]">Command</TableHead>
+              <TableHead class="w-[5%]">Version</TableHead>
               <TableHead class="w-[30%]">Filename</TableHead>
               <TableHead class="w-[10%]">Created</TableHead>
             </TableRow>
@@ -105,6 +106,10 @@ watch(selectedRows, val => {
                 </TableCell>
                 <TableCell class="text-start">
                   {{ row.command }}
+                </TableCell>
+                <TableCell class="text-start">
+                  <RcBadge v-if="row.config_version && row.latest_version === 1" variant="info">{{ row.config_version }}</RcBadge>
+                  <Badge v-else-if="row.config_version" variant="secondary">{{ row.config_version }}</Badge>
                 </TableCell>
                 <TableCell class="text-start">
                   {{ row.config_filename }}
