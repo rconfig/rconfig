@@ -61,7 +61,8 @@ export function useSystemSettingsTimezone() {
       })
       .catch(error => {
         console.log(error);
-        toastError('Error', 'Failed to set timezone');
+        const message = error.response?.data?.message || 'Failed to set timezone';
+        toastError('Error', message);
         popoverState.value = false;
       });
   }

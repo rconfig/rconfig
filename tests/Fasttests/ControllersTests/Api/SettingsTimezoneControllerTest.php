@@ -3,6 +3,7 @@
 namespace Tests\Fasttests\ControllersTests\Api;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
 
 class SettingsTimezoneControllerTest extends TestCase
@@ -45,6 +46,7 @@ class SettingsTimezoneControllerTest extends TestCase
         $timezone = 'Pacific/Midway';
         $response = $this->patch('/api/settings/timezone/1', ['timezone' => $timezone]);
         $response->assertStatus(200);
+        $response->assertJson(['success' => true]);
         $this->assertDatabaseHas('settings', [
             'id' => 1,
             'timezone' => $timezone,
@@ -59,6 +61,42 @@ class SettingsTimezoneControllerTest extends TestCase
         \Artisan::call('config:cache'); // cannot to a config:cache when testing
         $this->assertEquals('Europe/Dublin', \Config::get('app.timezone'));
         $this->assertEquals('Europe/Dublin', env('TIMEZONE'));
+    }
+
+    /**
+     * The timezone must be written to .env without any slash escaping. A previous
+     * implementation mangled the value (Europe/Rome -> Europe\/\Rome) which only
+     * worked by accident, so guard the .env now holds the clean identifier.
+     */
+    public function test_update_timezone_writes_clean_identifier_to_env()
+    {
+        $timezone = 'Europe/Rome';
+        $response = $this->patch('/api/settings/timezone/1', ['timezone' => $timezone]);
+        $response->assertStatus(200);
+
+        $this->assertStringContainsString('TIMEZONE=Europe/Rome', file_get_contents(app()->environmentFilePath()));
+
+        // change back to Europe/Dublin
+        \Artisan::call('env:set TIMEZONE=Europe/Dublin');
+    }
+
+    /**
+     * Regression for issue #307: the dashboard system-info card caches the timezone
+     * for a week. Updating the timezone must bust that cache so the dashboard reflects
+     * the change immediately instead of showing a stale (mismatched) timezone.
+     */
+    public function test_update_timezone_busts_dashboard_sysinfo_cache()
+    {
+        Cache::put('dashboard.sysinfo', ['timezone' => 'Europe/Dublin'], 600);
+        $this->assertTrue(Cache::has('dashboard.sysinfo'));
+
+        $response = $this->patch('/api/settings/timezone/1', ['timezone' => 'Pacific/Midway']);
+        $response->assertStatus(200);
+
+        $this->assertFalse(Cache::has('dashboard.sysinfo'));
+
+        // change back to Europe/Dublin
+        \Artisan::call('env:set TIMEZONE=Europe/Dublin');
     }
 
     /**
