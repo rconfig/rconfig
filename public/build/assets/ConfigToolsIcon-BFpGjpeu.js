@@ -1,0 +1,1 @@
+import{Da as e,Wa as t,lo as n,uo as r,wt as i}from"./app-DHRl4gvJ.js";var a={__name:`ConfigToolsIcon`,props:{height:{type:Number,default:16},width:{type:Number,default:16},colorClass:{type:String,default:`text-blue-300`}},setup(a){return(o,s)=>(t(),e(n(i),{width:a.width,height:a.height,class:r(a.colorClass)},null,8,[`width`,`height`,`class`]))}};export{a as default};

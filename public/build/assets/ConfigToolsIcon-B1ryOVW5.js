@@ -1,1 +1,0 @@
-import{Ra as e,io as t,ro as n,wt as r,xa as i}from"./app-CdNUwdKL.js";var a={__name:`ConfigToolsIcon`,props:{height:{type:Number,default:16},width:{type:Number,default:16},colorClass:{type:String,default:`text-blue-300`}},setup(a){return(o,s)=>(e(),i(n(r),{width:a.width,height:a.height,class:t(a.colorClass)},null,8,[`width`,`height`,`class`]))}};export{a as default};

@@ -1,1 +1,0 @@
-import{$a as e,Gt as t,Ra as n,io as r,ro as i,xa as a,ya as o}from"./app-CdNUwdKL.js";var s={__name:`PlusIcon`,props:{size:{type:[Number,String],default:16},class:{type:String,default:``}},setup(s){e(!1);let c=s,l=o(()=>`size-4 text-muted-foreground ${c.class}`);return(e,o)=>(n(),a(i(t),{size:s.size,class:r(l.value)},null,8,[`size`,`class`]))}};export{s as default};
