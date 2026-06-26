@@ -6,6 +6,9 @@ use App\Models\Category;
 use App\Models\Command;
 use App\Models\Config;
 use App\Services\Config\FileOperations;
+use App\Services\ConfigCompare\ConfigCompareExclusionCleaner;
+use App\Services\ConfigHistory\ConfigHistoryManager;
+use Illuminate\Support\Facades\Log;
 
 class SaveConfigsToDiskAndDb
 {
@@ -76,10 +79,29 @@ class SaveConfigsToDiskAndDb
         $saved = $this->model->save();
 
         if ($saved && ! empty($savedFileInfo)) {
+            $this->runVersionCompare();
+
             return ['success' => true, 'commandName' => $this->commandName];
         }
 
         return ['success' => false, 'commandName' => $this->commandName];
+    }
+
+    /**
+     * Run version + diff detection for a freshly saved config. A failure here
+     * must never fail the download, so everything is wrapped and logged.
+     */
+    private function runVersionCompare(): void
+    {
+        try {
+            (new ConfigHistoryManager)->handleNewDownloadedConfig($this->model, $this->commandName);
+
+            if (! empty($this->model->config_location)) {
+                (new ConfigCompareExclusionCleaner($this->model->config_location, $this->commandName))->cleanTempFiles();
+            }
+        } catch (\Throwable $e) {
+            Log::error('Config version compare failed for device ' . $this->model->device_name . ': ' . $e->getMessage());
+        }
     }
 
     public function saveFailedConfigs()

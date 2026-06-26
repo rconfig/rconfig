@@ -65,6 +65,10 @@ export function useCommands() {
 		openDialog("DialogNewCommand");
 	}
 
+	function navToCompareOptions() {
+		router.push({ name: "configcompareoptions" });
+	}
+
 	// Delete Command
 	const deleteCommand = async (id) => {
 		try {
@@ -179,6 +183,7 @@ export function useCommands() {
 		fetchCommands,
 		handleKeyDown,
 		handleSave,
+		navToCompareOptions,
 		openDialog,
 		reload,
 		toggleSort,

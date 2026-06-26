@@ -101,6 +101,7 @@ function viewDetailsPane(configId) {
             <TableRow>
               <TableHead class="w-[2%]">ID</TableHead>
               <TableHead class="w-[10%]">Command</TableHead>
+              <TableHead class="w-[5%]">Version</TableHead>
               <TableHead class="w-[10%]">Filename</TableHead>
               <TableHead class="w-[10%]">File size</TableHead>
               <TableHead class="w-[10%]">Downloaded at</TableHead>
@@ -118,6 +119,10 @@ function viewDetailsPane(configId) {
               <TableRow v-for="row in latestConfigs" :key="row.id">
                 <TableCell>{{ row.id }}</TableCell>
                 <TableCell>{{ row.command }}</TableCell>
+                <TableCell>
+                  <RcBadge v-if="row.config_version && row.latest_version === 1" variant="info">{{ row.config_version }}</RcBadge>
+                  <Badge v-else-if="row.config_version" variant="secondary">{{ row.config_version }}</Badge>
+                </TableCell>
                 <TableCell>
                   <Button class="px-2 py-0 hover:bg-rcgray-800 rounded-xl" variant="ghost" @click="viewDetailsPane(row.id)">
                     <span class="border-b">{{ row.config_filename }}</span>

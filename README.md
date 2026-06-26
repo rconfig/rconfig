@@ -59,8 +59,13 @@
 
 rConfig v8 Core is a **powerful, free, and open-source** Network Configuration Management (NCM) solution designed to help you easily manage configurations across networks of any size—from small deployments to large, heterogeneous enterprise environments.
 
+> [!IMPORTANT]
+> 🎉 **New: Config Versioning & Diff — Launched July 2026**
+> Track every configuration version automatically, see exactly what changed between versions with side-by-side and inline diffs, and drill into a device's full config history. Includes configurable ignore rules so routine noise (timestamps, uptime) never flags as a change.
+
 ### Why Choose rConfig?
 
+- 🆕 **Config Versioning & Diff** - Automatic version tracking and visual diffs *(new in July 2026)*
 - 🚀 **Fast & Efficient** - Optimized for high-performance configuration backups
 - 🔒 **Secure** - Built with security best practices from the ground up
 - 🌐 **Multi-Vendor Support** - Works with Cisco, Juniper, HP, and more
@@ -98,6 +103,7 @@ Full V8Core documentation: [https://v8coredocs.rconfig.com/getting-started/](htt
 - ✅ **Multi-Vendor Support** - Cisco, Juniper, HP, Dell, and more
 - ✅ **Unlimited Devices** - No artificial limits
 - ✅ **Scheduled Tasks** - Automated backup scheduling
+- 🆕 **Config Versioning & Diff** - Automatic version tracking with inline and side-by-side diffs
 
 </td>
 <td width="50%">
@@ -116,15 +122,17 @@ Full V8Core documentation: [https://v8coredocs.rconfig.com/getting-started/](htt
 
 ### 🆚 rConfig Editions Comparison
 
-| Feature              | 🆓 rConfig Core | 💎 rConfig Professional |
-|----------------------|:---------------:|:-----------------------:|
-| Configuration Backup | ✅              | ✅                      |
-| Multi-Vendor Support | ✅              | ✅                      |
-| Unlimited Devices    | ✅              | ✅                      |
-| API Access           | ❌              | ✅                      |
-| Enterprise Features  | ❌              | ✅                      |
-| Priority Support     | ❌              | ✅                      |
-| SLA Guarantees       | ❌              | ✅                      |
+| Feature                          | 🆓 rConfig Core | 💎 rConfig Professional |
+|----------------------------------|:---------------:|:-----------------------:|
+| Configuration Backup             | ✅              | ✅                      |
+| Multi-Vendor Support             | ✅              | ✅                      |
+| Unlimited Devices                | ✅              | ✅                      |
+| Config Versioning & Diff         | ✅              | ✅                      |
+| Change Manager & Review Workflow | ❌              | ✅                      |
+| API Access                       | ❌              | ✅                      |
+| Enterprise Features              | ❌              | ✅                      |
+| Priority Support                 | ❌              | ✅                      |
+| SLA Guarantees                   | ❌              | ✅                      |
 
 <details>
 <summary><strong>📋 View Full Feature Comparison</strong></summary>

@@ -16,5 +16,6 @@ class Setting extends Model
         'defaultDevicePassword' => EncryptStringCast::class,
         'defaultEnablePassword' => EncryptStringCast::class,
         'mail_password' => EncryptStringCast::class,
+        'config_compare_settings' => 'array',
     ];
 }

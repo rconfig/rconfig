@@ -64,6 +64,9 @@ Route::namespace('Api')->middleware('auth:api')->group(function () {
     /* CONFIGS ROUTES */
     loadRoutesFrom('/api_modules/configs.php');
 
+    /* CONFIG CHANGES ROUTES */
+    loadRoutesFrom('/api_modules/config_changes.php');
+
     Route::get('/app-dir-path', function () {
         return rconfig_appdir_path();
     });

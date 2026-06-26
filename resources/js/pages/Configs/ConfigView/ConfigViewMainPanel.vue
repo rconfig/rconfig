@@ -140,6 +140,10 @@ function initCodeEditor() {
 									Config ID: <RcBadge variant="info">{{ props.configId }}</RcBadge>
 								</span>
 								<Separator orientation="vertical" class="relative w-px h-6 mx-4 shrink-0 bg-border" />
+								<span v-if="props.selectedConfigVersion" class="flex items-center gap-1 text-lg font-semibold rc-text-heading-gradient font-inter">
+									Version: <RcBadge variant="info">{{ props.selectedConfigVersion }}</RcBadge>
+								</span>
+								<Separator v-if="props.selectedConfigVersion" orientation="vertical" class="relative w-px h-6 mx-4 shrink-0 bg-border" />
 							</div>
 
 							<!-- RIGHT BUTTONS -->

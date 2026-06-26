@@ -7,6 +7,7 @@ Route::prefix('configs')->group(function () {
     Route::get('latest-by-deviceid/{id}', 'ConfigController@getLatestById');
     Route::get('view-config/{id}', 'ConfigController@getSingleConfigFile');
     Route::get('distinct-commands/{id}', 'ConfigController@getDistinctCommands');
+    Route::get('config-history/{id}/{command}', 'ConfigController@getConfigHistory')->where('command', '.*');
     Route::post('/search', 'ConfigSearchController@search');
     Route::post('/delete-many', 'ConfigController@deleteMany');
 });

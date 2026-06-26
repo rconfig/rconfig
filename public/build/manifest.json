@@ -1,13 +1,13 @@
 {
-  "_AlertInfo-GnJsh6Db.js": {
-    "file": "assets/AlertInfo-GnJsh6Db.js",
+  "_AlertInfo-CCH8FWMm.js": {
+    "file": "assets/AlertInfo-CCH8FWMm.js",
     "name": "AlertInfo",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_AlertSuccess-CnBjlntF.js": {
-    "file": "assets/AlertSuccess-CnBjlntF.js",
+  "_AlertSuccess-Bzh7DrI2.js": {
+    "file": "assets/AlertSuccess-Bzh7DrI2.js",
     "name": "AlertSuccess",
     "imports": [
       "resources/js/app.js"
@@ -20,97 +20,111 @@
     "file": "assets/AlertSuccess-DbaJMBWY.css",
     "src": "_AlertSuccess-DbaJMBWY.css"
   },
-  "_BadgeList-CCYAlx4P.js": {
-    "file": "assets/BadgeList-CCYAlx4P.js",
+  "_BadgeList-D2GrCsPT.js": {
+    "file": "assets/BadgeList-D2GrCsPT.js",
     "name": "BadgeList",
     "imports": [
       "resources/js/app.js",
-      "_hover-card-xEe3ZVCx.js"
+      "_hover-card-c1g3htwS.js"
     ]
   },
-  "_GoogleLogo-BV_7Legk.js": {
-    "file": "assets/GoogleLogo-BV_7Legk.js",
+  "_DeviceMultiSelect-CeZT3m_4.js": {
+    "file": "assets/DeviceMultiSelect-CeZT3m_4.js",
+    "name": "DeviceMultiSelect",
+    "imports": [
+      "resources/js/app.js",
+      "_useMultiSelect-DFN4S1K-.js"
+    ]
+  },
+  "_GoogleLogo-CgKQI_Nv.js": {
+    "file": "assets/GoogleLogo-CgKQI_Nv.js",
     "name": "GoogleLogo",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_HelpPopover-U6GEECdQ.js": {
-    "file": "assets/HelpPopover-U6GEECdQ.js",
+  "_HelpPopover-CQy75ZGR.js": {
+    "file": "assets/HelpPopover-CQy75ZGR.js",
     "name": "HelpPopover",
     "imports": [
       "resources/js/app.js",
-      "_useRowSelection-CCvrBa6b.js",
-      "_AlertInfo-GnJsh6Db.js",
-      "_hover-card-xEe3ZVCx.js"
+      "_useRowSelection-DJ3bwNR3.js",
+      "_AlertInfo-CCH8FWMm.js",
+      "_hover-card-c1g3htwS.js"
     ]
   },
-  "_HorizonLogo-VNKghHpB.js": {
-    "file": "assets/HorizonLogo-VNKghHpB.js",
+  "_HorizonLogo-D1un_yQo.js": {
+    "file": "assets/HorizonLogo-D1un_yQo.js",
     "name": "HorizonLogo",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_MSLogo-B9la1dQ5.js": {
-    "file": "assets/MSLogo-B9la1dQ5.js",
+  "_MSLogo-D8Rlp2fS.js": {
+    "file": "assets/MSLogo-D8Rlp2fS.js",
     "name": "MSLogo",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_NavPills-BX5p53Lu.css": {
-    "file": "assets/NavPills-BX5p53Lu.css",
-    "src": "_NavPills-BX5p53Lu.css"
-  },
-  "_NavPills-BpvOHVqa.js": {
-    "file": "assets/NavPills-BpvOHVqa.js",
+  "_NavPills-BYwXzvzC.js": {
+    "file": "assets/NavPills-BYwXzvzC.js",
     "name": "NavPills",
     "imports": [
       "resources/js/app.js",
-      "_select-CO3fRpPe.js",
-      "_useRowSelection-CCvrBa6b.js",
-      "_BadgeList-CCYAlx4P.js",
-      "_RcToolTip-CdwAhDqA.js"
+      "_select-B60wnE1X.js",
+      "_codeEditorFunctions-Dd17zIxD.js",
+      "_useRowSelection-DJ3bwNR3.js",
+      "_RcConfirmAlertDialog-DjXCmkpD.js",
+      "_toggle-group-B9UZaLtT.js",
+      "_BadgeList-D2GrCsPT.js",
+      "_RcToolTip-CSu9_cT4.js"
     ],
     "css": [
-      "assets/NavPills-BX5p53Lu.css"
+      "assets/NavPills-BnsQZLRp.css"
     ]
   },
-  "_OktaLogo-CTR5Dzam.js": {
-    "file": "assets/OktaLogo-CTR5Dzam.js",
+  "_NavPills-BnsQZLRp.css": {
+    "file": "assets/NavPills-BnsQZLRp.css",
+    "src": "_NavPills-BnsQZLRp.css"
+  },
+  "_OktaLogo-DJW_oxkP.js": {
+    "file": "assets/OktaLogo-DJW_oxkP.js",
     "name": "OktaLogo",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_PassboltLogo-dkbhzWGL.js": {
-    "file": "assets/PassboltLogo-dkbhzWGL.js",
+  "_PassboltLogo-C8qJDwRR.js": {
+    "file": "assets/PassboltLogo-C8qJDwRR.js",
     "name": "PassboltLogo",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_PhpLogo-DwEzKWOp.js": {
-    "file": "assets/PhpLogo-DwEzKWOp.js",
+  "_PhpLogo-DoWGCnQT.js": {
+    "file": "assets/PhpLogo-DoWGCnQT.js",
     "name": "PhpLogo",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_RcToolTip-CdwAhDqA.js": {
-    "file": "assets/RcToolTip-CdwAhDqA.js",
+  "_RcConfirmAlertDialog-DjXCmkpD.js": {
+    "file": "assets/RcConfirmAlertDialog-DjXCmkpD.js",
+    "name": "RcConfirmAlertDialog",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "_RcToolTip-CSu9_cT4.js": {
+    "file": "assets/RcToolTip-CSu9_cT4.js",
     "name": "RcToolTip",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_Spinner-51w6Afv5.css": {
-    "file": "assets/Spinner-51w6Afv5.css",
-    "src": "_Spinner-51w6Afv5.css"
-  },
-  "_Spinner-BXKfUpDN.js": {
-    "file": "assets/Spinner-BXKfUpDN.js",
+  "_Spinner--eNrTjGf.js": {
+    "file": "assets/Spinner--eNrTjGf.js",
     "name": "Spinner",
     "imports": [
       "resources/js/app.js"
@@ -119,124 +133,224 @@
       "assets/Spinner-51w6Afv5.css"
     ]
   },
-  "_StatusGrayIcon-zv0Z0AQt.js": {
-    "file": "assets/StatusGrayIcon-zv0Z0AQt.js",
+  "_Spinner-51w6Afv5.css": {
+    "file": "assets/Spinner-51w6Afv5.css",
+    "src": "_Spinner-51w6Afv5.css"
+  },
+  "_StatusGrayIcon-Bkg0lKmC.js": {
+    "file": "assets/StatusGrayIcon-Bkg0lKmC.js",
     "name": "StatusGrayIcon",
     "imports": [
       "resources/js/app.js",
-      "_RcToolTip-CdwAhDqA.js"
+      "_RcToolTip-CSu9_cT4.js"
     ]
   },
-  "_StatusGreenIcon-aNHilhnn.js": {
-    "file": "assets/StatusGreenIcon-aNHilhnn.js",
+  "_StatusGreenIcon-BwWPlm-L.js": {
+    "file": "assets/StatusGreenIcon-BwWPlm-L.js",
     "name": "StatusGreenIcon",
     "imports": [
       "resources/js/app.js",
-      "_RcToolTip-CdwAhDqA.js"
+      "_RcToolTip-CSu9_cT4.js"
     ]
   },
-  "_TagMultiSelect-CbinFAuL.js": {
-    "file": "assets/TagMultiSelect-CbinFAuL.js",
+  "_TagMultiSelect-D3IwxCjB.js": {
+    "file": "assets/TagMultiSelect-D3IwxCjB.js",
     "name": "TagMultiSelect",
     "imports": [
       "resources/js/app.js",
-      "_useRowSelection-CCvrBa6b.js"
+      "_useRowSelection-DJ3bwNR3.js",
+      "_useMultiSelect-DFN4S1K-.js"
     ]
   },
-  "_editor-CGi5ri4_.css": {
-    "file": "assets/editor-CGi5ri4_.css",
-    "src": "_editor-CGi5ri4_.css"
+  "_codeEditorFunctions-CGi5ri4_.css": {
+    "file": "assets/codeEditorFunctions-CGi5ri4_.css",
+    "src": "_codeEditorFunctions-CGi5ri4_.css"
   },
-  "_editor.api2-xpFrLT5O.js": {
-    "file": "assets/editor.api2-xpFrLT5O.js",
-    "name": "editor.api2",
+  "_codeEditorFunctions-Dd17zIxD.js": {
+    "file": "assets/codeEditorFunctions-Dd17zIxD.js",
+    "name": "codeEditorFunctions",
     "imports": [
-      "resources/js/app.js"
+      "resources/js/app.js",
+      "_useCopy-_tSTN8sV.js"
+    ],
+    "dynamicImports": [
+      "node_modules/monaco-editor/esm/vs/language/typescript/tsMode.js",
+      "node_modules/monaco-editor/esm/vs/language/css/cssMode.js",
+      "node_modules/monaco-editor/esm/vs/language/html/htmlMode.js",
+      "node_modules/monaco-editor/esm/vs/language/json/jsonMode.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/abap/abap.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/apex/apex.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/azcli/azcli.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/bat/bat.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/bicep/bicep.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/cameligo/cameligo.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/clojure/clojure.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/coffee/coffee.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/cpp/cpp.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/csharp/csharp.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/csp/csp.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/css/css.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/cypher/cypher.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/dart/dart.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/dockerfile/dockerfile.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/ecl/ecl.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/elixir/elixir.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/flow9/flow9.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/fsharp/fsharp.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/freemarker2/freemarker2.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/go/go.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/graphql/graphql.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/handlebars/handlebars.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/hcl/hcl.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/html/html.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/ini/ini.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/java/java.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/javascript/javascript.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/julia/julia.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/kotlin/kotlin.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/less/less.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/lexon/lexon.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/lua/lua.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/liquid/liquid.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/m3/m3.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/markdown/markdown.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/mdx/mdx.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/mips/mips.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/msdax/msdax.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/mysql/mysql.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/objective-c/objective-c.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/pascal/pascal.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/pascaligo/pascaligo.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/perl/perl.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/pgsql/pgsql.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/php/php.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/pla/pla.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/postiats/postiats.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/powerquery/powerquery.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/powershell/powershell.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/protobuf/protobuf.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/pug/pug.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/python/python.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/qsharp/qsharp.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/r/r.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/razor/razor.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/redis/redis.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/redshift/redshift.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/restructuredtext/restructuredtext.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/ruby/ruby.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/rust/rust.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/sb/sb.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/scala/scala.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/scheme/scheme.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/scss/scss.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/shell/shell.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/solidity/solidity.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/sophia/sophia.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/sparql/sparql.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/sql/sql.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/st/st.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/swift/swift.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/systemverilog/systemverilog.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/tcl/tcl.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/twig/twig.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/typescript/typescript.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/typespec/typespec.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/vb/vb.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/wgsl/wgsl.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/xml/xml.js",
+      "node_modules/monaco-editor/esm/vs/basic-languages/yaml/yaml.js"
     ],
     "css": [
-      "assets/editor-CGi5ri4_.css"
+      "assets/codeEditorFunctions-CGi5ri4_.css"
     ],
     "assets": [
       "assets/codicon-ngg6Pgfi.ttf"
     ]
   },
-  "_hover-card-xEe3ZVCx.js": {
-    "file": "assets/hover-card-xEe3ZVCx.js",
+  "_editor.api-DFDwjDcY.js": {
+    "file": "assets/editor.api-DFDwjDcY.js",
+    "name": "editor.api",
+    "imports": [
+      "resources/js/app.js",
+      "_codeEditorFunctions-Dd17zIxD.js"
+    ]
+  },
+  "_hover-card-c1g3htwS.js": {
+    "file": "assets/hover-card-c1g3htwS.js",
     "name": "hover-card",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_lspLanguageFeatures-DN-LX1g0.js": {
-    "file": "assets/lspLanguageFeatures-DN-LX1g0.js",
+  "_lspLanguageFeatures-Cwv54WCU.js": {
+    "file": "assets/lspLanguageFeatures-Cwv54WCU.js",
     "name": "lspLanguageFeatures",
     "imports": [
-      "_editor.api2-xpFrLT5O.js"
+      "_codeEditorFunctions-Dd17zIxD.js"
     ]
   },
-  "_monaco.contribution-Cb9wlwqs.js": {
-    "file": "assets/monaco.contribution-Cb9wlwqs.js",
-    "name": "monaco.contribution",
-    "imports": [
-      "resources/js/app.js",
-      "_editor.api2-xpFrLT5O.js"
-    ],
-    "dynamicImports": [
-      "node_modules/monaco-editor/esm/vs/language/typescript/tsMode.js"
-    ]
-  },
-  "_select-CO3fRpPe.js": {
-    "file": "assets/select-CO3fRpPe.js",
+  "_select-B60wnE1X.js": {
+    "file": "assets/select-B60wnE1X.js",
     "name": "select",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_tabs-M5FjWr-l.js": {
-    "file": "assets/tabs-M5FjWr-l.js",
+  "_tabs-CD3U0gRR.js": {
+    "file": "assets/tabs-CD3U0gRR.js",
     "name": "tabs",
     "imports": [
       "resources/js/app.js",
-      "_AlertInfo-GnJsh6Db.js"
+      "_AlertInfo-CCH8FWMm.js"
     ]
   },
-  "_useCopy-CsrVLTGY.js": {
-    "file": "assets/useCopy-CsrVLTGY.js",
+  "_toggle-group-B9UZaLtT.js": {
+    "file": "assets/toggle-group-B9UZaLtT.js",
+    "name": "toggle-group",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "_useCopy-_tSTN8sV.js": {
+    "file": "assets/useCopy-_tSTN8sV.js",
     "name": "useCopy",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_useDashboard-DIbMg0yW.js": {
-    "file": "assets/useDashboard-DIbMg0yW.js",
+  "_useDashboard-BXROKhXT.js": {
+    "file": "assets/useDashboard-BXROKhXT.js",
     "name": "useDashboard",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_useRowSelection-CCvrBa6b.js": {
-    "file": "assets/useRowSelection-CCvrBa6b.js",
+  "_useMultiSelect-DFN4S1K-.js": {
+    "file": "assets/useMultiSelect-DFN4S1K-.js",
+    "name": "useMultiSelect",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "_useRowSelection-DJ3bwNR3.js": {
+    "file": "assets/useRowSelection-DJ3bwNR3.js",
     "name": "useRowSelection",
     "imports": [
       "resources/js/app.js",
-      "_useCopy-CsrVLTGY.js"
+      "_RcConfirmAlertDialog-DjXCmkpD.js",
+      "_useCopy-_tSTN8sV.js"
     ]
   },
-  "_useTemplatesGithub-BBFefRLt.js": {
-    "file": "assets/useTemplatesGithub-BBFefRLt.js",
+  "_useTemplatesGithub-B87HShmx.js": {
+    "file": "assets/useTemplatesGithub-B87HShmx.js",
     "name": "useTemplatesGithub",
     "imports": [
       "resources/js/app.js",
-      "_useRowSelection-CCvrBa6b.js",
-      "_HelpPopover-U6GEECdQ.js",
-      "_TagMultiSelect-CbinFAuL.js"
-    ]
-  },
-  "_workers-BEP7hlVD.js": {
-    "file": "assets/workers-BEP7hlVD.js",
-    "name": "workers",
-    "imports": [
-      "_editor.api2-xpFrLT5O.js"
+      "_useRowSelection-DJ3bwNR3.js",
+      "_HelpPopover-CQy75ZGR.js",
+      "_RcConfirmAlertDialog-DjXCmkpD.js",
+      "_TagMultiSelect-D3IwxCjB.js",
+      "_useMultiSelect-DFN4S1K-.js"
     ]
   },
   "node_modules/monaco-editor/esm/vs/base/browser/ui/codicons/codicon/codicon.ttf": {
@@ -352,12 +466,12 @@
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/freemarker2/freemarker2.js": {
-    "file": "assets/freemarker2-CbyO68A5.js",
+    "file": "assets/freemarker2-CXj0Ylou.js",
     "name": "freemarker2",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/freemarker2/freemarker2.js",
     "isDynamicEntry": true,
     "imports": [
-      "_editor.api2-xpFrLT5O.js"
+      "_codeEditorFunctions-Dd17zIxD.js"
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/fsharp/fsharp.js": {
@@ -379,12 +493,12 @@
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/handlebars/handlebars.js": {
-    "file": "assets/handlebars-DhTxXKZe.js",
+    "file": "assets/handlebars-DCQrr1_N.js",
     "name": "handlebars",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/handlebars/handlebars.js",
     "isDynamicEntry": true,
     "imports": [
-      "_editor.api2-xpFrLT5O.js"
+      "_codeEditorFunctions-Dd17zIxD.js"
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/hcl/hcl.js": {
@@ -394,12 +508,12 @@
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/html/html.js": {
-    "file": "assets/html-TO5gNALz.js",
+    "file": "assets/html-Dg1qxSls.js",
     "name": "html",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/html/html.js",
     "isDynamicEntry": true,
     "imports": [
-      "_editor.api2-xpFrLT5O.js"
+      "_codeEditorFunctions-Dd17zIxD.js"
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/ini/ini.js": {
@@ -415,7 +529,7 @@
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/javascript/javascript.js": {
-    "file": "assets/javascript-D1AWJQCT.js",
+    "file": "assets/javascript-VK-TOcwS.js",
     "name": "javascript",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/javascript/javascript.js",
     "isDynamicEntry": true,
@@ -448,12 +562,12 @@
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/liquid/liquid.js": {
-    "file": "assets/liquid-BNMmcHlt.js",
+    "file": "assets/liquid-csU5xzBM.js",
     "name": "liquid",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/liquid/liquid.js",
     "isDynamicEntry": true,
     "imports": [
-      "_editor.api2-xpFrLT5O.js"
+      "_codeEditorFunctions-Dd17zIxD.js"
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/lua/lua.js": {
@@ -475,12 +589,12 @@
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/mdx/mdx.js": {
-    "file": "assets/mdx-BWmqZYLX.js",
+    "file": "assets/mdx-1IIBcpgW.js",
     "name": "mdx",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/mdx/mdx.js",
     "isDynamicEntry": true,
     "imports": [
-      "_editor.api2-xpFrLT5O.js"
+      "_codeEditorFunctions-Dd17zIxD.js"
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/mips/mips.js": {
@@ -574,12 +688,12 @@
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/python/python.js": {
-    "file": "assets/python-BsiEDWqU.js",
+    "file": "assets/python-2bUiYbT-.js",
     "name": "python",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/python/python.js",
     "isDynamicEntry": true,
     "imports": [
-      "_editor.api2-xpFrLT5O.js"
+      "_codeEditorFunctions-Dd17zIxD.js"
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/qsharp/qsharp.js": {
@@ -595,12 +709,12 @@
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/razor/razor.js": {
-    "file": "assets/razor-D7CK_Fpw.js",
+    "file": "assets/razor-B017JBtq.js",
     "name": "razor",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/razor/razor.js",
     "isDynamicEntry": true,
     "imports": [
-      "_editor.api2-xpFrLT5O.js"
+      "_codeEditorFunctions-Dd17zIxD.js"
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/redis/redis.js": {
@@ -718,12 +832,12 @@
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/typescript/typescript.js": {
-    "file": "assets/typescript-VzSYM7Z7.js",
+    "file": "assets/typescript-DVmvIW1l.js",
     "name": "typescript",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/typescript/typescript.js",
     "isDynamicEntry": true,
     "imports": [
-      "_editor.api2-xpFrLT5O.js"
+      "_codeEditorFunctions-Dd17zIxD.js"
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/typespec/typespec.js": {
@@ -745,65 +859,60 @@
     "isDynamicEntry": true
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/xml/xml.js": {
-    "file": "assets/xml-DE7EwVbx.js",
+    "file": "assets/xml-Cj-bKAfz.js",
     "name": "xml",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/xml/xml.js",
     "isDynamicEntry": true,
     "imports": [
-      "_editor.api2-xpFrLT5O.js"
+      "_codeEditorFunctions-Dd17zIxD.js"
     ]
   },
   "node_modules/monaco-editor/esm/vs/basic-languages/yaml/yaml.js": {
-    "file": "assets/yaml-DILEmUCL.js",
+    "file": "assets/yaml-W33uBc_j.js",
     "name": "yaml",
     "src": "node_modules/monaco-editor/esm/vs/basic-languages/yaml/yaml.js",
     "isDynamicEntry": true,
     "imports": [
-      "_editor.api2-xpFrLT5O.js"
+      "_codeEditorFunctions-Dd17zIxD.js"
     ]
   },
   "node_modules/monaco-editor/esm/vs/language/css/cssMode.js": {
-    "file": "assets/cssMode-8QqdbXzz.js",
+    "file": "assets/cssMode-jUz95gZs.js",
     "name": "cssMode",
     "src": "node_modules/monaco-editor/esm/vs/language/css/cssMode.js",
     "isDynamicEntry": true,
     "imports": [
-      "_lspLanguageFeatures-DN-LX1g0.js",
-      "_editor.api2-xpFrLT5O.js",
-      "_workers-BEP7hlVD.js"
+      "_codeEditorFunctions-Dd17zIxD.js",
+      "_lspLanguageFeatures-Cwv54WCU.js"
     ]
   },
   "node_modules/monaco-editor/esm/vs/language/html/htmlMode.js": {
-    "file": "assets/htmlMode-C88jSAkk.js",
+    "file": "assets/htmlMode-iJCwJGEG.js",
     "name": "htmlMode",
     "src": "node_modules/monaco-editor/esm/vs/language/html/htmlMode.js",
     "isDynamicEntry": true,
     "imports": [
-      "_lspLanguageFeatures-DN-LX1g0.js",
-      "_editor.api2-xpFrLT5O.js",
-      "_workers-BEP7hlVD.js"
+      "_codeEditorFunctions-Dd17zIxD.js",
+      "_lspLanguageFeatures-Cwv54WCU.js"
     ]
   },
   "node_modules/monaco-editor/esm/vs/language/json/jsonMode.js": {
-    "file": "assets/jsonMode-D_CEJOPz.js",
+    "file": "assets/jsonMode-C-uE7Sgx.js",
     "name": "jsonMode",
     "src": "node_modules/monaco-editor/esm/vs/language/json/jsonMode.js",
     "isDynamicEntry": true,
     "imports": [
-      "_lspLanguageFeatures-DN-LX1g0.js",
-      "_editor.api2-xpFrLT5O.js",
-      "_workers-BEP7hlVD.js"
+      "_codeEditorFunctions-Dd17zIxD.js",
+      "_lspLanguageFeatures-Cwv54WCU.js"
     ]
   },
   "node_modules/monaco-editor/esm/vs/language/typescript/tsMode.js": {
-    "file": "assets/tsMode-BrpY57KN.js",
+    "file": "assets/tsMode-Bbq7elLK.js",
     "name": "tsMode",
     "src": "node_modules/monaco-editor/esm/vs/language/typescript/tsMode.js",
     "isDynamicEntry": true,
     "imports": [
-      "_editor.api2-xpFrLT5O.js",
-      "_workers-BEP7hlVD.js",
-      "_monaco.contribution-Cb9wlwqs.js"
+      "_codeEditorFunctions-Dd17zIxD.js"
     ]
   },
   "public/fonts/inter/UcCm3FwrK3iLTcvnUwAT9nA2.woff2": {
@@ -923,7 +1032,7 @@
     "src": "public/fonts/sora/xMQbuFFYT72XzQspDre2.woff2"
   },
   "resources/css/global.css": {
-    "file": "assets/global-D8zQ-tP9.css",
+    "file": "assets/global-DA4b4NAh.css",
     "name": "global",
     "names": [
       "global.css"
@@ -963,13 +1072,14 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-CdNUwdKL.js",
+    "file": "assets/app-DHRl4gvJ.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "dynamicImports": [
       "resources/js/pages/Configs/Main.vue",
       "resources/js/pages/Shared/Panels/ContentPanel.vue",
+      "resources/js/pages/Configs/CompareOptions.vue",
       "resources/js/pages/Dashboard/Main.vue",
       "resources/js/pages/Settings/Integrations/Main.vue",
       "resources/js/pages/Inventory/Main.vue",
@@ -1029,10 +1139,10 @@
       "resources/js/pages/Shared/Icon/Icons/FlagSpanishIcon.vue",
       "resources/js/pages/Shared/Icon/Icons/FolderDownloadOpenIcon.vue",
       "resources/js/pages/Shared/Icon/Icons/FolderSecureIcon.vue",
-      "_GoogleLogo-BV_7Legk.js",
+      "_GoogleLogo-CgKQI_Nv.js",
       "resources/js/pages/Shared/Icon/Icons/HashVaultLogo.vue",
       "resources/js/pages/Shared/Icon/Icons/HistoryIcon.vue",
-      "_HorizonLogo-VNKghHpB.js",
+      "_HorizonLogo-D1un_yQo.js",
       "resources/js/pages/Shared/Icon/Icons/ImportedDeviceIcon.vue",
       "resources/js/pages/Shared/Icon/Icons/IntegrationsIcon.vue",
       "resources/js/pages/Shared/Icon/Icons/InventoryIcon.vue",
@@ -1041,18 +1151,18 @@
       "resources/js/pages/Shared/Icon/Icons/LockIcon.vue",
       "resources/js/pages/Shared/Icon/Icons/LogSeverityIcon.vue",
       "resources/js/pages/Shared/Icon/Icons/LogoutIcon.vue",
-      "_MSLogo-B9la1dQ5.js",
+      "_MSLogo-D8Rlp2fS.js",
       "resources/js/pages/Shared/Icon/Icons/ModelIcon.vue",
       "resources/js/pages/Shared/Icon/Icons/NetboxLogoIcon.vue",
       "resources/js/pages/Shared/Icon/Icons/NetworkDeviceIcon.vue",
       "resources/js/pages/Shared/Icon/Icons/NetworkServicesIcon.vue",
       "resources/js/pages/Shared/Icon/Icons/NotificationIcon.vue",
-      "_OktaLogo-CTR5Dzam.js",
+      "_OktaLogo-DJW_oxkP.js",
       "resources/js/pages/Shared/Icon/Icons/OtherOptimizationLogo.vue",
       "resources/js/pages/Shared/Icon/Icons/OtherTasksIcon.vue",
-      "_PassboltLogo-dkbhzWGL.js",
+      "_PassboltLogo-C8qJDwRR.js",
       "resources/js/pages/Shared/Icon/Icons/PeekEyeIcon.vue",
-      "_PhpLogo-DwEzKWOp.js",
+      "_PhpLogo-DoWGCnQT.js",
       "resources/js/pages/Shared/Icon/Icons/PinIcon.vue",
       "resources/js/pages/Shared/Icon/Icons/PlusIcon.vue",
       "resources/js/pages/Shared/Icon/Icons/PulsingIcon.vue",
@@ -1075,8 +1185,8 @@
       "resources/js/pages/Shared/Icon/Icons/StarSelectedIcon.vue",
       "resources/js/pages/Shared/Icon/Icons/StarUnselectedIcon.vue",
       "resources/js/pages/Shared/Icon/Icons/StatusGrayAgentIcon.vue",
-      "_StatusGrayIcon-zv0Z0AQt.js",
-      "_StatusGreenIcon-aNHilhnn.js",
+      "_StatusGrayIcon-Bkg0lKmC.js",
+      "_StatusGreenIcon-BwWPlm-L.js",
       "resources/js/pages/Shared/Icon/Icons/StatusRedAgentIcon.vue",
       "resources/js/pages/Shared/Icon/Icons/StatusRedIcon.vue",
       "resources/js/pages/Shared/Icon/Icons/StatusYellowIcon.vue",
@@ -1102,7 +1212,7 @@
     ],
     "css": [
       "assets/app-DfHGmqfR.css",
-      "assets/global-D8zQ-tP9.css"
+      "assets/global-DA4b4NAh.css"
     ],
     "assets": [
       "assets/1Ptug8zYS_SKggPNyCAIT5lu-Dc5xu4We.woff2",
@@ -1136,132 +1246,153 @@
       "assets/UcCm3FwrK3iLTcvnUwQT9g-BbqH_2Ar.woff2"
     ]
   },
+  "resources/js/pages/Configs/CompareOptions.vue": {
+    "file": "assets/CompareOptions-BP3dBr_s.js",
+    "name": "CompareOptions",
+    "src": "resources/js/pages/Configs/CompareOptions.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_codeEditorFunctions-Dd17zIxD.js",
+      "_editor.api-DFDwjDcY.js",
+      "_RcConfirmAlertDialog-DjXCmkpD.js",
+      "_toggle-group-B9UZaLtT.js",
+      "_Spinner--eNrTjGf.js",
+      "_RcToolTip-CSu9_cT4.js"
+    ]
+  },
   "resources/js/pages/Configs/Main.vue": {
-    "file": "assets/Main-C65p3NZy.js",
+    "file": "assets/Main-CNE8ympw.js",
     "name": "Main",
     "src": "resources/js/pages/Configs/Main.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_select-CO3fRpPe.js",
-      "_NavPills-BpvOHVqa.js",
-      "_useRowSelection-CCvrBa6b.js"
+      "_select-B60wnE1X.js",
+      "_NavPills-BYwXzvzC.js",
+      "_useRowSelection-DJ3bwNR3.js",
+      "_RcConfirmAlertDialog-DjXCmkpD.js",
+      "_DeviceMultiSelect-CeZT3m_4.js"
     ],
     "css": [
-      "assets/Main-CJgfKnbC.css"
+      "assets/Main-UWM0wy2J.css"
     ]
   },
   "resources/js/pages/Dashboard/Main.vue": {
-    "file": "assets/Main-yzk9zBGt.js",
+    "file": "assets/Main-CiZbNtI8.js",
     "name": "Main",
     "src": "resources/js/pages/Dashboard/Main.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_hover-card-xEe3ZVCx.js",
-      "_useCopy-CsrVLTGY.js",
-      "_useDashboard-DIbMg0yW.js",
-      "_HorizonLogo-VNKghHpB.js",
-      "_PhpLogo-DwEzKWOp.js"
+      "_hover-card-c1g3htwS.js",
+      "_useCopy-_tSTN8sV.js",
+      "_useDashboard-BXROKhXT.js",
+      "_HorizonLogo-D1un_yQo.js",
+      "_PhpLogo-DoWGCnQT.js"
     ],
     "css": [
       "assets/Main-Or4FO0Vk.css"
     ]
   },
   "resources/js/pages/Inventory/Main.vue": {
-    "file": "assets/Main-CnIQUq74.js",
+    "file": "assets/Main-CCQ_h-dH.js",
     "name": "Main",
     "src": "resources/js/pages/Inventory/Main.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_select-CO3fRpPe.js",
-      "_useRowSelection-CCvrBa6b.js",
-      "_useTemplatesGithub-BBFefRLt.js",
-      "_useCopy-CsrVLTGY.js",
-      "_TagMultiSelect-CbinFAuL.js",
-      "_AlertSuccess-CnBjlntF.js",
-      "_Spinner-BXKfUpDN.js",
-      "_BadgeList-CCYAlx4P.js",
-      "_RcToolTip-CdwAhDqA.js"
+      "_select-B60wnE1X.js",
+      "_useRowSelection-DJ3bwNR3.js",
+      "_RcConfirmAlertDialog-DjXCmkpD.js",
+      "_toggle-group-B9UZaLtT.js",
+      "_useCopy-_tSTN8sV.js",
+      "_TagMultiSelect-D3IwxCjB.js",
+      "_useTemplatesGithub-B87HShmx.js",
+      "_AlertSuccess-Bzh7DrI2.js",
+      "_Spinner--eNrTjGf.js",
+      "_BadgeList-D2GrCsPT.js",
+      "_RcToolTip-CSu9_cT4.js"
     ],
     "css": [
       "assets/Main-Db3GEaLi.css"
     ]
   },
   "resources/js/pages/Settings/Integrations/Main.vue": {
-    "file": "assets/Main-D_iUxI3G.js",
+    "file": "assets/Main-DjKzrJNI.js",
     "name": "Main",
     "src": "resources/js/pages/Settings/Integrations/Main.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_GoogleLogo-BV_7Legk.js",
-      "_MSLogo-B9la1dQ5.js",
-      "_OktaLogo-CTR5Dzam.js",
-      "_PassboltLogo-dkbhzWGL.js",
-      "_StatusGrayIcon-zv0Z0AQt.js",
-      "_StatusGreenIcon-aNHilhnn.js"
+      "_GoogleLogo-CgKQI_Nv.js",
+      "_MSLogo-D8Rlp2fS.js",
+      "_OktaLogo-DJW_oxkP.js",
+      "_PassboltLogo-C8qJDwRR.js",
+      "_StatusGrayIcon-Bkg0lKmC.js",
+      "_StatusGreenIcon-BwWPlm-L.js"
     ],
     "css": [
       "assets/Main-DtAvJ2-P.css"
     ]
   },
   "resources/js/pages/Settings/Main.vue": {
-    "file": "assets/Main-CX_SZt2D.js",
+    "file": "assets/Main-DXFyKQ6B.js",
     "name": "Main",
     "src": "resources/js/pages/Settings/Main.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_select-CO3fRpPe.js",
-      "_useRowSelection-CCvrBa6b.js",
-      "_HelpPopover-U6GEECdQ.js",
-      "_AlertInfo-GnJsh6Db.js",
-      "_hover-card-xEe3ZVCx.js",
-      "_tabs-M5FjWr-l.js",
-      "_useCopy-CsrVLTGY.js",
-      "_useDashboard-DIbMg0yW.js",
-      "_AlertSuccess-CnBjlntF.js",
-      "_Spinner-BXKfUpDN.js",
-      "_BadgeList-CCYAlx4P.js",
-      "_RcToolTip-CdwAhDqA.js"
+      "_select-B60wnE1X.js",
+      "_useRowSelection-DJ3bwNR3.js",
+      "_HelpPopover-CQy75ZGR.js",
+      "_AlertInfo-CCH8FWMm.js",
+      "_hover-card-c1g3htwS.js",
+      "_tabs-CD3U0gRR.js",
+      "_RcConfirmAlertDialog-DjXCmkpD.js",
+      "_useCopy-_tSTN8sV.js",
+      "_useDashboard-BXROKhXT.js",
+      "_AlertSuccess-Bzh7DrI2.js",
+      "_Spinner--eNrTjGf.js",
+      "_BadgeList-D2GrCsPT.js",
+      "_RcToolTip-CSu9_cT4.js"
     ],
     "css": [
       "assets/Main-cXCL2lh2.css"
     ]
   },
   "resources/js/pages/Settings/UserProfile/Main.vue": {
-    "file": "assets/Main-p2xDI_Dm.js",
+    "file": "assets/Main-Inh6Wcyo.js",
     "name": "Main",
     "src": "resources/js/pages/Settings/UserProfile/Main.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_select-CO3fRpPe.js",
-      "_AlertInfo-GnJsh6Db.js",
-      "_tabs-M5FjWr-l.js",
-      "_Spinner-BXKfUpDN.js"
+      "_select-B60wnE1X.js",
+      "_AlertInfo-CCH8FWMm.js",
+      "_tabs-CD3U0gRR.js",
+      "_Spinner--eNrTjGf.js"
     ],
     "css": [
       "assets/Main-DzzDKrTx.css"
     ]
   },
   "resources/js/pages/Settings/Users/Main.vue": {
-    "file": "assets/Main-BPGz8xGv.js",
+    "file": "assets/Main-CCA8Biht.js",
     "name": "Main",
     "src": "resources/js/pages/Settings/Users/Main.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_select-CO3fRpPe.js",
-      "_useRowSelection-CCvrBa6b.js",
-      "_Spinner-BXKfUpDN.js",
-      "_RcToolTip-CdwAhDqA.js"
+      "_select-B60wnE1X.js",
+      "_useRowSelection-DJ3bwNR3.js",
+      "_RcConfirmAlertDialog-DjXCmkpD.js",
+      "_Spinner--eNrTjGf.js",
+      "_RcToolTip-CSu9_cT4.js"
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/AgentLogIcon.vue": {
-    "file": "assets/AgentLogIcon-BVRFHvly.js",
+    "file": "assets/AgentLogIcon-DVmv45vS.js",
     "name": "AgentLogIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/AgentLogIcon.vue",
     "isDynamicEntry": true,
@@ -1270,7 +1401,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/AgentQueueIcon.vue": {
-    "file": "assets/AgentQueueIcon-_sBLo0oI.js",
+    "file": "assets/AgentQueueIcon-BHeZgMkk.js",
     "name": "AgentQueueIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/AgentQueueIcon.vue",
     "isDynamicEntry": true,
@@ -1279,7 +1410,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/AlertIcon.vue": {
-    "file": "assets/AlertIcon-T9BxJEvr.js",
+    "file": "assets/AlertIcon-BmHbjczO.js",
     "name": "AlertIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/AlertIcon.vue",
     "isDynamicEntry": true,
@@ -1288,7 +1419,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ApiCollectionIcon.vue": {
-    "file": "assets/ApiCollectionIcon-CAU7ORpA.js",
+    "file": "assets/ApiCollectionIcon-B4osHIvP.js",
     "name": "ApiCollectionIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ApiCollectionIcon.vue",
     "isDynamicEntry": true,
@@ -1297,7 +1428,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ApiIcon.vue": {
-    "file": "assets/ApiIcon-DlM8HfDd.js",
+    "file": "assets/ApiIcon-HRgNWf_R.js",
     "name": "ApiIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ApiIcon.vue",
     "isDynamicEntry": true,
@@ -1306,7 +1437,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ArrowUpDownIcon.vue": {
-    "file": "assets/ArrowUpDownIcon-wKTxp7Bz.js",
+    "file": "assets/ArrowUpDownIcon-BvR9Fpel.js",
     "name": "ArrowUpDownIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ArrowUpDownIcon.vue",
     "isDynamicEntry": true,
@@ -1315,7 +1446,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/BackupIcon.vue": {
-    "file": "assets/BackupIcon-Dr1xWv-o.js",
+    "file": "assets/BackupIcon-CYTKSrPu.js",
     "name": "BackupIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/BackupIcon.vue",
     "isDynamicEntry": true,
@@ -1324,7 +1455,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ChangeForgeIcon.vue": {
-    "file": "assets/ChangeForgeIcon-BVV0OkDL.js",
+    "file": "assets/ChangeForgeIcon-DBX2bQZr.js",
     "name": "ChangeForgeIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ChangeForgeIcon.vue",
     "isDynamicEntry": true,
@@ -1333,7 +1464,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ChangeManagerIcon.vue": {
-    "file": "assets/ChangeManagerIcon-DO36mxre.js",
+    "file": "assets/ChangeManagerIcon-5PHMO06L.js",
     "name": "ChangeManagerIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ChangeManagerIcon.vue",
     "isDynamicEntry": true,
@@ -1342,7 +1473,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ChangePulseIcon.vue": {
-    "file": "assets/ChangePulseIcon-Dl6EzrDK.js",
+    "file": "assets/ChangePulseIcon-CFXHVU_7.js",
     "name": "ChangePulseIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ChangePulseIcon.vue",
     "isDynamicEntry": true,
@@ -1351,7 +1482,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/CicIcon.vue": {
-    "file": "assets/CicIcon-BlYpJfyj.js",
+    "file": "assets/CicIcon-DQFi9JUl.js",
     "name": "CicIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/CicIcon.vue",
     "isDynamicEntry": true,
@@ -1360,27 +1491,27 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/CommandGroupIcon.vue": {
-    "file": "assets/CommandGroupIcon-CCvTXMg5.js",
+    "file": "assets/CommandGroupIcon-CPIq4lSL.js",
     "name": "CommandGroupIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/CommandGroupIcon.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_RcToolTip-CdwAhDqA.js"
+      "_RcToolTip-CSu9_cT4.js"
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/CommandsIcon.vue": {
-    "file": "assets/CommandsIcon-FrAXqR9v.js",
+    "file": "assets/CommandsIcon-BqMR2VzJ.js",
     "name": "CommandsIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/CommandsIcon.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_RcToolTip-CdwAhDqA.js"
+      "_RcToolTip-CSu9_cT4.js"
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/CommentAddIcon.vue": {
-    "file": "assets/CommentAddIcon-DmHWJzX6.js",
+    "file": "assets/CommentAddIcon-psIek9nd.js",
     "name": "CommentAddIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/CommentAddIcon.vue",
     "isDynamicEntry": true,
@@ -1389,7 +1520,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/CommentsIcon.vue": {
-    "file": "assets/CommentsIcon-IIcqMenr.js",
+    "file": "assets/CommentsIcon-CylOhjoV.js",
     "name": "CommentsIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/CommentsIcon.vue",
     "isDynamicEntry": true,
@@ -1398,7 +1529,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ComplianceAssignmentIcon.vue": {
-    "file": "assets/ComplianceAssignmentIcon-DgeOsp-m.js",
+    "file": "assets/ComplianceAssignmentIcon-8o9Cxcoo.js",
     "name": "ComplianceAssignmentIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ComplianceAssignmentIcon.vue",
     "isDynamicEntry": true,
@@ -1407,7 +1538,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ComplianceDefinitionIcon.vue": {
-    "file": "assets/ComplianceDefinitionIcon-CbkmrQno.js",
+    "file": "assets/ComplianceDefinitionIcon-D0hsUc9E.js",
     "name": "ComplianceDefinitionIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ComplianceDefinitionIcon.vue",
     "isDynamicEntry": true,
@@ -1416,7 +1547,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ComplianceIcon.vue": {
-    "file": "assets/ComplianceIcon-BJ7b2LAV.js",
+    "file": "assets/ComplianceIcon-BsxKIRxt.js",
     "name": "ComplianceIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ComplianceIcon.vue",
     "isDynamicEntry": true,
@@ -1425,7 +1556,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ConfigCompareIcon.vue": {
-    "file": "assets/ConfigCompareIcon-C5C-LKKd.js",
+    "file": "assets/ConfigCompareIcon-MyT5dz9q.js",
     "name": "ConfigCompareIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ConfigCompareIcon.vue",
     "isDynamicEntry": true,
@@ -1434,7 +1565,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ConfigHistoryIcon.vue": {
-    "file": "assets/ConfigHistoryIcon-DvE_Ev0a.js",
+    "file": "assets/ConfigHistoryIcon-DbPXYC3S.js",
     "name": "ConfigHistoryIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ConfigHistoryIcon.vue",
     "isDynamicEntry": true,
@@ -1443,7 +1574,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ConfigReportsIcon.vue": {
-    "file": "assets/ConfigReportsIcon-BiqmwNTD.js",
+    "file": "assets/ConfigReportsIcon-DFDRTyq-.js",
     "name": "ConfigReportsIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ConfigReportsIcon.vue",
     "isDynamicEntry": true,
@@ -1452,7 +1583,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ConfigSearchIcon.vue": {
-    "file": "assets/ConfigSearchIcon-BTIbow7V.js",
+    "file": "assets/ConfigSearchIcon-D7lRKhBW.js",
     "name": "ConfigSearchIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ConfigSearchIcon.vue",
     "isDynamicEntry": true,
@@ -1461,7 +1592,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ConfigSnippetIcon.vue": {
-    "file": "assets/ConfigSnippetIcon-CFfEytBA.js",
+    "file": "assets/ConfigSnippetIcon-B168RhIw.js",
     "name": "ConfigSnippetIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ConfigSnippetIcon.vue",
     "isDynamicEntry": true,
@@ -1470,7 +1601,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ConfigToolsIcon.vue": {
-    "file": "assets/ConfigToolsIcon-B1ryOVW5.js",
+    "file": "assets/ConfigToolsIcon-BFpGjpeu.js",
     "name": "ConfigToolsIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ConfigToolsIcon.vue",
     "isDynamicEntry": true,
@@ -1479,7 +1610,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ConfigpropIcon.vue": {
-    "file": "assets/ConfigpropIcon-BuUJXFgA.js",
+    "file": "assets/ConfigpropIcon-DTBKILcW.js",
     "name": "ConfigpropIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ConfigpropIcon.vue",
     "isDynamicEntry": true,
@@ -1488,7 +1619,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ContinueIcon.vue": {
-    "file": "assets/ContinueIcon-BciCtkYn.js",
+    "file": "assets/ContinueIcon-Cj3zDJM5.js",
     "name": "ContinueIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ContinueIcon.vue",
     "isDynamicEntry": true,
@@ -1500,7 +1631,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/CopyDownloadTransitionIcon.vue": {
-    "file": "assets/CopyDownloadTransitionIcon-fwusGay7.js",
+    "file": "assets/CopyDownloadTransitionIcon-CO6-V0J_.js",
     "name": "CopyDownloadTransitionIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/CopyDownloadTransitionIcon.vue",
     "isDynamicEntry": true,
@@ -1509,7 +1640,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/CopyFileTransitionIcon.vue": {
-    "file": "assets/CopyFileTransitionIcon-BKRidNQE.js",
+    "file": "assets/CopyFileTransitionIcon-DsIJP52G.js",
     "name": "CopyFileTransitionIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/CopyFileTransitionIcon.vue",
     "isDynamicEntry": true,
@@ -1518,7 +1649,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/CopyTransitionIcon.vue": {
-    "file": "assets/CopyTransitionIcon-CjT23dDz.js",
+    "file": "assets/CopyTransitionIcon-DbMUWKuP.js",
     "name": "CopyTransitionIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/CopyTransitionIcon.vue",
     "isDynamicEntry": true,
@@ -1527,7 +1658,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/CredentialsIcon.vue": {
-    "file": "assets/CredentialsIcon-D0UOClLV.js",
+    "file": "assets/CredentialsIcon-BMHeI7Wk.js",
     "name": "CredentialsIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/CredentialsIcon.vue",
     "isDynamicEntry": true,
@@ -1536,7 +1667,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/DashboardIcon.vue": {
-    "file": "assets/DashboardIcon-CQa1_ojm.js",
+    "file": "assets/DashboardIcon-D5ut5saq.js",
     "name": "DashboardIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/DashboardIcon.vue",
     "isDynamicEntry": true,
@@ -1545,7 +1676,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/DatabaseIcon.vue": {
-    "file": "assets/DatabaseIcon-BC_xPrCy.js",
+    "file": "assets/DatabaseIcon-CjqZ8WTW.js",
     "name": "DatabaseIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/DatabaseIcon.vue",
     "isDynamicEntry": true,
@@ -1554,7 +1685,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/DebuggingIcon.vue": {
-    "file": "assets/DebuggingIcon-P3CpVirC.js",
+    "file": "assets/DebuggingIcon-CukNyg5J.js",
     "name": "DebuggingIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/DebuggingIcon.vue",
     "isDynamicEntry": true,
@@ -1563,17 +1694,17 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/DeviceIcon.vue": {
-    "file": "assets/DeviceIcon-xH7CIH58.js",
+    "file": "assets/DeviceIcon-II7tziEL.js",
     "name": "DeviceIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/DeviceIcon.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_RcToolTip-CdwAhDqA.js"
+      "_RcToolTip-CSu9_cT4.js"
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/DeviceRedIcon.vue": {
-    "file": "assets/DeviceRedIcon-CBIJcxlt.js",
+    "file": "assets/DeviceRedIcon-ZatWrI5j.js",
     "name": "DeviceRedIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/DeviceRedIcon.vue",
     "isDynamicEntry": true,
@@ -1582,7 +1713,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/DiffIcon.vue": {
-    "file": "assets/DiffIcon-BNq3jz6A.js",
+    "file": "assets/DiffIcon-BwD_diBj.js",
     "name": "DiffIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/DiffIcon.vue",
     "isDynamicEntry": true,
@@ -1594,7 +1725,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/DocsIcon.vue": {
-    "file": "assets/DocsIcon-BkBOc4Nu.js",
+    "file": "assets/DocsIcon-DZfoS-lV.js",
     "name": "DocsIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/DocsIcon.vue",
     "isDynamicEntry": true,
@@ -1603,7 +1734,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/Download2Icon.vue": {
-    "file": "assets/Download2Icon-DYJADCHQ.js",
+    "file": "assets/Download2Icon-D-STfkRc.js",
     "name": "Download2Icon",
     "src": "resources/js/pages/Shared/Icon/Icons/Download2Icon.vue",
     "isDynamicEntry": true,
@@ -1612,7 +1743,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/DownloadIcon.vue": {
-    "file": "assets/DownloadIcon-CeNir9ko.js",
+    "file": "assets/DownloadIcon-CIguvPxo.js",
     "name": "DownloadIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/DownloadIcon.vue",
     "isDynamicEntry": true,
@@ -1621,7 +1752,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/EmailIcon.vue": {
-    "file": "assets/EmailIcon-BBpHAbzW.js",
+    "file": "assets/EmailIcon-vgwq7CFd.js",
     "name": "EmailIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/EmailIcon.vue",
     "isDynamicEntry": true,
@@ -1630,7 +1761,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/EncryptionShieldIcon.vue": {
-    "file": "assets/EncryptionShieldIcon-CzlAwl0N.js",
+    "file": "assets/EncryptionShieldIcon-CMikUADU.js",
     "name": "EncryptionShieldIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/EncryptionShieldIcon.vue",
     "isDynamicEntry": true,
@@ -1639,7 +1770,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/EnterIcon.vue": {
-    "file": "assets/EnterIcon-DwzzQKJb.js",
+    "file": "assets/EnterIcon-BCL1l-7_.js",
     "name": "EnterIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/EnterIcon.vue",
     "isDynamicEntry": true,
@@ -1648,7 +1779,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ExclusionRulesIcon.vue": {
-    "file": "assets/ExclusionRulesIcon-DkHz57EU.js",
+    "file": "assets/ExclusionRulesIcon-d6x9pVVv.js",
     "name": "ExclusionRulesIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ExclusionRulesIcon.vue",
     "isDynamicEntry": true,
@@ -1660,7 +1791,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ExternalLinkIcon.vue": {
-    "file": "assets/ExternalLinkIcon-BYW4-7qE.js",
+    "file": "assets/ExternalLinkIcon-CfSAe8kC.js",
     "name": "ExternalLinkIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ExternalLinkIcon.vue",
     "isDynamicEntry": true,
@@ -1669,7 +1800,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/FlagEnglishIcon.vue": {
-    "file": "assets/FlagEnglishIcon-xYrmOhis.js",
+    "file": "assets/FlagEnglishIcon-COEIQaRJ.js",
     "name": "FlagEnglishIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/FlagEnglishIcon.vue",
     "isDynamicEntry": true,
@@ -1678,7 +1809,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/FlagFrenchIcon.vue": {
-    "file": "assets/FlagFrenchIcon-2g6CeEZP.js",
+    "file": "assets/FlagFrenchIcon-ytFyH2IZ.js",
     "name": "FlagFrenchIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/FlagFrenchIcon.vue",
     "isDynamicEntry": true,
@@ -1687,7 +1818,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/FlagGermanIcon.vue": {
-    "file": "assets/FlagGermanIcon-5nhmKuVN.js",
+    "file": "assets/FlagGermanIcon-Ha-AUV7j.js",
     "name": "FlagGermanIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/FlagGermanIcon.vue",
     "isDynamicEntry": true,
@@ -1696,7 +1827,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/FlagItalianIcon.vue": {
-    "file": "assets/FlagItalianIcon-BLVEG3Kj.js",
+    "file": "assets/FlagItalianIcon-CpDx90Nm.js",
     "name": "FlagItalianIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/FlagItalianIcon.vue",
     "isDynamicEntry": true,
@@ -1705,7 +1836,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/FlagSpanishIcon.vue": {
-    "file": "assets/FlagSpanishIcon-DgM_HK3h.js",
+    "file": "assets/FlagSpanishIcon-B-BGJRx_.js",
     "name": "FlagSpanishIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/FlagSpanishIcon.vue",
     "isDynamicEntry": true,
@@ -1714,7 +1845,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/FolderDownloadOpenIcon.vue": {
-    "file": "assets/FolderDownloadOpenIcon-BiGuf5PV.js",
+    "file": "assets/FolderDownloadOpenIcon-GnCuvLsG.js",
     "name": "FolderDownloadOpenIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/FolderDownloadOpenIcon.vue",
     "isDynamicEntry": true,
@@ -1723,7 +1854,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/FolderSecureIcon.vue": {
-    "file": "assets/FolderSecureIcon-DDd_XLj_.js",
+    "file": "assets/FolderSecureIcon-BGHff9c4.js",
     "name": "FolderSecureIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/FolderSecureIcon.vue",
     "isDynamicEntry": true,
@@ -1732,7 +1863,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/HashVaultLogo.vue": {
-    "file": "assets/HashVaultLogo-BKw_2-kG.js",
+    "file": "assets/HashVaultLogo-jcPn-X98.js",
     "name": "HashVaultLogo",
     "src": "resources/js/pages/Shared/Icon/Icons/HashVaultLogo.vue",
     "isDynamicEntry": true,
@@ -1741,7 +1872,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/HistoryIcon.vue": {
-    "file": "assets/HistoryIcon-CDgk4Xl7.js",
+    "file": "assets/HistoryIcon-z-oBOa7F.js",
     "name": "HistoryIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/HistoryIcon.vue",
     "isDynamicEntry": true,
@@ -1753,7 +1884,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ImportedDeviceIcon.vue": {
-    "file": "assets/ImportedDeviceIcon-BhIFn_P0.js",
+    "file": "assets/ImportedDeviceIcon-DY-x7KT2.js",
     "name": "ImportedDeviceIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ImportedDeviceIcon.vue",
     "isDynamicEntry": true,
@@ -1765,7 +1896,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/IntegrationsIcon.vue": {
-    "file": "assets/IntegrationsIcon-DCxcUm4Y.js",
+    "file": "assets/IntegrationsIcon-CEahirBd.js",
     "name": "IntegrationsIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/IntegrationsIcon.vue",
     "isDynamicEntry": true,
@@ -1777,7 +1908,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/InventoryIcon.vue": {
-    "file": "assets/InventoryIcon-ddL1qOEz.js",
+    "file": "assets/InventoryIcon-Ck_NXI0r.js",
     "name": "InventoryIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/InventoryIcon.vue",
     "isDynamicEntry": true,
@@ -1789,7 +1920,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/LaravelIcon.vue": {
-    "file": "assets/LaravelIcon-DoKl0QdD.js",
+    "file": "assets/LaravelIcon-DMry1rd_.js",
     "name": "LaravelIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/LaravelIcon.vue",
     "isDynamicEntry": true,
@@ -1798,7 +1929,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ListCollapseIcon.vue": {
-    "file": "assets/ListCollapseIcon-DFEy3aC9.js",
+    "file": "assets/ListCollapseIcon-ByvJFWn0.js",
     "name": "ListCollapseIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ListCollapseIcon.vue",
     "isDynamicEntry": true,
@@ -1807,7 +1938,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/LockIcon.vue": {
-    "file": "assets/LockIcon-C5E5R39A.js",
+    "file": "assets/LockIcon-CtSHhD0c.js",
     "name": "LockIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/LockIcon.vue",
     "isDynamicEntry": true,
@@ -1816,7 +1947,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/LogSeverityIcon.vue": {
-    "file": "assets/LogSeverityIcon-Dde9AvZP.js",
+    "file": "assets/LogSeverityIcon-DQ-50E-S.js",
     "name": "LogSeverityIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/LogSeverityIcon.vue",
     "isDynamicEntry": true,
@@ -1825,7 +1956,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/LogoutIcon.vue": {
-    "file": "assets/LogoutIcon-BgtZkNAN.js",
+    "file": "assets/LogoutIcon-DStEtbFp.js",
     "name": "LogoutIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/LogoutIcon.vue",
     "isDynamicEntry": true,
@@ -1837,7 +1968,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ModelIcon.vue": {
-    "file": "assets/ModelIcon-CeKlIa54.js",
+    "file": "assets/ModelIcon-BTVQhfB6.js",
     "name": "ModelIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ModelIcon.vue",
     "isDynamicEntry": true,
@@ -1846,7 +1977,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/NetboxLogoIcon.vue": {
-    "file": "assets/NetboxLogoIcon-BTaUQUJ1.js",
+    "file": "assets/NetboxLogoIcon-X2Y-s6NN.js",
     "name": "NetboxLogoIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/NetboxLogoIcon.vue",
     "isDynamicEntry": true,
@@ -1855,7 +1986,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/NetworkDeviceIcon.vue": {
-    "file": "assets/NetworkDeviceIcon-BtGYNbYl.js",
+    "file": "assets/NetworkDeviceIcon-COtUicbu.js",
     "name": "NetworkDeviceIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/NetworkDeviceIcon.vue",
     "isDynamicEntry": true,
@@ -1867,7 +1998,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/NetworkServicesIcon.vue": {
-    "file": "assets/NetworkServicesIcon-9myxgq__.js",
+    "file": "assets/NetworkServicesIcon-Du7DQZ0P.js",
     "name": "NetworkServicesIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/NetworkServicesIcon.vue",
     "isDynamicEntry": true,
@@ -1876,7 +2007,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/NotificationIcon.vue": {
-    "file": "assets/NotificationIcon-BL0BrNdv.js",
+    "file": "assets/NotificationIcon-yYZNV2qE.js",
     "name": "NotificationIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/NotificationIcon.vue",
     "isDynamicEntry": true,
@@ -1888,7 +2019,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/OtherOptimizationLogo.vue": {
-    "file": "assets/OtherOptimizationLogo-FUi13Wnz.js",
+    "file": "assets/OtherOptimizationLogo-Dweqwfrh.js",
     "name": "OtherOptimizationLogo",
     "src": "resources/js/pages/Shared/Icon/Icons/OtherOptimizationLogo.vue",
     "isDynamicEntry": true,
@@ -1897,7 +2028,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/OtherTasksIcon.vue": {
-    "file": "assets/OtherTasksIcon-DJR4RDay.js",
+    "file": "assets/OtherTasksIcon-BZF4EzOd.js",
     "name": "OtherTasksIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/OtherTasksIcon.vue",
     "isDynamicEntry": true,
@@ -1906,7 +2037,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/PeekEyeIcon.vue": {
-    "file": "assets/PeekEyeIcon-DmgFcLTV.js",
+    "file": "assets/PeekEyeIcon-CtpJv_wB.js",
     "name": "PeekEyeIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/PeekEyeIcon.vue",
     "isDynamicEntry": true,
@@ -1918,7 +2049,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/PinIcon.vue": {
-    "file": "assets/PinIcon-BrFdG2ub.js",
+    "file": "assets/PinIcon-DbUzFftU.js",
     "name": "PinIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/PinIcon.vue",
     "isDynamicEntry": true,
@@ -1930,7 +2061,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/PlusIcon.vue": {
-    "file": "assets/PlusIcon-D4cHwzDh.js",
+    "file": "assets/PlusIcon-pvsMXJiH.js",
     "name": "PlusIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/PlusIcon.vue",
     "isDynamicEntry": true,
@@ -1939,7 +2070,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/PulsingIcon.vue": {
-    "file": "assets/PulsingIcon-CnGaXMQN.js",
+    "file": "assets/PulsingIcon-2s3fIeB_.js",
     "name": "PulsingIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/PulsingIcon.vue",
     "isDynamicEntry": true,
@@ -1951,7 +2082,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/PurgeIcon.vue": {
-    "file": "assets/PurgeIcon-BSs535zz.js",
+    "file": "assets/PurgeIcon-tPHSmzBu.js",
     "name": "PurgeIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/PurgeIcon.vue",
     "isDynamicEntry": true,
@@ -1963,7 +2094,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/RbacIcon.vue": {
-    "file": "assets/RbacIcon-DyQtQy4l.js",
+    "file": "assets/RbacIcon-Dzj6FZvs.js",
     "name": "RbacIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/RbacIcon.vue",
     "isDynamicEntry": true,
@@ -1972,7 +2103,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/RconfigWhiteIcon.vue": {
-    "file": "assets/RconfigWhiteIcon-DY16zg7Z.js",
+    "file": "assets/RconfigWhiteIcon-DUhPpfG8.js",
     "name": "RconfigWhiteIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/RconfigWhiteIcon.vue",
     "isDynamicEntry": true,
@@ -1981,7 +2112,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/RedhatLogo.vue": {
-    "file": "assets/RedhatLogo-DxrmfQub.js",
+    "file": "assets/RedhatLogo-DIq9bf4K.js",
     "name": "RedhatLogo",
     "src": "resources/js/pages/Shared/Icon/Icons/RedhatLogo.vue",
     "isDynamicEntry": true,
@@ -1990,7 +2121,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/RefreshIcon.vue": {
-    "file": "assets/RefreshIcon-BeU7c36Q.js",
+    "file": "assets/RefreshIcon-BaCetlzS.js",
     "name": "RefreshIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/RefreshIcon.vue",
     "isDynamicEntry": true,
@@ -2002,7 +2133,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/SearchIcon.vue": {
-    "file": "assets/SearchIcon-CwBp87-Z.js",
+    "file": "assets/SearchIcon-vQdQ7d6-.js",
     "name": "SearchIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/SearchIcon.vue",
     "isDynamicEntry": true,
@@ -2011,7 +2142,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/SelectAllIcon.vue": {
-    "file": "assets/SelectAllIcon-BHJTDEev.js",
+    "file": "assets/SelectAllIcon-DW1JbaRa.js",
     "name": "SelectAllIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/SelectAllIcon.vue",
     "isDynamicEntry": true,
@@ -2020,7 +2151,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/SettingsIcon.vue": {
-    "file": "assets/SettingsIcon-D_-qv9Um.js",
+    "file": "assets/SettingsIcon-DTG75fpm.js",
     "name": "SettingsIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/SettingsIcon.vue",
     "isDynamicEntry": true,
@@ -2029,17 +2160,17 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/SeverityIcon.vue": {
-    "file": "assets/SeverityIcon-OC9AbOH-.js",
+    "file": "assets/SeverityIcon-CrsZPZyn.js",
     "name": "SeverityIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/SeverityIcon.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_RcToolTip-CdwAhDqA.js"
+      "_RcToolTip-CSu9_cT4.js"
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/SlackLogo.vue": {
-    "file": "assets/SlackLogo-BEu7zDWb.js",
+    "file": "assets/SlackLogo-Cnmvlp-F.js",
     "name": "SlackLogo",
     "src": "resources/js/pages/Shared/Icon/Icons/SlackLogo.vue",
     "isDynamicEntry": true,
@@ -2048,7 +2179,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/SlackLogoIcon.vue": {
-    "file": "assets/SlackLogoIcon-CNbHMY-k.js",
+    "file": "assets/SlackLogoIcon-C8So7Kki.js",
     "name": "SlackLogoIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/SlackLogoIcon.vue",
     "isDynamicEntry": true,
@@ -2057,7 +2188,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/SnmpIcon.vue": {
-    "file": "assets/SnmpIcon-C1JQnoEr.js",
+    "file": "assets/SnmpIcon-LCWxDirF.js",
     "name": "SnmpIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/SnmpIcon.vue",
     "isDynamicEntry": true,
@@ -2066,7 +2197,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/SortAsc.vue": {
-    "file": "assets/SortAsc-CeC3wjB3.js",
+    "file": "assets/SortAsc-BkZzgMjb.js",
     "name": "SortAsc",
     "src": "resources/js/pages/Shared/Icon/Icons/SortAsc.vue",
     "isDynamicEntry": true,
@@ -2075,7 +2206,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/SortDesc.vue": {
-    "file": "assets/SortDesc-DgTCG8BV.js",
+    "file": "assets/SortDesc-GAQLtcnC.js",
     "name": "SortDesc",
     "src": "resources/js/pages/Shared/Icon/Icons/SortDesc.vue",
     "isDynamicEntry": true,
@@ -2084,7 +2215,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/SortIcon.vue": {
-    "file": "assets/SortIcon-NEpKsWtc.js",
+    "file": "assets/SortIcon-D049Ufgq.js",
     "name": "SortIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/SortIcon.vue",
     "isDynamicEntry": true,
@@ -2093,7 +2224,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/SpinningTaskIcon.vue": {
-    "file": "assets/SpinningTaskIcon-_NgL7Urk.js",
+    "file": "assets/SpinningTaskIcon-C7JEvMI7.js",
     "name": "SpinningTaskIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/SpinningTaskIcon.vue",
     "isDynamicEntry": true,
@@ -2105,7 +2236,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/StarSelectedIcon.vue": {
-    "file": "assets/StarSelectedIcon-DdN2crdl.js",
+    "file": "assets/StarSelectedIcon-bwUxSANP.js",
     "name": "StarSelectedIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/StarSelectedIcon.vue",
     "isDynamicEntry": true,
@@ -2117,7 +2248,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/StarUnselectedIcon.vue": {
-    "file": "assets/StarUnselectedIcon-Dravu4n8.js",
+    "file": "assets/StarUnselectedIcon-BRLdJANH.js",
     "name": "StarUnselectedIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/StarUnselectedIcon.vue",
     "isDynamicEntry": true,
@@ -2129,37 +2260,37 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/StatusGrayAgentIcon.vue": {
-    "file": "assets/StatusGrayAgentIcon-Cr95b1GQ.js",
+    "file": "assets/StatusGrayAgentIcon-CasipcQE.js",
     "name": "StatusGrayAgentIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/StatusGrayAgentIcon.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_RcToolTip-CdwAhDqA.js"
+      "_RcToolTip-CSu9_cT4.js"
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/StatusRedAgentIcon.vue": {
-    "file": "assets/StatusRedAgentIcon-C2RlE56y.js",
+    "file": "assets/StatusRedAgentIcon-C22lWxlU.js",
     "name": "StatusRedAgentIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/StatusRedAgentIcon.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_RcToolTip-CdwAhDqA.js"
+      "_RcToolTip-CSu9_cT4.js"
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/StatusRedIcon.vue": {
-    "file": "assets/StatusRedIcon-1tg-blFD.js",
+    "file": "assets/StatusRedIcon-BAXzU4rM.js",
     "name": "StatusRedIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/StatusRedIcon.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_RcToolTip-CdwAhDqA.js"
+      "_RcToolTip-CSu9_cT4.js"
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/StatusYellowIcon.vue": {
-    "file": "assets/StatusYellowIcon-BBdWvgKo.js",
+    "file": "assets/StatusYellowIcon-CzQjqwbW.js",
     "name": "StatusYellowIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/StatusYellowIcon.vue",
     "isDynamicEntry": true,
@@ -2168,7 +2299,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/StrategyPlayIcon.vue": {
-    "file": "assets/StrategyPlayIcon-XqDhOxPa.js",
+    "file": "assets/StrategyPlayIcon-BinXp-T0.js",
     "name": "StrategyPlayIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/StrategyPlayIcon.vue",
     "isDynamicEntry": true,
@@ -2180,7 +2311,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/SysLogViewerIcon.vue": {
-    "file": "assets/SysLogViewerIcon-TLsJJv6L.js",
+    "file": "assets/SysLogViewerIcon-BEYwm7TU.js",
     "name": "SysLogViewerIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/SysLogViewerIcon.vue",
     "isDynamicEntry": true,
@@ -2189,7 +2320,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/SysQueueManagerIcon.vue": {
-    "file": "assets/SysQueueManagerIcon-Bn_lMMKJ.js",
+    "file": "assets/SysQueueManagerIcon-DnOQ_so5.js",
     "name": "SysQueueManagerIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/SysQueueManagerIcon.vue",
     "isDynamicEntry": true,
@@ -2198,17 +2329,17 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/TagIcon.vue": {
-    "file": "assets/TagIcon-CvxBHBDK.js",
+    "file": "assets/TagIcon-EZ0BGFMQ.js",
     "name": "TagIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/TagIcon.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_RcToolTip-CdwAhDqA.js"
+      "_RcToolTip-CSu9_cT4.js"
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/TasksIcon.vue": {
-    "file": "assets/TasksIcon-CuaUYsa9.js",
+    "file": "assets/TasksIcon-nFbXBOMT.js",
     "name": "TasksIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/TasksIcon.vue",
     "isDynamicEntry": true,
@@ -2217,7 +2348,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/TemplateIcon.vue": {
-    "file": "assets/TemplateIcon-BsRNY9F3.js",
+    "file": "assets/TemplateIcon-CQfqlptW.js",
     "name": "TemplateIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/TemplateIcon.vue",
     "isDynamicEntry": true,
@@ -2226,7 +2357,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ThreeDotsLoadingIcon.vue": {
-    "file": "assets/ThreeDotsLoadingIcon-DDbPLQUe.js",
+    "file": "assets/ThreeDotsLoadingIcon-CrMTBaJg.js",
     "name": "ThreeDotsLoadingIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ThreeDotsLoadingIcon.vue",
     "isDynamicEntry": true,
@@ -2235,7 +2366,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/TickIcon.vue": {
-    "file": "assets/TickIcon-BmnFxEgg.js",
+    "file": "assets/TickIcon-Bx88hFme.js",
     "name": "TickIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/TickIcon.vue",
     "isDynamicEntry": true,
@@ -2244,17 +2375,17 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/TriggerIcon.vue": {
-    "file": "assets/TriggerIcon-CITJ7pVw.js",
+    "file": "assets/TriggerIcon-Da7lco3x.js",
     "name": "TriggerIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/TriggerIcon.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_RcToolTip-CdwAhDqA.js"
+      "_RcToolTip-CSu9_cT4.js"
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/TroubleshootIcon.vue": {
-    "file": "assets/TroubleshootIcon-Dx1XdRaY.js",
+    "file": "assets/TroubleshootIcon-DRdCsgqo.js",
     "name": "TroubleshootIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/TroubleshootIcon.vue",
     "isDynamicEntry": true,
@@ -2263,7 +2394,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/UbuntuLogo.vue": {
-    "file": "assets/UbuntuLogo-D6p6r1bi.js",
+    "file": "assets/UbuntuLogo-DGqu-FIk.js",
     "name": "UbuntuLogo",
     "src": "resources/js/pages/Shared/Icon/Icons/UbuntuLogo.vue",
     "isDynamicEntry": true,
@@ -2272,7 +2403,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/UserIcon.vue": {
-    "file": "assets/UserIcon-BPFZU91T.js",
+    "file": "assets/UserIcon-Dm57Teyl.js",
     "name": "UserIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/UserIcon.vue",
     "isDynamicEntry": true,
@@ -2281,7 +2412,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/UserSsoIcon.vue": {
-    "file": "assets/UserSsoIcon-CnKOjqw8.js",
+    "file": "assets/UserSsoIcon-BcYDqtC3.js",
     "name": "UserSsoIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/UserSsoIcon.vue",
     "isDynamicEntry": true,
@@ -2290,7 +2421,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/VaultIcon.vue": {
-    "file": "assets/VaultIcon-C5OM_dNI.js",
+    "file": "assets/VaultIcon-KSFNcRvp.js",
     "name": "VaultIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/VaultIcon.vue",
     "isDynamicEntry": true,
@@ -2299,7 +2430,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/VectorAgentIcon.vue": {
-    "file": "assets/VectorAgentIcon-F5U6g07R.js",
+    "file": "assets/VectorAgentIcon-_dq4SVQN.js",
     "name": "VectorAgentIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/VectorAgentIcon.vue",
     "isDynamicEntry": true,
@@ -2308,7 +2439,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/VendorIcon.vue": {
-    "file": "assets/VendorIcon-B9lZQgJE.js",
+    "file": "assets/VendorIcon-D5PBwTag.js",
     "name": "VendorIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/VendorIcon.vue",
     "isDynamicEntry": true,
@@ -2317,7 +2448,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/VideoPlayerIcon.vue": {
-    "file": "assets/VideoPlayerIcon-D5Q6ZOke.js",
+    "file": "assets/VideoPlayerIcon-DW1JgCaq.js",
     "name": "VideoPlayerIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/VideoPlayerIcon.vue",
     "isDynamicEntry": true,
@@ -2326,7 +2457,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/XftpIcon.vue": {
-    "file": "assets/XftpIcon-CGL0TNcT.js",
+    "file": "assets/XftpIcon-BqgZz00g.js",
     "name": "XftpIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/XftpIcon.vue",
     "isDynamicEntry": true,
@@ -2335,7 +2466,7 @@
     ]
   },
   "resources/js/pages/Shared/Icon/Icons/ZabbixLogoIcon.vue": {
-    "file": "assets/ZabbixLogoIcon-BbwEbuL1.js",
+    "file": "assets/ZabbixLogoIcon-N4QQAO2v.js",
     "name": "ZabbixLogoIcon",
     "src": "resources/js/pages/Shared/Icon/Icons/ZabbixLogoIcon.vue",
     "isDynamicEntry": true,
@@ -2344,7 +2475,7 @@
     ]
   },
   "resources/js/pages/Shared/PageNotFound.vue": {
-    "file": "assets/PageNotFound-A0SRMpUX.js",
+    "file": "assets/PageNotFound-DxYPG1aY.js",
     "name": "PageNotFound",
     "src": "resources/js/pages/Shared/PageNotFound.vue",
     "isDynamicEntry": true,
@@ -2353,125 +2484,42 @@
     ]
   },
   "resources/js/pages/Shared/Panels/ContentPanel.vue": {
-    "file": "assets/ContentPanel-D3yBGSZ3.js",
+    "file": "assets/ContentPanel-pWYZHrit.js",
     "name": "ContentPanel",
     "src": "resources/js/pages/Shared/Panels/ContentPanel.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_select-CO3fRpPe.js",
-      "_NavPills-BpvOHVqa.js",
-      "_useRowSelection-CCvrBa6b.js",
-      "_editor.api2-xpFrLT5O.js",
-      "_workers-BEP7hlVD.js",
-      "_monaco.contribution-Cb9wlwqs.js",
-      "_hover-card-xEe3ZVCx.js",
-      "_useTemplatesGithub-BBFefRLt.js",
-      "_useCopy-CsrVLTGY.js",
-      "_Spinner-BXKfUpDN.js",
-      "_RcToolTip-CdwAhDqA.js"
-    ],
-    "dynamicImports": [
-      "node_modules/monaco-editor/esm/vs/language/json/jsonMode.js",
-      "node_modules/monaco-editor/esm/vs/language/css/cssMode.js",
-      "node_modules/monaco-editor/esm/vs/language/html/htmlMode.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/abap/abap.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/apex/apex.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/azcli/azcli.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/bat/bat.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/bicep/bicep.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/cameligo/cameligo.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/clojure/clojure.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/coffee/coffee.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/cpp/cpp.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/csharp/csharp.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/csp/csp.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/css/css.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/cypher/cypher.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/dart/dart.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/dockerfile/dockerfile.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/ecl/ecl.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/elixir/elixir.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/flow9/flow9.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/fsharp/fsharp.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/freemarker2/freemarker2.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/go/go.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/graphql/graphql.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/handlebars/handlebars.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/hcl/hcl.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/html/html.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/ini/ini.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/java/java.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/javascript/javascript.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/julia/julia.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/kotlin/kotlin.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/less/less.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/lexon/lexon.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/lua/lua.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/liquid/liquid.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/m3/m3.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/markdown/markdown.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/mdx/mdx.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/mips/mips.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/msdax/msdax.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/mysql/mysql.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/objective-c/objective-c.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/pascal/pascal.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/pascaligo/pascaligo.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/perl/perl.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/pgsql/pgsql.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/php/php.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/pla/pla.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/postiats/postiats.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/powerquery/powerquery.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/powershell/powershell.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/protobuf/protobuf.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/pug/pug.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/python/python.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/qsharp/qsharp.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/r/r.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/razor/razor.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/redis/redis.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/redshift/redshift.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/restructuredtext/restructuredtext.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/ruby/ruby.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/rust/rust.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/sb/sb.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/scala/scala.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/scheme/scheme.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/scss/scss.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/shell/shell.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/solidity/solidity.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/sophia/sophia.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/sparql/sparql.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/sql/sql.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/st/st.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/swift/swift.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/systemverilog/systemverilog.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/tcl/tcl.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/twig/twig.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/typescript/typescript.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/typespec/typespec.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/vb/vb.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/wgsl/wgsl.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/xml/xml.js",
-      "node_modules/monaco-editor/esm/vs/basic-languages/yaml/yaml.js"
+      "_select-B60wnE1X.js",
+      "_NavPills-BYwXzvzC.js",
+      "_codeEditorFunctions-Dd17zIxD.js",
+      "_useRowSelection-DJ3bwNR3.js",
+      "_editor.api-DFDwjDcY.js",
+      "_hover-card-c1g3htwS.js",
+      "_RcConfirmAlertDialog-DjXCmkpD.js",
+      "_toggle-group-B9UZaLtT.js",
+      "_useCopy-_tSTN8sV.js",
+      "_useTemplatesGithub-B87HShmx.js",
+      "_Spinner--eNrTjGf.js",
+      "_RcToolTip-CSu9_cT4.js"
     ],
     "css": [
-      "assets/ContentPanel-r5pWr4RD.css"
+      "assets/ContentPanel-DNcEDOdj.css"
     ]
   },
   "resources/js/pages/Tasks/Main.vue": {
-    "file": "assets/Main-tNIfbl88.js",
+    "file": "assets/Main-BbdwY3Q1.js",
     "name": "Main",
     "src": "resources/js/pages/Tasks/Main.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_select-CO3fRpPe.js",
-      "_useRowSelection-CCvrBa6b.js",
-      "_TagMultiSelect-CbinFAuL.js",
-      "_BadgeList-CCYAlx4P.js"
+      "_select-B60wnE1X.js",
+      "_useRowSelection-DJ3bwNR3.js",
+      "_RcConfirmAlertDialog-DjXCmkpD.js",
+      "_TagMultiSelect-D3IwxCjB.js",
+      "_DeviceMultiSelect-CeZT3m_4.js",
+      "_BadgeList-D2GrCsPT.js"
     ],
     "css": [
       "assets/Main-C9AWagOR.css"

@@ -39,6 +39,7 @@ const {
 	fetchCommands,
 	handleKeyDown,
 	handleSave,
+	navToCompareOptions,
 	reload,
 	toggleSort,
 	viewEditDialog,
@@ -84,6 +85,10 @@ const selectedRecords = computed(() => {
 			</div>
 
 			<div class="flex items-center justify-end">
+				<Button class="px-2 py-1 mr-2 text-sm hover:animate-pulse flex items-center" size="sm" variant="outline" @click="navToCompareOptions">
+					<RcIcon name="config-compare" class="lg:mr-2" />
+					<span class="hidden lg:inline-flex">Compare Options</span>
+				</Button>
 				<Button
 					type="submit"
 					class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"

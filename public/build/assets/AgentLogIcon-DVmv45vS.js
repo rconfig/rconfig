@@ -1,0 +1,1 @@
+import{Da as e,Wa as t,lo as n,sn as r}from"./app-DHRl4gvJ.js";var i={__name:`AgentLogIcon`,props:{height:{type:Number,default:24},width:{type:Number,default:24}},setup(i){return(a,o)=>(t(),e(n(r),{width:i.width,height:i.height,class:`text-blue-400`},null,8,[`width`,`height`]))}};export{i as default};
