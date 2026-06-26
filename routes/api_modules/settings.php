@@ -19,6 +19,11 @@ Route::prefix('settings')->group(function () {
     Route::get('/test-notification', 'SettingEmailController@TestMailNotifications');
     Route::get('/schedule/list', 'ScheduleController@list');
 
+    /* CONFIG COMPARE OPTIONS */
+    Route::get('/compare-options', 'CompareOptionsController@index');
+    Route::get('/compare-options/default-template', 'CompareOptionsController@getDefaultTemplate');
+    Route::patch('/compare-options/{id}', 'CompareOptionsController@update');
+
     Route::prefix('/export')->group(function () {
         Route::get('/list-tables', 'ExportController@listTables');
         Route::get('/get-table/{table}', 'ExportController@export');

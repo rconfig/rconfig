@@ -104,6 +104,16 @@ function report_path()
     return rconfig_appdir_storage_path() . '/app/rconfig/reports/';
 }
 
+function tmp_dir()
+{
+    if (! File::exists(rconfig_appdir_storage_path() . '/app/rconfig/tempdir/')) {
+        File::makeDirectory(rconfig_appdir_storage_path() . '/app/rconfig/tempdir/', 0777, true, true);
+        custom_chown(rconfig_appdir_storage_path() . '/app/rconfig/tempdir/');
+    }
+
+    return rconfig_appdir_storage_path() . '/app/rconfig/tempdir/';
+}
+
 function custom_chown($path)
 {
     File::exists('/etc/redhat-release') ? chown($path, 'apache') : chown($path, 'www-data');

@@ -156,6 +156,7 @@ onUnmounted(() => {
 								<span class="ml-2">Command</span>
 							</Button>
 						</TableHead>
+						<TableHead class="w-[5%] rc-th-heading">Version</TableHead>
 						<TableHead class="w-[10%] rc-th-heading">Device</TableHead>
 						<TableHead class="w-[10%] rc-th-heading">File Size</TableHead>
 						<TableHead class="w-[10%] rc-th-heading">Downloaded</TableHead>
@@ -189,6 +190,12 @@ onUnmounted(() => {
 							</TableCell>
 							<TableCell class="text-start table-cell-fixed">
 								<span class="text-truncate" :title="row.command">{{ row.command }}</span>
+							</TableCell>
+							<TableCell class="text-start table-cell-fixed">
+								<div class="badge-container-fixed" v-if="row.config_version">
+									<RcBadge v-if="row.latest_version === 1" variant="info">{{ row.config_version }}</RcBadge>
+									<Badge v-else variant="secondary">{{ row.config_version }}</Badge>
+								</div>
 							</TableCell>
 							<TableCell class="text-start table-cell-fixed">
 								<span class="text-truncate" :title="row.device_name"> <BadgeList :items="[{ id: row.device_id, device_name: row.device_name, view_url: 'device/view/' + row.device_id }]" displayField="device_name" linkField="view_url" :maxVisible="2" :hoverCardFields="['id', 'device_name']" /> </span>

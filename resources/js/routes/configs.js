@@ -53,4 +53,35 @@ export default [
 			],
 		},
 	},
+	{
+		path: "/config-compare",
+		name: "configcompare",
+		component: () => import("@/pages/Configs/Main.vue"),
+		props: true,
+		meta: {
+			rbacViewName: "Config",
+			pageTitleKey: "ConfigCompare",
+			breadcrumb: [
+				{ label: "Home", link: "/" },
+				{ label: "Configs", link: "/configs" },
+				{ label: "Config Compare", link: "/config-compare" },
+			],
+		},
+	},
+	{
+		path: "/config-compare-options",
+		name: "configcompareoptions",
+		component: () => import("@/pages/Configs/CompareOptions.vue"),
+		props: true,
+		meta: {
+			rbacViewName: "Config",
+			pageTitleKey: "ConfigCompareOptions",
+			breadcrumb: [
+				{ label: "Home", link: "/" },
+				{ label: "Configs", link: "/configs" },
+				{ label: "Config Compare", link: "/config-compare" },
+				{ label: "Compare Options", link: "/config-compare-options" },
+			],
+		},
+	},
 ];

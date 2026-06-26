@@ -3,6 +3,8 @@
 # /public/build
 /public/storage
 /storage/*.key
+/storage/app/rconfig/tempconfigs
+/storage/app/rconfig/tempdir
 /vendor
 .env
 .env.backup

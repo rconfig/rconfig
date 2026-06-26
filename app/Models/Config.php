@@ -4,6 +4,7 @@ namespace App\Models;
 
 use File;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Config extends BaseModel
 {
@@ -75,6 +76,11 @@ class Config extends BaseModel
     public function device()
     {
         return $this->belongsTo('App\Models\Device', 'device_id', 'id')->select('id', 'device_name', 'device_ip');
+    }
+
+    public function configChange(): HasOne
+    {
+        return $this->hasOne(ConfigChange::class, 'current_config_id', 'id');
     }
 
     public function scopeCreatedAtBetween($query, $startDate, $endDate)
