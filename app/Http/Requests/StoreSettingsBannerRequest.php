@@ -24,6 +24,8 @@ class StoreSettingsBannerRequest extends FormRequest
      */
     public function rules()
     {
+        $rules = [];
+
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'login_banner' => 'required',

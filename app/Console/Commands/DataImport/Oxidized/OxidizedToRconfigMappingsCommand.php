@@ -130,8 +130,10 @@ class OxidizedToRconfigMappingsCommand extends Command
 
     /**
      * Display interactive menu
+     *
+     * @param  array<int|string, mixed>  $freshMappings
      */
-    protected function showMenu()
+    protected function showMenu(array $freshMappings = []): void
     {
         note('rConfig Oxidized Device Mappings');
 
@@ -332,7 +334,7 @@ class OxidizedToRconfigMappingsCommand extends Command
 
             // Now $selectedTagIds contains an array of tag IDs
             // If no tags were selected, use the first tag
-            if (empty($selectedTagIds) && ! empty($tagOptions)) {
+            if (empty($selectedTagIds)) {
                 $firstTagId = array_key_first($tagOptions);
                 $selectedTags = [$firstTagId];
                 note("No tags selected. Automatically using the first tag: {$tagOptions[$firstTagId]}");
@@ -436,7 +438,7 @@ class OxidizedToRconfigMappingsCommand extends Command
             );
 
             // If no tags were selected, use the first tag
-            if (empty($selectedTagIds) && ! empty($tagOptions)) {
+            if (empty($selectedTagIds)) {
                 $firstTagId = array_key_first($tagOptions);
                 $selectedTags = [$firstTagId];
                 note("No tags selected. Automatically using the first tag: {$tagOptions[$firstTagId]}");

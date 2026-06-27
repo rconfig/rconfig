@@ -24,6 +24,8 @@ class StoreSettingsDeviceCredRequest extends FormRequest
      */
     public function rules()
     {
+        $rules = [];
+
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'defaultDeviceUsername' => 'required|min:3|max:255',

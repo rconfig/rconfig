@@ -14,6 +14,8 @@ class StoreTemplateRequest extends FormRequest
 
     public function rules()
     {
+        $rules = [];
+
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'templateName' => 'required|max:255',

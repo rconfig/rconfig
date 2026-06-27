@@ -24,6 +24,8 @@ class StoreSettingsTimezoneRequest extends FormRequest
      */
     public function rules()
     {
+        $rules = [];
+
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'timezone' => 'required|timezone',

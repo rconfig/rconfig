@@ -167,3 +167,29 @@ parameters:
 			identifier: larastan.noEnvCallsOutsideOfConfig
 			count: 6
 			path: app/Support/Saml/SamlConfigResolver.php
+		# Pro-shared latent issues surfaced by the level 1 upgrade. These same call sites exist
+		# unfixed in ../rconfig8 (Pro); fixing them here would change runtime behaviour and diverge
+		# Core from Pro, so they are baselined pending a coordinated fix across both editions.
+		-
+			message: '#^Call to an undefined method App\\Http\\Controllers\\Api\\DashboardController\:\:checkOrSetAppUrlNotification\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Controllers/Api/DashboardController.php
+
+		-
+			message: '#^Class Spatie\\Health\\ResultStores\\StoredCheckResults\\StoredCheckResult constructor invoked with 7 parameters, 1\-6 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: app/Http/Controllers/Api/SystemHealthController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\ApiBaseController\:\:show\(\) invoked with 4 parameters, 1\-3 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: app/Http/Controllers/Api/TagController.php
+
+		-
+			message: '#^Static method Spatie\\QueryBuilder\\AllowedFilter\:\:custom\(\) invoked with 4 parameters, 2\-3 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: app/Http/Controllers/Api/TaskController.php

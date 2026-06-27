@@ -47,6 +47,8 @@ class StoreDeviceRequest extends FormRequest
 
     public function rules()
     {
+        $rules = [];
+
         // dd($this->request);
         if ($this->getMethod() == 'POST') {
             $rules = [

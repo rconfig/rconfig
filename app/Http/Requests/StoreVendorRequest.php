@@ -24,6 +24,8 @@ class StoreVendorRequest extends FormRequest
      */
     public function rules()
     {
+        $rules = [];
+
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'vendorName' => 'required|unique:vendors| max:255',

@@ -52,6 +52,8 @@ class UpdateTaskRequest extends FormRequest
      */
     public function rules()
     {
+        $rules = [];
+
         if ($this->getMethod() == 'PATCH') {
             $rules = [
                 'task_name' => 'required|min:3|max:255',

@@ -24,6 +24,8 @@ class StoreSettingsEmailRequest extends FormRequest
      */
     public function rules()
     {
+        $rules = [];
+
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'deviceEmailging' => 'required',

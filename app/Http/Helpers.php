@@ -182,6 +182,7 @@ function getOSInformation()
         return null;
     }
 
+    $osRelease = null;
     $osReleaseFile = '/etc/os-release';
     if (file_exists($osReleaseFile)) {
         $osRelease = parse_ini_file($osReleaseFile);
