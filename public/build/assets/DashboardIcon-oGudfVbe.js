@@ -1,0 +1,1 @@
+import{Ma as e,Ya as t,ho as n,mn as r,mo as i}from"./app-bToAm_jd.js";var a={__name:`DashboardIcon`,props:{height:{type:Number,default:16},width:{type:Number,default:16},class:{type:String,default:``}},setup(a){return(o,s)=>(t(),e(i(r),{width:a.width,height:a.height,color:`#c8d1f3`,class:n(a.class)},null,8,[`width`,`height`,`class`]))}};export{a as default};

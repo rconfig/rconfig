@@ -1,0 +1,1 @@
+import{Jn as e,Ma as t,Ya as n,mo as r}from"./app-bToAm_jd.js";var i={__name:`EnterIcon`,props:{width:{type:[String,Number],default:16},height:{type:[String,Number],default:16},color:{type:String,default:`currentColor`}},setup(i){return(a,o)=>(n(),t(r(e),{width:i.width,height:i.height,color:i.color},null,8,[`width`,`height`,`color`]))}};export{i as default};

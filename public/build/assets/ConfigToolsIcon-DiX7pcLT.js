@@ -1,0 +1,1 @@
+import{Dt as e,Ma as t,Ya as n,ho as r,mo as i}from"./app-bToAm_jd.js";var a={__name:`ConfigToolsIcon`,props:{height:{type:Number,default:16},width:{type:Number,default:16},colorClass:{type:String,default:`text-blue-300`}},setup(a){return(o,s)=>(n(),t(i(e),{width:a.width,height:a.height,class:r(a.colorClass)},null,8,[`width`,`height`,`class`]))}};export{a as default};

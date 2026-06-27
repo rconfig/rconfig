@@ -1,1 +1,0 @@
-import{Da as e,Kt as t,Ta as n,Wa as r,ao as i,lo as a,uo as o}from"./app-DHRl4gvJ.js";var s={__name:`PlusIcon`,props:{size:{type:[Number,String],default:16},class:{type:String,default:``}},setup(s){i(!1);let c=s,l=n(()=>`size-4 text-muted-foreground ${c.class}`);return(n,i)=>(r(),e(a(t),{size:s.size,class:o(l.value)},null,8,[`size`,`class`]))}};export{s as default};
