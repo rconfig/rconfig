@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\File;
 
 class Template extends BaseModel
 {
@@ -12,7 +13,7 @@ class Template extends BaseModel
     protected $guarded = [];
     protected $appends = ['view_url'];
 
-    public static function boot()
+    public static function boot(): void
     {
         parent::boot();
 
@@ -20,6 +21,10 @@ class Template extends BaseModel
 
             if ($template->devicesCount() > 0) {
                 throw new \Exception('Cannot delete template with related devices.');
+            }
+
+            if ($template->fileName && File::exists(storage_path() . $template->fileName)) {
+                File::delete(storage_path() . $template->fileName);
             }
         });
     }

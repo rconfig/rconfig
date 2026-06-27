@@ -108,13 +108,8 @@ class TemplateController extends ApiBaseController
 
         try {
             $template = Template::findOrFail($id);
-            $filePath = $template->fileName;
 
             $template->delete();
-
-            if (File::exists(storage_path() . $filePath)) {
-                File::delete(storage_path() . $filePath);
-            }
 
             return response()->json(['message' => 'Template deleted successfully.'], 200);
         } catch (\Exception $e) {

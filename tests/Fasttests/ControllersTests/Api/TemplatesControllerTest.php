@@ -159,6 +159,47 @@ class TemplatesControllerTest extends TestCase
         $this->assertDatabaseMissing('templates', ['id' => $latestTemplate->id]);
     }
 
+    public function test_delete_many_removes_physical_file_and_allows_recreation()
+    {
+        $testFile = storage_path('app/rconfig/templates/test_file_name.yml');
+        if (file_exists($testFile)) {
+            unlink($testFile);
+        }
+
+        $code = file_get_contents(base_path('tests/storage/default_template_test.yml'));
+
+        // Create a template (writes the physical file).
+        $this->withHeaders(['Accept' => 'application/json'])->json('POST', '/api/templates', [
+            'templateName' => 'test file name',
+            'description' => 'Test template description',
+            'code' => $code,
+        ])->assertStatus(200);
+
+        $template = Template::orderBy('id', 'desc')->first();
+        $this->assertFileExists($testFile);
+
+        // Bulk delete should remove the record and the physical file.
+        $this->post('/api/templates/delete-many', ['ids' => [$template->id]])->assertStatus(200);
+
+        $this->assertDatabaseMissing('templates', ['id' => $template->id]);
+        $this->assertFileDoesNotExist($testFile);
+
+        // The same name can now be recreated without a file collision.
+        $this->withHeaders(['Accept' => 'application/json'])->json('POST', '/api/templates', [
+            'templateName' => 'test file name',
+            'description' => 'Recreated after bulk delete',
+            'code' => $code,
+        ])->assertStatus(200);
+
+        $this->assertDatabaseHas('templates', [
+            'fileName' => '/app/rconfig/templates/test_file_name.yml',
+        ]);
+
+        if (file_exists($testFile)) {
+            unlink($testFile);
+        }
+    }
+
     public function test_cannot_delete_category_with_existing_device_relationships()
     {
         $this->expectException(\Exception::class);
