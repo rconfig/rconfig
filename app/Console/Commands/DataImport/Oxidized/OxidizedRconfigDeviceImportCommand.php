@@ -295,13 +295,6 @@ class OxidizedRconfigDeviceImportCommand extends Command
         $validDevices = [];
         $invalidDevices = [];
 
-        // Check if we have any devices to validate
-        if (empty($devices)) {
-            warning('No devices found in the import file.');
-
-            return 1;
-        }
-
         $bar = progress('Validating devices', count($devices));
 
         foreach ($devices as $index => $device) {

@@ -307,7 +307,7 @@ class SolarwindsToRconfigMappingsCommand extends Command
                 $tagOptions
             );
 
-            if (empty($selectedTagIds) && ! empty($tagOptions)) {
+            if (empty($selectedTagIds)) {
                 $firstTagId = array_key_first($tagOptions);
                 $selectedTags = [$firstTagId];
                 note("No tags selected. Automatically using the first tag: {$tagOptions[$firstTagId]}");
@@ -445,7 +445,7 @@ class SolarwindsToRconfigMappingsCommand extends Command
                 $currentTagIds
             );
 
-            if (empty($selectedTagIds) && ! empty($tagOptions)) {
+            if (empty($selectedTagIds)) {
                 $firstTagId = array_key_first($tagOptions);
                 $selectedTags = [$firstTagId];
                 note("No tags selected. Automatically using the first tag: {$tagOptions[$firstTagId]}");

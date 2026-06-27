@@ -23,6 +23,8 @@ class StoreCommandRequest extends FormRequest
 
     public function rules()
     {
+        $rules = [];
+
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'command' => 'required|min:3|unique:commands|max:255',

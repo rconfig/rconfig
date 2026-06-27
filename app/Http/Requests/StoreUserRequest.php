@@ -24,6 +24,8 @@ class StoreUserRequest extends FormRequest
      */
     public function rules()
     {
+        $rules = [];
+
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'name' => 'required|max:255',

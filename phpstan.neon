@@ -3,7 +3,7 @@ includes:
     - phpstan-baseline.neon
 
 parameters:
-    level: 0
+    level: 1
 
     # Stable, repo-relative location for the result cache so CI can cache it between runs.
     tmpDir: .phpstan

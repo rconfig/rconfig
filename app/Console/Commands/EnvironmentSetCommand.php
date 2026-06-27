@@ -119,7 +119,7 @@ class EnvironmentSetCommand extends Command
     /**
      * Parse key, value and path to .env-file from command line arguments.
      *
-     * @return string[] [string KEY, string value, ?string envFilePath].
+     * @return array{string, string, string|false|null} [string KEY, string value, ?string envFilePath].
      */
     public function parseCommandArguments(string $_key, ?string $_value, ?string $_envFilePath): array
     {

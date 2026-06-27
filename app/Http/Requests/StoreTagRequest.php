@@ -24,6 +24,8 @@ class StoreTagRequest extends FormRequest
      */
     public function rules()
     {
+        $rules = [];
+
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'tagname' => 'required|unique:tags| max:50',

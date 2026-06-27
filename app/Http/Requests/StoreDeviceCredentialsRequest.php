@@ -14,6 +14,8 @@ class StoreDeviceCredentialsRequest extends FormRequest
 
     public function rules()
     {
+        $rules = [];
+
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'cred_name' => 'required|min:3|unique:device_credentials|max:255',

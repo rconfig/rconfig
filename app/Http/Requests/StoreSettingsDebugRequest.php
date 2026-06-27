@@ -24,6 +24,8 @@ class StoreSettingsDebugRequest extends FormRequest
      */
     public function rules()
     {
+        $rules = [];
+
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'deviceDebugging' => 'required',

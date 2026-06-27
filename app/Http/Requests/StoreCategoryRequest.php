@@ -24,6 +24,8 @@ class StoreCategoryRequest extends FormRequest
      */
     public function rules()
     {
+        $rules = [];
+
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'categoryName' => 'required|unique:categories|max:255|alpha_dash',

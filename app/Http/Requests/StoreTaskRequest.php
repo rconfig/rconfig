@@ -53,6 +53,8 @@ class StoreTaskRequest extends FormRequest
      */
     public function rules()
     {
+        $rules = [];
+
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'task_name' => 'required|min:3|unique:tasks|max:255',
