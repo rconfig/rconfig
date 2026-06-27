@@ -63,9 +63,14 @@ rConfig v8 Core is a **powerful, free, and open-source** Network Configuration M
 > 🎉 **New: Config Versioning & Diff — Launched July 2026**
 > Track every configuration version automatically, see exactly what changed between versions with side-by-side and inline diffs, and drill into a device's full config history. Includes configurable ignore rules so routine noise (timestamps, uptime) never flags as a change.
 
+> [!IMPORTANT]
+> 🚀 **New: REST API (v1 & v2) — Launched July 2026**
+> Programmatic access to rConfig with token-based authentication. Manage devices, configurations, templates, tasks, vendors, categories and more over a versioned REST API. Generate and manage API keys, and browse built-in endpoint documentation, all under Settings → REST API.
+
 ### Why Choose rConfig?
 
 - 🆕 **Config Versioning & Diff** - Automatic version tracking and visual diffs *(new in July 2026)*
+- 🆕 **REST API (v1 & v2)** - Token-authenticated programmatic access *(new in July 2026)*
 - 🚀 **Fast & Efficient** - Optimized for high-performance configuration backups
 - 🔒 **Secure** - Built with security best practices from the ground up
 - 🌐 **Multi-Vendor Support** - Works with Cisco, Juniper, HP, and more
@@ -104,6 +109,7 @@ Full V8Core documentation: [https://v8coredocs.rconfig.com/getting-started/](htt
 - ✅ **Unlimited Devices** - No artificial limits
 - ✅ **Scheduled Tasks** - Automated backup scheduling
 - 🆕 **Config Versioning & Diff** - Automatic version tracking with inline and side-by-side diffs
+- 🆕 **REST API (v1 & v2)** - Token-authenticated API with key management and built-in docs
 
 </td>
 <td width="50%">
@@ -128,8 +134,8 @@ Full V8Core documentation: [https://v8coredocs.rconfig.com/getting-started/](htt
 | Multi-Vendor Support             | ✅              | ✅                      |
 | Unlimited Devices                | ✅              | ✅                      |
 | Config Versioning & Diff         | ✅              | ✅                      |
+| REST API Access (v1 & v2)        | ✅              | ✅                      |
 | Change Manager & Review Workflow | ❌              | ✅                      |
-| API Access                       | ❌              | ✅                      |
 | Enterprise Features              | ❌              | ✅                      |
 | Priority Support                 | ❌              | ✅                      |
 | SLA Guarantees                   | ❌              | ✅                      |

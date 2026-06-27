@@ -1,75 +1,77 @@
-import axios from 'axios';
-import { ref, computed, onMounted } from 'vue';
-import { useToaster } from '@/composables/useToaster'; // Import the composable
-import SystemSettingsPanel from '@/pages/Settings/Panels/SystemSettingsPanel.vue';
-import CredentialsPanel from '@/pages/Settings/Panels/CredentialsPanel.vue';
-import SecurityPanel from '@/pages/Settings/Panels/SecurityPanel.vue';
+import axios from "axios";
+import { ref, computed, onMounted } from "vue";
+import { useToaster } from "@/composables/useToaster"; // Import the composable
+import SystemSettingsPanel from "@/pages/Settings/Panels/SystemSettingsPanel.vue";
+import CredentialsPanel from "@/pages/Settings/Panels/CredentialsPanel.vue";
+import SecurityPanel from "@/pages/Settings/Panels/SecurityPanel.vue";
 import DataMigrationPanel from "@/pages/Settings/Panels/DataMigrationPanel.vue";
 import ImportExportPanel from "@/pages/Settings/Panels/ImportExportPanel.vue";
 import LoggingDebuggingPanel from "@/pages/Settings/Panels/LoggingDebuggingPanel.vue";
-import ScheduledTasksTable from '@/pages/Settings/Panels/ScheduledTasksTable.vue';
-import AboutPanel from '@/pages/Settings/Panels/AboutPanel.vue';
-import LogsPanel from '@/pages/Settings/Panels/LogsPanel.vue';
-import UpgradePanel from '@/pages/Settings/Panels/UpgradePanel.vue';
-import UpdatePanel from '@/pages/Settings/Panels/UpdatePanel.vue';
-import { useRoute } from 'vue-router'; // Import the useRoute from Vue Router
+import ScheduledTasksTable from "@/pages/Settings/Panels/ScheduledTasksTable.vue";
+import AboutPanel from "@/pages/Settings/Panels/AboutPanel.vue";
+import LogsPanel from "@/pages/Settings/Panels/LogsPanel.vue";
+import UpgradePanel from "@/pages/Settings/Panels/UpgradePanel.vue";
+import UpdatePanel from "@/pages/Settings/Panels/UpdatePanel.vue";
+import RestApiPanel from "@/pages/Settings/Panels/RestApiPanel.vue";
+import { useRoute } from "vue-router"; // Import the useRoute from Vue Router
 
 export function useSettings() {
-	const settingsActivePane = ref(null);
-	const route = useRoute();
-	const path = ref(route.path);
+  const settingsActivePane = ref(null);
+  const route = useRoute();
+  const path = ref(route.path);
 
-	const formComponents = {
-		'/settings/system': SystemSettingsPanel,
-		'/settings/credentials': CredentialsPanel,
-		'/settings/debugging': LoggingDebuggingPanel,
-		"/settings/data-migration": DataMigrationPanel,
-		"/settings/import-export": ImportExportPanel,
-		'/settings/security': SecurityPanel,
-		'/settings/about': AboutPanel,
-		'/settings/logs': LogsPanel,
-		"/settings/scheduled-tasks": ScheduledTasksTable,
-		'/settings/upgrade': UpgradePanel,
-		'/settings/update': UpdatePanel
-	};
+  const formComponents = {
+    "/settings/system": SystemSettingsPanel,
+    "/settings/credentials": CredentialsPanel,
+    "/settings/debugging": LoggingDebuggingPanel,
+    "/settings/data-migration": DataMigrationPanel,
+    "/settings/import-export": ImportExportPanel,
+    "/settings/security": SecurityPanel,
+    "/settings/restapi": RestApiPanel,
+    "/settings/about": AboutPanel,
+    "/settings/logs": LogsPanel,
+    "/settings/scheduled-tasks": ScheduledTasksTable,
+    "/settings/upgrade": UpgradePanel,
+    "/settings/update": UpdatePanel,
+  };
 
-	function setForm(e) {
-		settingsActivePane.value = e;
+  function setForm(e) {
+    settingsActivePane.value = e;
 
-		// Store the selected form in localStorage
-		localStorage.setItem('settingsActivePane', e);
-	}
+    // Store the selected form in localStorage
+    localStorage.setItem("settingsActivePane", e);
+  }
 
-	// Define the mapping between `settingsActivePane` value and the component to render.
-	const settingsActivePaneComponent = computed(() => {
-		return formComponents[settingsActivePane.value] || null;
-	});
+  // Define the mapping between `settingsActivePane` value and the component to render.
+  const settingsActivePaneComponent = computed(() => {
+    return formComponents[settingsActivePane.value] || null;
+  });
 
-	onMounted(() => {
-		setComponent();
-	});
+  onMounted(() => {
+    setComponent();
+  });
 
-	function setComponent() {
-		// if the path is specific, load the component
-		if (Object.keys(formComponents).includes(route.path)) {
-		settingsActivePane.value = route.path;
-		return;
-		}
+  function setComponent() {
+    // if the path is specific, load the component
+    if (Object.keys(formComponents).includes(route.path)) {
+      settingsActivePane.value = route.path;
+      return;
+    }
 
-		// if the path is not specific, load the users last active pane
-		const LastUserActivePane = localStorage.getItem('settingsActivePane');
+    // if the path is not specific, load the users last active pane
+    const LastUserActivePane = localStorage.getItem("settingsActivePane");
 
-		if (LastUserActivePane) {
-		settingsActivePane.value = LastUserActivePane;
-		} else {
-		settingsActivePane.value = '/settings/system';
-		}
-	}
+    if (LastUserActivePane) {
+      settingsActivePane.value = LastUserActivePane;
+    } else {
+      settingsActivePane.value = "/settings/system";
+    }
+  }
 
-	return {
-		settingsActivePane,
-		setForm,
-		formComponents,
-		settingsActivePaneComponent
-	};
+  return {
+    settingsActivePane,
+    setForm,
+    formComponents,
+    settingsActivePaneComponent,
+  };
 }

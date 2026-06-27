@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\ApiV1TokenAuth;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\corsMiddleware;
 use App\Http\Middleware\EncryptCookies;
@@ -81,6 +82,8 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'auth' => Authenticate::class,
         'auth.basic' => AuthenticateWithBasicAuth::class,
+        'apiv1auth' => ApiV1TokenAuth::class,
+        'apiv2auth' => ApiV1TokenAuth::class,
         'cache.headers' => SetCacheHeaders::class,
         'can' => Authorize::class,
         'guest' => RedirectIfAuthenticated::class,

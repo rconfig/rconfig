@@ -37,6 +37,10 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->mapApiRoutes();
 
+        $this->mapApiV1Routes();
+
+        $this->mapApiV2Routes();
+
         $this->mapWebRoutes();
     }
 
@@ -67,5 +71,33 @@ class RouteServiceProvider extends ServiceProvider
             ->middleware('api')
             ->namespace($this->namespace)
             ->group(base_path('routes/api.php'));
+    }
+
+    /**
+     * Define the external token-authenticated REST API (version 1).
+     *
+     * @return void
+     */
+    protected function mapApiV1Routes()
+    {
+        Route::prefix('api/v1')
+            ->middleware(['api', 'apiv1auth', 'cors'])
+            ->namespace($this->namespace . '\Api\v1')
+            ->name('api.v1.')
+            ->group(base_path('routes/api_v1.php'));
+    }
+
+    /**
+     * Define the external token-authenticated REST API (version 2).
+     *
+     * @return void
+     */
+    protected function mapApiV2Routes()
+    {
+        Route::prefix('api/v2')
+            ->middleware(['api', 'apiv2auth', 'cors'])
+            ->namespace($this->namespace . '\Api\v2')
+            ->name('api.v2.')
+            ->group(base_path('routes/api_v2.php'));
     }
 }
