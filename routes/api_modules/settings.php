@@ -13,6 +13,9 @@ Route::prefix('settings')->group(function () {
     Route::resource('/debug', 'SettingDebugController')->only(['show', 'update']);
     Route::get('/socialite-status', 'SettingSSOController@show');
 
+    /* REST API TOKENS */
+    Route::resource('/rest-api-token', 'SettingRestApiTokenController')->only(['index', 'store', 'destroy']);
+
     /* SETTINGS SPECIFIC ROUTES */
     Route::get('/get-timezone-list', 'SettingTimezoneController@getTimezoneList');
     Route::get('/test-email', 'SettingEmailController@TestMail');

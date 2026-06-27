@@ -1,0 +1,130 @@
+<script setup>
+import { CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import ApiDocsTemplate from "./ApiDocsTemplate.vue";
+import { GitCompare } from "lucide-vue-next";
+import AlertInfo from "@/pages/Shared/Alerts/AlertInfo.vue";
+
+const pagename = "Config Changes v2";
+
+const endpoints = {
+  0: {
+    name: "Get Change By Current Config Id",
+    description: "Look up a precomputed diff by the current (newer) config id",
+    method: "get",
+    url: "/api/v2/config-changes/by-config/{config}",
+    parameters: [
+      {
+        name: "config",
+        description:
+          "required|path — configs.id of the current (newer) revision",
+        type: "integer",
+        example: 245,
+      },
+      {
+        name: "mode",
+        description: "optional|in:inline,side — output shape of config_diff",
+        type: "string",
+        example: "inline",
+      },
+    ],
+    parametersUrlOnly: true,
+    parametersdescription:
+      "Returns the change row whose current_config_id matches. Responds 200 with data: null when no diff exists for the supplied config (e.g. v1 of a command, or an unchanged poll that did not produce a change row), so callers can distinguish 'no diff for this revision' from 'config not found'. Use mode=side to receive a side-by-side HTML render computed at request time using the same diff library and the original exclusion settings; if the source files are no longer on disk the response falls back to the stored inline diff and reports mode_used: 'inline'.",
+    responses: {
+      success: true,
+      data: {
+        id: 9876,
+        current_config_id: 245,
+        previous_config_id: 244,
+        config_version: 3,
+        config_change_type: "modification",
+        config_diff:
+          '<span class="diff-add">+ interface GigabitEthernet0/1</span>...',
+        compare_exclusion_settings: {
+          config_compare_settings: {
+            context: 3,
+            ignoreCase: false,
+            ignoreLineEnding: true,
+            ignoreWhitespace: false,
+            lengthLimit: 5000000,
+          },
+          config_compare_exclusion_file: null,
+        },
+        reviewed: false,
+        severity: null,
+        tags: [],
+        created_at: "2026-04-29T08:42:11.000000Z",
+        updated_at: "2026-04-29T08:42:11.000000Z",
+        mode_used: "inline",
+      },
+    },
+    responsesdescription:
+      "200 with a populated data object when a change row exists. 200 with data: null when no change row exists for the supplied config id. mode_used reports which renderer actually produced the bytes — 'side' when the side-by-side render succeeded, 'inline' when the request fell back (or did not ask for side-by-side).",
+  },
+  1: {
+    name: "Get Change By Id",
+    description: "Direct lookup of a config change row by its primary key",
+    method: "get",
+    url: "/api/v2/config-changes/{id}",
+    parameters: [
+      {
+        name: "id",
+        description: "required|path — config_changes.id value",
+        type: "integer",
+        example: 9876,
+      },
+      {
+        name: "mode",
+        description: "optional|in:inline,side — output shape of config_diff",
+        type: "string",
+        example: "side",
+      },
+    ],
+    parametersUrlOnly: true,
+    parametersdescription:
+      "Same response envelope and mode handling as by-config. Returns 404 when the supplied id does not exist (not 200 with null) — use this endpoint when you already hold a change id and want a hard not-found signal.",
+    responses: {
+      success: false,
+      message: "Config change not found",
+    },
+    responsesdescription:
+      "404 example shown — a successful lookup returns the same data payload as the by-config endpoint above, including the mode_used flag.",
+  },
+};
+</script>
+
+<template>
+  <CardHeader>
+    <CardTitle>Config Changes API v2</CardTitle>
+    <CardDescription
+      >Read-only access to precomputed config diffs, in inline or side-by-side
+      form</CardDescription
+    >
+  </CardHeader>
+
+  <div class="px-6 pb-4">
+    <div class="flex items-start gap-2 mb-6">
+      <GitCompare class="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
+      <div>
+        <h3 class="text-base font-medium">Endpoint Overview</h3>
+        <p class="text-muted-foreground mt-1">
+          Surfaces the same precomputed diff bytes that the SPA renders in the
+          Config History view. Use the by-config lookup when you have a
+          configs.id from a downstream system and want the matching diff; use
+          the id lookup when you already hold a change id. Both endpoints accept
+          mode=inline (default) or mode=side to choose the rendered output
+          shape.
+        </p>
+      </div>
+    </div>
+
+    <AlertInfo
+      class="mt-4 mb-6"
+      variant="dark"
+      title="Authentication"
+      message="A valid apitoken is required in the request header or query string."
+    />
+  </div>
+
+  <ApiDocsTemplate :pagename="pagename" :endpoints="endpoints" />
+</template>
