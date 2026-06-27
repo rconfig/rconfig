@@ -47,6 +47,10 @@ export const notificationConfig = {
                 label: "Failed Configuration Purge Completed",
                 description: "Notifications when failed config purge operations complete",
             },
+            config_changed: {
+                label: "Configuration Changed",
+                description: "Email alerts when a device configuration changes between versions",
+            },
             // Connection
             connection_device_failure: {
                 label: "Device Connection Failure",

@@ -10,28 +10,30 @@ vi.mock("@/composables/useToaster", () => ({
 	useToaster: () => ({ toastSuccess, toastError }),
 }));
 
-// The real config nests everything under `notifications`, but the store reads
-// the flat shape. Provide a flat config so the fallback path stays safe.
+// Mirror the real config, which nests everything under `notifications`.
 vi.mock("@/config/notificationConfig", () => ({
 	notificationConfig: {
-		categories: {
-			system: { label: "System", description: "System events" },
-			config: { label: "Config", description: "Config events" },
-			connection: { label: "Connection", description: "Connection events" },
-			task: { label: "Task", description: "Task events" },
-		},
-		channels: {
-			db: { label: "In-App", description: "Dashboard" },
-			mail: { label: "Email", description: "Email" },
-		},
-		types: {
-			system_notification_error: { label: "Err", description: "d" },
-			config_download_completed: { label: "Dl", description: "d" },
-			config_purge_completed: { label: "Purge", description: "d" },
-			config_purge_failed_completed: { label: "PurgeF", description: "d" },
-			connection_device_failure: { label: "Fail", description: "d" },
-			task_completed: { label: "Task", description: "d" },
-			task_download_report: { label: "Report", description: "d" },
+		notifications: {
+			categories: {
+				system: { label: "System", description: "System events" },
+				config: { label: "Config", description: "Config events" },
+				connection: { label: "Connection", description: "Connection events" },
+				task: { label: "Task", description: "Task events" },
+			},
+			channels: {
+				db: { label: "In-App", description: "Dashboard" },
+				mail: { label: "Email", description: "Email" },
+			},
+			types: {
+				system_notification_error: { label: "Err", description: "d" },
+				config_download_completed: { label: "Dl", description: "d" },
+				config_purge_completed: { label: "Purge", description: "d" },
+				config_purge_failed_completed: { label: "PurgeF", description: "d" },
+				config_changed: { label: "Changed", description: "d" },
+				connection_device_failure: { label: "Fail", description: "d" },
+				task_completed: { label: "Task", description: "d" },
+				task_download_report: { label: "Report", description: "d" },
+			},
 		},
 	},
 }));
@@ -120,7 +122,7 @@ describe("useNotificationStore", () => {
 
 			expect(store.enums.categories).toHaveLength(4);
 			expect(store.enums.channels).toHaveLength(2);
-			expect(store.enums.types).toHaveLength(7);
+			expect(store.enums.types).toHaveLength(8);
 		});
 	});
 

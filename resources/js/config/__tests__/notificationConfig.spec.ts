@@ -47,6 +47,7 @@ describe("notificationConfig", () => {
 			"config_download_completed",
 			"config_purge_completed",
 			"config_purge_failed_completed",
+			"config_changed",
 			"connection_device_failure",
 			"task_completed",
 			"task_download_report",

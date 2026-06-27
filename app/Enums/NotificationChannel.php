@@ -26,8 +26,8 @@ enum NotificationChannel: string
     public function description(): string
     {
         return match ($this) {
-            self::DB => 'notifications.channels.db_desc',
-            self::MAIL => 'notifications.channels.mail_desc',
+            self::DB => 'Notifications shown in your dashboard',
+            self::MAIL => 'Sent to your email address',
         };
     }
 }

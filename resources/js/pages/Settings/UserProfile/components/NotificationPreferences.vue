@@ -56,7 +56,7 @@ function handleAlertClosed() {
 					</div>
 					Notification Preferences
 					<div class="text-sm text-muted-foreground font-normal ml-2">
-						({{ notificationStore.enabledNotifications }} / {{ notificationStore.totalNotificationTypes * 3 }} enabled)
+						({{ notificationStore.enabledNotifications }} / {{ notificationStore.totalNotificationTypes * notificationStore.channels.length }} enabled)
 					</div>
 				</div>
 
