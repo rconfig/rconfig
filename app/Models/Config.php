@@ -4,6 +4,7 @@ namespace App\Models;
 
 use File;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Config extends BaseModel
@@ -73,7 +74,7 @@ class Config extends BaseModel
 
     }
 
-    public function device()
+    public function device(): BelongsTo
     {
         return $this->belongsTo('App\Models\Device', 'device_id', 'id')->select('id', 'device_name', 'device_ip');
     }

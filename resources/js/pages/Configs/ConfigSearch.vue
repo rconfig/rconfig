@@ -1,112 +1,86 @@
 <script setup>
-import ConfigSearchResultsTable from '@/pages/Configs/ConfigSearch/ConfigSearchResultsTable.vue';
-import ConfigSearchFilterCard from '@/pages/Configs/ConfigSearch/ConfigSearchFilterCard.vue';
-import NavCloseButton from '@/pages/Shared/Buttons/NavCloseButton.vue';
-import NavOpenButton from '@/pages/Shared/Buttons/NavOpenButton.vue';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { X } from "lucide-vue-next";
+import { computed, ref } from "vue";
+import ConfigSearchResultsTable from "@/pages/Configs/ConfigSearch/ConfigSearchResultsTable.vue";
+import ConfigSearchActiveFiltersBar from "@/pages/Configs/ConfigSearch/ConfigSearchActiveFiltersBar.vue";
+import ConfigSearchFilterCard from "@/pages/Configs/ConfigSearch/ConfigSearchFilterCard.vue";
+import AlertTip from "@/pages/Shared/Alerts/AlertTip.vue";
+import { Button } from "@/components/ui/button";
 
-const filters = ref({});
-const router = useRouter();
-const panelElement4 = ref(null);
-const navClosed = ref(false);
+const submittedFilters = ref(null);
+const submittedModel = ref(null);
+const isEditingFilters = ref(true);
+const filterEditorKey = ref(0);
+const hasSearched = computed(() => submittedFilters.value !== null);
 
-const performSearch = newFilters => {
-  // Object.assign(filters.value, newFilters);
-  filters.value = { ...newFilters }; // Shallow copy to break reactivity
+const performSearch = ({ payload, model }) => {
+	submittedFilters.value = { ...payload };
+	submittedModel.value = model;
+	isEditingFilters.value = false;
 };
 
-const close = () => {
-  // nav back to previous page
-  router.go(-1);
-};
-
-function closeNav() {
-  panelElement4?.value.isCollapsed ? panelElement4?.value.expand() : panelElement4?.value.collapse();
-  navClosed.value = !navClosed.value;
+function editFilters() {
+	isEditingFilters.value = true;
+	filterEditorKey.value += 1;
 }
-function openNav() {
-  panelElement4?.value.isCollapsed ? panelElement4?.value.expand() : panelElement4?.value.collapse();
-  navClosed.value = !navClosed.value;
+
+function clearSearch() {
+	submittedFilters.value = null;
+	submittedModel.value = null;
+	isEditingFilters.value = true;
+	filterEditorKey.value += 1;
+}
+
+function cancelEdit() {
+	if (hasSearched.value) {
+		isEditingFilters.value = false;
+	}
 }
 </script>
 
 <template>
-	<div
-		class="w-screen h-[calc(100vh-72px)] border"
-		style="display: flex; flex-direction: column; background-color: rgb(27, 29, 33); border-radius: 16px; margin: 4px 8px 8px; max-width: calc(100% - 16px); overflow: hidden;"
-	>
-		<div class="flex justify-between w-full p-2 border-b">
-			<Button
-				size="sm"
-				variant="outline"
-				class="gap-1 border-none hover:bg-rcgray-800"
-				@click="close()"
-			>
-				<X
-					size="16"
-					class="text-muted-foreground hover:animate-pulse"
-				/>
-			</Button>
-			<h2 class="items-center content-center text-muted-foreground">
-				Config Search
-			</h2>
+	<div>
+		<div class="flex-1 overflow-y-auto">
+			<div class="mx-auto flex w-full flex-col gap-6 p-4 md:p-6 xl:p-4">
 
-			<div class="flex justify-end">
-				<!-- EMPTY -->
+				<section v-if="isEditingFilters" class="space-y-4">
+					<AlertTip
+						v-if="hasSearched"
+						title="Editing Active Search"
+						message="Refine the query, then submit again to update the results."
+						small
+					/>
+					<div v-if="hasSearched" class="flex justify-end">
+						<Button variant="outline" size="sm" class="rounded-full px-4 text-xs font-medium rc-btn-shadow hover:animate-pulse" @click="cancelEdit()">
+							Keep Current Results
+						</Button>
+					</div>
+
+					<div class="w-full">
+						<ConfigSearchFilterCard
+							:key="filterEditorKey"
+							:initial-model="submittedModel"
+							:search-button-label="hasSearched ? 'Update Search' : 'Search'"
+							@search-completed="performSearch"
+						/>
+					</div>
+				</section>
+
+				<ConfigSearchActiveFiltersBar
+					v-else-if="hasSearched"
+					:model="submittedModel"
+					@edit="editFilters"
+					@clear="clearSearch"
+				/>
+
+				<section v-if="hasSearched" class="overflow-hidden rounded-[28px] border border-border/60 bg-card/95 py-4 shadow-sm backdrop-blur">
+					<div class="border-b px-6 pb-4">
+						<h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">Results</h2>
+						<p class="mt-1 text-xs text-muted-foreground">Results stay full width so the filters never fight the table for space.</p>
+					</div>
+					<ConfigSearchResultsTable :filters="submittedFilters" />
+				</section>
+
 			</div>
 		</div>
-
-		<ResizablePanelGroup
-			direction="horizontal"
-			class=""
-		>
-			<ResizablePanel
-				ref="panelElement4"
-				:default-size="25"
-				:max-size="30"
-				:min-size="10"
-				collapsible
-				:collapsed-size="0"
-				class="h-[86vh]"
-			>
-				<div class="flex items-center justify-between p-2 mb-4 border-b">
-					<h1 class="ml-4 text-sm font-semibold">
-						Search Options
-					</h1>
-					<NavCloseButton
-						class="mr-2"
-						@close="closeNav()"
-					/>
-				</div>
-
-				<ConfigSearchFilterCard @search-completed="performSearch" />
-			</ResizablePanel>
-			<ResizableHandle with-handle />
-			<ResizablePanel class="h-[86vh]">
-				<ScrollArea class="border border-none rounded-md">
-					<div>
-						<div class="flex items-center justify-between p-2 mb-2 border-b">
-							<NavOpenButton
-								class="ml-2"
-								:nav-panel-btn-state="navClosed"
-								@open-nav="openNav()"
-							/>
-							<h1
-								class="w-full text-sm font-semibold"
-								:class="navClosed === false ? 'ml-2 ' : ''"
-							>
-								Results
-							</h1>
-						</div>
-
-						<!-- Render search results here -->
-						<ConfigSearchResultsTable :filters="filters" />
-					</div>
-				</ScrollArea>
-			</ResizablePanel>
-		</ResizablePanelGroup>
 	</div>
 </template>
