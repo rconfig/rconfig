@@ -60,7 +60,12 @@ function saveDialog() {
 		<DialogTrigger as-child>
 			<!-- <Button variant="outline">Edit Profile</Button> -->
 		</DialogTrigger>
-		<DialogContent class="w-full p-0" @escapeKeyDown="closeDialog('DialogNewVendor')" @pointerDownOutside="closeDialog('DialogNewVendor')" @closeClicked="closeDialog('DialogNewVendor')">
+		<DialogContent
+			class="w-full p-0"
+			@escape-key-down="closeDialog('DialogNewVendor')"
+			@pointer-down-outside="closeDialog('DialogNewVendor')"
+			@close-clicked="closeDialog('DialogNewVendor')"
+		>
 			<DialogHeader class="rc-dialog-header">
 				<DialogTitle class="text-sm text-rcgray-200">
 					<div class="flex items-center">
@@ -72,37 +77,73 @@ function saveDialog() {
 
 			<div class="grid gap-2 py-4">
 				<div class="grid items-center grid-cols-4 gap-2">
-					<Label for="vendorName" class="text-right">Vendor Name</Label>
-					<Input v-model="model.vendorName" id="vendorName" class="col-span-3" />
-					<span class="col-span-3 col-start-2 text-sm text-red-400" v-if="errors.vendorName">
+					<Label
+						for="vendorName"
+						class="text-right"
+					>Vendor Name</Label>
+					<Input
+						id="vendorName"
+						v-model="model.vendorName"
+						class="col-span-3"
+					/>
+					<span
+						v-if="errors.vendorName"
+						class="col-span-3 col-start-2 text-sm text-red-400"
+					>
 						{{ errors.vendorName[0] }}
 					</span>
 				</div>
 			</div>
 
 			<DialogFooter class="rc-dialog-footer bg-rcgray-800">
-				<Button type="close" variant="outline" class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse" @click="closeDialog('DialogNewVendor')" size="sm">
+				<Button
+					type="close"
+					variant="outline"
+					class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse"
+					size="sm"
+					@click="closeDialog('DialogNewVendor')"
+				>
 					Cancel
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class">ESC</kbd>
 					</div>
 				</Button>
-				<Button v-if="props.editId === 0" type="submit" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click="saveDialog" variant="primary">
+				<Button
+					v-if="props.editId === 0"
+					type="submit"
+					class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+					size="sm"
+					variant="primary"
+					@click="saveDialog"
+				>
 					Save
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class2">
 							Ctrl&nbsp;
-							<RcIcon name="enter" class="ml-1" />
+							<RcIcon
+								name="enter"
+								class="ml-1"
+							/>
 						</kbd>
 					</div>
 				</Button>
 
-				<Button v-else type="submit" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click="saveDialog" variant="primary">
+				<Button
+					v-else
+					type="submit"
+					class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+					size="sm"
+					variant="primary"
+					@click="saveDialog"
+				>
 					Update
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class2">
 							Ctrl&nbsp;
-							<RcIcon name="enter" class="ml-1" />
+							<RcIcon
+								name="enter"
+								class="ml-1"
+							/>
 						</kbd>
 					</div>
 				</Button>

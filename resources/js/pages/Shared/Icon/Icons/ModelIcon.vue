@@ -23,5 +23,9 @@ const combinedClass = computed(() => {
 </script>
 
 <template>
-	<HardDrive :width="width" :height="height" :class="combinedClass" />
+	<HardDrive
+		:width="width"
+		:height="height"
+		:class="combinedClass"
+	/>
 </template>

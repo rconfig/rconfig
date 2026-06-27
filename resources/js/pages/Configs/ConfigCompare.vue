@@ -13,33 +13,80 @@ const { close, closeNav, leftConfigData, leftConfigFilterKey, leftConfigResultsK
 </script>
 
 <template>
-	<div class="w-screen h-[calc(100vh-72px)] border" style="display: flex; flex-direction: column; border-radius: 16px; margin: 4px 8px 8px; max-width: calc(100% - 16px); overflow: hidden;">
+	<div
+		class="w-screen h-[calc(100vh-72px)] border"
+		style="display: flex; flex-direction: column; border-radius: 16px; margin: 4px 8px 8px; max-width: calc(100% - 16px); overflow: hidden;"
+	>
 		<div class="flex justify-between w-full p-2 border-b">
-			<Button @click="close()" size="sm" variant="outline" class="gap-1 border-none"> <X size="16" class="text-muted-foreground hover:animate-pulse" /> </Button>
-			<h2 class="items-center content-center text-muted-foreground">Config Compare</h2>
+			<Button
+				size="sm"
+				variant="outline"
+				class="gap-1 border-none"
+				@click="close()"
+			>
+				<X
+					size="16"
+					class="text-muted-foreground hover:animate-pulse"
+				/>
+			</Button>
+			<h2 class="items-center content-center text-muted-foreground">
+				Config Compare
+			</h2>
 
 			<div class="flex items-center justify-end">
 				<div v-if="leftSelectedId.length > 0 && rightSelectedId.length > 0">
-					<Badge variant="outline" class="py-1 mt-1 bg-rcgray-200 dark:bg-rcgray-800">
-						<RcIcon name="status-green" class="mr-2" />
+					<Badge
+						variant="outline"
+						class="py-1 mt-1 bg-rcgray-200 dark:bg-rcgray-800"
+					>
+						<RcIcon
+							name="status-green"
+							class="mr-2"
+						/>
 						<span class="text-sm">Compare Config ID {{ leftSelectedId }} with Config ID {{ rightSelectedId }}</span>
 					</Badge>
 				</div>
-				<Button v-if="leftSelectedId && rightSelectedId" @click="sendConfigCompare(leftSelectedId, rightSelectedId)" class="h-8 ml-2 hover:animate-pulse btn-primary-action" variant="default">
+				<Button
+					v-if="leftSelectedId && rightSelectedId"
+					class="h-8 ml-2 hover:animate-pulse btn-primary-action"
+					variant="default"
+					@click="sendConfigCompare(leftSelectedId, rightSelectedId)"
+				>
 					Compare
 				</Button>
-				<Button variant="outline" v-if="leftSelectedId && rightSelectedId" @click="reset()" class="h-8 ml-2 text-rcgray-900 dark:text-white">
+				<Button
+					v-if="leftSelectedId && rightSelectedId"
+					variant="outline"
+					class="h-8 ml-2 text-rcgray-900 dark:text-white"
+					@click="reset()"
+				>
 					Reset
 				</Button>
 			</div>
 		</div>
 
-		<ResizablePanelGroup direction="horizontal" class="">
-			<ResizablePanel :default-size="25" :max-size="30" :min-size="10" collapsible :collapsed-size="0" ref="panelElement3" class="flex flex-col">
+		<ResizablePanelGroup
+			direction="horizontal"
+			class=""
+		>
+			<ResizablePanel
+				ref="panelElement3"
+				:default-size="25"
+				:max-size="30"
+				:min-size="10"
+				collapsible
+				:collapsed-size="0"
+				class="flex flex-col"
+			>
 				<!-- Fixed header -->
 				<div class="flex items-center justify-between p-2 mb-2 border-b flex-shrink-0">
-					<h1 class="ml-4 text-sm font-semibold">Search Options</h1>
-					<NavCloseButton class="mr-2" @close="closeNav()" />
+					<h1 class="ml-4 text-sm font-semibold">
+						Search Options
+					</h1>
+					<NavCloseButton
+						class="mr-2"
+						@close="closeNav()"
+					/>
 				</div>
 
 				<!-- Scrollable content -->
@@ -47,7 +94,11 @@ const { close, closeNav, leftConfigData, leftConfigFilterKey, leftConfigResultsK
 					<div class="relative flex flex-col items-center px-2">
 						<!-- First element -->
 						<div class="w-full mb-4">
-							<ConfigCompareFilterCard :key="leftConfigFilterKey" @updateConfigFilter="(data) => updateConfigFilterData('left', data)" :comparePosition="'left'" />
+							<ConfigCompareFilterCard
+								:key="leftConfigFilterKey"
+								:compare-position="'left'"
+								@update-config-filter="(data) => updateConfigFilterData('left', data)"
+							/>
 						</div>
 
 						<!-- Separator -->
@@ -55,7 +106,11 @@ const { close, closeNav, leftConfigData, leftConfigFilterKey, leftConfigResultsK
 
 						<!-- Second element -->
 						<div class="w-full mb-4">
-							<ConfigCompareFilterCard :key="rightConfigFilterKey" @updateConfigFilter="(data) => updateConfigFilterData('right', data)" :comparePosition="'right'" />
+							<ConfigCompareFilterCard
+								:key="rightConfigFilterKey"
+								:compare-position="'right'"
+								@update-config-filter="(data) => updateConfigFilterData('right', data)"
+							/>
 						</div>
 						<div class="w-full my-4 border-t"></div>
 					</div>
@@ -68,19 +123,34 @@ const { close, closeNav, leftConfigData, leftConfigFilterKey, leftConfigResultsK
 					<div class="h-[80dvh]">
 						<div class="flex items-center justify-between p-2 mb-2 border-b">
 							<div class="flex items-center">
-								<NavOpenButton class="ml-2" @openNav="openNav()" :navPanelBtnState="navClosed" />
-								<h1 class="w-full text-sm font-semibold" :class="navClosed === false ? 'ml-2 ' : ''">
+								<NavOpenButton
+									class="ml-2"
+									:nav-panel-btn-state="navClosed"
+									@open-nav="openNav()"
+								/>
+								<h1
+									class="w-full text-sm font-semibold"
+									:class="navClosed === false ? 'ml-2 ' : ''"
+								>
 									Filter Results
 								</h1>
 							</div>
 							<div class="mx-2">
 								<Popover>
-									<PopoverTrigger asChild>
-										<CircleAlert class="cursor-pointer transition-transform duration-300 hover:text-blue-500 hover:animate-pulse" size="16" />
+									<PopoverTrigger as-child>
+										<CircleAlert
+											class="cursor-pointer transition-transform duration-300 hover:text-blue-500 hover:animate-pulse"
+											size="16"
+										/>
 									</PopoverTrigger>
-									<PopoverContent class="w-64 p-4 shadow-lg border bg-card/95 backdrop-blur-xl pb-0" align="end">
+									<PopoverContent
+										class="w-64 p-4 shadow-lg border bg-card/95 backdrop-blur-xl pb-0"
+										align="end"
+									>
 										<div class="space-y-3">
-											<div class="text-xs font-medium text-foreground border-b pb-2">Filter Results</div>
+											<div class="text-xs font-medium text-foreground border-b pb-2">
+												Filter Results
+											</div>
 											<div class="space-y-2 text-sm">
 												<div class="flex justify-between">
 													<span class="text-muted-foreground">When filtering for devices, the default results only include configurations that have been successfully downloaded and are in a good (successful) status.</span>
@@ -91,7 +161,11 @@ const { close, closeNav, leftConfigData, leftConfigFilterKey, leftConfigResultsK
 										<!-- Footer Links -->
 										<div class="border-t bg-muted/20 py-1 mt-2">
 											<div class="flex items-center text-xs py-2">
-												<a :href="$rconfigDocsUrl + '/configtools/compare/'" target="_blank" class="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+												<a
+													:href="$rconfigDocsUrl + '/configtools/compare/'"
+													target="_blank"
+													class="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+												>
 													<BookOpenCheck size="12" />
 													View Documentation
 												</a>
@@ -102,15 +176,31 @@ const { close, closeNav, leftConfigData, leftConfigFilterKey, leftConfigResultsK
 							</div>
 						</div>
 
-						<div class="relative flex flex-col items-center" v-if="!loadComparison">
-							<ConfigCompareFilterConfigResults :key="leftConfigResultsKey" :filterData="leftConfigData" @updateSelectedRows="leftSelectedId = $event" :comparePosition="'left'" />
+						<div
+							v-if="!loadComparison"
+							class="relative flex flex-col items-center"
+						>
+							<ConfigCompareFilterConfigResults
+								:key="leftConfigResultsKey"
+								:filter-data="leftConfigData"
+								:compare-position="'left'"
+								@update-selected-rows="leftSelectedId = $event"
+							/>
 
 							<!-- Second element -->
-							<ConfigCompareFilterConfigResults :key="rightConfigResultsKey" :filterData="rightConfigData" @updateSelectedRows="rightSelectedId = $event" :comparePosition="'right'" />
+							<ConfigCompareFilterConfigResults
+								:key="rightConfigResultsKey"
+								:filter-data="rightConfigData"
+								:compare-position="'right'"
+								@update-selected-rows="rightSelectedId = $event"
+							/>
 						</div>
 
 						<div v-if="loadComparison">
-							<ConfigCompareResults :leftSelectedId="leftSelectedId" :rightSelectedId="rightSelectedId" />
+							<ConfigCompareResults
+								:left-selected-id="leftSelectedId"
+								:right-selected-id="rightSelectedId"
+							/>
 						</div>
 					</div>
 					<!-- SEARCH RESULTS -->

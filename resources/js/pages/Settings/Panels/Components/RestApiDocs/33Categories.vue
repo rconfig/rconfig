@@ -210,31 +210,36 @@ const endpoints = {
 </script>
 
 <template>
-  <CardHeader>
-    <CardTitle>Categories API</CardTitle>
-    <CardDescription
-      >Manage device categories through the rConfig API</CardDescription
-    >
-  </CardHeader>
+	<CardHeader>
+		<CardTitle>Categories API</CardTitle>
+		<CardDescription>
+			Manage device categories through the rConfig API
+		</CardDescription>
+	</CardHeader>
 
-  <div class="px-6 pb-4">
-    <div class="flex items-start gap-2 mb-6">
-      <FolderTree class="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
-      <div>
-        <h3 class="text-base font-medium">Categories Overview</h3>
-        <p class="text-muted-foreground mt-1">
-          Manage device categories through the rConfig API
-        </p>
-      </div>
-    </div>
+	<div class="px-6 pb-4">
+		<div class="flex items-start gap-2 mb-6">
+			<FolderTree class="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
+			<div>
+				<h3 class="text-base font-medium">
+					Categories Overview
+				</h3>
+				<p class="text-muted-foreground mt-1">
+					Manage device categories through the rConfig API
+				</p>
+			</div>
+		</div>
 
-    <AlertInfo
-      class="mt-4 mb-6"
-      variant="dark"
-      title="Device Relationships"
-      message="Categories have relationships with devices. When retrieving categories, the associated devices are included in the response."
-    />
-  </div>
+		<AlertInfo
+			class="mt-4 mb-6"
+			variant="dark"
+			title="Device Relationships"
+			message="Categories have relationships with devices. When retrieving categories, the associated devices are included in the response."
+		/>
+	</div>
 
-  <ApiDocsTemplate :pagename="pagename" :endpoints="endpoints" />
+	<ApiDocsTemplate
+		:pagename="pagename"
+		:endpoints="endpoints"
+	/>
 </template>

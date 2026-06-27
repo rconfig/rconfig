@@ -24,5 +24,9 @@ const combinedClass = computed(() => {
 </script>
 
 <template>
-	 <ArrowUpDown :class="combinedClass" :width="width" :height="height" />
+	<ArrowUpDown
+		:class="combinedClass"
+		:width="width"
+		:height="height"
+	/>
 </template>

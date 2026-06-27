@@ -44,12 +44,25 @@ onMounted(() => {
 
 <template>
 	<div class="p-2">
-		<div v-if="!isReady" class="flex justify-center items-center h-32">
+		<div
+			v-if="!isReady"
+			class="flex justify-center items-center h-32"
+		>
 			<!-- Optional: Add a loading spinner here -->
-			<div class="text-gray-500">Loading...</div>
+			<div class="text-gray-500">
+				Loading...
+			</div>
 		</div>
-		<transition v-else name="fade" mode="out-in">
-			<component :is="activeView === 'latest' ? DeviceConfigsViewPanelLatest : DeviceConfigsViewPanelAll" :deviceId="deviceId" @toggle-view="toggleView" />
+		<transition
+			v-else
+			name="fade"
+			mode="out-in"
+		>
+			<component
+				:is="activeView === 'latest' ? DeviceConfigsViewPanelLatest : DeviceConfigsViewPanelAll"
+				:device-id="deviceId"
+				@toggle-view="toggleView"
+			/>
 		</transition>
 	</div>
 </template>

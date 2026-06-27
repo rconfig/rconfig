@@ -23,5 +23,9 @@ const combinedClass = computed(() => {
 </script>
 
 <template>
-	<ListCollapse :width="width" :height="height" :class="combinedClass" />
+	<ListCollapse
+		:width="width"
+		:height="height"
+		:class="combinedClass"
+	/>
 </template>

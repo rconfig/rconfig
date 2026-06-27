@@ -198,31 +198,36 @@ const endpoints = {
 </script>
 
 <template>
-  <CardHeader>
-    <CardTitle>Commands API</CardTitle>
-    <CardDescription
-      >Manage device commands through the rConfig API</CardDescription
-    >
-  </CardHeader>
+	<CardHeader>
+		<CardTitle>Commands API</CardTitle>
+		<CardDescription>
+			Manage device commands through the rConfig API
+		</CardDescription>
+	</CardHeader>
 
-  <div class="px-6 pb-4">
-    <div class="flex items-start gap-2 mb-6">
-      <Terminal class="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
-      <div>
-        <h3 class="text-base font-medium">Commands Overview</h3>
-        <p class="text-muted-foreground mt-1">
-          Manage device commands through the rConfig API
-        </p>
-      </div>
-    </div>
+	<div class="px-6 pb-4">
+		<div class="flex items-start gap-2 mb-6">
+			<Terminal class="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
+			<div>
+				<h3 class="text-base font-medium">
+					Commands Overview
+				</h3>
+				<p class="text-muted-foreground mt-1">
+					Manage device commands through the rConfig API
+				</p>
+			</div>
+		</div>
 
-    <AlertInfo
-      class="mt-4 mb-6"
-      variant="dark"
-      title="Template Relationships"
-      message="Commands have relationships with templates. When retrieving commands, the associated templates are included in the response."
-    />
-  </div>
+		<AlertInfo
+			class="mt-4 mb-6"
+			variant="dark"
+			title="Template Relationships"
+			message="Commands have relationships with templates. When retrieving commands, the associated templates are included in the response."
+		/>
+	</div>
 
-  <ApiDocsTemplate :pagename="pagename" :endpoints="endpoints" />
+	<ApiDocsTemplate
+		:pagename="pagename"
+		:endpoints="endpoints"
+	/>
 </template>

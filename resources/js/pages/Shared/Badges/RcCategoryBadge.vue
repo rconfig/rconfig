@@ -26,7 +26,10 @@ const badgeClasses = computed(() => {
 </script>
 <template>
 	<div class="flex justify-start w-full">
-		<span :class="badgeClasses" class="inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-xl border transition-colors duration-200">
+		<span
+			:class="badgeClasses"
+			class="inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-xl border transition-colors duration-200"
+		>
 			<slot name="icon"></slot>
 			{{ category?.categoryName || placeholder }}
 		</span>

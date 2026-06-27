@@ -238,16 +238,36 @@ defineExpose({
 	<Dialog v-model:open="isOpen">
 		<DialogContent class="p-0 max-w-[450px] top-[20%] translate-y-0">
 			<Command class="rounded-lg border-0 shadow-md">
-				<CommandInput v-model="searchQuery" placeholder="Navigate to…" class="border-0 focus:ring-0" />
+				<CommandInput
+					v-model="searchQuery"
+					placeholder="Navigate to…"
+					class="border-0 focus:ring-0"
+				/>
 				<CommandList class="max-h-[300px]">
 					<CommandEmpty>No results found.</CommandEmpty>
 
 					<!-- Navigation Group -->
-					<CommandGroup v-for="(items, groupName) in groupedItems" :key="groupName" :heading="groupName">
-						<CommandItem v-for="item in items" :key="item.id" :value="item.id" @select="handleSelect(item)" class="cursor-pointer">
-							<RcIcon :name="item.icon" class="mr-2 h-4 w-4" />
+					<CommandGroup
+						v-for="(items, groupName) in groupedItems"
+						:key="groupName"
+						:heading="groupName"
+					>
+						<CommandItem
+							v-for="item in items"
+							:key="item.id"
+							:value="item.id"
+							class="cursor-pointer"
+							@select="handleSelect(item)"
+						>
+							<RcIcon
+								:name="item.icon"
+								class="mr-2 h-4 w-4"
+							/>
 							<span>{{ item.label }}</span>
-							<ExternalLink v-if="item.external" class="ml-auto h-3 w-3 text-muted-foreground" />
+							<ExternalLink
+								v-if="item.external"
+								class="ml-auto h-3 w-3 text-muted-foreground"
+							/>
 						</CommandItem>
 					</CommandGroup>
 
@@ -257,12 +277,12 @@ defineExpose({
 					<CommandGroup heading="Quick Actions">
 						<CommandItem
 							value="search"
+							class="cursor-pointer"
 							@select="
 								() => {
 									/* Add search functionality */
 								}
 							"
-							class="cursor-pointer"
 						>
 							<Search class="mr-2 h-4 w-4" />
 							<span>Record Search</span>
@@ -276,9 +296,18 @@ defineExpose({
 
 	<!-- Optional: Add a trigger button to your existing navigation -->
 	<div class="w-1/2 mx-2 mb-2">
-		<RcToolTip :delayDuration="100" :content="`Quick navigation search... (⌘ Ctrl+K)`" :side="'bottom'">
+		<RcToolTip
+			:delay-duration="100"
+			:content="`Quick navigation search... (⌘ Ctrl+K)`"
+			:side="'bottom'"
+		>
 			<template #trigger>
-				<Button @click="isOpen = true" variant="ghost" size="sm" class="w-auto px-2 py-1 rc-btn-shadow bg-rcgray-900 hover:bg-rcgray-850 transition focus:outline-none focus:ring-0">
+				<Button
+					variant="ghost"
+					size="sm"
+					class="w-auto px-2 py-1 rc-btn-shadow bg-rcgray-900 hover:bg-rcgray-850 transition focus:outline-none focus:ring-0"
+					@click="isOpen = true"
+				>
 					<div class="flex items-center w-full">
 						<Navigation class="text-muted-foreground h-4 w-4 opacity-60" />
 

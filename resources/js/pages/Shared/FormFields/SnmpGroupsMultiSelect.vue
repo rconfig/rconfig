@@ -61,24 +61,49 @@ function fetchGroups() {
 <template>
 	<Popover>
 		<PopoverTrigger class="col-span-3">
-			<Button variant="ghost" class="flex items-center justify-start w-full px-2 py-1 border rounded-xl whitespace-nowrap h-fit bg-rcgray-700" :class="selectedSnmpGroups.length === 0 ? ' text-rcgray-400' : ''" :style="selectedSnmpGroups.length === 0 ? 'padding: 0.45rem' : 'padding: 0.2rem'">
+			<Button
+				variant="ghost"
+				class="flex items-center justify-start w-full px-2 py-1 border rounded-xl whitespace-nowrap h-fit bg-rcgray-700"
+				:class="selectedSnmpGroups.length === 0 ? ' text-rcgray-400' : ''"
+				:style="selectedSnmpGroups.length === 0 ? 'padding: 0.45rem' : 'padding: 0.2rem'"
+			>
 				<span v-if="isLoading">{{ t("loadingDeviceModels") }}</span>
-				<template v-else class="text-rcgray-400">
-					<RcIcon name="snmp" class="mx-2" />
+				<template
+					v-else
+				>
+					<RcIcon
+						name="snmp"
+						class="mx-2"
+					/>
 					<span v-if="selectedSnmpGroups.length === 0">{{ props.placeholder }}</span>
 
 					<!-- Display single selected item -->
-					<span v-else-if="props.singleSelect && selectedSnmpGroups.length > 0" class="flex items-center text-xs font-medium px-2.5 py-0.5 rounded-xl border bg-muted">
+					<span
+						v-else-if="props.singleSelect && selectedSnmpGroups.length > 0"
+						class="flex items-center text-xs font-medium px-2.5 py-0.5 rounded-xl border bg-muted"
+					>
 						{{ selectedSnmpGroups[0].name }}
-						<X size="16" class="ml-1 cursor-pointer hover:text-primary" @click.stop="deleteItemById(selectedSnmpGroups[0].id)" />
+						<X
+							size="16"
+							class="ml-1 cursor-pointer hover:text-primary"
+							@click.stop="deleteItemById(selectedSnmpGroups[0].id)"
+						/>
 					</span>
 
 					<!-- Display multiple selected items -->
 					<template v-else>
-						<span v-for="group in selectedSnmpGroups" :key="group.id" class="relative my-1 group">
+						<span
+							v-for="group in selectedSnmpGroups"
+							:key="group.id"
+							class="relative my-1 group"
+						>
 							<span class="flex items-center text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border">
 								{{ group.name }}
-								<X size="16" class="ml-1 cursor-pointer hover:text-white" @click.stop="deleteItemById(group.id)" />
+								<X
+									size="16"
+									class="ml-1 cursor-pointer hover:text-white"
+									@click.stop="deleteItemById(group.id)"
+								/>
 							</span>
 						</span>
 					</template>
@@ -86,9 +111,20 @@ function fetchGroups() {
 			</Button>
 		</PopoverTrigger>
 
-		<PopoverContent side="bottom" align="start" class="col-span-3 p-0 max-h-56 overflow-hidden">
+		<PopoverContent
+			side="bottom"
+			align="start"
+			class="col-span-3 p-0 max-h-56 overflow-hidden"
+		>
 			<div class="relative items-center w-full">
-				<Input id="search" type="text" v-model="searchTerm" autocomplete="off" :placeholder="t('common.search')" class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter" />
+				<Input
+					id="search"
+					v-model="searchTerm"
+					type="text"
+					autocomplete="off"
+					:placeholder="t('common.search')"
+					class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter"
+				/>
 				<span class="absolute inset-y-0 flex items-center justify-center px-2 start-0">
 					<RcIcon name="search" />
 				</span>
@@ -97,9 +133,22 @@ function fetchGroups() {
 
 			<ScrollArea class="h-48 max-h-48">
 				<div class="py-1">
-					<RcIcon name="three-dots-loading" class="w-8 h-8 mx-auto my-4 text-muted-foreground" v-if="isLoading" />
-					<div v-else v-for="group in filteredSnmpGroups" :key="group.id" class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600" @click="selectItem(group)">
-						<span data-size="20" class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5">
+					<RcIcon
+						v-if="isLoading"
+						name="three-dots-loading"
+						class="w-8 h-8 mx-auto my-4 text-muted-foreground"
+					/>
+					<div
+						v-for="group in filteredSnmpGroups"
+						v-else
+						:key="group.id"
+						class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600"
+						@click="selectItem(group)"
+					>
+						<span
+							data-size="20"
+							class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5"
+						>
 							<span data-size="20">
 								{{ group.name }}
 							</span>

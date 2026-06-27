@@ -22,17 +22,17 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="pulsing-icon-wrapper">
-        <Clock 
-            :size="props.size" 
-            :color="props.color" 
-            :class="[
-                'transition-all duration-300 ease-in-out', 
-                props.animate ? 'animate-pulse-slow' : ''
-            ]" 
-            :style="{ '--pulse-duration': props.speed }"
-        />
-    </div>
+	<div class="pulsing-icon-wrapper">
+		<Clock 
+			:size="props.size" 
+			:color="props.color" 
+			:class="[
+				'transition-all duration-300 ease-in-out', 
+				props.animate ? 'animate-pulse-slow' : ''
+			]" 
+			:style="{ '--pulse-duration': props.speed }"
+		/>
+	</div>
 </template>
 
 <style scoped>

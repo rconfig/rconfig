@@ -23,6 +23,77 @@ const combinedClass = computed(() => {
 });
 </script>
 
+<template>
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		:width="width"
+		:height="height"
+		viewBox="0 0 16 16"
+		:class="combinedClass"
+	>
+		<g
+			fill="none"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+		>
+			<!-- Circular border -->
+			<circle 
+				class="circle-border" 
+				cx="8" 
+				cy="8" 
+				r="6.5" 
+				stroke="#3b82f6" 
+				stroke-width="1.2" 
+				fill="none"
+			/>
+            
+			<!-- Trail dots (leading the arrow) -->
+			<g
+				class="trail-dots"
+				stroke="#60a5fa"
+				stroke-width="1"
+			>
+				<circle
+					cx="4"
+					cy="8"
+					r="0.5"
+					fill="#60a5fa"
+					opacity="0.4"
+				/>
+				<circle
+					cx="5.5"
+					cy="8"
+					r="0.3"
+					fill="#60a5fa"
+					opacity="0.6"
+				/>
+			</g>
+            
+			<!-- Main arrow -->
+			<g
+				class="arrow-main"
+				stroke="#3b82f6"
+				stroke-width="1.5"
+			>
+				<!-- Arrow shaft -->
+				<path d="M6.5 8h4" />
+				<!-- Arrow head -->
+				<path d="M9 6.5L10.5 8L9 9.5" />
+			</g>
+            
+			<!-- Secondary arrow (subtle) -->
+			<g
+				stroke="#93c5fd"
+				stroke-width="1"
+				opacity="0.5"
+			>
+				<path d="M10.5 8h1" />
+				<path d="M11 7.5l0.5 0.5l-0.5 0.5" />
+			</g>
+		</g>
+	</svg>
+</template>
+
 <style scoped>
 @keyframes arrow-slide {
   0%, 100% { transform: translateX(0); opacity: 0.7; }
@@ -64,40 +135,3 @@ const combinedClass = computed(() => {
   animation-delay: 0.6s;
 }
 </style>
-
-<template>
-    <svg xmlns="http://www.w3.org/2000/svg" :width="width" :height="height" viewBox="0 0 16 16" :class="combinedClass">
-        <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <!-- Circular border -->
-            <circle 
-                class="circle-border" 
-                cx="8" 
-                cy="8" 
-                r="6.5" 
-                stroke="#3b82f6" 
-                stroke-width="1.2" 
-                fill="none"
-            />
-            
-            <!-- Trail dots (leading the arrow) -->
-            <g class="trail-dots" stroke="#60a5fa" stroke-width="1">
-                <circle cx="4" cy="8" r="0.5" fill="#60a5fa" opacity="0.4"/>
-                <circle cx="5.5" cy="8" r="0.3" fill="#60a5fa" opacity="0.6"/>
-            </g>
-            
-            <!-- Main arrow -->
-            <g class="arrow-main" stroke="#3b82f6" stroke-width="1.5">
-                <!-- Arrow shaft -->
-                <path d="M6.5 8h4" />
-                <!-- Arrow head -->
-                <path d="M9 6.5L10.5 8L9 9.5" />
-            </g>
-            
-            <!-- Secondary arrow (subtle) -->
-            <g stroke="#93c5fd" stroke-width="1" opacity="0.5">
-                <path d="M10.5 8h1" />
-                <path d="M11 7.5l0.5 0.5l-0.5 0.5" />
-            </g>
-        </g>
-    </svg>
-</template>

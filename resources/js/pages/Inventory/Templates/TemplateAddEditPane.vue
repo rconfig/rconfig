@@ -143,18 +143,44 @@ function setTemplateCode(code) {
 <template>
 	<div>
 		<div class="flex justify-between p-2 border-b">
-			<Button @click="close()" size="sm" variant="outline" class="gap-1 border-none hover:bg-rcgray-600"> <X size="16" class="hover:animate-pulse" /> </Button>
-			<h2 class="items-center content-center text-muted-foreground">{{ editId === 0 ? "Add Template" : "Edit Template" }} {{ editId === 0 ? "" : "(" + editId + ")" }}</h2>
+			<Button
+				size="sm"
+				variant="outline"
+				class="gap-1 border-none hover:bg-rcgray-600"
+				@click="close()"
+			>
+				<X
+					size="16"
+					class="hover:animate-pulse"
+				/>
+			</Button>
+			<h2 class="items-center content-center text-muted-foreground">
+				{{ editId === 0 ? "Add Template" : "Edit Template" }} {{ editId === 0 ? "" : "(" + editId + ")" }}
+			</h2>
 			<div class="flex justify-end">
 				<!-- EMPTY -->
 			</div>
 		</div>
 
-		<ResizablePanelGroup direction="horizontal" class="">
-			<ResizablePanel :default-size="25" :max-size="30" :min-size="10" collapsible :collapsed-size="0" ref="panelElement44" class="h-[90vh]">
+		<ResizablePanelGroup
+			direction="horizontal"
+			class=""
+		>
+			<ResizablePanel
+				ref="panelElement44"
+				:default-size="25"
+				:max-size="30"
+				:min-size="10"
+				collapsible
+				:collapsed-size="0"
+				class="h-[90vh]"
+			>
 				<div class="">
 					<!-- Loading Skeleton -->
-					<div v-if="isLoading" class="grid gap-4 px-4 py-4">
+					<div
+						v-if="isLoading"
+						class="grid gap-4 px-4 py-4"
+					>
 						<!-- Form Fields Skeleton -->
 						<div class="grid items-center grid-cols-4 gap-4">
 							<Skeleton class="h-4 w-24 justify-self-end" />
@@ -184,33 +210,74 @@ function setTemplateCode(code) {
 					</div>
 
 					<!-- Actual Form Content -->
-					<div class="pb-4 px-4 mt-4" v-else>
+					<div
+						v-else
+						class="pb-4 px-4 mt-4"
+					>
 						<div v-if="hasVendorTemplateOptions">
-							<Label for="description" class="block mb-2">Imported Templates</Label>
-							<Button type="close" @click="openImportDialog()" class="px-2 py-1 text-sm hover:bg-gray-700" variant="outline">
-								<Github size="16" class="mr-2" />
+							<Label
+								for="description"
+								class="block mb-2"
+							>Imported Templates</Label>
+							<Button
+								type="close"
+								class="px-2 py-1 text-sm hover:bg-gray-700"
+								variant="outline"
+								@click="openImportDialog()"
+							>
+								<Github
+									size="16"
+									class="mr-2"
+								/>
 								Choose Template to Import
 							</Button>
 						</div>
 
-						<Separator class="relative w-full h-px shrink-0 bg-border mb-4 my-4" v-if="hasVendorTemplateOptions" />
+						<Separator
+							v-if="hasVendorTemplateOptions"
+							class="relative w-full h-px shrink-0 bg-border mb-4 my-4"
+						/>
 
 						<div class="grid gap-4">
 							<div>
-								<Label for="templateName" class="block mb-2">
+								<Label
+									for="templateName"
+									class="block mb-2"
+								>
 									Template Name
 									<span class="text-red-600">*</span>
 								</Label>
-								<Input v-model="model.templateName" id="templateName" autocomplete="off" class="w-full" disabled />
-								<span class="text-sm text-red-400 mt-1 block" v-if="errors.templateName">
+								<Input
+									id="templateName"
+									v-model="model.templateName"
+									autocomplete="off"
+									class="w-full"
+									disabled
+								/>
+								<span
+									v-if="errors.templateName"
+									class="text-sm text-red-400 mt-1 block"
+								>
 									{{ errors.templateName[0] }}
 								</span>
 							</div>
 
 							<div>
-								<Label for="description" class="block mb-2">Description</Label>
-								<Input v-model="model.description" id="description" autocomplete="off" class="w-full" disabled />
-								<span class="text-sm text-red-400 mt-1 block" v-if="errors.description">
+								<Label
+									for="description"
+									class="block mb-2"
+								>Description</Label>
+								<Input
+									id="description"
+									v-model="model.description"
+									autocomplete="off"
+									class="w-full"
+									disabled
+								/>
+								<span
+									v-if="errors.description"
+									class="text-sm text-red-400 mt-1 block"
+								>
 									{{ errors.description[0] }}
 								</span>
 							</div>
@@ -219,34 +286,63 @@ function setTemplateCode(code) {
 								<span class="rc-text-xs-muted">Template name and description will be updated from YAML after editing</span>
 							</div>
 
-							<span class="text-sm text-red-400" v-if="errors.code">
+							<span
+								v-if="errors.code"
+								class="text-sm text-red-400"
+							>
 								{{ errors.code[0] }}
 							</span>
 						</div>
 
 						<!-- Action Buttons -->
 						<div class="flex justify-end my-4 gap-2 hidden md:flex">
-							<Button type="close" variant="outline" class="px-2 py-1 text-sm hover:bg-gray-700 hover:animate-pulse" @click="close()" size="sm">
+							<Button
+								type="close"
+								variant="outline"
+								class="px-2 py-1 text-sm hover:bg-gray-700 hover:animate-pulse"
+								size="sm"
+								@click="close()"
+							>
 								Cancel
 								<div class="pl-2 ml-auto">
 									<kbd class="rc-kdb-class">ESC</kbd>
 								</div>
 							</Button>
-							<Button v-if="props.editId === 0" type="submit" class="px-2 py-1 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click="handleSave" variant="primary">
+							<Button
+								v-if="props.editId === 0"
+								type="submit"
+								class="px-2 py-1 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+								size="sm"
+								variant="primary"
+								@click="handleSave"
+							>
 								Save
 								<div class="pl-2 ml-auto">
 									<kbd class="rc-kdb-class2">
 										Ctrl&nbsp;
-										<RcIcon name="enter" class="ml-1" />
+										<RcIcon
+											name="enter"
+											class="ml-1"
+										/>
 									</kbd>
 								</div>
 							</Button>
-							<Button v-else type="submit" class="px-2 py-1 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click="handleSave" variant="primary">
+							<Button
+								v-else
+								type="submit"
+								class="px-2 py-1 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+								size="sm"
+								variant="primary"
+								@click="handleSave"
+							>
 								Update
 								<div class="pl-2 ml-auto">
 									<kbd class="rc-kdb-class2">
 										Ctrl&nbsp;
-										<RcIcon name="enter" class="ml-1" />
+										<RcIcon
+											name="enter"
+											class="ml-1"
+										/>
 									</kbd>
 								</div>
 							</Button>
@@ -256,12 +352,27 @@ function setTemplateCode(code) {
 						<Separator class="relative w-full h-px shrink-0 bg-border mb-4 mt-2" />
 
 						<div class="pt-2 hidden md:block">
-							<Button type="close" variant="outline" class="px-2 py-1 text-sm hover:bg-gray-700 hover:animate-pulse mr-2" @click="handleReformat()" size="sm">
+							<Button
+								type="close"
+								variant="outline"
+								class="px-2 py-1 text-sm hover:bg-gray-700 hover:animate-pulse mr-2"
+								size="sm"
+								@click="handleReformat()"
+							>
 								Reformat Code
 							</Button>
-							<GenericPopover :title="'Updated Template Format'" :description="'From V8.0.0, templates use a cleaner layout. This format is backward-compatible with older versions. Use the Reformat button to update the template in the editor if it hasn’t been reformatted yet.'" :hasLink="false" :align="'start'">
+							<GenericPopover
+								:title="'Updated Template Format'"
+								:description="'From V8.0.0, templates use a cleaner layout. This format is backward-compatible with older versions. Use the Reformat button to update the template in the editor if it hasn’t been reformatted yet.'"
+								:has-link="false"
+								:align="'start'"
+							>
 								<template #trigger>
-									<Button variant="link" size="sm" class="text-blue-400 hover:text-blue-300 p-0">
+									<Button
+										variant="link"
+										size="sm"
+										class="text-blue-400 hover:text-blue-300 p-0"
+									>
 										<MessageCircleQuestion class="h-3.5 w-3.5" />
 									</Button>
 								</template>
@@ -278,54 +389,122 @@ function setTemplateCode(code) {
 							<div class="flex items-center gap-2"></div>
 
 							<!-- LEFT BUTTONS -->
-							<div v-if="!isLoading" class="gap-1 flex items-center">
-								<RcToolTip :delayDuration="100" :content="'Copy Content'" :side="'bottom'">
+							<div
+								v-if="!isLoading"
+								class="gap-1 flex items-center"
+							>
+								<RcToolTip
+									:delay-duration="100"
+									:content="'Copy Content'"
+									:side="'bottom'"
+								>
 									<template #trigger>
-										<Button variant="ghost" @click="copyContent(meditor.getValue())" class="px-2 py-1 rc-btn-shadow">
-											<RcIcon name="copy-transition" :isActive="activeCopyIcon['getValue']" :size="16" />
+										<Button
+											variant="ghost"
+											class="px-2 py-1 rc-btn-shadow"
+											@click="copyContent(meditor.getValue())"
+										>
+											<RcIcon
+												name="copy-transition"
+												:is-active="activeCopyIcon['getValue']"
+												:size="16"
+											/>
 										</Button>
 									</template>
 								</RcToolTip>
-								<RcToolTip :delayDuration="100" :content="'Download Template'" :side="'bottom'">
+								<RcToolTip
+									:delay-duration="100"
+									:content="'Download Template'"
+									:side="'bottom'"
+								>
 									<template #trigger>
-										<Button variant="ghost" @click="download(model.fileName)" class="px-2 py-1 ml-1 rc-btn-shadow">
+										<Button
+											variant="ghost"
+											class="px-2 py-1 ml-1 rc-btn-shadow"
+											@click="download(model.fileName)"
+										>
 											<Download size="16" />
 										</Button>
 									</template>
 								</RcToolTip>
 							</div>
 							<!-- Skeleton for LEFT BUTTONS -->
-							<div v-else class="flex gap-1">
+							<div
+								v-else
+								class="flex gap-1"
+							>
 								<Skeleton class="h-8 w-8" />
 								<Skeleton class="h-8 w-8" />
 							</div>
 
-							<Separator orientation="vertical" class="relative w-px h-6 mx-4 shrink-0 bg-border" />
+							<Separator
+								orientation="vertical"
+								class="relative w-px h-6 mx-4 shrink-0 bg-border"
+							/>
 
 							<!-- RIGHT BUTTONS -->
-							<div class="flex items-center gap-2 ml-auto" v-if="!isLoading">
+							<div
+								v-if="!isLoading"
+								class="flex items-center gap-2 ml-auto"
+							>
 								<TooltipProvider>
-									<ToggleGroup v-model="toggleStateMultiple" type="multiple">
-										<ToggleGroupItem value="dark" @click="toggleEditorDarkMode()" class="px-2 py-1 rc-btn-shadow">
-											<RcToolTip :delayDuration="100" :content="'Toggle Dark Mode'" :side="'bottom'">
+									<ToggleGroup
+										v-model="toggleStateMultiple"
+										type="multiple"
+									>
+										<ToggleGroupItem
+											value="dark"
+											class="px-2 py-1 rc-btn-shadow"
+											@click="toggleEditorDarkMode()"
+										>
+											<RcToolTip
+												:delay-duration="100"
+												:content="'Toggle Dark Mode'"
+												:side="'bottom'"
+											>
 												<template #trigger>
-													<SunMoon size="16" class="focus:outline-none" />
+													<SunMoon
+														size="16"
+														class="focus:outline-none"
+													/>
 												</template>
 											</RcToolTip>
 										</ToggleGroupItem>
 
-										<ToggleGroupItem value="lineNumbers" @click="toggleEditorLineNumbers()" class="px-2 py-1 rc-btn-shadow">
-											<RcToolTip :delayDuration="100" :content="'Toggle Line Numbers'" :side="'bottom'">
+										<ToggleGroupItem
+											value="lineNumbers"
+											class="px-2 py-1 rc-btn-shadow"
+											@click="toggleEditorLineNumbers()"
+										>
+											<RcToolTip
+												:delay-duration="100"
+												:content="'Toggle Line Numbers'"
+												:side="'bottom'"
+											>
 												<template #trigger>
-													<Hash size="16" class="focus:outline-none" />
+													<Hash
+														size="16"
+														class="focus:outline-none"
+													/>
 												</template>
 											</RcToolTip>
 										</ToggleGroupItem>
 
-										<ToggleGroupItem value="minimap" @click="toggleEditorMinimap()" class="px-2 py-1 rc-btn-shadow">
-											<RcToolTip :delayDuration="100" :content="'Toggle Map'" :side="'bottom'">
+										<ToggleGroupItem
+											value="minimap"
+											class="px-2 py-1 rc-btn-shadow"
+											@click="toggleEditorMinimap()"
+										>
+											<RcToolTip
+												:delay-duration="100"
+												:content="'Toggle Map'"
+												:side="'bottom'"
+											>
 												<template #trigger>
-													<Map size="16" class="focus:outline-none" />
+													<Map
+														size="16"
+														class="focus:outline-none"
+													/>
 												</template>
 											</RcToolTip>
 										</ToggleGroupItem>
@@ -333,7 +512,10 @@ function setTemplateCode(code) {
 								</TooltipProvider>
 							</div>
 							<!-- Skeleton for RIGHT BUTTONS -->
-							<div v-else class="flex items-center gap-2 ml-auto">
+							<div
+								v-else
+								class="flex items-center gap-2 ml-auto"
+							>
 								<div class="flex gap-1">
 									<Skeleton class="h-8 w-8" />
 									<Skeleton class="h-8 w-8" />
@@ -342,9 +524,15 @@ function setTemplateCode(code) {
 								</div>
 							</div>
 
-							<Separator orientation="vertical" class="relative w-px h-6 mx-4 shrink-0 bg-border" />
+							<Separator
+								orientation="vertical"
+								class="relative w-px h-6 mx-4 shrink-0 bg-border"
+							/>
 							<span v-if="!isLoading">YAML</span>
-							<Skeleton v-else class="h-4 w-8" />
+							<Skeleton
+								v-else
+								class="h-4 w-8"
+							/>
 						</div>
 						<Separator class="relative w-full h-px shrink-0 bg-border"></Separator>
 					</div>
@@ -352,16 +540,27 @@ function setTemplateCode(code) {
 					<!-- EDITOR - Always present in DOM for Monaco -->
 					<div class="relative">
 						<!-- Editor Skeleton Overlay -->
-						<div v-if="isLoading" class="absolute inset-0 z-10 w-full p-4" style="height: calc(100vh - 190px);">
+						<div
+							v-if="isLoading"
+							class="absolute inset-0 z-10 w-full p-4"
+							style="height: calc(100vh - 190px);"
+						>
 							<Skeleton class="w-full h-full" />
 						</div>
 						<!-- Actual Editor -->
-						<div class="code-editor__code-pre" id="code-editor__code-pre" style="height: calc(100vh - 190px);"></div>
+						<div
+							id="code-editor__code-pre"
+							class="code-editor__code-pre"
+							style="height: calc(100vh - 190px);"
+						></div>
 					</div>
 				</ScrollArea>
 			</ResizablePanel>
 		</ResizablePanelGroup>
 
-		<TemplateImportDialog v-if="isDialogOpen('DialogTemplateImport')" @setTemplateCode="setTemplateCode($event)" />
+		<TemplateImportDialog
+			v-if="isDialogOpen('DialogTemplateImport')"
+			@set-template-code="setTemplateCode($event)"
+		/>
 	</div>
 </template>

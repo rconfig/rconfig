@@ -69,12 +69,21 @@ onMounted(() => {
 
 <template>
 	<div>
-		<h3 class="mb-3 text-base font-medium text-gray-900 dark:text-white">Select Task Type</h3>
+		<h3 class="mb-3 text-base font-medium text-gray-900 dark:text-white">
+			Select Task Type
+		</h3>
 		
 		<!-- Iterate through each category -->
-		<div v-for="(categoryCommands, categoryName, index) in groupedCommands" :key="categoryName" class="mb-4">
+		<div
+			v-for="(categoryCommands, categoryName, index) in groupedCommands"
+			:key="categoryName"
+			class="mb-4"
+		>
 			<!-- Subtle separator line (not for first category) -->
-			<div v-if="index > 0" class="w-full h-px bg-gray-200 dark:bg-gray-700 mb-4"></div>
+			<div
+				v-if="index > 0"
+				class="w-full h-px bg-gray-200 dark:bg-gray-700 mb-4"
+			></div>
 			
 			<!-- Minimal Category Header -->
 			<div class="flex items-center mb-2">
@@ -82,15 +91,20 @@ onMounted(() => {
 					:name="getCategoryIcon(categoryName).name" 
 					class="w-3 h-3 text-blue-600 dark:text-blue-400 mr-1.5" 
 				/>
-				<h4 class="text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">{{ categoryName }}</h4>
+				<h4 class="text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+					{{ categoryName }}
+				</h4>
 			</div>
 			
 			<!-- Compact List Layout - Two Columns -->
 			<div class="grid grid-cols-2 gap-x-4 gap-y-1">
-				<div v-for="command in categoryCommands" :key="command.id">
+				<div
+					v-for="command in categoryCommands"
+					:key="command.id"
+				>
 					<input 
-						type="radio" 
 						:id="`task-${command.id}`" 
+						type="radio" 
 						name="task-type" 
 						:value="command.command" 
 						class="sr-only peer" 
@@ -101,7 +115,10 @@ onMounted(() => {
 						class="flex items-center px-2 py-1.5 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded cursor-pointer transition-colors duration-150 peer-checked:bg-blue-50 dark:peer-checked:bg-blue-900/20 peer-checked:border-l-2 peer-checked:border-blue-500 group"
 					>
 						<!-- Tiny Icon - Simple Lucide -->
-						<component :is="iconMap[command.command]" class="w-3 h-3 text-gray-500 dark:text-gray-400 mr-2 flex-shrink-0 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+						<component
+							:is="iconMap[command.command]"
+							class="w-3 h-3 text-gray-500 dark:text-gray-400 mr-2 flex-shrink-0 group-hover:text-blue-600 dark:group-hover:text-blue-400"
+						/>
 						
 						<!-- Content -->
 						<div class="flex-1 min-w-0">
@@ -110,8 +127,14 @@ onMounted(() => {
 						
 						<!-- Minimal Selection Indicator -->
 						<div class="flex-shrink-0 ml-2">
-							<div v-if="selectedValue === command.command" class="w-2 h-2 bg-green-500 rounded-full"></div>
-							<div v-else class="w-2 h-2 border border-gray-300 dark:border-gray-600 rounded-full group-hover:border-blue-400"></div>
+							<div
+								v-if="selectedValue === command.command"
+								class="w-2 h-2 bg-green-500 rounded-full"
+							></div>
+							<div
+								v-else
+								class="w-2 h-2 border border-gray-300 dark:border-gray-600 rounded-full group-hover:border-blue-400"
+							></div>
 						</div>
 					</label>
 				</div>

@@ -24,5 +24,9 @@ const combinedClass = computed(() => {
 </script>
 
 <template>
-	<PanelLeftClose :width="width" :height="height" :class="combinedClass" />
+	<PanelLeftClose
+		:width="width"
+		:height="height"
+		:class="combinedClass"
+	/>
 </template>

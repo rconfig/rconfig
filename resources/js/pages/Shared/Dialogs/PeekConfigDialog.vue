@@ -87,7 +87,12 @@ function resetFont() {
 		<DialogTrigger as-child>
 			<slot />
 		</DialogTrigger>
-		<DialogContent class="sm:max-w-[70dvw] max-h-[90dvh] grid grid-rows-[auto_minmax(0,1fr)_auto] p-0" @escapeKeyDown="closeDialog('peek-config-dialog-' + editId)" @pointerDownOutside="closeDialog('peek-config-dialog-' + editId)" @closeClicked="closeDialog('peek-config-dialog-' + editId)">
+		<DialogContent
+			class="sm:max-w-[70dvw] max-h-[90dvh] grid grid-rows-[auto_minmax(0,1fr)_auto] p-0"
+			@escape-key-down="closeDialog('peek-config-dialog-' + editId)"
+			@pointer-down-outside="closeDialog('peek-config-dialog-' + editId)"
+			@close-clicked="closeDialog('peek-config-dialog-' + editId)"
+		>
 			<DialogHeader class="p-6 pb-0">
 				<DialogTitle>Configuration Quick Peek (Config ID: {{ editId }})</DialogTitle>
 				<DialogDescription>
@@ -100,7 +105,11 @@ function resetFont() {
 								</SelectTrigger>
 								<SelectContent>
 									<SelectGroup>
-										<SelectItem :value="language" v-for="language in languages" :key="language">
+										<SelectItem
+											v-for="language in languages"
+											:key="language"
+											:value="language"
+										>
 											{{ language }}
 										</SelectItem>
 									</SelectGroup>
@@ -109,18 +118,48 @@ function resetFont() {
 
 							<!-- ✅ Font size controls -->
 							<div class="flex items-center gap-2">
-								<Button variant="outline" size="sm" @click="decreaseFont">A-</Button>
-								<Button variant="outline" size="sm" @click="resetFont">A</Button>
-								<Button variant="outline" size="sm" @click="increaseFont">A+</Button>
+								<Button
+									variant="outline"
+									size="sm"
+									@click="decreaseFont"
+								>
+									A-
+								</Button>
+								<Button
+									variant="outline"
+									size="sm"
+									@click="resetFont"
+								>
+									A
+								</Button>
+								<Button
+									variant="outline"
+									size="sm"
+									@click="increaseFont"
+								>
+									A+
+								</Button>
 							</div>
 						</div>
 						
 						<div class="flex items-center gap-4">
-							<div v-if="ishardlink === 1" size="sm" class="text-sm text-blue-400 font-medium flex justify-between items-center">
+							<div
+								v-if="ishardlink === 1"
+								size="sm"
+								class="text-sm text-blue-400 font-medium flex justify-between items-center"
+							>
 								🔗 HardLink
 							</div>
-							<Button variant="outline" size="sm" @click="copy(fileLocation)" class="flex items-center gap-2">
-								<RcIcon name="copy-transition" :isActive="copied" />
+							<Button
+								variant="outline"
+								size="sm"
+								class="flex items-center gap-2"
+								@click="copy(fileLocation)"
+							>
+								<RcIcon
+									name="copy-transition"
+									:is-active="copied"
+								/>
 								{{ copied ? "Copied" : "Copy path" }}
 							</Button>
 						</div>
@@ -131,13 +170,26 @@ function resetFont() {
 			<!-- Scrollable region -->
 			<div class="overflow-y-auto px-6 py-4">
 				<Loading v-if="isLoading" />
-				<pre v-highlightjs class="rounded bg-muted overflow-auto whitespace-pre"><code class="pf-v5-c-code-block__code " :class="selectedLanguage" style="background: none !important;" :style="{ background: 'none', fontSize: fontSize + 'px' }">{{ processedCode }}
+				<pre
+					v-highlightjs
+					class="rounded bg-muted overflow-auto whitespace-pre"
+				><code
+class="pf-v5-c-code-block__code "
+						:class="selectedLanguage"
+style="background: none !important;"
+:style="{ background: 'none', fontSize: fontSize + 'px' }"
+>{{ processedCode }}
             </code> 
          </pre>
 			</div>
 
 			<DialogFooter class="p-6 pt-0">
-				<Button @click="handleClose()" variant="outline">Close</Button>
+				<Button
+					variant="outline"
+					@click="handleClose()"
+				>
+					Close
+				</Button>
 			</DialogFooter>
 		</DialogContent>
 	</Dialog>

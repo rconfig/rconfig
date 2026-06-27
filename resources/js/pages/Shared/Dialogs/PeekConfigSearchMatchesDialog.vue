@@ -90,20 +90,31 @@ function handleClose() {
 		<DialogTrigger as-child>
 			<slot />
 		</DialogTrigger>
-		<DialogContent class="sm:max-w-[70dvw] grid-rows-[auto_minmax(0,1fr)_auto] p-0 max-h-[90dvh]" @escapeKeyDown="closeDialog('peek-config-search-matches-dialog-' + editId)" @pointerDownOutside="closeDialog('peek-config-search-matches-dialog-' + editId)" @closeClicked="closeDialog('peek-config-search-matches-dialog-' + editId)">
+		<DialogContent
+			class="sm:max-w-[70dvw] grid-rows-[auto_minmax(0,1fr)_auto] p-0 max-h-[90dvh]"
+			@escape-key-down="closeDialog('peek-config-search-matches-dialog-' + editId)"
+			@pointer-down-outside="closeDialog('peek-config-search-matches-dialog-' + editId)"
+			@close-clicked="closeDialog('peek-config-search-matches-dialog-' + editId)"
+		>
 			<DialogHeader class="p-6 pb-0">
 				<DialogTitle>Configuration Quick Peek (Config ID: {{ editId }})</DialogTitle>
 				<DialogDescription>
 					<div class="flex justify-between">
 						<div class="flex items-center">
-							<div class="mr-2">Language Options:</div>
+							<div class="mr-2">
+								Language Options:
+							</div>
 							<Select v-model="selectedLanguage">
 								<SelectTrigger class="w-[180px]">
 									<SelectValue placeholder="Select a language" />
 								</SelectTrigger>
 								<SelectContent>
 									<SelectGroup>
-										<SelectItem :value="language" v-for="language in languages" :key="language">
+										<SelectItem
+											v-for="language in languages"
+											:key="language"
+											:value="language"
+										>
 											{{ language }}
 										</SelectItem>
 									</SelectGroup>
@@ -112,8 +123,17 @@ function handleClose() {
 						</div>
 						<div class="flex items-center">
 							Path: {{ fileLocation }}
-							<span class="ml-2 cursor-pointer" @mouseover="handleMouseOver('fileLocation')" @mouseleave="handleMouseLeave('fileLocation')" @click="copy(fileLocation)">
-								<RcIcon name="copy-transition" :isActive="copied" :size="16" />
+							<span
+								class="ml-2 cursor-pointer"
+								@mouseover="handleMouseOver('fileLocation')"
+								@mouseleave="handleMouseLeave('fileLocation')"
+								@click="copy(fileLocation)"
+							>
+								<RcIcon
+									name="copy-transition"
+									:is-active="copied"
+									:size="16"
+								/>
 							</span>
 						</div>
 					</div>
@@ -124,20 +144,35 @@ function handleClose() {
 				<div class="flex flex-col justify-between">
 					<Loading v-if="isLoading" />
 
-					<div v-else class="space-y-4">
-						<div v-for="(match, index) in matches" :key="index" class="context-block border rounded-lg p-4">
+					<div
+						v-else
+						class="space-y-4"
+					>
+						<div
+							v-for="(match, index) in matches"
+							:key="index"
+							class="context-block border rounded-lg p-4"
+						>
 							<div class="mb-2">
 								<span class="text-sm font-medium rc-text-sm-muted underline"> Matched Line: {{ match.line_number }} </span>
 							</div>
 
-							<pre v-highlightjs :class="selectedLanguage" class="whitespace-pre-wrap text-sm p-3 rounded border overflow-x-auto" v-html="highlightMatch(match.context)"></pre>
+							<pre
+								v-highlightjs
+								:class="selectedLanguage"
+								class="whitespace-pre-wrap text-sm p-3 rounded border overflow-x-auto"
+								v-html="highlightMatch(match.context)"
+							></pre>
 						</div>
 					</div>
 				</div>
 			</div>
 
 			<DialogFooter class="p-6 pt-0">
-				<Button @click="handleClose()" variant="outline">
+				<Button
+					variant="outline"
+					@click="handleClose()"
+				>
 					Close
 				</Button>
 			</DialogFooter>

@@ -20,9 +20,17 @@ const props = defineProps({
 </script>
 
 <template>
-	<RcToolTip :delayDuration="100" :content="'Agent Disabled'" :side="'bottom'">
+	<RcToolTip
+		:delay-duration="100"
+		:content="'Agent Disabled'"
+		:side="'bottom'"
+	>
 		<template #trigger>
-			<Diamond :width="width" :height="height" :color="color" />
+			<Diamond
+				:width="width"
+				:height="height"
+				:color="color"
+			/>
 		</template>
 	</RcToolTip>
 </template>

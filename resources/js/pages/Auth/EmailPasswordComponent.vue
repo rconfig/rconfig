@@ -39,51 +39,60 @@ const goToLogin = () => {
 </script>
 
 <template>
-  <Card class="max-w-sm mx-auto bg-rcgray-900">
-    <CardHeader>
-      <CardTitle class="text-2xl">Reset Password</CardTitle>
-      <CardDescription class="text-base font-light">Enter your email below to reset your password</CardDescription>
-    </CardHeader>
-    <CardContent>
-      <div
-        v-if="successMessage"
-        class="mb-4 text-base font-light text-green-500">
-        {{ successMessage }}
-      </div>
-      <div
-        v-if="errorMessage"
-        class="mb-4 text-base font-light text-red-500">
-        {{ errorMessage }}
-      </div>
-      <form @submit.prevent="handlePasswordReset">
-        <div class="grid gap-4">
-          <div class="grid gap-2">
-            <Label for="email">Email Address</Label>
-            <Input
-              tabindex="1"
-              v-model="email"
-              id="email"
-              type="email"
-              class="text-base font-light"
-              placeholder="email@domain.com"
-              required />
-          </div>
-          <Button
-            :disabled="isLoading"
-            type="submit"
-            class="w-full hover:bg-rcgray-300">
-            {{ isLoading ? 'Sending...' : 'Send Password Reset Link' }}
-          </Button>
-          <div class="mt-4 text-sm text-center">
-            <a
-              href="#"
-              @click.prevent="goToLogin"
-              class="inline-block ml-auto text-sm font-light underline hover:text-blue-400">
-              Back to login
-            </a>
-          </div>
-        </div>
-      </form>
-    </CardContent>
-  </Card>
+	<Card class="max-w-sm mx-auto bg-rcgray-900">
+		<CardHeader>
+			<CardTitle class="text-2xl">
+				Reset Password
+			</CardTitle>
+			<CardDescription class="text-base font-light">
+				Enter your email below to reset your password
+			</CardDescription>
+		</CardHeader>
+		<CardContent>
+			<div
+				v-if="successMessage"
+				class="mb-4 text-base font-light text-green-500"
+			>
+				{{ successMessage }}
+			</div>
+			<div
+				v-if="errorMessage"
+				class="mb-4 text-base font-light text-red-500"
+			>
+				{{ errorMessage }}
+			</div>
+			<form @submit.prevent="handlePasswordReset">
+				<div class="grid gap-4">
+					<div class="grid gap-2">
+						<Label for="email">Email Address</Label>
+						<Input
+							id="email"
+							v-model="email"
+							tabindex="1"
+							type="email"
+							class="text-base font-light"
+							placeholder="email@domain.com"
+							required
+						/>
+					</div>
+					<Button
+						:disabled="isLoading"
+						type="submit"
+						class="w-full hover:bg-rcgray-300"
+					>
+						{{ isLoading ? 'Sending...' : 'Send Password Reset Link' }}
+					</Button>
+					<div class="mt-4 text-sm text-center">
+						<a
+							href="#"
+							class="inline-block ml-auto text-sm font-light underline hover:text-blue-400"
+							@click.prevent="goToLogin"
+						>
+							Back to login
+						</a>
+					</div>
+				</div>
+			</form>
+		</CardContent>
+	</Card>
 </template>

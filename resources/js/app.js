@@ -26,8 +26,8 @@ try {
 }
 
 try {
-	app.component("navigation-side", NavigationSide);
-	app.component("navigation-top", NavigationTop);
+	app.component("NavigationSide", NavigationSide);
+	app.component("NavigationTop", NavigationTop);
 } catch (error) {
 	console.error("Failed to register navigation components:", error);
 }

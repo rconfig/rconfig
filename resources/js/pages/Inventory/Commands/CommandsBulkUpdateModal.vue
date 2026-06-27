@@ -104,7 +104,12 @@ async function confirmUpdate() {
 
 <template>
 	<Dialog :open="isDialogOpen('DialogBulkUpdateCommands')">
-		<DialogContent class="p-0 sm:max-w-2xl" @escapeKeyDown="close" @pointerDownOutside="close" @closeClicked="close">
+		<DialogContent
+			class="p-0 sm:max-w-2xl"
+			@escape-key-down="close"
+			@pointer-down-outside="close"
+			@close-clicked="close"
+		>
 			<DialogHeader class="rc-dialog-header">
 				<DialogTitle class="text-sm text-rcgray-200">
 					<div class="flex items-center">
@@ -115,7 +120,9 @@ async function confirmUpdate() {
 			</DialogHeader>
 
 			<div class="grid gap-4 p-4">
-				<p class="text-sm text-rcgray-300">The commands below will be updated with the selected command groups.</p>
+				<p class="text-sm text-rcgray-300">
+					The commands below will be updated with the selected command groups.
+				</p>
 
 				<!-- Commands List -->
 				<div class="max-h-40 overflow-y-auto rounded-lg border border-border bg-background/80 backdrop-blur-sm p-2">
@@ -136,19 +143,33 @@ async function confirmUpdate() {
 					<Label class="text-sm font-medium text-rcgray-200">
 						Command Groups <span class="text-red-400">*</span>
 					</Label>
-					<CategoryMultiSelect v-model="selectedCategories" id="selectedCategoryObj" />
+					<CategoryMultiSelect
+						id="selectedCategoryObj"
+						v-model="selectedCategories"
+					/>
 
-					<p class="text-xs text-rcgray-400">You must associate one or multiple command groups to the chosen commands.</p>
+					<p class="text-xs text-rcgray-400">
+						You must associate one or multiple command groups to the chosen commands.
+					</p>
 				</div>
 
 				<!-- Error Display -->
-				<div v-if="errors" class="text-sm text-red-400 bg-red-900/20 border border-red-700 rounded p-2">
+				<div
+					v-if="errors"
+					class="text-sm text-red-400 bg-red-900/20 border border-red-700 rounded p-2"
+				>
 					{{ errors }}
 				</div>
 			</div>
 
 			<DialogFooter class="rc-dialog-footer bg-rcgray-800">
-				<Button type="button" variant="outline" class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse" @click="close" size="sm">
+				<Button
+					type="button"
+					variant="outline"
+					class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse"
+					size="sm"
+					@click="close"
+				>
 					Cancel
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class">ESC</kbd>
@@ -159,16 +180,25 @@ async function confirmUpdate() {
 					type="submit"
 					class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
 					size="sm"
-					@click="confirmUpdate"
 					variant="primary"
 					:disabled="isLoading || selectedCategories.length === 0"
+					@click="confirmUpdate"
 				>
-					<Spinner v-if="isLoading" class="w-4 h-4 mr-2" />
+					<Spinner
+						v-if="isLoading"
+						class="w-4 h-4 mr-2"
+					/>
 					Confirm
-					<div class="pl-2 ml-auto" v-if="!isLoading">
+					<div
+						v-if="!isLoading"
+						class="pl-2 ml-auto"
+					>
 						<kbd class="rc-kdb-class2">
 							Ctrl&nbsp;
-							<RcIcon name="enter" class="ml-1" />
+							<RcIcon
+								name="enter"
+								class="ml-1"
+							/>
 						</kbd>
 					</div>
 				</Button>

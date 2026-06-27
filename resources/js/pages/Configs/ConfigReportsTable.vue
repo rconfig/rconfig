@@ -50,13 +50,35 @@ onMounted(() => {
 	<div class="flex flex-col h-full gap-1 text-center">
 		<div class="flex items-center justify-between p-4">
 			<div class="flex items-center">
-				<Input class="max-w-sm ml-4 mr-2" autocomplete="off" data-1p-ignore data-lpignore="true" placeholder="Filter reports" v-model="searchTerm" />
-				<ClearFilters v-if="searchTerm" @update:model-value="searchTerm = ''" />
+				<Input
+					v-model="searchTerm"
+					class="max-w-sm ml-4 mr-2"
+					autocomplete="off"
+					data-1p-ignore
+					data-lpignore="true"
+					placeholder="Filter reports"
+				/>
+				<ClearFilters
+					v-if="searchTerm"
+					@update:model-value="searchTerm = ''"
+				/>
 			</div>
 			<div class="flex items-center justify-end">
-				<Button v-if="selectedRows.length" class="px-2 py-1 bg-red-600 hover:bg-red-700 hover:animate-pulse" size="md" @click.prevent="showConfirmDelete = true" variant="primary">Delete Selected {{ selectedRows.length }} Report(s) </Button>
+				<Button
+					v-if="selectedRows.length"
+					class="px-2 py-1 bg-red-600 hover:bg-red-700 hover:animate-pulse"
+					size="md"
+					variant="primary"
+					@click.prevent="showConfirmDelete = true"
+				>
+					Delete Selected {{ selectedRows.length }} Report(s)
+				</Button>
 
-				<RcIcon name="refresh" class="w-4 h-4 mx-4 text-muted-foreground cursor-pointer hover:text-rcgray-200" @click="reload()" />
+				<RcIcon
+					name="refresh"
+					class="w-4 h-4 mx-4 text-muted-foreground cursor-pointer hover:text-rcgray-200"
+					@click="reload()"
+				/>
 			</div>
 		</div>
 
@@ -65,29 +87,64 @@ onMounted(() => {
 				<TableHeader>
 					<TableRow>
 						<TableHead class="w-[2%]">
-							<Checkbox id="selectAll" v-model="selectAll" :checked="selectAll" @click="toggleSelectAll()" />
+							<Checkbox
+								id="selectAll"
+								v-model="selectAll"
+								:checked="selectAll"
+								@click="toggleSelectAll()"
+							/>
 						</TableHead>
 						<TableHead class="w-[5%]">
-							<Button class="flex justify-start w-full p-0 hover:bg-rcgray-800" variant="ghost" @click="toggleSort('id')">
-								<RcIcon name="sort" :sortParam="sortParam" field="id" />
+							<Button
+								class="flex justify-start w-full p-0 hover:bg-rcgray-800"
+								variant="ghost"
+								@click="toggleSort('id')"
+							>
+								<RcIcon
+									name="sort"
+									:sort-param="sortParam"
+									field="id"
+								/>
 								<span class="ml-2">ID</span>
 							</Button>
 						</TableHead>
 						<TableHead class="w-[20%]">
-							<Button class="flex justify-start w-full p-0 hover:bg-rcgray-800" variant="ghost" @click="toggleSort('report_name')">
-								<RcIcon name="sort" :sortParam="sortParam" field="report_name" />
+							<Button
+								class="flex justify-start w-full p-0 hover:bg-rcgray-800"
+								variant="ghost"
+								@click="toggleSort('report_name')"
+							>
+								<RcIcon
+									name="sort"
+									:sort-param="sortParam"
+									field="report_name"
+								/>
 								<span class="ml-2">Name</span>
 							</Button>
 						</TableHead>
-						<TableHead class="w-[10%]">Task ID</TableHead>
-						<TableHead class="w-[10%]">Task Name</TableHead>
 						<TableHead class="w-[10%]">
-							<Button class="flex justify-start w-full p-0 hover:bg-rcgray-800" variant="ghost" @click="toggleSort('created_at')">
-								<RcIcon name="sort" :sortParam="sortParam" field="created_at" />
+							Task ID
+						</TableHead>
+						<TableHead class="w-[10%]">
+							Task Name
+						</TableHead>
+						<TableHead class="w-[10%]">
+							<Button
+								class="flex justify-start w-full p-0 hover:bg-rcgray-800"
+								variant="ghost"
+								@click="toggleSort('created_at')"
+							>
+								<RcIcon
+									name="sort"
+									:sort-param="sortParam"
+									field="created_at"
+								/>
 								<span class="ml-2">Created</span>
 							</Button>
 						</TableHead>
-						<TableHead class="w-[10%]">Actions</TableHead>
+						<TableHead class="w-[10%]">
+							Actions
+						</TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>
@@ -96,15 +153,27 @@ onMounted(() => {
 					</template>
 
 					<template v-else-if="!isLoading">
-						<TableRow v-for="row in reports.data" :key="row.id">
+						<TableRow
+							v-for="row in reports.data"
+							:key="row.id"
+						>
 							<TableCell class="text-start">
-								<Checkbox class="cursor-pointer" :id="'select-' + row.id" :checked="selectedRows.includes(row.id) ? true : false" @click="toggleSelectRow(row.id)" />
+								<Checkbox
+									:id="'select-' + row.id"
+									class="cursor-pointer"
+									:checked="selectedRows.includes(row.id) ? true : false"
+									@click="toggleSelectRow(row.id)"
+								/>
 							</TableCell>
 							<TableCell class="text-start">
 								{{ row.id }}
 							</TableCell>
 							<TableCell class="text-start">
-								<Button class="px-2 py-0 hover:bg-rcgray-800 rounded-xl" variant="ghost" @click="openReportViewModal(row.report_id)">
+								<Button
+									class="px-2 py-0 hover:bg-rcgray-800 rounded-xl"
+									variant="ghost"
+									@click="openReportViewModal(row.report_id)"
+								>
 									<span class="border-b">{{ row.report_name }}</span>
 								</Button>
 							</TableCell>
@@ -119,7 +188,11 @@ onMounted(() => {
 							</TableCell>
 							<!-- ACTIONS MENU -->
 							<TableCell class="text-start">
-								<ActionsMenu :showEditBtn="false" :rowData="row" @onDelete="deleteReport(row.id)" />
+								<ActionsMenu
+									:show-edit-btn="false"
+									:row-data="row"
+									@on-delete="deleteReport(row.id)"
+								/>
 							</TableCell>
 							<!-- ACTIONS MENU -->
 						</TableRow>
@@ -130,9 +203,27 @@ onMounted(() => {
 				</TableBody>
 			</Table>
 
-			<Pagination :currentPage="currentPage" :lastPage="lastPage" :perPage="perPage" @update:currentPage="currentPage = $event" @update:perPage="perPage = $event" :totalRecords="totalRecords" :isLoading="isLoading" />
-			<RcConfirmAlertDialog :ids="selectedRows" :showConfirmDelete="showConfirmDelete" @close="showConfirmDelete = false" @handleDelete="deleteManyReports(selectedRows)" />
-			<ReportViewModal v-if="currentReportId" :report_id="currentReportId" :isOpen="isReportViewModalOpen" @update:isOpen="isReportViewModalOpen = $event" />
+			<Pagination
+				:current-page="currentPage"
+				:last-page="lastPage"
+				:per-page="perPage"
+				:total-records="totalRecords"
+				:is-loading="isLoading"
+				@update:current-page="currentPage = $event"
+				@update:per-page="perPage = $event"
+			/>
+			<RcConfirmAlertDialog
+				:ids="selectedRows"
+				:show-confirm-delete="showConfirmDelete"
+				@close="showConfirmDelete = false"
+				@handle-delete="deleteManyReports(selectedRows)"
+			/>
+			<ReportViewModal
+				v-if="currentReportId"
+				:report_id="currentReportId"
+				:is-open="isReportViewModalOpen"
+				@update:is-open="isReportViewModalOpen = $event"
+			/>
 		</div>
 	</div>
 </template>

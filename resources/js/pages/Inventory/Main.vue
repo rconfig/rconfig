@@ -38,12 +38,24 @@ const currentViewExists = computed(() => {
 		<div class="border-t border-b topRow">
 			<DropdownMenu @update:open="isDropdownOpen = $event">
 				<div class="flex items-center justify-between">
-					<DropdownMenuTrigger as-child class="p-4 ml-2">
-						<Button variant="outline" class="w-48">
+					<DropdownMenuTrigger
+						as-child
+						class="p-4 ml-2"
+					>
+						<Button
+							variant="outline"
+							class="w-48"
+						>
 							<div class="flex items-center justify-start w-full gap-2">
-								<RcIcon name="pin" class="w-4 h-4 text-blue-400 shrink-0" />
+								<RcIcon
+									name="pin"
+									class="w-4 h-4 text-blue-400 shrink-0"
+								/>
 								<span class="truncate">{{ viewItems.find((item) => item.id === currentView)?.label || "Select View" }}</span>
-								<ChevronDown class="w-4 h-4 ml-auto transition-transform duration-300" :class="{ 'rotate-180': isDropdownOpen }" />
+								<ChevronDown
+									class="w-4 h-4 ml-auto transition-transform duration-300"
+									:class="{ 'rotate-180': isDropdownOpen }"
+								/>
 							</div>
 						</Button>
 					</DropdownMenuTrigger>
@@ -52,9 +64,16 @@ const currentViewExists = computed(() => {
 					<RcIcon :name="viewItems.find((item) => item.id === currentView)?.icon || ''" />
 					{{ viewItems.find((item) => item.id === currentView)?.label || "" }}
 				</div>
-				<DropdownMenuContent class="w-56" align="start">
+				<DropdownMenuContent
+					class="w-56"
+					align="start"
+				>
 					<DropdownMenuGroup>
-						<DropdownMenuItem v-for="item in viewItems" :key="item.id" @click="changeView(item.id)">
+						<DropdownMenuItem
+							v-for="item in viewItems"
+							:key="item.id"
+							@click="changeView(item.id)"
+						>
 							<span class="flex items-center gap-2">
 								<RcIcon :name="item.icon" />
 								{{ item.label }}
@@ -63,8 +82,16 @@ const currentViewExists = computed(() => {
 								<Tooltip>
 									<TooltipTrigger as-child>
 										<DropdownMenuShortcut @click.stop.prevent="toggleFavorite(item.id)">
-											<RcIcon name="star-unselected" v-if="!item.isFavorite" class="animated-star" />
-											<RcIcon name="star-selected" v-if="item.isFavorite" class="animated-star" />
+											<RcIcon
+												v-if="!item.isFavorite"
+												name="star-unselected"
+												class="animated-star"
+											/>
+											<RcIcon
+												v-if="item.isFavorite"
+												name="star-selected"
+												class="animated-star"
+											/>
 										</DropdownMenuShortcut>
 									</TooltipTrigger>
 									<TooltipContent>
@@ -91,10 +118,15 @@ const currentViewExists = computed(() => {
 			</template>
 
 			<!-- Error message when view doesn't exist -->
-			<div v-else class="flex flex-col h-full gap-1 text-center">
+			<div
+				v-else
+				class="flex flex-col h-full gap-1 text-center"
+			>
 				<div class="flex items-center justify-between p-4">
 					<div class="flex items-center">
-						<p class="text-lg text-red-500 font-semibold">{{ currentView }} view not found</p>
+						<p class="text-lg text-red-500 font-semibold">
+							{{ currentView }} view not found
+						</p>
 					</div>
 				</div>
 			</div>

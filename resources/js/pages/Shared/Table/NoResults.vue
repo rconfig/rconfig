@@ -6,11 +6,12 @@ defineProps({});
 </script>
 
 <template>
-  <TableRow>
-    <TableCell
-      :colspan="12"
-      class="h-24 text-center">
-      No results.
-    </TableCell>
-  </TableRow>
+	<TableRow>
+		<TableCell
+			:colspan="12"
+			class="h-24 text-center"
+		>
+			No results.
+		</TableCell>
+	</TableRow>
 </template>

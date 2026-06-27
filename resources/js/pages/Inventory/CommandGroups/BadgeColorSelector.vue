@@ -53,37 +53,41 @@ watch(
 </script>
 
 <template>
-  <!-- DIV FOR RENDERING THE BADGE COLOR CLASSES -->
-  <Popover>
-    <div class="hidden text-yellow-200 text-teal-100 bg-yellow-700 bg-teal-700 border-yellow-500 border-teal-500 bg-stone-700 text-stone-200 border-stone-500 bg-lime-700 text-lime-200 border-lime-500 bg-sky-700 text-sky-100 border-sky-500 bg-violet-700 text-violet-200 border-violet-500 bg-fuchsia-700 text-fuchsia-200 border-fuchsia-500"></div>
-    <PopoverTrigger class="col-span-3">
-      <Button
-        variant="ghost"
-        class="flex flex-wrap items-start justify-start w-full p-1 pl-2 whitespace-normal border h-fit">
-        <div
-          class="h-6 px-2 border-2 border-transparent rounded-full cursor-pointer w-fit"
-          :class="Object.keys(selectedColor).length === 0 ? 'bg-gray-600 text-gray-200 border-gray-500' : selectedColor.bgClass">
-          {{ Object.keys(selectedColor).length === 0 ? 'Select color' : selectedColor.label }}
-        </div>
-      </Button>
-    </PopoverTrigger>
-    <PopoverContent
-      side="bottom"
-      align="start"
-      class="col-span-3 p-0">
-      <Separator />
+	<!-- DIV FOR RENDERING THE BADGE COLOR CLASSES -->
+	<Popover>
+		<div class="hidden text-yellow-200 text-teal-100 bg-yellow-700 bg-teal-700 border-yellow-500 border-teal-500 bg-stone-700 text-stone-200 border-stone-500 bg-lime-700 text-lime-200 border-lime-500 bg-sky-700 text-sky-100 border-sky-500 bg-violet-700 text-violet-200 border-violet-500 bg-fuchsia-700 text-fuchsia-200 border-fuchsia-500"></div>
+		<PopoverTrigger class="col-span-3">
+			<Button
+				variant="ghost"
+				class="flex flex-wrap items-start justify-start w-full p-1 pl-2 whitespace-normal border h-fit"
+			>
+				<div
+					class="h-6 px-2 border-2 border-transparent rounded-full cursor-pointer w-fit"
+					:class="Object.keys(selectedColor).length === 0 ? 'bg-gray-600 text-gray-200 border-gray-500' : selectedColor.bgClass"
+				>
+					{{ Object.keys(selectedColor).length === 0 ? 'Select color' : selectedColor.label }}
+				</div>
+			</Button>
+		</PopoverTrigger>
+		<PopoverContent
+			side="bottom"
+			align="start"
+			class="col-span-3 p-0"
+		>
+			<Separator />
 
-      <ScrollArea class="h-64">
-        <div class="py-1">
-          <div class="grid grid-cols-3 gap-2 mt-4 place-items-center">
-            <div
-              v-for="(color, index) in colors"
-              :key="index"
-              :class="['cursor-pointer w-6 h-6 rounded-full border-2', color.bgClass, selectedColor.value === index ? 'ring-2 ring-offset-2 ring-black' : 'border-transparent']"
-              @click="selectColor(color)"></div>
-          </div>
-        </div>
-      </ScrollArea>
-    </PopoverContent>
-  </Popover>
+			<ScrollArea class="h-64">
+				<div class="py-1">
+					<div class="grid grid-cols-3 gap-2 mt-4 place-items-center">
+						<div
+							v-for="(color, index) in colors"
+							:key="index"
+							:class="['cursor-pointer w-6 h-6 rounded-full border-2', color.bgClass, selectedColor.value === index ? 'ring-2 ring-offset-2 ring-black' : 'border-transparent']"
+							@click="selectColor(color)"
+						></div>
+					</div>
+				</div>
+			</ScrollArea>
+		</PopoverContent>
+	</Popover>
 </template>

@@ -18,5 +18,9 @@ const props = defineProps({
 </script>
 
 <template>
-	<SquareTerminal :width="width" :height="height" :class="colorClass" />
+	<SquareTerminal
+		:width="width"
+		:height="height"
+		:class="colorClass"
+	/>
 </template>

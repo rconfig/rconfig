@@ -78,35 +78,40 @@ const endpoints = {
 </script>
 
 <template>
-  <CardHeader>
-    <CardTitle>Download Now API</CardTitle>
-    <CardDescription
-      >Trigger immediate configuration downloads through the REST
-      API</CardDescription
-    >
-  </CardHeader>
+	<CardHeader>
+		<CardTitle>Download Now API</CardTitle>
+		<CardDescription>
+			Trigger immediate configuration downloads through the REST
+			API
+		</CardDescription>
+	</CardHeader>
 
-  <div class="px-6 pb-4">
-    <div class="flex items-start gap-2 mb-6">
-      <Download class="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
-      <div>
-        <h3 class="text-base font-medium">On-Demand Configuration Downloads</h3>
-        <p class="text-muted-foreground mt-1">
-          The Download Now API allows you to trigger immediate configuration
-          downloads from your network devices. You can download configurations
-          for individual devices, multiple specific devices, or all devices in a
-          category or with a specific tag.
-        </p>
-      </div>
-    </div>
+	<div class="px-6 pb-4">
+		<div class="flex items-start gap-2 mb-6">
+			<Download class="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
+			<div>
+				<h3 class="text-base font-medium">
+					On-Demand Configuration Downloads
+				</h3>
+				<p class="text-muted-foreground mt-1">
+					The Download Now API allows you to trigger immediate configuration
+					downloads from your network devices. You can download configurations
+					for individual devices, multiple specific devices, or all devices in a
+					category or with a specific tag.
+				</p>
+			</div>
+		</div>
 
-    <AlertInfo
-      class="mt-4 mb-6"
-      variant="dark"
-      title="Asynchronous Processing"
-      message="Download requests are queued and processed asynchronously. The v1 endpoints here are host-ID driven and return queue-start confirmation messages."
-    />
-  </div>
+		<AlertInfo
+			class="mt-4 mb-6"
+			variant="dark"
+			title="Asynchronous Processing"
+			message="Download requests are queued and processed asynchronously. The v1 endpoints here are host-ID driven and return queue-start confirmation messages."
+		/>
+	</div>
 
-  <ApiDocsTemplate :pagename="pagename" :endpoints="endpoints" />
+	<ApiDocsTemplate
+		:pagename="pagename"
+		:endpoints="endpoints"
+	/>
 </template>

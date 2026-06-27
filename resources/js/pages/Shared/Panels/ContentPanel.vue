@@ -36,17 +36,32 @@ function closeConfigViewPanel() {
 </script>
 
 <template>
-	<div class="w-screen h-[calc(100vh-72px)] border" style="display: flex; flex-direction: column; background-color: rgb(27, 29, 33); border-radius: 16px; margin: 4px 8px 8px; max-width: calc(100% - 16px); overflow: hidden;">
+	<div
+		class="w-screen h-[calc(100vh-72px)] border"
+		style="display: flex; flex-direction: column; background-color: rgb(27, 29, 33); border-radius: 16px; margin: 4px 8px 8px; max-width: calc(100% - 16px); overflow: hidden;"
+	>
 		<transition name="fade">
-			<DeviceViewPane v-if="panelContentName === 'device-view'" :editId="panelId" @close="closeDeviceViewPanel()" />
+			<DeviceViewPane
+				v-if="panelContentName === 'device-view'"
+				:edit-id="panelId"
+				@close="closeDeviceViewPanel()"
+			/>
 		</transition>
 
 		<transition name="fade">
-			<TemplateAddEditPane v-if="panelContentName === 'template-view'" :editId="panelId" @close="closeTemplateViewPanel()" />
+			<TemplateAddEditPane
+				v-if="panelContentName === 'template-view'"
+				:edit-id="panelId"
+				@close="closeTemplateViewPanel()"
+			/>
 		</transition>
 
 		<transition name="fade">
-			<ConfigViewPane v-if="panelContentName === 'config-view'" :configId="panelId" @close="closeConfigViewPanel()" />
+			<ConfigViewPane
+				v-if="panelContentName === 'config-view'"
+				:config-id="panelId"
+				@close="closeConfigViewPanel()"
+			/>
 		</transition>
 	</div>
 </template>

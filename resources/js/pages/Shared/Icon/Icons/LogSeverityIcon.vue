@@ -115,9 +115,16 @@ const formattedLabel = computed(() => {
 <template>
 	<div class="flex items-center gap-1.5 mr-2">
 		<div :class="[iconColor, variantClasses]">
-			<component :is="iconComponent" :class="iconSize" />
+			<component
+				:is="iconComponent"
+				:class="iconSize"
+			/>
 		</div>
-		<span v-if="showLabel" :class="iconColor" class="font-medium">
+		<span
+			v-if="showLabel"
+			:class="iconColor"
+			class="font-medium"
+		>
 			{{ formattedLabel }}
 		</span>
 	</div>

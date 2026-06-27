@@ -150,34 +150,39 @@ const endpoints = {
 </script>
 
 <template>
-  <CardHeader>
-    <CardTitle>Tasks API</CardTitle>
-    <CardDescription
-      >Manage scheduled tasks through the REST API</CardDescription
-    >
-  </CardHeader>
+	<CardHeader>
+		<CardTitle>Tasks API</CardTitle>
+		<CardDescription>
+			Manage scheduled tasks through the REST API
+		</CardDescription>
+	</CardHeader>
 
-  <div class="px-6 pb-4">
-    <div class="flex items-start gap-2 mb-6">
-      <Calendar class="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
-      <div>
-        <h3 class="text-base font-medium">Working with Scheduled Tasks</h3>
-        <p class="text-muted-foreground mt-1">
-          The Tasks API allows you to manage scheduled operations in rConfig.
-          You can create, view, update, and delete tasks that run on a schedule
-          defined by a cron expression. Tasks can be applied to specific
-          devices, categories, or tags.
-        </p>
-      </div>
-    </div>
+	<div class="px-6 pb-4">
+		<div class="flex items-start gap-2 mb-6">
+			<Calendar class="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
+			<div>
+				<h3 class="text-base font-medium">
+					Working with Scheduled Tasks
+				</h3>
+				<p class="text-muted-foreground mt-1">
+					The Tasks API allows you to manage scheduled operations in rConfig.
+					You can create, view, update, and delete tasks that run on a schedule
+					defined by a cron expression. Tasks can be applied to specific
+					devices, categories, or tags.
+				</p>
+			</div>
+		</div>
 
-    <AlertInfo
-      class="mt-4 mb-6"
-      variant="dark"
-      title="Task Commands"
-      message="The v1 token API currently supports listing, viewing, and deleting tasks. Task create/update/execute helpers are available in the authenticated app API namespace."
-    />
-  </div>
+		<AlertInfo
+			class="mt-4 mb-6"
+			variant="dark"
+			title="Task Commands"
+			message="The v1 token API currently supports listing, viewing, and deleting tasks. Task create/update/execute helpers are available in the authenticated app API namespace."
+		/>
+	</div>
 
-  <ApiDocsTemplate :pagename="pagename" :endpoints="endpoints" />
+	<ApiDocsTemplate
+		:pagename="pagename"
+		:endpoints="endpoints"
+	/>
 </template>

@@ -102,15 +102,26 @@ const gridClass = computed(() => {
 
 <template>
 	<div class="border-t pt-6">
-		<h3 :class="['text-lg font-medium mb-4', headerClass]">{{ header }}</h3>
+		<h3 :class="['text-lg font-medium mb-4', headerClass]">
+			{{ header }}
+		</h3>
 		<div :class="['grid gap-4', gridClass]">
-			<Button v-for="(doc, index) in docs" :key="index" variant="outline" class="justify-start h-auto p-4 bg-gradient-to-r from-rcgray-800 hover:from-rcgray-900 to-rcgray-900 border border-rcgray-700 rounded-lg transition-all duration-200 hover:border-rcgray-600" @click="openLink(doc.link)">
+			<Button
+				v-for="(doc, index) in docs"
+				:key="index"
+				variant="outline"
+				class="justify-start h-auto p-4 bg-gradient-to-r from-rcgray-800 hover:from-rcgray-900 to-rcgray-900 border border-rcgray-700 rounded-lg transition-all duration-200 hover:border-rcgray-600"
+				@click="openLink(doc.link)"
+			>
 				<div class="flex flex-col items-start w-full">
 					<div class="flex items-center gap-2 w-full">
 						<span class="font-medium">{{ doc.title }}</span>
 
 						<!-- Show external link icon for external links, or specified icon -->
-						<component :is="doc.link.startsWith('http') ? ExternalLink : getIcon(doc.icon)" class="h-3.5 w-3.5 text-muted-foreground ml-auto" />
+						<component
+							:is="doc.link.startsWith('http') ? ExternalLink : getIcon(doc.icon)"
+							class="h-3.5 w-3.5 text-muted-foreground ml-auto"
+						/>
 					</div>
 					<span class="text-sm text-muted-foreground truncate max-w-full">{{ doc.description }}</span>
 				</div>

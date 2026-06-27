@@ -109,11 +109,19 @@ function validateRotation(value) {
 		<DialogTrigger as-child>
 			<!-- <Button variant="outline">Edit Profile</Button> -->
 		</DialogTrigger>
-		<DialogContent class="max-w-4xl" @escapeKeyDown="closeDialog('DialogNewCred')" @pointerDownOutside="closeDialog('DialogNewCred')" @closeClicked="closeDialog('DialogNewCred')">
+		<DialogContent
+			class="max-w-4xl"
+			@escape-key-down="closeDialog('DialogNewCred')"
+			@pointer-down-outside="closeDialog('DialogNewCred')"
+			@close-clicked="closeDialog('DialogNewCred')"
+		>
 			<DialogHeader>
 				<DialogTitle>
 					<h3 class="flex items-center rc-panel-heading">
-						<RcIcon name="credentials" class="mr-2" />
+						<RcIcon
+							name="credentials"
+							class="mr-2"
+						/>
 						{{ editId > 0 ? "Edit Credential" : "Add Credential" }} {{ editId > 0 ? "(ID: " + editId + ")" : "" }}
 					</h3>
 				</DialogTitle>
@@ -121,27 +129,55 @@ function validateRotation(value) {
 			</DialogHeader>
 			<div class="grid gap-4 py-4">
 				<div class="grid items-center grid-cols-4 gap-4">
-					<Label for="cred_name" class="text-right">
+					<Label
+						for="cred_name"
+						class="text-right"
+					>
 						<span class="inline-flex items-center gap-1">
 							Name
 							<span class="text-red-400">*</span>
 						</span>
 					</Label>
-					<Skeleton class="h-8 col-span-3" v-if="isLoading" />
-					<Input v-model="model.cred_name" v-else id="cred_name" class="col-span-3" autocomplete="off" :disabled="editId > 0" />
-					<span class="col-span-2 col-start-2 -mt-4 text-sm text-red-400" v-if="errors.cred_name">
+					<Skeleton
+						v-if="isLoading"
+						class="h-8 col-span-3"
+					/>
+					<Input
+						v-else
+						id="cred_name"
+						v-model="model.cred_name"
+						class="col-span-3"
+						autocomplete="off"
+						:disabled="editId > 0"
+					/>
+					<span
+						v-if="errors.cred_name"
+						class="col-span-2 col-start-2 -mt-4 text-sm text-red-400"
+					>
 						{{ errors.cred_name[0] }}
 					</span>
 				</div>
 
 				<div class="grid items-center grid-cols-4 gap-4">
-					<Label for="cred_description" class="text-right">
+					<Label
+						for="cred_description"
+						class="text-right"
+					>
 						<span class="inline-flex items-center gap-1">
 							Description
 						</span>
 					</Label>
-					<Skeleton class="h-8 col-span-3" v-if="isLoading" />
-					<Input v-model="model.cred_description" v-else id="cred_description" class="col-span-3" :disabled="editId > 0" />
+					<Skeleton
+						v-if="isLoading"
+						class="h-8 col-span-3"
+					/>
+					<Input
+						v-else
+						id="cred_description"
+						v-model="model.cred_description"
+						class="col-span-3"
+						:disabled="editId > 0"
+					/>
 				</div>
 
 				<div class="grid items-center grid-cols-4 gap-4">
@@ -150,9 +186,17 @@ function validateRotation(value) {
 						<template v-if="isLoading">
 							<Skeleton class="h-6 w-64" />
 						</template>
-						<RadioGroup v-else v-model="selectedMethod" class="flex space-x-6">
+						<RadioGroup
+							v-else
+							v-model="selectedMethod"
+							class="flex space-x-6"
+						>
 							<label class="flex items-center space-x-2 cursor-pointer">
-								<RadioGroupItem value="usernamePassword" id="usernamePassword" class="h-5 w-5 rounded-full focus:ring-2 focus:ring-blue-400 focus:outline-none data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-600" />
+								<RadioGroupItem
+									id="usernamePassword"
+									value="usernamePassword"
+									class="h-5 w-5 rounded-full focus:ring-2 focus:ring-blue-400 focus:outline-none data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-600"
+								/>
 								<span class="text-sm font-medium rc-text-sm-muted">Username/Password</span>
 							</label>
 						</RadioGroup>
@@ -160,35 +204,70 @@ function validateRotation(value) {
 				</div>
 
 				<div class="grid items-center grid-cols-4 gap-4">
-					<Label for="cred_username" class="text-right">
+					<Label
+						for="cred_username"
+						class="text-right"
+					>
 						Username
 						<span class="text-red-400">*</span>
 					</Label>
-					<Skeleton class="h-8 col-span-3" v-if="isLoading" />
-					<Input v-model="model.cred_username" v-else id="cred_username" class="col-span-3" autocomplete="off" />
-					<span class="col-span-2 col-start-2 -mt-4 text-sm text-red-400" v-if="errors.cred_username">
+					<Skeleton
+						v-if="isLoading"
+						class="h-8 col-span-3"
+					/>
+					<Input
+						v-else
+						id="cred_username"
+						v-model="model.cred_username"
+						class="col-span-3"
+						autocomplete="off"
+					/>
+					<span
+						v-if="errors.cred_username"
+						class="col-span-2 col-start-2 -mt-4 text-sm text-red-400"
+					>
 						{{ errors.cred_username[0] }}
 					</span>
 				</div>
 
 				<template v-if="!isLoading && selectedMethod === 'usernamePassword'">
 					<div class="grid items-center grid-cols-4 gap-4">
-						<Label for="cred_password" class="text-right">
+						<Label
+							for="cred_password"
+							class="text-right"
+						>
 							Password
 							<span class="text-red-400">*</span>
 						</Label>
-						<InputPassword v-model="model.cred_password" id="cred_password" mainDivClass="col-span-3" />
-						<span class="col-span-2 col-start-2 -mt-4 text-sm text-red-400" v-if="errors.cred_password">
+						<InputPassword
+							id="cred_password"
+							v-model="model.cred_password"
+							main-div-class="col-span-3"
+						/>
+						<span
+							v-if="errors.cred_password"
+							class="col-span-2 col-start-2 -mt-4 text-sm text-red-400"
+						>
 							{{ errors.cred_password[0] }}
 						</span>
 					</div>
 
 					<div class="grid items-center grid-cols-4 gap-4">
-						<Label for="cred_enable_password" class="text-right">
+						<Label
+							for="cred_enable_password"
+							class="text-right"
+						>
 							Enable Password
 						</Label>
-						<InputPassword v-model="model.cred_enable_password" id="cred_enable_password" mainDivClass="col-span-3" />
-						<span class="col-span-2 col-start-2 -mt-4 text-sm text-red-400" v-if="errors.cred_enable_password">
+						<InputPassword
+							id="cred_enable_password"
+							v-model="model.cred_enable_password"
+							main-div-class="col-span-3"
+						/>
+						<span
+							v-if="errors.cred_enable_password"
+							class="col-span-2 col-start-2 -mt-4 text-sm text-red-400"
+						>
 							{{ errors.cred_enable_password[0] }}
 						</span>
 					</div>
@@ -196,7 +275,10 @@ function validateRotation(value) {
 
 				<template v-if="isLoading && selectedMethod === 'usernamePassword'">
 					<div class="grid items-center grid-cols-4 gap-4">
-						<Label for="cred_password" class="text-right">
+						<Label
+							for="cred_password"
+							class="text-right"
+						>
 							Password
 							<span class="text-red-400">*</span>
 						</Label>
@@ -204,24 +286,46 @@ function validateRotation(value) {
 					</div>
 
 					<div class="grid items-center grid-cols-4 gap-4">
-						<Label for="cred_enable_password" class="text-right">
+						<Label
+							for="cred_enable_password"
+							class="text-right"
+						>
 							Enable Password
 						</Label>
 						<Skeleton class="h-8 col-span-3" />
 					</div>
 				</template>
-				<div v-if="!isLoading && editId > 0" class="grid items-center grid-cols-4 gap-4">
-					<Label for="rotate_creds" class="text-right">
+				<div
+					v-if="!isLoading && editId > 0"
+					class="grid items-center grid-cols-4 gap-4"
+				>
+					<Label
+						for="rotate_creds"
+						class="text-right"
+					>
 						Rotate Device Credentials
 					</Label>
 					<div class="col-span-3">
-						<Switch v-model:checked="model.rotate_creds" id="rotate_creds" @update:checked="validateRotation" />
-						<span class="ml-2 text-sm text-gray-600" v-if="model.rotate_creds">Device credentials will be rotated</span>
+						<Switch
+							id="rotate_creds"
+							v-model:checked="model.rotate_creds"
+							@update:checked="validateRotation"
+						/>
+						<span
+							v-if="model.rotate_creds"
+							class="ml-2 text-sm text-gray-600"
+						>Device credentials will be rotated</span>
 					</div>
 				</div>
 
-				<div v-if="isLoading && editId > 0" class="grid items-center grid-cols-4 gap-4">
-					<Label for="rotate_creds" class="text-right">
+				<div
+					v-if="isLoading && editId > 0"
+					class="grid items-center grid-cols-4 gap-4"
+				>
+					<Label
+						for="rotate_creds"
+						class="text-right"
+					>
 						Rotate Device Credentials
 					</Label>
 					<div class="col-span-3">
@@ -231,29 +335,57 @@ function validateRotation(value) {
 			</div>
 
 			<DialogFooter>
-				<Button type="close" variant="outline" class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse" @click="closeDialog('DialogNewCred')" size="sm">
+				<Button
+					type="close"
+					variant="outline"
+					class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse"
+					size="sm"
+					@click="closeDialog('DialogNewCred')"
+				>
 					Cancel
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class">ESC</kbd>
 					</div>
 				</Button>
 
-				<Button v-if="props.editId === 0" type="submit" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click="saveDialog()" variant="primary" :disabled="isLoading">
+				<Button
+					v-if="props.editId === 0"
+					type="submit"
+					class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+					size="sm"
+					variant="primary"
+					:disabled="isLoading"
+					@click="saveDialog()"
+				>
 					Save
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class2">
 							Ctrl&nbsp;
-							<RcIcon name="enter" class="ml-1" />
+							<RcIcon
+								name="enter"
+								class="ml-1"
+							/>
 						</kbd>
 					</div>
 				</Button>
 
-				<Button v-if="props.editId > 0" type="submit" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click="saveDialog()" variant="primary" :disabled="isLoading">
+				<Button
+					v-if="props.editId > 0"
+					type="submit"
+					class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+					size="sm"
+					variant="primary"
+					:disabled="isLoading"
+					@click="saveDialog()"
+				>
 					Update
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class2">
 							Ctrl&nbsp;
-							<RcIcon name="enter" class="ml-1" />
+							<RcIcon
+								name="enter"
+								class="ml-1"
+							/>
 						</kbd>
 					</div>
 				</Button>

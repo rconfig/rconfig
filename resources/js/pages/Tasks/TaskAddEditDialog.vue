@@ -187,7 +187,13 @@ function Step5CheckSuccess() {
 		<DialogTrigger as-child>
 			<!-- Trigger button -->
 		</DialogTrigger>
-		<DialogContent @interactOutside="confirmCloseWizardOpen()" @pointerDownOutside="confirmCloseWizardOpen()" class="max-w-4xl gap-0 p-0 m-4 bg-rcgray-900" @escapeKeyDown="closeDialog('DialogNewTask')" @closeClicked="closeDialog('DialogNewTask')">
+		<DialogContent
+			class="max-w-4xl gap-0 p-0 m-4 bg-rcgray-900"
+			@interact-outside="confirmCloseWizardOpen()"
+			@pointer-down-outside="confirmCloseWizardOpen()"
+			@escape-key-down="closeDialog('DialogNewTask')"
+			@close-clicked="closeDialog('DialogNewTask')"
+		>
 			<DialogHeader class="rc-dialog-header">
 				<DialogTitle class="text-sm text-rcgray-200">
 					<div class="flex items-center">
@@ -202,46 +208,105 @@ function Step5CheckSuccess() {
 			</DialogHeader>
 
 			<!-- Task Type Selection -->
-			<div v-if="showTaskTypeSelection" class="p-6">
-				<TaskTypeSelection :model="model" @taskSelected="handleTaskSelected" @continue="handleContinueFromTaskSelection" />
+			<div
+				v-if="showTaskTypeSelection"
+				class="p-6"
+			>
+				<TaskTypeSelection
+					:model="model"
+					@task-selected="handleTaskSelected"
+					@continue="handleContinueFromTaskSelection"
+				/>
 			</div>
 
 			<!-- Wizard Steps -->
 			<div v-else>
-				<ResizablePanelGroup direction="horizontal" class="p-4">
-					<ResizablePanel :default-size="25" :max-size="25" :min-size="25" collapsible :collapsed-size="25" ref="panelElement" class="">
-						<NavPanel :currentStep="activeStep" />
+				<ResizablePanelGroup
+					direction="horizontal"
+					class="p-4"
+				>
+					<ResizablePanel
+						ref="panelElement"
+						:default-size="25"
+						:max-size="25"
+						:min-size="25"
+						collapsible
+						:collapsed-size="25"
+						class=""
+					>
+						<NavPanel :current-step="activeStep" />
 					</ResizablePanel>
 					<ResizableHandle />
 					<ResizablePanel class="max-h-[80vh]">
 						<ScrollArea class="h-full px-4 border border-none rounded-md">
-							<Step2 v-if="activeStep === 2" :model="model" />
-							<Step3 :model="model" v-if="activeStep === 3" />
-							<Step4 :model="model" v-if="activeStep === 4" />
-							<Step5 @checkSuccess="Step5CheckSuccess()" :model="model" v-if="activeStep === 5" />
+							<Step2
+								v-if="activeStep === 2"
+								:model="model"
+							/>
+							<Step3
+								v-if="activeStep === 3"
+								:model="model"
+							/>
+							<Step4
+								v-if="activeStep === 4"
+								:model="model"
+							/>
+							<Step5
+								v-if="activeStep === 5"
+								:model="model"
+								@check-success="Step5CheckSuccess()"
+							/>
 						</ScrollArea>
 					</ResizablePanel>
 				</ResizablePanelGroup>
 			</div>
 
 			<!-- Navigation Footer -->
-			<div v-if="!showTaskTypeSelection" class="w-full py-2 border-t border-b">
-				<div class="flex items-center px-2" :class="errors.length > 0 || errorMessage ? 'justify-between' : 'justify-end'">
+			<div
+				v-if="!showTaskTypeSelection"
+				class="w-full py-2 border-t border-b"
+			>
+				<div
+					class="flex items-center px-2"
+					:class="errors.length > 0 || errorMessage ? 'justify-between' : 'justify-end'"
+				>
 					<!-- Display validation errors -->
-					<div v-if="errors.length > 0" class="text-sm text-red-500">
+					<div
+						v-if="errors.length > 0"
+						class="text-sm text-red-500"
+					>
 						<ul class="list-disc list-inside">
-							<li v-for="error in errors" :key="error">{{ error }}</li>
+							<li
+								v-for="error in errors"
+								:key="error"
+							>
+								{{ error }}
+							</li>
 						</ul>
 					</div>
-					<div v-else-if="errorMessage" class="text-sm text-red-500">
+					<div
+						v-else-if="errorMessage"
+						class="text-sm text-red-500"
+					>
 						{{ errorMessage }}
 					</div>
 
 					<div class="flex">
-						<Button @click.prevent="prevPage()" variant="outline" class="px-2 py-1 text-sm hover:animate-pulse" size="sm">
+						<Button
+							variant="outline"
+							class="px-2 py-1 text-sm hover:animate-pulse"
+							size="sm"
+							@click.prevent="prevPage()"
+						>
 							Previous
 						</Button>
-						<Button :disabled="activeStep === 5" @click.prevent="nextPage()" variant="outline" class="px-2 py-1 ml-2 text-sm hover:animate-pulse" size="sm">
+						<Button
+							:disabled="activeStep === 5"
+							variant="outline"
+							class="px-2 py-1 ml-2 text-sm hover:animate-pulse"
+							size="sm"
+							@click.prevent="nextPage()"
+						>
 							Next
 						</Button>
 					</div>
@@ -249,34 +314,65 @@ function Step5CheckSuccess() {
 			</div>
 
 			<DialogFooter class="rc-dialog-footer bg-rcgray-800">
-				<Button type="close" variant="outline" class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse" @click="confirmCloseWizardOpen()" size="sm">
+				<Button
+					type="close"
+					variant="outline"
+					class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse"
+					size="sm"
+					@click="confirmCloseWizardOpen()"
+				>
 					Cancel
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class">ESC</kbd>
 					</div>
 				</Button>
 
-				<Button :disabled="Step5Validated" v-if="props.editId === 0" type="submit" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click="saveDialog()" variant="primary">
+				<Button
+					v-if="props.editId === 0"
+					:disabled="Step5Validated"
+					type="submit"
+					class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+					size="sm"
+					variant="primary"
+					@click="saveDialog()"
+				>
 					Save
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class2">
 							Ctrl&nbsp;
-							<RcIcon name="enter" class="ml-1" />
+							<RcIcon
+								name="enter"
+								class="ml-1"
+							/>
 						</kbd>
 					</div>
 				</Button>
 
-				<Button v-if="props.editId > 0" type="submit" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click="saveDialog()" variant="primary">
+				<Button
+					v-if="props.editId > 0"
+					type="submit"
+					class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+					size="sm"
+					variant="primary"
+					@click="saveDialog()"
+				>
 					Update
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class2">
 							Ctrl&nbsp;
-							<RcIcon name="enter" class="ml-1" />
+							<RcIcon
+								name="enter"
+								class="ml-1"
+							/>
 						</kbd>
 					</div>
 				</Button>
 			</DialogFooter>
 		</DialogContent>
 	</Dialog>
-	<RcConfirmAlertDialog :showConfirmCloseAlert="showConfirmCloseAlert" @handleClose="cancelCloseWizard" @handleConfirm="confirmCloseWizard" />
+	<RcConfirmAlertDialog
+		:show-confirm-close-alert="showConfirmCloseAlert"
+		@handle-close="cancelCloseWizard"
+		@handle-confirm="confirmCloseWizard"
+	/>
 </template>

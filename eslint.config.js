@@ -13,6 +13,7 @@ export default [
 			"node_modules/**",
 			"coverage/**",
 			"public/build/**",
+			"resources/js/.archive/**",
 			"resources/js/components/ui/**",
 			"resources/js/components/ui/**/*",
 			"**/resources/js/components/ui/**",
@@ -32,6 +33,8 @@ export default [
 			globals: {
 				...globals.browser,
 				...globals.node,
+				axios: "readonly",
+				route: "readonly",
 			},
 		},
 		rules: {

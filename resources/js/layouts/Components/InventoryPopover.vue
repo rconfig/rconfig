@@ -97,22 +97,33 @@ const positioning = computed(() => ({
 
 <template>
 	<!-- Drawer fallback for very narrow panels -->
-	<Sheet v-if="useSheet" v-model:open="popoverOpen">
+	<Sheet
+		v-if="useSheet"
+		v-model:open="popoverOpen"
+	>
 		<SheetTrigger as-child>
 			<slot />
 		</SheetTrigger>
-		<SheetContent side="left" class="w-80 sm:w-96">
+		<SheetContent
+			side="left"
+			class="w-80 sm:w-96"
+		>
 			<SheetHeader>
 				<SheetTitle>
 					<div class="flex items-center">
-						<RcIcon name="inventory" class="w-5 h-5" />
+						<RcIcon
+							name="inventory"
+							class="w-5 h-5"
+						/>
 						<span class="ml-2">Inventory</span>
 					</div>
 				</SheetTitle>
 			</SheetHeader>
 
 			<div class="mt-4 grid gap-4">
-				<p class="text-xs text-muted-foreground">Select an inventory view to manage your devices and assets</p>
+				<p class="text-xs text-muted-foreground">
+					Select an inventory view to manage your devices and assets
+				</p>
 
 				<!-- Sort Controls -->
 				<div class="flex items-center justify-between">
@@ -120,8 +131,17 @@ const positioning = computed(() => ({
 						<TooltipProvider>
 							<Tooltip>
 								<TooltipTrigger as-child>
-									<Button variant="ghost" size="sm" @click="onSortAlphabetically" class="h-8 px-2 rc-btn-shadow">
-										<RcIcon name="sort" :sortParam="sortDirection === 'asc' ? 'sort-alpha' : '-sort-alpha'" field="id" />
+									<Button
+										variant="ghost"
+										size="sm"
+										class="h-8 px-2 rc-btn-shadow"
+										@click="onSortAlphabetically"
+									>
+										<RcIcon
+											name="sort"
+											:sort-param="sortDirection === 'asc' ? 'sort-alpha' : '-sort-alpha'"
+											field="id"
+										/>
 									</Button>
 								</TooltipTrigger>
 								<TooltipContent>
@@ -133,7 +153,12 @@ const positioning = computed(() => ({
 						<TooltipProvider>
 							<Tooltip>
 								<TooltipTrigger as-child>
-									<Button variant="ghost" size="sm" @click="onResetOrder" class="h-8 px-2 rc-btn-shadow">
+									<Button
+										variant="ghost"
+										size="sm"
+										class="h-8 px-2 rc-btn-shadow"
+										@click="onResetOrder"
+									>
 										<ListRestart class="w-4 h-4" />
 									</Button>
 								</TooltipTrigger>
@@ -155,8 +180,8 @@ const positioning = computed(() => ({
 					</template>
 
 					<div
-						v-if="!isLoading"
 						v-for="item in viewItems"
+						v-show="!isLoading"
 						:key="item.id"
 						class="flex items-center justify-between group rounded-md transition-colors"
 						:class="{
@@ -175,9 +200,17 @@ const positioning = computed(() => ({
 						</div>
 
 						<!-- Navigation Button -->
-						<Button variant="ghost" class="flex-1 justify-start mr-2 px-2 focus:outline-none focus:ring-0" @click="navigate(item.id)" tabindex="-1">
+						<Button
+							variant="ghost"
+							class="flex-1 justify-start mr-2 px-2 focus:outline-none focus:ring-0"
+							tabindex="-1"
+							@click="navigate(item.id)"
+						>
 							<span class="flex items-center gap-2">
-								<RcIcon :name="item.icon" class="w-4 h-4" />
+								<RcIcon
+									:name="item.icon"
+									class="w-4 h-4"
+								/>
 								<span class="text-sm">{{ item.label }}</span>
 							</span>
 						</Button>
@@ -186,7 +219,10 @@ const positioning = computed(() => ({
 						<TooltipProvider>
 							<Tooltip>
 								<TooltipTrigger as-child>
-									<button @click.stop.prevent="toggleFavorite(item.id)" class="p-1 rounded hover:bg-muted/50 transition-colors">
+									<button
+										class="p-1 rounded hover:bg-muted/50 transition-colors"
+										@click.stop.prevent="toggleFavorite(item.id)"
+									>
 										<RcIcon
 											:name="item.isFavorite ? 'star-selected' : 'star-unselected'"
 											class="w-4 h-4 animated-star"
@@ -209,24 +245,41 @@ const positioning = computed(() => ({
 	</Sheet>
 
 	<!-- Properly bounded popover for normal widths -->
-	<Popover v-else v-model:open="popoverOpen" :positioning="positioning">
+	<Popover
+		v-else
+		v-model:open="popoverOpen"
+		:positioning="positioning"
+	>
 		<PopoverTrigger as-child>
 			<slot />
 		</PopoverTrigger>
 
-		<PopoverContent class="w-80 p-0 overflow-hidden" side="right" align="start" :side-offset="panelWidth < 260 ? 0 : 26" :avoid-collisions="true" :collision-padding="8" :style="{ maxHeight: 'min(70vh, 640px)' }">
+		<PopoverContent
+			class="w-80 p-0 overflow-hidden"
+			side="right"
+			align="start"
+			:side-offset="panelWidth < 260 ? 0 : 26"
+			:avoid-collisions="true"
+			:collision-padding="8"
+			:style="{ maxHeight: 'min(70vh, 640px)' }"
+		>
 			<div class="grid gap-4 p-4">
 				<div class="space-y-2">
 					<h4 class="flex justify-start w-full font-medium leading-none">
 						<div class="flex items-center justify-between w-full">
 							<div class="flex items-center">
-								<RcIcon name="inventory" class="w-5 h-5" />
+								<RcIcon
+									name="inventory"
+									class="w-5 h-5"
+								/>
 								<span class="ml-2">Inventory</span>
 							</div>
 							<kbd class="rc-kdb-class">ESC</kbd>
 						</div>
 					</h4>
-					<p class="text-xs text-muted-foreground">Select an inventory view to manage your devices and assets</p>
+					<p class="text-xs text-muted-foreground">
+						Select an inventory view to manage your devices and assets
+					</p>
 				</div>
 
 				<!-- Sort Controls -->
@@ -235,8 +288,17 @@ const positioning = computed(() => ({
 						<TooltipProvider>
 							<Tooltip>
 								<TooltipTrigger as-child>
-									<Button variant="ghost" size="sm" @click="onSortAlphabetically" class="h-8 px-2 rc-btn-shadow">
-										<RcIcon name="sort" :sortParam="sortDirection === 'asc' ? 'sort-alpha' : '-sort-alpha'" field="id" />
+									<Button
+										variant="ghost"
+										size="sm"
+										class="h-8 px-2 rc-btn-shadow"
+										@click="onSortAlphabetically"
+									>
+										<RcIcon
+											name="sort"
+											:sort-param="sortDirection === 'asc' ? 'sort-alpha' : '-sort-alpha'"
+											field="id"
+										/>
 									</Button>
 								</TooltipTrigger>
 								<TooltipContent>
@@ -248,7 +310,12 @@ const positioning = computed(() => ({
 						<TooltipProvider>
 							<Tooltip>
 								<TooltipTrigger as-child>
-									<Button variant="ghost" size="sm" @click="onResetOrder" class="h-8 px-2 rc-btn-shadow">
+									<Button
+										variant="ghost"
+										size="sm"
+										class="h-8 px-2 rc-btn-shadow"
+										@click="onResetOrder"
+									>
 										<ListRestart class="w-4 h-4" />
 									</Button>
 								</TooltipTrigger>
@@ -270,8 +337,8 @@ const positioning = computed(() => ({
 					</template>
 
 					<div
-						v-if="!isLoading"
 						v-for="item in viewItems"
+						v-show="!isLoading"
 						:key="item.id"
 						class="flex items-center justify-between group rounded-md transition-colors"
 						:class="{
@@ -290,9 +357,17 @@ const positioning = computed(() => ({
 						</div>
 
 						<!-- Navigation Button -->
-						<Button variant="ghost" class="flex-1 justify-start mr-2 px-2 focus:outline-none focus:ring-0" @click="navigate(item.id)" tabindex="-1">
+						<Button
+							variant="ghost"
+							class="flex-1 justify-start mr-2 px-2 focus:outline-none focus:ring-0"
+							tabindex="-1"
+							@click="navigate(item.id)"
+						>
 							<span class="flex items-center gap-2">
-								<RcIcon :name="item.icon" class="w-4 h-4" />
+								<RcIcon
+									:name="item.icon"
+									class="w-4 h-4"
+								/>
 								<span class="text-sm">{{ item.label }}</span>
 							</span>
 						</Button>
@@ -301,7 +376,10 @@ const positioning = computed(() => ({
 						<TooltipProvider>
 							<Tooltip>
 								<TooltipTrigger as-child>
-									<button @click.stop.prevent="toggleFavorite(item.id)" class="p-1 rounded hover:bg-muted/50 transition-colors">
+									<button
+										class="p-1 rounded hover:bg-muted/50 transition-colors"
+										@click.stop.prevent="toggleFavorite(item.id)"
+									>
 										<RcIcon
 											:name="item.isFavorite ? 'star-selected' : 'star-unselected'"
 											class="w-4 h-4 animated-star"

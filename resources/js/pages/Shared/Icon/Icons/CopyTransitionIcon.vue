@@ -31,8 +31,17 @@ const transitionStyle = computed(() => {
 </script>
 
 <template>
-	<div class="relative" :class="iconSize">
-		<CheckCircle class="absolute top-0 left-0 transition-all ease-in-out" :class="[iconSize, transitionStyle, isActive ? `opacity-100 ${activeColor} scale-100` : 'opacity-0 scale-75']" />
-		<Copy class="absolute top-0 left-0 transition-all ease-in-out" :class="[iconSize, transitionStyle, !isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-75']" />
+	<div
+		class="relative"
+		:class="iconSize"
+	>
+		<CheckCircle
+			class="absolute top-0 left-0 transition-all ease-in-out"
+			:class="[iconSize, transitionStyle, isActive ? `opacity-100 ${activeColor} scale-100` : 'opacity-0 scale-75']"
+		/>
+		<Copy
+			class="absolute top-0 left-0 transition-all ease-in-out"
+			:class="[iconSize, transitionStyle, !isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-75']"
+		/>
 	</div>
 </template>

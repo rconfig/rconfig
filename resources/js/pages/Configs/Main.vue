@@ -26,14 +26,28 @@ const {
 	<main class="flex flex-col flex-1 gap-2 dark:bg-rcgray-900">
 		<div class="flex flex-row items-center justify-between h-12 gap-3 px-5 border-t border-b">
 			<div class="flex justify-start items-center">
-				<NavPills :items="navPillsItems" v-model="currentView" persist-key="inventorySelectedView" @select="handleNavSelection" />
+				<NavPills
+					v-model="currentView"
+					:items="navPillsItems"
+					persist-key="inventorySelectedView"
+					@select="handleNavSelection"
+				/>
 			</div>
 
 			<!-- Star/favorite icon -->
 			<TooltipProvider>
-				<Tooltip v-for="item in viewItems" :key="item.id">
-					<TooltipTrigger as-child v-if="currentView === item.id">
-						<div @click.stop.prevent="toggleFavorite(item.id)" class="cursor-pointer">
+				<Tooltip
+					v-for="item in viewItems"
+					:key="item.id"
+				>
+					<TooltipTrigger
+						v-if="currentView === item.id"
+						as-child
+					>
+						<div
+							class="cursor-pointer"
+							@click.stop.prevent="toggleFavorite(item.id)"
+						>
 							<RcIcon :name="item.isFavorite.value ? 'star-selected' : 'star-unselected'" />
 						</div>
 					</TooltipTrigger>
@@ -48,10 +62,14 @@ const {
 			<keep-alive>
 				<component
 					:is="currentView === 'configs' ? ConfigsTable : currentView === 'configsearch' ? ConfigSearch : currentView === 'configcompare' ? ConfigCompare : currentView === 'configreport' ? ConfigReportsTable : null"
-					:configsId="configsId"
-					:statusId="statusIdParam"
-					:key="currentView">
-					<template v-if="['configsearch', 'configreport'].includes(currentView)" #default>
+					:key="currentView"
+					:configs-id="configsId"
+					:status-id="statusIdParam"
+				>
+					<template
+						v-if="['configsearch', 'configreport'].includes(currentView)"
+						#default
+					>
 						<h1 class="text-2xl text-muted-foreground">
 							{{ currentView === 'configsearch' ? 'Config Search' : currentView === 'configreport' ? 'Config Reports' : '' }}
 						</h1>

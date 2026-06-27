@@ -90,12 +90,26 @@ function navTo(href) {
 	<Menubar class="flex items-start w-full bg-rcgray-900 text-rcgray-100 rounded-md shadow-md h-fit">
 		<!-- Top-level navigation items -->
 		<div class="flex space-x-4">
-			<MenubarMenu v-for="(section, index) in sections" :key="index">
-				<MenubarTrigger class="flex items-start">{{ section.heading }}</MenubarTrigger>
+			<MenubarMenu
+				v-for="(section, index) in sections"
+				:key="index"
+			>
+				<MenubarTrigger class="flex items-start">
+					{{ section.heading }}
+				</MenubarTrigger>
 				<MenubarContent class="flex space-x-4">
 					<!-- Submenu items -->
-					<div v-if="section.openState" class="flex space-x-4">
-						<MenubarItem v-for="item in section.items" :key="item.title" @click="navTo(item.href)" variant="ghost" class="inline-flex items-center justify-start w-auto px-4 py-2 text-sm font-medium text-left rounded-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring hover:text-accent-foreground hover:bg-rcgray-800">
+					<div
+						v-if="section.openState"
+						class="flex space-x-4"
+					>
+						<MenubarItem
+							v-for="item in section.items"
+							:key="item.title"
+							variant="ghost"
+							class="inline-flex items-center justify-start w-auto px-4 py-2 text-sm font-medium text-left rounded-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring hover:text-accent-foreground hover:bg-rcgray-800"
+							@click="navTo(item.href)"
+						>
 							{{ item.title }}
 						</MenubarItem>
 					</div>

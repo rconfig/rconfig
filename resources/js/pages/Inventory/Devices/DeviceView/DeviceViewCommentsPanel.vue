@@ -14,8 +14,9 @@ const props = defineProps({
 </script>
 
 <template>
-  <CommentsMainPanel
-    :deviceId="deviceId"
-    :deviceName="deviceName"
-    :isDeviceCommentsPanelView="true" />
+	<CommentsMainPanel
+		:device-id="deviceId"
+		:device-name="deviceName"
+		:is-device-comments-panel-view="true"
+	/>
 </template>

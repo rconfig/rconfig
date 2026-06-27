@@ -108,12 +108,32 @@ const iconClasses = computed(() => {
 
 <template>
 	<!-- External link with icon based on variant -->
-	<a :href="to" target="_blank" rel="noopener noreferrer" :class="linkClasses" class="group" @click="emit('click', $event)">
+	<a
+		:href="to"
+		target="_blank"
+		rel="noopener noreferrer"
+		:class="linkClasses"
+		class="group"
+		@click="emit('click', $event)"
+	>
 		<!-- Optional prefix icon -->
-		<component v-if="iconComponent" :is="iconComponent" :size="14" :class="iconClasses" />
+		<component
+			:is="iconComponent"
+			v-if="iconComponent"
+			:size="14"
+			:class="iconClasses"
+		/>
 		<span>{{ text }}</span>
-		<ExternalLink v-if="variant === 'default'" :size="14" :class="iconClasses" />
-		<ArrowUpRight v-else-if="variant === 'subtle'" :size="14" :class="iconClasses" />
+		<ExternalLink
+			v-if="variant === 'default'"
+			:size="14"
+			:class="iconClasses"
+		/>
+		<ArrowUpRight
+			v-else-if="variant === 'subtle'"
+			:size="14"
+			:class="iconClasses"
+		/>
 	</a>
 </template>
 

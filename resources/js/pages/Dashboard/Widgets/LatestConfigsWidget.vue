@@ -32,13 +32,19 @@ const getStatusIcon = (status) => {
 
 <template>
 	<Card class="border-0 shadow-md rounded-2xl bg-card text-card-foreground p-4 transition-all duration-200 hover:shadow-lg relative">
-		<div v-if="editMode" class="absolute top-2 right-2 cursor-move opacity-50">
+		<div
+			v-if="editMode"
+			class="absolute top-2 right-2 cursor-move opacity-50"
+		>
 			<GripVertical class="w-4 h-4 text-muted-foreground" />
 		</div>
 
 		<div class="flex items-center justify-between mb-3">
 			<h3 class="text-base font-semibold flex items-center gap-2">
-				<RcIcon name="config-tools" class="w-4" />
+				<RcIcon
+					name="config-tools"
+					class="w-4"
+				/>
 				Latest Configs
 			</h3>
 		</div>
@@ -49,10 +55,12 @@ const getStatusIcon = (status) => {
 					<span class="text-muted-foreground">Last Download</span>
 					<div class="flex items-center gap-2">
 						<span class="font-medium">{{ getStatusIcon(configinfo.data.lastConfig.download_status) }}</span>
-						<div :class="[
-							'w-2 h-2 rounded-full',
-							configinfo.data.lastConfig.download_status === 1 ? 'bg-green-500' : 'bg-red-500'
-						]"></div>
+						<div
+							:class="[
+								'w-2 h-2 rounded-full',
+								configinfo.data.lastConfig.download_status === 1 ? 'bg-green-500' : 'bg-red-500'
+							]"
+						></div>
 					</div>
 				</div>
 
@@ -78,7 +86,10 @@ const getStatusIcon = (status) => {
 				</div>
 			</div>
 
-			<div v-else class="text-center py-4 text-muted-foreground">
+			<div
+				v-else
+				class="text-center py-4 text-muted-foreground"
+			>
 				No config data available
 			</div>
 
@@ -86,9 +97,9 @@ const getStatusIcon = (status) => {
 				type="button"
 				class="w-full px-2 py-1 mt-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
 				size="sm" 
-				@click="navigateToConfigs"
 				:disabled="editMode"
 				variant="primary"
+				@click="navigateToConfigs"
 			>
 				View All Configs
 			</Button>

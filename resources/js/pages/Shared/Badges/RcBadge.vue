@@ -120,7 +120,11 @@ const badgeClasses = computed(() => {
 </script>
 
 <template>
-	<span :class="badgeClasses" :tabindex="interactive ? 0 : undefined" :role="interactive ? 'button' : undefined">
+	<span
+		:class="badgeClasses"
+		:tabindex="interactive ? 0 : undefined"
+		:role="interactive ? 'button' : undefined"
+	>
 		<slot></slot>
 	</span>
 </template>

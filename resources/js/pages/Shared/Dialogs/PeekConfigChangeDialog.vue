@@ -87,7 +87,12 @@ function resetFont() {
 		<DialogTrigger as-child>
 			<slot />
 		</DialogTrigger>
-		<DialogContent class="sm:max-w-[70dvw] max-h-[90dvh] grid grid-rows-[auto_minmax(0,1fr)_auto] p-0" @escapeKeyDown="closeDialog('peek-config-change-dialog-' + editId)" @pointerDownOutside="closeDialog('peek-config-change-dialog-' + editId)" @closeClicked="closeDialog('peek-config-change-dialog-' + editId)">
+		<DialogContent
+			class="sm:max-w-[70dvw] max-h-[90dvh] grid grid-rows-[auto_minmax(0,1fr)_auto] p-0"
+			@escape-key-down="closeDialog('peek-config-change-dialog-' + editId)"
+			@pointer-down-outside="closeDialog('peek-config-change-dialog-' + editId)"
+			@close-clicked="closeDialog('peek-config-change-dialog-' + editId)"
+		>
 			<DialogHeader class="p-6 pb-0">
 				<DialogTitle>Configuration Change Quick Peek (Config Change ID: {{ editId }})</DialogTitle>
 				<DialogDescription>
@@ -95,9 +100,27 @@ function resetFont() {
 						<div class="flex items-center gap-2">
 							<!-- ✅ Font size controls -->
 							<div class="flex items-center gap-2">
-								<Button variant="outline" size="sm" @click="decreaseFont">A-</Button>
-								<Button variant="outline" size="sm" @click="resetFont">A</Button>
-								<Button variant="outline" size="sm" @click="increaseFont">A+</Button>
+								<Button
+									variant="outline"
+									size="sm"
+									@click="decreaseFont"
+								>
+									A-
+								</Button>
+								<Button
+									variant="outline"
+									size="sm"
+									@click="resetFont"
+								>
+									A
+								</Button>
+								<Button
+									variant="outline"
+									size="sm"
+									@click="increaseFont"
+								>
+									A+
+								</Button>
 							</div>
 							<!-- ✅ Display current font size -->
 							<!-- <span class="text-xs text-muted-foreground">{{ fontSize }}px</span> -->
@@ -117,17 +140,35 @@ function resetFont() {
 			<div class="overflow-y-auto px-6 py-2">
 				<Loading v-if="isLoading" />
 
-				<div class="bg-muted/30 border rounded-2xl p-4 overflow-auto bg-rcgray-900" v-if="!isLoading">
+				<div
+					v-if="!isLoading"
+					class="bg-muted/30 border rounded-2xl p-4 overflow-auto bg-rcgray-900"
+				>
 					<!-- ✅ Apply dynamic font size using CSS custom properties -->
-					<div class="dynamic-font-container font-mono whitespace-pre-wrap" :style="codeStyle">
-						<span v-if="processedCode === ''" class="text-muted-foreground italic">No changes detected</span>
-						<span class="rc-text-sm-muted" v-html="processedCode" v-if="processedCode !== ''" />
+					<div
+						class="dynamic-font-container font-mono whitespace-pre-wrap"
+						:style="codeStyle"
+					>
+						<span
+							v-if="processedCode === ''"
+							class="text-muted-foreground italic"
+						>No changes detected</span>
+						<span
+							v-if="processedCode !== ''"
+							class="rc-text-sm-muted"
+							v-html="processedCode"
+						/>
 					</div>
 				</div>
 			</div>
 
 			<DialogFooter class="p-6 pt-0">
-				<Button @click="handleClose()" variant="outline">Close</Button>
+				<Button
+					variant="outline"
+					@click="handleClose()"
+				>
+					Close
+				</Button>
 			</DialogFooter>
 		</DialogContent>
 	</Dialog>

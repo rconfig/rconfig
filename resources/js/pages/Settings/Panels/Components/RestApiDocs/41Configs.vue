@@ -234,35 +234,40 @@ const endpoints = {
 </script>
 
 <template>
-  <CardHeader>
-    <CardTitle>Configs API</CardTitle>
-    <CardDescription
-      >Access and search device configurations through the REST
-      API</CardDescription
-    >
-  </CardHeader>
+	<CardHeader>
+		<CardTitle>Configs API</CardTitle>
+		<CardDescription>
+			Access and search device configurations through the REST
+			API
+		</CardDescription>
+	</CardHeader>
 
-  <div class="px-6 pb-4">
-    <div class="flex items-start gap-2 mb-6">
-      <FileText class="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
-      <div>
-        <h3 class="text-base font-medium">Working with Configurations</h3>
-        <p class="text-muted-foreground mt-1">
-          The Configs API allows you to retrieve, view, and search through
-          device configuration files that have been collected by rConfig. You
-          can access configurations by device, specific file, or search within
-          them.
-        </p>
-      </div>
-    </div>
+	<div class="px-6 pb-4">
+		<div class="flex items-start gap-2 mb-6">
+			<FileText class="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
+			<div>
+				<h3 class="text-base font-medium">
+					Working with Configurations
+				</h3>
+				<p class="text-muted-foreground mt-1">
+					The Configs API allows you to retrieve, view, and search through
+					device configuration files that have been collected by rConfig. You
+					can access configurations by device, specific file, or search within
+					them.
+				</p>
+			</div>
+		</div>
 
-    <AlertInfo
-      class="mt-4 mb-6"
-      variant="dark"
-      title="Deprecated"
-      message="The Configs API v1 is deprecated and will be removed in a future release. Please migrate to the v2 endpoints."
-    />
-  </div>
+		<AlertInfo
+			class="mt-4 mb-6"
+			variant="dark"
+			title="Deprecated"
+			message="The Configs API v1 is deprecated and will be removed in a future release. Please migrate to the v2 endpoints."
+		/>
+	</div>
 
-  <ApiDocsTemplate :pagename="pagename" :endpoints="endpoints" />
+	<ApiDocsTemplate
+		:pagename="pagename"
+		:endpoints="endpoints"
+	/>
 </template>

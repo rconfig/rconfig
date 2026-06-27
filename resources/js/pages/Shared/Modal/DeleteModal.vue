@@ -45,11 +45,17 @@ function confirmAction() {
 </script>
 
 <template>
-	<Dialog :open="true" @update:open="closeModal">
+	<Dialog
+		:open="true"
+		@update:open="closeModal"
+	>
 		<DialogContent class="sm:max-w-md">
 			<DialogHeader>
 				<DialogTitle class="flex items-center gap-2">
-					<RcIcon name="alert-triangle" class="h-5 w-5 text-destructive" />
+					<RcIcon
+						name="alert-triangle"
+						class="h-5 w-5 text-destructive"
+					/>
 					<span>Delete {{ name }}</span>
 				</DialogTitle>
 				<DialogDescription>
@@ -58,10 +64,16 @@ function confirmAction() {
 			</DialogHeader>
 
 			<DialogFooter class="sm:justify-between gap-2 mt-4">
-				<Button variant="outline" @click="closeModal">
+				<Button
+					variant="outline"
+					@click="closeModal"
+				>
 					{{ cancelButtonText }}
 				</Button>
-				<Button variant="destructive" @click="confirmAction">
+				<Button
+					variant="destructive"
+					@click="confirmAction"
+				>
 					{{ dangerButtonText }}
 				</Button>
 			</DialogFooter>

@@ -73,7 +73,12 @@ const buttonClasses = computed(() => {
 
 <template>
 	<!-- Button style external link -->
-	<Button :variant="variant" :size="size" :class="buttonClasses" @click="openExtLink">
+	<Button
+		:variant="variant"
+		:size="size"
+		:class="buttonClasses"
+		@click="openExtLink"
+	>
 		{{ text }}
 		<ExternalLink :class="iconClasses" />
 	</Button>

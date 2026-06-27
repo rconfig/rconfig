@@ -349,7 +349,7 @@ export function useFormatters() {
 		const severityLower = severity.toLowerCase();
 		const text = capitalize(severity); // Use the capitalize function from the same composable
 
-		let colorClasses = "";
+		let colorClasses;
 		switch (severityLower) {
 			case "critical":
 				colorClasses = "bg-red-600 text-white";

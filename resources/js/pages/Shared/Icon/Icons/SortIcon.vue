@@ -26,7 +26,16 @@ const isDescending = () => props.sortParam === `-${props.field}`;
 </script>
 
 <template>
-  <SortAsc v-if="isAscending()" :class="size" />
-  <SortDesc v-else-if="isDescending()" :class="size" />
-  <ArrowUpDown v-else :class="size" />
+	<SortAsc
+		v-if="isAscending()"
+		:class="size"
+	/>
+	<SortDesc
+		v-else-if="isDescending()"
+		:class="size"
+	/>
+	<ArrowUpDown
+		v-else
+		:class="size"
+	/>
 </template>

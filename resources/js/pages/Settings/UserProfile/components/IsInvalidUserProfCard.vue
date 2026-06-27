@@ -1,13 +1,17 @@
 <script setup>
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { TriangleAlert, RefreshCw } from "lucide-vue-next";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const emit = defineEmits(["refresh"]);
 
 function goToDashboard() {
 	router.push("/dashboard");
 }
 
 function refreshPage() {
-	fetchUserProfile();
+	emit("refresh");
 }
 </script>
 
@@ -25,8 +29,12 @@ function refreshPage() {
 					<TriangleAlert class="h-8 w-8 text-rose-400" />
 				</div>
 				<div>
-					<p class="text-lg font-semibold text-rose-400">Profile Not Found</p>
-					<p class="text-muted-foreground">We couldn't find the requested profile or you don't have permission to access it.</p>
+					<p class="text-lg font-semibold text-rose-400">
+						Profile Not Found
+					</p>
+					<p class="text-muted-foreground">
+						We couldn't find the requested profile or you don't have permission to access it.
+					</p>
 				</div>
 			</div>
 
@@ -40,11 +48,19 @@ function refreshPage() {
 			</ul>
 		</CardContent>
 		<CardFooter class="flex flex-col sm:flex-row gap-3 border-t pt-4">
-			<Button @click="refreshPage" variant="destructive" class="w-full sm:w-auto">
+			<Button
+				variant="destructive"
+				class="w-full sm:w-auto"
+				@click="refreshPage"
+			>
 				<RefreshCw class="h-4 w-4 mr-2" />
 				Try Again
 			</Button>
-			<Button @click="goToDashboard" variant="outline" class="w-full sm:w-auto">
+			<Button
+				variant="outline"
+				class="w-full sm:w-auto"
+				@click="goToDashboard"
+			>
 				Back to Dashboard
 			</Button>
 		</CardFooter>

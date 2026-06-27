@@ -23,5 +23,9 @@ const combinedClass = computed(() => {
 </script>
 
 <template>
-	<LocateFixed :width="width" :height="height" :class="combinedClass" />
+	<LocateFixed
+		:width="width"
+		:height="height"
+		:class="combinedClass"
+	/>
 </template>

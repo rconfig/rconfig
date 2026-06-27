@@ -145,25 +145,55 @@ const groupedFilteredItems = computed(() => {
 <template>
 	<Popover>
 		<PopoverTrigger class="w-full">
-			<Button variant="ghost" class="flex flex-wrap items-start justify-start w-full pl-2 whitespace-normal border h-fit" :class="selectedItems.length === 0 ? 'text-muted-foreground' : ' '" :style="selectedItems.length === 0 ? 'padding: 0.45rem' : 'padding: 0.2rem'">
+			<Button
+				variant="ghost"
+				class="flex flex-wrap items-start justify-start w-full pl-2 whitespace-normal border h-fit"
+				:class="selectedItems.length === 0 ? 'text-muted-foreground' : ' '"
+				:style="selectedItems.length === 0 ? 'padding: 0.45rem' : 'padding: 0.2rem'"
+			>
 				<span v-if="isLoading">Loading trap types...</span>
-				<div v-else class="flex items-center justify-start w-full">
-					<RcIcon name="vendor" class="mx-2" />
+				<div
+					v-else
+					class="flex items-center justify-start w-full"
+				>
+					<RcIcon
+						name="vendor"
+						class="mx-2"
+					/>
 					{{ selectedItems.length === 0 ? "Select a trap type" : "" }}
 
-					<span v-for="sel in selectedItems" :key="sel.id" class="relative my-1 group">
+					<span
+						v-for="sel in selectedItems"
+						:key="sel.id"
+						class="relative my-1 group"
+					>
 						<span class="flex items-center text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border">
 							{{ sel.label }}
-							<X size="10" class="ml-1 cursor-pointer text-rcgray-300 hover:text-white" @click.stop="deleteItemById(sel.id)" />
+							<X
+								size="10"
+								class="ml-1 cursor-pointer text-rcgray-300 hover:text-white"
+								@click.stop="deleteItemById(sel.id)"
+							/>
 						</span>
 					</span>
 				</div>
 			</Button>
 		</PopoverTrigger>
 
-		<PopoverContent side="bottom" align="start" class="w-full p-0">
+		<PopoverContent
+			side="bottom"
+			align="start"
+			class="w-full p-0"
+		>
 			<div class="relative items-center w-full">
-				<Input id="search" type="text" v-model="searchTerm" autocomplete="off" placeholder="Search by MIB, name, vendor..." class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter" />
+				<Input
+					id="search"
+					v-model="searchTerm"
+					type="text"
+					autocomplete="off"
+					placeholder="Search by MIB, name, vendor..."
+					class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter"
+				/>
 				<span class="absolute inset-y-0 flex items-center justify-center px-2 start-0">
 					<RcIcon name="search" />
 				</span>
@@ -172,18 +202,34 @@ const groupedFilteredItems = computed(() => {
 
 			<ScrollArea class="h-64">
 				<div class="py-1">
-					<RcIcon name="three-dots-loading" class="w-8 h-8 mx-auto my-4 text-muted-foreground" v-if="isLoading" />
+					<RcIcon
+						v-if="isLoading"
+						name="three-dots-loading"
+						class="w-8 h-8 mx-auto my-4 text-muted-foreground"
+					/>
 
 					<template v-else>
-						<div v-for="(groupItems, vendor) in groupedFilteredItems" :key="vendor" class="px-2 py-1">
+						<div
+							v-for="(groupItems, vendor) in groupedFilteredItems"
+							:key="vendor"
+							class="px-2 py-1"
+						>
 							<div class="sticky top-0 z-10 py-1 text-xs font-semibold uppercase rc-text-xs-muted bg-background">
 								{{ vendor }}
 							</div>
 
-							<div v-for="it in groupItems" :key="it.id" class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600 cursor-pointer" @click="selectItem(it)">
+							<div
+								v-for="it in groupItems"
+								:key="it.id"
+								class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600 cursor-pointer"
+								@click="selectItem(it)"
+							>
 								<div class="flex flex-col">
 									<span class="text-xs font-medium">{{ it.label }}</span>
-									<span v-if="it.meta?.severity || it.meta?.category" class="text-[10px] rc-text-xs-muted">
+									<span
+										v-if="it.meta?.severity || it.meta?.category"
+										class="text-[10px] rc-text-xs-muted"
+									>
 										<template v-if="it.meta?.category">Category: {{ it.meta.category }}</template>
 										<template v-if="it.meta?.category && it.meta?.severity"> • </template>
 										<template v-if="it.meta?.severity">Severity: {{ it.meta.severity }}</template>

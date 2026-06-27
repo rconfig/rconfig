@@ -168,18 +168,25 @@ const showServerName = computed(() => {
 	<nav class="bg-rcgray-900 relative">
 		<div class="relative flex items-center justify-between w-full max-w-full px-2 py-1">
 			<div class="flex items-center ml-4 gap-3">
-				<NavOpenButton @openNav="openNav()" :navPanelBtnState="navPanelBtnState" class="transition-transform duration-300 hover:scale-110" />
+				<NavOpenButton
+					:nav-panel-btn-state="navPanelBtnState"
+					class="transition-transform duration-300 hover:scale-110"
+					@open-nav="openNav()"
+				/>
 				
 				<!-- GitHub Star Button -->
 				<TooltipProvider>
 					<Tooltip>
 						<TooltipTrigger as-child>
 							<button
-								@click="openGitHub"
 								class="group relative flex items-center gap-2 px-3 py-1.5 bg-transparent hover:bg-rcgray-700 border border-transparent hover:border-blue-500/50 rounded-md transition-all duration-300 hover:scale-105"
+								@click="openGitHub"
 							>
 								<!-- Animated star icon -->
-								<Star class="w-4 h-4 text-yellow-500/50 group-hover:text-yellow-500 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110" :fill="'currentColor'" />
+								<Star
+									class="w-4 h-4 text-yellow-500/50 group-hover:text-yellow-500 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110"
+									:fill="'currentColor'"
+								/>
 								<span class="text-xs font-medium text-white group-hover:text-blue-400 transition-colors duration-300 leading-none">
 									Star us on GitHub
 								</span>
@@ -196,8 +203,15 @@ const showServerName = computed(() => {
 				<!-- Breadcrumb -->
 				<Breadcrumb>
 					<BreadcrumbList>
-						<BreadcrumbItem v-for="(item, index) in breadcrumbs" :key="index" class="hover:text-blue-400 transition-colors duration-200">
-							<router-link v-if="item.link" :to="item.link">
+						<BreadcrumbItem
+							v-for="(item, index) in breadcrumbs"
+							:key="index"
+							class="hover:text-blue-400 transition-colors duration-200"
+						>
+							<router-link
+								v-if="item.link"
+								:to="item.link"
+							>
 								{{ item.label }}
 							</router-link>
 							<span v-else>{{ item.label }}</span>
@@ -210,15 +224,27 @@ const showServerName = computed(() => {
 				<!-- Breadcrumb -->
 			</div>
 
-			<span v-if="showServerName" :style="{ color: serverDisplayColor }" :class="`text-${serverDisplaySize} font-semibold mr-4`">{{ serverDisplayName }}</span>
+			<span
+				v-if="showServerName"
+				:style="{ color: serverDisplayColor }"
+				:class="`text-${serverDisplaySize} font-semibold mr-4`"
+			>{{ serverDisplayName }}</span>
 
 			<div class="mt-1 top-nav-div flex items-center space-x-2">
 				<!-- Dashboard Widgets selector - only on the dashboard -->
 				<TooltipProvider v-if="showDashboardWidgetsButton">
 					<Tooltip>
 						<TooltipTrigger as-child>
-							<Button aria-label="Dashboard Widgets" class="hover:bg-rcgray-600 transition-colors duration-200 transform hover:scale-105" variant="ghost" @click="handleDashboardWidgetsClick()">
-								<RcIcon name="dashboard" class="absolute h-[1.2rem] w-[1.2rem] text-blue-400" />
+							<Button
+								aria-label="Dashboard Widgets"
+								class="hover:bg-rcgray-600 transition-colors duration-200 transform hover:scale-105"
+								variant="ghost"
+								@click="handleDashboardWidgetsClick()"
+							>
+								<RcIcon
+									name="dashboard"
+									class="absolute h-[1.2rem] w-[1.2rem] text-blue-400"
+								/>
 							</Button>
 						</TooltipTrigger>
 						<TooltipContent class="text-white bg-rcgray-800 border border-blue-500/30">
@@ -227,38 +253,75 @@ const showServerName = computed(() => {
 					</Tooltip>
 				</TooltipProvider>
 
-				<Button v-if="isDevMode" class="hover:bg-rcgray-600 transition-colors duration-200 transform hover:scale-105" @click="navToStyles()" variant="ghost">
+				<Button
+					v-if="isDevMode"
+					class="hover:bg-rcgray-600 transition-colors duration-200 transform hover:scale-105"
+					variant="ghost"
+					@click="navToStyles()"
+				>
 					<Paintbrush class="absolute h-[1.2rem] w-[1.2rem] text-blue-400" />
 				</Button>
 
 				<!-- HTTPS Status Section -->
-				<Skeleton v-if="loading && isHttpsDisabled" class="h-5 w-20 rounded-md" />
+				<Skeleton
+					v-if="loading && isHttpsDisabled"
+					class="h-5 w-20 rounded-md"
+				/>
 
-				<GenericPopover v-if="!loading && isHttpsDisabled" title="HTTPS Disabled" description="HTTPS is currently disabled. Please enable HTTPS. Some features may be unavailable." :hasLink="true" :align="'end'" :href="$rconfigDocsUrl + '/other/ssl-setup/'">
+				<GenericPopover
+					v-if="!loading && isHttpsDisabled"
+					title="HTTPS Disabled"
+					description="HTTPS is currently disabled. Please enable HTTPS. Some features may be unavailable."
+					:has-link="true"
+					:align="'end'"
+					:href="$rconfigDocsUrl + '/other/ssl-setup/'"
+				>
 					<template #trigger>
-					<div class="flex items-center gap-1 px-2 py-1 bg-red-100 dark:bg-red-900/30 rounded-md border border-red-300 dark:border-red-700 cursor-pointer hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors">
-						<Lock size="14" class="text-red-500 dark:text-red-400 animate-pulse" />
-					</div>
+						<div class="flex items-center gap-1 px-2 py-1 bg-red-100 dark:bg-red-900/30 rounded-md border border-red-300 dark:border-red-700 cursor-pointer hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors">
+							<Lock
+								size="14"
+								class="text-red-500 dark:text-red-400 animate-pulse"
+							/>
+						</div>
 					</template>
 				</GenericPopover>
 
-				<GenericPopover v-else-if="!loading && !isHttpsDisabled" title="HTTPS Enabled" description="HTTPS is enabled and your connection is secure." :hasLink="false" :align="'end'">
+				<GenericPopover
+					v-else-if="!loading && !isHttpsDisabled"
+					title="HTTPS Enabled"
+					description="HTTPS is enabled and your connection is secure."
+					:has-link="false"
+					:align="'end'"
+				>
 					<template #trigger>
-					<div class="flex items-center gap-1 px-2 py-1 bg-green-100 dark:bg-green-900/30 rounded-md border border-green-300 dark:border-green-700 cursor-pointer hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors">
-						<Lock size="14" class="text-green-600 dark:text-green-400" />
-					</div>
+						<div class="flex items-center gap-1 px-2 py-1 bg-green-100 dark:bg-green-900/30 rounded-md border border-green-300 dark:border-green-700 cursor-pointer hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors">
+							<Lock
+								size="14"
+								class="text-green-600 dark:text-green-400"
+							/>
+						</div>
 					</template>
 				</GenericPopover>
 
-				<Skeleton v-if="loading" class="h-5 w-20 rounded-md" />
+				<Skeleton
+					v-if="loading"
+					class="h-5 w-20 rounded-md"
+				/>
 				<!-- End HTTPS Status Section -->
 
 				<!-- Version Status Section -->
 				<TooltipProvider>
 					<Tooltip>
 						<TooltipTrigger as-child>
-							<div @click="navToUpdate()" :class="['flex items-center gap-1 px-2 py-1 rounded-md border cursor-pointer transition-colors', versionStatus.classes]">
-								<component :is="versionStatus.icon" size="14" :class="versionStatus.iconClasses" />
+							<div
+								:class="['flex items-center gap-1 px-2 py-1 rounded-md border cursor-pointer transition-colors', versionStatus.classes]"
+								@click="navToUpdate()"
+							>
+								<component
+									:is="versionStatus.icon"
+									size="14"
+									:class="versionStatus.iconClasses"
+								/>
 							</div>
 						</TooltipTrigger>
 						<TooltipContent class="text-white bg-rcgray-800 border border-blue-500/30">
@@ -271,7 +334,11 @@ const showServerName = computed(() => {
 				<TooltipProvider>
 					<Tooltip>
 						<TooltipTrigger as-child>
-							<Button class="hover:bg-rcgray-600 transition-colors duration-200 transform hover:scale-105" @click="navToUpgrade()" variant="ghost">
+							<Button
+								class="hover:bg-rcgray-600 transition-colors duration-200 transform hover:scale-105"
+								variant="ghost"
+								@click="navToUpgrade()"
+							>
 								<HelpCircle class="absolute h-[1.2rem] w-[1.2rem] text-blue-400" />
 							</Button>
 						</TooltipTrigger>
@@ -284,37 +351,75 @@ const showServerName = computed(() => {
 				<TooltipProvider>
 					<Tooltip>
 						<TooltipTrigger as-child>
-							<Button variant="ghost" class="hover:bg-rcgray-600 transition-colors duration-200 transform hover:scale-105 relative overflow-hidden" @click="toggleTheme()">
+							<Button
+								variant="ghost"
+								class="hover:bg-rcgray-600 transition-colors duration-200 transform hover:scale-105 relative overflow-hidden"
+								@click="toggleTheme()"
+							>
 								<div class="absolute inset-0 bg-blue-500/10 rounded-full filter blur-md opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
-								<Sun v-if="enforceDarkMode" class="h-[1.2rem] w-[1.2rem] text-yellow-400" />
-								<Sun v-else-if="colorMode === 'dark'" class="h-[1.2rem] w-[1.2rem] text-yellow-400" />
-								<Moon v-else class="h-[1.2rem] w-[1.2rem] text-blue-400" />
+								<Sun
+									v-if="enforceDarkMode"
+									class="h-[1.2rem] w-[1.2rem] text-yellow-400"
+								/>
+								<Sun
+									v-else-if="colorMode === 'dark'"
+									class="h-[1.2rem] w-[1.2rem] text-yellow-400"
+								/>
+								<Moon
+									v-else
+									class="h-[1.2rem] w-[1.2rem] text-blue-400"
+								/>
 							</Button>
 						</TooltipTrigger>
 						<TooltipContent class="text-white bg-rcgray-800 border border-blue-500/30">
-							<p v-if="enforceDarkMode">Dark Mode Enabled</p>
-							<p v-else>Toggle {{ colorMode === "dark" ? "Light Mode" : "Dark Mode" }}</p>
+							<p v-if="enforceDarkMode">
+								Dark Mode Enabled
+							</p>
+							<p v-else>
+								Toggle {{ colorMode === "dark" ? "Light Mode" : "Dark Mode" }}
+							</p>
 						</TooltipContent>
 					</Tooltip>
 				</TooltipProvider>
 
 				<DropdownMenu>
 					<DropdownMenuTrigger as-child>
-						<Button variant="ghost" class="hover:bg-rcgray-600 transition-transform duration-200 hover:scale-105">
-							<MoreVertical class="text-gray-300" size="16" />
+						<Button
+							variant="ghost"
+							class="hover:bg-rcgray-600 transition-transform duration-200 hover:scale-105"
+						>
+							<MoreVertical
+								class="text-gray-300"
+								size="16"
+							/>
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent class="bg-rcgray-800 border border-rcgray-700 shadow-lg mr-8">
 						<DropdownMenuItem class="p-0 cursor-pointer hover:bg-rcgray-700 transition-colors duration-200">
-							<router-link type="button" variant="ghost" :to="'/settings/my-profile/' + $userId" class="flex items-center py-2 ml-2 w-full">
-								<RcIcon name="user" class="mr-2 w-5 h-5 text-blue-400" />
+							<router-link
+								type="button"
+								variant="ghost"
+								:to="'/settings/my-profile/' + $userId"
+								class="flex items-center py-2 ml-2 w-full"
+							>
+								<RcIcon
+									name="user"
+									class="mr-2 w-5 h-5 text-blue-400"
+								/>
 								<span class="text-gray-200">My Profile</span>
 							</router-link>
 						</DropdownMenuItem>
 						<DropdownMenuSeparator class="bg-rcgray-700" />
 						<DropdownMenuItem class="p-0 cursor-pointer hover:bg-rcgray-700 transition-colors duration-200">
-							<Button variant="ghost" class="flex justify-start w-full py-1 pl-2" @click.prevent="logout()">
-								<RcIcon name="logout" class="mr-2 text-blue-400" />
+							<Button
+								variant="ghost"
+								class="flex justify-start w-full py-1 pl-2"
+								@click.prevent="logout()"
+							>
+								<RcIcon
+									name="logout"
+									class="mr-2 text-blue-400"
+								/>
 								<span class="text-gray-200">Sign Out</span>
 							</Button>
 						</DropdownMenuItem>

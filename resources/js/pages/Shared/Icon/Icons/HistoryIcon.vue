@@ -23,6 +23,122 @@ const combinedClass = computed(() => {
 });
 </script>
 
+<template>
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		:width="width"
+		:height="height"
+		viewBox="0 0 16 16"
+		:class="combinedClass"
+	>
+		<g
+			fill="none"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+		>
+			<!-- Clock face background -->
+			<circle 
+				class="clock-border" 
+				cx="8" 
+				cy="8" 
+				r="6" 
+				stroke="#8b5cf6" 
+				stroke-width="1.2" 
+				fill="none"
+			/>
+            
+			<!-- Clock hour markers -->
+			<g
+				stroke="#a78bfa"
+				stroke-width="1"
+				opacity="0.6"
+			>
+				<path d="M8 2v1" />
+				<path d="M14 8h-1" />
+				<path d="M8 14v-1" />
+				<path d="M2 8h1" />
+			</g>
+            
+			<!-- Clock hands -->
+			<g
+				class="clock-hand"
+				stroke="#8b5cf6"
+				stroke-width="1.5"
+			>
+				<!-- Hour hand (short) -->
+				<path d="M8 8L8 5.5" />
+				<!-- Minute hand (long) -->
+				<path d="M8 8L10.5 8" />
+			</g>
+            
+			<!-- Center dot -->
+			<circle
+				cx="8"
+				cy="8"
+				r="0.8"
+				fill="#8b5cf6"
+			/>
+            
+			<!-- Timeline elements (representing history) -->
+			<g
+				class="timeline-line"
+				stroke="#a78bfa"
+				stroke-width="1"
+				opacity="0.7"
+			>
+				<!-- Vertical timeline -->
+				<path d="M1 3v10" />
+			</g>
+            
+			<!-- Historical data points -->
+			<g
+				class="data-point"
+				fill="#c4b5fd"
+				opacity="0.8"
+			>
+				<circle
+					cx="1"
+					cy="4"
+					r="0.8"
+				/>
+			</g>
+			<g
+				class="data-point"
+				fill="#c4b5fd"
+				opacity="0.8"
+			>
+				<circle
+					cx="1"
+					cy="7"
+					r="0.8"
+				/>
+			</g>
+			<g
+				class="data-point"
+				fill="#c4b5fd"
+				opacity="0.8"
+			>
+				<circle
+					cx="1"
+					cy="10"
+					r="0.8"
+				/>
+			</g>
+			<g
+				class="data-point"
+				fill="#c4b5fd"
+				opacity="0.8"
+			>
+				<circle
+					cx="1"
+					cy="13"
+					r="0.8"
+				/>
+			</g>
+		</g>
+	</svg>
+</template>
+
 <style scoped>
 @keyframes clock-tick {
   0%, 100% { transform: rotate(0deg); }
@@ -80,59 +196,3 @@ const combinedClass = computed(() => {
   animation-delay: 1.2s;
 }
 </style>
-
-<template>
-    <svg xmlns="http://www.w3.org/2000/svg" :width="width" :height="height" viewBox="0 0 16 16" :class="combinedClass">
-        <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <!-- Clock face background -->
-            <circle 
-                class="clock-border" 
-                cx="8" 
-                cy="8" 
-                r="6" 
-                stroke="#8b5cf6" 
-                stroke-width="1.2" 
-                fill="none"
-            />
-            
-            <!-- Clock hour markers -->
-            <g stroke="#a78bfa" stroke-width="1" opacity="0.6">
-                <path d="M8 2v1" />
-                <path d="M14 8h-1" />
-                <path d="M8 14v-1" />
-                <path d="M2 8h1" />
-            </g>
-            
-            <!-- Clock hands -->
-            <g class="clock-hand" stroke="#8b5cf6" stroke-width="1.5">
-                <!-- Hour hand (short) -->
-                <path d="M8 8L8 5.5" />
-                <!-- Minute hand (long) -->
-                <path d="M8 8L10.5 8" />
-            </g>
-            
-            <!-- Center dot -->
-            <circle cx="8" cy="8" r="0.8" fill="#8b5cf6" />
-            
-            <!-- Timeline elements (representing history) -->
-            <g class="timeline-line" stroke="#a78bfa" stroke-width="1" opacity="0.7">
-                <!-- Vertical timeline -->
-                <path d="M1 3v10" />
-            </g>
-            
-            <!-- Historical data points -->
-            <g class="data-point" fill="#c4b5fd" opacity="0.8">
-                <circle cx="1" cy="4" r="0.8" />
-            </g>
-            <g class="data-point" fill="#c4b5fd" opacity="0.8">
-                <circle cx="1" cy="7" r="0.8" />
-            </g>
-            <g class="data-point" fill="#c4b5fd" opacity="0.8">
-                <circle cx="1" cy="10" r="0.8" />
-            </g>
-            <g class="data-point" fill="#c4b5fd" opacity="0.8">
-                <circle cx="1" cy="13" r="0.8" />
-            </g>
-        </g>
-    </svg>
-</template>

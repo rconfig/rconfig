@@ -124,7 +124,11 @@ onUnmounted(() => {
 		<DialogTrigger as-child>
 			<!-- Dialog trigger handled externally -->
 		</DialogTrigger>
-		<DialogContent class="max-w-[95vw] md:max-w-7xl gap-0 p-0 m-2 md:m-4 bg-rcgray-900 h-[90vh] md:h-auto" @escapeKeyDown="closeDialog('DialogViewHistory')" @closeClicked="closeDialog('DialogViewHistory')">
+		<DialogContent
+			class="max-w-[95vw] md:max-w-7xl gap-0 p-0 m-2 md:m-4 bg-rcgray-900 h-[90vh] md:h-auto"
+			@escape-key-down="closeDialog('DialogViewHistory')"
+			@close-clicked="closeDialog('DialogViewHistory')"
+		>
 			<DialogHeader class="rc-dialog-header">
 				<DialogTitle class="text-sm text-rcgray-200">
 					<div class="flex items-center">
@@ -148,18 +152,30 @@ onUnmounted(() => {
 						</div>
 					</div>
 					<div class="flex items-center justify-center sm:justify-end">
-						<RcIcon name="refresh" class="w-4 h-4 mx-2 md:mx-4 text-muted-foreground cursor-pointer hover:text-rcgray-200" @click="reload()" />
+						<RcIcon
+							name="refresh"
+							class="w-4 h-4 mx-2 md:mx-4 text-muted-foreground cursor-pointer hover:text-rcgray-200"
+							@click="reload()"
+						/>
 					</div>
 				</div>
 
 				<!-- Table container with exact same padding as main table -->
 				<div class="px-2 md:px-6 overflow-auto">
 					<!-- Empty state when no task ID -->
-					<div v-if="!taskId" class="flex flex-col items-center justify-center p-4 md:p-8">
+					<div
+						v-if="!taskId"
+						class="flex flex-col items-center justify-center p-4 md:p-8"
+					>
 						<div class="w-12 h-12 md:w-16 md:h-16 mb-4 rounded-full bg-muted/50 flex items-center justify-center">
-							<RcIcon name="history" class="w-6 h-6 md:w-8 md:h-8 text-muted-foreground" />
+							<RcIcon
+								name="history"
+								class="w-6 h-6 md:w-8 md:h-8 text-muted-foreground"
+							/>
 						</div>
-						<h3 class="text-base md:text-lg font-semibold mb-2">No Task Selected</h3>
+						<h3 class="text-base md:text-lg font-semibold mb-2">
+							No Task Selected
+						</h3>
 						<p class="text-muted-foreground text-sm text-center max-w-sm">
 							Select a task from the list to view its execution history
 						</p>
@@ -170,11 +186,21 @@ onUnmounted(() => {
 						<Table>
 							<TableHeader>
 								<TableRow>
-									<TableHead class="w-[8%] min-w-[60px] text-xs md:text-sm">Task ID</TableHead>
-									<TableHead class="w-[8%] min-w-[80px] text-xs md:text-sm">Monitored Task ID</TableHead>
-									<TableHead class="w-[12%] min-w-[60px] text-xs md:text-sm">Type</TableHead>
-									<TableHead class="w-[15%] min-w-[100px] text-xs md:text-sm">Status</TableHead>
-									<TableHead class="w-[15%] min-w-[100px] text-xs md:text-sm">Timestamp</TableHead>
+									<TableHead class="w-[8%] min-w-[60px] text-xs md:text-sm">
+										Task ID
+									</TableHead>
+									<TableHead class="w-[8%] min-w-[80px] text-xs md:text-sm">
+										Monitored Task ID
+									</TableHead>
+									<TableHead class="w-[12%] min-w-[60px] text-xs md:text-sm">
+										Type
+									</TableHead>
+									<TableHead class="w-[15%] min-w-[100px] text-xs md:text-sm">
+										Status
+									</TableHead>
+									<TableHead class="w-[15%] min-w-[100px] text-xs md:text-sm">
+										Timestamp
+									</TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody>
@@ -185,7 +211,10 @@ onUnmounted(() => {
 
 								<!-- Data rows -->
 								<template v-else-if="taskHistory.length > 0">
-									<TableRow v-for="item in taskHistory" :key="item.id">
+									<TableRow
+										v-for="item in taskHistory"
+										:key="item.id"
+									>
 										<TableCell class="text-start font-mono text-xs md:text-sm">
 											{{ item.task_id }}
 										</TableCell>
@@ -200,7 +229,11 @@ onUnmounted(() => {
 										</TableCell>
 										<TableCell class="text-start">
 											<div class="flex items-center space-x-1 md:space-x-2">
-												<component :is="getStatusInfo(item.meta).icon" :class="getStatusInfo(item.meta).color" class="w-3 h-3 md:w-4 md:h-4" />
+												<component
+													:is="getStatusInfo(item.meta).icon"
+													:class="getStatusInfo(item.meta).color"
+													class="w-3 h-3 md:w-4 md:h-4"
+												/>
 												<!-- Status badge with dynamic variant -->
 												<RcBadge :variant="getStatusInfo(item.meta).variant">
 													{{ item.meta }}
@@ -220,14 +253,27 @@ onUnmounted(() => {
 							</TableBody>
 						</Table>
 
-						<Pagination :currentPage="currentPage" :lastPage="lastPage" :perPage="perPage" @update:currentPage="currentPage = $event" @update:perPage="perPage = $event" :totalRecords="total" :isLoading="isLoading" />
+						<Pagination
+							:current-page="currentPage"
+							:last-page="lastPage"
+							:per-page="perPage"
+							:total-records="total"
+							:is-loading="isLoading"
+							@update:current-page="currentPage = $event"
+							@update:per-page="perPage = $event"
+						/>
 					</div>
 				</div>
 			</div>
 
 			<!-- Footer -->
 			<div class="flex items-center justify-end p-2 md:p-4 border-t border-rcgray-700">
-				<Button variant="outline" size="sm" @click="closeDialog('DialogViewHistory')" class="px-3 py-1 md:px-4 text-sm">
+				<Button
+					variant="outline"
+					size="sm"
+					class="px-3 py-1 md:px-4 text-sm"
+					@click="closeDialog('DialogViewHistory')"
+				>
 					Close
 					<div class="pl-2 ml-auto hidden sm:block">
 						<kbd class="rc-kdb-class">ESC</kbd>

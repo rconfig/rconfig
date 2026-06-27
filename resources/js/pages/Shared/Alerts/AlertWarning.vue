@@ -38,14 +38,28 @@ function handleClose() {
 				<AlertTriangle />
 				<span class="alert-icon-pulse"></span>
 			</div>
-			<div class="alert-body" :class="{ 'text-size-sm': small }">
-				<h5 v-if="titleEnabled">{{ title }}</h5>
-				<div v-html="message" class="alert-message"></div>
+			<div
+				class="alert-body"
+				:class="{ 'text-size-sm': small }"
+			>
+				<h5 v-if="titleEnabled">
+					{{ title }}
+				</h5>
+				<div
+					class="alert-message"
+					v-html="message"
+				></div>
 				<div class="alert-slot">
 					<slot></slot>
 				</div>
 			</div>
-			<button v-if="showClose" @click="handleClose" class="alert-close-btn" aria-label="Close" type="button">
+			<button
+				v-if="showClose"
+				class="alert-close-btn"
+				aria-label="Close"
+				type="button"
+				@click="handleClose"
+			>
 				<X />
 				<span class="alert-close-ripple"></span>
 			</button>

@@ -296,31 +296,36 @@ const endpoints = {
 </script>
 
 <template>
-  <CardHeader>
-    <CardTitle>Devices Management API</CardTitle>
-    <CardDescription
-      >Advanced device management through the rConfig API</CardDescription
-    >
-  </CardHeader>
+	<CardHeader>
+		<CardTitle>Devices Management API</CardTitle>
+		<CardDescription>
+			Advanced device management through the rConfig API
+		</CardDescription>
+	</CardHeader>
 
-  <div class="px-6 pb-4">
-    <div class="flex items-start gap-2 mb-6">
-      <Server class="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
-      <div>
-        <h3 class="text-base font-medium">Device Management Overview</h3>
-        <p class="text-muted-foreground mt-1">
-          Advanced device management through the rConfig API
-        </p>
-      </div>
-    </div>
+	<div class="px-6 pb-4">
+		<div class="flex items-start gap-2 mb-6">
+			<Server class="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
+			<div>
+				<h3 class="text-base font-medium">
+					Device Management Overview
+				</h3>
+				<p class="text-muted-foreground mt-1">
+					Advanced device management through the rConfig API
+				</p>
+			</div>
+		</div>
 
-    <AlertInfo
-      class="mt-4 mb-6"
-      variant="dark"
-      title="API Version"
-      message="This is the v2 Devices API. It supports per_page and perPage pagination params (max 100), includes top-level last_backup fields on list responses, and provides /api/v2/devices/summary for monitoring integrations."
-    />
-  </div>
+		<AlertInfo
+			class="mt-4 mb-6"
+			variant="dark"
+			title="API Version"
+			message="This is the v2 Devices API. It supports per_page and perPage pagination params (max 100), includes top-level last_backup fields on list responses, and provides /api/v2/devices/summary for monitoring integrations."
+		/>
+	</div>
 
-  <ApiDocsTemplate :pagename="pagename" :endpoints="endpoints" />
+	<ApiDocsTemplate
+		:pagename="pagename"
+		:endpoints="endpoints"
+	/>
 </template>

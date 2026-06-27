@@ -35,7 +35,10 @@ function close() {
 
 		<!-- Main content -->
 		<div class="relative z-10 w-full max-w-2xl mx-auto">
-			<div class="transform transition-all duration-1000 ease-out" :class="isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'">
+			<div
+				class="transform transition-all duration-1000 ease-out"
+				:class="isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'"
+			>
 				<!-- Error code with glowing effect -->
 				<div class="text-center mb-8">
 					<div class="inline-block relative">
@@ -55,8 +58,18 @@ function close() {
 						<div class="flex justify-center mb-6">
 							<div class="relative">
 								<div class="w-20 h-20 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
-									<svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+									<svg
+										class="w-10 h-10 text-white"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+										></path>
 									</svg>
 								</div>
 								<div class="absolute inset-0 w-20 h-20 bg-gradient-to-r from-red-500 to-pink-500 rounded-full blur-md opacity-50 animate-ping"></div>
@@ -74,10 +87,22 @@ function close() {
 					<CardContent class="text-center space-y-6">
 						<div class="bg-gradient-to-r from-rcgray-50 to-rcgray-100 dark:from-rcgray-700 dark:to-rcgray-600 rounded-2xl p-6 border border-rcgray-200 dark:border-rcgray-600">
 							<div class="flex items-center justify-center space-x-3 mb-3">
-								<svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+								<svg
+									class="w-6 h-6 text-blue-500"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+									></path>
 								</svg>
-								<h3 class="font-semibold text-rcgray-800 dark:text-white">{{ t("sections.whatCanYouDoTitle") }}</h3>
+								<h3 class="font-semibold text-rcgray-800 dark:text-white">
+									{{ t("sections.whatCanYouDoTitle") }}
+								</h3>
 							</div>
 							<p class="text-rcgray-600 dark:text-rcgray-300 text-sm leading-relaxed">
 								{{ t("sections.whatCanYouDoDescription") }}
@@ -87,17 +112,40 @@ function close() {
 						<div class="flex flex-col sm:flex-row gap-3 justify-center">
 							<router-link to="/dashboard">
 								<Button class="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center space-x-2">
-									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+									<svg
+										class="w-5 h-5"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+										></path>
 									</svg>
 									<span>{{ t("buttons.goToDashboard") }}</span>
 								</Button>
 							</router-link>
 
 							<router-link to="/settings/about">
-								<Button variant="outline" class="w-full sm:w-auto border-2 border-rcgray-300 dark:border-rcgray-600 hover:border-rcgray-400 dark:hover:border-rcgray-500 px-8 py-3 rounded-xl font-semibold hover:bg-rcgray-50 dark:hover:bg-rcgray-700 transform hover:scale-105 transition-all duration-200 flex items-center justify-center space-x-2">
-									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+								<Button
+									variant="outline"
+									class="w-full sm:w-auto border-2 border-rcgray-300 dark:border-rcgray-600 hover:border-rcgray-400 dark:hover:border-rcgray-500 px-8 py-3 rounded-xl font-semibold hover:bg-rcgray-50 dark:hover:bg-rcgray-700 transform hover:scale-105 transition-all duration-200 flex items-center justify-center space-x-2"
+								>
+									<svg
+										class="w-5 h-5"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+										></path>
 									</svg>
 									<span>{{ t("buttons.contactSupport") }}</span>
 								</Button>

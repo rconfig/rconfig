@@ -42,6 +42,19 @@ export function useConfigsTable(props) {
 	const { toastSuccess, toastError } = useToaster();
 	const formatters = inject("formatters");
 
+	// --- Load More Mode Check ---
+	const checkLoadMoreMode = (newPerPage) => {
+		if (newPerPage >= 10000000) {
+			isLoadMoreMode.value = true;
+			originalPerPage.value = newPerPage;
+			loadMorePage.value = 1;
+			hasMoreData.value = true;
+		} else {
+			isLoadMoreMode.value = false;
+			originalPerPage.value = null;
+		}
+	};
+
 	// --- Initialization ---
 	const initialPerPage = parseInt(localStorage.getItem("ConfigPerPage") || "10");
 	if (initialPerPage >= 10000000) {
@@ -145,19 +158,6 @@ export function useConfigsTable(props) {
 	}
 
 	// Business Logic
-	// --- Load More Mode Check ---
-	const checkLoadMoreMode = (newPerPage) => {
-		if (newPerPage >= 10000000) {
-			isLoadMoreMode.value = true;
-			originalPerPage.value = newPerPage;
-			loadMorePage.value = 1;
-			hasMoreData.value = true;
-		} else {
-			isLoadMoreMode.value = false;
-			originalPerPage.value = null;
-		}
-	};
-
 	function setDates(dates) {
 		let startDate = "";
 		let endDate = "";

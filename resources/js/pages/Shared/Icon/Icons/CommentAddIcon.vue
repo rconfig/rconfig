@@ -24,5 +24,9 @@ const combinedClass = computed(() => {
 </script>
 
 <template>
-	<MessageCirclePlus :width="width" :height="height" :class="combinedClass" />
+	<MessageCirclePlus
+		:width="width"
+		:height="height"
+		:class="combinedClass"
+	/>
 </template>

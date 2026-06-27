@@ -66,99 +66,102 @@ const completionPercentage = computed(() => {
 </script>
 
 <template>
-    <div class="space-y-6 ml-2">
-        <!-- Vertical Step Timeline -->
-        <div class="relative">
-            <div 
-                class="absolute left-4 top-0 w-0.5 bg-gradient-to-b from-cyan-500 via-purple-500 to-emerald-600 transition-all duration-1000 ease-out"
-                :style="{ height: `${completionPercentage}%` }"
-            ></div>
+	<div class="space-y-6 ml-2">
+		<!-- Vertical Step Timeline -->
+		<div class="relative">
+			<div 
+				class="absolute left-4 top-0 w-0.5 bg-gradient-to-b from-cyan-500 via-purple-500 to-emerald-600 transition-all duration-1000 ease-out"
+				:style="{ height: `${completionPercentage}%` }"
+			></div>
 
-            <!-- Steps -->
-            <div class="space-y-6">
-                <div 
-                    v-for="(step, index) in steps"
-                    :key="step.id"
-                    class="relative flex items-center group"
-                >
-                    <!-- Step Circle -->
-                    <div 
-                        class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-300 hover:scale-110"
-                        :class="{
-                            'bg-gray-800 border-gray-600': getStepStatus(step) === 'pending',
-                            'border-gray-500 shadow-lg': getStepStatus(step) === 'active',
-                            'completed-step-circle': getStepStatus(step) === 'completed',
-                        }"
-                        :style="getStepStatus(step) === 'active' ? { 
-                            borderColor: step.color, 
-                            backgroundColor: step.color + '20',
-                            boxShadow: `0 0 15px ${step.color}40`
-                        } : {}"
-                    >
-                        <!-- Inner glow for completed steps -->
-                        <div 
-                            v-if="getStepStatus(step) === 'completed'"
-                            class="absolute inset-0.5 rounded-full bg-gradient-to-br from-emerald-400/20 to-emerald-600/30 animate-pulse-slow"
-                        ></div>
+			<!-- Steps -->
+			<div class="space-y-6">
+				<div 
+					v-for="(step, index) in steps"
+					:key="step.id"
+					class="relative flex items-center group"
+				>
+					<!-- Step Circle -->
+					<div 
+						class="relative z-10 w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-300 hover:scale-110"
+						:class="{
+							'bg-gray-800 border-gray-600': getStepStatus(step) === 'pending',
+							'border-gray-500 shadow-lg': getStepStatus(step) === 'active',
+							'completed-step-circle': getStepStatus(step) === 'completed',
+						}"
+						:style="getStepStatus(step) === 'active' ? { 
+							borderColor: step.color, 
+							backgroundColor: step.color + '20',
+							boxShadow: `0 0 15px ${step.color}40`
+						} : {}"
+					>
+						<!-- Inner glow for completed steps -->
+						<div 
+							v-if="getStepStatus(step) === 'completed'"
+							class="absolute inset-0.5 rounded-full bg-gradient-to-br from-emerald-400/20 to-emerald-600/30 animate-pulse-slow"
+						></div>
 
-                        <Check 
-                            v-if="getStepStatus(step) === 'completed'" 
-                            class="w-4 h-4 text-emerald-100 relative z-10 drop-shadow-sm animate-check-in" 
-                        />
-                        <component 
-                            v-else-if="getStepStatus(step) === 'active'"
-                            :is="step.icon" 
-                            class="w-4 h-4"
-                            :style="{ color: step.color }"
-                        />
-                        <span 
-                            v-else
-                            class="text-xs font-medium text-gray-400"
-                        >
-                            {{ index + 1 }}
-                        </span>
-                    </div>
+						<Check 
+							v-if="getStepStatus(step) === 'completed'" 
+							class="w-4 h-4 text-emerald-100 relative z-10 drop-shadow-sm animate-check-in" 
+						/>
+						<component 
+							:is="step.icon"
+							v-else-if="getStepStatus(step) === 'active'" 
+							class="w-4 h-4"
+							:style="{ color: step.color }"
+						/>
+						<span 
+							v-else
+							class="text-xs font-medium text-gray-400"
+						>
+							{{ index + 1 }}
+						</span>
+					</div>
 
-                    <!-- Step Content -->
-                    <div class="ml-4 flex-1">
-                        <div 
-                            class="font-medium transition-all duration-300"
-                            :class="{
-                                'text-gray-400': getStepStatus(step) === 'pending',
-                                'text-white': getStepStatus(step) === 'active' || getStepStatus(step) === 'completed',
-                            }"
-                            :style="getStepStatus(step) === 'active' ? { color: step.color } : {}"
-                        >
-                            {{ step.label }}
-                        </div>
-                        <div class="text-xs text-gray-500 mt-1">
-                            {{ step.description }}
-                        </div>
+					<!-- Step Content -->
+					<div class="ml-4 flex-1">
+						<div 
+							class="font-medium transition-all duration-300"
+							:class="{
+								'text-gray-400': getStepStatus(step) === 'pending',
+								'text-white': getStepStatus(step) === 'active' || getStepStatus(step) === 'completed',
+							}"
+							:style="getStepStatus(step) === 'active' ? { color: step.color } : {}"
+						>
+							{{ step.label }}
+						</div>
+						<div class="text-xs text-gray-500 mt-1">
+							{{ step.description }}
+						</div>
                         
-                        <!-- Active Step Indicator -->
-                        <div 
-                            v-if="getStepStatus(step) === 'active'"
-                            class="mt-1.5 flex items-center text-xs font-medium animate-pulse"
-                            :style="{ color: step.color }"
-                        >
-                            <div class="w-1.5 h-1.5 rounded-full mr-2" :style="{ backgroundColor: step.color }"></div>
-                            Current Step
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+						<!-- Active Step Indicator -->
+						<div 
+							v-if="getStepStatus(step) === 'active'"
+							class="mt-1.5 flex items-center text-xs font-medium animate-pulse"
+							:style="{ color: step.color }"
+						>
+							<div
+								class="w-1.5 h-1.5 rounded-full mr-2"
+								:style="{ backgroundColor: step.color }"
+							></div>
+							Current Step
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        <!-- Bottom Summary -->
-        <div class="p-3 bg-gray-800/30 rounded-lg border border-gray-700/50 mr-4">
-            <div class="flex items-center justify-between text-xs">
-                <span class="text-gray-400">Status:</span>
-                <span class="text-white font-medium">
-                    Step {{ props.currentStep - 1 }} of {{ steps.length }}
-                </span>
-            </div>
-        </div>
-    </div>
+		<!-- Bottom Summary -->
+		<div class="p-3 bg-gray-800/30 rounded-lg border border-gray-700/50 mr-4">
+			<div class="flex items-center justify-between text-xs">
+				<span class="text-gray-400">Status:</span>
+				<span class="text-white font-medium">
+					Step {{ props.currentStep - 1 }} of {{ steps.length }}
+				</span>
+			</div>
+		</div>
+	</div>
 </template>
 
 <style scoped>

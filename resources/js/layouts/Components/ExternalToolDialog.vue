@@ -56,61 +56,127 @@ const submitLink = () => {
 	<div>
 		<Dialog :open="isDialogOpen">
 			<DialogTrigger as-child>
-				<Plus size="16" @click="openDialog" class="ml-2 mr-1 cursor-pointer text-muted-foreground hover:text-white" />
+				<Plus
+					size="16"
+					class="ml-2 mr-1 cursor-pointer text-muted-foreground hover:text-white"
+					@click="openDialog"
+				/>
 			</DialogTrigger>
-			<DialogContent class="sm:max-w-fit" @escapeKeyDown="closeDialog()" @pointerDownOutside="closeDialog()" @closeClicked="closeDialog()">
+			<DialogContent
+				class="sm:max-w-fit"
+				@escape-key-down="closeDialog()"
+				@pointer-down-outside="closeDialog()"
+				@close-clicked="closeDialog()"
+			>
 				<DialogTitle>Add New External Link</DialogTitle>
 				<DialogDescription>Please fill in the details for the new external link you want to add.</DialogDescription>
 				<div class="grid gap-2 py-4">
 					<div class="grid items-center grid-cols-4 gap-4">
-						<Label for="linkName" class="text-right">
+						<Label
+							for="linkName"
+							class="text-right"
+						>
 							Link Name
 						</Label>
-						<Input v-model="linkName" type="text" id="linkName" placeholder="Enter link name" required class="col-span-3" />
+						<Input
+							id="linkName"
+							v-model="linkName"
+							type="text"
+							placeholder="Enter link name"
+							required
+							class="col-span-3"
+						/>
 					</div>
 					<div class="grid items-center grid-cols-4 gap-4">
-						<Label for="linkUrl" class="text-right">
+						<Label
+							for="linkUrl"
+							class="text-right"
+						>
 							Link URL
 						</Label>
-						<Input v-model="linkUrl" type="text" id="linkUrl" placeholder="Enter link URL" required class="col-span-3" />
+						<Input
+							id="linkUrl"
+							v-model="linkUrl"
+							type="text"
+							placeholder="Enter link URL"
+							required
+							class="col-span-3"
+						/>
 					</div>
 
 					<div class="grid items-center grid-cols-4 gap-4">
-						<Label for="linkIcon" class="text-right">
+						<Label
+							for="linkIcon"
+							class="text-right"
+						>
 							Link ICON
 						</Label>
-						<Input v-model="linkIcon" type="text" id="linkIcon" placeholder="Enter icon (e.g., mdi:tools)" required class="col-span-3" />
+						<Input
+							id="linkIcon"
+							v-model="linkIcon"
+							type="text"
+							placeholder="Enter icon (e.g., mdi:tools)"
+							required
+							class="col-span-3"
+						/>
 					</div>
 					<span class="text-sm text-muted-foreground whitespace-normal">
 						Please select an icon from the
-						<ExternalLinkComponent to="https://icon-sets.iconify.design/" text="iconify.design" variant="default" :active="true" :class="'text-xs'" />
+						<ExternalLinkComponent
+							to="https://icon-sets.iconify.design/"
+							text="iconify.design"
+							variant="default"
+							:active="true"
+							:class="'text-xs'"
+						/>
 						icon sets. i.e. cib:cisco or simple-icons:junipernetworks
 					</span>
 				</div>
 
 				<div class="flex flex-col w-full space-y-2">
-					<span class="text-red-400" v-if="errors.name">
+					<span
+						v-if="errors.name"
+						class="text-red-400"
+					>
 						{{ errors.name[0] }}
 					</span>
 
-					<span class="text-red-400" v-if="errors.url">
+					<span
+						v-if="errors.url"
+						class="text-red-400"
+					>
 						{{ errors.url[0] }}
 					</span>
 
-					<span class="text-red-400" v-if="errors.icon">
+					<span
+						v-if="errors.icon"
+						class="text-red-400"
+					>
 						{{ errors.icon[0] }}
 					</span>
 				</div>
 
 				<DialogFooter>
-					<Button type="close" variant="outline" class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse" @click="closeDialog()" size="sm">
+					<Button
+						type="close"
+						variant="outline"
+						class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse"
+						size="sm"
+						@click="closeDialog()"
+					>
 						Cancel
 						<div class="pl-2 ml-auto">
 							<KeyboardShortcut shortcut="esc" />
 						</div>
 					</Button>
 
-					<Button type="submit" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click="submitLink()" variant="primary">
+					<Button
+						type="submit"
+						class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+						size="sm"
+						variant="primary"
+						@click="submitLink()"
+					>
 						Add Link
 						<KeyboardShortcut shortcut="submit" />
 					</Button>

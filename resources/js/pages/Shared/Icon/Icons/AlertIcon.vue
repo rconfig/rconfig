@@ -18,5 +18,9 @@ const props = defineProps({
 </script>
 
 <template>
-	<Bell :width="width" :height="height" :class="class" />
+	<Bell
+		:width="width"
+		:height="height"
+		:class="props.class"
+	/>
 </template>

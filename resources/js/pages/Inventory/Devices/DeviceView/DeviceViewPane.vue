@@ -90,128 +90,212 @@ function close() {
 </script>
 
 <template>
-  <main class="flex flex-col flex-1 dark:bg-rcgray-900">
-    <div class="flex flex-row items-center justify-between h-12 gap-3 pl-4 pr-2" v-if="deviceData">
-      <div class="flex items-center">
-        <Button @click="close()" size="sm" variant="outline" class="gap-1 border-none hover:bg-rcgray-600">
-          <X size="16" class="hover:animate-pulse" />
-        </Button>
-        <span class="text-lg font-semibold rc-text-heading-gradient font-inter ml-2">
-          {{ deviceData.device_name }}
-        </span>
-        <Button variant="ghost" class="h-8 px-2 py-1.5 h-7 ml-2 animated-star" @click="addToFavorites()">
-          <RcIcon name="star-unselected" class="text-muted-foreground animated-star" v-if="!favoriteItem.isFavorite" />
-          <RcIcon name="star-selected" class="text-muted-foreground animated-star" v-if="favoriteItem.isFavorite" />
-        </Button>
-      </div>
+	<main class="flex flex-col flex-1 dark:bg-rcgray-900">
+		<div
+			v-if="deviceData"
+			class="flex flex-row items-center justify-between h-12 gap-3 pl-4 pr-2"
+		>
+			<div class="flex items-center">
+				<Button
+					size="sm"
+					variant="outline"
+					class="gap-1 border-none hover:bg-rcgray-600"
+					@click="close()"
+				>
+					<X
+						size="16"
+						class="hover:animate-pulse"
+					/>
+				</Button>
+				<span class="text-lg font-semibold rc-text-heading-gradient font-inter ml-2">
+					{{ deviceData.device_name }}
+				</span>
+				<Button
+					variant="ghost"
+					class="h-8 px-2 py-1.5 h-7 ml-2 animated-star"
+					@click="addToFavorites()"
+				>
+					<RcIcon
+						v-if="!favoriteItem.isFavorite"
+						name="star-unselected"
+						class="text-muted-foreground animated-star"
+					/>
+					<RcIcon
+						v-if="favoriteItem.isFavorite"
+						name="star-selected"
+						class="text-muted-foreground animated-star"
+					/>
+				</Button>
+			</div>
 
-      <div class="flex items-center">
-        <div class="button-container flex flex-row items-center">
-          <RcToolTip :delayDuration="50" :content="'Copy debug command'" :side="'bottom'">
-            <template #trigger>
-              <Button
-                class="h-8 w-4 ml-2"
-                @click="copyDebug('cd ' + appDirPath + ' && php artisan rconfig:download-device ' + props.editId + ' -d')"
-                variant="outline"
-                :title="'Copy debug command'"
-              >
-                <Terminal size="16" class="button-icon" />
-                <span class="button-text">Copy debug command</span>
-              </Button>
-            </template>
-          </RcToolTip>
+			<div class="flex items-center">
+				<div class="button-container flex flex-row items-center">
+					<RcToolTip
+						:delay-duration="50"
+						:content="'Copy debug command'"
+						:side="'bottom'"
+					>
+						<template #trigger>
+							<Button
+								class="h-8 w-4 ml-2"
+								variant="outline"
+								:title="'Copy debug command'"
+								@click="copyDebug('cd ' + appDirPath + ' && php artisan rconfig:download-device ' + props.editId + ' -d')"
+							>
+								<Terminal
+									size="16"
+									class="button-icon"
+								/>
+								<span class="button-text">Copy debug command</span>
+							</Button>
+						</template>
+					</RcToolTip>
 
-          <RcToolTip :delayDuration="50" :content="'Download now'" :side="'bottom'">
-            <template #trigger>
-              <Button
-                :class="downloadStatus ? 'h-8 ml-2 min-w-fit transition-all duration-300 ease-in-out' : 'h-8 ml-2 w-4'"
-                @click="downloadNow()"
-                variant="outline"
-                :title="'Download now'"
-              >
-                <Spinner :state="downloadStatus" v-if="downloadStatus" />
-                <RcIcon name="folder-download-open" v-if="!downloadStatus" class="button-icon" />
-                <span v-if="downloadStatus" class="ml-2 text-muted-foreground transition-all duration-300 ease-in-out" style="word-wrap: normal;">
-                  {{ downloadStatus }}
-                </span>
-                <span v-if="!downloadStatus" class="button-text">Download now</span>
-              </Button>
-            </template>
-          </RcToolTip>
-        </div>
+					<RcToolTip
+						:delay-duration="50"
+						:content="'Download now'"
+						:side="'bottom'"
+					>
+						<template #trigger>
+							<Button
+								:class="downloadStatus ? 'h-8 ml-2 min-w-fit transition-all duration-300 ease-in-out' : 'h-8 ml-2 w-4'"
+								variant="outline"
+								:title="'Download now'"
+								@click="downloadNow()"
+							>
+								<Spinner
+									v-if="downloadStatus"
+									:state="downloadStatus"
+								/>
+								<RcIcon
+									v-if="!downloadStatus"
+									name="folder-download-open"
+									class="button-icon"
+								/>
+								<span
+									v-if="downloadStatus"
+									class="ml-2 text-muted-foreground transition-all duration-300 ease-in-out"
+									style="word-wrap: normal;"
+								>
+									{{ downloadStatus }}
+								</span>
+								<span
+									v-if="!downloadStatus"
+									class="button-text"
+								>Download now</span>
+							</Button>
+						</template>
+					</RcToolTip>
+				</div>
 
-        <ViewPaneDropdown
-          v-if="deviceData"
-          :rowData="deviceData"
-          @onDisable="handleDisable()"
-          @onEnable="handleEnable()"
-          @onPurge="handleDropDownPurge()"
-          @openDeviceEdit="viewEditDialog(editId), (isClone = false)"
-          @openDeviceClone="viewEditDialog(editId), (isClone = true)"
-          @onDelete="showConfirmDelete = true"
-        />
-      </div>
-    </div>
+				<ViewPaneDropdown
+					v-if="deviceData"
+					:row-data="deviceData"
+					@on-disable="handleDisable()"
+					@on-enable="handleEnable()"
+					@on-purge="handleDropDownPurge()"
+					@open-device-edit="viewEditDialog(editId), (isClone = false)"
+					@open-device-clone="viewEditDialog(editId), (isClone = true)"
+					@on-delete="showConfirmDelete = true"
+				/>
+			</div>
+		</div>
 
-    <div v-if="isLoading">
-      <div class="flex items-center justify-center" style="height: 60vh;"></div>
-      <Loading class="flex justify-center" />
-    </div>
+		<div v-if="isLoading">
+			<div
+				class="flex items-center justify-center"
+				style="height: 60vh;"
+			></div>
+			<Loading class="flex justify-center" />
+		</div>
 
-    <div v-else>
-      <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel
-          :default-size="25"
-          :max-size="30"
-          :min-size="10"
-          collapsible
-          :collapsed-size="0"
-          ref="panelElement2"
-          class="min-h-[100vh] h-full flex flex-col overflow-y-auto"
-        >
-          <ScrollArea class="max-h-[83vh] w-full rounded-md border smooth-scroll overflow-y-auto">
-            <DetailsViewLeftNav
-              @closeNav="closeNav"
-              @selectLeftNavView="selectLeftNavView"
-              :selectedNav="leftNavSelected"
-              :deviceId="editId"
-            />
-            <ConfigStatusPanel class="p-2 mt-2" v-if="leftNavSelected === 'details'" :isLoading="isLoading" :data="deviceData" />
-            <DeviceViewDetailsPanel class="p-2" v-if="leftNavSelected === 'details'" :isLoading="isLoading" :deviceData="deviceData" />
-          </ScrollArea>
-        </ResizablePanel>
+		<div v-else>
+			<ResizablePanelGroup direction="horizontal">
+				<ResizablePanel
+					ref="panelElement2"
+					:default-size="25"
+					:max-size="30"
+					:min-size="10"
+					collapsible
+					:collapsed-size="0"
+					class="min-h-[100vh] h-full flex flex-col overflow-y-auto"
+				>
+					<ScrollArea class="max-h-[83vh] w-full rounded-md border smooth-scroll overflow-y-auto">
+						<DetailsViewLeftNav
+							:selected-nav="leftNavSelected"
+							:device-id="editId"
+							@close-nav="closeNav"
+							@select-left-nav-view="selectLeftNavView"
+						/>
+						<ConfigStatusPanel
+							v-if="leftNavSelected === 'details'"
+							class="p-2 mt-2"
+							:is-loading="isLoading"
+							:data="deviceData"
+						/>
+						<DeviceViewDetailsPanel
+							v-if="leftNavSelected === 'details'"
+							class="p-2"
+							:is-loading="isLoading"
+							:device-data="deviceData"
+						/>
+					</ScrollArea>
+				</ResizablePanel>
 
-        <ResizableHandle with-handle />
+				<ResizableHandle with-handle />
 
-        <ResizablePanel class="min-h-[100vh]">
-          <ScrollArea class="h-[100vh] w-full rounded-md border">
-            <div class="flex items-center justify-center" style="height: 60vh;" v-if="isLoading">
-              <Loading class="flex justify-center" />
-            </div>
+				<ResizablePanel class="min-h-[100vh]">
+					<ScrollArea class="h-[100vh] w-full rounded-md border">
+						<div
+							v-if="isLoading"
+							class="flex items-center justify-center"
+							style="height: 60vh;"
+						>
+							<Loading class="flex justify-center" />
+						</div>
 
-            <div v-if="!isLoading">
-              <DetailsViewRightNav class="p-2" @selectMainNavView="selectMainNavView" :selectedNav="mainNavSelected" />
-              <LatestEventsPanel v-if="!isLoading && mainNavSelected === 'notifications'" class="p-2" style="height: 80vh;" :deviceId="editId" />
-              <DeviceConfigsViewPanel class="p-2" v-if="!isLoading && mainNavSelected === 'configs'" :deviceId="editId" style="height: 80vh;" />
-            </div>
-          </ScrollArea>
-        </ResizablePanel>
-      </ResizablePanelGroup>
+						<div v-if="!isLoading">
+							<DetailsViewRightNav
+								class="p-2"
+								:selected-nav="mainNavSelected"
+								@select-main-nav-view="selectMainNavView"
+							/>
+							<LatestEventsPanel
+								v-if="!isLoading && mainNavSelected === 'notifications'"
+								class="p-2"
+								style="height: 80vh;"
+								:device-id="editId"
+							/>
+							<DeviceConfigsViewPanel
+								v-if="!isLoading && mainNavSelected === 'configs'"
+								class="p-2"
+								:device-id="editId"
+								style="height: 80vh;"
+							/>
+						</div>
+					</ScrollArea>
+				</ResizablePanel>
+			</ResizablePanelGroup>
 
-      <DeviceAddEditDialog
-        :key="newDeviceModalKey"
-        @close="isClone = false"
-        @save="
-          handleSave();
-          fetchDevice(editId);
-        "
-        :isClone="isClone"
-        :editId="editId"
-      />
-      <!-- Confirm delete -->
-      <RcConfirmAlertDialog :ids="[editId]" :showConfirmDelete="showConfirmDelete" @close="showConfirmDelete = false" @handleDelete="handleDropdownDelete()" />
-    </div>
-  </main>
+			<DeviceAddEditDialog
+				:key="newDeviceModalKey"
+				:is-clone="isClone"
+				:edit-id="editId"
+				@close="isClone = false"
+				@save="
+					handleSave();
+					fetchDevice(editId);
+				"
+			/>
+			<!-- Confirm delete -->
+			<RcConfirmAlertDialog
+				:ids="[editId]"
+				:show-confirm-delete="showConfirmDelete"
+				@close="showConfirmDelete = false"
+				@handle-delete="handleDropdownDelete()"
+			/>
+		</div>
+	</main>
 </template>
 
 <style scoped>

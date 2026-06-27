@@ -12,16 +12,18 @@ const { isLoadingComponent, configResultsLeft, configResultsRight, getConfigLeft
 </script>
 
 <template>
-  <div
-    v-if="isLoadingComponent"
-    class="flex items-center justify-center h-full mt-48">
-    <Loading :text="'Running comparison'" />
-  </div>
+	<div
+		v-if="isLoadingComponent"
+		class="flex items-center justify-center h-full mt-48"
+	>
+		<Loading :text="'Running comparison'" />
+	</div>
 
-  <CompareDiffEditorComponent
-    v-if="!isLoadingComponent"
-    :configResultsRight="configResultsRight"
-    :configResultsLeft="configResultsLeft"
-    :leftSelectedId="leftSelectedId"
-    :rightSelectedId="rightSelectedId" />
+	<CompareDiffEditorComponent
+		v-if="!isLoadingComponent"
+		:config-results-right="configResultsRight"
+		:config-results-left="configResultsLeft"
+		:left-selected-id="leftSelectedId"
+		:right-selected-id="rightSelectedId"
+	/>
 </template>

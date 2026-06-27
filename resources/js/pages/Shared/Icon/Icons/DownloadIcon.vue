@@ -23,5 +23,9 @@ const combinedClass = computed(() => {
 </script>
 
 <template>
-	<Download :width="width" :height="height" :class="combinedClass" />
+	<Download
+		:width="width"
+		:height="height"
+		:class="combinedClass"
+	/>
 </template>

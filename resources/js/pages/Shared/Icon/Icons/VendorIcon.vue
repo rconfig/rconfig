@@ -23,5 +23,9 @@ const combinedClass = computed(() => {
 </script>
 
 <template>
-	<Waypoints :width="width" :height="height" :class="combinedClass" />
+	<Waypoints
+		:width="width"
+		:height="height"
+		:class="combinedClass"
+	/>
 </template>

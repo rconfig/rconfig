@@ -15,5 +15,9 @@ const props = defineProps({
 </script>
 
 <template>
-	<Logs :width="width" :height="height" class="text-blue-400" />
+	<Logs
+		:width="width"
+		:height="height"
+		class="text-blue-400"
+	/>
 </template>

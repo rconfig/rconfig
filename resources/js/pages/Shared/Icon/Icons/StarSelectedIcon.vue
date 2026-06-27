@@ -25,6 +25,28 @@ const combinedClass = computed(() => {
 });
 </script>
 
+<template>
+	<svg 
+		xmlns="http://www.w3.org/2000/svg" 
+		:width="width" 
+		:height="height" 
+		viewBox="0 0 24 24" 
+		:class="combinedClass"
+	>
+		<!-- Base star shape with fill color -->
+		<path 
+			class="star-points" 
+			d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+		/>
+    
+		<!-- Overlay for glow effect -->
+		<path 
+			class="star-glow" 
+			d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+		/>
+	</svg>
+</template>
+
 <style scoped>
 @keyframes star-pulse {
   0%, 100% {
@@ -74,25 +96,3 @@ const combinedClass = computed(() => {
   opacity: 0.3;
 }
 </style>
-
-<template>
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    :width="width" 
-    :height="height" 
-    viewBox="0 0 24 24" 
-    :class="combinedClass"
-  >
-    <!-- Base star shape with fill color -->
-    <path 
-      class="star-points" 
-      d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
-    />
-    
-    <!-- Overlay for glow effect -->
-    <path 
-      class="star-glow" 
-      d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
-    />
-  </svg>
-</template>

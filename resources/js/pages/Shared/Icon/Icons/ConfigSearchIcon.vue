@@ -24,5 +24,9 @@ const combinedClass = computed(() => {
 </script>
 
 <template>
-	<Search :width="width" :height="height" :class="combinedClass" />
+	<Search
+		:width="width"
+		:height="height"
+		:class="combinedClass"
+	/>
 </template>

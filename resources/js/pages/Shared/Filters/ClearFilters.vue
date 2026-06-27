@@ -16,7 +16,11 @@ function clearFilters() {
 <template>
 	<Popover>
 		<PopoverTrigger>
-			<Button variant="ghost" @click="clearFilters" class="flex items-center justify-center w-full px-2 py-1 border rounded-xl whitespace-nowrap h-fit bg-rcgray-700 text-rcgray-400">
+			<Button
+				variant="ghost"
+				class="flex items-center justify-center w-full px-2 py-1 border rounded-xl whitespace-nowrap h-fit bg-rcgray-700 text-rcgray-400"
+				@click="clearFilters"
+			>
 				<XCircle class="w-4 h-4 lg:mr-2 text-rcgray-400" />
 				<span class="hidden lg:inline-flex">Clear Filter</span>
 			</Button>

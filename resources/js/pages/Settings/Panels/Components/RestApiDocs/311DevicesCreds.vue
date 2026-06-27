@@ -150,31 +150,36 @@ const endpoints = {
 </script>
 
 <template>
-  <CardHeader>
-    <CardTitle>Device Credentials API</CardTitle>
-    <CardDescription
-      >Manage device credentials through the rConfig API</CardDescription
-    >
-  </CardHeader>
+	<CardHeader>
+		<CardTitle>Device Credentials API</CardTitle>
+		<CardDescription>
+			Manage device credentials through the rConfig API
+		</CardDescription>
+	</CardHeader>
 
-  <div class="px-6 pb-4">
-    <div class="flex items-start gap-2 mb-6">
-      <Key class="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
-      <div>
-        <h3 class="text-base font-medium">Device Credentials Overview</h3>
-        <p class="text-muted-foreground mt-1">
-          Manage device credentials through the rConfig API
-        </p>
-      </div>
-    </div>
+	<div class="px-6 pb-4">
+		<div class="flex items-start gap-2 mb-6">
+			<Key class="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
+			<div>
+				<h3 class="text-base font-medium">
+					Device Credentials Overview
+				</h3>
+				<p class="text-muted-foreground mt-1">
+					Manage device credentials through the rConfig API
+				</p>
+			</div>
+		</div>
 
-    <AlertInfo
-      class="mt-4 mb-6"
-      variant="dark"
-      title="Security Note"
-      message="If credential masking is enabled, credential password fields are masked in API responses. If credential masking is disabled, credential password fields are returned as plain text."
-    />
-  </div>
+		<AlertInfo
+			class="mt-4 mb-6"
+			variant="dark"
+			title="Security Note"
+			message="If credential masking is enabled, credential password fields are masked in API responses. If credential masking is disabled, credential password fields are returned as plain text."
+		/>
+	</div>
 
-  <ApiDocsTemplate :pagename="pagename" :endpoints="endpoints" />
+	<ApiDocsTemplate
+		:pagename="pagename"
+		:endpoints="endpoints"
+	/>
 </template>

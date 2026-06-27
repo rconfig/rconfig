@@ -1,10 +1,17 @@
 <template>
 	<TableCell class="text-start">
-		<span :class="badgeColor || defaultBadgeClass" class="w-fit flex items-center text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border">
+		<span
+			:class="badgeColor || defaultBadgeClass"
+			class="w-fit flex items-center text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border"
+		>
 			{{ categoryName }}
 		</span>
 
-		<TooltipProvider :delay-duration="delayDuration" :skip-delay-duration="skipDelayDuration" v-if="shouldShowTooltip">
+		<TooltipProvider
+			v-if="shouldShowTooltip"
+			:delay-duration="delayDuration"
+			:skip-delay-duration="skipDelayDuration"
+		>
 			<Tooltip>
 				<TooltipTrigger as-child>
 					<span class="text-xs text-gray-500 line-clamp-1 mt-1 ml-1">
@@ -12,12 +19,17 @@
 					</span>
 				</TooltipTrigger>
 				<TooltipContent side="bottom">
-					<p class="max-w-xs">{{ categoryDescription }}</p>
+					<p class="max-w-xs">
+						{{ categoryDescription }}
+					</p>
 				</TooltipContent>
 			</Tooltip>
 		</TooltipProvider>
 
-		<span v-else class="text-xs text-gray-500">
+		<span
+			v-else
+			class="text-xs text-gray-500"
+		>
 			{{ categoryDescription }}
 		</span>
 	</TableCell>

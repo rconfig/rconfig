@@ -150,11 +150,19 @@ watch(
 		<DialogTrigger as-child>
 			<!-- Trigger content would go here if needed -->
 		</DialogTrigger>
-		<DialogContent class="p-0 sm:max-w-fit" :onEscapeKeyDown="onDialogClose" :onInteractOutside="onDialogClose" :onCloseAutoFocus="onDialogClose">
+		<DialogContent
+			class="p-0 sm:max-w-fit"
+			:on-escape-key-down="onDialogClose"
+			:on-interact-outside="onDialogClose"
+			:on-close-auto-focus="onDialogClose"
+		>
 			<DialogHeader class="rc-dialog-header">
 				<DialogTitle class="text-sm text-rcgray-200">
 					<div class="flex items-center">
-						<RcIcon name="user" class="w-5 h-5" />
+						<RcIcon
+							name="user"
+							class="w-5 h-5"
+						/>
 						<span class="ml-2">
 							{{ editId > 0 ? "Edit" : "Add" }} User
 							{{ editId > 0 ? "(ID: " + editId + ")" : "" }}
@@ -163,99 +171,207 @@ watch(
 				</DialogTitle>
 			</DialogHeader>
 
-			<form :key="formKey" autocomplete="off" @submit.prevent="saveDialog" class="grid gap-2 p-4" novalidate>
+			<form
+				:key="formKey"
+				autocomplete="off"
+				class="grid gap-2 p-4"
+				novalidate
+				@submit.prevent="saveDialog"
+			>
 				<!-- Hidden fields to trick browsers -->
-				<input type="text" style="display: none;" name="fakeusernameremembered" />
-				<input type="password" style="display: none;" name="fakepasswordremembered" />
+				<input
+					type="text"
+					style="display: none;"
+					name="fakeusernameremembered"
+				/>
+				<input
+					type="password"
+					style="display: none;"
+					name="fakepasswordremembered"
+				/>
 
 				<!-- Name -->
 				<div class="grid items-center grid-cols-4 gap-2">
-					<Label for="name" class="text-right">
+					<Label
+						for="name"
+						class="text-right"
+					>
 						Name
 						<span class="text-red-400">*</span>
 					</Label>
-					<Input v-model="model.name" id="name" class="col-span-3" autocomplete="new-name" name="new-name" />
+					<Input
+						id="name"
+						v-model="model.name"
+						class="col-span-3"
+						autocomplete="new-name"
+						name="new-name"
+					/>
 					<span v-if="errors?.name?.[0]">{{ errors.name[0] }}</span>
 				</div>
 
 				<!-- Username -->
 				<div class="grid items-center grid-cols-4 gap-2">
-					<Label for="username" class="text-right">Username</Label>
-					<Input v-model="model.username" id="username" class="col-span-3" autocomplete="new-username" name="new-username" />
-					<span class="col-span-3 col-start-2 text-sm text-red-400" v-if="errors?.username?.[0]">
+					<Label
+						for="username"
+						class="text-right"
+					>Username</Label>
+					<Input
+						id="username"
+						v-model="model.username"
+						class="col-span-3"
+						autocomplete="new-username"
+						name="new-username"
+					/>
+					<span
+						v-if="errors?.username?.[0]"
+						class="col-span-3 col-start-2 text-sm text-red-400"
+					>
 						{{ errors.username[0] }}
 					</span>
 				</div>
 
 				<!-- Email -->
 				<div class="grid items-center grid-cols-4 gap-2">
-					<Label for="email-address" class="text-right">
+					<Label
+						for="email-address"
+						class="text-right"
+					>
 						Email
 						<span class="text-red-400">*</span>
 					</Label>
-					<Input v-model="model.email" id="email-address" name="email-address" type="email" class="col-span-3" autocomplete="new-email" />
-					<span class="col-span-3 col-start-2 text-sm text-red-400" v-if="errors?.email?.[0]">
+					<Input
+						id="email-address"
+						v-model="model.email"
+						name="email-address"
+						type="email"
+						class="col-span-3"
+						autocomplete="new-email"
+					/>
+					<span
+						v-if="errors?.email?.[0]"
+						class="col-span-3 col-start-2 text-sm text-red-400"
+					>
 						{{ errors.email[0] }}
 					</span>
 				</div>
 
 				<!-- Password -->
 				<div class="grid items-center grid-cols-4 gap-2">
-					<Label for="new-password" class="text-right">
+					<Label
+						for="new-password"
+						class="text-right"
+					>
 						Password
-						<span class="text-red-400" v-if="editId === 0">*</span>
+						<span
+							v-if="editId === 0"
+							class="text-red-400"
+						>*</span>
 					</Label>
-					<Input type="password" v-model="model.password" id="new-password" name="new-password" class="col-span-3" autocomplete="new-password" />
-					<span class="col-span-3 col-start-2 text-sm text-red-400" v-if="errors?.password?.[0]">
+					<Input
+						id="new-password"
+						v-model="model.password"
+						type="password"
+						name="new-password"
+						class="col-span-3"
+						autocomplete="new-password"
+					/>
+					<span
+						v-if="errors?.password?.[0]"
+						class="col-span-3 col-start-2 text-sm text-red-400"
+					>
 						{{ errors.password[0] }}
 					</span>
 				</div>
 
 				<!-- Confirm Password -->
 				<div class="grid items-center grid-cols-4 gap-2">
-					<Label for="confirm-new-password" class="text-right">
+					<Label
+						for="confirm-new-password"
+						class="text-right"
+					>
 						Confirm Password
-						<span class="text-red-400" v-if="editId === 0">*</span>
+						<span
+							v-if="editId === 0"
+							class="text-red-400"
+						>*</span>
 					</Label>
-					<Input type="password" v-model="model.repeat_password" id="confirm-new-password" name="confirm-new-password" class="col-span-3" autocomplete="new-password" />
-					<span class="col-span-3 col-start-2 text-sm text-red-400" v-if="errors?.repeat_password?.[0]">
+					<Input
+						id="confirm-new-password"
+						v-model="model.repeat_password"
+						type="password"
+						name="confirm-new-password"
+						class="col-span-3"
+						autocomplete="new-password"
+					/>
+					<span
+						v-if="errors?.repeat_password?.[0]"
+						class="col-span-3 col-start-2 text-sm text-red-400"
+					>
 						{{ errors.repeat_password[0] }}
 					</span>
-					<span class="col-span-3 col-start-2 text-sm text-green-400" v-if="successMessage && model.password && model.repeat_password">
+					<span
+						v-if="successMessage && model.password && model.repeat_password"
+						class="col-span-3 col-start-2 text-sm text-green-400"
+					>
 						{{ successMessage }}
 					</span>
 				</div>
 
 				<div class="grid items-center grid-cols-4 gap-2">
-					<Label for="role-select" class="text-right">
+					<Label
+						for="role-select"
+						class="text-right"
+					>
 						Role
 						<span class="text-red-400">*</span>
 					</Label>
-				<Select v-model="roleIdString">
-					<SelectTrigger id="role-select" class="col-span-3">
-						<SelectValue placeholder="Select a role" />
-					</SelectTrigger>
-					<SelectContent>
-						<SelectGroup>
-							<SelectItem v-for="role in roles" :key="role.id" :value="String(role.id)" @click="setRole(role.id)">
-								{{ role.name }}
-							</SelectItem>
-						</SelectGroup>
-					</SelectContent>
-				</Select>
-				<span class="col-span-3 col-start-2 text-sm text-red-400" v-if="errors?.role?.[0]">
-					{{ errors.role[0] }}
-				</span>
+					<Select v-model="roleIdString">
+						<SelectTrigger
+							id="role-select"
+							class="col-span-3"
+						>
+							<SelectValue placeholder="Select a role" />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectGroup>
+								<SelectItem
+									v-for="role in roles"
+									:key="role.id"
+									:value="String(role.id)"
+									@click="setRole(role.id)"
+								>
+									{{ role.name }}
+								</SelectItem>
+							</SelectGroup>
+						</SelectContent>
+					</Select>
+					<span
+						v-if="errors?.role?.[0]"
+						class="col-span-3 col-start-2 text-sm text-red-400"
+					>
+						{{ errors.role[0] }}
+					</span>
 				</div>
 
 				<!-- Notifications -->
 				<div class="grid items-center grid-cols-4 gap-2 mt-2">
-					<Label for="get-notifications" class="text-right">
+					<Label
+						for="get-notifications"
+						class="text-right"
+					>
 						Notifications
 					</Label>
 					<div class="flex items-center col-span-3">
-						<Switch id="get-notifications" v-model="model.get_notifications" :checked="model.get_notifications === 1" @update:checked="model.get_notifications = $event ? 1 : 0" />
-						<Label for="get-notifications" class="ml-2">
+						<Switch
+							id="get-notifications"
+							v-model="model.get_notifications"
+							:checked="model.get_notifications === 1"
+							@update:checked="model.get_notifications = $event ? 1 : 0"
+						/>
+						<Label
+							for="get-notifications"
+							class="ml-2"
+						>
 							{{ model.get_notifications === 1 ? "Enabled" : "Disabled" }}
 						</Label>
 					</div>
@@ -263,20 +379,38 @@ watch(
 			</form>
 
 			<DialogFooter class="rc-dialog-footer bg-rcgray-800">
-				<Button type="close" variant="outline" class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse" @click="onDialogClose" size="sm">
+				<Button
+					type="close"
+					variant="outline"
+					class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse"
+					size="sm"
+					@click="onDialogClose"
+				>
 					Cancel
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class">ESC</kbd>
 					</div>
 				</Button>
 
-				<Button type="submit" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click="saveDialog()" variant="primary">
-					<Spinner :state="isSaving" class="mr-2" />
+				<Button
+					type="submit"
+					class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+					size="sm"
+					variant="primary"
+					@click="saveDialog()"
+				>
+					<Spinner
+						:state="isSaving"
+						class="mr-2"
+					/>
 					{{ props.editId > 0 ? "Update" : "Save" }}
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class2">
 							Ctrl&nbsp;
-							<RcIcon name="enter" class="ml-1" />
+							<RcIcon
+								name="enter"
+								class="ml-1"
+							/>
 						</kbd>
 					</div>
 				</Button>

@@ -200,47 +200,112 @@ onMounted(() => {
 <template>
 	<Popover>
 		<PopoverTrigger class="flex items-center">
-			<Button variant="ghost" class="flex items-center justify-start p-1 pl-2 border h-fit gap-1 min-w-2xl" :class="selectedDevs.length === 0 ? 'text-muted-foreground' : ''">
-				<RcIcon name="device" class="flex-shrink-0 mx-2" />
-				<span v-if="selectedDevs && selectedDevs.length === 0" class="flex-1 text-left mr-2">
+			<Button
+				variant="ghost"
+				class="flex items-center justify-start p-1 pl-2 border h-fit gap-1 min-w-2xl"
+				:class="selectedDevs.length === 0 ? 'text-muted-foreground' : ''"
+			>
+				<RcIcon
+					name="device"
+					class="flex-shrink-0 mx-2"
+				/>
+				<span
+					v-if="selectedDevs && selectedDevs.length === 0"
+					class="flex-1 text-left mr-2"
+				>
 					Select devices
 				</span>
-				<div v-else class="flex flex-wrap gap-1 flex-1 overflow-hidden">
+				<div
+					v-else
+					class="flex flex-wrap gap-1 flex-1 overflow-hidden"
+				>
 					<!-- Show first 3 devices -->
-					<span v-for="(dev, index) in selectedDevs.slice(0, 3)" :key="dev.id" class="relative group flex-shrink-0">
+					<span
+						v-for="dev in selectedDevs.slice(0, 3)"
+						:key="dev.id"
+						class="relative group flex-shrink-0"
+					>
 						<span class="flex items-center text-xs font-medium px-2.5 py-0.5 rounded-xl border whitespace-nowrap max-w-[150px]">
 							<span class="truncate">{{ dev.device_name }}</span>
-							<X size="10" class="ml-1 cursor-pointer text-rcgray-300 hover:text-white flex-shrink-0" @click.stop="deleteItem(dev.device_name)" />
+							<X
+								size="10"
+								class="ml-1 cursor-pointer text-rcgray-300 hover:text-white flex-shrink-0"
+								@click.stop="deleteItem(dev.device_name)"
+							/>
 						</span>
 					</span>
 					<!-- Show count if there are more than 3 selected -->
-					<span v-if="selectedDevs.length > 3" class="flex items-center text-xs font-medium px-2.5 py-0.5 rounded-xl border bg-muted text-muted-foreground flex-shrink-0"> +{{ selectedDevs.length - 3 }} more </span>
+					<span
+						v-if="selectedDevs.length > 3"
+						class="flex items-center text-xs font-medium px-2.5 py-0.5 rounded-xl border bg-muted text-muted-foreground flex-shrink-0"
+					> +{{ selectedDevs.length - 3 }} more </span>
 				</div>
 			</Button>
 		</PopoverTrigger>
-		<PopoverContent side="bottom" align="start" class="col-span-3 p-0">
+		<PopoverContent
+			side="bottom"
+			align="start"
+			class="col-span-3 p-0"
+		>
 			<div class="relative items-center w-full">
-				<Input id="search" type="text" v-model="searchTerm" autocomplete="off" placeholder="Search..." class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter" />
+				<Input
+					id="search"
+					v-model="searchTerm"
+					type="text"
+					autocomplete="off"
+					placeholder="Search..."
+					class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter"
+				/>
 				<span class="absolute inset-y-0 flex items-center justify-center px-2 start-0">
 					<RcIcon name="search" />
 				</span>
 			</div>
 			<Separator />
 
-			<ScrollArea ref="scrollContainer" class="h-64">
+			<ScrollArea
+				ref="scrollContainer"
+				class="h-64"
+			>
 				<div class="py-1">
-					<RcIcon name="three-dots-loading" class="w-8 h-8 mx-auto my-4 text-muted-foreground" v-if="isLoading" />
+					<RcIcon
+						v-if="isLoading"
+						name="three-dots-loading"
+						class="w-8 h-8 mx-auto my-4 text-muted-foreground"
+					/>
 					<template v-else>
-						<div v-for="dev in displayedDevices" :key="dev.id" class="w-full p-1 pl-2 my-1 text-xs rounded-lg hover:bg-rcgray-600 cursor-pointer" @click="selectItem(dev)">
+						<div
+							v-for="dev in displayedDevices"
+							:key="dev.id"
+							class="w-full p-1 pl-2 my-1 text-xs rounded-lg hover:bg-rcgray-600 cursor-pointer"
+							@click="selectItem(dev)"
+						>
 							<span class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border">
 								{{ dev.device_name }}
 							</span>
 						</div>
 
 						<!-- Manual Load More Button -->
-						<div v-if="hasMoreData && !searchTerm" class="text-center rc-text-xs-muted">
-							<Button @click="fetchDevices(currentPage + 1)" :disabled="isLoadingMore" variant="outline" class="load-more-btn my-4">
-								<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+						<div
+							v-if="hasMoreData && !searchTerm"
+							class="text-center rc-text-xs-muted"
+						>
+							<Button
+								:disabled="isLoadingMore"
+								variant="outline"
+								class="load-more-btn my-4"
+								@click="fetchDevices(currentPage + 1)"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									class="w-4 h-4 mr-2"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									aria-hidden="true"
+								>
 									<path d="M12 8v8m0 0l4-4m-4 4l-4-4" />
 									<path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
 								</svg>
@@ -249,15 +314,29 @@ onMounted(() => {
 						</div>
 
 						<!-- Loading more indicator -->
-						<div v-if="isLoadingMore" class="flex justify-center py-2">
-							<RcIcon name="three-dots-loading" class="w-6 h-6 text-muted-foreground" />
+						<div
+							v-if="isLoadingMore"
+							class="flex justify-center py-2"
+						>
+							<RcIcon
+								name="three-dots-loading"
+								class="w-6 h-6 text-muted-foreground"
+							/>
 						</div>
 
 						<!-- End of data indicator -->
-						<div v-else-if="!hasMoreData && !searchTerm && devices.length > 0" class="text-center py-2 rc-text-xs-muted">No more devices to load ({{ devices.length }} total)</div>
+						<div
+							v-else-if="!hasMoreData && !searchTerm && devices.length > 0"
+							class="text-center py-2 rc-text-xs-muted"
+						>
+							No more devices to load ({{ devices.length }} total)
+						</div>
 
 						<!-- No search results -->
-						<div v-else-if="searchTerm && displayedDevices.length === 0" class="text-center py-4 rc-text-xs-muted">
+						<div
+							v-else-if="searchTerm && displayedDevices.length === 0"
+							class="text-center py-4 rc-text-xs-muted"
+						>
 							No devices found
 						</div>
 					</template>

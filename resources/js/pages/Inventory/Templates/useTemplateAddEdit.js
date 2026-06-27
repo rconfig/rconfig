@@ -48,7 +48,7 @@ export default function useTemplateAddEdit(props, emit) {
 	function reformatTemplateCode(meditor) {
 		axios
 			.post("/api/reformat-template", {
-				fileName: model.fileName,
+				fileName: model.value.fileName,
 			})
 			.then((response) => {
 				code.value = response.data;

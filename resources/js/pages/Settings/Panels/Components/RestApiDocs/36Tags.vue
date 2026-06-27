@@ -142,31 +142,36 @@ const endpoints = {
 </script>
 
 <template>
-  <CardHeader>
-    <CardTitle>Tags API</CardTitle>
-    <CardDescription>Manage device tags through the REST API</CardDescription>
-  </CardHeader>
+	<CardHeader>
+		<CardTitle>Tags API</CardTitle>
+		<CardDescription>Manage device tags through the REST API</CardDescription>
+	</CardHeader>
 
-  <div class="px-6 pb-4">
-    <div class="flex items-start gap-2 mb-6">
-      <Tag class="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
-      <div>
-        <h3 class="text-base font-medium">Working with Tags</h3>
-        <p class="text-muted-foreground mt-1">
-          The Tags API allows you to label and group devices using flexible
-          taxonomies. Tags provide a way to organize devices independently of
-          categories or vendors.
-        </p>
-      </div>
-    </div>
+	<div class="px-6 pb-4">
+		<div class="flex items-start gap-2 mb-6">
+			<Tag class="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
+			<div>
+				<h3 class="text-base font-medium">
+					Working with Tags
+				</h3>
+				<p class="text-muted-foreground mt-1">
+					The Tags API allows you to label and group devices using flexible
+					taxonomies. Tags provide a way to organize devices independently of
+					categories or vendors.
+				</p>
+			</div>
+		</div>
 
-    <AlertInfo
-      class="mt-4 mb-6"
-      variant="dark"
-      title="Device Labeling"
-      message="Tags can be assigned to multiple devices and a device can have multiple tags, allowing for flexible organization of your network inventory."
-    />
-  </div>
+		<AlertInfo
+			class="mt-4 mb-6"
+			variant="dark"
+			title="Device Labeling"
+			message="Tags can be assigned to multiple devices and a device can have multiple tags, allowing for flexible organization of your network inventory."
+		/>
+	</div>
 
-  <ApiDocsTemplate :pagename="pagename" :endpoints="endpoints" />
+	<ApiDocsTemplate
+		:pagename="pagename"
+		:endpoints="endpoints"
+	/>
 </template>

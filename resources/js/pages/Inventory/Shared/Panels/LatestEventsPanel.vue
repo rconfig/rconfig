@@ -50,12 +50,24 @@ function refreshData() {
 					<span class="flex-[0_1_auto] min-w-0 overflow-hidden text-ellipsis whitespace-nowrap inline-flex line-clamp-1">Last Events</span>
 				</span>
 				<span class="flex-1 bg-[rgb(49,51,55)] bg-[rgb(49,51,55)] flex-shrink-0 h-px w-full"></span>
-				<Button type="button" :title="'Refresh'" variant="ghost" @click="refreshData" class="p-2 h-7">
-					<RefreshCw size="16" :class="isLoading ? 'text-blue-500 animate-spin' : 'text-gray-600 hover:text-blue-500'" />
+				<Button
+					type="button"
+					:title="'Refresh'"
+					variant="ghost"
+					class="p-2 h-7"
+					@click="refreshData"
+				>
+					<RefreshCw
+						size="16"
+						:class="isLoading ? 'text-blue-500 animate-spin' : 'text-gray-600 hover:text-blue-500'"
+					/>
 				</Button>
 			</div>
 
-			<div class="mt-4 space-y-2" v-if="isLoading">
+			<div
+				v-if="isLoading"
+				class="mt-4 space-y-2"
+			>
 				<Skeleton class="w-1/2 h-4" />
 				<Skeleton class="w-full h-4" />
 				<Skeleton class="w-full h-4" />
@@ -67,13 +79,23 @@ function refreshData() {
 				<Skeleton class="w-full h-4" />
 			</div>
 
-			<div class="mt-6 space-y-4" v-if="!isLoading">
+			<div
+				v-if="!isLoading"
+				class="mt-6 space-y-4"
+			>
 				<div v-if="Object.keys(notificationResults).length > 0">
-					<Button class="flex w-full h-full border bg-rcgray-800 cursor-default hover:bg-rcgray-600 items-left" v-for="(notification, index) in notificationResults" :key="index">
+					<Button
+						v-for="(notification, index) in notificationResults"
+						:key="index"
+						class="flex w-full h-full border bg-rcgray-800 cursor-default hover:bg-rcgray-600 items-left"
+					>
 						<div class="w-full">
 							<div class="pl-6 border-l border-l-4 rounded-md border-l-rcgray-600">
 								<div class="flex justify-between">
-									<span class="py-0.5 flex w-fit bg-green-100 text-green-800 text-xs font-medium me-2 px-1.5 py-0.5 rounded-lg dark:bg-blue-900 dark:text-blue-100" v-if="notification.log_name === 'info'">
+									<span
+										v-if="notification.log_name === 'info'"
+										class="py-0.5 flex w-fit bg-green-100 text-green-800 text-xs font-medium me-2 px-1.5 py-0.5 rounded-lg dark:bg-blue-900 dark:text-blue-100"
+									>
 										{{ notification.log_name }}
 									</span>
 									<span class="text-muted-foreground">Type: {{ notification.event_type }}</span>
@@ -83,9 +105,16 @@ function refreshData() {
 										{{ notification.description }}
 									</p>
 									<div class="flex items-center justify-between">
-										<p class="text-muted-foreground">{{ formatters.formatTime(notification.created_at) }}</p>
+										<p class="text-muted-foreground">
+											{{ formatters.formatTime(notification.created_at) }}
+										</p>
 										<DeviceNotificationHoverCard :notification="notification">
-											<Button :title="'View Raw Data'" :alt="'View Raw Data'" variant="outline" class="h-4 px-1 text-sm text-muted-foreground">
+											<Button
+												:title="'View Raw Data'"
+												:alt="'View Raw Data'"
+												variant="outline"
+												class="h-4 px-1 text-sm text-muted-foreground"
+											>
 												<Eye size="16" />
 											</Button>
 										</DeviceNotificationHoverCard>
@@ -104,7 +133,10 @@ function refreshData() {
 				</div>
 			</div>
 			<div class="flex items-center justify-end mt-4 space-x-2">
-				<Button variant="outline" class="text-center">
+				<Button
+					variant="outline"
+					class="text-center"
+				>
 					View All
 				</Button>
 			</div>

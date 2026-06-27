@@ -87,7 +87,10 @@ function initCodeEditor() {
 <template>
 	<div>
 		<div class="p-0 overflow-none">
-			<div class="mt-4 space-y-2" v-if="isLoading">
+			<div
+				v-if="isLoading"
+				class="mt-4 space-y-2"
+			>
 				<Skeleton class="w-1/2 h-4" />
 				<Skeleton class="w-full h-4" />
 				<Skeleton class="w-full h-4" />
@@ -99,7 +102,10 @@ function initCodeEditor() {
 				<Skeleton class="w-full h-4" />
 			</div>
 
-			<div class="space-y-4" v-if="!isLoading">
+			<div
+				v-if="!isLoading"
+				class="space-y-4"
+			>
 				<div class="p-0">
 					<div class="flex flex-col">
 						<div class="flex items-center px-2 mb-1">
@@ -107,70 +113,155 @@ function initCodeEditor() {
 
 							<!-- LEFT BUTTONS -->
 							<div class="flex items-center gap-1">
-								<RcToolTip :delayDuration="100" :content="'Copy Config Path'" :side="'bottom'">
+								<RcToolTip
+									:delay-duration="100"
+									:content="'Copy Config Path'"
+									:side="'bottom'"
+								>
 									<template #trigger>
-										<Button variant="ghost" @click="copyPath(config_location)" class="px-2 py-1 rc-btn-shadow">
-											<RcIcon name="copy-file-transition" :isActive="activeCopyIcon['getPath']" :size="16" />
+										<Button
+											variant="ghost"
+											class="px-2 py-1 rc-btn-shadow"
+											@click="copyPath(config_location)"
+										>
+											<RcIcon
+												name="copy-file-transition"
+												:is-active="activeCopyIcon['getPath']"
+												:size="16"
+											/>
 										</Button>
 									</template>
 								</RcToolTip>
 
-								<RcToolTip :delayDuration="100" :content="'Copy Config'" :side="'bottom'">
+								<RcToolTip
+									:delay-duration="100"
+									:content="'Copy Config'"
+									:side="'bottom'"
+								>
 									<template #trigger>
-										<Button variant="ghost" @click="copyContent(meditor.getValue())" class="px-2 py-1 rc-btn-shadow">
-											<RcIcon name="copy-transition" :isActive="activeCopyIcon['getValue']" :size="16" />
+										<Button
+											variant="ghost"
+											class="px-2 py-1 rc-btn-shadow"
+											@click="copyContent(meditor.getValue())"
+										>
+											<RcIcon
+												name="copy-transition"
+												:is-active="activeCopyIcon['getValue']"
+												:size="16"
+											/>
 										</Button>
 									</template>
 								</RcToolTip>
 
-								<RcToolTip :delayDuration="100" :content="'Download Configs'" :side="'bottom'">
+								<RcToolTip
+									:delay-duration="100"
+									:content="'Download Configs'"
+									:side="'bottom'"
+								>
 									<template #trigger>
-										<Button variant="ghost" @click="download(config_location)" class="px-2 py-1 rc-btn-shadow">
-											<RcIcon name="copy-download-transition" :isActive="isDownloaded" :size="16" />
+										<Button
+											variant="ghost"
+											class="px-2 py-1 rc-btn-shadow"
+											@click="download(config_location)"
+										>
+											<RcIcon
+												name="copy-download-transition"
+												:is-active="isDownloaded"
+												:size="16"
+											/>
 										</Button>
 									</template>
 								</RcToolTip>
 							</div>
 							<!-- LEFT BUTTONS -->
 
-							<Separator orientation="vertical" class="relative w-px h-6 mx-4 shrink-0 bg-border" />
+							<Separator
+								orientation="vertical"
+								class="relative w-px h-6 mx-4 shrink-0 bg-border"
+							/>
 
 							<div class="flex items-center">
 								<span class="flex items-center gap-1 text-lg font-semibold rc-text-heading-gradient font-inter">
 									Config ID: <RcBadge variant="info">{{ props.configId }}</RcBadge>
 								</span>
-								<Separator orientation="vertical" class="relative w-px h-6 mx-4 shrink-0 bg-border" />
-								<span v-if="props.selectedConfigVersion" class="flex items-center gap-1 text-lg font-semibold rc-text-heading-gradient font-inter">
+								<Separator
+									orientation="vertical"
+									class="relative w-px h-6 mx-4 shrink-0 bg-border"
+								/>
+								<span
+									v-if="props.selectedConfigVersion"
+									class="flex items-center gap-1 text-lg font-semibold rc-text-heading-gradient font-inter"
+								>
 									Version: <RcBadge variant="info">{{ props.selectedConfigVersion }}</RcBadge>
 								</span>
-								<Separator v-if="props.selectedConfigVersion" orientation="vertical" class="relative w-px h-6 mx-4 shrink-0 bg-border" />
+								<Separator
+									v-if="props.selectedConfigVersion"
+									orientation="vertical"
+									class="relative w-px h-6 mx-4 shrink-0 bg-border"
+								/>
 							</div>
 
 							<!-- RIGHT BUTTONS -->
 							<div class="flex items-center gap-2 ml-auto">
 								<TooltipProvider>
 									<!--  is needed to manage the global tooltip state, timing, and positioning context that multiple tooltips within the same area need to share. -->
-									<ToggleGroup v-model="toggleStateMultiple" type="multiple">
-										<ToggleGroupItem value="dark" @click="toggleEditorDarkMode()" class="px-2 py-1 rc-btn-shadow">
-											<RcToolTip :delayDuration="100" :content="'Toggle Dark Mode'" :side="'bottom'">
+									<ToggleGroup
+										v-model="toggleStateMultiple"
+										type="multiple"
+									>
+										<ToggleGroupItem
+											value="dark"
+											class="px-2 py-1 rc-btn-shadow"
+											@click="toggleEditorDarkMode()"
+										>
+											<RcToolTip
+												:delay-duration="100"
+												:content="'Toggle Dark Mode'"
+												:side="'bottom'"
+											>
 												<template #trigger>
-													<SunMoon size="16" class="focus:outline-none" />
+													<SunMoon
+														size="16"
+														class="focus:outline-none"
+													/>
 												</template>
 											</RcToolTip>
 										</ToggleGroupItem>
 
-										<ToggleGroupItem value="lineNumbers" @click="toggleEditorLineNumbers()" class="px-2 py-1 rc-btn-shadow">
-											<RcToolTip :delayDuration="100" :content="'Toggle Line Numbers'" :side="'bottom'">
+										<ToggleGroupItem
+											value="lineNumbers"
+											class="px-2 py-1 rc-btn-shadow"
+											@click="toggleEditorLineNumbers()"
+										>
+											<RcToolTip
+												:delay-duration="100"
+												:content="'Toggle Line Numbers'"
+												:side="'bottom'"
+											>
 												<template #trigger>
-													<Hash size="16" class="focus:outline-none" />
+													<Hash
+														size="16"
+														class="focus:outline-none"
+													/>
 												</template>
 											</RcToolTip>
 										</ToggleGroupItem>
 
-										<ToggleGroupItem value="minimap" @click="toggleEditorMinimap()" class="px-2 py-1 rc-btn-shadow">
-											<RcToolTip :delayDuration="100" :content="'Toggle Map'" :side="'bottom'">
+										<ToggleGroupItem
+											value="minimap"
+											class="px-2 py-1 rc-btn-shadow"
+											@click="toggleEditorMinimap()"
+										>
+											<RcToolTip
+												:delay-duration="100"
+												:content="'Toggle Map'"
+												:side="'bottom'"
+											>
 												<template #trigger>
-													<Map size="16" class="focus:outline-none" />
+													<Map
+														size="16"
+														class="focus:outline-none"
+													/>
 												</template>
 											</RcToolTip>
 										</ToggleGroupItem>
@@ -179,14 +270,21 @@ function initCodeEditor() {
 							</div>
 							<!-- RIGHT BUTTONS -->
 
-							<Separator orientation="vertical" class="relative w-px h-6 mx-4 shrink-0 bg-border" />
+							<Separator
+								orientation="vertical"
+								class="relative w-px h-6 mx-4 shrink-0 bg-border"
+							/>
 							<span>CONFIG</span>
 						</div>
 						<Separator class="relative w-full h-px shrink-0 bg-border"></Separator>
 					</div>
 
 					<!-- EDITOR -->
-					<div class="code-editor__code-pre" id="code-editor__code-pre" style="height: calc(100vh - 237px);"></div>
+					<div
+						id="code-editor__code-pre"
+						class="code-editor__code-pre"
+						style="height: calc(100vh - 237px);"
+					></div>
 					<!-- EDITOR -->
 				</div>
 			</div>

@@ -121,10 +121,21 @@ const showDocsPage = () => {
 <template>
 	<div>
 		<ResizablePanelGroup direction="horizontal">
-			<ResizablePanel :default-size="25" :max-size="30" :min-size="10" collapsible :collapsed-size="0" ref="panelElement44" class="h-[90vh]">
+			<ResizablePanel
+				ref="panelElement44"
+				:default-size="25"
+				:max-size="30"
+				:min-size="10"
+				collapsible
+				:collapsed-size="0"
+				class="h-[90vh]"
+			>
 				<div>
 					<!-- Loading Skeleton -->
-					<div v-if="isLoading" class="grid gap-4 px-4 py-4">
+					<div
+						v-if="isLoading"
+						class="grid gap-4 px-4 py-4"
+					>
 						<div class="grid items-center gap-4 hidden md:grid">
 							<div class="col-span-1"></div>
 							<div class="col-span-3">
@@ -161,14 +172,26 @@ const showDocsPage = () => {
 
 					<!-- Actual Form Content -->
 					<ScrollArea class="h-full">
-						<div class="pb-4 px-4" v-if="!isLoading">
+						<div
+							v-if="!isLoading"
+							class="pb-4 px-4"
+						>
 							<!-- Help Link -->
 							<div class="m-2">
 								<div class="col-span-1"></div>
 								<div class="col-span-3">
 									<div class="flex items-center text-blue-500 mt-2">
-										<Info class="mr-2" size="16" />
-										<Button variant="link" class="px-0 py-0 text-sm font-normal" @click="showDocsPage">Compare Options Documentation</Button>
+										<Info
+											class="mr-2"
+											size="16"
+										/>
+										<Button
+											variant="link"
+											class="px-0 py-0 text-sm font-normal"
+											@click="showDocsPage"
+										>
+											Compare Options Documentation
+										</Button>
 									</div>
 								</div>
 							</div>
@@ -178,20 +201,29 @@ const showDocsPage = () => {
 							<div class="space-y-6">
 								<!-- Compare Settings Section -->
 								<div class="space-y-4">
-									<h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">Compare Settings</h3>
+									<h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">
+										Compare Settings
+									</h3>
 
 									<div>
-										<Label for="context" class="block mb-2">
+										<Label
+											for="context"
+											class="block mb-2"
+										>
 											Context Lines
-											<RcToolTip :delayDuration="100" :content="'Number of context lines to show around differences'" :side="'right'">
+											<RcToolTip
+												:delay-duration="100"
+												:content="'Number of context lines to show around differences'"
+												:side="'right'"
+											>
 												<template #trigger>
 													<Info class="inline ml-1 h-3 w-3 text-gray-400" />
 												</template>
 											</RcToolTip>
 										</Label>
 										<Input
-											v-model.number="configCompareSettings.context"
 											id="context"
+											v-model.number="configCompareSettings.context"
 											type="number"
 											min="0"
 											max="50"
@@ -200,17 +232,24 @@ const showDocsPage = () => {
 									</div>
 
 									<div>
-										<Label for="lengthLimit" class="block mb-2">
+										<Label
+											for="lengthLimit"
+											class="block mb-2"
+										>
 											Length Limit
-											<RcToolTip :delayDuration="100" :content="'Maximum number of characters to compare'" :side="'right'">
+											<RcToolTip
+												:delay-duration="100"
+												:content="'Maximum number of characters to compare'"
+												:side="'right'"
+											>
 												<template #trigger>
 													<Info class="inline ml-1 h-3 w-3 text-gray-400" />
 												</template>
 											</RcToolTip>
 										</Label>
 										<Input
-											v-model.number="configCompareSettings.lengthLimit"
 											id="lengthLimit"
+											v-model.number="configCompareSettings.lengthLimit"
 											type="number"
 											min="1000"
 											max="100000"
@@ -222,9 +261,19 @@ const showDocsPage = () => {
 									<!-- Compare Options Checkboxes -->
 									<div class="space-y-3">
 										<div class="flex items-center space-x-2">
-											<Checkbox id="ignoreCase" v-model:checked="configCompareSettings.ignoreCase" />
-											<Label for="ignoreCase" class="text-sm font-normal cursor-pointer">Ignore Case</Label>
-											<RcToolTip :delayDuration="100" :content="'Ignore case differences when comparing'" :side="'right'">
+											<Checkbox
+												id="ignoreCase"
+												v-model:checked="configCompareSettings.ignoreCase"
+											/>
+											<Label
+												for="ignoreCase"
+												class="text-sm font-normal cursor-pointer"
+											>Ignore Case</Label>
+											<RcToolTip
+												:delay-duration="100"
+												:content="'Ignore case differences when comparing'"
+												:side="'right'"
+											>
 												<template #trigger>
 													<Info class="h-3 w-3 text-gray-400" />
 												</template>
@@ -232,9 +281,19 @@ const showDocsPage = () => {
 										</div>
 
 										<div class="flex items-center space-x-2">
-											<Checkbox id="ignoreLineEnding" v-model:checked="configCompareSettings.ignoreLineEnding" />
-											<Label for="ignoreLineEnding" class="text-sm font-normal cursor-pointer">Ignore Line Endings</Label>
-											<RcToolTip :delayDuration="100" :content="'Ignore differences in line ending characters (\\n vs \\r\\n)'" :side="'right'">
+											<Checkbox
+												id="ignoreLineEnding"
+												v-model:checked="configCompareSettings.ignoreLineEnding"
+											/>
+											<Label
+												for="ignoreLineEnding"
+												class="text-sm font-normal cursor-pointer"
+											>Ignore Line Endings</Label>
+											<RcToolTip
+												:delay-duration="100"
+												:content="'Ignore differences in line ending characters (\\n vs \\r\\n)'"
+												:side="'right'"
+											>
 												<template #trigger>
 													<Info class="h-3 w-3 text-gray-400" />
 												</template>
@@ -242,9 +301,19 @@ const showDocsPage = () => {
 										</div>
 
 										<div class="flex items-center space-x-2">
-											<Checkbox id="ignoreWhitespace" v-model:checked="configCompareSettings.ignoreWhitespace" />
-											<Label for="ignoreWhitespace" class="text-sm font-normal cursor-pointer">Ignore Whitespace</Label>
-											<RcToolTip :delayDuration="100" :content="'Ignore whitespace differences when comparing'" :side="'right'">
+											<Checkbox
+												id="ignoreWhitespace"
+												v-model:checked="configCompareSettings.ignoreWhitespace"
+											/>
+											<Label
+												for="ignoreWhitespace"
+												class="text-sm font-normal cursor-pointer"
+											>Ignore Whitespace</Label>
+											<RcToolTip
+												:delay-duration="100"
+												:content="'Ignore whitespace differences when comparing'"
+												:side="'right'"
+											>
 												<template #trigger>
 													<Info class="h-3 w-3 text-gray-400" />
 												</template>
@@ -254,7 +323,12 @@ const showDocsPage = () => {
 
 									<!-- Reset to Defaults Button -->
 									<div class="pt-2">
-										<Button variant="outline" size="sm" @click="showResetConfirmDialog = true" class="text-xs">
+										<Button
+											variant="outline"
+											size="sm"
+											class="text-xs"
+											@click="showResetConfirmDialog = true"
+										>
 											Reset to Defaults
 										</Button>
 									</div>
@@ -262,7 +336,13 @@ const showDocsPage = () => {
 
 								<!-- Action Buttons -->
 								<div class="flex justify-end pt-6 space-x-2">
-									<Button type="button" variant="outline" class="px-2 py-1 text-sm hover:bg-gray-700 hover:animate-pulse" @click="close()" size="sm">
+									<Button
+										type="button"
+										variant="outline"
+										class="px-2 py-1 text-sm hover:bg-gray-700 hover:animate-pulse"
+										size="sm"
+										@click="close()"
+									>
 										Close
 										<div class="pl-2 ml-auto">
 											<kbd class="rc-kdb-class">ESC</kbd>
@@ -273,12 +353,15 @@ const showDocsPage = () => {
 										type="submit"
 										class="px-2 py-1 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse flex items-center justify-between"
 										size="sm"
-										@click="saveCompareSettings(meditor)"
 										variant="primary"
+										@click="saveCompareSettings(meditor)"
 									>
 										<div class="flex items-center">
 											<span v-if="!isSubmitting">Update</span>
-											<div v-else class="flex items-center">
+											<div
+												v-else
+												class="flex items-center"
+											>
 												<Spinner class="w-4 h-4 mr-2" />
 												Saving...
 											</div>
@@ -304,72 +387,151 @@ const showDocsPage = () => {
 							<div class="flex items-center gap-2"></div>
 
 							<!-- LEFT BUTTONS -->
-							<div v-if="!isLoading" class="gap-1 flex items-center">
-								<RcToolTip :delayDuration="100" :content="'Copy Content'" :side="'bottom'">
+							<div
+								v-if="!isLoading"
+								class="gap-1 flex items-center"
+							>
+								<RcToolTip
+									:delay-duration="100"
+									:content="'Copy Content'"
+									:side="'bottom'"
+								>
 									<template #trigger>
-										<Button variant="ghost" @click="copyContent(meditor.getValue())" class="px-2 py-1 rc-btn-shadow">
-											<RcIcon name="copy-transition" :isActive="activeCopyIcon['getValue']" :size="16" />
+										<Button
+											variant="ghost"
+											class="px-2 py-1 rc-btn-shadow"
+											@click="copyContent(meditor.getValue())"
+										>
+											<RcIcon
+												name="copy-transition"
+												:is-active="activeCopyIcon['getValue']"
+												:size="16"
+											/>
 										</Button>
 									</template>
 								</RcToolTip>
 
-								<RcToolTip :delayDuration="100" :content="'Download Template'" :side="'bottom'">
+								<RcToolTip
+									:delay-duration="100"
+									:content="'Download Template'"
+									:side="'bottom'"
+								>
 									<template #trigger>
-										<Button variant="ghost" @click="download(model?.filepath || 'policy-definition.txt')" class="px-2 py-1 rc-btn-shadow">
-											<RcIcon name="copy-download-transition" :isActive="isDownloaded" :size="16" />
+										<Button
+											variant="ghost"
+											class="px-2 py-1 rc-btn-shadow"
+											@click="download(model?.filepath || 'policy-definition.txt')"
+										>
+											<RcIcon
+												name="copy-download-transition"
+												:is-active="isDownloaded"
+												:size="16"
+											/>
 										</Button>
 									</template>
 								</RcToolTip>
 							</div>
 
-							<div v-else class="flex gap-1">
+							<div
+								v-else
+								class="flex gap-1"
+							>
 								<Skeleton class="h-8 w-8" />
 								<Skeleton class="h-8 w-8" />
 								<Skeleton class="h-8 w-8" />
 								<Skeleton class="h-8 w-8" />
 							</div>
 
-							<Separator orientation="vertical" class="relative w-px h-6 mx-4 shrink-0 bg-border" />
+							<Separator
+								orientation="vertical"
+								class="relative w-px h-6 mx-4 shrink-0 bg-border"
+							/>
 
 							<GenericPopover
 								:title="'Editor Tip'"
 								:description="'You can auto-complete the policy definition by typing the first few characters of the policy method and pressing the Tab key or CTRL + Space . i.e. #[TAB]'"
-								:hasLink="false"
+								:has-link="false"
 								:align="'start'"
 							>
 								<template #trigger>
-									<Button variant="link" size="sm" class="text-blue-400 hover:text-blue-300 p-0">
+									<Button
+										variant="link"
+										size="sm"
+										class="text-blue-400 hover:text-blue-300 p-0"
+									>
 										<MessageCircleQuestion class="h-3.5 w-3.5" />
 									</Button>
 								</template>
 							</GenericPopover>
 
-							<Separator orientation="vertical" class="relative w-px h-6 mx-4 shrink-0 bg-border" />
+							<Separator
+								orientation="vertical"
+								class="relative w-px h-6 mx-4 shrink-0 bg-border"
+							/>
 
 							<!-- RIGHT BUTTONS -->
-							<div class="flex items-center gap-2 ml-auto" v-if="!isLoading">
+							<div
+								v-if="!isLoading"
+								class="flex items-center gap-2 ml-auto"
+							>
 								<TooltipProvider>
-									<ToggleGroup v-model="toggleStateMultiple" type="multiple">
-										<ToggleGroupItem value="dark" @click="toggleEditorDarkMode()" class="px-2 py-1 rc-btn-shadow">
-											<RcToolTip :delayDuration="100" :content="'Toggle Dark Mode'" :side="'bottom'">
+									<ToggleGroup
+										v-model="toggleStateMultiple"
+										type="multiple"
+									>
+										<ToggleGroupItem
+											value="dark"
+											class="px-2 py-1 rc-btn-shadow"
+											@click="toggleEditorDarkMode()"
+										>
+											<RcToolTip
+												:delay-duration="100"
+												:content="'Toggle Dark Mode'"
+												:side="'bottom'"
+											>
 												<template #trigger>
-													<SunMoon size="16" class="focus:outline-none" />
+													<SunMoon
+														size="16"
+														class="focus:outline-none"
+													/>
 												</template>
 											</RcToolTip>
 										</ToggleGroupItem>
 
-										<ToggleGroupItem value="lineNumbers" @click="toggleEditorLineNumbers()" class="px-2 py-1 rc-btn-shadow">
-											<RcToolTip :delayDuration="100" :content="'Toggle Line Numbers'" :side="'bottom'">
+										<ToggleGroupItem
+											value="lineNumbers"
+											class="px-2 py-1 rc-btn-shadow"
+											@click="toggleEditorLineNumbers()"
+										>
+											<RcToolTip
+												:delay-duration="100"
+												:content="'Toggle Line Numbers'"
+												:side="'bottom'"
+											>
 												<template #trigger>
-													<Hash size="16" class="focus:outline-none" />
+													<Hash
+														size="16"
+														class="focus:outline-none"
+													/>
 												</template>
 											</RcToolTip>
 										</ToggleGroupItem>
 
-										<ToggleGroupItem value="minimap" @click="toggleEditorMinimap()" class="px-2 py-1 rc-btn-shadow">
-											<RcToolTip :delayDuration="100" :content="'Toggle Map'" :side="'bottom'">
+										<ToggleGroupItem
+											value="minimap"
+											class="px-2 py-1 rc-btn-shadow"
+											@click="toggleEditorMinimap()"
+										>
+											<RcToolTip
+												:delay-duration="100"
+												:content="'Toggle Map'"
+												:side="'bottom'"
+											>
 												<template #trigger>
-													<Map size="16" class="focus:outline-none" />
+													<Map
+														size="16"
+														class="focus:outline-none"
+													/>
 												</template>
 											</RcToolTip>
 										</ToggleGroupItem>
@@ -377,7 +539,10 @@ const showDocsPage = () => {
 								</TooltipProvider>
 							</div>
 
-							<div v-else class="flex items-center gap-2 ml-auto">
+							<div
+								v-else
+								class="flex items-center gap-2 ml-auto"
+							>
 								<div class="flex gap-1">
 									<Skeleton class="h-8 w-8" />
 									<Skeleton class="h-8 w-8" />
@@ -385,31 +550,51 @@ const showDocsPage = () => {
 								</div>
 							</div>
 
-							<Separator orientation="vertical" class="relative w-px h-6 mx-4 shrink-0 bg-border" />
+							<Separator
+								orientation="vertical"
+								class="relative w-px h-6 mx-4 shrink-0 bg-border"
+							/>
 							<span v-if="!isLoading">Policy</span>
-							<Skeleton v-else class="h-4 w-12" />
+							<Skeleton
+								v-else
+								class="h-4 w-12"
+							/>
 						</div>
 						<Separator class="relative w-full h-px shrink-0 bg-border"></Separator>
 					</div>
 
 					<!-- EDITOR -->
-					<div v-if="!editorMounted || isLoading" class="flex items-center justify-center" style="height: calc(100vh - 190px);">
-						<div v-if="isLoadingEditor" class="w-full h-full p-4">
+					<div
+						v-if="!editorMounted || isLoading"
+						class="flex items-center justify-center"
+						style="height: calc(100vh - 190px);"
+					>
+						<div
+							v-if="isLoadingEditor"
+							class="w-full h-full p-4"
+						>
 							<Skeleton class="w-full h-full" />
 						</div>
-						<Loader2 v-else class="w-8 h-8 animate-spin" />
+						<Loader2
+							v-else
+							class="w-8 h-8 animate-spin"
+						/>
 					</div>
-					<div class="code-editor__code-pre" id="code-editor__code-pre" style="height: calc(100vh - 190px);"></div>
+					<div
+						id="code-editor__code-pre"
+						class="code-editor__code-pre"
+						style="height: calc(100vh - 190px);"
+					></div>
 					<!-- EDITOR -->
 				</ScrollArea>
 			</ResizablePanel>
 		</ResizablePanelGroup>
 
 		<RcConfirmAlertDialog
-			:showConfirmConfirmProceedAlertAlert="showResetConfirmDialog"
+			:show-confirm-confirm-proceed-alert-alert="showResetConfirmDialog"
 			title="Reset to Default Settings?"
 			description="This will reset all compare settings to their default values. Any custom settings you've configured may be lost. This will only take effect when you click the update button, and the compare code in the editor will not change."
-			@handleConfirmProceedAlert="handleConfirmReset"
+			@handle-confirm-proceed-alert="handleConfirmReset"
 			@close="showResetConfirmDialog = false"
 		/>
 	</div>

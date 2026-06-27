@@ -44,34 +44,60 @@ onMounted(() => {
 	<div class="pb-4 pl-10 space-y-6 md:block">
 		<div class="space-y-0.5">
 			<h2 class="flex items-center space-x-2 text-2xl font-bold tracking-tight">
-				<RcIcon name="settings" class="w-8 h-8" />
+				<RcIcon
+					name="settings"
+					class="w-8 h-8"
+				/>
 				<span>My User Profile</span>
 			</h2>
-			<p class="text-muted-foreground">Manage your application settings and preferences</p>
+			<p class="text-muted-foreground">
+				Manage your application settings and preferences
+			</p>
 		</div>
 		<Separator class="my-6" />
 	</div>
 
 	<div class="flex flex-col h-full gap-1">
-		<div v-if="isLoading" class="flex flex-col w-full">
+		<div
+			v-if="isLoading"
+			class="flex flex-col w-full"
+		>
 			<Loading class="mx-auto" />
 		</div>
 
-		<div v-else-if="isUnauthorized" class="flex items-center justify-center h-full p-4">
-			<IsUnauthorizedUserProfCard :userId="profileUserId" :loggedInUser="loggedInUser" />
+		<div
+			v-else-if="isUnauthorized"
+			class="flex items-center justify-center h-full p-4"
+		>
+			<IsUnauthorizedUserProfCard
+				:user-id="profileUserId"
+				:logged-in-user="loggedInUser"
+			/>
 		</div>
 
-		<div v-else-if="isInvalid" class="flex items-center justify-center h-full p-4">
-			<IsInvalidUserProfCard />
+		<div
+			v-else-if="isInvalid"
+			class="flex items-center justify-center h-full p-4"
+		>
+			<IsInvalidUserProfCard @refresh="fetchUserProfile" />
 		</div>
 
 		<!-- Authorized - User Profile Content with Tabs -->
-		<div v-else-if="isAuthorized" class="container mx-auto px-4 max-w-4xl">
-			<Tabs v-model="activeTab" class="w-full">
+		<div
+			v-else-if="isAuthorized"
+			class="container mx-auto px-4 max-w-4xl"
+		>
+			<Tabs
+				v-model="activeTab"
+				class="w-full"
+			>
 				<TabsList class="grid w-full grid-cols-2 mb-4">
 					<TabsTrigger value="profile">
 						<div class="flex items-center justify-center gap-2 data-[state=active]:bg-background">
-							<RcIcon name="user" class="w-4 h-4" />
+							<RcIcon
+								name="user"
+								class="w-4 h-4"
+							/>
 							<span class="hidden sm:inline">Profile & Security</span>
 						</div>
 					</TabsTrigger>
@@ -84,18 +110,39 @@ onMounted(() => {
 				</TabsList>
 
 				<!-- Profile & Security Tab -->
-				<TabsContent value="profile" class="space-y-4 mt-0">
+				<TabsContent
+					value="profile"
+					class="space-y-4 mt-0"
+				>
 					<div class="tab-content-wrapper">
-						<PersonalDetailsCard v-if="user" :user="user" :profileUserId="profileUserId" />
-						<PasswordCard v-if="user" :profileUserId="profileUserId" />
-						<TimeLocaleCard v-if="user" :user="user" :profileUserId="profileUserId" />
+						<PersonalDetailsCard
+							v-if="user"
+							:user="user"
+							:profile-user-id="profileUserId"
+						/>
+						<PasswordCard
+							v-if="user"
+							:profile-user-id="profileUserId"
+						/>
+						<TimeLocaleCard
+							v-if="user"
+							:user="user"
+							:profile-user-id="profileUserId"
+						/>
 					</div>
 				</TabsContent>
 
 				<!-- Notifications Tab -->
-				<TabsContent value="notifications" class="space-y-4 mt-0">
+				<TabsContent
+					value="notifications"
+					class="space-y-4 mt-0"
+				>
 					<div class="tab-content-wrapper">
-						<NotificationPreferences v-if="user" :profileUserId="user.id" :notificationStatus="user.get_notifications"/>
+						<NotificationPreferences
+							v-if="user"
+							:profile-user-id="user.id"
+							:notification-status="user.get_notifications"
+						/>
 					</div>
 				</TabsContent>
 			</Tabs>

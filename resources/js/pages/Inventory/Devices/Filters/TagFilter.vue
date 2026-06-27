@@ -80,13 +80,24 @@ const filteredTags = computed(() => {
 <template>
 	<Popover>
 		<PopoverTrigger>
-			<Button variant="ghost" class="flex items-center justify-center w-full px-2 py-1 border rounded-xl whitespace-nowrap h-fit bg-rcgray-700 text-rcgray-400">
-				<RcIcon name="tag" class="lg:mr-2" />
+			<Button
+				variant="ghost"
+				class="flex items-center justify-center w-full px-2 py-1 border rounded-xl whitespace-nowrap h-fit bg-rcgray-700 text-rcgray-400"
+			>
+				<RcIcon
+					name="tag"
+					class="lg:mr-2"
+				/>
 
 				<div class="hidden lg:inline-flex">
-					<template v-if="selectedTags && selectedTags.length === 0">Tag</template>
+					<template v-if="selectedTags && selectedTags.length === 0">
+						Tag
+					</template>
 					<template v-else>
-						<span class="text-sm font-light" v-if="selectedTags.length > 0">
+						<span
+							v-if="selectedTags.length > 0"
+							class="text-sm font-light"
+						>
 							Tag
 							<strong class="text-sm font-semibold">{{ selectedTags.length }} Selected</strong>
 						</span>
@@ -94,9 +105,19 @@ const filteredTags = computed(() => {
 				</div>
 			</Button>
 		</PopoverTrigger>
-		<PopoverContent side="bottom" align="start" class="w-64 p-0">
+		<PopoverContent
+			side="bottom"
+			align="start"
+			class="w-64 p-0"
+		>
 			<div class="relative items-center w-full">
-				<Input id="search" type="text" v-model="searchTerm" placeholder="Search" class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter" />
+				<Input
+					id="search"
+					v-model="searchTerm"
+					type="text"
+					placeholder="Search"
+					class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter"
+				/>
 				<span class="absolute inset-y-0 flex items-center justify-center px-2 start-0">
 					<RcIcon name="search" />
 				</span>
@@ -104,9 +125,21 @@ const filteredTags = computed(() => {
 			<Separator />
 			<ScrollArea class="h-44">
 				<div class="py-1">
-					<div v-for="option in filteredTags" :key="option.id" class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600" @click="selectItem(option)">
-						<input type="checkbox" :checked="selectedTags.some((tag) => tag.id === option.id)" class="mr-2" />
-						<span data-size="20" class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5">
+					<div
+						v-for="option in filteredTags"
+						:key="option.id"
+						class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600"
+						@click="selectItem(option)"
+					>
+						<input
+							type="checkbox"
+							:checked="selectedTags.some((tag) => tag.id === option.id)"
+							class="mr-2"
+						/>
+						<span
+							data-size="20"
+							class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5"
+						>
 							<span data-size="20">
 								{{ option.tagname }}
 							</span>
@@ -117,8 +150,17 @@ const filteredTags = computed(() => {
 			<Separator />
 
 			<div class="p-1 border-5">
-				<Button variant="ghost" class="justify-start w-full p-1" @click="selectItem({ id: 9999999 })">
-					<RcIcon name="select-all" :isSelected="allSelected" size="16" class="mr-2" />
+				<Button
+					variant="ghost"
+					class="justify-start w-full p-1"
+					@click="selectItem({ id: 9999999 })"
+				>
+					<RcIcon
+						name="select-all"
+						:is-selected="allSelected"
+						size="16"
+						class="mr-2"
+					/>
 
 					<span>{{ allSelected ? 'Deselect All' : 'Select All' }}</span>
 				</Button>

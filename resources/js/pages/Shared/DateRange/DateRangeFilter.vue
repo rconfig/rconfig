@@ -148,35 +148,64 @@ function selectLast30Days() {
 
 <template>
 	<Popover v-model:open="open">
-		<PopoverTrigger asChild>
-			<Button variant="ghost" :class="[' ml-2 flex items-center justify-center w-full px-2 py-1 border rounded-xl whitespace-nowrap h-fit', hasSelection ? 'bg-blue-600/10 text-blue-200 border-blue-300' : 'bg-rcgray-700 text-rcgray-400']">
+		<PopoverTrigger as-child>
+			<Button
+				variant="ghost"
+				:class="[' ml-2 flex items-center justify-center w-full px-2 py-1 border rounded-xl whitespace-nowrap h-fit', hasSelection ? 'bg-blue-600/10 text-blue-200 border-blue-300' : 'bg-rcgray-700 text-rcgray-400']"
+			>
 				<CalendarDays class="w-4 h-4 lg:mr-2" />
 				<div class="hidden lg:inline-flex">
 					{{ displayText }}
 				</div>
-				<X v-if="hasSelection" class="w-3 h-3 ml-2 hover:bg-blue-200 rounded" @click.stop="clearRange" />
+				<X
+					v-if="hasSelection"
+					class="w-3 h-3 ml-2 hover:bg-blue-200 rounded"
+					@click.stop="clearRange"
+				/>
 			</Button>
 		</PopoverTrigger>
-		<PopoverContent class="w-auto p-0" align="start">
+		<PopoverContent
+			class="w-auto p-0"
+			align="start"
+		>
 			<div class="p-4">
 				<!-- Quick Select Buttons -->
 				<div class="flex flex-wrap gap-2 mb-4">
-					<Button variant="outline" size="sm" @click="selectToday">
+					<Button
+						variant="outline"
+						size="sm"
+						@click="selectToday"
+					>
 						Today
 					</Button>
-					<Button variant="outline" size="sm" @click="selectLast7Days">
+					<Button
+						variant="outline"
+						size="sm"
+						@click="selectLast7Days"
+					>
 						Last 7 days
 					</Button>
-					<Button variant="outline" size="sm" @click="selectLast30Days">
+					<Button
+						variant="outline"
+						size="sm"
+						@click="selectLast30Days"
+					>
 						Last 30 days
 					</Button>
-					<Button variant="outline" size="sm" @click="clearRange">
+					<Button
+						variant="outline"
+						size="sm"
+						@click="clearRange"
+					>
 						Clear
 					</Button>
 				</div>
 				<!-- Calendar Component -->
 				<!-- <Calendar v-model:range="range" mode="range" :number-of-months="2" class="rounded-md border" /> -->
-				<RangeCalendar v-model="range" class="rounded-md border" />
+				<RangeCalendar
+					v-model="range"
+					class="rounded-md border"
+				/>
 			</div>
 		</PopoverContent>
 	</Popover>

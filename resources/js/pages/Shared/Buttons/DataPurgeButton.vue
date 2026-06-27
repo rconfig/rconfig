@@ -21,8 +21,18 @@ function dataPurgeRoute(src) {
 </script>
 
 <template>
-	<Button variant="outline" size="sm" class="group ml-2 hidden lg:inline-flex" @click="dataPurgeRoute(srcName)" title="Purge & Retention" alt="Purge & Retention">
-		<RcIcon name="purge" class="2xl:mr-2 h-4 w-4" />
+	<Button
+		variant="outline"
+		size="sm"
+		class="group ml-2 hidden lg:inline-flex"
+		title="Purge & Retention"
+		alt="Purge & Retention"
+		@click="dataPurgeRoute(srcName)"
+	>
+		<RcIcon
+			name="purge"
+			class="2xl:mr-2 h-4 w-4"
+		/>
 		<span class="hidden 2xl:inline-flex">Purge and Retention</span>
 	</Button>
 </template>
