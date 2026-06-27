@@ -5,7 +5,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 13.12.0.
+ * Generated for Laravel 13.17.0.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -1650,11 +1650,11 @@ namespace Illuminate\Support\Facades {
          * @throws \Illuminate\Contracts\Container\BindingResolutionException
          * @static
          */
-        public static function resolveFromAttribute($attribute)
+        public static function resolveFromAttribute($attribute, $parameter)
         {
             //Method inherited from \Illuminate\Container\Container 
             /** @var \Illuminate\Foundation\Application $instance */
-            return $instance->resolveFromAttribute($attribute);
+            return $instance->resolveFromAttribute($attribute, $parameter);
         }
 
         /**
@@ -3910,6 +3910,19 @@ namespace Illuminate\Support\Facades {
         }
 
         /**
+         * Dispatch multiple commands in bulk to their appropriate handlers on the queue.
+         *
+         * @param iterable $jobs
+         * @return void
+         * @static
+         */
+        public static function bulk($jobs)
+        {
+            /** @var \Illuminate\Bus\Dispatcher $instance */
+            $instance->bulk($jobs);
+        }
+
+        /**
          * Attempt to find the batch with the given ID.
          *
          * @return \Illuminate\Bus\Batch|null
@@ -4963,6 +4976,22 @@ namespace Illuminate\Support\Facades {
         {
             /** @var \Illuminate\Cache\Repository $instance */
             return $instance->remember($key, $ttl, $callback);
+        }
+
+        /**
+         * Get an item from the cache, or execute the given Closure and store the result.
+         *
+         * @template TCacheValue
+         * @param \UnitEnum|string $key
+         * @param \Closure|\DateTimeInterface|\DateInterval|int|null $ttl
+         * @param \Closure():  TCacheValue  $callback
+         * @return array{TCacheValue, bool} The cached value and whether it was warm.
+         * @static
+         */
+        public static function rememberWithWarmth($key, $ttl, $callback)
+        {
+            /** @var \Illuminate\Cache\Repository $instance */
+            return $instance->rememberWithWarmth($key, $ttl, $callback);
         }
 
         /**
@@ -6437,9 +6466,10 @@ namespace Illuminate\Support\Facades {
         /**
          * Set the default database connection for the callback execution.
          *
+         * @template TReturn
          * @param \UnitEnum|string $name
-         * @param callable $callback
-         * @return mixed
+         * @param (callable(): TReturn) $callback
+         * @return TReturn
          * @static
          */
         public static function usingConnection($name, $callback)
@@ -6987,8 +7017,9 @@ namespace Illuminate\Support\Facades {
         /**
          * Execute the given callback without "pretending".
          *
-         * @param \Closure $callback
-         * @return mixed
+         * @template TReturn
+         * @param \Closure():  TReturn  $callback
+         * @return TReturn
          * @static
          */
         public static function withoutPretending($callback)
@@ -7303,6 +7334,32 @@ namespace Illuminate\Support\Facades {
         }
 
         /**
+         * Get the current PDO connection used for direct connections.
+         *
+         * @return \PDO
+         * @static
+         */
+        public static function getDirectPdo()
+        {
+            //Method inherited from \Illuminate\Database\Connection 
+            /** @var \Illuminate\Database\MySqlConnection $instance */
+            return $instance->getDirectPdo();
+        }
+
+        /**
+         * Get the current direct PDO connection parameter without executing any reconnect logic.
+         *
+         * @return \PDO|\Closure|null
+         * @static
+         */
+        public static function getRawDirectPdo()
+        {
+            //Method inherited from \Illuminate\Database\Connection 
+            /** @var \Illuminate\Database\MySqlConnection $instance */
+            return $instance->getRawDirectPdo();
+        }
+
+        /**
          * Set the PDO connection.
          *
          * @param \PDO|\Closure|null $pdo
@@ -7342,6 +7399,60 @@ namespace Illuminate\Support\Facades {
             //Method inherited from \Illuminate\Database\Connection 
             /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->setReadPdoConfig($config);
+        }
+
+        /**
+         * Set the PDO connection used for direct connections.
+         *
+         * @param \PDO|\Closure|null $pdo
+         * @return \Illuminate\Database\MySqlConnection
+         * @static
+         */
+        public static function setDirectPdo($pdo)
+        {
+            //Method inherited from \Illuminate\Database\Connection 
+            /** @var \Illuminate\Database\MySqlConnection $instance */
+            return $instance->setDirectPdo($pdo);
+        }
+
+        /**
+         * Set the direct PDO connection configuration.
+         *
+         * @param array $config
+         * @return \Illuminate\Database\MySqlConnection
+         * @static
+         */
+        public static function setDirectPdoConfig($config)
+        {
+            //Method inherited from \Illuminate\Database\Connection 
+            /** @var \Illuminate\Database\MySqlConnection $instance */
+            return $instance->setDirectPdoConfig($config);
+        }
+
+        /**
+         * Get the direct PDO connection configuration.
+         *
+         * @return array
+         * @static
+         */
+        public static function getDirectPdoConfig()
+        {
+            //Method inherited from \Illuminate\Database\Connection 
+            /** @var \Illuminate\Database\MySqlConnection $instance */
+            return $instance->getDirectPdoConfig();
+        }
+
+        /**
+         * Determine if this connection has a direct PDO connection configured.
+         *
+         * @return bool
+         * @static
+         */
+        public static function hasDirectConnection()
+        {
+            //Method inherited from \Illuminate\Database\Connection 
+            /** @var \Illuminate\Database\MySqlConnection $instance */
+            return $instance->hasDirectConnection();
         }
 
         /**
@@ -7707,8 +7818,9 @@ namespace Illuminate\Support\Facades {
         /**
          * Execute the given callback without table prefix.
          *
-         * @param \Closure $callback
-         * @return mixed
+         * @template TReturn
+         * @param (\Closure($this): TReturn) $callback
+         * @return TReturn
          * @static
          */
         public static function withoutTablePrefix($callback)
@@ -9769,6 +9881,7 @@ namespace Illuminate\Support\Facades {
          * @param int $status
          * @param array<string, mixed> $headers
          * @return \GuzzleHttp\Psr7\Response
+         * @throws \InvalidArgumentException
          * @static
          */
         public static function psr7Response($body = null, $status = 200, $headers = [])
@@ -9847,6 +9960,7 @@ namespace Illuminate\Support\Facades {
          * @param string $url
          * @param \Illuminate\Http\Client\Response|\GuzzleHttp\Promise\PromiseInterface|callable|int|string|array|\Illuminate\Http\Client\ResponseSequence $callback
          * @return \Illuminate\Http\Client\Factory
+         * @throws \InvalidArgumentException
          * @static
          */
         public static function stubUrl($url, $callback)
@@ -10158,6 +10272,31 @@ namespace Illuminate\Support\Facades {
         {
             /** @var \Illuminate\Translation\Translator $instance */
             return $instance->get($key, $replace, $locale, $fallback);
+        }
+
+        /**
+         * Get the specified string translation value.
+         *
+         * @throws \InvalidArgumentException
+         * @static
+         */
+        public static function string($key, $replace = [], $locale = null, $fallback = true)
+        {
+            /** @var \Illuminate\Translation\Translator $instance */
+            return $instance->string($key, $replace, $locale, $fallback);
+        }
+
+        /**
+         * Get the specified array translation value.
+         *
+         * @return array<array-key, mixed>
+         * @throws \InvalidArgumentException
+         * @static
+         */
+        public static function array($key, $replace = [], $locale = null, $fallback = true)
+        {
+            /** @var \Illuminate\Translation\Translator $instance */
+            return $instance->array($key, $replace, $locale, $fallback);
         }
 
         /**
@@ -11907,8 +12046,8 @@ namespace Illuminate\Support\Facades {
          * Set the queue route for the given class.
          *
          * @param array|class-string $class
-         * @param string|null $queue
-         * @param string|null $connection
+         * @param \UnitEnum|string|null $queue
+         * @param \UnitEnum|string|null $connection
          * @return void
          * @static
          */
@@ -15610,10 +15749,12 @@ namespace Illuminate\Support\Facades {
         /**
          * Apply the callback if the instance contains the given key.
          *
+         * @template TReturn
+         * @template TReturnDefault = never
          * @param string $key
-         * @param callable $callback
-         * @param callable|null $default
-         * @return $this|mixed
+         * @param callable(mixed):  TReturn  $callback
+         * @param (callable(): TReturnDefault)|null $default
+         * @return $this|TReturn|\Illuminate\Http\TReturnDefault
          * @static
          */
         public static function whenHas($key, $callback, $default = null)
@@ -15664,16 +15805,37 @@ namespace Illuminate\Support\Facades {
         /**
          * Apply the callback if the instance contains a non-empty value for the given key.
          *
+         * @template TReturn
+         * @template TReturnDefault = never
          * @param string $key
-         * @param callable $callback
-         * @param callable|null $default
-         * @return $this|mixed
+         * @param callable(mixed):  TReturn  $callback
+         * @param (callable(): TReturnDefault)|null $default
+         * @return $this|TReturn|\Illuminate\Http\TReturnDefault
          * @static
          */
         public static function whenFilled($key, $callback, $default = null)
         {
             /** @var \Illuminate\Http\Request $instance */
             return $instance->whenFilled($key, $callback, $default);
+        }
+
+        /**
+         * Apply the callback if the instance contains a valid enum value for the given key.
+         *
+         * @template TEnum of \BackedEnum
+         * @template TReturn
+         * @template TReturnDefault = never
+         * @param string $key
+         * @param class-string<TEnum> $enumClass
+         * @param callable(TEnum):TReturn $callback
+         * @param (callable(): TReturnDefault)|null $default
+         * @return $this|TReturn|\Illuminate\Http\TReturnDefault
+         * @static
+         */
+        public static function whenEnum($key, $enumClass, $callback, $default = null)
+        {
+            /** @var \Illuminate\Http\Request $instance */
+            return $instance->whenEnum($key, $enumClass, $callback, $default);
         }
 
         /**
@@ -15692,10 +15854,12 @@ namespace Illuminate\Support\Facades {
         /**
          * Apply the callback if the instance is missing the given key.
          *
+         * @template TReturn
+         * @template TReturnDefault = never
          * @param string $key
-         * @param callable $callback
-         * @param callable|null $default
-         * @return $this|mixed
+         * @param callable(mixed):  TReturn  $callback
+         * @param (callable(): TReturnDefault)|null $default
+         * @return $this|TReturn|\Illuminate\Http\TReturnDefault
          * @static
          */
         public static function whenMissing($key, $callback, $default = null)
@@ -16364,6 +16528,7 @@ namespace Illuminate\Support\Facades {
             }
     /**
      * @method static \Illuminate\Routing\RouteRegistrar attribute(string $key, mixed $value)
+     * @method static \Illuminate\Routing\RouteRegistrar metadata(array $metadata)
      * @method static \Illuminate\Routing\RouteRegistrar whereAlpha(array|string $parameters)
      * @method static \Illuminate\Routing\RouteRegistrar whereAlphaNumeric(array|string $parameters)
      * @method static \Illuminate\Routing\RouteRegistrar whereNumber(array|string $parameters)
@@ -22081,6 +22246,161 @@ namespace Illuminate\Support\Facades {
             }
     }
 
+namespace Laravel\Mcp\Facades {
+    /**
+     * @see Registrar
+     */
+    class Mcp {
+        /**
+         * @param class-string<Server> $serverClass
+         * @static
+         */
+        public static function web($route, $serverClass)
+        {
+            /** @var \Laravel\Mcp\Server\Registrar $instance */
+            return $instance->web($route, $serverClass);
+        }
+
+        /**
+         * @param class-string<Server> $serverClass
+         * @static
+         */
+        public static function local($handle, $serverClass)
+        {
+            /** @var \Laravel\Mcp\Server\Registrar $instance */
+            return $instance->local($handle, $serverClass);
+        }
+
+        /**
+         * @param \Closure():  Client  $factory
+         * @static
+         */
+        public static function registerClient($name, $factory)
+        {
+            /** @var \Laravel\Mcp\Server\Registrar $instance */
+            return $instance->registerClient($name, $factory);
+        }
+
+        /**
+         * @static
+         */
+        public static function client($name)
+        {
+            /** @var \Laravel\Mcp\Server\Registrar $instance */
+            return $instance->client($name);
+        }
+
+        /**
+         * @param \Closure(string, TokenSet):  mixed|array{0: class-string, 1: string}  $handler
+         * @param array<int, string>|string $middleware
+         * @static
+         */
+        public static function oAuthRoutesFor($client, $handler, $middleware = 'web', $connectUri = null, $callbackUri = null)
+        {
+            /** @var \Laravel\Mcp\Server\Registrar $instance */
+            return $instance->oAuthRoutesFor($client, $handler, $middleware, $connectUri, $callbackUri);
+        }
+
+        /**
+         * @static
+         */
+        public static function getLocalServer($handle)
+        {
+            /** @var \Laravel\Mcp\Server\Registrar $instance */
+            return $instance->getLocalServer($handle);
+        }
+
+        /**
+         * @static
+         */
+        public static function getWebServer($route)
+        {
+            /** @var \Laravel\Mcp\Server\Registrar $instance */
+            return $instance->getWebServer($route);
+        }
+
+        /**
+         * @return array<string, callable|Route>
+         * @static
+         */
+        public static function servers()
+        {
+            /** @var \Laravel\Mcp\Server\Registrar $instance */
+            return $instance->servers();
+        }
+
+        /**
+         * @static
+         */
+        public static function oauthRoutes($oauthPrefix = 'oauth')
+        {
+            /** @var \Laravel\Mcp\Server\Registrar $instance */
+            return $instance->oauthRoutes($oauthPrefix);
+        }
+
+        /**
+         * @return array<string, string>
+         * @static
+         */
+        public static function ensureMcpScope()
+        {
+            return \Laravel\Mcp\Server\Registrar::ensureMcpScope();
+        }
+
+        /**
+         * Register a custom macro.
+         *
+         * @param string $name
+         * @param object|callable $macro
+         * @param-closure-this static  $macro
+         * @return void
+         * @static
+         */
+        public static function macro($name, $macro)
+        {
+            \Laravel\Mcp\Server\Registrar::macro($name, $macro);
+        }
+
+        /**
+         * Mix another object into the class.
+         *
+         * @param object $mixin
+         * @param bool $replace
+         * @return void
+         * @throws \ReflectionException
+         * @static
+         */
+        public static function mixin($mixin, $replace = true)
+        {
+            \Laravel\Mcp\Server\Registrar::mixin($mixin, $replace);
+        }
+
+        /**
+         * Checks if macro is registered.
+         *
+         * @param string $name
+         * @return bool
+         * @static
+         */
+        public static function hasMacro($name)
+        {
+            return \Laravel\Mcp\Server\Registrar::hasMacro($name);
+        }
+
+        /**
+         * Flush the existing macros.
+         *
+         * @return void
+         * @static
+         */
+        public static function flushMacros()
+        {
+            \Laravel\Mcp\Server\Registrar::flushMacros();
+        }
+
+            }
+    }
+
 namespace Laravel\Socialite\Facades {
     /**
      */
@@ -23417,6 +23737,16 @@ namespace Illuminate\Routing {
             return \Illuminate\Routing\Router::emailVerification();
         }
 
+            }
+    }
+
+namespace Illuminate\Database\Eloquent {
+    /**
+     * @template TKey of array-key
+     * @template TModel of \Illuminate\Database\Eloquent\Model
+     * @extends \Illuminate\Support\Collection<TKey, TModel>
+     */
+    class Collection extends \Illuminate\Support\Collection {
             }
     }
 
@@ -25615,6 +25945,7 @@ namespace  {
          * @param \Illuminate\Support\Collection<int, float>|\Illuminate\Contracts\Support\Arrayable|array<int, float>|string $vector
          * @param string|null $as
          * @return \Illuminate\Database\Eloquent\Builder<static>
+         * @throws \JsonException
          * @static
          */
         public static function selectVectorDistance($column, $vector, $as = null)
@@ -26031,6 +26362,7 @@ namespace  {
          * @param float $maxDistance
          * @param string $boolean
          * @return \Illuminate\Database\Eloquent\Builder<static>
+         * @throws \JsonException
          * @static
          */
         public static function whereVectorDistanceLessThan($column, $vector, $maxDistance, $boolean = 'and')
@@ -27412,6 +27744,7 @@ namespace  {
          * @param \Illuminate\Contracts\Database\Query\Expression|string $column
          * @param \Illuminate\Support\Collection<int, float>|\Illuminate\Contracts\Support\Arrayable|array<int, float> $vector
          * @return \Illuminate\Database\Eloquent\Builder<static>
+         * @throws \JsonException
          * @static
          */
         public static function orderByVectorDistance($column, $vector)
@@ -28609,6 +28942,7 @@ namespace  {
     class View extends \Illuminate\Support\Facades\View {}
     class Yaml extends \Symfony\Component\Yaml\Yaml {}
     class Horizon extends \Laravel\Horizon\Horizon {}
+    class Mcp extends \Laravel\Mcp\Facades\Mcp {}
     class Socialite extends \Laravel\Socialite\Facades\Socialite {}
     class Excel extends \Maatwebsite\Excel\Facades\Excel {}
     class LogViewer extends \Opcodes\LogViewer\Facades\LogViewer {}
