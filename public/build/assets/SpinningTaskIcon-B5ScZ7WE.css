@@ -1,0 +1,1 @@
+.spinning-icon-wrapper[data-v-604fb5dc]{justify-content:center;align-items:center;display:inline-flex}@keyframes spin-slow-604fb5dc{0%{transform:rotate(0)}to{transform:rotate(360deg)}}.animate-spin-slow[data-v-604fb5dc]{animation:spin-slow-604fb5dc var(--spin-duration,2s) linear infinite}

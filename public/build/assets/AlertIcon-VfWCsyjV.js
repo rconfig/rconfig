@@ -1,1 +1,0 @@
-import{Ma as e,Ya as t,ho as n,kr as r,mo as i}from"./app-bToAm_jd.js";var a={__name:`AlertIcon`,props:{width:{type:Number,default:16},height:{type:Number,default:16},class:{type:String,default:``}},setup(a){return(o,s)=>(t(),e(i(r),{width:a.width,height:a.height,class:n(a.class)},null,8,[`width`,`height`,`class`]))}};export{a as default};

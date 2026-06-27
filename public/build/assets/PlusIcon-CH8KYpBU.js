@@ -1,1 +1,0 @@
-import{Aa as e,Jt as t,Ma as n,Ya as r,ho as i,mo as a,uo as o}from"./app-bToAm_jd.js";var s={__name:`PlusIcon`,props:{size:{type:[Number,String],default:16},class:{type:String,default:``}},setup(s){o(!1);let c=s,l=e(()=>`size-4 text-muted-foreground ${c.class}`);return(e,o)=>(r(),n(a(t),{size:s.size,class:i(l.value)},null,8,[`size`,`class`]))}};export{s as default};
