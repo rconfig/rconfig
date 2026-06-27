@@ -11,6 +11,7 @@ import { HelpCircle, Sun, Moon, MoreVertical, Paintbrush, Star, ArrowUpCircle, C
 import { Lock } from "lucide-vue-next";
 import GenericPopover from "@/pages/Shared/Popover/GeneralPopover.vue";
 import { useVersionCheck } from "@/composables/useVersionCheck";
+import { eventBus } from "@/composables/eventBus";
 
 const colorMode = inject("colorMode");
 const panelStore = usePanelStore(); // Access the panel store
@@ -90,6 +91,13 @@ const versionStatus = computed(() => {
 const breadcrumbs = computed(() => {
 	return route.meta.breadcrumb || [];
 });
+
+// Only show the Dashboard Widgets button while on the dashboard.
+const showDashboardWidgetsButton = computed(() => route.name === "Dashboard" || route.path === "/dashboard");
+
+function handleDashboardWidgetsClick() {
+	eventBus.emit("dashboard-widgets-customize-requested");
+}
 
 const navPanelBtnState = computed(() => {
 	return panelStore.panelRef?.isCollapsed;
@@ -205,6 +213,20 @@ const showServerName = computed(() => {
 			<span v-if="showServerName" :style="{ color: serverDisplayColor }" :class="`text-${serverDisplaySize} font-semibold mr-4`">{{ serverDisplayName }}</span>
 
 			<div class="mt-1 top-nav-div flex items-center space-x-2">
+				<!-- Dashboard Widgets selector - only on the dashboard -->
+				<TooltipProvider v-if="showDashboardWidgetsButton">
+					<Tooltip>
+						<TooltipTrigger as-child>
+							<Button aria-label="Dashboard Widgets" class="hover:bg-rcgray-600 transition-colors duration-200 transform hover:scale-105" variant="ghost" @click="handleDashboardWidgetsClick()">
+								<RcIcon name="dashboard" class="absolute h-[1.2rem] w-[1.2rem] text-blue-400" />
+							</Button>
+						</TooltipTrigger>
+						<TooltipContent class="text-white bg-rcgray-800 border border-blue-500/30">
+							<p>Dashboard Widgets</p>
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
+
 				<Button v-if="isDevMode" class="hover:bg-rcgray-600 transition-colors duration-200 transform hover:scale-105" @click="navToStyles()" variant="ghost">
 					<Paintbrush class="absolute h-[1.2rem] w-[1.2rem] text-blue-400" />
 				</Button>

@@ -1,7 +1,7 @@
 <script setup>
-import { ref, computed, onMounted, watch } from "vue";
-import { Button } from "@/components/ui/button";
-import { GripVertical, Plus, Settings2, Maximize2, Minimize2 } from "lucide-vue-next";
+import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
+import { X } from "lucide-vue-next";
+import { eventBus } from "@/composables/eventBus";
 import LatestDevicesWidget from "@/pages/Dashboard/Widgets/LatestDevicesWidget.vue";
 import LatestConfigsWidget from "@/pages/Dashboard/Widgets/LatestConfigsWidget.vue";
 import QuickStatsWidget from "@/pages/Dashboard/Widgets/QuickStatsWidget.vue";
@@ -27,7 +27,6 @@ const props = defineProps({
 
 const STORAGE_KEY = 'dashboard_widgets_config';
 
-const isExpanded = ref(true);
 const editMode = ref(false);
 
 // Map component names to actual components
@@ -103,12 +102,12 @@ watch(
 	{ deep: true }
 );
 
-const toggleExpanded = () => {
-	isExpanded.value = !isExpanded.value;
-};
-
 const toggleEditMode = () => {
 	editMode.value = !editMode.value;
+};
+
+const closeEditMode = () => {
+	editMode.value = false;
 };
 
 const toggleWidget = (widgetId) => {
@@ -118,76 +117,42 @@ const toggleWidget = (widgetId) => {
 	}
 };
 
-// Load configuration on mount
+// Load configuration on mount and listen for the top nav customize button
 onMounted(() => {
 	loadWidgetConfig();
+	eventBus.on("dashboard-widgets-customize-requested", toggleEditMode);
+});
+
+onBeforeUnmount(() => {
+	eventBus.off("dashboard-widgets-customize-requested", toggleEditMode);
 });
 </script>
 
 <template>
-	<div :class="[
-		'hidden xl:block transition-all duration-300',
-		isExpanded ? 'xl:col-span-12' : 'xl:col-span-4'
-	]">
-		<!-- Header Card with Controls -->
-		<div class="border-0 shadow-md rounded-2xl bg-card text-card-foreground p-4 transition-all duration-200 hover:shadow-lg mb-4">
+	<div class="hidden xl:block xl:col-span-12">
+		<!-- Widget Selector Panel - opened from the Dashboard Widgets button in the top nav -->
+		<div v-if="editMode" class="border-0 shadow-md rounded-2xl bg-card text-card-foreground p-4 transition-all duration-200 mb-4">
 			<div class="flex items-center justify-between mb-3">
-				<h3 class="text-lg font-semibold flex items-center gap-2">
-					<RcIcon name="dashboard" class="w-5 h-5" />
-					Dashboard Widgets
+				<h3 class="text-sm font-semibold flex items-center gap-2">
+					<RcIcon name="dashboard" class="w-4 h-4" />
+					Available Widgets
+					<span class="text-xs font-normal text-muted-foreground">Click to enable or disable</span>
 				</h3>
-				
-				<div class="flex items-center gap-2">
-					<button class="p-2 rounded-lg hover:bg-muted/50 transition-colors" @click="toggleEditMode" :title="editMode ? 'Close configuration' : 'Configure Widgets'">
-						<Settings2 class="w-4 h-4" />
-					</button>
-					<button class="p-2 rounded-lg hover:bg-muted/50 transition-colors" @click="toggleExpanded" :title="isExpanded ? 'Collapse' : 'Expand'">
-						<Maximize2 v-if="!isExpanded" class="w-4 h-4" />
-						<Minimize2 v-else class="w-4 h-4" />
-					</button>
-				</div>
+				<button class="p-2 rounded-lg hover:bg-muted/50 transition-colors" @click="closeEditMode" title="Done">
+					<X class="w-4 h-4" />
+				</button>
 			</div>
-
-			<!-- Edit Mode Panel -->
-			<div v-if="editMode" class="p-3 rounded-lg bg-muted/30 border border-muted">
-				<div class="flex items-center justify-between mb-2">
-					<span class="text-sm font-medium">Available Widgets</span>
-					<span class="text-xs text-muted-foreground">Click to enable/disable</span>
-				</div>
-				<div class="flex flex-wrap gap-2">
-					<button v-for="widget in availableWidgets" :key="widget.id" @click="toggleWidget(widget.id)" :class="['px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 cursor-pointer', widget.enabled ? 'bg-blue-600 text-white hover:bg-blue-700 hover:animate-pulse' : 'bg-muted text-muted-foreground hover:bg-muted/70']">
-						<span class="mr-1.5">{{ widget.enabled ? '✓' : '+' }}</span>
-						{{ widget.name }}
-					</button>
-				</div>
+			<div class="flex flex-wrap gap-2">
+				<button v-for="widget in availableWidgets" :key="widget.id" @click="toggleWidget(widget.id)" :class="['px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 cursor-pointer', widget.enabled ? 'bg-blue-600 text-white hover:bg-blue-700 hover:animate-pulse' : 'bg-muted text-muted-foreground hover:bg-muted/70']">
+					<span class="mr-1.5">{{ widget.enabled ? '✓' : '+' }}</span>
+					{{ widget.name }}
+				</button>
 			</div>
 		</div>
 
 		<!-- Widget Grid - No background wrapper -->
-		<div v-if="activeWidgets.length > 0" :class="['grid gap-4', isExpanded ? 'grid-cols-1 lg:grid-cols-2 xl:grid-cols-3' : 'grid-cols-1']">
+		<div v-if="activeWidgets.length > 0" class="grid gap-4 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
 			<component v-for="widget in activeWidgets" :key="widget.id" :is="widgetComponents[widget.component]" :configinfo="configinfo" :healthLatest="healthLatest" :latestDevices="latestDevices" :isLoadingLatestDevices="isLoadingLatestDevices" :editMode="editMode" class="transition-all duration-200"/>
 		</div>
-
-		<!-- Empty State -->
-		<!-- <div v-if="activeWidgets.length === 0" class="border-0 shadow-md rounded-2xl bg-card text-card-foreground p-4 transition-all duration-200 hover:shadow-lg">
-			<div class="text-center py-8">
-				<div class="inline-flex p-3 rounded-full bg-muted/50 mb-3">
-					<Plus class="w-6 h-6 text-muted-foreground" />
-				</div>
-				<h4 class="text-sm font-semibold mb-1">No Widgets Active</h4>
-				<p class="text-xs text-muted-foreground mb-3">
-					Click the settings icon to add widgets
-				</p>
-				<Button 
-					class="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse text-white"
-					size="sm" 
-					@click="editMode = true"
-					variant="primary"
-				>
-					<Settings2 class="w-4 h-4 mr-2" />
-					Configure Widgets
-				</Button>
-			</div>
-		</div> -->
 	</div>
 </template>
