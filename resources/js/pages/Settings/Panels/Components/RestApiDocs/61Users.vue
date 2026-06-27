@@ -173,30 +173,35 @@ const endpoints = {
 </script>
 
 <template>
-  <CardHeader>
-    <CardTitle>Users API</CardTitle>
-    <CardDescription>Manage system users through the REST API</CardDescription>
-  </CardHeader>
+	<CardHeader>
+		<CardTitle>Users API</CardTitle>
+		<CardDescription>Manage system users through the REST API</CardDescription>
+	</CardHeader>
 
-  <div class="px-6 pb-4">
-    <div class="flex items-start gap-2 mb-6">
-      <Users class="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
-      <div>
-        <h3 class="text-base font-medium">Working with Users</h3>
-        <p class="text-muted-foreground mt-1">
-          The Users API allows you to manage user accounts in rConfig. You can
-          create, view, update, and delete users.
-        </p>
-      </div>
-    </div>
+	<div class="px-6 pb-4">
+		<div class="flex items-start gap-2 mb-6">
+			<Users class="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
+			<div>
+				<h3 class="text-base font-medium">
+					Working with Users
+				</h3>
+				<p class="text-muted-foreground mt-1">
+					The Users API allows you to manage user accounts in rConfig. You can
+					create, view, update, and delete users.
+				</p>
+			</div>
+		</div>
 
-    <AlertInfo
-      class="mt-4 mb-6"
-      variant="dark"
-      title="User Management"
-      message="This section documents the v1 users resource CRUD endpoints. Additional user profile and activity endpoints are available in the authenticated app API namespace."
-    />
-  </div>
+		<AlertInfo
+			class="mt-4 mb-6"
+			variant="dark"
+			title="User Management"
+			message="This section documents the v1 users resource CRUD endpoints. Additional user profile and activity endpoints are available in the authenticated app API namespace."
+		/>
+	</div>
 
-  <ApiDocsTemplate :pagename="pagename" :endpoints="endpoints" />
+	<ApiDocsTemplate
+		:pagename="pagename"
+		:endpoints="endpoints"
+	/>
 </template>

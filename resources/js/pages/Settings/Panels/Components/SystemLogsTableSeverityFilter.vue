@@ -64,24 +64,48 @@ function selectItem(item) {
 <template>
 	<Popover>
 		<PopoverTrigger>
-			<Button variant="ghost" class="flex items-center justify-center w-full h-full px-2 py-1 border rounded-xl whitespace-nowrap bg-rcgray-700 text-rcgray-400">
+			<Button
+				variant="ghost"
+				class="flex items-center justify-center w-full h-full px-2 py-1 border rounded-xl whitespace-nowrap bg-rcgray-700 text-rcgray-400"
+			>
 				<Activity class="w-4 h-4 mr-2 text-amber-400 activity-pulse" />
 
-				<template v-if="selectedSeverity && selectedSeverity.length === 0">Severity</template>
+				<template v-if="selectedSeverity && selectedSeverity.length === 0">
+					Severity
+				</template>
 				<template v-else>
-					<span class="text-sm font-light" v-if="selectedSeverity.length > 0">
+					<span
+						v-if="selectedSeverity.length > 0"
+						class="text-sm font-light"
+					>
 						Severity
 						<strong class="text-sm font-semibold">{{ selectedSeverity.length }} selected</strong>
 					</span>
 				</template>
 			</Button>
 		</PopoverTrigger>
-		<PopoverContent side="bottom" align="start" class="p-0 w-44">
+		<PopoverContent
+			side="bottom"
+			align="start"
+			class="p-0 w-44"
+		>
 			<ScrollArea class="h-50">
 				<div class="py-1">
-					<div v-for="option in options" :key="option.id" class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600" @click="selectItem(option)">
-						<input type="checkbox" :checked="selectedSeverity.some((cat) => cat.id === option.id)" class="mr-2" />
-						<span data-size="20" class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5">
+					<div
+						v-for="option in options"
+						:key="option.id"
+						class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600"
+						@click="selectItem(option)"
+					>
+						<input
+							type="checkbox"
+							:checked="selectedSeverity.some((cat) => cat.id === option.id)"
+							class="mr-2"
+						/>
+						<span
+							data-size="20"
+							class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5"
+						>
 							<span data-size="20">
 								{{ option.name }}
 							</span>

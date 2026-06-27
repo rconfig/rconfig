@@ -94,37 +94,42 @@ const endpoints = {
 </script>
 
 <template>
-  <CardHeader>
-    <CardTitle>Config Changes API v2</CardTitle>
-    <CardDescription
-      >Read-only access to precomputed config diffs, in inline or side-by-side
-      form</CardDescription
-    >
-  </CardHeader>
+	<CardHeader>
+		<CardTitle>Config Changes API v2</CardTitle>
+		<CardDescription>
+			Read-only access to precomputed config diffs, in inline or side-by-side
+			form
+		</CardDescription>
+	</CardHeader>
 
-  <div class="px-6 pb-4">
-    <div class="flex items-start gap-2 mb-6">
-      <GitCompare class="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
-      <div>
-        <h3 class="text-base font-medium">Endpoint Overview</h3>
-        <p class="text-muted-foreground mt-1">
-          Surfaces the same precomputed diff bytes that the SPA renders in the
-          Config History view. Use the by-config lookup when you have a
-          configs.id from a downstream system and want the matching diff; use
-          the id lookup when you already hold a change id. Both endpoints accept
-          mode=inline (default) or mode=side to choose the rendered output
-          shape.
-        </p>
-      </div>
-    </div>
+	<div class="px-6 pb-4">
+		<div class="flex items-start gap-2 mb-6">
+			<GitCompare class="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
+			<div>
+				<h3 class="text-base font-medium">
+					Endpoint Overview
+				</h3>
+				<p class="text-muted-foreground mt-1">
+					Surfaces the same precomputed diff bytes that the SPA renders in the
+					Config History view. Use the by-config lookup when you have a
+					configs.id from a downstream system and want the matching diff; use
+					the id lookup when you already hold a change id. Both endpoints accept
+					mode=inline (default) or mode=side to choose the rendered output
+					shape.
+				</p>
+			</div>
+		</div>
 
-    <AlertInfo
-      class="mt-4 mb-6"
-      variant="dark"
-      title="Authentication"
-      message="A valid apitoken is required in the request header or query string."
-    />
-  </div>
+		<AlertInfo
+			class="mt-4 mb-6"
+			variant="dark"
+			title="Authentication"
+			message="A valid apitoken is required in the request header or query string."
+		/>
+	</div>
 
-  <ApiDocsTemplate :pagename="pagename" :endpoints="endpoints" />
+	<ApiDocsTemplate
+		:pagename="pagename"
+		:endpoints="endpoints"
+	/>
 </template>

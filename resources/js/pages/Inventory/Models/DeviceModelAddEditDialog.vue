@@ -58,12 +58,12 @@ const validateForm = () => {
 	errors.value = {};
 
 	if (!deviceModelForm.value.name?.trim()) {
-		errors.value.name = t("validation.required", { field: t("common.entities.deviceModel") });
+		errors.value.name = "Device Model name is required.";
 		return false;
 	}
 
 	if (deviceModelForm.value.name.length > 255) {
-		errors.value.name = t("validation.maxLength", { field: t("common.entities.deviceModel"), max: 255 });
+		errors.value.name = "Device Model name must not exceed 255 characters.";
 		return false;
 	}
 
@@ -151,32 +151,66 @@ onMounted(() => {
 </script>
 
 <template>
-	<Dialog :open="isDialogOpen('DialogNewDeviceModel')" @update:open="handleCancel">
+	<Dialog
+		:open="isDialogOpen('DialogNewDeviceModel')"
+		@update:open="handleCancel"
+	>
 		<DialogContent class="sm:max-w-[600px]">
 			<DialogHeader>
 				<DialogTitle>{{ dialogTitle }}</DialogTitle>
 			</DialogHeader>
 
-			<div v-if="isLoading" class="flex justify-center py-8">
+			<div
+				v-if="isLoading"
+				class="flex justify-center py-8"
+			>
 				<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
 			</div>
 
-			<form v-else @submit.prevent="saveDeviceModel" class="space-y-6">
+			<form
+				v-else
+				class="space-y-6"
+				@submit.prevent="saveDeviceModel"
+			>
 				<!-- Device Model Name -->
 				<div class="space-y-2">
-					<Label for="name" class="text-sm font-medium"> Device Model Name * </Label>
-					<Input id="name" v-model="deviceModelForm.name" type="text" placeholder="Enter device model name" :class="{ 'border-red-500': errors.name }" maxlength="255" required />
-					<p v-if="errors.name" class="text-sm text-red-600">
+					<Label
+						for="name"
+						class="text-sm font-medium"
+					> Device Model Name * </Label>
+					<Input
+						id="name"
+						v-model="deviceModelForm.name"
+						type="text"
+						placeholder="Enter device model name"
+						:class="{ 'border-red-500': errors.name }"
+						maxlength="255"
+						required
+					/>
+					<p
+						v-if="errors.name"
+						class="text-sm text-red-600"
+					>
 						{{ errors.name }}
 					</p>
 				</div>
 
 				<!-- Current Devices (Edit Mode Only) -->
-				<div v-if="isEditMode && devices.length > 0" class="space-y-2">
+				<div
+					v-if="isEditMode && devices.length > 0"
+					class="space-y-2"
+				>
 					<Label class="text-sm font-medium"> Devices Using This Model ({{ devices.length }}) </Label>
 					<div class="max-h-32 overflow-y-auto border rounded-md p-3 bg-gray-50">
 						<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-							<div v-for="device in devices" :key="device.id" class="text-sm text-gray-700 truncate" :title="device.name">• {{ device.name }}</div>
+							<div
+								v-for="device in devices"
+								:key="device.id"
+								class="text-sm text-gray-700 truncate"
+								:title="device.name"
+							>
+								• {{ device.name }}
+							</div>
 						</div>
 					</div>
 					<p class="text-xs text-gray-600">
@@ -185,11 +219,22 @@ onMounted(() => {
 				</div>
 
 				<!-- Warning for Edit Mode -->
-				<div v-if="isEditMode" class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+				<div
+					v-if="isEditMode"
+					class="bg-yellow-50 border-l-4 border-yellow-400 p-4"
+				>
 					<div class="flex">
 						<div class="flex-shrink-0">
-							<svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-								<path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+							<svg
+								class="h-5 w-5 text-yellow-400"
+								viewBox="0 0 20 20"
+								fill="currentColor"
+							>
+								<path
+									fill-rule="evenodd"
+									d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+									clip-rule="evenodd"
+								/>
 							</svg>
 						</div>
 						<div class="ml-3">
@@ -202,7 +247,12 @@ onMounted(() => {
 
 				<!-- Actions -->
 				<DialogFooter>
-					<Button type="button" variant="outline" @click="handleCancel" :disabled="isLoading">
+					<Button
+						type="button"
+						variant="outline"
+						:disabled="isLoading"
+						@click="handleCancel"
+					>
 						Cancel
 					</Button>
 					<!-- <Button type="submit" :disabled="isLoading" class="bg-blue-600 hover:bg-blue-700">
@@ -210,22 +260,44 @@ onMounted(() => {
 						{{ isEditMode ? t("common.update") : t("common.create") }}
 					</Button> -->
 
-					<Button v-if="props.editId === 0" type="submit" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click="saveDeviceModel()" variant="primary" :disabled="isLoading">
+					<Button
+						v-if="props.editId === 0"
+						type="submit"
+						class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+						size="sm"
+						variant="primary"
+						:disabled="isLoading"
+						@click="saveDeviceModel()"
+					>
 						Save
 						<div class="pl-2 ml-auto">
 							<kbd class="rc-kdb-class2">
 								Ctrl&nbsp;
-								<RcIcon name="enter" class="ml-1" />
+								<RcIcon
+									name="enter"
+									class="ml-1"
+								/>
 							</kbd>
 						</div>
 					</Button>
 
-					<Button v-else type="submit" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click="saveDeviceModel()" variant="primary" :disabled="isLoading">
+					<Button
+						v-else
+						type="submit"
+						class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+						size="sm"
+						variant="primary"
+						:disabled="isLoading"
+						@click="saveDeviceModel()"
+					>
 						Update
 						<div class="pl-2 ml-auto">
 							<kbd class="rc-kdb-class2">
 								Ctrl&nbsp;
-								<RcIcon name="enter" class="ml-1" />
+								<RcIcon
+									name="enter"
+									class="ml-1"
+								/>
 							</kbd>
 						</div>
 					</Button>

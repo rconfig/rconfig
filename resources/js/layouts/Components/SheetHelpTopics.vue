@@ -51,45 +51,49 @@ function markAsRead(itemId) {
 </script>
 
 <template>
-  <div class="grid gap-2 py-4">
-    <div class="flex justify-between mb-1">
-      <span class="font-semibold">Popular Docs</span>
+	<div class="grid gap-2 py-4">
+		<div class="flex justify-between mb-1">
+			<span class="font-semibold">Popular Docs</span>
 
-      <Badge
-        class="flex justify-end bg-gray-800 border border-gray-700 text-slate-50 min-w-fit hover:cursor-pointer hover:bg-gray-700"
-        @click="visitDocs()">
-        View Docs
-      </Badge>
-    </div>
-    <button
-      @click="openItem(item)"
-      v-for="item of items"
-      :key="item.id"
-      class="flex items-start justify-between gap-2 p-2.5 text-sm text-left transition-all border rounded-lg hover:bg-accent">
-      <div class="flex-shrink-0">
-        <RcIcon 
-          :name="item.icon"
-          :class="item.iconClass" />
-      </div>
-      <div class="flex-1 min-w-0">
-        <div class="flex flex-col w-full gap-1">
-          <div class="flex items-center">
-            <div class="flex items-center gap-2">
-              <div class="font-semibold">
-                {{ item.name }}
-              </div>
-            </div>
-            <div class="ml-auto text-xs text-muted-foreground flex-shrink-0">
-              <span
-                v-if="!item.read"
-                class="flex w-2 h-2 bg-blue-600 rounded-full" />
-            </div>
-          </div>
-        </div>
-        <div class="text-xs line-clamp-2 text-muted-foreground">
-          {{ item.text.substring(0, 300) }}
-        </div>
-      </div>
-    </button>
-  </div>
+			<Badge
+				class="flex justify-end bg-gray-800 border border-gray-700 text-slate-50 min-w-fit hover:cursor-pointer hover:bg-gray-700"
+				@click="visitDocs()"
+			>
+				View Docs
+			</Badge>
+		</div>
+		<button
+			v-for="item of items"
+			:key="item.id"
+			class="flex items-start justify-between gap-2 p-2.5 text-sm text-left transition-all border rounded-lg hover:bg-accent"
+			@click="openItem(item)"
+		>
+			<div class="flex-shrink-0">
+				<RcIcon 
+					:name="item.icon"
+					:class="item.iconClass"
+				/>
+			</div>
+			<div class="flex-1 min-w-0">
+				<div class="flex flex-col w-full gap-1">
+					<div class="flex items-center">
+						<div class="flex items-center gap-2">
+							<div class="font-semibold">
+								{{ item.name }}
+							</div>
+						</div>
+						<div class="ml-auto text-xs text-muted-foreground flex-shrink-0">
+							<span
+								v-if="!item.read"
+								class="flex w-2 h-2 bg-blue-600 rounded-full"
+							/>
+						</div>
+					</div>
+				</div>
+				<div class="text-xs line-clamp-2 text-muted-foreground">
+					{{ item.text.substring(0, 300) }}
+				</div>
+			</div>
+		</button>
+	</div>
 </template>

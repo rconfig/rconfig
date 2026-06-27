@@ -18,11 +18,16 @@ defineProps({
 		<Card class="overflow-hidden">
 			<CardHeader class="flex flex-row items-start p-4 bg-muted/50">
 				<div class="grid gap-0.5">
-					<CardTitle class="flex items-center gap-2 text-lg group">Configuration Summary</CardTitle>
+					<CardTitle class="flex items-center gap-2 text-lg group">
+						Configuration Summary
+					</CardTitle>
 				</div>
 			</CardHeader>
 			<CardContent class="p-4 pt-0 text-sm">
-				<div class="space-y-2" v-if="isLoading">
+				<div
+					v-if="isLoading"
+					class="space-y-2"
+				>
 					<Skeleton class="w-1/2 h-4" />
 					<Skeleton class="w-full h-4" />
 					<Skeleton class="w-full h-4" />
@@ -34,7 +39,10 @@ defineProps({
 					<Skeleton class="w-full h-4" />
 				</div>
 				<transition name="fade">
-					<div class="grid gap-2 text-sm" v-if="!isLoading && data">
+					<div
+						v-if="!isLoading && data"
+						class="grid gap-2 text-sm"
+					>
 						<dl class="grid gap-2">
 							<div class="flex items-center justify-between">
 								<dt class="flex items-center gap-1 text-muted-foreground">
@@ -42,10 +50,16 @@ defineProps({
 									Good Configs
 								</dt>
 								<!-- if data.config_summary then this is a device else its an API -->
-								<dd class="flex items-center gap-2" v-if="data.config_summary">
+								<dd
+									v-if="data.config_summary"
+									class="flex items-center gap-2"
+								>
 									{{ data.config_summary?.download_status_1_count ?? "--" }}
 								</dd>
-								<dd class="flex items-center gap-2" v-else>
+								<dd
+									v-else
+									class="flex items-center gap-2"
+								>
 									{{ data?.config_good_count ?? "--" }}
 								</dd>
 							</div>
@@ -54,10 +68,16 @@ defineProps({
 									<RcIcon name="status-red" />
 									Failed Configs
 								</dt>
-								<dd class="flex items-center gap-2" v-if="data.config_summary">
+								<dd
+									v-if="data.config_summary"
+									class="flex items-center gap-2"
+								>
 									{{ data.config_summary?.download_status_0_count ?? "--" }}
 								</dd>
-								<dd class="flex items-center gap-2" v-else>
+								<dd
+									v-else
+									class="flex items-center gap-2"
+								>
 									{{ data?.config_bad_count ?? "--" }}
 								</dd>
 							</div>
@@ -66,16 +86,25 @@ defineProps({
 									<RcIcon name="status-yellow" />
 									Unknown Configs
 								</dt>
-								<dd class="flex items-center gap-2" v-if="data.config_summary">
+								<dd
+									v-if="data.config_summary"
+									class="flex items-center gap-2"
+								>
 									{{ data.config_summary?.download_status_2_count ?? "--" }}
 								</dd>
-								<dd class="flex items-center gap-2" v-else>
+								<dd
+									v-else
+									class="flex items-center gap-2"
+								>
 									{{ data?.config_unknown_count ?? "--" }}
 								</dd>
 							</div>
 							<div class="flex items-center justify-between">
 								<dt class="flex items-center gap-1 text-muted-foreground">
-									<Calendar size="16" class="text-indigo-400" />
+									<Calendar
+										size="16"
+										class="text-indigo-400"
+									/>
 									Last Download
 								</dt>
 								<!-- Different last_config_at for device and api collection -->

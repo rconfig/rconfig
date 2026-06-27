@@ -22,5 +22,8 @@ const combinedClass = computed(() => {
 </script>
 
 <template>
-	<Plus :size="size" :class="combinedClass" />
+	<Plus
+		:size="size"
+		:class="combinedClass"
+	/>
 </template>

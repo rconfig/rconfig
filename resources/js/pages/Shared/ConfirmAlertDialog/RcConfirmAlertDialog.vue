@@ -105,15 +105,29 @@ function handleClose() {
 			<AlertDialogHeader>
 				<AlertDialogTitle>{{ defaultTitle }}</AlertDialogTitle>
 				<AlertDialogDescription>
-					<slot name="description">{{ defaultDescription }}</slot>
+					<slot name="description">
+						{{ defaultDescription }}
+					</slot>
 				</AlertDialogDescription>
 			</AlertDialogHeader>
 
 			<AlertDialogFooter>
-				<AlertDialogCancel type="button" @click="handleClose">Cancel</AlertDialogCancel>
-				<AlertDialogAction type="button" @click="handleConfirm" :class="actionButtonClass">
+				<AlertDialogCancel
+					type="button"
+					@click="handleClose"
+				>
+					Cancel
+				</AlertDialogCancel>
+				<AlertDialogAction
+					type="button"
+					:class="actionButtonClass"
+					@click="handleConfirm"
+				>
 					{{ actionButtonText }}
-					<div v-if="showKeyHints" class="pl-2 ml-auto">
+					<div
+						v-if="showKeyHints"
+						class="pl-2 ml-auto"
+					>
 						<kbd class="rc-kdb-class">{{ confirmKey === " " ? "SPC" : confirmKey }}</kbd>
 					</div>
 				</AlertDialogAction>

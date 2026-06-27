@@ -21,16 +21,31 @@ onMounted(() => {
 				<Flag color="#eed49f" /><span class="ml-2">Login Banner</span>
 			</div>
 		</h3>
-		<p class="rc-panel-subheading">Customize the banner message displayed on the login page</p>
+		<p class="rc-panel-subheading">
+			Customize the banner message displayed on the login page
+		</p>
 
-		<Textarea :placeholder="banner || 'Enter your login banner message here...'" v-model="banner" />
+		<Textarea
+			v-model="banner"
+			:placeholder="banner || 'Enter your login banner message here...'"
+		/>
 
 		<div class="flex justify-end jap-2">
-			<Button variant="outline" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" @click.prevent="saveBanner()" size="sm">
+			<Button
+				variant="outline"
+				class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+				size="sm"
+				@click.prevent="saveBanner()"
+			>
 				Save
 			</Button>
 
-			<Button variant="outline" class="px-2 py-1 ml-2 text-sm bg-rcgray-900 hover:bg-rcgray-800 hover:animate-pulse" @click.prevent="resetBanner" size="sm">
+			<Button
+				variant="outline"
+				class="px-2 py-1 ml-2 text-sm bg-rcgray-900 hover:bg-rcgray-800 hover:animate-pulse"
+				size="sm"
+				@click.prevent="resetBanner"
+			>
 				Reset
 			</Button>
 		</div>

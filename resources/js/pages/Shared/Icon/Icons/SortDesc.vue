@@ -24,5 +24,9 @@ const combinedClass = computed(() => {
 </script>
 
 <template>
-	 <SortDesc :class="combinedClass" :width="width" :height="height" />
+	<SortDesc
+		:class="combinedClass"
+		:width="width"
+		:height="height"
+	/>
 </template>

@@ -41,7 +41,7 @@ export function useDeviceViewPane(props, emit) {
 			}
 		});
 
-		if (deviceData) {
+		if (deviceData.value) {
 			[...favoritesStore.favorites].forEach((favorite) => {
 				if (favorite.id === props.editId) {
 					favoriteItem.value.isFavorite = true;
@@ -77,7 +77,7 @@ export function useDeviceViewPane(props, emit) {
 
 	// Business Logic
 	function addToFavorites() {
-		if (deviceData) {
+		if (deviceData.value) {
 			favoriteItem.value.id = deviceData.value.id;
 			favoriteItem.value.label = deviceData.value.device_name;
 			favoriteItem.value.route = `/device/view/${deviceData.value.id}`;

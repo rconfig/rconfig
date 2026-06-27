@@ -32,6 +32,45 @@ const onMouseLeave = () => {
 };
 </script>
 
+<template>
+	<div 
+		class="inline-flex"
+		@mouseenter="onMouseEnter"
+		@mouseleave="onMouseLeave"
+	>
+		<svg 
+			xmlns="http://www.w3.org/2000/svg" 
+			:width="width" 
+			:height="height" 
+			viewBox="0 0 24 24" 
+			fill="none" 
+			stroke="currentColor" 
+			stroke-width="2" 
+			stroke-linecap="round" 
+			stroke-linejoin="round"
+			:class="[combinedClass, { 'logout-animation': isHovering }]"
+		>
+			<!-- Door frame path -->
+			<path
+				class="door-frame"
+				d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"
+			/>
+			<!-- Arrow path with separate classes for animation -->
+			<polyline
+				class="arrow-head"
+				points="16 17 21 12 16 7"
+			/>
+			<line
+				class="arrow-body"
+				x1="21"
+				x2="9"
+				y1="12"
+				y2="12"
+			/>
+		</svg>
+	</div>
+</template>
+
 <style scoped>
 @keyframes slide-out {
   0% {
@@ -92,30 +131,3 @@ const onMouseLeave = () => {
   animation-delay: 0.1s;
 }
 </style>
-
-<template>
-	<div 
-    @mouseenter="onMouseEnter"
-    @mouseleave="onMouseLeave"
-    class="inline-flex"
-  >
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    :width="width" 
-    :height="height" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    stroke-width="2" 
-    stroke-linecap="round" 
-    stroke-linejoin="round"
-    :class="[combinedClass, { 'logout-animation': isHovering }]"
-  >
-    <!-- Door frame path -->
-    <path class="door-frame" d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-    <!-- Arrow path with separate classes for animation -->
-    <polyline class="arrow-head" points="16 17 21 12 16 7"/>
-    <line class="arrow-body" x1="21" x2="9" y1="12" y2="12"/>
-  </svg>
-	</div>
-</template>

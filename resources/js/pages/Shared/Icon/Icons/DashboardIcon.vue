@@ -17,4 +17,11 @@ const props = defineProps({
 });
 </script>
 
-<template> <LayoutDashboard :width="width" :height="height" color="#c8d1f3" :class="class" /> </template>
+<template>
+	<LayoutDashboard
+		:width="width"
+		:height="height"
+		color="#c8d1f3"
+		:class="props.class"
+	/>
+</template>

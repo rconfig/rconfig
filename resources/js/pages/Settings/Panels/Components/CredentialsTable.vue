@@ -60,19 +60,50 @@ onMounted(() => {
 	<div class="flex flex-col h-full gap-1 text-center">
 		<div class="flex items-center justify-between p-4">
 			<div class="flex items-center">
-				<Input class="max-w-sm ml-4 mr-2" autocomplete="off" data-1p-ignore data-lpignore="true" placeholder="Filter credentials..." v-model="searchTerm" />
-				<ClearFilters v-if="searchTerm" @update:model-value="searchTerm = ''" />
+				<Input
+					v-model="searchTerm"
+					class="max-w-sm ml-4 mr-2"
+					autocomplete="off"
+					data-1p-ignore
+					data-lpignore="true"
+					placeholder="Filter credentials..."
+				/>
+				<ClearFilters
+					v-if="searchTerm"
+					@update:model-value="searchTerm = ''"
+				/>
 			</div>
 			<div class="flex items-center justify-end">
-				<Button v-if="selectedRows.length" class="px-2 py-1 bg-red-600 hover:bg-red-700 hover:animate-pulse" size="md" @click.prevent="showConfirmDelete = true" variant="primary"> Delete Selected {{ selectedRows.length }} Credentials </Button>
-				<Button type="submit" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click.prevent="createCred()" variant="primary">
-					<Key size="16" class="mr-2" />
+				<Button
+					v-if="selectedRows.length"
+					class="px-2 py-1 bg-red-600 hover:bg-red-700 hover:animate-pulse"
+					size="md"
+					variant="primary"
+					@click.prevent="showConfirmDelete = true"
+				>
+					Delete Selected {{ selectedRows.length }} Credentials
+				</Button>
+				<Button
+					type="submit"
+					class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+					size="sm"
+					variant="primary"
+					@click.prevent="createCred()"
+				>
+					<Key
+						size="16"
+						class="mr-2"
+					/>
 					New Credentials
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class2">ALT N</kbd>
 					</div>
 				</Button>
-				<RcIcon name="refresh" class="w-4 h-4 mx-4 text-muted-foreground cursor-pointer hover:text-rcgray-200" @click="reload()" />
+				<RcIcon
+					name="refresh"
+					class="w-4 h-4 mx-4 text-muted-foreground cursor-pointer hover:text-rcgray-200"
+					@click="reload()"
+				/>
 			</div>
 		</div>
 
@@ -81,24 +112,53 @@ onMounted(() => {
 				<TableHeader>
 					<TableRow>
 						<TableHead class="w-[2%]">
-							<Checkbox id="selectAll" v-model="selectAll" :checked="selectAll" @click="toggleSelectAll()" />
+							<Checkbox
+								id="selectAll"
+								v-model="selectAll"
+								:checked="selectAll"
+								@click="toggleSelectAll()"
+							/>
 						</TableHead>
 						<TableHead class="w-[5%]">
-							<Button class="flex justify-start w-full p-0 hover:bg-rcgray-800" variant="ghost" @click="toggleSort('id')">
-								<RcIcon name="sort" :sortParam="sortParam" field="id" />
+							<Button
+								class="flex justify-start w-full p-0 hover:bg-rcgray-800"
+								variant="ghost"
+								@click="toggleSort('id')"
+							>
+								<RcIcon
+									name="sort"
+									:sort-param="sortParam"
+									field="id"
+								/>
 								<span class="ml-2">ID</span>
 							</Button>
 						</TableHead>
 						<TableHead class="w-[20%]">
-							<Button class="flex justify-start w-full p-0 hover:bg-rcgray-800" variant="ghost" @click="toggleSort('cred_name')">
-								<RcIcon name="sort" :sortParam="sortParam" field="cred_name" />
+							<Button
+								class="flex justify-start w-full p-0 hover:bg-rcgray-800"
+								variant="ghost"
+								@click="toggleSort('cred_name')"
+							>
+								<RcIcon
+									name="sort"
+									:sort-param="sortParam"
+									field="cred_name"
+								/>
 								<span class="ml-2">Name</span>
 							</Button>
 						</TableHead>
-						<TableHead class="w-[30%]">Description</TableHead>
-						<TableHead class="w-[30%]">Devices</TableHead>
-						<TableHead class="w-[10%]">Created</TableHead>
-						<TableHead class="w-[10%]">Actions</TableHead>
+						<TableHead class="w-[30%]">
+							Description
+						</TableHead>
+						<TableHead class="w-[30%]">
+							Devices
+						</TableHead>
+						<TableHead class="w-[10%]">
+							Created
+						</TableHead>
+						<TableHead class="w-[10%]">
+							Actions
+						</TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>
@@ -106,19 +166,35 @@ onMounted(() => {
 						<Loading />
 					</template>
 					<template v-else-if="!isLoading">
-						<TableRow v-for="row in creds.data" :key="row.id">
+						<TableRow
+							v-for="row in creds.data"
+							:key="row.id"
+						>
 							<TableCell class="text-start">
-								<Checkbox class="cursor-pointer" :id="'select-' + row.id" :checked="selectedRows.includes(row.id) ? true : false" @click="toggleSelectRow(row.id)" />
+								<Checkbox
+									:id="'select-' + row.id"
+									class="cursor-pointer"
+									:checked="selectedRows.includes(row.id) ? true : false"
+									@click="toggleSelectRow(row.id)"
+								/>
 							</TableCell>
 							<TableCell class="text-start">
 								<div class="flex items-center">
 									{{ row.id }}
-									<RcIcon name="vault" v-if="row.vault_enabled === 1" class="ml-2 text-yellow-300" />
+									<RcIcon
+										v-if="row.vault_enabled === 1"
+										name="vault"
+										class="ml-2 text-yellow-300"
+									/>
 								</div>
 							</TableCell>
 							<TableCell class="text-start">
 								<div class="flex items-center gap-2">
-									<Button class="px-2 py-0 text-sm hover:bg-rcgray-800 rounded-xl" variant="ghost" @click="editCred(row)">
+									<Button
+										class="px-2 py-0 text-sm hover:bg-rcgray-800 rounded-xl"
+										variant="ghost"
+										@click="editCred(row)"
+									>
 										<span class="border-b">{{ row.cred_name }}</span>
 									</Button>
 								</div>
@@ -127,7 +203,13 @@ onMounted(() => {
 								{{ row.cred_description }}
 							</TableCell>
 							<TableCell class="text-start">
-								<BadgeList :items="row.device" displayField="device_name" linkField="view_url" :maxVisible="4" :hoverCardFields="['id', 'device_name', 'device_ip']" />
+								<BadgeList
+									:items="row.device"
+									display-field="device_name"
+									link-field="view_url"
+									:max-visible="4"
+									:hover-card-fields="['id', 'device_name', 'device_ip']"
+								/>
 							</TableCell>
 							<TableCell class="text-start">
 								{{ row.created_at }}
@@ -135,13 +217,13 @@ onMounted(() => {
 							<!-- ACTIONS MENU -->
 							<TableCell class="text-start">
 								<ActionsMenu
-									:showEditBtn="true"
-									@onEdit="
+									:show-edit-btn="true"
+									:row-data="row"
+									@on-edit="
 										editCred(row);
 										showCredDialog = true;
 									"
-									:rowData="row"
-									@onDelete="deleteCredential(row.id)"
+									@on-delete="deleteCredential(row.id)"
 								/>
 							</TableCell>
 							<!-- ACTIONS MENU -->
@@ -153,9 +235,26 @@ onMounted(() => {
 				</TableBody>
 			</Table>
 
-			<Pagination :currentPage="currentPage" :lastPage="lastPage" :perPage="perPage" @update:currentPage="currentPage = $event" @update:perPage="perPage = $event" :totalRecords="creds.total" :isLoading="isLoading" />
-			<CredentialsAddEditDialog @save="handleSave()" :key="newCredModalKey" :editId="editId" />
-			<RcConfirmAlertDialog :ids="selectedRows" :showConfirmDelete="showConfirmDelete" @close="showConfirmDelete = false" @handleDelete="deleteManyCredentials(selectedRows)" />
+			<Pagination
+				:current-page="currentPage"
+				:last-page="lastPage"
+				:per-page="perPage"
+				:total-records="creds.total"
+				:is-loading="isLoading"
+				@update:current-page="currentPage = $event"
+				@update:per-page="perPage = $event"
+			/>
+			<CredentialsAddEditDialog
+				:key="newCredModalKey"
+				:edit-id="editId"
+				@save="handleSave()"
+			/>
+			<RcConfirmAlertDialog
+				:ids="selectedRows"
+				:show-confirm-delete="showConfirmDelete"
+				@close="showConfirmDelete = false"
+				@handle-delete="deleteManyCredentials(selectedRows)"
+			/>
 		</div>
 	</div>
 </template>

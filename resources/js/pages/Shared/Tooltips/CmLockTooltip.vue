@@ -43,12 +43,19 @@ const props = defineProps({
 </script>
 <template>
 	<div class="flex items-center">
-		<TooltipProvider :delay-duration="delayDuration" :skip-delay-duration="skipDelayDuration" v-if="isLocked">
+		<TooltipProvider
+			v-if="isLocked"
+			:delay-duration="delayDuration"
+			:skip-delay-duration="skipDelayDuration"
+		>
 			<Tooltip>
 				<TooltipTrigger as-child>
 					<div class="flex items-center">
 						<span :class="lockedTextClass">{{ id }}</span>
-						<FileLock :class="iconClass" :size="iconSize" />
+						<FileLock
+							:class="iconClass"
+							:size="iconSize"
+						/>
 					</div>
 				</TooltipTrigger>
 				<TooltipContent>
@@ -56,6 +63,9 @@ const props = defineProps({
 				</TooltipContent>
 			</Tooltip>
 		</TooltipProvider>
-		<span v-else :class="unlockedTextClass">{{ id }}</span>
+		<span
+			v-else
+			:class="unlockedTextClass"
+		>{{ id }}</span>
 	</div>
 </template>

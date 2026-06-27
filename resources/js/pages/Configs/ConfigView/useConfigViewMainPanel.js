@@ -72,7 +72,6 @@ export default function useConfigViewMainPanel(props) {
 
 	onMounted(async () => {
 		// await checkPrismServerStatus();
-		window.addEventListener("keydown", (event) => handleKeyDown(event, () => saveDialog(props.configId, model, null, emit, () => emit("close"))));
 	});
 
 	onUnmounted(() => {

@@ -82,13 +82,24 @@ const filteredCommand = computed(() => {
 <template>
 	<Popover>
 		<PopoverTrigger>
-			<Button variant="ghost" class="flex items-center justify-center w-full px-2 py-1 border rounded-xl whitespace-nowrap h-fit bg-rcgray-700 text-rcgray-400">
-				<TerminalSquare class=" " size="16" />
+			<Button
+				variant="ghost"
+				class="flex items-center justify-center w-full px-2 py-1 border rounded-xl whitespace-nowrap h-fit bg-rcgray-700 text-rcgray-400"
+			>
+				<TerminalSquare
+					class=" "
+					size="16"
+				/>
 
 				<div class="hidden lg:inline-flex ml-2">
-					<template v-if="selectedCommand && selectedCommand.length === 0">Command</template>
+					<template v-if="selectedCommand && selectedCommand.length === 0">
+						Command
+					</template>
 					<template v-else>
-						<span class="text-sm font-light" v-if="selectedCommand.length > 0">
+						<span
+							v-if="selectedCommand.length > 0"
+							class="text-sm font-light"
+						>
 							Command
 							<strong class="text-sm font-semibold">{{ selectedCommand.length }} selected</strong>
 						</span>
@@ -96,9 +107,19 @@ const filteredCommand = computed(() => {
 				</div>
 			</Button>
 		</PopoverTrigger>
-		<PopoverContent side="bottom" align="start" class="w-64 p-0">
+		<PopoverContent
+			side="bottom"
+			align="start"
+			class="w-64 p-0"
+		>
 			<div class="relative items-center w-full">
-				<Input id="search" type="text" v-model="searchTerm" placeholder="Search..." class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter" />
+				<Input
+					id="search"
+					v-model="searchTerm"
+					type="text"
+					placeholder="Search..."
+					class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter"
+				/>
 				<span class="absolute inset-y-0 flex items-center justify-center px-2 start-0">
 					<Search size="16" />
 				</span>
@@ -106,9 +127,21 @@ const filteredCommand = computed(() => {
 			<Separator />
 			<ScrollArea class="h-44">
 				<div class="py-1">
-					<div v-for="option in filteredCommand" :key="option.command" class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600" @click="selectItem(option)">
-						<input type="checkbox" :checked="selectedCommand.some((selected) => selected.command === option.command)" class="mr-2" />
-						<span data-size="20" class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5">
+					<div
+						v-for="option in filteredCommand"
+						:key="option.command"
+						class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600"
+						@click="selectItem(option)"
+					>
+						<input
+							type="checkbox"
+							:checked="selectedCommand.some((selected) => selected.command === option.command)"
+							class="mr-2"
+						/>
+						<span
+							data-size="20"
+							class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5"
+						>
 							<span data-size="20">
 								{{ option.command }}
 							</span>
@@ -119,9 +152,21 @@ const filteredCommand = computed(() => {
 			<Separator />
 
 			<div class="p-1 border-5">
-				<Button variant="ghost" class="justify-start w-full p-1" @click="selectItem({ id: 9999999 })">
-					<CheckSquare v-if="allSelected" class="mr-2" size="16" />
-					<Square v-else class="mr-2" size="16" />
+				<Button
+					variant="ghost"
+					class="justify-start w-full p-1"
+					@click="selectItem({ id: 9999999 })"
+				>
+					<CheckSquare
+						v-if="allSelected"
+						class="mr-2"
+						size="16"
+					/>
+					<Square
+						v-else
+						class="mr-2"
+						size="16"
+					/>
 
 					<span>{{ allSelected ? "Deselect all" : "Select all" }}</span>
 				</Button>

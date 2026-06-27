@@ -64,27 +64,46 @@ function close() {
 </script>
 
 <template>
-	<Dialog :open="isOpen" @update:open="close">
+	<Dialog
+		:open="isOpen"
+		@update:open="close"
+	>
 		<DialogContent class="w-full max-w-5xl">
 			<DialogHeader>
 				<DialogTitle>Report Viewer</DialogTitle>
-				<DialogDescription v-if="!isLoading" class="text-sm text-muted-foreground"> Viewing report ID: {{ report_id }} </DialogDescription>
+				<DialogDescription
+					v-if="!isLoading"
+					class="text-sm text-muted-foreground"
+				>
+					Viewing report ID: {{ report_id }}
+				</DialogDescription>
 			</DialogHeader>
 
 			<div class="relative">
 				<!-- Loading spinner -->
-				<div v-if="isLoading" class="flex items-center justify-center py-12">
+				<div
+					v-if="isLoading"
+					class="flex items-center justify-center py-12"
+				>
 					<Loader2Icon class="w-8 h-8 animate-spin text-primary" />
 				</div>
 
 				<!-- Report content -->
-				<div v-else class="max-h-[70vh] overflow-y-auto">
+				<div
+					v-else
+					class="max-h-[70vh] overflow-y-auto"
+				>
 					<div v-html="reportHtml"></div>
 				</div>
 			</div>
 
 			<DialogFooter>
-				<Button variant="outline" @click="close">Close</Button>
+				<Button
+					variant="outline"
+					@click="close"
+				>
+					Close
+				</Button>
 			</DialogFooter>
 		</DialogContent>
 	</Dialog>

@@ -57,35 +57,78 @@ const onMouseLeave = () => {
 </script>
 
 <template>
-	<Popover @mouseenter="onMouseEnter" @mouseleave="onMouseLeave" class="inline-flex">
+	<Popover
+		class="inline-flex"
+		@mouseenter="onMouseEnter"
+		@mouseleave="onMouseLeave"
+	>
 		<PopoverTrigger :open="isOpen">
 			<!-- Slot for trigger content - can be any element -->
 			<slot name="trigger">
 				<div class="cursor-pointer">
-					<component :is="typeof triggerContent === 'string' ? 'span' : triggerContent" v-if="typeof triggerContent !== 'string'" class="cursor-help" />
+					<component
+						:is="typeof triggerContent === 'string' ? 'span' : triggerContent"
+						v-if="typeof triggerContent !== 'string'"
+						class="cursor-help"
+					/>
 					<span v-else>{{ triggerContent }}</span>
 				</div>
 			</slot>
 		</PopoverTrigger>
 
-		<PopoverContent class="shadow-lg border bg-card/95 backdrop-blur-xl" :class="width" :align="align">
+		<PopoverContent
+			class="shadow-lg border bg-card/95 backdrop-blur-xl"
+			:class="width"
+			:align="align"
+		>
 			<!-- Title slot (optional) -->
 			<slot name="title">
-				<h4 v-if="title" class="font-medium text-sm mb-2">{{ title }}</h4>
+				<h4
+					v-if="title"
+					class="font-medium text-sm mb-2"
+				>
+					{{ title }}
+				</h4>
 			</slot>
 
 			<!-- Description slot -->
 			<slot name="content">
-				<p v-if="description" class="text-sm text-gray-400">{{ description }}</p>
-				<p v-if="description2" class="text-sm text-gray-400">{{ description2 }}</p>
+				<p
+					v-if="description"
+					class="text-sm text-gray-400"
+				>
+					{{ description }}
+				</p>
+				<p
+					v-if="description2"
+					class="text-sm text-gray-400"
+				>
+					{{ description2 }}
+				</p>
 			</slot>
 
 			<!-- Action slot -->
 			<slot name="action">
-				<div class="border-t bg-muted/20 mt-3" v-if="hasLink">
-					<div v-if="href" class="flex mt-3 justify-start">
-						<Button variant="outline" size="sm" asChild class="text-xs">
-							<a :href="href" target="_blank" rel="noopener noreferrer" class="inline-flex items-center">
+				<div
+					v-if="hasLink"
+					class="border-t bg-muted/20 mt-3"
+				>
+					<div
+						v-if="href"
+						class="flex mt-3 justify-start"
+					>
+						<Button
+							variant="outline"
+							size="sm"
+							as-child
+							class="text-xs"
+						>
+							<a
+								:href="href"
+								target="_blank"
+								rel="noopener noreferrer"
+								class="inline-flex items-center"
+							>
 								{{ linkText }}
 								<ExternalLink class="ml-2 h-3 w-3" />
 							</a>

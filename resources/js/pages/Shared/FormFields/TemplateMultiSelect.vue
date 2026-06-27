@@ -61,25 +61,55 @@ function navToTemplates() {
 	<!-- DIV FOR RENDERING THE BADGE COLOR CLASSES -->
 	<Popover>
 		<PopoverTrigger class="col-span-3">
-			<Button variant="ghost" class="flex flex-wrap items-start justify-start w-full pl-2 whitespace-normal border h-fit" :class="selectedTemplates.length === 0 ? 'text-muted-foreground' : ' '" :style="selectedTemplates.length === 0 ? 'padding: 0.45rem' : 'padding: 0.2rem'">
+			<Button
+				variant="ghost"
+				class="flex flex-wrap items-start justify-start w-full pl-2 whitespace-normal border h-fit"
+				:class="selectedTemplates.length === 0 ? 'text-muted-foreground' : ' '"
+				:style="selectedTemplates.length === 0 ? 'padding: 0.45rem' : 'padding: 0.2rem'"
+			>
 				<span v-if="isLoading">Loading device models...</span>
 				<!-- Padding is 0.45rem to match Inputs and adjustment when adding templates -->
-				<div v-else class="flex items-center justify-start w-full">
-					<RcIcon name="template" class="mx-2" />
+				<div
+					v-else
+					class="flex items-center justify-start w-full"
+				>
+					<RcIcon
+						name="template"
+						class="mx-2"
+					/>
 					{{ selectedTemplates.length === 0 ? "Selected templates: " : "" }}
 
-					<span v-for="template in selectedTemplates" :key="template.id" class="relative my-1 group">
+					<span
+						v-for="template in selectedTemplates"
+						:key="template.id"
+						class="relative my-1 group"
+					>
 						<span class="flex items-center text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border">
 							{{ template.templateName }}
-							<X size="10" class="ml-1 cursor-pointer text-rcgray-300 hover:text-white" @click.stop="deleteItemById(template.id)" />
+							<X
+								size="10"
+								class="ml-1 cursor-pointer text-rcgray-300 hover:text-white"
+								@click.stop="deleteItemById(template.id)"
+							/>
 						</span>
 					</span>
 				</div>
 			</Button>
 		</PopoverTrigger>
-		<PopoverContent side="bottom" align="start" class="col-span-3 p-0">
+		<PopoverContent
+			side="bottom"
+			align="start"
+			class="col-span-3 p-0"
+		>
 			<div class="relative items-center w-full">
-				<Input id="search" type="text" v-model="searchTerm" autocomplete="off" placeholder="Search..." class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter" />
+				<Input
+					id="search"
+					v-model="searchTerm"
+					type="text"
+					autocomplete="off"
+					placeholder="Search..."
+					class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter"
+				/>
 				<span class="absolute inset-y-0 flex items-center justify-center px-2 start-0">
 					<RcIcon name="search" />
 				</span>
@@ -88,9 +118,22 @@ function navToTemplates() {
 
 			<ScrollArea class="h-64">
 				<div class="py-1">
-					<RcIcon name="three-dots-loading" class="w-8 h-8 mx-auto my-4 text-muted-foreground" v-if="isLoading" />
-					<div v-else v-for="template in filteredVendors" :key="template.id" class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600" @click="selectItem(template)">
-						<span data-size="20" class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5">
+					<RcIcon
+						v-if="isLoading"
+						name="three-dots-loading"
+						class="w-8 h-8 mx-auto my-4 text-muted-foreground"
+					/>
+					<div
+						v-for="template in filteredVendors"
+						v-else
+						:key="template.id"
+						class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600"
+						@click="selectItem(template)"
+					>
+						<span
+							data-size="20"
+							class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5"
+						>
 							<span data-size="20">
 								{{ template.templateName }}
 							</span>
@@ -102,9 +145,18 @@ function navToTemplates() {
 			<Separator />
 
 			<div class="p-1 border-5">
-				<Button variant="ghost" @click="showConfirmCloseDialog()" class="justify-start w-full p-1">
-					<RcIcon name="plus" class="w-8" />
-					<div class="rc-text-xs-muted ml-1">Create new record</div>
+				<Button
+					variant="ghost"
+					class="justify-start w-full p-1"
+					@click="showConfirmCloseDialog()"
+				>
+					<RcIcon
+						name="plus"
+						class="w-8"
+					/>
+					<div class="rc-text-xs-muted ml-1">
+						Create new record
+					</div>
 					<TooltipProvider>
 						<Tooltip>
 							<TooltipTrigger as-child>
@@ -121,6 +173,10 @@ function navToTemplates() {
 			</div>
 		</PopoverContent>
 
-		<RcConfirmAlertDialog :showConfirmCloseAlert="showConfirmCloseAlert" @handleClose="cancelCloseDialog" @handleConfirm="navToTemplates()" />
+		<RcConfirmAlertDialog
+			:show-confirm-close-alert="showConfirmCloseAlert"
+			@handle-close="cancelCloseDialog"
+			@handle-confirm="navToTemplates()"
+		/>
 	</Popover>
 </template>

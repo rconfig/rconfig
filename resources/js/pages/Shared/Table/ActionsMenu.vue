@@ -195,66 +195,135 @@ function handleShowCopyComplianceDefDebug() {
 	<div>
 		<DropdownMenu>
 			<DropdownMenuTrigger as-child>
-				<Button variant="ghost" class="hover:animate-pulse">
+				<Button
+					variant="ghost"
+					class="hover:animate-pulse"
+				>
 					...
 				</Button>
 			</DropdownMenuTrigger>
 
-			<DropdownMenuContent class="w-56" align="end" side="bottom">
-				<DropdownMenuItem v-if="showCopySnippetDebug" class="cursor-pointer hover:bg-rcgray-800" @click="handleShowCopySnippetDebug">
+			<DropdownMenuContent
+				class="w-56"
+				align="end"
+				side="bottom"
+			>
+				<DropdownMenuItem
+					v-if="showCopySnippetDebug"
+					class="cursor-pointer hover:bg-rcgray-800"
+					@click="handleShowCopySnippetDebug"
+				>
 					<span class="text-gray-300 group-hover:text-gray-200">Debug Cmd</span>
 					<DropdownMenuShortcut>
-						<RcIcon name="commands" size="16" class="text-blue-300" />
+						<RcIcon
+							name="commands"
+							size="16"
+							class="text-blue-300"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
 
-				<DropdownMenuItem v-if="showCopyComplianceDefDebug" class="cursor-pointer hover:bg-rcgray-800" @click="handleShowCopyComplianceDefDebug">
+				<DropdownMenuItem
+					v-if="showCopyComplianceDefDebug"
+					class="cursor-pointer hover:bg-rcgray-800"
+					@click="handleShowCopyComplianceDefDebug"
+				>
 					<span class="text-gray-300 group-hover:text-gray-200">Debug Cmd</span>
 					<DropdownMenuShortcut>
-						<RcIcon name="commands" size="16" class="text-blue-300" />
+						<RcIcon
+							name="commands"
+							size="16"
+							class="text-blue-300"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
 
-				<DropdownMenuItem v-if="showViewDetailsBtn" class="group cursor-pointer hover:bg-rcgray-800" @click="handleViewDetails">
+				<DropdownMenuItem
+					v-if="showViewDetailsBtn"
+					class="group cursor-pointer hover:bg-rcgray-800"
+					@click="handleViewDetails"
+				>
 					<span class="text-gray-300 group-hover:text-gray-200">View Details</span>
 					<DropdownMenuShortcut>
-						<Eye size="16" class="text-blue-400 group-hover:text-blue-300" />
+						<Eye
+							size="16"
+							class="text-blue-400 group-hover:text-blue-300"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
-				<DropdownMenuItem v-if="showViewHistoryBtn" class="group cursor-pointer hover:bg-rcgray-800" @click="handleViewHistory">
+				<DropdownMenuItem
+					v-if="showViewHistoryBtn"
+					class="group cursor-pointer hover:bg-rcgray-800"
+					@click="handleViewHistory"
+				>
 					<span class="text-gray-300 group-hover:text-gray-200">View History</span>
 					<DropdownMenuShortcut>
-						<Eye size="16" class="text-blue-400 group-hover:text-blue-300" />
+						<Eye
+							size="16"
+							class="text-blue-400 group-hover:text-blue-300"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
 
-				<DropdownMenuItem v-if="showLatestResultsBtn" class="cursor-pointer hover:bg-rcgray-800" @click="handleLatestResults">
+				<DropdownMenuItem
+					v-if="showLatestResultsBtn"
+					class="cursor-pointer hover:bg-rcgray-800"
+					@click="handleLatestResults"
+				>
 					<span class="text-gray-300 group-hover:text-gray-200">Latest Results</span>
 					<DropdownMenuShortcut>
-						<List size="16" class="text-green-500 text-green hover:animate-spin" />
+						<List
+							size="16"
+							class="text-green-500 text-green hover:animate-spin"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
 
-				<DropdownMenuItem v-if="showViewResultsBtn" class="group cursor-pointer hover:bg-rcgray-800" @click="handleViewResults">
+				<DropdownMenuItem
+					v-if="showViewResultsBtn"
+					class="group cursor-pointer hover:bg-rcgray-800"
+					@click="handleViewResults"
+				>
 					<span class="text-gray-300 group-hover:text-gray-200">View Results</span>
 					<DropdownMenuShortcut>
-						<Eye size="16" class="text-blue-400 group-hover:text-blue-300" />
+						<Eye
+							size="16"
+							class="text-blue-400 group-hover:text-blue-300"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
-				<DropdownMenuItem v-if="showTaskRunNowBtn" class="cursor-pointer hover:bg-rcgray-800" @click="handleRunManualTask">
+				<DropdownMenuItem
+					v-if="showTaskRunNowBtn"
+					class="cursor-pointer hover:bg-rcgray-800"
+					@click="handleRunManualTask"
+				>
 					<span class="text-gray-300 group-hover:text-gray-200">Run now</span>
 					<DropdownMenuShortcut>
-						<Play size="16" class="animate-pulse text-yellow-300" />
+						<Play
+							size="16"
+							class="animate-pulse text-yellow-300"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
-				<DropdownMenuItem v-if="showPolicyRunNowBtn" class="cursor-pointer hover:bg-rcgray-800" @click="handleRunManualPolicy">
+				<DropdownMenuItem
+					v-if="showPolicyRunNowBtn"
+					class="cursor-pointer hover:bg-rcgray-800"
+					@click="handleRunManualPolicy"
+				>
 					<span class="text-gray-300 group-hover:text-gray-200">Run now</span>
 					<DropdownMenuShortcut>
-						<Play size="16" class="animate-pulse text-yellow-300" />
+						<Play
+							size="16"
+							class="animate-pulse text-yellow-300"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
 
-				<DropdownMenuItem v-if="showEditRbacBtn" class="group cursor-pointer hover:bg-rcgray-800" @click="handleRbacUpdate">
+				<DropdownMenuItem
+					v-if="showEditRbacBtn"
+					class="group cursor-pointer hover:bg-rcgray-800"
+					@click="handleRbacUpdate"
+				>
 					<!-- CHANGE USER ROLE -->
 					<span class="text-gray-300 group-hover:text-gray-200">Change Role</span>
 					<DropdownMenuShortcut>
@@ -262,77 +331,152 @@ function handleShowCopyComplianceDefDebug() {
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
 
-				<DropdownMenuItem v-if="showRolesBtn" class="cursor-pointer hover:bg-rcgray-800" @click="handleRoleAssignment">
+				<DropdownMenuItem
+					v-if="showRolesBtn"
+					class="cursor-pointer hover:bg-rcgray-800"
+					@click="handleRoleAssignment"
+				>
 					<!-- UPDATE ROLES FOR DEVICES, TAGS, SNIPPETS, AGENTS -->
 					<span class="text-gray-300 group-hover:text-gray-200">Roles</span>
 					<DropdownMenuShortcut>
-						<RcIcon name="rbac" size="16" />
+						<RcIcon
+							name="rbac"
+							size="16"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
 
-				<DropdownMenuItem v-if="showTaskPauseBtn && !taskPaused" class="cursor-pointer hover:bg-rcgray-800" @click="handleTaskPause">
+				<DropdownMenuItem
+					v-if="showTaskPauseBtn && !taskPaused"
+					class="cursor-pointer hover:bg-rcgray-800"
+					@click="handleTaskPause"
+				>
 					<span class="text-gray-300 group-hover:text-gray-200">Pause</span>
 					<DropdownMenuShortcut>
 						<Pause size="16" />
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
 
-				<DropdownMenuItem v-if="showTaskPauseBtn && taskPaused" class="cursor-pointer hover:bg-rcgray-800" @click="handleTaskPause">
+				<DropdownMenuItem
+					v-if="showTaskPauseBtn && taskPaused"
+					class="cursor-pointer hover:bg-rcgray-800"
+					@click="handleTaskPause"
+				>
 					<span class="text-gray-300 group-hover:text-gray-200">Resume</span>
 					<DropdownMenuShortcut>
-						<RefreshCcwDot size="16" class="text-green-500 text-green hover:animate-spin" />
+						<RefreshCcwDot
+							size="16"
+							class="text-green-500 text-green hover:animate-spin"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
 
 				<!-- AGENTS MENU ITEMS -->
-				<DropdownMenuItem v-if="showAgentEnvBtn" class="cursor-pointer hover:bg-rcgray-800" @click="handleDownloadEnv">
+				<DropdownMenuItem
+					v-if="showAgentEnvBtn"
+					class="cursor-pointer hover:bg-rcgray-800"
+					@click="handleDownloadEnv"
+				>
 					<span class="text-gray-300 group-hover:text-gray-200">Download .ENV</span>
 					<DropdownMenuShortcut>
-						<FileCode2 class="text-blue-400" size="18" />
+						<FileCode2
+							class="text-blue-400"
+							size="18"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
-				<DropdownMenuItem v-if="showAgentEnableDisableBtn" class="cursor-pointer hover:bg-rcgray-800" @click="handleEnableDisable()">
+				<DropdownMenuItem
+					v-if="showAgentEnableDisableBtn"
+					class="cursor-pointer hover:bg-rcgray-800"
+					@click="handleEnableDisable()"
+				>
 					<span v-if="!agentEnableStatus">Enable</span>
 					<span v-if="agentEnableStatus">Disable</span>
 					&nbsp;Agent
 					<DropdownMenuShortcut>
-						<Power v-if="!agentEnableStatus" class="text-green-400" size="18" />
-						<PowerOff v-if="agentEnableStatus" class="text-red-400" size="18" />
+						<Power
+							v-if="!agentEnableStatus"
+							class="text-green-400"
+							size="18"
+						/>
+						<PowerOff
+							v-if="agentEnableStatus"
+							class="text-red-400"
+							size="18"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
 				<!-- AGENTS MENU ITEMS -->
 
-				<DropdownMenuItem v-if="showEnableDisableBtn" class="cursor-pointer hover:bg-rcgray-800" @click="handleEnableDisable()">
+				<DropdownMenuItem
+					v-if="showEnableDisableBtn"
+					class="cursor-pointer hover:bg-rcgray-800"
+					@click="handleEnableDisable()"
+				>
 					<span v-if="!enableStatus">Enable</span>
 					<span v-if="enableStatus">Disable</span>
 					<DropdownMenuShortcut>
-						<Power v-if="!enableStatus" class="text-green-400" size="18" />
-						<PowerOff v-if="enableStatus" class="text-red-400" size="18" />
+						<Power
+							v-if="!enableStatus"
+							class="text-green-400"
+							size="18"
+						/>
+						<PowerOff
+							v-if="enableStatus"
+							class="text-red-400"
+							size="18"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
 
-				<DropdownMenuItem v-if="showEditBtn" class="group cursor-pointer hover:bg-rcgray-800" @click="handleEdit">
+				<DropdownMenuItem
+					v-if="showEditBtn"
+					class="group cursor-pointer hover:bg-rcgray-800"
+					@click="handleEdit"
+				>
 					<span class="text-gray-300 group-hover:text-gray-200">Edit</span>
 					<DropdownMenuShortcut>
-						<Pencil size="16" class="text-gray-300 group-hover:text-gray-100" />
+						<Pencil
+							size="16"
+							class="text-gray-300 group-hover:text-gray-100"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
 
-				<DropdownMenuItem v-if="showDownloadBtn" class="cursor-pointer hover:bg-rcgray-800" @click="handleDownload">
+				<DropdownMenuItem
+					v-if="showDownloadBtn"
+					class="cursor-pointer hover:bg-rcgray-800"
+					@click="handleDownload"
+				>
 					<span class="text-gray-300 group-hover:text-gray-200">Download</span>
 					<DropdownMenuShortcut>
-						<RcIcon name="download" size="16" class="text-blue-300" />
+						<RcIcon
+							name="download"
+							size="16"
+							class="text-blue-300"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
 
 				<DropdownMenuSeparator v-if="showEditBtn" />
-				<DropdownMenuItem v-if="canDelete && !isLocked" class="group cursor-pointer hover:bg-rcgray-800" @click="showAlert">
+				<DropdownMenuItem
+					v-if="canDelete && !isLocked"
+					class="group cursor-pointer hover:bg-rcgray-800"
+					@click="showAlert"
+				>
 					<span class="text-red-500 group-hover:text-red-400">Delete</span>
 					<DropdownMenuShortcut>
-						<TrashIcon size="16" class="text-red-500 group-hover:text-red-400" />
+						<TrashIcon
+							size="16"
+							class="text-red-500 group-hover:text-red-400"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
-				<DropdownMenuItem v-if="isLocked" disabled class="cursor-default">
+				<DropdownMenuItem
+					v-if="isLocked"
+					disabled
+					class="cursor-default"
+				>
 					<span class="italic text-slate-500">Vector CM Locked</span>
 					<DropdownMenuShortcut>
 						<RcIcon name="lock" />
@@ -341,6 +485,12 @@ function handleShowCopyComplianceDefDebug() {
 			</DropdownMenuContent>
 		</DropdownMenu>
 
-		<RcConfirmAlertDialog v-if="showConfirmDelete" :showConfirmDelete="showConfirmDelete" @close="showConfirmDelete = false" @handleDelete="handleDelete" :ids="[rowData.id]" />
+		<RcConfirmAlertDialog
+			v-if="showConfirmDelete"
+			:show-confirm-delete="showConfirmDelete"
+			:ids="[rowData.id]"
+			@close="showConfirmDelete = false"
+			@handle-delete="handleDelete"
+		/>
 	</div>
 </template>

@@ -38,18 +38,29 @@ function setErrors(errors) {
 
 <template>
 	<div>
-		<h3 class="mb-5 text-lg font-medium text-gray-900 dark:text-white">Finalize Task</h3>
+		<h3 class="mb-5 text-lg font-medium text-gray-900 dark:text-white">
+			Finalize Task
+		</h3>
 
 		<div class="card">
-			<Step5TaskVerifyProgress @errors="setErrors($event)" :model="model" @checkSuccess="checkSuccess()" />
-			<div class="grid gap-2" v-if="validationErrors.data">
+			<Step5TaskVerifyProgress
+				:model="model"
+				@errors="setErrors($event)"
+				@check-success="checkSuccess()"
+			/>
+			<div
+				v-if="validationErrors.data"
+				class="grid gap-2"
+			>
 				<div class="grid items-center grid-cols-3 gap-4">
 					<Label class="text-muted-foreground">Task Errors:</Label>
 					<span class="col-span-2 font-light text-red-500">{{ validationErrors.data.message }}</span>
 				</div>
 			</div>
 
-			<h2 class="my-4">Task Details</h2>
+			<h2 class="my-4">
+				Task Details
+			</h2>
 
 			<div class="grid gap-2">
 				<div class="grid gap-2">
@@ -72,19 +83,40 @@ function setErrors(errors) {
 				</div>
 				<!-- CATEGORIES -->
 
-				<div class="grid gap-2" v-if="model.task_categories === 1">
+				<div
+					v-if="model.task_categories === 1"
+					class="grid gap-2"
+				>
 					<div class="grid items-center grid-cols-3 gap-4 group">
 						<Label class="text-muted-foreground">Categories:</Label>
-						<div class="flex flex-wrap items-start justify-start w-full col-span-2 p-1 whitespace-normal h-fit group-hover:bg-rcgray-800 group-hover:cursor-pointer group-hover:rounded-lg" @click="toggleDefaultSlice(model.category.length)" @mouseover="hoveringCategories = true" @mouseleave="hoveringCategories = false">
-							<span v-for="(dev, index) in model.category.slice(0, defaultSlice)" :key="dev.id">
-								<span :class="dev.badgeColor ? dev.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'" class="items-center text-xs font-medium px-2.5 py-0.5 rounded-xl border ml-1">
+						<div
+							class="flex flex-wrap items-start justify-start w-full col-span-2 p-1 whitespace-normal h-fit group-hover:bg-rcgray-800 group-hover:cursor-pointer group-hover:rounded-lg"
+							@click="toggleDefaultSlice(model.category.length)"
+							@mouseover="hoveringCategories = true"
+							@mouseleave="hoveringCategories = false"
+						>
+							<span
+								v-for="(dev, index) in model.category.slice(0, defaultSlice)"
+								:key="dev.id"
+							>
+								<span
+									:class="dev.badgeColor ? dev.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'"
+									class="items-center text-xs font-medium px-2.5 py-0.5 rounded-xl border ml-1"
+								>
 									{{ dev.categoryName }}
 								</span>
-								<span :class="!hoveringCategories ? 'border bg-gray-600 border-gray-500 text-gray-200' : ' text-gray-400'" class="items-center text-xs font-normal px-2.5 py-0.5 rounded-xl ml-1" v-if="model.category.length > defaultSlice && defaultSlice === 4 && index === 3">
+								<span
+									v-if="model.category.length > defaultSlice && defaultSlice === 4 && index === 3"
+									:class="!hoveringCategories ? 'border bg-gray-600 border-gray-500 text-gray-200' : ' text-gray-400'"
+									class="items-center text-xs font-normal px-2.5 py-0.5 rounded-xl ml-1"
+								>
 									<span v-if="hoveringCategories">Show All</span>
 									<span v-else>+ {{ model.category.length - 4 }}</span>
 								</span>
-								<span class="text-gray-400 items-center text-xs font-normal px-2.5 py-0.5 rounded-xl ml-1" v-if="defaultSlice === index + 1 && showAll">
+								<span
+									v-if="defaultSlice === index + 1 && showAll"
+									class="text-gray-400 items-center text-xs font-normal px-2.5 py-0.5 rounded-xl ml-1"
+								>
 									<span>Show Less</span>
 								</span>
 							</span>
@@ -95,19 +127,40 @@ function setErrors(errors) {
 				<!-- CATEGORIES -->
 
 				<!-- DEVICES -->
-				<div class="grid gap-2" v-if="model.task_devices === 1">
+				<div
+					v-if="model.task_devices === 1"
+					class="grid gap-2"
+				>
 					<div class="grid items-center grid-cols-3 gap-4 group">
 						<Label class="text-muted-foreground">Devices:</Label>
-						<div class="flex flex-wrap items-start justify-start w-full col-span-2 p-1 whitespace-normal h-fit group-hover:bg-rcgray-800 group-hover:cursor-pointer group-hover:rounded-lg" @click="toggleDefaultSlice(model.device.length)" @mouseover="hoveringDevices = true" @mouseleave="hoveringDevices = false">
-							<span v-for="(dev, index) in model.device.slice(0, defaultSlice)" :key="dev.id">
-								<span :class="dev.badgeColor ? dev.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'" class="items-center text-xs font-medium px-2.5 py-0.5 rounded-xl border ml-1">
+						<div
+							class="flex flex-wrap items-start justify-start w-full col-span-2 p-1 whitespace-normal h-fit group-hover:bg-rcgray-800 group-hover:cursor-pointer group-hover:rounded-lg"
+							@click="toggleDefaultSlice(model.device.length)"
+							@mouseover="hoveringDevices = true"
+							@mouseleave="hoveringDevices = false"
+						>
+							<span
+								v-for="(dev, index) in model.device.slice(0, defaultSlice)"
+								:key="dev.id"
+							>
+								<span
+									:class="dev.badgeColor ? dev.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'"
+									class="items-center text-xs font-medium px-2.5 py-0.5 rounded-xl border ml-1"
+								>
 									{{ dev.device_name }}
 								</span>
-								<span :class="!hoveringDevices ? 'border bg-gray-600 border-gray-500 text-gray-200' : ' text-gray-400'" class="items-center text-xs font-normal px-2.5 py-0.5 rounded-xl ml-1" v-if="model.device.length > defaultSlice && defaultSlice === 4 && index === 3">
+								<span
+									v-if="model.device.length > defaultSlice && defaultSlice === 4 && index === 3"
+									:class="!hoveringDevices ? 'border bg-gray-600 border-gray-500 text-gray-200' : ' text-gray-400'"
+									class="items-center text-xs font-normal px-2.5 py-0.5 rounded-xl ml-1"
+								>
 									<span v-if="hoveringDevices">Show All</span>
 									<span v-else>+ {{ model.device.length - 4 }}</span>
 								</span>
-								<span class="text-gray-400 items-center text-xs font-normal px-2.5 py-0.5 rounded-xl ml-1" v-if="defaultSlice === index + 1 && showAll">
+								<span
+									v-if="defaultSlice === index + 1 && showAll"
+									class="text-gray-400 items-center text-xs font-normal px-2.5 py-0.5 rounded-xl ml-1"
+								>
 									<span>Show Less</span>
 								</span>
 							</span>
@@ -118,19 +171,40 @@ function setErrors(errors) {
 
 				<!-- TAGS -->
 
-				<div class="grid gap-2" v-if="model.task_tags === 1">
+				<div
+					v-if="model.task_tags === 1"
+					class="grid gap-2"
+				>
 					<div class="grid items-center grid-cols-3 gap-4 group">
 						<Label class="text-muted-foreground">Tags:</Label>
-						<div class="flex flex-wrap items-start justify-start w-full col-span-2 p-1 whitespace-normal h-fit group-hover:bg-rcgray-800 group-hover:cursor-pointer group-hover:rounded-lg" @click="toggleDefaultSlice(model.tag.length)" @mouseover="hoveringTags = true" @mouseleave="hoveringTags = false">
-							<span v-for="(dev, index) in model.tag.slice(0, defaultSlice)" :key="dev.id">
-								<span :class="dev.badgeColor ? dev.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'" class="items-center text-xs font-medium px-2.5 py-0.5 rounded-xl border ml-1">
+						<div
+							class="flex flex-wrap items-start justify-start w-full col-span-2 p-1 whitespace-normal h-fit group-hover:bg-rcgray-800 group-hover:cursor-pointer group-hover:rounded-lg"
+							@click="toggleDefaultSlice(model.tag.length)"
+							@mouseover="hoveringTags = true"
+							@mouseleave="hoveringTags = false"
+						>
+							<span
+								v-for="(dev, index) in model.tag.slice(0, defaultSlice)"
+								:key="dev.id"
+							>
+								<span
+									:class="dev.badgeColor ? dev.badgeColor : 'bg-gray-600 text-gray-200 border-gray-500'"
+									class="items-center text-xs font-medium px-2.5 py-0.5 rounded-xl border ml-1"
+								>
 									{{ dev.tagname }}
 								</span>
-								<span :class="!hoveringTags ? 'border bg-gray-600 border-gray-500 text-gray-200' : ' text-gray-400'" class="items-center text-xs font-normal px-2.5 py-0.5 rounded-xl ml-1" v-if="model.tag.length > defaultSlice && defaultSlice === 4 && index === 3">
+								<span
+									v-if="model.tag.length > defaultSlice && defaultSlice === 4 && index === 3"
+									:class="!hoveringTags ? 'border bg-gray-600 border-gray-500 text-gray-200' : ' text-gray-400'"
+									class="items-center text-xs font-normal px-2.5 py-0.5 rounded-xl ml-1"
+								>
 									<span v-if="hoveringTags">Show All</span>
 									<span v-else>+ {{ model.tag.length - 4 }}</span>
 								</span>
-								<span class="text-gray-400 items-center text-xs font-normal px-2.5 py-0.5 rounded-xl ml-1" v-if="defaultSlice === index + 1 && showAll">
+								<span
+									v-if="defaultSlice === index + 1 && showAll"
+									class="text-gray-400 items-center text-xs font-normal px-2.5 py-0.5 rounded-xl ml-1"
+								>
 									<span>Show Less</span>
 								</span>
 							</span>
@@ -151,15 +225,30 @@ function setErrors(errors) {
 						<Label class="text-muted-foreground">Task Reporting:</Label>
 						<div class="flex flex-col col-span-2 gap-2 font-light">
 							<span class="flex items-center">
-								<RcIcon name="alert" class="flex-shrink-0 h-4 mr-2 text-blue-600" />
+								<RcIcon
+									name="alert"
+									class="flex-shrink-0 h-4 mr-2 text-blue-600"
+								/>
 								Task notification email
 							</span>
-							<span class="flex items-center" v-if="model.download_report_notify">
-								<RcIcon name="alert" class="flex-shrink-0 h-4 mr-2 text-blue-600" />
+							<span
+								v-if="model.download_report_notify"
+								class="flex items-center"
+							>
+								<RcIcon
+									name="alert"
+									class="flex-shrink-0 h-4 mr-2 text-blue-600"
+								/>
 								Device download failure report
 							</span>
-							<span class="flex items-center" v-if="model.verbose_download_report_notify">
-								<RcIcon name="alert" class="flex-shrink-0 h-4 mr-2 text-blue-600" />
+							<span
+								v-if="model.verbose_download_report_notify"
+								class="flex items-center"
+							>
+								<RcIcon
+									name="alert"
+									class="flex-shrink-0 h-4 mr-2 text-blue-600"
+								/>
 								Verbose device download failure report
 							</span>
 						</div>

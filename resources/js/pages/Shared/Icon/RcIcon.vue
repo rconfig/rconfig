@@ -51,5 +51,12 @@ watch(
 </script>
 
 <template>
-	<component :is="iconComponent" :width="width" :height="height" :class="class" :addedBy="addedBy" :animate="animate" />
+	<component
+		:is="iconComponent"
+		:width="width"
+		:height="height"
+		:class="props.class"
+		:added-by="addedBy"
+		:animate="animate"
+	/>
 </template>

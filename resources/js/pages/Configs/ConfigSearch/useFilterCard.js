@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
+import { useToaster } from '@/composables/useToaster';
 
 export function useFilterCard(emit) {
+	const { toastError } = useToaster();
 	const model = ref({
 		device_name: "",
 		command: "",
@@ -30,10 +32,7 @@ export function useFilterCard(emit) {
 				commands.value = response.data.data;
 			})
 			.catch(error => {
-				createNotification({
-				type: 'danger',
-				message: error.response.data.message
-				});
+				toastError('Error', error.response.data.message);
 			});
 	}
 
@@ -58,12 +57,12 @@ export function useFilterCard(emit) {
 		const endDate = `${dateRange.end.year}-${String(dateRange.end.month).padStart(2, '0')}-${String(dateRange.end.day).padStart(2, '0')}`;
 
 		// Update the model with the transformed dates
-		model.start_date = startDate;
-		model.end_date = endDate;
+		model.value.start_date = startDate;
+		model.value.end_date = endDate;
 		} else {
 		// If no date range is provided, reset the model
-		model.start_date = "";
-		model.end_date = "";
+		model.value.start_date = "";
+		model.value.end_date = "";
 		}
 
 		// Optional: Update the Vue state or other reactive properties

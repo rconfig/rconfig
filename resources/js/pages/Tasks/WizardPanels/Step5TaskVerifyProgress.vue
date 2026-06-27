@@ -37,8 +37,8 @@ const validateModel = async (data) => {
 			progressCheckStatus.value = "error";
 			errors.value = e.response.data.errors;
 		} else {
-			errors.status = e.response.status;
-			errors.message = e.response.data.message;
+			errors.value.status = e.response.status;
+			errors.value.message = e.response.data.message;
 		}
 		emit("errors", e.response);
 	}
@@ -46,7 +46,15 @@ const validateModel = async (data) => {
 </script>
 
 <template>
-	<h2 class="mb-0 text-base font-semibold text-gray-900 dark:text-white">Task Verification</h2>
-	<span v-if="progressCheckStatus === 'error'" class="text-red-500"> Status: {{ progressCheckStatus }} </span>
-	<Progress v-model="progress" class="w-3/5" />
+	<h2 class="mb-0 text-base font-semibold text-gray-900 dark:text-white">
+		Task Verification
+	</h2>
+	<span
+		v-if="progressCheckStatus === 'error'"
+		class="text-red-500"
+	> Status: {{ progressCheckStatus }} </span>
+	<Progress
+		v-model="progress"
+		class="w-3/5"
+	/>
 </template>

@@ -33,12 +33,22 @@ function onCopy() {
 	<div>
 		<DropdownMenu>
 			<DropdownMenuTrigger as-child>
-				<Button variant="ghost" class="h-8 ml-2">
+				<Button
+					variant="ghost"
+					class="h-8 ml-2"
+				>
 					<MoreVertical size="16" />
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent class="w-56" align="end" side="bottom">
-				<DropdownMenuItem class="cursor-pointer hover:bg-rcgray-600" @click="onCopy()">
+			<DropdownMenuContent
+				class="w-56"
+				align="end"
+				side="bottom"
+			>
+				<DropdownMenuItem
+					class="cursor-pointer hover:bg-rcgray-600"
+					@click="onCopy()"
+				>
 					<span>Copy ID</span>
 					<DropdownMenuShortcut>
 						<Copy size="16" />
@@ -46,10 +56,17 @@ function onCopy() {
 				</DropdownMenuItem>
 
 				<DropdownMenuSeparator v-if="showDelete" />
-				<DropdownMenuItem v-if="showDelete" class="cursor-pointer hover:bg-rcgray-600" @click="handleDelete()">
+				<DropdownMenuItem
+					v-if="showDelete"
+					class="cursor-pointer hover:bg-rcgray-600"
+					@click="handleDelete()"
+				>
 					<span class="text-red-400">Delete</span>
 					<DropdownMenuShortcut>
-						<Trash size="16" class="text-red-400" />
+						<Trash
+							size="16"
+							class="text-red-400"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
 			</DropdownMenuContent>

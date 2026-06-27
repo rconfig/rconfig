@@ -28,13 +28,30 @@ onMounted(() => {
 			<!-- Primary Stats - Full Width on Mobile, 8 cols on XL -->
 			<QuickActions />
 			<div class="xl:col-span-12">
-				<ConfigInfoCards :configinfo="configinfo" :isLoadingConfiginfo="isLoadingConfiginfo" />
+				<ConfigInfoCards
+					:configinfo="configinfo"
+					:is-loading-configinfo="isLoadingConfiginfo"
+				/>
 			</div>
 
-			<SysinfoCards :sysinfo="sysinfo" :isLoadingSysinfo="isLoadingSysinfo" @refresh="fetchSysinfo(true)" />
-			<HealthLatestCards :healthLatest="healthLatest" :isLoadingHealth="isLoadingHealth" @refresh="fetchHealth" :SystemUptime="sysinfo.systemUptime" />
+			<SysinfoCards
+				:sysinfo="sysinfo"
+				:is-loading-sysinfo="isLoadingSysinfo"
+				@refresh="fetchSysinfo(true)"
+			/>
+			<HealthLatestCards
+				:health-latest="healthLatest"
+				:is-loading-health="isLoadingHealth"
+				:SystemUptime="sysinfo.systemUptime"
+				@refresh="fetchHealth"
+			/>
 
-			<DashboardWidgets :configinfo="configinfo" :healthLatest="healthLatest" :latestDevices="latestDevices" :isLoadingLatestDevices="isLoadingLatestDevices" />
+			<DashboardWidgets
+				:configinfo="configinfo"
+				:health-latest="healthLatest"
+				:latest-devices="latestDevices"
+				:is-loading-latest-devices="isLoadingLatestDevices"
+			/>
 		</div>
 	</main>
 </template>

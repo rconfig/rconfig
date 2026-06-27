@@ -23,19 +23,19 @@ const props = defineProps({
 </script>
 
 <template>
-    <div 
-        class="spinning-icon-wrapper"
-    >
-        <RotateCw 
-            :size="props.size" 
-            :color="props.color" 
-            :class="[
-                'transition-all duration-300 ease-in-out', 
-                props.animate ? 'animate-spin-slow' : ''
-            ]"
-            :style="{ '--spin-duration': props.speed }"
-        />
-    </div>
+	<div 
+		class="spinning-icon-wrapper"
+	>
+		<RotateCw 
+			:size="props.size" 
+			:color="props.color" 
+			:class="[
+				'transition-all duration-300 ease-in-out', 
+				props.animate ? 'animate-spin-slow' : ''
+			]"
+			:style="{ '--spin-duration': props.speed }"
+		/>
+	</div>
 </template>
 
 <style scoped>

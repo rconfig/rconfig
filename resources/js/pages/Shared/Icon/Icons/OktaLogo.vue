@@ -1,5 +1,15 @@
 <template>
-	<svg version="1.2" baseProfile="tiny" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 2490.6 839.8" xml:space="preserve">
+	<svg
+		id="Layer_1"
+		version="1.2"
+		baseProfile="tiny"
+		xmlns="http://www.w3.org/2000/svg"
+		xmlns:xlink="http://www.w3.org/1999/xlink"
+		x="0px"
+		y="0px"
+		viewBox="0 0 2490.6 839.8"
+		xml:space="preserve"
+	>
 		<path
 			fill="#007DC1"
 			d="M704.3,418c0-129.5,0.2-259.1-0.3-388.5c0-18,11.9-29.2,29.9-29.2c33.3-0.2,66.8-0.3,100.1,0

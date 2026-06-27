@@ -118,35 +118,64 @@ onMounted(() => {
 <template>
 	<Card class="w-full">
 		<CardHeader class="flex flex-row items-center justify-between space-y-0 pb-4">
-			<CardTitle class="text-lg font-semibold"> Scheduled Tasks ({{ tasks.length }}) </CardTitle>
-			<Button variant="outline" size="sm" @click="fetchScheduledTasks" class="gap-2" :disabled="isLoading">
-				<RcIcon name="refresh" class="h-4 w-4" :class="{ 'animate-spin': isLoading }" />
+			<CardTitle class="text-lg font-semibold">
+				Scheduled Tasks ({{ tasks.length }})
+			</CardTitle>
+			<Button
+				variant="outline"
+				size="sm"
+				class="gap-2"
+				:disabled="isLoading"
+				@click="fetchScheduledTasks"
+			>
+				<RcIcon
+					name="refresh"
+					class="h-4 w-4"
+					:class="{ 'animate-spin': isLoading }"
+				/>
 				Refresh
 			</Button>
 		</CardHeader>
 
 		<CardContent>
 			<!-- Loading State -->
-			<div v-if="isLoading" class="flex justify-center items-center py-8">
+			<div
+				v-if="isLoading"
+				class="flex justify-center items-center py-8"
+			>
 				<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
 				<span class="ml-2">Loading scheduled tasks...</span>
 			</div>
 
 			<!-- Error State -->
-			<div v-else-if="error" class="bg-destructive/10 border border-destructive/20 rounded-md p-4">
+			<div
+				v-else-if="error"
+				class="bg-destructive/10 border border-destructive/20 rounded-md p-4"
+			>
 				<div class="flex items-center">
-					<RcIcon name="alert-circle" class="mr-2 text-destructive" />
+					<RcIcon
+						name="alert-circle"
+						class="mr-2 text-destructive"
+					/>
 					<span class="text-destructive font-medium">Error Loading Tasks</span>
 				</div>
-				<p class="text-sm text-muted-foreground mt-1">{{ error }}</p>
-				<button @click="fetchScheduledTasks" class="mt-2 text-sm text-primary hover:underline">
+				<p class="text-sm text-muted-foreground mt-1">
+					{{ error }}
+				</p>
+				<button
+					class="mt-2 text-sm text-primary hover:underline"
+					@click="fetchScheduledTasks"
+				>
 					Try Again
 				</button>
 			</div>
 
 			<template v-else>
 				<!-- Tasks Table -->
-				<div v-if="Array.isArray(tasks) && tasks.length > 0" class="rounded-md border">
+				<div
+					v-if="Array.isArray(tasks) && tasks.length > 0"
+					class="rounded-md border"
+				>
 					<Table>
 						<TableHeader>
 							<TableRow>
@@ -157,11 +186,17 @@ onMounted(() => {
 							</TableRow>
 						</TableHeader>
 						<TableBody>
-							<template v-for="(task, index) in tasks" :key="index">
+							<template
+								v-for="(task, index) in tasks"
+								:key="index"
+							>
 								<!-- Main Row -->
 								<TableRow class="group">
 									<TableCell>
-										<RcBadge :variant="getBadgeVariant(task.taskType)" size="small">
+										<RcBadge
+											:variant="getBadgeVariant(task.taskType)"
+											size="small"
+										>
 											{{ task.taskType }}
 										</RcBadge>
 									</TableCell>
@@ -172,7 +207,9 @@ onMounted(() => {
 									</TableCell>
 									<TableCell>
 										<div class="space-y-1">
-											<div class="text-sm">{{ task.humanReadableSchedule }}</div>
+											<div class="text-sm">
+												{{ task.humanReadableSchedule }}
+											</div>
 											<code class="text-xs text-muted-foreground">{{ task.expression }}</code>
 										</div>
 									</TableCell>
@@ -186,10 +223,17 @@ onMounted(() => {
 				</div>
 
 				<!-- Empty State -->
-				<div v-if="!tasks || !Array.isArray(tasks) || tasks.length === 0" class="text-center py-12">
+				<div
+					v-if="!tasks || !Array.isArray(tasks) || tasks.length === 0"
+					class="text-center py-12"
+				>
 					<CalendarX class="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-					<h3 class="text-lg font-semibold">No Scheduled Tasks</h3>
-					<p class="text-muted-foreground">There are no scheduled tasks configured at this time.</p>
+					<h3 class="text-lg font-semibold">
+						No Scheduled Tasks
+					</h3>
+					<p class="text-muted-foreground">
+						There are no scheduled tasks configured at this time.
+					</p>
 				</div>
 			</template>
 		</CardContent>

@@ -63,7 +63,12 @@ function saveDialog() {
 		<DialogTrigger as-child>
 			<!-- <Button variant="outline">Edit Profile</Button> -->
 		</DialogTrigger>
-		<DialogContent class="p-0 sm:max-w-fit" @escapeKeyDown="closeDialog('DialogNewCommandGroups')" @pointerDownOutside="closeDialog('DialogNewCommandGroups')" @closeClicked="closeDialog('DialogNewCommandGroups')">
+		<DialogContent
+			class="p-0 sm:max-w-fit"
+			@escape-key-down="closeDialog('DialogNewCommandGroups')"
+			@pointer-down-outside="closeDialog('DialogNewCommandGroups')"
+			@close-clicked="closeDialog('DialogNewCommandGroups')"
+		>
 			<DialogHeader class="rc-dialog-header">
 				<DialogTitle class="text-sm text-rcgray-200">
 					<div class="flex items-center">
@@ -74,25 +79,45 @@ function saveDialog() {
 			</DialogHeader>
 			<div class="grid gap-2 p-4">
 				<div class="grid items-center grid-cols-4 gap-2">
-					<Label for="categoryName" class="text-right">
+					<Label
+						for="categoryName"
+						class="text-right"
+					>
 						Name
 						<span class="text-red-400">*</span>
 					</Label>
-					<Input v-model="model.categoryName" id="categoryName" class="col-span-3" />
-					<span class="col-span-3 col-start-2 text-sm text-red-400" v-if="errors?.categoryName">
+					<Input
+						id="categoryName"
+						v-model="model.categoryName"
+						class="col-span-3"
+					/>
+					<span
+						v-if="errors?.categoryName"
+						class="col-span-3 col-start-2 text-sm text-red-400"
+					>
 						{{ errors?.categoryName[0] }}
 					</span>
 				</div>
 
 				<div class="grid items-center grid-cols-4 gap-2">
-					<Label for="categoryDescription" class="text-right">
+					<Label
+						for="categoryDescription"
+						class="text-right"
+					>
 						Description
 					</Label>
-					<Input v-model="model.categoryDescription" id="categoryDescription" class="col-span-3" />
+					<Input
+						id="categoryDescription"
+						v-model="model.categoryDescription"
+						class="col-span-3"
+					/>
 				</div>
 
 				<div class="grid items-center grid-cols-4 gap-4">
-					<Label for="badgeColor" class="text-right">
+					<Label
+						for="badgeColor"
+						class="text-right"
+					>
 						Badge Color
 					</Label>
 					<BadgeColorSelector v-model="model.badgeColor" />
@@ -100,28 +125,54 @@ function saveDialog() {
 			</div>
 
 			<DialogFooter class="rc-dialog-footer bg-rcgray-800">
-				<Button type="close" variant="outline" class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse" @click="closeDialog('DialogNewCommandGroups')" size="sm">
+				<Button
+					type="close"
+					variant="outline"
+					class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse"
+					size="sm"
+					@click="closeDialog('DialogNewCommandGroups')"
+				>
 					Close
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class">ESC</kbd>
 					</div>
 				</Button>
-				<Button v-if="props.editId === 0" type="submit" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click="saveDialog" variant="primary">
+				<Button
+					v-if="props.editId === 0"
+					type="submit"
+					class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+					size="sm"
+					variant="primary"
+					@click="saveDialog"
+				>
 					Save
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class2">
 							Ctrl&nbsp;
-							<RcIcon name="enter" class="ml-1" />
+							<RcIcon
+								name="enter"
+								class="ml-1"
+							/>
 						</kbd>
 					</div>
 				</Button>
 
-				<Button v-else type="submit" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click="saveDialog" variant="primary">
+				<Button
+					v-else
+					type="submit"
+					class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+					size="sm"
+					variant="primary"
+					@click="saveDialog"
+				>
 					Update
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class2">
 							Ctrl&nbsp;
-							<RcIcon name="enter" class="ml-1" />
+							<RcIcon
+								name="enter"
+								class="ml-1"
+							/>
 						</kbd>
 					</div>
 				</Button>

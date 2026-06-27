@@ -76,9 +76,9 @@ function saveDialog() {
 		<DialogTrigger as-child />
 		<DialogContent
 			class="p-0 sm:max-w-fit"
-			@escapeKeyDown="closeDialog('DialogNewCommand')"
-			@pointerDownOutside="closeDialog('DialogNewCommand')"
-			@closeClicked="closeDialog('DialogNewCommand')"
+			@escape-key-down="closeDialog('DialogNewCommand')"
+			@pointer-down-outside="closeDialog('DialogNewCommand')"
+			@close-clicked="closeDialog('DialogNewCommand')"
 		>
 			<DialogHeader class="rc-dialog-header">
 				<DialogTitle class="text-sm text-rcgray-200">
@@ -92,25 +92,50 @@ function saveDialog() {
 			<div class="grid gap-2 p-4">
 				<!-- Command Name Field -->
 				<div class="grid items-center grid-cols-4 gap-2">
-					<Label for="command" class="text-right">
+					<Label
+						for="command"
+						class="text-right"
+					>
 						Command Name <span class="text-red-400">*</span>
 					</Label>
-					<div v-if="isLoading" class="col-span-3">
+					<div
+						v-if="isLoading"
+						class="col-span-3"
+					>
 						<Skeleton class="h-6 w-full" />
 					</div>
-					<Input v-else v-model="model.command" id="command" class="col-span-3" />
-					<span class="col-span-3 col-start-2 text-sm text-red-400" v-if="errors.command && !isLoading">
+					<Input
+						v-else
+						id="command"
+						v-model="model.command"
+						class="col-span-3"
+					/>
+					<span
+						v-if="errors.command && !isLoading"
+						class="col-span-3 col-start-2 text-sm text-red-400"
+					>
 						{{ errors.command[0] }}
 					</span>
 				</div>
 
 				<!-- Description Field -->
 				<div class="grid items-center grid-cols-4 gap-2">
-					<Label for="description" class="text-right">Description</Label>
-					<div v-if="isLoading" class="col-span-3">
+					<Label
+						for="description"
+						class="text-right"
+					>Description</Label>
+					<div
+						v-if="isLoading"
+						class="col-span-3"
+					>
 						<Skeleton class="h-6 w-full" />
 					</div>
-					<Input v-else v-model="model.description" id="description" class="col-span-3" />
+					<Input
+						v-else
+						id="description"
+						v-model="model.description"
+						class="col-span-3"
+					/>
 				</div>
 
 				<!-- Command Group Field -->
@@ -118,18 +143,33 @@ function saveDialog() {
 					<Label class="text-right">
 						Command Group <span class="text-red-400">*</span>
 					</Label>
-					<div v-if="isLoading" class="col-span-3">
+					<div
+						v-if="isLoading"
+						class="col-span-3"
+					>
 						<Skeleton class="h-6 w-full" />
 					</div>
-					<CategoryMultiSelect v-else v-model="model.category" />
-					<span class="col-span-3 col-start-2 text-sm text-red-400" v-if="errors.categoryArray && !isLoading">
+					<CategoryMultiSelect
+						v-else
+						v-model="model.category"
+					/>
+					<span
+						v-if="errors.categoryArray && !isLoading"
+						class="col-span-3 col-start-2 text-sm text-red-400"
+					>
 						{{ errors.categoryArray[0] }}
 					</span>
 				</div>
 			</div>
 
 			<DialogFooter class="rc-dialog-footer bg-rcgray-800">
-				<Button type="button" variant="outline" class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse" @click="closeDialog('DialogNewCommand')" size="sm">
+				<Button
+					type="button"
+					variant="outline"
+					class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse"
+					size="sm"
+					@click="closeDialog('DialogNewCommand')"
+				>
 					Close
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class">ESC</kbd>
@@ -140,14 +180,17 @@ function saveDialog() {
 					type="submit"
 					class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
 					size="sm"
-					@click="saveDialog"
 					variant="primary"
+					@click="saveDialog"
 				>
 					{{ props.editId === 0 ? 'Save' : 'Update' }}
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class2">
 							Ctrl&nbsp;
-							<RcIcon name="enter" class="ml-1" />
+							<RcIcon
+								name="enter"
+								class="ml-1"
+							/>
 						</kbd>
 					</div>
 				</Button>

@@ -151,15 +151,32 @@ function showSideBySideView() {
 		<Card class="lg:col-span-6 border-0 shadow-xs rounded-2xl bg-card text-card-foreground dark:bg-[rgb(27,29,33)]">
 			<CardHeader class="flex flex-row justify-between items-center py-1 px-4">
 				<div class="flex items-center">
-					<CardTitle class="text-lg font-semibold">Config Changes</CardTitle>
+					<CardTitle class="text-lg font-semibold">
+						Config Changes
+					</CardTitle>
 				</div>
 				<div class="flex items-center gap-2">
-					<Button class="px-2 py-1 text-sm hover:animate-pulse flex items-center" :class="{ 'btn-primary-action': viewToggle === 'diff' }" size="sm" @click="showDiffView" :variant="viewToggle === 'diff' ? 'default' : 'outline'">
-						<RcIcon name="diff" class="h-4 w-4 mr-1" />
+					<Button
+						class="px-2 py-1 text-sm hover:animate-pulse flex items-center"
+						:class="{ 'btn-primary-action': viewToggle === 'diff' }"
+						size="sm"
+						:variant="viewToggle === 'diff' ? 'default' : 'outline'"
+						@click="showDiffView"
+					>
+						<RcIcon
+							name="diff"
+							class="h-4 w-4 mr-1"
+						/>
 						Diff View
 					</Button>
 
-					<Button class="px-2 py-1 text-sm hover:animate-pulse flex items-center" :class="{ 'btn-primary-action': viewToggle === 'sidebyside' }" size="sm" @click="showSideBySideView" :variant="viewToggle === 'sidebyside' ? 'default' : 'outline'">
+					<Button
+						class="px-2 py-1 text-sm hover:animate-pulse flex items-center"
+						:class="{ 'btn-primary-action': viewToggle === 'sidebyside' }"
+						size="sm"
+						:variant="viewToggle === 'sidebyside' ? 'default' : 'outline'"
+						@click="showSideBySideView"
+					>
 						<GitCompare class="h-4 w-4 mr-1" />
 						Side by Side
 					</Button>
@@ -170,15 +187,23 @@ function showSideBySideView() {
 
 			<ScrollArea class="max-h-[83vh] w-full rounded-md border-none smooth-scroll overflow-y-auto">
 				<CardContent class="p-4 space-y-4">
-					<div v-if="isLoading" class="flex items-center justify-center py-12">
+					<div
+						v-if="isLoading"
+						class="flex items-center justify-center py-12"
+					>
 						<div class="flex flex-col items-center space-y-3">
 							<div class="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-							<p class="rc-text-sm-muted">Loading configuration changes...</p>
+							<p class="rc-text-sm-muted">
+								Loading configuration changes...
+							</p>
 						</div>
 					</div>
 
 					<template v-else>
-						<div v-if="showCodeBlock" class="space-y-4">
+						<div
+							v-if="showCodeBlock"
+							class="space-y-4"
+						>
 							<div class="flex justify-between items-center">
 								<div class="flex items-center justify-between bg-muted/40 rounded-lg">
 									<h3 class="text-lg font-semibold text-card-foreground">
@@ -191,10 +216,23 @@ function showSideBySideView() {
 									</div>
 								</div>
 
-								<RcToolTip :delayDuration="100" :content="'Copy configuration diff'" :side="'bottom'">
+								<RcToolTip
+									:delay-duration="100"
+									:content="'Copy configuration diff'"
+									:side="'bottom'"
+								>
 									<template #trigger>
-										<Button class="text-muted-foreground hover:text-foreground px-2 py-1 rc-btn-shadow" variant="ghost" size="sm" @click="copyItem('configDiff', config_diff)">
-											<RcIcon name="copy-transition" :isActive="activeCopyIcon['configDiff']" :size="16" />
+										<Button
+											class="text-muted-foreground hover:text-foreground px-2 py-1 rc-btn-shadow"
+											variant="ghost"
+											size="sm"
+											@click="copyItem('configDiff', config_diff)"
+										>
+											<RcIcon
+												name="copy-transition"
+												:is-active="activeCopyIcon['configDiff']"
+												:size="16"
+											/>
 										</Button>
 									</template>
 								</RcToolTip>
@@ -202,36 +240,61 @@ function showSideBySideView() {
 
 							<div class="bg-muted/30 border rounded-2xl p-4 overflow-auto max-h-[40vh]">
 								<div class="text-sm font-mono whitespace-pre-wrap">
-									<span v-if="config_diff === ''" class="text-muted-foreground italic">No changes detected</span>
-									<span class="rc-text-sm-muted" v-html="config_diff" v-if="config_diff !== ''" />
+									<span
+										v-if="config_diff === ''"
+										class="text-muted-foreground italic"
+									>No changes detected</span>
+									<span
+										v-if="config_diff !== ''"
+										class="rc-text-sm-muted"
+										v-html="config_diff"
+									/>
 								</div>
 							</div>
 
 							<!-- Comparison Settings Section -->
-							<div v-if="config_change_record.compare_exclusion_settings" class="mt-6 space-y-4">
+							<div
+								v-if="config_change_record.compare_exclusion_settings"
+								class="mt-6 space-y-4"
+							>
 								<!-- Comparison Settings Section -->
 								<div class="bg-muted/20 rounded-2xl border border-muted-foreground/20 overflow-hidden">
-									<div :class="{ 'border-b border-muted-foreground/20': showComparisonSettings }" class="bg-muted/30 px-4 py-3 cursor-pointer hover:bg-muted/40 transition-colors" @click="showComparisonSettings = !showComparisonSettings">
+									<div
+										:class="{ 'border-b border-muted-foreground/20': showComparisonSettings }"
+										class="bg-muted/30 px-4 py-3 cursor-pointer hover:bg-muted/40 transition-colors"
+										@click="showComparisonSettings = !showComparisonSettings"
+									>
 										<div class="flex items-center justify-between">
 											<div class="flex items-start gap-3">
 												<div class="flex-shrink-0 mt-0.5">
-													<RcIcon name="config-compare" class="w-4 h-4" />
+													<RcIcon
+														name="config-compare"
+														class="w-4 h-4"
+													/>
 												</div>
 												<div>
-													<h4 class="font-semibold text-foreground text-sm">Comparison Settings for this Config</h4>
+													<h4 class="font-semibold text-foreground text-sm">
+														Comparison Settings for this Config
+													</h4>
 													<p class="text-xs text-muted-foreground mt-1">
 														These comparison policy settings were applied specifically to this configuration comparison.
 													</p>
 												</div>
 											</div>
 											<div class="flex-shrink-0 ml-3">
-												<ChevronDown class="w-5 h-5 text-muted-foreground transition-transform duration-200" :class="{ 'rotate-180': showComparisonSettings }" />
+												<ChevronDown
+													class="w-5 h-5 text-muted-foreground transition-transform duration-200"
+													:class="{ 'rotate-180': showComparisonSettings }"
+												/>
 											</div>
 										</div>
 									</div>
 
 									<transition name="expand">
-										<div v-if="showComparisonSettings" class="p-4">
+										<div
+											v-if="showComparisonSettings"
+											class="p-4"
+										>
 											<ScrollArea class="max-h-[40vh] w-full rounded-md">
 												<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 													<!-- Comparison Settings Card -->
@@ -258,7 +321,10 @@ function showSideBySideView() {
 															<div class="flex items-center justify-between py-2 border-b border-muted-foreground/10 last:border-b-0">
 																<span class="text-sm text-muted-foreground">Ignore Case</span>
 																<div class="flex items-center gap-1">
-																	<RcIcon :name="config_change_record.compare_exclusion_settings.config_compare_settings.ignoreCase ? 'status-green' : 'status-red'" class="w-4 h-4" />
+																	<RcIcon
+																		:name="config_change_record.compare_exclusion_settings.config_compare_settings.ignoreCase ? 'status-green' : 'status-red'"
+																		class="w-4 h-4"
+																	/>
 																	<span class="text-sm font-medium">
 																		{{ config_change_record.compare_exclusion_settings.config_compare_settings.ignoreCase ? "Yes" : "No" }}
 																	</span>
@@ -268,7 +334,10 @@ function showSideBySideView() {
 															<div class="flex items-center justify-between py-2 border-b border-muted-foreground/10 last:border-b-0">
 																<span class="text-sm text-muted-foreground">Ignore Line Endings</span>
 																<div class="flex items-center gap-1">
-																	<RcIcon :name="config_change_record.compare_exclusion_settings.config_compare_settings.ignoreLineEnding ? 'status-green' : 'status-red'" class="w-4 h-4" />
+																	<RcIcon
+																		:name="config_change_record.compare_exclusion_settings.config_compare_settings.ignoreLineEnding ? 'status-green' : 'status-red'"
+																		class="w-4 h-4"
+																	/>
 																	<span class="text-sm font-medium">
 																		{{ config_change_record.compare_exclusion_settings.config_compare_settings.ignoreLineEnding ? "Yes" : "No" }}
 																	</span>
@@ -278,7 +347,10 @@ function showSideBySideView() {
 															<div class="flex items-center justify-between py-2">
 																<span class="text-sm text-muted-foreground">Ignore Whitespace</span>
 																<div class="flex items-center gap-1">
-																	<RcIcon :name="config_change_record.compare_exclusion_settings.config_compare_settings.ignoreWhitespace ? 'status-green' : 'status-red'" class="w-4 h-4" />
+																	<RcIcon
+																		:name="config_change_record.compare_exclusion_settings.config_compare_settings.ignoreWhitespace ? 'status-green' : 'status-red'"
+																		class="w-4 h-4"
+																	/>
 																	<span class="text-sm font-medium">
 																		{{ config_change_record.compare_exclusion_settings.config_compare_settings.ignoreWhitespace ? "Yes" : "No" }}
 																	</span>
@@ -318,34 +390,57 @@ function showSideBySideView() {
 
 								<!-- Exclusion Rules Section -->
 								<div class="bg-muted/20 rounded-2xl border border-muted-foreground/20 overflow-hidden">
-									<div :class="{ 'border-b border-muted-foreground/20': showExclusionRules }" class="bg-muted/30 px-4 py-3 cursor-pointer hover:bg-muted/40 transition-colors" @click="showExclusionRules = !showExclusionRules">
+									<div
+										:class="{ 'border-b border-muted-foreground/20': showExclusionRules }"
+										class="bg-muted/30 px-4 py-3 cursor-pointer hover:bg-muted/40 transition-colors"
+										@click="showExclusionRules = !showExclusionRules"
+									>
 										<div class="flex items-center justify-between">
 											<div class="flex items-start gap-3">
 												<div class="flex-shrink-0 mt-0.5">
-													<RcIcon name="exclusion-rules" class="w-4 h-4" />
+													<RcIcon
+														name="exclusion-rules"
+														class="w-4 h-4"
+													/>
 												</div>
 												<div>
-													<h4 class="font-semibold text-foreground text-sm">Exclusion Rules File</h4>
+													<h4 class="font-semibold text-foreground text-sm">
+														Exclusion Rules File
+													</h4>
 													<p class="text-xs text-muted-foreground mt-1">
 														<span v-if="config_change_record.compare_exclusion_settings?.config_compare_exclusion_file">
 															Exclusion rules that were applied during this configuration comparison.
 														</span>
-														<span v-else class="italic">
+														<span
+															v-else
+															class="italic"
+														>
 															No exclusion rules were applied to this comparison.
 														</span>
 													</p>
 												</div>
 											</div>
 											<div class="flex-shrink-0 ml-3">
-												<ChevronDown class="w-5 h-5 text-muted-foreground transition-transform duration-200" :class="{ 'rotate-180': showExclusionRules }" />
+												<ChevronDown
+													class="w-5 h-5 text-muted-foreground transition-transform duration-200"
+													:class="{ 'rotate-180': showExclusionRules }"
+												/>
 											</div>
 										</div>
 									</div>
 
 									<transition name="expand">
-										<div v-if="showExclusionRules" class="p-4">
+										<div
+											v-if="showExclusionRules"
+											class="p-4"
+										>
 											<div class="flex items-center justify-end mb-3">
-												<Button asChild variant="outline" size="sm" class="h-7 text-xs">
+												<Button
+													as-child
+													variant="outline"
+													size="sm"
+													class="h-7 text-xs"
+												>
 													<a href="/config-compare-options">Open Compare Options</a>
 												</Button>
 											</div>
@@ -355,8 +450,17 @@ function showSideBySideView() {
 													<ScrollArea class="max-h-[100vh] w-full rounded-md">
 														<div class="flex items-center justify-between mb-2">
 															<span class="text-xs text-muted-foreground font-medium">Exclusion Rules Content</span>
-															<Button variant="ghost" size="sm" class="h-6 w-6 p-0" @click="copyItem('exclusionFile', config_change_record.compare_exclusion_settings.config_compare_exclusion_file)">
-																<RcIcon name="copy-transition" :isActive="activeCopyIcon['exclusionFile']" class="w-3 h-3" />
+															<Button
+																variant="ghost"
+																size="sm"
+																class="h-6 w-6 p-0"
+																@click="copyItem('exclusionFile', config_change_record.compare_exclusion_settings.config_compare_exclusion_file)"
+															>
+																<RcIcon
+																	name="copy-transition"
+																	:is-active="activeCopyIcon['exclusionFile']"
+																	class="w-3 h-3"
+																/>
 															</Button>
 														</div>
 														<pre class="text-xs font-mono text-foreground whitespace-pre-wrap">{{ config_change_record.compare_exclusion_settings.config_compare_exclusion_file }}</pre>
@@ -364,9 +468,14 @@ function showSideBySideView() {
 												</div>
 											</div>
 
-											<div v-else class="text-center py-8">
+											<div
+												v-else
+												class="text-center py-8"
+											>
 												<FileX class="w-12 h-12 text-muted-foreground/50 mx-auto mb-3" />
-												<p class="text-sm text-muted-foreground">No exclusion rules file was applied</p>
+												<p class="text-sm text-muted-foreground">
+													No exclusion rules file was applied
+												</p>
 												<p class="text-xs text-muted-foreground/70 mt-1">
 													The comparison was performed without any exclusion rules.
 												</p>
@@ -377,8 +486,14 @@ function showSideBySideView() {
 							</div>
 						</div>
 
-						<div v-if="showSideBySide" class="rounded-2xl overflow-hidden bg-muted/10">
-							<ConfigCompareResults :leftSelectedId="[left_device.config.id]" :rightSelectedId="[right_device.config.id]" />
+						<div
+							v-if="showSideBySide"
+							class="rounded-2xl overflow-hidden bg-muted/10"
+						>
+							<ConfigCompareResults
+								:left-selected-id="[left_device.config.id]"
+								:right-selected-id="[right_device.config.id]"
+							/>
 						</div>
 					</template>
 				</CardContent>

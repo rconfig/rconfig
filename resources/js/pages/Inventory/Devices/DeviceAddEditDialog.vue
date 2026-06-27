@@ -67,7 +67,13 @@ function removeDeviceCredSet() {
 		<DialogTrigger as-child>
 			<!-- <Button variant="outline">Edit Profile</Button> -->
 		</DialogTrigger>
-		<DialogContent @interactOutside="showConfirmCloseDialog()" @pointerDownOutside="showConfirmCloseDialog()" class="p-0 sm:max-w-7xl" @escapeKeyDown="showConfirmCloseDialog()" @closeClicked="showConfirmCloseDialog()">
+		<DialogContent
+			class="p-0 sm:max-w-7xl"
+			@interact-outside="showConfirmCloseDialog()"
+			@pointer-down-outside="showConfirmCloseDialog()"
+			@escape-key-down="showConfirmCloseDialog()"
+			@close-clicked="showConfirmCloseDialog()"
+		>
 			<DialogHeader class="rc-dialog-header">
 				<DialogTitle class="text-sm text-rcgray-200">
 					<div class="flex items-center">
@@ -90,106 +96,289 @@ function removeDeviceCredSet() {
 				<transition name="fade">
 					<!-- Wrapper grid -->
 
-					<div class="grid gap-6 px-4" v-if="!isLoading">
+					<div
+						v-if="!isLoading"
+						class="grid gap-6 px-4"
+					>
 						<!-- Top Two Columns -->
 						<div>
 							<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 								<!-- Column 1: Device Info -->
 								<div class="flex flex-col">
-									<h3 class="text-lg font-semibold border-b">Device Information</h3>
+									<h3 class="text-lg font-semibold border-b">
+										Device Information
+									</h3>
 
-									<Label for="device_name" class="mt-4 mb-1 font-light"> Device Name <span class="text-red-400">*</span> </Label>
-									<Input v-model="model.device_name" id="device_name" autocomplete="off" class="w-full" />
-									<span class="text-red-400 text-sm" v-if="errors.device_name">{{ errors.device_name[0] }}</span>
+									<Label
+										for="device_name"
+										class="mt-4 mb-1 font-light"
+									> Device Name <span class="text-red-400">*</span> </Label>
+									<Input
+										id="device_name"
+										v-model="model.device_name"
+										autocomplete="off"
+										class="w-full"
+									/>
+									<span
+										v-if="errors.device_name"
+										class="text-red-400 text-sm"
+									>{{ errors.device_name[0] }}</span>
 
 									<div class="flex flex-row space-x-4">
 										<div class="flex flex-col w-1/2">
-											<Label for="device_ip" class="mt-4 mb-1 font-light"> IP Address <span class="text-red-400">*</span> </Label>
-											<Input v-model="model.device_ip" id="device_ip" autocomplete="off" class="w-full" />
-											<span class="text-red-400 text-sm" v-if="errors.device_ip">{{ errors.device_ip[0] }}</span>
+											<Label
+												for="device_ip"
+												class="mt-4 mb-1 font-light"
+											> IP Address <span class="text-red-400">*</span> </Label>
+											<Input
+												id="device_ip"
+												v-model="model.device_ip"
+												autocomplete="off"
+												class="w-full"
+											/>
+											<span
+												v-if="errors.device_ip"
+												class="text-red-400 text-sm"
+											>{{ errors.device_ip[0] }}</span>
 										</div>
 
 										<div class="flex flex-col w-1/2">
-											<Label for="device_port_override" class="mt-4 mb-1 font-light">
+											<Label
+												for="device_port_override"
+												class="mt-4 mb-1 font-light"
+											>
 												Port
-												<HelpPopover title="Device Port" content="Set the connection port specific to this device. It overrides the value set in the connection template. Leave empty otherwise." />
+												<HelpPopover
+													title="Device Port"
+													content="Set the connection port specific to this device. It overrides the value set in the connection template. Leave empty otherwise."
+												/>
 											</Label>
-											<Input v-model="model.device_port_override" id="device_port_override" type="number" autocomplete="off" class="w-full" />
+											<Input
+												id="device_port_override"
+												v-model="model.device_port_override"
+												type="number"
+												autocomplete="off"
+												class="w-full"
+											/>
 										</div>
 									</div>
 
-									<Label for="vector" class="mt-4 mb-1 font-light"> Vendor <span class="text-red-400">*</span> </Label>
-									<VendorMultiSelect :singleSelect="true" v-model="model.selectedVendorObj" id="selectedVendorObj" class="w-full" />
-									<span class="text-red-400 text-sm" v-if="errors.device_vendor">{{ errors.device_vendor[0] }}</span>
+									<Label
+										for="vector"
+										class="mt-4 mb-1 font-light"
+									> Vendor <span class="text-red-400">*</span> </Label>
+									<VendorMultiSelect
+										id="selectedVendorObj"
+										v-model="model.selectedVendorObj"
+										:single-select="true"
+										class="w-full"
+									/>
+									<span
+										v-if="errors.device_vendor"
+										class="text-red-400 text-sm"
+									>{{ errors.device_vendor[0] }}</span>
 
-									<Label for="device_category_id" class="mt-4 mb-1 font-light"> Command Group <span class="text-red-400">*</span> </Label>
-									<CategoryMultiSelect v-model="model.selectedCategoryObj" id="selectedCategoryObj" :singleSelect="true" class="w-full" />
-									<span class="text-red-400 text-sm" v-if="errors.device_category_id">{{ errors.device_category_id[0] }}</span>
+									<Label
+										for="device_category_id"
+										class="mt-4 mb-1 font-light"
+									> Command Group <span class="text-red-400">*</span> </Label>
+									<CategoryMultiSelect
+										id="selectedCategoryObj"
+										v-model="model.selectedCategoryObj"
+										:single-select="true"
+										class="w-full"
+									/>
+									<span
+										v-if="errors.device_category_id"
+										class="text-red-400 text-sm"
+									>{{ errors.device_category_id[0] }}</span>
 
-									<Label for="device_model" class="mt-4 mb-1 font-light"> Model <span class="text-red-400">*</span> </Label>
-									<DeviceModelMultiSelect :singleSelect="true" v-model="model.selectedModelObj" id="selectedModelObj" class="w-full" />
-									<span class="text-red-400 text-sm" v-if="errors.device_model">{{ errors.device_model[0] }}</span>
+									<Label
+										for="device_model"
+										class="mt-4 mb-1 font-light"
+									> Model <span class="text-red-400">*</span> </Label>
+									<DeviceModelMultiSelect
+										id="selectedModelObj"
+										v-model="model.selectedModelObj"
+										:single-select="true"
+										class="w-full"
+									/>
+									<span
+										v-if="errors.device_model"
+										class="text-red-400 text-sm"
+									>{{ errors.device_model[0] }}</span>
 
-									<Label for="selectedTagObj" class="mt-4 mb-1 font-light"> Tags <span class="text-red-400">*</span> </Label>
-									<TagMultiSelect v-model="model.selectedTagObj" id="selectedTagObj" class="w-full" />
-									<span class="text-red-400 text-sm" v-if="errors.device_tags">{{ errors.device_tags[0] }}</span>
+									<Label
+										for="selectedTagObj"
+										class="mt-4 mb-1 font-light"
+									> Tags <span class="text-red-400">*</span> </Label>
+									<TagMultiSelect
+										id="selectedTagObj"
+										v-model="model.selectedTagObj"
+										class="w-full"
+									/>
+									<span
+										v-if="errors.device_tags"
+										class="text-red-400 text-sm"
+									>{{ errors.device_tags[0] }}</span>
 								</div>
 
 								<!-- Column 2: Connection Info -->
 								<div class="flex flex-col">
-									<h3 class="text-lg font-semibold border-b">Connection Information</h3>
+									<h3 class="text-lg font-semibold border-b">
+										Connection Information
+									</h3>
 
-									<Label for="device_username" class="mt-4 mb-1 font-light">
+									<Label
+										for="device_username"
+										class="mt-4 mb-1 font-light"
+									>
 										Username <span class="text-red-400">*</span>
-										<span class="text-sm text-muted-foreground" v-if="model.device_cred_id != 0">- Credential set selected</span>
+										<span
+											v-if="model.device_cred_id != 0"
+											class="text-sm text-muted-foreground"
+										>- Credential set selected</span>
 									</Label>
 									<div class="flex w-full max-w-full items-center gap-1.5">
-										<Input :disabled="model.device_cred_id != 0" v-model="model.device_username" id="device_username" class="flex-grow w-2/3" />
+										<Input
+											id="device_username"
+											v-model="model.device_username"
+											:disabled="model.device_cred_id != 0"
+											class="flex-grow w-2/3"
+										/>
 
-										<CredentialsMultiSelect v-if="model.device_cred" :modelValue="model.device_cred" @update:modelValue="updateDeviceCredFields($event)" :singleSelect="true" class="w-full" />
+										<CredentialsMultiSelect
+											v-if="model.device_cred"
+											:model-value="model.device_cred"
+											:single-select="true"
+											class="w-full"
+											@update:model-value="updateDeviceCredFields($event)"
+										/>
 										<TooltipProvider>
 											<Tooltip>
 												<TooltipTrigger as-child>
-													<Button type="button" variant="ghost" @click="removeDeviceCredSet" class="p-1.5 ml-1" :disabled="model.device_cred_id === 0">
-														<X class="text-muted-foreground" size="12" />
+													<Button
+														type="button"
+														variant="ghost"
+														class="p-1.5 ml-1"
+														:disabled="model.device_cred_id === 0"
+														@click="removeDeviceCredSet"
+													>
+														<X
+															class="text-muted-foreground"
+															size="12"
+														/>
 													</Button>
 												</TooltipTrigger>
 												<TooltipContent>Remove Device Credentials</TooltipContent>
 											</Tooltip>
 										</TooltipProvider>
 									</div>
-									<span class="text-red-400 text-sm" v-if="errors.device_username">{{ errors.device_username[0] }}</span>
+									<span
+										v-if="errors.device_username"
+										class="text-red-400 text-sm"
+									>{{ errors.device_username[0] }}</span>
 
-									<Label v-if="model.device_cred_id === 0" for="device_password" class="mt-4 mb-1 font-light"> Password <span class="text-red-400">*</span> </Label>
-									<InputPassword v-if="model.device_cred_id === 0" v-model="model.device_password" id="device_password" class="w-full" />
-									<span class="text-red-400 text-sm" v-if="errors.device_password">{{ errors.device_password[0] }}</span>
+									<Label
+										v-if="model.device_cred_id === 0"
+										for="device_password"
+										class="mt-4 mb-1 font-light"
+									> Password <span class="text-red-400">*</span> </Label>
+									<InputPassword
+										v-if="model.device_cred_id === 0"
+										id="device_password"
+										v-model="model.device_password"
+										class="w-full"
+									/>
+									<span
+										v-if="errors.device_password"
+										class="text-red-400 text-sm"
+									>{{ errors.device_password[0] }}</span>
 
-									<Label v-if="model.device_cred_id === 0" for="device_enable_password" class="mt-4 mb-1 font-light">Enable Password</Label>
-									<InputPassword v-if="model.device_cred_id === 0" v-model="model.device_enable_password" id="device_enable_password" class="w-full" />
-									<span class="text-red-400 text-sm" v-if="errors.device_enable_password">{{ errors.device_enable_password[0] }}</span>
+									<Label
+										v-if="model.device_cred_id === 0"
+										for="device_enable_password"
+										class="mt-4 mb-1 font-light"
+									>Enable Password</Label>
+									<InputPassword
+										v-if="model.device_cred_id === 0"
+										id="device_enable_password"
+										v-model="model.device_enable_password"
+										class="w-full"
+									/>
+									<span
+										v-if="errors.device_enable_password"
+										class="text-red-400 text-sm"
+									>{{ errors.device_enable_password[0] }}</span>
 
-									<Label for="device_template" class="mt-4 mb-1 font-light"> Template <span class="text-red-400">*</span> </Label>
-									<TemplateMultiSelect :singleSelect="true" v-model="model.selectedTemplateObj" id="selectedTemplateObj" class="w-full" />
-									<span class="text-red-400 text-sm" v-if="errors.device_template">{{ errors.device_template[0] }}</span>
+									<Label
+										for="device_template"
+										class="mt-4 mb-1 font-light"
+									> Template <span class="text-red-400">*</span> </Label>
+									<TemplateMultiSelect
+										id="selectedTemplateObj"
+										v-model="model.selectedTemplateObj"
+										:single-select="true"
+										class="w-full"
+									/>
+									<span
+										v-if="errors.device_template"
+										class="text-red-400 text-sm"
+									>{{ errors.device_template[0] }}</span>
 
-									<Label for="main_prompt" class="mt-4 mb-1 font-light">
+									<Label
+										for="main_prompt"
+										class="mt-4 mb-1 font-light"
+									>
 										Main Prompt
-										<HelpPopover title="Device Main Prompt" content="This is the 'Privileged EXEC' prompt. You will run show commands from this prompt and you can access configure mode. Usually 'router1#'" />
+										<HelpPopover
+											title="Device Main Prompt"
+											content="This is the 'Privileged EXEC' prompt. You will run show commands from this prompt and you can access configure mode. Usually 'router1#'"
+										/>
 									</Label>
-									<Input v-model="model.device_main_prompt" id="device_main_prompt" autocomplete="off" class="w-full" />
-									<span class="text-red-400 text-sm" v-if="errors.device_main_prompt">{{ errors.device_main_prompt[0] }}</span>
+									<Input
+										id="device_main_prompt"
+										v-model="model.device_main_prompt"
+										autocomplete="off"
+										class="w-full"
+									/>
+									<span
+										v-if="errors.device_main_prompt"
+										class="text-red-400 text-sm"
+									>{{ errors.device_main_prompt[0] }}</span>
 
-									<Label for="enable_prompt" class="mt-4 mb-1 font-light">
+									<Label
+										for="enable_prompt"
+										class="mt-4 mb-1 font-light"
+									>
 										Enable Prompt
-										<HelpPopover title="Device Main Prompt" content="This is the 'User EXEC' prompt. The first level of access prompt. Usually 'router1>'" />
+										<HelpPopover
+											title="Device Main Prompt"
+											content="This is the 'User EXEC' prompt. The first level of access prompt. Usually 'router1>'"
+										/>
 									</Label>
-									<Input v-model="model.device_enable_prompt" id="device_enable_prompt" autocomplete="off" class="w-full" />
+									<Input
+										id="device_enable_prompt"
+										v-model="model.device_enable_prompt"
+										autocomplete="off"
+										class="w-full"
+									/>
 
-									<button class="flex items-center p-2 text-sm text-left rounded-lg pf-c-button pf-m-link pf-m-inline hover:bg-rcgray-800 max-w-fit text-muted-foreground hover:text-gray-200" type="button" @click="generatePrompts()">
-										<Sparkles class="w-4 h-4 mr-1 text-gray-500" size="16" />
+									<button
+										class="flex items-center p-2 text-sm text-left rounded-lg pf-c-button pf-m-link pf-m-inline hover:bg-rcgray-800 max-w-fit text-muted-foreground hover:text-gray-200"
+										type="button"
+										@click="generatePrompts()"
+									>
+										<Sparkles
+											class="w-4 h-4 mr-1 text-gray-500"
+											size="16"
+										/>
 										Auto-generate prompts
 									</button>
-									<span class="text-red-400 text-sm" v-if="errors.device_enable_prompt">{{ errors.device_enable_prompt[0] }}</span>
+									<span
+										v-if="errors.device_enable_prompt"
+										class="text-red-400 text-sm"
+									>{{ errors.device_enable_prompt[0] }}</span>
 								</div>
 							</div>
 						</div>
@@ -198,30 +387,59 @@ function removeDeviceCredSet() {
 			</ScrollArea>
 
 			<transition name="fade">
-				<DialogFooter v-if="!isLoading" class="rc-dialog-footer bg-rcgray-800">
-					<Button type="button" variant="outline" class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse" @click="showConfirmCloseDialog()" size="sm">
+				<DialogFooter
+					v-if="!isLoading"
+					class="rc-dialog-footer bg-rcgray-800"
+				>
+					<Button
+						type="button"
+						variant="outline"
+						class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse"
+						size="sm"
+						@click="showConfirmCloseDialog()"
+					>
 						Cancel
 						<div class="pl-2 ml-auto">
 							<kbd class="rc-kdb-class">ESC</kbd>
 						</div>
 					</Button>
 
-					<Button type="button" v-if="props.editId === 0 || props.isClone" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click="saveDialog" variant="primary">
+					<Button
+						v-if="props.editId === 0 || props.isClone"
+						type="button"
+						class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+						size="sm"
+						variant="primary"
+						@click="saveDialog"
+					>
 						Save
 						<div class="pl-2 ml-auto">
 							<kbd class="rc-kdb-class2">
 								Ctrl&nbsp;
-								<CornerDownLeft class="ml-1" size="16" />
+								<CornerDownLeft
+									class="ml-1"
+									size="16"
+								/>
 							</kbd>
 						</div>
 					</Button>
 
-					<Button v-else type="button" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click="saveDialog" variant="primary">
+					<Button
+						v-else
+						type="button"
+						class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+						size="sm"
+						variant="primary"
+						@click="saveDialog"
+					>
 						Update
 						<div class="pl-2 ml-auto">
 							<kbd class="rc-kdb-class2">
 								Ctrl&nbsp;
-								<CornerDownLeft class="ml-1" size="16" />
+								<CornerDownLeft
+									class="ml-1"
+									size="16"
+								/>
 							</kbd>
 						</div>
 					</Button>
@@ -229,5 +447,9 @@ function removeDeviceCredSet() {
 			</transition>
 		</DialogContent>
 	</Dialog>
-	<RcConfirmAlertDialog :showConfirmCloseAlert="showConfirmCloseAlert" @handleClose="cancelCloseDialog" @handleConfirm="confirmCloseDialog" />
+	<RcConfirmAlertDialog
+		:show-confirm-close-alert="showConfirmCloseAlert"
+		@handle-close="cancelCloseDialog"
+		@handle-confirm="confirmCloseDialog"
+	/>
 </template>

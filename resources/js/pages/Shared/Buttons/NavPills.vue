@@ -31,12 +31,27 @@ function isActive(to) {
 
 <template>
 	<div class="flex items-center">
-		<Button v-for="item in items" :key="item.to" type="button" :data-nav="item.to" variant="ghost" class="relative ml-2 border" @click="select(item.to)">
-			<RcIcon v-if="item.icon" :name="item.icon" class="mr-2" />
+		<Button
+			v-for="item in items"
+			:key="item.to"
+			type="button"
+			:data-nav="item.to"
+			variant="ghost"
+			class="relative ml-2 border"
+			@click="select(item.to)"
+		>
+			<RcIcon
+				v-if="item.icon"
+				:name="item.icon"
+				class="mr-2"
+			/>
 			{{ item.label }}
 
 			<!-- subtle indicator -->
-			<span class="pointer-events-none absolute left-0 right-0 -bottom-[6px] h-0.5 bg-blue-500 origin-center transition-transform duration-200" :class="isActive(item.to) ? 'scale-x-100' : 'scale-x-0'" />
+			<span
+				class="pointer-events-none absolute left-0 right-0 -bottom-[6px] h-0.5 bg-blue-500 origin-center transition-transform duration-200"
+				:class="isActive(item.to) ? 'scale-x-100' : 'scale-x-0'"
+			/>
 		</Button>
 	</div>
 </template>

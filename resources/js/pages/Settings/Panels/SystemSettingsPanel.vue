@@ -5,11 +5,11 @@ import SystemSettingsFormEmail from '@/pages/Settings/Panels/Components/SystemSe
 </script>
 
 <template>
-  <div class="flex justify-center w-full">
-    <div class="flex flex-col items-center w-full gap-4 xl:w-3/4 w-full">
-      <SystemSettingsFormTimezone />
-      <SystemSettingsFormBanner />
-      <SystemSettingsFormEmail />
-    </div>
-  </div>
+	<div class="flex justify-center w-full">
+		<div class="flex flex-col items-center w-full gap-4 xl:w-3/4 w-full">
+			<SystemSettingsFormTimezone />
+			<SystemSettingsFormBanner />
+			<SystemSettingsFormEmail />
+		</div>
+	</div>
 </template>

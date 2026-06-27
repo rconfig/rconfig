@@ -102,8 +102,15 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-	<transition name="fade" mode="out-in">
-		<div v-if="isVisible" :class="['p-4 mb-4 text-sm rounded-lg', backgroundClasses, textColor]" role="alert">
+	<transition
+		name="fade"
+		mode="out-in"
+	>
+		<div
+			v-if="isVisible"
+			:class="['p-4 mb-4 text-sm rounded-lg', backgroundClasses, textColor]"
+			role="alert"
+		>
 			<span class="font-medium">{{ heading }}</span> {{ message }}
 		</div>
 	</transition>

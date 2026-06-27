@@ -33,7 +33,9 @@ watchEffect(() => {
 
 <template>
 	<div>
-		<h3 class="mb-5 text-lg font-medium text-gray-900 dark:text-white">Select Task Schedule</h3>
+		<h3 class="mb-5 text-lg font-medium text-gray-900 dark:text-white">
+			Select Task Schedule
+		</h3>
 
 		<div class="grid w-full max-w-xl items-center gap-1.5">
 			<Label for="picture">Example CRON Schedules</Label>
@@ -44,22 +46,45 @@ watchEffect(() => {
 				<SelectContent class="">
 					<SelectGroup>
 						<SelectLabel>Select an Option</SelectLabel>
-						<SelectItem value="* * * * *">Every Minute (* * * * *)</SelectItem>
-						<SelectItem value="*/5 * * * *">Every 5 Minutes (*/5 * * * *)</SelectItem>
-						<SelectItem value="0,30 * * * *">Twice an Hour (0,30 * * * *)</SelectItem>
-						<SelectItem value="0 * * * *">Once an Hour (0 * * * *)</SelectItem>
-						<SelectItem value="0 0,12 * * *">Twice a Day (0 0,12 * * *)</SelectItem>
-						<SelectItem value="0 0 * * *">Once a Day (0 0 * * *)</SelectItem>
-						<SelectItem value="0 0 * * 0">Once a Week (0 0 * * 0)</SelectItem>
-						<SelectItem value="0 0 1,15 * *">1st and 15th of Month (0 0 1,15 * *)</SelectItem>
-						<SelectItem value="0 0 1 * *">Once a Month (0 0 1 * *)</SelectItem>
-						<SelectItem value="0 0 1 1 *">Once a Year (0 0 1 1 *)</SelectItem>
+						<SelectItem value="* * * * *">
+							Every Minute (* * * * *)
+						</SelectItem>
+						<SelectItem value="*/5 * * * *">
+							Every 5 Minutes (*/5 * * * *)
+						</SelectItem>
+						<SelectItem value="0,30 * * * *">
+							Twice an Hour (0,30 * * * *)
+						</SelectItem>
+						<SelectItem value="0 * * * *">
+							Once an Hour (0 * * * *)
+						</SelectItem>
+						<SelectItem value="0 0,12 * * *">
+							Twice a Day (0 0,12 * * *)
+						</SelectItem>
+						<SelectItem value="0 0 * * *">
+							Once a Day (0 0 * * *)
+						</SelectItem>
+						<SelectItem value="0 0 * * 0">
+							Once a Week (0 0 * * 0)
+						</SelectItem>
+						<SelectItem value="0 0 1,15 * *">
+							1st and 15th of Month (0 0 1,15 * *)
+						</SelectItem>
+						<SelectItem value="0 0 1 * *">
+							Once a Month (0 0 1 * *)
+						</SelectItem>
+						<SelectItem value="0 0 1 1 *">
+							Once a Year (0 0 1 1 *)
+						</SelectItem>
 					</SelectGroup>
 				</SelectContent>
 			</Select>
 			<span class="mb-0 text-muted-foreground">
 				{{ cronToHuman }} &nbsp;
-				<span class="mb-4 text-muted-foreground" v-if="model.task_cron"> ({{ model.task_cron.join(" ") }}) </span>
+				<span
+					v-if="model.task_cron"
+					class="mb-4 text-muted-foreground"
+				> ({{ model.task_cron.join(" ") }}) </span>
 			</span>
 		</div>
 		<br />

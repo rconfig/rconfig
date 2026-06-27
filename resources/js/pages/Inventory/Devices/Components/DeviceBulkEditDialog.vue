@@ -55,7 +55,13 @@ const {
 
 <template>
 	<Dialog :open="isDialogOpen('DeviceBulkEditDialog') && checkedRows.length > 0">
-		<DialogContent class="max-w-2xl" @interactOutside="close()" @pointerDownOutside="close()" @escapeKeyDown="close()" @closeClicked="close()">
+		<DialogContent
+			class="max-w-2xl"
+			@interact-outside="close()"
+			@pointer-down-outside="close()"
+			@escape-key-down="close()"
+			@close-clicked="close()"
+		>
 			<DialogHeader>
 				<DialogTitle class="text-lg font-semibold">
 					Bulk Edit Devices
@@ -64,20 +70,33 @@ const {
 			</DialogHeader>
 
 			<div class="py-4 space-y-4">
-				<div v-if="!isUpdating" class="space-y-4">
+				<div
+					v-if="!isUpdating"
+					class="space-y-4"
+				>
 					<!-- Property Selection -->
 					<div class="grid items-center grid-cols-4 gap-2">
-						<Label for="property-select" class="text-right">
+						<Label
+							for="property-select"
+							class="text-right"
+						>
 							Select Property
 							<span class="text-red-400">*</span>
 						</Label>
 						<div class="col-span-3">
 							<Select v-model="selectedPropertyName">
-								<SelectTrigger id="property-select" class="w-full">
+								<SelectTrigger
+									id="property-select"
+									class="w-full"
+								>
 									<SelectValue placeholder="Choose a property to update" />
 								</SelectTrigger>
 								<SelectContent>
-									<SelectItem v-for="property in finalPropertyOptions" :value="property.name" :key="property.id">
+									<SelectItem
+										v-for="property in finalPropertyOptions"
+										:key="property.id"
+										:value="property.name"
+									>
 										{{ formatters.capitalizeFirstLetter(property.name) }}
 									</SelectItem>
 								</SelectContent>
@@ -86,36 +105,103 @@ const {
 					</div>
 
 					<!-- Property-Specific Fields -->
-					<div v-if="selectedProperty" class="grid items-start grid-cols-4 gap-2">
-						<Label for="property-field" class="text-right pt-2" v-if="selectedPropertyName">
+					<div
+						v-if="selectedProperty"
+						class="grid items-start grid-cols-4 gap-2"
+					>
+						<Label
+							v-if="selectedPropertyName"
+							for="property-field"
+							class="text-right pt-2"
+						>
 							{{ formatters.capitalizeFirstLetter(selectedPropertyName) }}
 							<span class="text-red-400">*</span>
 						</Label>
-						<CredentialsMultiSelect v-if="selectedProperty.name === 'credentials'" v-model="selectedCredentials" :singleSelect="true" class="w-full" />
-						<CategoryMultiSelect v-if="selectedProperty.name === 'command_group'" v-model="selectedCategory" :singleSelect="true" class="w-full" />
-						<div v-if="selectedProperty.name === 'device_enable_prompt'" class="col-span-3">
-							<Input v-model="deviceEnablePrompt" id="device_enable_prompt" autocomplete="new-name" name="new-name" />
+						<CredentialsMultiSelect
+							v-if="selectedProperty.name === 'credentials'"
+							v-model="selectedCredentials"
+							:single-select="true"
+							class="w-full"
+						/>
+						<CategoryMultiSelect
+							v-if="selectedProperty.name === 'command_group'"
+							v-model="selectedCategory"
+							:single-select="true"
+							class="w-full"
+						/>
+						<div
+							v-if="selectedProperty.name === 'device_enable_prompt'"
+							class="col-span-3"
+						>
+							<Input
+								id="device_enable_prompt"
+								v-model="deviceEnablePrompt"
+								autocomplete="new-name"
+								name="new-name"
+							/>
 						</div>
-						<div v-if="selectedProperty.name === 'device_main_prompt'" class="col-span-3">
-							<Input v-model="deviceMainPrompt" id="device_main_prompt" autocomplete="new-name" name="new-name" />
+						<div
+							v-if="selectedProperty.name === 'device_main_prompt'"
+							class="col-span-3"
+						>
+							<Input
+								id="device_main_prompt"
+								v-model="deviceMainPrompt"
+								autocomplete="new-name"
+								name="new-name"
+							/>
 						</div>
-						<DeviceModelMultiSelect v-if="selectedProperty.name === 'model'" v-model="selectedModel" :singleSelect="true" class="w-full" />
-						<VendorMultiSelect v-if="selectedProperty.name === 'vendor'" v-model="selectedVendor" :singleSelect="true" class="w-full" />
-						<TemplateMultiSelect v-if="selectedProperty.name === 'template'" v-model="selectedTemplate" :singleSelect="true" class="w-full" />
-						<TagMultiSelect v-if="selectedProperty.name === 'tag'" v-model="selectedTags" :singleSelect="false" class="w-full" />
-						<span class="col-span-3 col-start-2 text-red-400 text-sm" v-if="errorMessage">
+						<DeviceModelMultiSelect
+							v-if="selectedProperty.name === 'model'"
+							v-model="selectedModel"
+							:single-select="true"
+							class="w-full"
+						/>
+						<VendorMultiSelect
+							v-if="selectedProperty.name === 'vendor'"
+							v-model="selectedVendor"
+							:single-select="true"
+							class="w-full"
+						/>
+						<TemplateMultiSelect
+							v-if="selectedProperty.name === 'template'"
+							v-model="selectedTemplate"
+							:single-select="true"
+							class="w-full"
+						/>
+						<TagMultiSelect
+							v-if="selectedProperty.name === 'tag'"
+							v-model="selectedTags"
+							:single-select="false"
+							class="w-full"
+						/>
+						<span
+							v-if="errorMessage"
+							class="col-span-3 col-start-2 text-red-400 text-sm"
+						>
 							{{ errorMessage }}
 						</span>
 					</div>
 
 					<!-- Append Option for Tags -->
-					<div v-if="selectedPropertyName === 'tag'" class="grid items-center grid-cols-4 gap-2">
-						<Label for="append-toggle" class="text-right">
+					<div
+						v-if="selectedPropertyName === 'tag'"
+						class="grid items-center grid-cols-4 gap-2"
+					>
+						<Label
+							for="append-toggle"
+							class="text-right"
+						>
 							Append
 							<span class="text-red-400">*</span>
 						</Label>
 						<div class="flex items-center gap-2 col-span-3">
-							<Switch id="append-toggle" :checked="append" @update:checked="append = !append" :disabled="isUpdating" />
+							<Switch
+								id="append-toggle"
+								:checked="append"
+								:disabled="isUpdating"
+								@update:checked="append = !append"
+							/>
 							<span class="text-sm">Append to existing</span>
 						</div>
 						<span class="col-span-3 col-start-2 text-xs text-muted-foreground">
@@ -124,31 +210,64 @@ const {
 						</span>
 					</div>
 
-					<AlertSuccess small v-if="successMsg" class="mb-6" title="Success" :message="successMsg" :showClose="true" @closed="successMsg = ''" />
+					<AlertSuccess
+						v-if="successMsg"
+						small
+						class="mb-6"
+						title="Success"
+						:message="successMsg"
+						:show-close="true"
+						@closed="successMsg = ''"
+					/>
 				</div>
 
 				<!-- Loading State -->
-				<div v-else class="flex flex-col items-center justify-center gap-4">
+				<div
+					v-else
+					class="flex flex-col items-center justify-center gap-4"
+				>
 					<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-300"></div>
-					<p class="text-sm text-gray-200">Processing bulk update. This may take a few moments...</p>
+					<p class="text-sm text-gray-200">
+						Processing bulk update. This may take a few moments...
+					</p>
 				</div>
 			</div>
 
 			<DialogFooter>
-				<Button type="close" variant="outline" class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse" @click="close" size="sm">
+				<Button
+					type="close"
+					variant="outline"
+					class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse"
+					size="sm"
+					@click="close"
+				>
 					Cancel
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class">ESC</kbd>
 					</div>
 				</Button>
 
-				<Button type="submit" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click="confirm()" variant="primary">
-					<Spinner :state="isUpdating" class="items-center mr-2" :color="'white'" :fillColor="'white'" />
+				<Button
+					type="submit"
+					class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+					size="sm"
+					variant="primary"
+					@click="confirm()"
+				>
+					<Spinner
+						:state="isUpdating"
+						class="items-center mr-2"
+						:color="'white'"
+						:fill-color="'white'"
+					/>
 					Confirm
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class2">
 							Ctrl&nbsp;
-							<RcIcon name="enter" class="ml-1" />
+							<RcIcon
+								name="enter"
+								class="ml-1"
+							/>
 						</kbd>
 					</div>
 				</Button>

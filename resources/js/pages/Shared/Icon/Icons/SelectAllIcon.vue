@@ -28,7 +28,13 @@ const combinedClass = computed(() => {
 
 <template>
 	<div class="relative">
-		<CheckSquare v-if="isSelected" :class="combinedClass" />
-		<Square v-else :class="combinedClass" />
+		<CheckSquare
+			v-if="isSelected"
+			:class="combinedClass"
+		/>
+		<Square
+			v-else
+			:class="combinedClass"
+		/>
 	</div>
 </template>

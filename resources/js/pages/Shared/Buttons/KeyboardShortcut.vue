@@ -59,9 +59,16 @@ const shortcutConfig = computed(() => {
 <template>
 	<div :class="cn('pl-2 ml-auto font-mono', className)">
 		<KbdGroup :class="{ 'no-border': noBorder }">
-			<template v-for="(key, index) in shortcutConfig.keys" :key="index">
+			<template
+				v-for="(key, index) in shortcutConfig.keys"
+				:key="index"
+			>
 				<Kbd>
-					<RcIcon v-if="key === 'Enter' && shortcutConfig.icon" :name="shortcutConfig.icon" class="ml-1" />
+					<RcIcon
+						v-if="key === 'Enter' && shortcutConfig.icon"
+						:name="shortcutConfig.icon"
+						class="ml-1"
+					/>
 					<span v-else>{{ key }}</span>
 				</Kbd>
 				<span v-if="index < shortcutConfig.keys.length - 1">+</span>

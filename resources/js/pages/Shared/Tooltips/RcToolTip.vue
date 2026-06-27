@@ -33,14 +33,19 @@ const props = defineProps({
 </script>
 
 <template>
-	<TooltipProvider :delayDuration="delayDuration">
+	<TooltipProvider :delay-duration="delayDuration">
 		<Tooltip :disabled="disabled">
-			<TooltipTrigger asChild>
+			<TooltipTrigger as-child>
 				<slot name="trigger">
 					<span class="cursor-help">Hover me</span>
 				</slot>
 			</TooltipTrigger>
-			<TooltipContent :side="side" :align="align" :sideOffset="sideOffset" class="bg-rcgray-900 text-rcgray-900 shadow-[rgb(47,48,51)_0px_0px_0px_1px_inset,_rgb(0,0,0)_0px_0px_2px_0px,_rgba(0,0,0,0.08)_0px_1px_3px_0px] dark:bg-rcgray-800 dark:text-rcgray-200 dark:shadow-[rgb(47,48,51)_0px_0px_0px_1px_inset,_rgb(0,0,0)_0px_0px_2px_0px,_rgba(0,0,0,0.08)_0px_1px_3px_0px]">
+			<TooltipContent
+				:side="side"
+				:align="align"
+				:side-offset="sideOffset"
+				class="bg-rcgray-900 text-rcgray-900 shadow-[rgb(47,48,51)_0px_0px_0px_1px_inset,_rgb(0,0,0)_0px_0px_2px_0px,_rgba(0,0,0,0.08)_0px_1px_3px_0px] dark:bg-rcgray-800 dark:text-rcgray-200 dark:shadow-[rgb(47,48,51)_0px_0px_0px_1px_inset,_rgb(0,0,0)_0px_0px_2px_0px,_rgba(0,0,0,0.08)_0px_1px_3px_0px]"
+			>
 				<slot name="content">
 					<p>{{ content }}</p>
 				</slot>

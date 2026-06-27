@@ -34,40 +34,41 @@ watch(
 </script>
 
 <template>
-  <Sheet :open="isSheetOpen('DeviceCommentSheet')">
-    <SheetContent
-      class="h-[96vh] m-6 rounded-lg border p-2"
-      @escapeKeyDown="closeSheet('DeviceCommentSheet')"
-      @pointerDownOutside="closeSheet('DeviceCommentSheet')"
-      @closeClicked="closeSheet('DeviceCommentSheet')">
-      <SheetHeader>
-        <SheetTitle class="mt-2 ml-1">
-          {{ commentCount }} Comments
-          <span class="text-sm font-light text-muted-foreground">on</span>
-          <Button
-            class="px-2 py-0 hover:bg-rcgray-800 rounded-xl text-muted-foreground"
-            variant="ghost"
-            @click="viewDevice(deviceId)">
-            <span class="border-b">{{ deviceName }}</span>
-          </Button>
-        </SheetTitle>
-        <SheetDescription>
-          <Separator />
-        </SheetDescription>
-      </SheetHeader>
+	<Sheet :open="isSheetOpen('DeviceCommentSheet')">
+		<SheetContent
+			class="h-[96vh] m-6 rounded-lg border p-2"
+			@escape-key-down="closeSheet('DeviceCommentSheet')"
+			@pointer-down-outside="closeSheet('DeviceCommentSheet')"
+			@close-clicked="closeSheet('DeviceCommentSheet')"
+		>
+			<SheetHeader>
+				<SheetTitle class="mt-2 ml-1">
+					{{ commentCount }} Comments
+					<span class="text-sm font-light text-muted-foreground">on</span>
+					<Button
+						class="px-2 py-0 hover:bg-rcgray-800 rounded-xl text-muted-foreground"
+						variant="ghost"
+						@click="viewDevice(deviceId)"
+					>
+						<span class="border-b">{{ deviceName }}</span>
+					</Button>
+				</SheetTitle>
+				<SheetDescription>
+					<Separator />
+				</SheetDescription>
+			</SheetHeader>
 
-      <transition name="fade">
-        <div>
-          <CommentsMainPanel
-            @commentsaved="emit('commentsaved')"
-            :deviceId="deviceId"
-            :deviceName="deviceName" />
-        </div>
-      </transition>
-      <!-- 
+			<div>
+				<CommentsMainPanel
+					:device-id="deviceId"
+					:device-name="deviceName"
+					@commentsaved="emit('commentsaved')"
+				/>
+			</div>
+			<!-- 
       <SheetFooter>
         <div class="flex-1"></div>
       </SheetFooter> -->
-    </SheetContent>
-  </Sheet>
+		</SheetContent>
+	</Sheet>
 </template>

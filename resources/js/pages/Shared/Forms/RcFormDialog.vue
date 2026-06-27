@@ -41,21 +41,49 @@ const { t } = useComponentTranslations(RcFormDialogI18N);
 			</DialogHeader>
 
 			<div class="grid gap-2 p-4">
-				<div v-for="field in requiredFields" :key="field" class="grid items-center grid-cols-4 gap-2">
-					<Label :for="field" class="text-right capitalize"> {{ field }} <span class="text-red-600">*</span> </Label>
-					<Input :id="field" v-model="modelValue[field]" class="col-span-3" />
-					<div class="rc-text-xs-muted col-span-3 col-start-2">{{ t("enter") }} {{ field }}</div>
-					<span v-if="errors && errors[field]" class="col-span-3 col-start-2 text-sm text-red-400">
+				<div
+					v-for="field in requiredFields"
+					:key="field"
+					class="grid items-center grid-cols-4 gap-2"
+				>
+					<Label
+						:for="field"
+						class="text-right capitalize"
+					> {{ field }} <span class="text-red-600">*</span> </Label>
+					<Input
+						:id="field"
+						v-model="modelValue[field]"
+						class="col-span-3"
+					/>
+					<div class="rc-text-xs-muted col-span-3 col-start-2">
+						{{ t("enter") }} {{ field }}
+					</div>
+					<span
+						v-if="errors && errors[field]"
+						class="col-span-3 col-start-2 text-sm text-red-400"
+					>
 						{{ errors[field][0] }}
 					</span>
 				</div>
 			</div>
 
 			<DialogFooter class="rc-dialog-footer bg-muted">
-				<Button type="button" variant="outline" class="px-2 py-1 ml-2 text-sm" @click="emit('close')" size="sm">
+				<Button
+					type="button"
+					variant="outline"
+					class="px-2 py-1 ml-2 text-sm"
+					size="sm"
+					@click="emit('close')"
+				>
 					{{ t("common.cancel") }}
 				</Button>
-				<Button type="submit" variant="primary" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700" size="sm" @click="emit('save')">
+				<Button
+					type="submit"
+					variant="primary"
+					class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700"
+					size="sm"
+					@click="emit('save')"
+				>
 					{{ isEditMode ? t("common.update") : t("common.save") }}
 				</Button>
 			</DialogFooter>

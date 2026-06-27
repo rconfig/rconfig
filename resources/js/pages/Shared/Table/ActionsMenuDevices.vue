@@ -104,62 +104,124 @@ function handleShowCopyDownloadDebug() {
 	<div>
 		<DropdownMenu>
 			<DropdownMenuTrigger as-child>
-				<Button variant="ghost" class="hover:animate-pulse">
+				<Button
+					variant="ghost"
+					class="hover:animate-pulse"
+				>
 					...
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent class="w-56" align="end" side="bottom">
-				<DropdownMenuItem v-if="showCopyDownloadDebug" class="cursor-pointer hover:bg-rcgray-800" @click="handleShowCopyDownloadDebug">
+			<DropdownMenuContent
+				class="w-56"
+				align="end"
+				side="bottom"
+			>
+				<DropdownMenuItem
+					v-if="showCopyDownloadDebug"
+					class="cursor-pointer hover:bg-rcgray-800"
+					@click="handleShowCopyDownloadDebug"
+				>
 					<span class="text-gray-300 group-hover:text-gray-200">Debug Cmd</span>
 					<DropdownMenuShortcut>
-						<RcIcon name="commands" size="16" class="text-blue-300" />
+						<RcIcon
+							name="commands"
+							size="16"
+							class="text-blue-300"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
 
-				<DropdownMenuItem v-if="showRolesBtn" class="cursor-pointer hover:bg-rcgray-800" @click="handleRoleAssignment">
+				<DropdownMenuItem
+					v-if="showRolesBtn"
+					class="cursor-pointer hover:bg-rcgray-800"
+					@click="handleRoleAssignment"
+				>
 					<span>Roles</span>
 					<DropdownMenuShortcut>
-						<RcIcon name="rbac" size="16" />
+						<RcIcon
+							name="rbac"
+							size="16"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
-				<DropdownMenuItem v-if="showViewDetailsBtn" class="cursor-pointer hover:bg-rcgray-800" @click="handleViewDetails">
+				<DropdownMenuItem
+					v-if="showViewDetailsBtn"
+					class="cursor-pointer hover:bg-rcgray-800"
+					@click="handleViewDetails"
+				>
 					<span>View Details</span>
 					<DropdownMenuShortcut>
 						<Eye size="16" />
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
-				<DropdownMenuItem v-if="showEditBtn" class="cursor-pointer hover:bg-rcgray-800" @click="handleEdit">
+				<DropdownMenuItem
+					v-if="showEditBtn"
+					class="cursor-pointer hover:bg-rcgray-800"
+					@click="handleEdit"
+				>
 					<span>Edit</span>
 					<DropdownMenuShortcut>
 						<Pencil size="16" />
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
-				<DropdownMenuItem v-if="showEditBtn" class="cursor-pointer hover:bg-rcgray-800 group" @click="handleClone">
+				<DropdownMenuItem
+					v-if="showEditBtn"
+					class="cursor-pointer hover:bg-rcgray-800 group"
+					@click="handleClone"
+				>
 					<span class="text-blue-400 group-hover:text-blue-500">Clone</span>
 					<DropdownMenuShortcut>
-						<Copy size="16" class="text-blue-400 group-hover:text-blue-500" />
+						<Copy
+							size="16"
+							class="text-blue-400 group-hover:text-blue-500"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
 				<DropdownMenuSeparator v-if="showEditBtn" />
-				<DropdownMenuItem v-if="rowData.status === 100" class="cursor-pointer hover:bg-rcgray-800" @click="handleEnable">
+				<DropdownMenuItem
+					v-if="rowData.status === 100"
+					class="cursor-pointer hover:bg-rcgray-800"
+					@click="handleEnable"
+				>
 					<span>Enable</span>
 					<DropdownMenuShortcut>
-						<TvMinimalPlay size="16" class="text-green-400" />
+						<TvMinimalPlay
+							size="16"
+							class="text-green-400"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
-				<DropdownMenuItem v-if="rowData.status != 100" class="cursor-pointer hover:bg-rcgray-800" @click="showDisableConfirm">
+				<DropdownMenuItem
+					v-if="rowData.status != 100"
+					class="cursor-pointer hover:bg-rcgray-800"
+					@click="showDisableConfirm"
+				>
 					<span>Disable</span>
 					<DropdownMenuShortcut>
-						<MonitorOff size="16" class="text-red-300" />
+						<MonitorOff
+							size="16"
+							class="text-red-300"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
-				<DropdownMenuItem v-if="canDelete && !isLocked" class="group cursor-pointer hover:bg-rcgray-800" @click="showAlert">
+				<DropdownMenuItem
+					v-if="canDelete && !isLocked"
+					class="group cursor-pointer hover:bg-rcgray-800"
+					@click="showAlert"
+				>
 					<span class="text-red-500 group-hover:text-red-400">Delete</span>
 					<DropdownMenuShortcut>
-						<Trash size="16" class="text-red-500 group-hover:text-red-400" />
+						<Trash
+							size="16"
+							class="text-red-500 group-hover:text-red-400"
+						/>
 					</DropdownMenuShortcut>
 				</DropdownMenuItem>
-				<DropdownMenuItem v-if="isLocked" disabled class="cursor-default opacity-70">
+				<DropdownMenuItem
+					v-if="isLocked"
+					disabled
+					class="cursor-default opacity-70"
+				>
 					<span class="italic text-slate-500">Vector CM Locked</span>
 					<DropdownMenuShortcut>
 						<RcIcon name="lock" />
@@ -168,8 +230,18 @@ function handleShowCopyDownloadDebug() {
 			</DropdownMenuContent>
 		</DropdownMenu>
 
-		<RcConfirmAlertDialog :ids="[rowData.id]" :showConfirmDisable="showConfirmDisable" @close="showConfirmDisable = false" @handleDisable="handleDisable" />
+		<RcConfirmAlertDialog
+			:ids="[rowData.id]"
+			:show-confirm-disable="showConfirmDisable"
+			@close="showConfirmDisable = false"
+			@handle-disable="handleDisable"
+		/>
 
-		<RcConfirmAlertDialog :ids="[rowData.id]" :showConfirmDelete="showConfirmDelete" @close="showConfirmDelete = false" @handleDelete="handleDelete" />
+		<RcConfirmAlertDialog
+			:ids="[rowData.id]"
+			:show-confirm-delete="showConfirmDelete"
+			@close="showConfirmDelete = false"
+			@handle-delete="handleDelete"
+		/>
 	</div>
 </template>

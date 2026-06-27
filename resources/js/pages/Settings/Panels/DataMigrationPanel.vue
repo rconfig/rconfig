@@ -61,18 +61,37 @@ function openExtLink(url) {
 						<Card class="mt-4">
 							<CardContent>
 								<div class="space-y-6 mt-4">
-									<div v-for="opt in importOptions" :key="opt.key" class="rounded-md border p-4">
+									<div
+										v-for="opt in importOptions"
+										:key="opt.key"
+										class="rounded-md border p-4"
+									>
 										<div class="flex items-center">
 											<div class="flex-shrink-0">
-												<img :src="opt.logoSrc" :alt="opt.name + ' logo'" class="h-7 w-7" loading="lazy" />
+												<img
+													:src="opt.logoSrc"
+													:alt="opt.name + ' logo'"
+													class="h-7 w-7"
+													loading="lazy"
+												/>
 											</div>
 											<div class="ml-2 flex items-center justify-between w-full">
 												<div class="flex items-center gap-2">
-													<h3 class="text-sm font-medium text-muted-foreground">{{ opt.name }}</h3>
-													<component :is="opt.Icon" class="h-4 w-4 text-muted-foreground" />
+													<h3 class="text-sm font-medium text-muted-foreground">
+														{{ opt.name }}
+													</h3>
+													<component
+														:is="opt.Icon"
+														class="h-4 w-4 text-muted-foreground"
+													/>
 												</div>
 												<div class="flex items-center justify-end">
-													<Button variant="outline" size="sm" @click="openExtLink($rconfigDocsUrl + opt.docsPath)" class="flex items-center gap-1 text-xs">
+													<Button
+														variant="outline"
+														size="sm"
+														class="flex items-center gap-1 text-xs"
+														@click="openExtLink($rconfigDocsUrl + opt.docsPath)"
+													>
 														Configure
 														<ExternalLink class="w-4 h-4" />
 													</Button>

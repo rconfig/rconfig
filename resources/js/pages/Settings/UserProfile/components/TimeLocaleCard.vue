@@ -55,7 +55,9 @@ onMounted(() => {
 						<Clock class="h-5 w-5 text-blue-600 dark:text-blue-400" />
 					</div>
 					<div>
-						<CardTitle class="text-xl font-semibold text-gray-900 dark:text-white"> Time & Locale {{ selectedLocale }} </CardTitle>
+						<CardTitle class="text-xl font-semibold text-gray-900 dark:text-white">
+							Time & Locale {{ selectedLocale }}
+						</CardTitle>
 						<CardDescription class="text-gray-500 dark:text-gray-400">
 							Customize your regional and time preferences
 						</CardDescription>
@@ -63,8 +65,14 @@ onMounted(() => {
 				</div>
 				<!-- Current Status Indicator -->
 				<div class="flex flex-col items-start space-y-2">
-					<div class="flex items-center space-x-2 text-sm" :class="isSaving ? 'text-blue-500 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'">
-						<div class="w-2 h-2 rounded-full" :class="isSaving ? 'bg-blue-500 animate-pulse' : 'bg-gray-400'"></div>
+					<div
+						class="flex items-center space-x-2 text-sm"
+						:class="isSaving ? 'text-blue-500 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'"
+					>
+						<div
+							class="w-2 h-2 rounded-full"
+							:class="isSaving ? 'bg-blue-500 animate-pulse' : 'bg-gray-400'"
+						></div>
 						<span>{{ isSaving ? "Saving changes…" : "Changes auto-saved" }}</span>
 					</div>
 				</div>
@@ -81,7 +89,9 @@ onMounted(() => {
 							<div class="space-y-3">
 								<div class="flex items-center space-x-2 border-b border-gray-200 dark:border-gray-700">
 									<div class="w-1 h-4 bg-blue-400 rounded-full"></div>
-									<h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">Timezone</h4>
+									<h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+										Timezone
+									</h4>
 								</div>
 								<div class="pl-3 space-y-2">
 									<Select v-model="selectedLocale">
@@ -89,12 +99,20 @@ onMounted(() => {
 											<SelectValue placeholder="Select timezone" />
 										</SelectTrigger>
 										<SelectContent>
-											<SelectItem v-for="(locale, key) in locales" :key="key" :value="key">
+											<SelectItem
+												v-for="(locale, key) in locales"
+												:key="key"
+												:value="key"
+											>
 												{{ locale }}
 											</SelectItem>
 										</SelectContent>
 									</Select>
-									<RcBadge v-if="selectedLocale" variant="success" :interactive="false">
+									<RcBadge
+										v-if="selectedLocale"
+										variant="success"
+										:interactive="false"
+									>
 										<div class="w-2 h-2 bg-green-500 rounded-full animate-pulse mr-2"></div>
 										<span class="text-sm font-medium text-green-700 dark:text-green-300">{{ selectedLocale }}</span>
 									</RcBadge>
@@ -108,13 +126,18 @@ onMounted(() => {
 				<div class="space-y-4">
 					<div class="flex items-center space-x-2 pb-2 border-b border-gray-200 dark:border-gray-700">
 						<div class="w-1 h-5 bg-purple-500 rounded-full"></div>
-						<h3 class="text-base font-medium text-gray-900 dark:text-white">Display Formats</h3>
+						<h3 class="text-base font-medium text-gray-900 dark:text-white">
+							Display Formats
+						</h3>
 					</div>
 					<div class="pl-3">
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 							<!-- Date Format -->
 							<div class="space-y-2">
-								<Label for="dateFormat" class="text-sm font-medium text-gray-700 dark:text-gray-300">
+								<Label
+									for="dateFormat"
+									class="text-sm font-medium text-gray-700 dark:text-gray-300"
+								>
 									Date Format
 								</Label>
 								<Select v-model="preferences.dateFormat">
@@ -146,7 +169,10 @@ onMounted(() => {
 
 							<!-- Time Format -->
 							<div class="space-y-2">
-								<Label for="timeFormat" class="text-sm font-medium text-gray-700 dark:text-gray-300">
+								<Label
+									for="timeFormat"
+									class="text-sm font-medium text-gray-700 dark:text-gray-300"
+								>
 									Time Format
 								</Label>
 								<Select v-model="preferences.timeFormat">
@@ -177,7 +203,9 @@ onMounted(() => {
 				<div class="pt-4">
 					<Alert class="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
 						<AlertCircle class="h-4 w-4 text-blue-600 dark:text-blue-400" />
-						<AlertTitle class="text-blue-800 dark:text-blue-200">Display Preferences</AlertTitle>
+						<AlertTitle class="text-blue-800 dark:text-blue-200">
+							Display Preferences
+						</AlertTitle>
 						<AlertDescription class="text-blue-700 dark:text-blue-300">
 							Your display settings affect how dates, times, and table layouts are shown throughout the application. Changes are automatically saved and will apply immediately to all tables.
 						</AlertDescription>
@@ -186,6 +214,7 @@ onMounted(() => {
 			</form>
 		</CardContent>
 
-		<CardFooter class="flex justify-between items-center border-t border-gray-200 dark:border-gray-700 pt-6"> </CardFooter>
+		<CardFooter class="flex justify-between items-center border-t border-gray-200 dark:border-gray-700 pt-6">
+		</CardFooter>
 	</Card>
 </template>

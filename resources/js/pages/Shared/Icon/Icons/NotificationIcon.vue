@@ -26,6 +26,27 @@ const combinedClass = computed(() => {
 });
 </script>
 
+<template>
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		:width="width"
+		:height="height"
+		viewBox="0 0 16 16"
+		:class="combinedClass"
+		style="flex-shrink: 0; display: block;"
+	>
+		<path
+			class="notification-bolt"
+			fill="none"
+			stroke="#eed49f"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			d="M2.85 9.301a.644.65 0 0 1-.502-1.06L8.72 1.605a.322.325 0 0 1 .554.3L8.039 5.82a.644.65 0 0 0 .605.878h4.506a.644.65 0 0 1 .502 1.06L7.28 14.395a.322.325 0 0 1-.554-.3l1.236-3.916a.644.65 0 0 0-.605-.878Z"
+			stroke-width="1"
+		/>
+	</svg>
+</template>
+
 <style scoped>
 @keyframes notification-pulse {
 	0%,
@@ -77,9 +98,3 @@ const combinedClass = computed(() => {
 	animation: notification-shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 </style>
-
-<template>
-	<svg xmlns="http://www.w3.org/2000/svg" :width="width" :height="height" viewBox="0 0 16 16" :class="combinedClass" style="flex-shrink: 0; display: block;">
-		<path class="notification-bolt" fill="none" stroke="#eed49f" stroke-linecap="round" stroke-linejoin="round" d="M2.85 9.301a.644.65 0 0 1-.502-1.06L8.72 1.605a.322.325 0 0 1 .554.3L8.039 5.82a.644.65 0 0 0 .605.878h4.506a.644.65 0 0 1 .502 1.06L7.28 14.395a.322.325 0 0 1-.554-.3l1.236-3.916a.644.65 0 0 0-.605-.878Z" stroke-width="1" />
-	</svg>
-</template>

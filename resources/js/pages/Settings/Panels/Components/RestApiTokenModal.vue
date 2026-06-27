@@ -44,63 +44,82 @@ function onOpenChange(value) {
 </script>
 
 <template>
-  <Dialog :open="open" @update:open="onOpenChange">
-    <DialogTrigger as-child>
-      <Button>New Token</Button>
-    </DialogTrigger>
-    <DialogContent>
-      <DialogHeader>
-        <DialogTitle>Create API Token</DialogTitle>
-        <DialogDescription>
-          Give the token a memorable name. The token value is shown only once,
-          so copy it now.
-        </DialogDescription>
-      </DialogHeader>
+	<Dialog
+		:open="open"
+		@update:open="onOpenChange"
+	>
+		<DialogTrigger as-child>
+			<Button>New Token</Button>
+		</DialogTrigger>
+		<DialogContent>
+			<DialogHeader>
+				<DialogTitle>Create API Token</DialogTitle>
+				<DialogDescription>
+					Give the token a memorable name. The token value is shown only once,
+					so copy it now.
+				</DialogDescription>
+			</DialogHeader>
 
-      <div v-if="!generatedToken" class="space-y-2">
-        <Label for="api_token_name">Token name</Label>
-        <Input
-          id="api_token_name"
-          v-model="tokenName"
-          placeholder="e.g. Automation script"
-          @keyup.enter="generate"
-        />
-      </div>
+			<div
+				v-if="!generatedToken"
+				class="space-y-2"
+			>
+				<Label for="api_token_name">Token name</Label>
+				<Input
+					id="api_token_name"
+					v-model="tokenName"
+					placeholder="e.g. Automation script"
+					@keyup.enter="generate"
+				/>
+			</div>
 
-      <div v-else class="space-y-2">
-        <Label>Your new token</Label>
-        <div class="flex items-center space-x-2">
-          <Input
-            :model-value="generatedToken"
-            readonly
-            class="font-mono text-xs"
-          />
-          <Button
-            variant="outline"
-            size="icon"
-            @click="copyItem('token', generatedToken)"
-          >
-            <Check v-if="activeCopyIcon['token']" class="w-4 h-4" />
-            <Copy v-else class="w-4 h-4" />
-          </Button>
-        </div>
-        <p class="text-xs text-muted-foreground">
-          Store this token securely. You will not be able to see it again.
-        </p>
-      </div>
+			<div
+				v-else
+				class="space-y-2"
+			>
+				<Label>Your new token</Label>
+				<div class="flex items-center space-x-2">
+					<Input
+						:model-value="generatedToken"
+						readonly
+						class="font-mono text-xs"
+					/>
+					<Button
+						variant="outline"
+						size="icon"
+						@click="copyItem('token', generatedToken)"
+					>
+						<Check
+							v-if="activeCopyIcon['token']"
+							class="w-4 h-4"
+						/>
+						<Copy
+							v-else
+							class="w-4 h-4"
+						/>
+					</Button>
+				</div>
+				<p class="text-xs text-muted-foreground">
+					Store this token securely. You will not be able to see it again.
+				</p>
+			</div>
 
-      <DialogFooter>
-        <Button
-          v-if="!generatedToken"
-          :disabled="isSubmitting || !tokenName"
-          @click="generate"
-        >
-          Generate Token
-        </Button>
-        <Button v-else variant="secondary" @click="onOpenChange(false)"
-          >Done</Button
-        >
-      </DialogFooter>
-    </DialogContent>
-  </Dialog>
+			<DialogFooter>
+				<Button
+					v-if="!generatedToken"
+					:disabled="isSubmitting || !tokenName"
+					@click="generate"
+				>
+					Generate Token
+				</Button>
+				<Button
+					v-else
+					variant="secondary"
+					@click="onOpenChange(false)"
+				>
+					Done
+				</Button>
+			</DialogFooter>
+		</DialogContent>
+	</Dialog>
 </template>

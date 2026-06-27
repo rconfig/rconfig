@@ -94,34 +94,80 @@ onUnmounted(() => {
 	<div class="flex flex-col h-full gap-1 text-center">
 		<div class="flex items-center justify-between p-4">
 			<div class="flex items-center mr-2">
-				<Input class="max-w-sm ml-4 hidden xl:inline-flex" autocomplete="off" data-1p-ignore data-lpignore="true" placeholder="Filter [id, device_name]" v-model="searchTerm" />
-				<Separator orientation="vertical" class="relative w-px h-6 mx-4 shrink-0 bg-border hidden xl:inline-flex" />
+				<Input
+					v-model="searchTerm"
+					class="max-w-sm ml-4 hidden xl:inline-flex"
+					autocomplete="off"
+					data-1p-ignore
+					data-lpignore="true"
+					placeholder="Filter [id, device_name]"
+				/>
+				<Separator
+					orientation="vertical"
+					class="relative w-px h-6 mx-4 shrink-0 bg-border hidden xl:inline-flex"
+				/>
 
 				<div class="flex gap-2">
-					<ConfigSearchFilterCardDateRangePicker :use-default-range="false" placeholder="Select date range" @date-change="setDates($event)" :width="'200px'" />
-					<CommandFilter v-model="filterCommand" :deviceId="configsId" />
+					<ConfigSearchFilterCardDateRangePicker
+						:use-default-range="false"
+						placeholder="Select date range"
+						:width="'200px'"
+						@date-change="setDates($event)"
+					/>
+					<CommandFilter
+						v-model="filterCommand"
+						:device-id="configsId"
+					/>
 					<StatusFilter v-model="filterStatus" />
-					<ClearFilters v-if="Object.keys(filters).length > 0 || searchTerm || filterStatus.length || filterCommand.length" @update:model-value="clearFilters" />
+					<ClearFilters
+						v-if="Object.keys(filters).length > 0 || searchTerm || filterStatus.length || filterCommand.length"
+						@update:model-value="clearFilters"
+					/>
 
-					<Separator orientation="vertical" class="relative w-px h-6 mx-4 shrink-0 bg-border" />
+					<Separator
+						orientation="vertical"
+						class="relative w-px h-6 mx-4 shrink-0 bg-border"
+					/>
 
 					<div class="flex items-center">
-						<RcToolTip :delayDuration="100" content="Latest configs only" :side="'bottom'">
+						<RcToolTip
+							:delay-duration="100"
+							content="Latest configs only"
+							:side="'bottom'"
+						>
 							<template #trigger>
-								<FileClock size="16" class="mr-2" />
+								<FileClock
+									size="16"
+									class="mr-2"
+								/>
 							</template>
 						</RcToolTip>
-						<Switch id="airplane-mode" @update:checked="toggleLatestVersion" />
+						<Switch
+							id="airplane-mode"
+							@update:checked="toggleLatestVersion"
+						/>
 					</div>
 				</div>
 			</div>
 
 			<div class="flex items-center justify-end">
-				<Button v-if="selectedRows.length" class="px-2 py-1 bg-red-600 hover:bg-red-700 hover:animate-pulse" size="md" @click.prevent="showConfirmDelete = true" variant="primary">Delete Selected {{ selectedRows.length }} Config(s) </Button>
+				<Button
+					v-if="selectedRows.length"
+					class="px-2 py-1 bg-red-600 hover:bg-red-700 hover:animate-pulse"
+					size="md"
+					variant="primary"
+					@click.prevent="showConfirmDelete = true"
+				>
+					Delete Selected {{ selectedRows.length }} Config(s)
+				</Button>
 
-				<DataPurgeButton :srcName="'configs'" />
+				<DataPurgeButton :src-name="'configs'" />
 
-				<RcIcon name="refresh" class="w-4 h-4 mx-4 text-muted-foreground cursor-pointer hover:text-rcgray-200" @click="reload()" />
+				<RcIcon
+					name="refresh"
+					class="w-4 h-4 mx-4 text-muted-foreground cursor-pointer hover:text-rcgray-200"
+					@click="reload()"
+				/>
 			</div>
 		</div>
 
@@ -130,36 +176,81 @@ onUnmounted(() => {
 				<TableHeader>
 					<TableRow>
 						<TableHead class="w-[2%] rc-th-heading">
-							<Checkbox id="selectAll" v-model="selectAll" :checked="selectAll" @click="toggleSelectAll()" />
+							<Checkbox
+								id="selectAll"
+								v-model="selectAll"
+								:checked="selectAll"
+								@click="toggleSelectAll()"
+							/>
 						</TableHead>
 						<TableHead class="w-[2%] rc-th-heading">
-							<Button class="flex justify-start w-full p-0 hover:bg-rcgray-800" variant="ghost" @click="toggleSort('id')">
-								<RcIcon name="sort" :sortParam="sortParam" field="id" />
+							<Button
+								class="flex justify-start w-full p-0 hover:bg-rcgray-800"
+								variant="ghost"
+								@click="toggleSort('id')"
+							>
+								<RcIcon
+									name="sort"
+									:sort-param="sortParam"
+									field="id"
+								/>
 								<span class="ml-2">ID</span>
 							</Button>
 						</TableHead>
 						<TableHead class="w-[2%] rc-th-heading">
-							<Button class="flex justify-start w-full p-0 hover:bg-rcgray-800" variant="ghost" @click="toggleSort('download_status')">
-								<RcIcon name="sort" :sortParam="sortParam" field="download_status" />
+							<Button
+								class="flex justify-start w-full p-0 hover:bg-rcgray-800"
+								variant="ghost"
+								@click="toggleSort('download_status')"
+							>
+								<RcIcon
+									name="sort"
+									:sort-param="sortParam"
+									field="download_status"
+								/>
 								<span class="ml-2"></span>
 							</Button>
 						</TableHead>
 						<TableHead class="w-[10%] rc-th-heading">
-							<Button class="flex justify-start w-full p-0 hover:bg-rcgray-800" variant="ghost" @click="toggleSort('device_name')">
-								<RcIcon name="sort" :sortParam="sortParam" field="device_name" />
+							<Button
+								class="flex justify-start w-full p-0 hover:bg-rcgray-800"
+								variant="ghost"
+								@click="toggleSort('device_name')"
+							>
+								<RcIcon
+									name="sort"
+									:sort-param="sortParam"
+									field="device_name"
+								/>
 								<span class="ml-2">Filename</span>
 							</Button>
 						</TableHead>
 						<TableHead class="w-[15%] rc-th-heading">
-							<Button class="flex justify-start w-full p-0 hover:bg-rcgray-800" variant="ghost" @click="toggleSort('command')">
-								<RcIcon name="sort" :sortParam="sortParam" field="command" />
+							<Button
+								class="flex justify-start w-full p-0 hover:bg-rcgray-800"
+								variant="ghost"
+								@click="toggleSort('command')"
+							>
+								<RcIcon
+									name="sort"
+									:sort-param="sortParam"
+									field="command"
+								/>
 								<span class="ml-2">Command</span>
 							</Button>
 						</TableHead>
-						<TableHead class="w-[5%] rc-th-heading">Version</TableHead>
-						<TableHead class="w-[10%] rc-th-heading">Device</TableHead>
-						<TableHead class="w-[10%] rc-th-heading">File Size</TableHead>
-						<TableHead class="w-[10%] rc-th-heading">Downloaded</TableHead>
+						<TableHead class="w-[5%] rc-th-heading">
+							Version
+						</TableHead>
+						<TableHead class="w-[10%] rc-th-heading">
+							Device
+						</TableHead>
+						<TableHead class="w-[10%] rc-th-heading">
+							File Size
+						</TableHead>
+						<TableHead class="w-[10%] rc-th-heading">
+							Downloaded
+						</TableHead>
 						<TableHead class="w-[10%] rc-th-heading"></TableHead>
 					</TableRow>
 				</TableHeader>
@@ -169,42 +260,106 @@ onUnmounted(() => {
 					</template>
 
 					<template v-else-if="!isLoading">
-						<TableRow v-for="row in configs" :key="row.id" :class="{ 'rc-text-sm-muted': row.config_downloaded === 0 }" class="table-row-fixed">
+						<TableRow
+							v-for="row in configs"
+							:key="row.id"
+							:class="{ 'rc-text-sm-muted': row.config_downloaded === 0 }"
+							class="table-row-fixed"
+						>
 							<TableCell class="text-start table-cell-fixed">
-								<Checkbox class="cursor-pointer" :id="'select-' + row.id" :checked="selectedRows.includes(row.id) ? true : false" @click="toggleSelectRow(row.id)" />
+								<Checkbox
+									:id="'select-' + row.id"
+									class="cursor-pointer"
+									:checked="selectedRows.includes(row.id) ? true : false"
+									@click="toggleSelectRow(row.id)"
+								/>
 							</TableCell>
 							<TableCell class="text-start table-cell-fixed">
 								{{ row.id }}
 							</TableCell>
 							<TableCell class="text-start table-cell-fixed">
-								<RcIcon name="status-red" v-if="row.download_status === 0" />
-								<RcIcon name="status-green" v-if="row.download_status === 1" />
-								<RcIcon name="status-yellow" v-if="row.download_status === 2" />
-								<RcIcon name="status-gray" v-if="row.download_status === 100" />
+								<RcIcon
+									v-if="row.download_status === 0"
+									name="status-red"
+								/>
+								<RcIcon
+									v-if="row.download_status === 1"
+									name="status-green"
+								/>
+								<RcIcon
+									v-if="row.download_status === 2"
+									name="status-yellow"
+								/>
+								<RcIcon
+									v-if="row.download_status === 100"
+									name="status-gray"
+								/>
 							</TableCell>
 							<TableCell class="text-start table-cell-fixed">
-								<Button v-if="row.config_filename" class="px-2 py-0 hover:bg-rcgray-800 rounded-xl button-cell-fixed" variant="ghost" @click="viewDetailsPane(row.id)">
-									<span class="border-b text-truncate" :title="row.config_filename">{{ row.config_filename }}</span>
+								<Button
+									v-if="row.config_filename"
+									class="px-2 py-0 hover:bg-rcgray-800 rounded-xl button-cell-fixed"
+									variant="ghost"
+									@click="viewDetailsPane(row.id)"
+								>
+									<span
+										class="border-b text-truncate"
+										:title="row.config_filename"
+									>{{ row.config_filename }}</span>
 								</Button>
-								<span v-else class="text-truncate">Not Downloaded - unchanged</span>
+								<span
+									v-else
+									class="text-truncate"
+								>Not Downloaded - unchanged</span>
 							</TableCell>
 							<TableCell class="text-start table-cell-fixed">
-								<span class="text-truncate" :title="row.command">{{ row.command }}</span>
+								<span
+									class="text-truncate"
+									:title="row.command"
+								>{{ row.command }}</span>
 							</TableCell>
 							<TableCell class="text-start table-cell-fixed">
-								<div class="badge-container-fixed" v-if="row.config_version">
-									<RcBadge v-if="row.latest_version === 1" variant="info">{{ row.config_version }}</RcBadge>
-									<Badge v-else variant="secondary">{{ row.config_version }}</Badge>
+								<div
+									v-if="row.config_version"
+									class="badge-container-fixed"
+								>
+									<RcBadge
+										v-if="row.latest_version === 1"
+										variant="info"
+									>
+										{{ row.config_version }}
+									</RcBadge>
+									<Badge
+										v-else
+										variant="secondary"
+									>
+										{{ row.config_version }}
+									</Badge>
 								</div>
 							</TableCell>
 							<TableCell class="text-start table-cell-fixed">
-								<span class="text-truncate" :title="row.device_name"> <BadgeList :items="[{ id: row.device_id, device_name: row.device_name, view_url: 'device/view/' + row.device_id }]" displayField="device_name" linkField="view_url" :maxVisible="2" :hoverCardFields="['id', 'device_name']" /> </span>
+								<span
+									class="text-truncate"
+									:title="row.device_name"
+								> <BadgeList
+									:items="[{ id: row.device_id, device_name: row.device_name, view_url: 'device/view/' + row.device_id }]"
+									display-field="device_name"
+									link-field="view_url"
+									:max-visible="2"
+									:hover-card-fields="['id', 'device_name']"
+								/> </span>
 							</TableCell>
 							<TableCell class="text-start table-cell-fixed">
-								<span class="text-truncate" :title="row.config_filesize ? formatters.formatFileSize(row.config_filesize) : ''"> {{ row.config_filesize ? formatters.formatFileSize(row.config_filesize) : "" }}</span>
+								<span
+									class="text-truncate"
+									:title="row.config_filesize ? formatters.formatFileSize(row.config_filesize) : ''"
+								> {{ row.config_filesize ? formatters.formatFileSize(row.config_filesize) : "" }}</span>
 							</TableCell>
 							<TableCell class="text-start table-cell-fixed">
-								<span class="text-truncate" :title="formatters.formatTime(row.created_at)">{{ formatters.formatTime(row.created_at) }}</span>
+								<span
+									class="text-truncate"
+									:title="formatters.formatTime(row.created_at)"
+								>{{ formatters.formatTime(row.created_at) }}</span>
 							</TableCell>
 							<!-- ACTIONS MENU -->
 							<TableCell class="text-start table-cell-fixed">
@@ -212,7 +367,11 @@ onUnmounted(() => {
 									<TooltipProvider>
 										<Tooltip>
 											<TooltipTrigger as-child>
-												<Button variant="ghost" @click="openDialog('peek-config-dialog-' + row.id)" :disabled="row.config_downloaded == 0">
+												<Button
+													variant="ghost"
+													:disabled="row.config_downloaded == 0"
+													@click="openDialog('peek-config-dialog-' + row.id)"
+												>
 													<RcIcon name="peek-eye" />
 												</Button>
 											</TooltipTrigger>
@@ -225,8 +384,15 @@ onUnmounted(() => {
 									<TooltipProvider>
 										<Tooltip>
 											<TooltipTrigger as-child>
-												<Button variant="ghost" @click="viewDetailsPane(row.id)" :disabled="row.config_downloaded == 0">
-													<FileView size="16" class="text-muted-foreground hover:text-blue-500" />
+												<Button
+													variant="ghost"
+													:disabled="row.config_downloaded == 0"
+													@click="viewDetailsPane(row.id)"
+												>
+													<FileView
+														size="16"
+														class="text-muted-foreground hover:text-blue-500"
+													/>
 												</Button>
 											</TooltipTrigger>
 											<TooltipContent class="text-white bg-rcgray-800">
@@ -235,9 +401,18 @@ onUnmounted(() => {
 										</Tooltip>
 									</TooltipProvider>
 
-									<PeekConfigDialog :editId="row.id" v-if="isDialogOpen('peek-config-dialog-' + row.id)"></PeekConfigDialog>
+									<PeekConfigDialog
+										v-if="isDialogOpen('peek-config-dialog-' + row.id)"
+										:edit-id="row.id"
+									></PeekConfigDialog>
 
-									<ActionsMenu :rowData="row" :showEditBtn="false" :showViewDetailsBtn="row.config_downloaded == 1" @onViewDetails="viewDetailsPane(row.id)" @onDelete="deleteConfig(row.id)" />
+									<ActionsMenu
+										:row-data="row"
+										:show-edit-btn="false"
+										:show-view-details-btn="row.config_downloaded == 1"
+										@on-view-details="viewDetailsPane(row.id)"
+										@on-delete="deleteConfig(row.id)"
+									/>
 								</div>
 							</TableCell>
 							<!-- ACTIONS MENU -->
@@ -250,8 +425,24 @@ onUnmounted(() => {
 			</Table>
 
 			<!-- Load more button -->
-			<Button v-if="isLoadMoreMode && hasMoreData" @click="loadMoreConfigs" :disabled="isLoadingMore" class="load-more-btn my-4" variant="outline">
-				<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+			<Button
+				v-if="isLoadMoreMode && hasMoreData"
+				:disabled="isLoadingMore"
+				class="load-more-btn my-4"
+				variant="outline"
+				@click="loadMoreConfigs"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="w-4 h-4 mr-2"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					aria-hidden="true"
+				>
 					<path d="M12 8v8m0 0l4-4m-4 4l-4-4" />
 					<path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
 				</svg>
@@ -259,11 +450,22 @@ onUnmounted(() => {
 			</Button>
 
 			<!-- PAGINATION -->
-			<Pagination :currentPage="currentPage" :lastPage="lastPage" :perPage="perPage" @update:currentPage="currentPage = $event" @update:perPage="perPage = $event" />
+			<Pagination
+				:current-page="currentPage"
+				:last-page="lastPage"
+				:per-page="perPage"
+				@update:current-page="currentPage = $event"
+				@update:per-page="perPage = $event"
+			/>
 			<!-- END PAGINATION -->
 
 			<!-- FOR MULTIPLE DELETE -->
-			<RcConfirmAlertDialog :ids="selectedRows" :showConfirmDelete="showConfirmDelete" @close="showConfirmDelete = false" @handleDelete="deleteManyConfigs(selectedRows)" />
+			<RcConfirmAlertDialog
+				:ids="selectedRows"
+				:show-confirm-delete="showConfirmDelete"
+				@close="showConfirmDelete = false"
+				@handle-delete="deleteManyConfigs(selectedRows)"
+			/>
 			<!-- FOR MULTIPLE DELETE -->
 
 			<Toaster />

@@ -6,6 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { RangeCalendar } from "@/components/ui/range-calendar";
 import { cn } from "@/lib/utils";
 import { ref, watch, onMounted, computed } from "vue";
+import type { Ref } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 
 interface Props {
@@ -103,8 +104,14 @@ defineExpose({
 <template>
 	<Popover>
 		<PopoverTrigger as-child>
-			<Button variant="outline" :class="cn(props.width, 'justify-start text-left font-normal rounded-xl px-2 py-1 h-fit', !value?.start && 'text-muted-foreground')">
-				<Calendar class="w-4 h-4" size="16" />
+			<Button
+				variant="outline"
+				:class="cn(props.width, 'justify-start text-left font-normal rounded-xl px-2 py-1 h-fit', !value?.start && 'text-muted-foreground')"
+			>
+				<Calendar
+					class="w-4 h-4"
+					size="16"
+				/>
 				<div class="hidden lg:inline-flex ml-2">
 					{{ buttonText }}
 				</div>

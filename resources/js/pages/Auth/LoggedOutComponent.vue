@@ -16,21 +16,26 @@ const redirectToLogin = () => {
 </script>
 
 <template>
-  <Card class="max-w-sm mx-auto bg-rcgray-900">
-    <CardHeader>
-      <CardTitle class="text-2xl">You have been logged out of the system due to inactivity!</CardTitle>
-      <CardDescription class="text-base font-light">Click the link below to log back in.</CardDescription>
-    </CardHeader>
-    <CardContent>
-      <div class="grid gap-4">
-        <Button
-          variant="ghost"
-          :disabled="isLoading"
-          @click="redirectToLogin"
-          class="w-full">
-          {{ isLoading ? 'Redirecting...' : 'Login' }}
-        </Button>
-      </div>
-    </CardContent>
-  </Card>
+	<Card class="max-w-sm mx-auto bg-rcgray-900">
+		<CardHeader>
+			<CardTitle class="text-2xl">
+				You have been logged out of the system due to inactivity!
+			</CardTitle>
+			<CardDescription class="text-base font-light">
+				Click the link below to log back in.
+			</CardDescription>
+		</CardHeader>
+		<CardContent>
+			<div class="grid gap-4">
+				<Button
+					variant="ghost"
+					:disabled="isLoading"
+					class="w-full"
+					@click="redirectToLogin"
+				>
+					{{ isLoading ? 'Redirecting...' : 'Login' }}
+				</Button>
+			</div>
+		</CardContent>
+	</Card>
 </template>

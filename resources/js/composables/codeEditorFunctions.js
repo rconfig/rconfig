@@ -16,7 +16,7 @@ export default function useCodeEditor(monaco) {
 	// const createNotification = inject('create-notification');
 	const meditorValue = ref(["Loading file..."].join("\n"));
 	let meditor = null;
-	let completionItemProvider;
+	let completionItemProvider = null;
 	const isDownloaded = ref(false);
 
 	/* Init the Editor */
@@ -44,7 +44,6 @@ export default function useCodeEditor(monaco) {
 			language: language || "javascript",
 			lineNumbers: lineNumbers.value,
 			roundedSelection: false,
-			scrollBeyondLastLine: true,
 			readOnly: false,
 			theme: darkmode.value,
 			scrollBeyondLastLine: false,
@@ -53,7 +52,6 @@ export default function useCodeEditor(monaco) {
 			minimap: {
 				enabled: localStorage.getItem("rConfig.editorMinimap") === "true" ? true : false,
 			},
-			automaticLayout: true,
 		});
 
 		return meditor;
@@ -86,7 +84,6 @@ export default function useCodeEditor(monaco) {
 			lineNumbers: lineNumbers.value,
 			renderOverviewRuler: false, //https://github.com/microsoft/monaco-editor/issues/1689
 			roundedSelection: false,
-			scrollBeyondLastLine: true,
 			readOnly: false,
 			theme: darkmode.value,
 			scrollBeyondLastLine: false,
@@ -95,7 +92,6 @@ export default function useCodeEditor(monaco) {
 			minimap: {
 				enabled: localStorage.getItem("rConfig.editorMinimap") === "true" ? true : false,
 			},
-			automaticLayout: true,
 		});
 
 		return meditor;

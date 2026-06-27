@@ -24,5 +24,9 @@ const combinedClass = computed(() => {
 </script>
 
 <template>
-	<Mail :width="width" :height="height" :class="combinedClass" />
+	<Mail
+		:width="width"
+		:height="height"
+		:class="combinedClass"
+	/>
 </template>

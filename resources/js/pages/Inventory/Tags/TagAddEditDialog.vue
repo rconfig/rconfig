@@ -60,7 +60,12 @@ function saveDialog() {
 		<DialogTrigger as-child>
 			<!-- <Button variant="outline">Edit Profile</Button> -->
 		</DialogTrigger>
-		<DialogContent class="w-full p-0" @escapeKeyDown="closeDialog('DialogNewTag')" @pointerDownOutside="closeDialog('DialogNewTag')" @closeClicked="closeDialog('DialogNewTag')">
+		<DialogContent
+			class="w-full p-0"
+			@escape-key-down="closeDialog('DialogNewTag')"
+			@pointer-down-outside="closeDialog('DialogNewTag')"
+			@close-clicked="closeDialog('DialogNewTag')"
+		>
 			<DialogHeader class="rc-dialog-header">
 				<DialogTitle class="text-sm text-rcgray-200">
 					<div class="flex items-center">
@@ -72,48 +77,94 @@ function saveDialog() {
 
 			<div class="grid gap-2 py-4">
 				<div class="grid items-center grid-cols-4 gap-2">
-					<Label for="tagname" class="text-right">
+					<Label
+						for="tagname"
+						class="text-right"
+					>
 						Tag Name
 						<span class="text-red-600">*</span>
 					</Label>
-					<Input v-model="model.tagname" id="tagname" class="col-span-3" />
-					<span class="col-span-3 col-start-2 text-sm text-red-400" v-if="errors.tagname">
+					<Input
+						id="tagname"
+						v-model="model.tagname"
+						class="col-span-3"
+					/>
+					<span
+						v-if="errors.tagname"
+						class="col-span-3 col-start-2 text-sm text-red-400"
+					>
 						{{ errors.tagname[0] }}
 					</span>
 				</div>
 
 				<div class="grid items-center grid-cols-4 gap-2">
-					<Label for="tagDescription" class="text-right">Description</Label>
-					<Input v-model="model.tagDescription" id="tagDescription" class="col-span-3" />
-					<span class="col-span-3 col-start-2 text-sm text-red-400" v-if="errors.tagDescription">
+					<Label
+						for="tagDescription"
+						class="text-right"
+					>Description</Label>
+					<Input
+						id="tagDescription"
+						v-model="model.tagDescription"
+						class="col-span-3"
+					/>
+					<span
+						v-if="errors.tagDescription"
+						class="col-span-3 col-start-2 text-sm text-red-400"
+					>
 						{{ errors.tagDescription[0] }}
 					</span>
 				</div>
 			</div>
 
 			<DialogFooter class="rc-dialog-footer bg-rcgray-800">
-				<Button type="close" variant="outline" class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse" @click="closeDialog('DialogNewTag')" size="sm">
+				<Button
+					type="close"
+					variant="outline"
+					class="px-2 py-1 ml-2 text-sm hover:bg-gray-700 hover:animate-pulse"
+					size="sm"
+					@click="closeDialog('DialogNewTag')"
+				>
 					Cancel
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class">ESC</kbd>
 					</div>
 				</Button>
-				<Button v-if="props.editId === 0" type="submit" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click="saveDialog" variant="primary">
+				<Button
+					v-if="props.editId === 0"
+					type="submit"
+					class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+					size="sm"
+					variant="primary"
+					@click="saveDialog"
+				>
 					Save
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class2">
 							Ctrl&nbsp;
-							<RcIcon name="enter" class="ml-1" />
+							<RcIcon
+								name="enter"
+								class="ml-1"
+							/>
 						</kbd>
 					</div>
 				</Button>
 
-				<Button v-else type="submit" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click="saveDialog" variant="primary">
+				<Button
+					v-else
+					type="submit"
+					class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+					size="sm"
+					variant="primary"
+					@click="saveDialog"
+				>
 					Update
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class2">
 							Ctrl&nbsp;
-							<RcIcon name="enter" class="ml-1" />
+							<RcIcon
+								name="enter"
+								class="ml-1"
+							/>
 						</kbd>
 					</div>
 				</Button>

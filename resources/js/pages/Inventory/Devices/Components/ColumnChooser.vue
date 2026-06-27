@@ -163,25 +163,48 @@ onMounted(() => {
 <template>
 	<DropdownMenu v-model:open="isOpen">
 		<DropdownMenuTrigger as-child>
-			<Button variant="ghost" size="sm" class="h-8 w-8 p-0 hidden xl:inline-flex" title="Column Options">
+			<Button
+				variant="ghost"
+				size="sm"
+				class="h-8 w-8 p-0 hidden xl:inline-flex"
+				title="Column Options"
+			>
 				<Columns class="h-4 w-4" />
 				<span class="sr-only">Column Options</span>
 			</Button>
 		</DropdownMenuTrigger>
 
-		<DropdownMenuContent align="end" class="w-60">
+		<DropdownMenuContent
+			align="end"
+			class="w-60"
+		>
 			<DropdownMenuLabel>Customize Columns</DropdownMenuLabel>
 			<DropdownMenuSeparator />
 
 			<div class="p-2">
 				<div class="flex justify-between mb-2">
-					<Button variant="outline" size="sm" class="text-xs" @click="showAllColumns">
+					<Button
+						variant="outline"
+						size="sm"
+						class="text-xs"
+						@click="showAllColumns"
+					>
 						Show All
 					</Button>
-					<Button variant="outline" size="sm" class="text-xs" @click="hideAllColumns">
+					<Button
+						variant="outline"
+						size="sm"
+						class="text-xs"
+						@click="hideAllColumns"
+					>
 						Hide All
 					</Button>
-					<Button variant="outline" size="sm" class="text-xs" @click="resetToDefaultColumns">
+					<Button
+						variant="outline"
+						size="sm"
+						class="text-xs"
+						@click="resetToDefaultColumns"
+					>
 						Reset
 					</Button>
 				</div>
@@ -191,19 +214,50 @@ onMounted(() => {
 
 			<ScrollArea class="h-[300px]">
 				<div class="p-2">
-					<div v-for="column in allColumns" :key="column.key" class="flex items-center justify-between py-1">
+					<div
+						v-for="column in allColumns"
+						:key="column.key"
+						class="flex items-center justify-between py-1"
+					>
 						<div class="flex items-center space-x-2">
-							<Switch :id="`col-toggle-${column.key}`" :checked="isSelected(column.key)" :disabled="column.mandatory" @update:checked="toggleColumn(column.key)" />
-							<label :for="`col-toggle-${column.key}`" class="text-sm cursor-pointer" :class="{ 'opacity-50': column.mandatory }">
+							<Switch
+								:id="`col-toggle-${column.key}`"
+								:checked="isSelected(column.key)"
+								:disabled="column.mandatory"
+								@update:checked="toggleColumn(column.key)"
+							/>
+							<label
+								:for="`col-toggle-${column.key}`"
+								class="text-sm cursor-pointer"
+								:class="{ 'opacity-50': column.mandatory }"
+							>
 								{{ column.label }}
-								<span v-if="column.mandatory" class="text-xs text-muted-foreground ml-1">(Required)</span>
+								<span
+									v-if="column.mandatory"
+									class="text-xs text-muted-foreground ml-1"
+								>(Required)</span>
 							</label>
 						</div>
-						<div class="flex items-center space-x-1" v-if="isSelected(column.key)">
-							<Button variant="ghost" size="icon" class="h-6 w-6" @click="moveColumnUp(column.key)" :disabled="selectedColumns.indexOf(column.key) === 0">
+						<div
+							v-if="isSelected(column.key)"
+							class="flex items-center space-x-1"
+						>
+							<Button
+								variant="ghost"
+								size="icon"
+								class="h-6 w-6"
+								:disabled="selectedColumns.indexOf(column.key) === 0"
+								@click="moveColumnUp(column.key)"
+							>
 								<ChevronUp class="h-3 w-3" />
 							</Button>
-							<Button variant="ghost" size="icon" class="h-6 w-6" @click="moveColumnDown(column.key)" :disabled="selectedColumns.indexOf(column.key) === selectedColumns.length - 1">
+							<Button
+								variant="ghost"
+								size="icon"
+								class="h-6 w-6"
+								:disabled="selectedColumns.indexOf(column.key) === selectedColumns.length - 1"
+								@click="moveColumnDown(column.key)"
+							>
 								<ChevronDown class="h-3 w-3" />
 							</Button>
 						</div>

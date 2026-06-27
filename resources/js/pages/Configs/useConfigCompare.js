@@ -40,7 +40,7 @@ export function useConfigCompare() {
   };
 
   const sendConfigCompare = () => {
-    if (leftSelectedId.length === 0 || rightSelectedId.length === 0) {
+    if (leftSelectedId.value.length === 0 || rightSelectedId.value.length === 0) {
       toastError('Please select configurations for comparison');
       return;
     }

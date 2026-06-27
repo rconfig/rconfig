@@ -36,7 +36,12 @@ function handleClick() {
 </script>
 
 <template>
-	<div class="pin-icon-wrapper" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave" @click="handleClick">
+	<div
+		class="pin-icon-wrapper"
+		@mouseenter="handleMouseEnter"
+		@mouseleave="handleMouseLeave"
+		@click="handleClick"
+	>
 		<BrushCleaning
 			:size="props.size"
 			:class="[

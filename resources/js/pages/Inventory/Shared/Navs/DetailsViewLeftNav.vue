@@ -71,9 +71,17 @@ function closeNav() {
 <template>
 	<div class="relative flex items-center justify-between border-b">
 		<div class="flex items-start pt-2 pb-1 px-2 pt-1">
-			<NavPills :items="navItems" v-model="selectedNav" persist-key="detailsViewLeftNav" @select="handleNavSelection" />
+			<NavPills
+				v-model="selectedNav"
+				:items="navItems"
+				persist-key="detailsViewLeftNav"
+				@select="handleNavSelection"
+			/>
 		</div>
 
-		<NavCloseButton class="mr-2" @close="closeNav()" />
+		<NavCloseButton
+			class="mr-2"
+			@close="closeNav()"
+		/>
 	</div>
 </template>

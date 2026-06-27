@@ -176,54 +176,71 @@ function navTo(href) {
 </script>
 
 <template>
-  <nav class="flex flex-col space-y-2">
-    <div v-for="section in sections" :key="section.heading" class="space-y-1">
-      <!-- Section with Collapsible -->
-      <Collapsible v-model:open="section.openState.value" class="w-full">
-        <div class="flex items-center justify-between">
-          <CollapsibleTrigger as-child>
-            <div class="flex items-center w-full">
-              <Button variant="ghost" size="sm" class="w-full pl-0 pr-4">
-                <div class="flex items-center w-full cursor-pointer">
-                  <ChevronRight
-                    size="18"
-                    class="text-rcgray-500"
-                    v-if="!section.openState.value"
-                  />
-                  <ChevronDown
-                    size="18"
-                    class="text-rcgray-500"
-                    v-if="section.openState.value"
-                  />
-                  <div class="ml-2 text-left" style="color: rgb(134, 136, 141)">
-                    <span>{{ section.heading }}</span>
-                  </div>
-                </div>
-              </Button>
-            </div>
-          </CollapsibleTrigger>
-        </div>
+	<nav class="flex flex-col space-y-2">
+		<div
+			v-for="section in sections"
+			:key="section.heading"
+			class="space-y-1"
+		>
+			<!-- Section with Collapsible -->
+			<Collapsible
+				v-model:open="section.openState.value"
+				class="w-full"
+			>
+				<div class="flex items-center justify-between">
+					<CollapsibleTrigger as-child>
+						<div class="flex items-center w-full">
+							<Button
+								variant="ghost"
+								size="sm"
+								class="w-full pl-0 pr-4"
+							>
+								<div class="flex items-center w-full cursor-pointer">
+									<ChevronRight
+										v-if="!section.openState.value"
+										size="18"
+										class="text-rcgray-500"
+									/>
+									<ChevronDown
+										v-if="section.openState.value"
+										size="18"
+										class="text-rcgray-500"
+									/>
+									<div
+										class="ml-2 text-left"
+										style="color: rgb(134, 136, 141)"
+									>
+										<span>{{ section.heading }}</span>
+									</div>
+								</div>
+							</Button>
+						</div>
+					</CollapsibleTrigger>
+				</div>
 
-        <CollapsibleContent>
-          <div>
-            <Button
-              v-for="item in section.items"
-              :key="item.title"
-              @click="navTo(item.href)"
-              variant="ghost"
-              :class="[
-                settingsActivePane === item.href
-                  ? 'bg-rcgray-600'
-                  : 'text-rcgray-300',
-                'inline-flex items-center justify-start w-full px-4 py-2 text-sm font-medium text-left rounded-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:text-accent-foreground hover:bg-rcgray-800 h-auto min-h-[2.25rem] whitespace-normal',
-              ]"
-            >
-              <component :is="item.icon" class="w-4 h-4 mr-2 shrink-0" />
-              {{ item.title }}
-            </Button>
-          </div>
-        </CollapsibleContent>
-      </Collapsible>
-    </div>
-  </nav>
+				<CollapsibleContent>
+					<div>
+						<Button
+							v-for="item in section.items"
+							:key="item.title"
+							variant="ghost"
+							:class="[
+								settingsActivePane === item.href
+									? 'bg-rcgray-600'
+									: 'text-rcgray-300',
+								'inline-flex items-center justify-start w-full px-4 py-2 text-sm font-medium text-left rounded-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:text-accent-foreground hover:bg-rcgray-800 h-auto min-h-[2.25rem] whitespace-normal',
+							]"
+							@click="navTo(item.href)"
+						>
+							<component
+								:is="item.icon"
+								class="w-4 h-4 mr-2 shrink-0"
+							/>
+							{{ item.title }}
+						</Button>
+					</div>
+				</CollapsibleContent>
+			</Collapsible>
+		</div>
+	</nav>
 </template>

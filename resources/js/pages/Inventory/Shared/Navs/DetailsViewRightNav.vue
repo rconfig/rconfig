@@ -5,7 +5,7 @@ import { ref, onMounted, nextTick, watch, computed } from "vue";
 import { usePanelStore } from "@/stores/panelStore"; // Import the Pinia store
 import NavPills from "@/pages/Shared/Buttons/NavPills.vue";
 
-const selectedNav = ref(null);
+const activeNav = ref(null);
 const selectedButtonRef = ref(null);
 const panelStore = usePanelStore(); // Access the panel store
 const props = defineProps({
@@ -17,11 +17,11 @@ const emit = defineEmits(["selectMainNavView", "closeNav"]);
 onMounted(() => {
 	// Check localStorage for saved navigation item
 	const savedNav = localStorage.getItem("DeviceDetailsMainNav");
-	selectedNav.value = savedNav || props.selectedNav;
+	activeNav.value = savedNav || props.selectedNav;
 });
 
 function selectNav(navItem, buttonElement) {
-	selectedNav.value = navItem;
+	activeNav.value = navItem;
 	selectedButtonRef.value = buttonElement;
 	emit("selectMainNavView", navItem); // Emit the selected option
 
@@ -32,13 +32,6 @@ function selectNav(navItem, buttonElement) {
 function openNav() {
 	panelStore.panelRef2?.isCollapsed ? panelStore.panelRef2?.expand() : panelStore.panelRef2?.collapse();
 }
-
-watch(
-	() => panelStore.panelRef2?.isCollapsed,
-	() => {
-		updateBottomBorder();
-	}
-);
 
 watch(
 	() => props.selectedNav,
@@ -66,7 +59,7 @@ const navItems = computed(() => {
 });
 
 function handleNavSelection(navItem) {
-	selectedNav.value = navItem;
+	activeNav.value = navItem;
 	emit("selectMainNavView", navItem);
 	localStorage.setItem("DeviceDetailsMainNav", navItem);
 }
@@ -74,18 +67,32 @@ function handleNavSelection(navItem) {
 
 <template>
 	<div class="relative flex items-center w-full border-b p-2 pb-1">
-		<NavOpenButton @openNav="openNav()" :navPanelBtnState="panelStore.panelRef2?.isCollapsed" />
+		<NavOpenButton
+			:nav-panel-btn-state="panelStore.panelRef2?.isCollapsed"
+			@open-nav="openNav()"
+		/>
 
 		<div class="flex justify-between w-full mb-0">
 			<div>
-				<NavPills :items="navItems" v-model="selectedNav" persist-key="DeviceDetailsMainNav" @select="handleNavSelection" />
+				<NavPills
+					v-model="activeNav"
+					:items="navItems"
+					persist-key="DeviceDetailsMainNav"
+					@select="handleNavSelection"
+				/>
 			</div>
 			<div>
-				<h3 class="gap-2 ml-auto mr-4 text-lg font-semibold tracking-tight group" v-if="selectedNav === 'notifications'">
+				<h3
+					v-if="activeNav === 'notifications'"
+					class="gap-2 ml-auto mr-4 text-lg font-semibold tracking-tight group"
+				>
 					Device Last Events
 				</h3>
 
-				<h3 class="gap-2 ml-auto mr-4 text-lg font-semibold tracking-tight group" v-if="selectedNav === 'configs'">
+				<h3
+					v-if="activeNav === 'configs'"
+					class="gap-2 ml-auto mr-4 text-lg font-semibold tracking-tight group"
+				>
 					Latest Configs
 				</h3>
 			</div>

@@ -45,8 +45,16 @@ watch(
 </script>
 
 <template>
-	<div class="refresh-icon-wrapper" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
-		<RefreshCw :size="props.size" :color="props.color" :class="['transition-all duration-300 ease-in-out', isHovered || props.animate ? 'text-blue-300 animate-spin-slow' : '']" />
+	<div
+		class="refresh-icon-wrapper"
+		@mouseenter="handleMouseEnter"
+		@mouseleave="handleMouseLeave"
+	>
+		<RefreshCw
+			:size="props.size"
+			:color="props.color"
+			:class="['transition-all duration-300 ease-in-out', isHovered || props.animate ? 'text-blue-300 animate-spin-slow' : '']"
+		/>
 	</div>
 </template>
 

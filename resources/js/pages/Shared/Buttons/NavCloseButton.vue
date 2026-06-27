@@ -14,8 +14,20 @@ function close() {
 </script>
 
 <template>
-	<button aria-label="Collapse sidebar" data-state="closed" @click="close()">
-		<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" @mouseover="setHoveringClose(true)" @mouseleave="setHoveringClose(false)">
+	<button
+		aria-label="Collapse sidebar"
+		data-state="closed"
+		@click="close()"
+	>
+		<svg
+			width="18"
+			height="18"
+			viewBox="0 0 18 18"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			@mouseover="setHoveringClose(true)"
+			@mouseleave="setHoveringClose(false)"
+		>
 			<path
 				fill-rule="evenodd"
 				clip-rule="evenodd"
@@ -23,10 +35,38 @@ function close() {
 				fill="#86888D"
 				:data-hovering="svgIshoveringClose"
 			></path>
-			<path fill-rule="evenodd" clip-rule="evenodd" d="M7.19531 15.2246L7.19531 2.72461H8.39531L8.39531 15.2246H7.19531Z" fill="#86888D" :data-hovering="svgIshoveringClose" class="nav-icon"></path>
-			<path fill-rule="evenodd" clip-rule="evenodd" d="M3.375 5.42617C3.375 5.0948 3.64363 4.82617 3.975 4.82617H5.325C5.65637 4.82617 5.925 5.0948 5.925 5.42617C5.925 5.75754 5.65637 6.02617 5.325 6.02617H3.975C3.64363 6.02617 3.375 5.75754 3.375 5.42617Z" fill="#86888D" :data-hovering="svgIshoveringClose" class="nac-icon-xform"></path>
-			<path fill-rule="evenodd" clip-rule="evenodd" d="M3.375 7.67422C3.375 7.34285 3.64363 7.07422 3.975 7.07422H5.325C5.65637 7.07422 5.925 7.34285 5.925 7.67422C5.925 8.00559 5.65637 8.27422 5.325 8.27422H3.975C3.64363 8.27422 3.375 8.00559 3.375 7.67422Z" fill="#86888D" :data-hovering="svgIshoveringClose" class="nac-icon-xform"></path>
-			<path fill-rule="evenodd" clip-rule="evenodd" d="M5.82739 11.2247C5.59308 11.459 5.21318 11.459 4.97886 11.2247L3.17886 9.42466C2.94455 9.19034 2.94455 8.81044 3.17886 8.57613L4.97886 6.77613C5.21317 6.54181 5.59307 6.54181 5.82739 6.77613C6.0617 7.01044 6.0617 7.39034 5.82739 7.62465L5.05165 8.40039H8.10312C8.4345 8.40039 8.70312 8.66902 8.70312 9.00039C8.70312 9.33176 8.4345 9.60039 8.10312 9.60039H5.05166L5.82739 10.3761C6.0617 10.6104 6.0617 10.9903 5.82739 11.2247Z" fill="#86888D" :data-hovering="svgIshoveringClose" class="nav-icon-form-2"></path>
+			<path
+				fill-rule="evenodd"
+				clip-rule="evenodd"
+				d="M7.19531 15.2246L7.19531 2.72461H8.39531L8.39531 15.2246H7.19531Z"
+				fill="#86888D"
+				:data-hovering="svgIshoveringClose"
+				class="nav-icon"
+			></path>
+			<path
+				fill-rule="evenodd"
+				clip-rule="evenodd"
+				d="M3.375 5.42617C3.375 5.0948 3.64363 4.82617 3.975 4.82617H5.325C5.65637 4.82617 5.925 5.0948 5.925 5.42617C5.925 5.75754 5.65637 6.02617 5.325 6.02617H3.975C3.64363 6.02617 3.375 5.75754 3.375 5.42617Z"
+				fill="#86888D"
+				:data-hovering="svgIshoveringClose"
+				class="nac-icon-xform"
+			></path>
+			<path
+				fill-rule="evenodd"
+				clip-rule="evenodd"
+				d="M3.375 7.67422C3.375 7.34285 3.64363 7.07422 3.975 7.07422H5.325C5.65637 7.07422 5.925 7.34285 5.925 7.67422C5.925 8.00559 5.65637 8.27422 5.325 8.27422H3.975C3.64363 8.27422 3.375 8.00559 3.375 7.67422Z"
+				fill="#86888D"
+				:data-hovering="svgIshoveringClose"
+				class="nac-icon-xform"
+			></path>
+			<path
+				fill-rule="evenodd"
+				clip-rule="evenodd"
+				d="M5.82739 11.2247C5.59308 11.459 5.21318 11.459 4.97886 11.2247L3.17886 9.42466C2.94455 9.19034 2.94455 8.81044 3.17886 8.57613L4.97886 6.77613C5.21317 6.54181 5.59307 6.54181 5.82739 6.77613C6.0617 7.01044 6.0617 7.39034 5.82739 7.62465L5.05165 8.40039H8.10312C8.4345 8.40039 8.70312 8.66902 8.70312 9.00039C8.70312 9.33176 8.4345 9.60039 8.10312 9.60039H5.05166L5.82739 10.3761C6.0617 10.6104 6.0617 10.9903 5.82739 11.2247Z"
+				fill="#86888D"
+				:data-hovering="svgIshoveringClose"
+				class="nav-icon-form-2"
+			></path>
 		</svg>
 	</button>
 </template>

@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
+import { useToaster } from '@/composables/useToaster';
 
 export function useCompareFilterCard(emit) {
+  const { toastError } = useToaster();
   const daterange = ref(null);
   const commands = ref([]);
 
@@ -25,10 +27,7 @@ export function useCompareFilterCard(emit) {
         commands.value = response.data.data;
       })
       .catch(error => {
-        createNotification({
-          type: 'danger',
-          message: error.response.data.message
-        });
+        toastError('Error', error.response.data.message);
       });
   }
 

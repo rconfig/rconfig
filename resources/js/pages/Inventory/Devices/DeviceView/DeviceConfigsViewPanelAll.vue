@@ -51,12 +51,24 @@ function emitToggleView() {
 					<span class="flex-[0_1_auto] min-w-0 overflow-hidden text-ellipsis whitespace-nowrap inline-flex line-clamp-1">All Config Downloads for Device ID: {{ props.deviceId }}</span>
 				</span>
 				<span class="flex-1 bg-[rgb(49,51,55)] bg-[rgb(49,51,55)] flex-shrink-0 h-px w-full"></span>
-				<Button type="button" :title="'Refresh'" variant="ghost" @click="refreshConfigs" class="p-2 h-7">
-					<RefreshCw :class="isLoading ? 'text-blue-500 animate-spin' : 'text-gray-600 hover:text-blue-500'" class="w-4 h-4" />
+				<Button
+					type="button"
+					:title="'Refresh'"
+					variant="ghost"
+					class="p-2 h-7"
+					@click="refreshConfigs"
+				>
+					<RefreshCw
+						:class="isLoading ? 'text-blue-500 animate-spin' : 'text-gray-600 hover:text-blue-500'"
+						class="w-4 h-4"
+					/>
 				</Button>
 			</div>
 
-			<div class="mt-4 space-y-2" v-if="isLoading">
+			<div
+				v-if="isLoading"
+				class="mt-4 space-y-2"
+			>
 				<Skeleton class="w-1/2 h-4" />
 				<Skeleton class="w-full h-4" />
 				<Skeleton class="w-full h-4" />
@@ -68,11 +80,18 @@ function emitToggleView() {
 				<Skeleton class="w-full h-4" />
 			</div>
 
-			<div class="mt-6 space-y-4" v-if="!isLoading">
-				<ConfigsTable :configsId="deviceId" />
+			<div
+				v-if="!isLoading"
+				class="mt-6 space-y-4"
+			>
+				<ConfigsTable :configs-id="deviceId" />
 			</div>
 			<div class="flex items-center justify-end mt-4 space-x-2">
-				<Button variant="outline" @click="emitToggleView" class="text-center">
+				<Button
+					variant="outline"
+					class="text-center"
+					@click="emitToggleView"
+				>
 					Show Latest Configs
 				</Button>
 			</div>

@@ -74,34 +74,49 @@ const selectedRecords = computed(() => {
 		<div class="flex items-center justify-between p-4">
 			<div class="flex items-center">
 				<Input
+					v-model="searchTerm"
 					class="max-w-sm ml-4 mr-2"
 					autocomplete="off"
 					data-1p-ignore
 					data-lpignore="true"
 					placeholder="Filter commands..."
-					v-model="searchTerm"
 				/>
-				<ClearFilters v-if="searchTerm" @update:model-value="searchTerm = ''" />
+				<ClearFilters
+					v-if="searchTerm"
+					@update:model-value="searchTerm = ''"
+				/>
 			</div>
 
 			<div class="flex items-center justify-end">
-				<Button class="px-2 py-1 mr-2 text-sm hover:animate-pulse flex items-center" size="sm" variant="outline" @click="navToCompareOptions">
-					<RcIcon name="config-compare" class="lg:mr-2" />
+				<Button
+					class="px-2 py-1 mr-2 text-sm hover:animate-pulse flex items-center"
+					size="sm"
+					variant="outline"
+					@click="navToCompareOptions"
+				>
+					<RcIcon
+						name="config-compare"
+						class="lg:mr-2"
+					/>
 					<span class="hidden lg:inline-flex">Compare Options</span>
 				</Button>
 				<Button
 					type="submit"
 					class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
 					size="sm"
-					@click.prevent="createCommand"
 					variant="primary"
+					@click.prevent="createCommand"
 				>
 					New Command
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class2">ALT N</kbd>
 					</div>
 				</Button>
-				<RcIcon name="refresh" class="w-4 h-4 mx-4 text-muted-foreground cursor-pointer hover:text-rcgray-200" @click="reload()" />
+				<RcIcon
+					name="refresh"
+					class="w-4 h-4 mx-4 text-muted-foreground cursor-pointer hover:text-rcgray-200"
+					@click="reload()"
+				/>
 			</div>
 		</div>
 
@@ -110,23 +125,50 @@ const selectedRecords = computed(() => {
 				<TableHeader>
 					<TableRow>
 						<TableHead class="w-[2%]">
-							<Checkbox id="selectAll" v-model="selectAll" :checked="selectAll" @click="toggleSelectAll()" />
+							<Checkbox
+								id="selectAll"
+								v-model="selectAll"
+								:checked="selectAll"
+								@click="toggleSelectAll()"
+							/>
 						</TableHead>
 						<TableHead class="w-[5%]">
-							<Button class="flex justify-start w-full p-0 hover:bg-rcgray-800" variant="ghost" @click="toggleSort('id')">
-								<RcIcon name="sort" :sortParam="sortParam" field="id" />
+							<Button
+								class="flex justify-start w-full p-0 hover:bg-rcgray-800"
+								variant="ghost"
+								@click="toggleSort('id')"
+							>
+								<RcIcon
+									name="sort"
+									:sort-param="sortParam"
+									field="id"
+								/>
 								<span class="ml-2">ID</span>
 							</Button>
 						</TableHead>
 						<TableHead class="w-[20%]">
-							<Button class="flex justify-start w-full p-0 hover:bg-rcgray-800" variant="ghost" @click="toggleSort('command')">
-								<RcIcon name="sort" :sortParam="sortParam" field="command" />
+							<Button
+								class="flex justify-start w-full p-0 hover:bg-rcgray-800"
+								variant="ghost"
+								@click="toggleSort('command')"
+							>
+								<RcIcon
+									name="sort"
+									:sort-param="sortParam"
+									field="command"
+								/>
 								<span class="ml-2">Command</span>
 							</Button>
 						</TableHead>
-						<TableHead class="w-[20%]">Description</TableHead>
-						<TableHead class="w-[20%]">Command Groups</TableHead>
-						<TableHead class="w-[10%]">Actions</TableHead>
+						<TableHead class="w-[20%]">
+							Description
+						</TableHead>
+						<TableHead class="w-[20%]">
+							Command Groups
+						</TableHead>
+						<TableHead class="w-[10%]">
+							Actions
+						</TableHead>
 					</TableRow>
 				</TableHeader>
 
@@ -136,11 +178,14 @@ const selectedRecords = computed(() => {
 					</template>
 
 					<template v-else-if="!isLoading">
-						<TableRow v-for="(row, index) in commands.data" :key="row.id">
+						<TableRow
+							v-for="row in commands.data"
+							:key="row.id"
+						>
 							<TableCell class="text-start">
 								<Checkbox
-									class="cursor-pointer"
 									:id="'select-' + row.id"
+									class="cursor-pointer"
 									:checked="selectedRows.includes(row.id) ? true : false"
 									@click="toggleSelectRow(row.id)"
 								/>
@@ -160,12 +205,22 @@ const selectedRecords = computed(() => {
 							</TableCell>
 
 							<TableCell class="text-start">
-								<BadgeList :items="row.category" displayField="categoryName" linkField="view_url" :maxVisible="8" :hoverCardFields="['id', 'categoryName']" />
+								<BadgeList
+									:items="row.category"
+									display-field="categoryName"
+									link-field="view_url"
+									:max-visible="8"
+									:hover-card-fields="['id', 'categoryName']"
+								/>
 							</TableCell>
 
 							<!-- ACTIONS MENU -->
 							<TableCell class="text-start">
-								<ActionsMenu :rowData="row" @onEdit="viewEditDialog(row.id)" @onDelete="deleteCommand(row.id)" />
+								<ActionsMenu
+									:row-data="row"
+									@on-edit="viewEditDialog(row.id)"
+									@on-delete="deleteCommand(row.id)"
+								/>
 							</TableCell>
 							<!-- ACTIONS MENU -->
 						</TableRow>
@@ -183,32 +238,65 @@ const selectedRecords = computed(() => {
 				class="fixed bottom-5 left-1/2 transform -translate-x-1/2 z-50 flex items-center gap-4 bg-rcgray-900 text-white border border-rcgray-600 shadow-xl px-4 py-1.5 rounded-lg"
 			>
 				<span class="text-sm">
-					<RcBadge variant="primary" class="mr-1">{{ selectedRows.length }}</RcBadge> command(s) selected
+					<RcBadge
+						variant="primary"
+						class="mr-1"
+					>{{ selectedRows.length }}</RcBadge> command(s) selected
 				</span>
 
-				<Button class="text-sm px-1.5 py-0 hover:animate-pulse h-8" variant="outline" @click="openBulkUpdateDialog">
-					<RcIcon name="command-group" class="inline-block mr-0 md:mr-2 ml-0" size="14" />
+				<Button
+					class="text-sm px-1.5 py-0 hover:animate-pulse h-8"
+					variant="outline"
+					@click="openBulkUpdateDialog"
+				>
+					<RcIcon
+						name="command-group"
+						class="inline-block mr-0 md:mr-2 ml-0"
+						size="14"
+					/>
 					<span class="hidden md:inline-flex">Bulk assign command group</span>
 				</Button>
 
-				<Button class="text-sm px-1.5 py-0 bg-red-600 hover:bg-red-700 hover:animate-pulse h-8" @click.prevent="showConfirmDelete = true" variant="primary">
-					<Shredder class="inline-block mr-0 md:mr-2 ml-0" size="14" />
+				<Button
+					class="text-sm px-1.5 py-0 bg-red-600 hover:bg-red-700 hover:animate-pulse h-8"
+					variant="primary"
+					@click.prevent="showConfirmDelete = true"
+				>
+					<Shredder
+						class="inline-block mr-0 md:mr-2 ml-0"
+						size="14"
+					/>
 					<span class="hidden md:inline-flex mr-1">Delete {{ selectedRows.length }}</span>
 				</Button>
 			</div>
 
 			<Pagination
-				:currentPage="currentPage"
-				:lastPage="lastPage"
-				:perPage="perPage"
-				@update:currentPage="currentPage = $event"
-				@update:perPage="perPage = $event"
-				:totalRecords="commands.total"
-				:isLoading="isLoading"
+				:current-page="currentPage"
+				:last-page="lastPage"
+				:per-page="perPage"
+				:total-records="commands.total"
+				:is-loading="isLoading"
+				@update:current-page="currentPage = $event"
+				@update:per-page="perPage = $event"
 			/>
-			<CommandAddEditDialog @save="handleSave()" :key="newCommandModalKey" :editId="editId" />
-			<CommandsBulkUpdateModal :key="newBulkUpdateCommandsKey" :editId="editId" :data="selectedRecords" @close="handleCloseBulkUpdate" @updated="handleUpdateBulkCommands" />
-			<RcConfirmAlertDialog :ids="selectedRows" :showConfirmDelete="showConfirmDelete" @close="showConfirmDelete = false" @handleDelete="deleteManyCommands(selectedRows)" />
+			<CommandAddEditDialog
+				:key="newCommandModalKey"
+				:edit-id="editId"
+				@save="handleSave()"
+			/>
+			<CommandsBulkUpdateModal
+				:key="newBulkUpdateCommandsKey"
+				:edit-id="editId"
+				:data="selectedRecords"
+				@close="handleCloseBulkUpdate"
+				@updated="handleUpdateBulkCommands"
+			/>
+			<RcConfirmAlertDialog
+				:ids="selectedRows"
+				:show-confirm-delete="showConfirmDelete"
+				@close="showConfirmDelete = false"
+				@handle-delete="deleteManyCommands(selectedRows)"
+			/>
 		</div>
 	</div>
 </template>

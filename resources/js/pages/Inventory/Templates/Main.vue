@@ -32,25 +32,64 @@ onMounted(() => {
 	<div class="flex flex-col h-full gap-1 text-center">
 		<div class="flex items-center justify-between p-4">
 			<div class="flex items-center">
-				<Input class="max-w-sm ml-4 mr-2" autocomplete="off" data-1p-ignore data-lpignore="true" placeholder="Filter templates..." v-model="searchTerm" />
-				<ClearFilters v-if="searchTerm" @update:model-value="searchTerm = ''" />
+				<Input
+					v-model="searchTerm"
+					class="max-w-sm ml-4 mr-2"
+					autocomplete="off"
+					data-1p-ignore
+					data-lpignore="true"
+					placeholder="Filter templates..."
+				/>
+				<ClearFilters
+					v-if="searchTerm"
+					@update:model-value="searchTerm = ''"
+				/>
 			</div>
 			<div class="flex items-center justify-end">
-				<Button v-if="selectedRows.length" class="px-2 py-1 bg-red-600 hover:bg-red-700 hover:animate-pulse" size="md" @click.prevent="showConfirmDelete = true" variant="primary">Delete Selected {{ selectedRows.length }} Template(s) </Button>
+				<Button
+					v-if="selectedRows.length"
+					class="px-2 py-1 bg-red-600 hover:bg-red-700 hover:animate-pulse"
+					size="md"
+					variant="primary"
+					@click.prevent="showConfirmDelete = true"
+				>
+					Delete Selected {{ selectedRows.length }} Template(s)
+				</Button>
 
-				<Button type="close" class="px-2 py-1 ml-2 text-sm hover:bg-gray-700" @click="importTemplates()" variant="outline">
-					<Github v-if="!importingTemplates" class="w-4 h-4 mr-2 text-white github-shake" />
-					<Spinner :state="importingTemplates" class="mr-2" />
+				<Button
+					type="close"
+					class="px-2 py-1 ml-2 text-sm hover:bg-gray-700"
+					variant="outline"
+					@click="importTemplates()"
+				>
+					<Github
+						v-if="!importingTemplates"
+						class="w-4 h-4 mr-2 text-white github-shake"
+					/>
+					<Spinner
+						:state="importingTemplates"
+						class="mr-2"
+					/>
 					Import Templates
 				</Button>
 
-				<Button type="submit" class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse" size="sm" @click.prevent="viewTemplateDetailsPane(0)" variant="primary">
+				<Button
+					type="submit"
+					class="px-2 py-1 ml-2 text-sm bg-blue-600 hover:bg-blue-700 hover:animate-pulse"
+					size="sm"
+					variant="primary"
+					@click.prevent="viewTemplateDetailsPane(0)"
+				>
 					New Template
 					<div class="pl-2 ml-auto">
 						<kbd class="rc-kdb-class2">ALT N</kbd>
 					</div>
 				</Button>
-				<RcIcon name="refresh" class="w-4 h-4 mx-4 text-muted-foreground cursor-pointer hover:text-rcgray-200" @click="reload()" />
+				<RcIcon
+					name="refresh"
+					class="w-4 h-4 mx-4 text-muted-foreground cursor-pointer hover:text-rcgray-200"
+					@click="reload()"
+				/>
 			</div>
 		</div>
 
@@ -59,23 +98,50 @@ onMounted(() => {
 				<TableHeader>
 					<TableRow>
 						<TableHead class="w-[2%]">
-							<Checkbox id="selectAll" v-model="selectAll" :checked="selectAll" @click="toggleSelectAll()" />
+							<Checkbox
+								id="selectAll"
+								v-model="selectAll"
+								:checked="selectAll"
+								@click="toggleSelectAll()"
+							/>
 						</TableHead>
 						<TableHead class="w-[5%]">
-							<Button class="flex justify-start w-full p-0 hover:bg-rcgray-800" variant="ghost" @click="toggleSort('id')">
-								<RcIcon name="sort" :sortParam="sortParam" field="id" />
+							<Button
+								class="flex justify-start w-full p-0 hover:bg-rcgray-800"
+								variant="ghost"
+								@click="toggleSort('id')"
+							>
+								<RcIcon
+									name="sort"
+									:sort-param="sortParam"
+									field="id"
+								/>
 								<span class="ml-2">ID</span>
 							</Button>
 						</TableHead>
 						<TableHead class="w-[20%]">
-							<Button class="flex justify-start w-full p-0 hover:bg-rcgray-800" variant="ghost" @click="toggleSort('templateName')">
-								<RcIcon name="sort" :sortParam="sortParam" field="templateName" />
+							<Button
+								class="flex justify-start w-full p-0 hover:bg-rcgray-800"
+								variant="ghost"
+								@click="toggleSort('templateName')"
+							>
+								<RcIcon
+									name="sort"
+									:sort-param="sortParam"
+									field="templateName"
+								/>
 								<span class="ml-2">Name</span>
 							</Button>
 						</TableHead>
-						<TableHead class="w-[20%]">Description</TableHead>
-						<TableHead class="w-[40%]">Devices</TableHead>
-						<TableHead class="w-[10%]">Actions</TableHead>
+						<TableHead class="w-[20%]">
+							Description
+						</TableHead>
+						<TableHead class="w-[40%]">
+							Devices
+						</TableHead>
+						<TableHead class="w-[10%]">
+							Actions
+						</TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>
@@ -84,15 +150,27 @@ onMounted(() => {
 					</template>
 
 					<template v-else-if="!isLoading">
-						<TableRow v-for="row in templates.data" :key="row.id">
+						<TableRow
+							v-for="row in templates.data"
+							:key="row.id"
+						>
 							<TableCell class="text-start">
-								<Checkbox class="cursor-pointer" :id="'select-' + row.id" :checked="selectedRows.includes(row.id) ? true : false" @click="toggleSelectRow(row.id)" />
+								<Checkbox
+									:id="'select-' + row.id"
+									class="cursor-pointer"
+									:checked="selectedRows.includes(row.id) ? true : false"
+									@click="toggleSelectRow(row.id)"
+								/>
 							</TableCell>
 							<TableCell class="text-start">
 								{{ row.id }}
 							</TableCell>
 							<TableCell class="text-start">
-								<Button class="px-2 py-0 text-sm hover:bg-rcgray-800 rounded-xl" variant="ghost" @click="viewTemplateDetailsPane(row.id)">
+								<Button
+									class="px-2 py-0 text-sm hover:bg-rcgray-800 rounded-xl"
+									variant="ghost"
+									@click="viewTemplateDetailsPane(row.id)"
+								>
 									<span class="border-b">{{ row.templateName }}</span>
 								</Button>
 							</TableCell>
@@ -100,11 +178,21 @@ onMounted(() => {
 								{{ row.description }}
 							</TableCell>
 							<TableCell class="text-start">
-								<BadgeList :items="row.device" displayField="device_name" linkField="view_url" :maxVisible="8" :hoverCardFields="['id', 'device_name', 'device_ip']" />
+								<BadgeList
+									:items="row.device"
+									display-field="device_name"
+									link-field="view_url"
+									:max-visible="8"
+									:hover-card-fields="['id', 'device_name', 'device_ip']"
+								/>
 							</TableCell>
 							<!-- ACTIONS MENU -->
 							<TableCell class="text-start">
-								<ActionsMenu :rowData="row" @onEdit="viewTemplateDetailsPane(row.id)" @onDelete="deleteTemplate(row.id)" />
+								<ActionsMenu
+									:row-data="row"
+									@on-edit="viewTemplateDetailsPane(row.id)"
+									@on-delete="deleteTemplate(row.id)"
+								/>
 							</TableCell>
 							<!-- ACTIONS MENU -->
 						</TableRow>
@@ -115,8 +203,21 @@ onMounted(() => {
 				</TableBody>
 			</Table>
 
-			<Pagination :currentPage="currentPage" :lastPage="lastPage" :perPage="perPage" @update:currentPage="currentPage = $event" @update:perPage="perPage = $event" :totalRecords="templates.total" :isLoading="isLoading" />
-			<RcConfirmAlertDialog :ids="selectedRows" :showConfirmDelete="showConfirmDelete" @close="showConfirmDelete = false" @handleDelete="deleteManyTemplates(selectedRows)" />
+			<Pagination
+				:current-page="currentPage"
+				:last-page="lastPage"
+				:per-page="perPage"
+				:total-records="templates.total"
+				:is-loading="isLoading"
+				@update:current-page="currentPage = $event"
+				@update:per-page="perPage = $event"
+			/>
+			<RcConfirmAlertDialog
+				:ids="selectedRows"
+				:show-confirm-delete="showConfirmDelete"
+				@close="showConfirmDelete = false"
+				@handle-delete="deleteManyTemplates(selectedRows)"
+			/>
 		</div>
 	</div>
 </template>

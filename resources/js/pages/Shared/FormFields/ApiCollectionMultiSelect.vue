@@ -59,92 +59,122 @@ function fetchApiCollections() {
 </script>
 
 <template>
-    <Popover>
-        <PopoverTrigger class="col-span-3">
-            <Button 
-                variant="ghost" 
-                class="flex items-center justify-start w-full px-2 py-1 border rounded-xl whitespace-nowrap h-fit bg-rcgray-700" 
-                :class="selectedApiCollections.length === 0 ? ' text-rcgray-400' : ''" 
-                :style="selectedApiCollections.length === 0 ? 'padding: 0.45rem' : 'padding: 0.2rem'"
-            >
-                <span v-if="isLoading">{{ t("loadingApiCollections") }}</span>
-                <template v-else class="text-rcgray-400">
-                    <RcIcon name="api-collection" class="mx-2" />
+	<Popover>
+		<PopoverTrigger class="col-span-3">
+			<Button 
+				variant="ghost" 
+				class="flex items-center justify-start w-full px-2 py-1 border rounded-xl whitespace-nowrap h-fit bg-rcgray-700" 
+				:class="selectedApiCollections.length === 0 ? ' text-rcgray-400' : ''" 
+				:style="selectedApiCollections.length === 0 ? 'padding: 0.45rem' : 'padding: 0.2rem'"
+			>
+				<span v-if="isLoading">{{ t("loadingApiCollections") }}</span>
+				<template
+					v-else
+				>
+					<RcIcon
+						name="api-collection"
+						class="mx-2"
+					/>
 
-                    <span v-if="selectedApiCollections.length === 0">{{ props.placeholder }}</span>
+					<span v-if="selectedApiCollections.length === 0">{{ props.placeholder }}</span>
 
-                    <!-- Display single selected item -->
-                    <span 
-                        v-else-if="props.singleSelect && selectedApiCollections.length > 0" 
-                        class="flex items-center text-xs font-medium px-2.5 py-0.5 rounded-xl border bg-muted"
-                    >
-                        {{ selectedApiCollections[0].name }}
-                        <X 
-                            size="16" 
-                            class="ml-1 cursor-pointer hover:text-primary" 
-                            @click.stop="deleteItem(selectedApiCollections[0].id)" 
-                        />
-                    </span>
+					<!-- Display single selected item -->
+					<span 
+						v-else-if="props.singleSelect && selectedApiCollections.length > 0" 
+						class="flex items-center text-xs font-medium px-2.5 py-0.5 rounded-xl border bg-muted"
+					>
+						{{ selectedApiCollections[0].name }}
+						<X 
+							size="16" 
+							class="ml-1 cursor-pointer hover:text-primary" 
+							@click.stop="deleteItem(selectedApiCollections[0].id)" 
+						/>
+					</span>
 
-                    <!-- Display multiple selected items -->
-                    <template v-else>
-                        <span 
-                            v-for="apiCollection in selectedApiCollections" 
-                            :key="apiCollection.id" 
-                            class="relative my-1 group"
-                        >
-                            <span class="flex items-center text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border">
-                                {{ apiCollection.name }}
+					<!-- Display multiple selected items -->
+					<template v-else>
+						<span 
+							v-for="apiCollection in selectedApiCollections" 
+							:key="apiCollection.id" 
+							class="relative my-1 group"
+						>
+							<span class="flex items-center text-xs font-medium me-2 px-2.5 py-0.5 rounded-xl border">
+								{{ apiCollection.name }}
 
-                                <X 
-                                    size="16" 
-                                    class="ml-1 cursor-pointer hover:text-white" 
-                                    @click.stop="deleteItem(apiCollection.id)" 
-                                />
-                            </span>
-                        </span>
-                    </template>
-                </template>
-            </Button>
-        </PopoverTrigger>
+								<X 
+									size="16" 
+									class="ml-1 cursor-pointer hover:text-white" 
+									@click.stop="deleteItem(apiCollection.id)" 
+								/>
+							</span>
+						</span>
+					</template>
+				</template>
+			</Button>
+		</PopoverTrigger>
 
-        <PopoverContent side="bottom" align="start" class="col-span-3 p-0">
-            <div class="relative items-center w-full">
-                <Input 
-                    id="search" 
-                    type="text" 
-                    v-model="searchTerm" 
-                    autocomplete="off" 
-                    :placeholder="t('common.search')" 
-                    class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter" 
-                />
-                <span class="absolute inset-y-0 flex items-center justify-center px-2 start-0">
-                    <RcIcon name="search" />
-                </span>
-            </div>
-            <Separator />
+		<PopoverContent
+			side="bottom"
+			align="start"
+			class="col-span-3 p-0"
+		>
+			<div class="relative items-center w-full">
+				<Input 
+					id="search" 
+					v-model="searchTerm" 
+					type="text" 
+					autocomplete="off" 
+					:placeholder="t('common.search')" 
+					class="pl-10 border-none focus:outline-none focus-visible:ring-0 text-muted-foreground font-inter" 
+				/>
+				<span class="absolute inset-y-0 flex items-center justify-center px-2 start-0">
+					<RcIcon name="search" />
+				</span>
+			</div>
+			<Separator />
 
-            <ScrollArea class="h-64">
-                <div class="py-1">
-                    <RcIcon name="three-dots-loading" class="w-8 h-8 mx-auto my-4 text-muted-foreground" v-if="isLoading" />
-                    <div v-else v-for="apiCollection in filteredApiCollections" :key="apiCollection.id" class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600" @click="selectItem(apiCollection)">
-                        <span data-size="20" class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5">
-                            <span data-size="20">
-                                {{ apiCollection.name }}
-                            </span>
-                        </span>
-                    </div>
-                </div>
-            </ScrollArea>
+			<ScrollArea class="h-64">
+				<div class="py-1">
+					<RcIcon
+						v-if="isLoading"
+						name="three-dots-loading"
+						class="w-8 h-8 mx-auto my-4 text-muted-foreground"
+					/>
+					<div
+						v-for="apiCollection in filteredApiCollections"
+						v-else
+						:key="apiCollection.id"
+						class="w-full p-1 pl-2 my-1 text-sm rounded-lg hover:bg-rcgray-600"
+						@click="selectItem(apiCollection)"
+					>
+						<span
+							data-size="20"
+							class="cursor-default text-xs font-medium me-2 px-2.5 py-0.5"
+						>
+							<span data-size="20">
+								{{ apiCollection.name }}
+							</span>
+						</span>
+					</div>
+				</div>
+			</ScrollArea>
 
-            <Separator />
+			<Separator />
 
-            <div class="p-1 border-5">
-                <Button variant="ghost" class="justify-start w-full p-1">
-                    <RcIcon name="plus" class="w-8" />
-                    <div class="rc-text-xs-muted ml-1">{{ t("createNewRecord") }}</div>
-                </Button>
-            </div>
-        </PopoverContent>
-    </Popover>
+			<div class="p-1 border-5">
+				<Button
+					variant="ghost"
+					class="justify-start w-full p-1"
+				>
+					<RcIcon
+						name="plus"
+						class="w-8"
+					/>
+					<div class="rc-text-xs-muted ml-1">
+						{{ t("createNewRecord") }}
+					</div>
+				</Button>
+			</div>
+		</PopoverContent>
+	</Popover>
 </template>

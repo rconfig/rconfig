@@ -2,21 +2,31 @@
     "private": true,
     "scripts": {
         "dev": "vite --host --config vite.dev.config.js",
-        "build": "vite build --config vite.prod.config.js"
+        "build": "vite build --config vite.prod.config.js",
+        "test": "vitest run",
+        "lint": "eslint resources/js --quiet",
+        "lint:fix": "eslint resources/js --fix"
     },
     "overrides": {
         "@modelcontextprotocol/sdk": "^1.26.0",
         "serialize-javascript": "^7.0.3",
-        "ajv": "^8.18.0"
+        "ajv": "^8.18.0",
+        "eslint": {
+            "ajv": "^6.12.6"
+        }
     },
     "devDependencies": {
+        "@eslint/js": "^10.0.1",
         "@iconify/vue": "^5.0.0",
         "@tailwindcss/vite": "^4.2.2",
+        "@typescript-eslint/parser": "^8.62.0",
         "@vitejs/plugin-vue": "^6.0.0",
         "@vue/compiler-sfc": "^3.5.14",
         "@vue/test-utils": "^2.4.6",
         "babel-loader": "^10.0.0",
-        "eslint": "^10.1.0",
+        "eslint": "^10.6.0",
+        "globals": "^17.7.0",
+        "jsdom": "^29.1.1",
         "laravel-vite-plugin": "^3.0.0",
         "monaco-editor-webpack-plugin": "^7.1.0",
         "prettier": "^3.5.3",
@@ -28,7 +38,7 @@
         "tailwindcss-animate": "^1.0.7",
         "typescript": "^6.0.3",
         "vite": "^8.0.2",
-        "vitest": "^4.0.0",
+        "vitest": "^4.1.9",
         "vue": "^3.5.16",
         "vue-loader": "^17.4.2"
     },
@@ -52,6 +62,7 @@
     "dependencies": {
         "@highlightjs/vue-plugin": "^2.1.0",
         "@radix-icons/vue": "^1.0.0",
+        "@vitest/ui": "^4.1.9",
         "@vueuse/core": "^14.0.0",
         "axios": "^1.13.5",
         "axios-cache-interceptor": "^1.8.0",
@@ -60,6 +71,7 @@
         "clsx": "^2.1.1",
         "cronstrue": "^3.0.0",
         "dotenv": "^17.0.1",
+        "eslint-plugin-vue": "^10.9.2",
         "file-saver": "^2.0.5",
         "highlight.js": "^11.11.1",
         "hono": "^4.12.2",

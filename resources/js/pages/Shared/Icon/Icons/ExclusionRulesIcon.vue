@@ -22,6 +22,42 @@ const combinedClass = computed(() => {
 });
 </script>
 
+<template>
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		:width="width"
+		:height="height"
+		viewBox="0 0 16 16"
+		:class="combinedClass"
+	>
+		<g
+			fill="none"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+		>
+			<!-- Shield outline -->
+			<path 
+				class="shield-path" 
+				stroke="#6b7280" 
+				d="M8 2l-6 2v4c0 3.5 6 6 6 6s6-2.5 6-6V4l-6-2z" 
+				stroke-width="1.2" 
+				fill="none"
+			/>
+            
+			<!-- Large X mark in center -->
+			<g
+				class="exclusion-mark"
+				stroke-width="2"
+			>
+				<path 
+					d="M6 6l4 4m-4 0l4-4" 
+					stroke="#f97316"
+				/>
+			</g>
+		</g>
+	</svg>
+</template>
+
 <style scoped>
 @keyframes shield-pulse {
   0%, 100% { opacity: 0.9; }
@@ -45,26 +81,3 @@ const combinedClass = computed(() => {
   animation: x-glow 2.5s ease-in-out infinite;
 }
 </style>
-
-<template>
-    <svg xmlns="http://www.w3.org/2000/svg" :width="width" :height="height" viewBox="0 0 16 16" :class="combinedClass">
-        <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <!-- Shield outline -->
-            <path 
-                class="shield-path" 
-                stroke="#6b7280" 
-                d="M8 2l-6 2v4c0 3.5 6 6 6 6s6-2.5 6-6V4l-6-2z" 
-                stroke-width="1.2" 
-                fill="none"
-            />
-            
-            <!-- Large X mark in center -->
-            <g class="exclusion-mark" stroke-width="2">
-                <path 
-                    d="M6 6l4 4m-4 0l4-4" 
-                    stroke="#f97316"
-                />
-            </g>
-        </g>
-    </svg>
-</template>

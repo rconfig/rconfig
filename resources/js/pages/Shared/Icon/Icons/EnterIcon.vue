@@ -18,5 +18,9 @@ defineProps({
 </script>
 
 <template>
-	<CornerDownLeft :width="width" :height="height" :color="color" />
+	<CornerDownLeft
+		:width="width"
+		:height="height"
+		:color="color"
+	/>
 </template>

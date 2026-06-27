@@ -71,15 +71,24 @@ const positioning = computed(() => ({
 
 <template>
 	<!-- Drawer fallback for very narrow panels -->
-	<Sheet v-if="useSheet" v-model:open="popoverOpen">
+	<Sheet
+		v-if="useSheet"
+		v-model:open="popoverOpen"
+	>
 		<SheetTrigger as-child>
 			<slot />
 		</SheetTrigger>
-		<SheetContent side="left" class="w-80 sm:w-96">
+		<SheetContent
+			side="left"
+			class="w-80 sm:w-96"
+		>
 			<SheetHeader>
 				<SheetTitle>
 					<div class="flex items-center">
-						<RcIcon name="config-tools" class="w-5 h-5" />
+						<RcIcon
+							name="config-tools"
+							class="w-5 h-5"
+						/>
 						<span class="ml-2">Configuration Tools</span>
 					</div>
 				</SheetTitle>
@@ -97,10 +106,23 @@ const positioning = computed(() => ({
 						</div>
 					</template>
 
-					<div v-if="!isLoading" v-for="item in viewItems" :key="item.id" class="flex items-center justify-between group rounded-md transition-colors hover:bg-muted/30">
-						<Button variant="ghost" class="w-full flex justify-start mr-2 px-1 focus:outline-none focus:ring-0" @click="navigate(item.id)" tabindex="-1">
+					<div
+						v-for="item in viewItems"
+						v-show="!isLoading"
+						:key="item.id"
+						class="flex items-center justify-between group rounded-md transition-colors hover:bg-muted/30"
+					>
+						<Button
+							variant="ghost"
+							class="w-full flex justify-start mr-2 px-1 focus:outline-none focus:ring-0"
+							tabindex="-1"
+							@click="navigate(item.id)"
+						>
 							<span class="flex gap-2 items-center">
-								<RcIcon :name="item.icon" class="w-4 h-4" />
+								<RcIcon
+									:name="item.icon"
+									class="w-4 h-4"
+								/>
 								<span class="text-sm">{{ item.label }}</span>
 							</span>
 						</Button>
@@ -108,9 +130,20 @@ const positioning = computed(() => ({
 						<TooltipProvider>
 							<Tooltip>
 								<TooltipTrigger as-child>
-									<span @click.stop.prevent="toggleFavorite(item.id)" class="p-1 rounded hover:bg-muted/50 transition-colors">
-										<RcIcon name="star-unselected" v-if="!item.isFavorite.value" class="animated-star text-muted-foreground hover:text-yellow-400 w-4 h-4" />
-										<RcIcon name="star-selected" v-else class="animated-star text-yellow-500 w-4 h-4" />
+									<span
+										class="p-1 rounded hover:bg-muted/50 transition-colors"
+										@click.stop.prevent="toggleFavorite(item.id)"
+									>
+										<RcIcon
+											v-if="!item.isFavorite.value"
+											name="star-unselected"
+											class="animated-star text-muted-foreground hover:text-yellow-400 w-4 h-4"
+										/>
+										<RcIcon
+											v-else
+											name="star-selected"
+											class="animated-star text-yellow-500 w-4 h-4"
+										/>
 									</span>
 								</TooltipTrigger>
 								<TooltipContent side="right">
@@ -125,18 +158,33 @@ const positioning = computed(() => ({
 	</Sheet>
 
 	<!-- Properly bounded popover for normal widths -->
-	<Popover v-else v-model:open="popoverOpen" :positioning="positioning">
+	<Popover
+		v-else
+		v-model:open="popoverOpen"
+		:positioning="positioning"
+	>
 		<PopoverTrigger as-child>
 			<slot />
 		</PopoverTrigger>
 
-		<PopoverContent class="w-80 p-0 overflow-hidden" side="right" align="start" :side-offset="panelWidth < 260 ? 0 : 26" :avoid-collisions="true" :collision-padding="8" :style="{ maxHeight: 'min(70vh, 640px)' }">
+		<PopoverContent
+			class="w-80 p-0 overflow-hidden"
+			side="right"
+			align="start"
+			:side-offset="panelWidth < 260 ? 0 : 26"
+			:avoid-collisions="true"
+			:collision-padding="8"
+			:style="{ maxHeight: 'min(70vh, 640px)' }"
+		>
 			<div class="grid gap-4 p-4">
 				<div class="space-y-2">
 					<h4 class="flex justify-start w-full font-medium leading-none">
 						<div class="flex items-center justify-between w-full">
 							<div class="flex items-center">
-								<RcIcon name="config-tools" class="w-5 h-5" />
+								<RcIcon
+									name="config-tools"
+									class="w-5 h-5"
+								/>
 								<span class="ml-2">Configuration Tools</span>
 							</div>
 							<kbd class="rc-kdb-class">ESC</kbd>
@@ -154,10 +202,23 @@ const positioning = computed(() => ({
 						</div>
 					</template>
 
-					<div v-if="!isLoading" v-for="item in viewItems" :key="item.id" class="flex items-center justify-between group rounded-md transition-colors hover:bg-muted/30">
-						<Button variant="ghost" class="w-full flex justify-start mr-2 px-1 focus:outline-none focus:ring-0" @click="navigate(item.id)" tabindex="-1">
+					<div
+						v-for="item in viewItems"
+						v-show="!isLoading"
+						:key="item.id"
+						class="flex items-center justify-between group rounded-md transition-colors hover:bg-muted/30"
+					>
+						<Button
+							variant="ghost"
+							class="w-full flex justify-start mr-2 px-1 focus:outline-none focus:ring-0"
+							tabindex="-1"
+							@click="navigate(item.id)"
+						>
 							<span class="flex gap-2 items-center">
-								<RcIcon :name="item.icon" class="w-4 h-4" />
+								<RcIcon
+									:name="item.icon"
+									class="w-4 h-4"
+								/>
 								<span class="text-sm">{{ item.label }}</span>
 							</span>
 						</Button>
@@ -165,9 +226,20 @@ const positioning = computed(() => ({
 						<TooltipProvider>
 							<Tooltip>
 								<TooltipTrigger as-child>
-									<span @click.stop.prevent="toggleFavorite(item.id)" class="p-1 rounded hover:bg-muted/50 transition-colors">
-										<RcIcon name="star-unselected" v-if="!item.isFavorite.value" class="animated-star text-muted-foreground hover:text-yellow-400 w-4 h-4" />
-										<RcIcon name="star-selected" v-else class="animated-star text-yellow-500 w-4 h-4" />
+									<span
+										class="p-1 rounded hover:bg-muted/50 transition-colors"
+										@click.stop.prevent="toggleFavorite(item.id)"
+									>
+										<RcIcon
+											v-if="!item.isFavorite.value"
+											name="star-unselected"
+											class="animated-star text-muted-foreground hover:text-yellow-400 w-4 h-4"
+										/>
+										<RcIcon
+											v-else
+											name="star-selected"
+											class="animated-star text-yellow-500 w-4 h-4"
+										/>
 									</span>
 								</TooltipTrigger>
 								<TooltipContent side="right">

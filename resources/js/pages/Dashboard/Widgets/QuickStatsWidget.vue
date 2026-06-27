@@ -51,7 +51,10 @@ const stats = computed(() => {
 
 <template>
 	<Card class="border-0 shadow-md rounded-2xl bg-card text-card-foreground p-4 transition-all duration-200 hover:shadow-lg relative">
-		<div v-if="editMode" class="absolute top-2 right-2 cursor-move opacity-50">
+		<div
+			v-if="editMode"
+			class="absolute top-2 right-2 cursor-move opacity-50"
+		>
 			<GripVertical class="w-4 h-4 text-muted-foreground" />
 		</div>
 
@@ -69,12 +72,21 @@ const stats = computed(() => {
 				class="flex items-center justify-between py-1.5"
 			>
 				<div class="flex items-center gap-2">
-					<TrendingUp v-if="stat.trend === 'up'" :class="[
-						'w-4 h-4',
-						stat.color === 'green' ? 'text-green-500' : 'text-amber-500'
-					]" />
-					<TrendingDown v-else-if="stat.trend === 'down'" class="w-4 h-4 text-red-500" />
-					<BarChart3 v-else class="w-4 h-4 text-muted-foreground" />
+					<TrendingUp
+						v-if="stat.trend === 'up'"
+						:class="[
+							'w-4 h-4',
+							stat.color === 'green' ? 'text-green-500' : 'text-amber-500'
+						]"
+					/>
+					<TrendingDown
+						v-else-if="stat.trend === 'down'"
+						class="w-4 h-4 text-red-500"
+					/>
+					<BarChart3
+						v-else
+						class="w-4 h-4 text-muted-foreground"
+					/>
 					<span class="text-muted-foreground">{{ stat.label }}</span>
 				</div>
 				<span class="font-medium">{{ stat.value }}</span>

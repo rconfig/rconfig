@@ -32,24 +32,45 @@ const { t } = useComponentTranslations(RcListPopoverI18N);
 <template>
 	<Popover>
 		<PopoverTrigger as-child>
-			<button type="button" class="mt-1 inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground bg-background border-border">
+			<button
+				type="button"
+				class="mt-1 inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground bg-background border-border"
+			>
 				...
 			</button>
 		</PopoverTrigger>
 
-		<PopoverContent class="max-w-max bg-popover text-popover-foreground border border-border shadow-md" style="width: 800px;">
+		<PopoverContent
+			class="max-w-max bg-popover text-popover-foreground border border-border shadow-md"
+			style="width: 800px;"
+		>
 			<div class="space-y-2">
-				<p class="mb-2 text-sm text-muted-foreground">{{ description }}</p>
+				<p class="mb-2 text-sm text-muted-foreground">
+					{{ description }}
+				</p>
 			</div>
 
-			<RcBadge v-for="item in items.slice(0, displayCount)" :key="item[displayField]" variant="outline" class="py-1 mt-1 hover:bg-muted">
-				<router-link :to="item.view_url">{{ item[displayField] }}</router-link>
+			<RcBadge
+				v-for="item in items.slice(0, displayCount)"
+				:key="item[displayField]"
+				variant="outline"
+				class="py-1 mt-1 hover:bg-muted"
+			>
+				<router-link :to="item.view_url">
+					{{ item[displayField] }}
+				</router-link>
 			</RcBadge>
 
-			<span class="text-xs text-muted-foreground" v-if="items.length > displayCount - 1">
+			<span
+				v-if="items.length > displayCount - 1"
+				class="text-xs text-muted-foreground"
+			>
 				<br />
 				{{ t("displayingOnly") }} {{ displayCount }} {{ t("records") }}. {{ t("visitThe") }}
-				<router-link :to="linkPath" class="text-blue-500 hover:underline">
+				<router-link
+					:to="linkPath"
+					class="text-blue-500 hover:underline"
+				>
 					{{ defaultTypeGuess }}
 				</router-link>
 				{{ t("pageToViewAll") }}.

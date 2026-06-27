@@ -11,7 +11,17 @@ const props = defineProps({
 });
 </script>
 <template>
-	<svg xmlns="http://www.w3.org/2000/svg" :width="width" :height="height" viewBox="0 0 24 24" fill="none" stroke="#04a5e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		:width="width"
+		:height="height"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="#04a5e5"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+	>
 		<path d="m19 5 3-3" />
 		<path d="m2 22 3-3" />
 		<path d="M6.3 20.3a2.4 2.4 0 0 0 3.4 0L12 18l-6-6-2.3 2.3a2.4 2.4 0 0 0 0 3.4Z" />

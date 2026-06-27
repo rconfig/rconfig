@@ -25,9 +25,17 @@ const combinedClass = computed(() => {
 </script>
 
 <template>
-	<RcToolTip :delayDuration="100" :content="'Config Change Push or Pull'" :side="'bottom'">
+	<RcToolTip
+		:delay-duration="100"
+		:content="'Config Change Push or Pull'"
+		:side="'bottom'"
+	>
 		<template #trigger>
-			<Repeat :width="width" :height="height" :class="combinedClass" />
+			<Repeat
+				:width="width"
+				:height="height"
+				:class="combinedClass"
+			/>
 		</template>
 	</RcToolTip>
 </template>
