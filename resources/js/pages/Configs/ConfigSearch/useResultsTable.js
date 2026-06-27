@@ -1,120 +1,162 @@
-import axios from 'axios';
-import { inject, ref, reactive, watch } from 'vue';
-import { useDialogStore } from '@/stores/dialogActions';
-import { useRouter } from 'vue-router';
-import { usePageSettingsStore } from "@/stores/pageSettings";
+import axios from "axios";
+import { inject, reactive, ref, watch } from "vue";
+import { useDialogStore } from "@/stores/dialogActions";
+import { useRouter } from "vue-router";
 
 export function useResultsTable(props) {
-	const formatters = inject('formatters');
-	const dialogStore = useDialogStore();
-	const { openDialog, closeDialog, isDialogOpen } = dialogStore;
+	const formatters = inject("formatters");
+	const { openDialog, isDialogOpen } = useDialogStore();
 	const router = useRouter();
-	const currentPage = ref(0);
 	const errors = ref([]);
 	const isFetching = ref(false);
-	const lastPage = ref(1);
-	const page = ref(1);
-
-	const pageSettings = usePageSettingsStore();
-	const perPage = ref(pageSettings.get("useResultsTable", "perPage", 5));
 	const results = ref([]);
+	const currentPage = ref(1);
+	const perPage = ref(10);
+	const lastPage = ref(1);
+	const totalRecords = ref(0);
+	const resultMeta = ref({
+		limit: 50,
+		results_returned: 0,
+		limit_reached: false,
+	});
 
 	const searchModel = reactive({
-		device_name: "",
-		command: "",
-		device_category: "",
-		search_string: "",
+		criteria: [],
+		criteria_mode: "all",
+		limit: 50,
+		results_per_config: "first_match",
+		devices: [],
+		categories: [],
+		commands: [],
+		tags: [],
 		lines_before: 5,
 		lines_after: 5,
 		latest_version_only: true,
-		ignore_case: true,
-		start_date: "",
-		end_date: ""
+		case_sensitive: false,
+		dateFrom: undefined,
+		dateTo: undefined,
+		search_terms: [],
 	});
 
-	watch(
-		() => props.filters,
-		newFilters => {
+	function handleFiltersChange(newFilters) {
 		applyFilters(newFilters);
-		fetchResults();
-		}
-	);
+		currentPage.value = 1;
 
-	watch(perPage, () => {
-		pageSettings.set("useResultsTable", "perPage", perPage.value);
+		if (searchModel.criteria.length > 0) {
+			fetchResults();
+		}
+	}
+
+	watch(() => props.filters, handleFiltersChange, { deep: true, immediate: true });
+
+	watch([currentPage, perPage], ([newPage, newPerPage], [oldPage, oldPerPage]) => {
+		if (!searchModel.criteria.length) {
+			return;
+		}
+		if (newPerPage !== oldPerPage && newPage !== 1) {
+			currentPage.value = 1;
+
+			return;
+		}
 		fetchResults();
 	});
 
 	function applyFilters(newFilters) {
 		results.value = [];
 		errors.value = [];
-		currentPage.value = 0;
+		resultMeta.value = {
+			limit: 50,
+			results_returned: 0,
+			limit_reached: false,
+		};
+		totalRecords.value = 0;
 		lastPage.value = 1;
-		page.value = 1;
 
-		Object.assign(searchModel, newFilters);
+		Object.assign(searchModel, {
+			criteria: [],
+			criteria_mode: "all",
+			limit: 50,
+			results_per_config: "first_match",
+			devices: [],
+			categories: [],
+			commands: [],
+			tags: [],
+			lines_before: 5,
+			lines_after: 5,
+			latest_version_only: true,
+			case_sensitive: false,
+			dateFrom: undefined,
+			dateTo: undefined,
+			search_terms: [],
+			...newFilters,
+		});
 	}
 
-	// Function to handle the API call to fetch more results
-	const fetchResults = async () => {
+	async function fetchResults() {
+		if (!searchModel.criteria.length) {
+			return;
+		}
+
 		isFetching.value = true;
 
 		try {
-		const response = await axios.post('/api/configs/search', {
-			device_name: searchModel.device_name,
-			command: searchModel.command,
-			device_category: searchModel.device_category,
-			search_string: searchModel.search_string,
-			lines_before: searchModel.lines_before,
-			lines_after: searchModel.lines_after,
-			latest_version_only: searchModel.latest_version_only,
-			ignore_case: searchModel.ignore_case,
-			start_date: searchModel.start_date + ' 00:00:00',
-			end_date: searchModel.end_date + ' 23:59:59',
-			page: page.value,
-			per_page: perPage.value
-		});
+			const response = await axios.post("/api/configs/search", {
+				...searchModel,
+				page: currentPage.value,
+				perPage: perPage.value,
+			});
+			const rows = Array.isArray(response.data.data) ? response.data.data : [];
+			const meta = response?.data?.meta ?? {};
 
-		if (response.data.data.length) {
-			results.value = response.data.data;
-			currentPage.value = response.data.current_page;
-			lastPage.value = response.data.last_page;
-		}
+			results.value = rows.map((row) => {
+				const matches = Array.isArray(row.matches) ? row.matches : [];
+				const previewMatch = row.preview_match || matches[0] || null;
+				const matchCount = typeof row.match_count === "number" ? row.match_count : matches.length;
+
+				return {
+					...row,
+					matches,
+					preview_match: previewMatch,
+					match_count: matchCount,
+					search_terms: searchModel.search_terms,
+				};
+			});
+
+			resultMeta.value = {
+				limit: Number(meta.limit ?? searchModel.limit ?? 50),
+				results_returned: Number(meta.results_returned ?? rows.length),
+				limit_reached: Boolean(meta.limit_reached),
+			};
+			totalRecords.value = Number(meta.total ?? rows.length);
+			lastPage.value = Number(meta.last_page ?? 1);
+			if (meta.current_page && Number(meta.current_page) !== currentPage.value) {
+				currentPage.value = Number(meta.current_page);
+			}
 		} catch (error) {
 			console.log(error);
-			errors.value = error.response?.data?.errors || [];
+			errors.value = error?.response?.data?.errors || [];
 		} finally {
 			isFetching.value = false;
 		}
-	};
+	}
 
 	function viewDetailsPane(configId) {
-		router.push({ name: 'config-view', params: { id: parseInt(configId) }, query: { ref: 'configsearch' } });
-	}
-
-	function updatePerpage(event) {
-		perPage.value = event;
-		fetchResults();
-	}
-	function changePage(event) {
-		console.log(event);
-		page.value = event;
-		fetchResults();
+		router.push({ name: "config-view", params: { id: parseInt(configId) }, query: { ref: "configsearch" } });
 	}
 
 	return {
-		changePage,
-		currentPage,
 		errors,
 		formatters,
 		isDialogOpen,
 		isFetching,
-		lastPage,
 		openDialog,
-		perPage,
 		results,
+		resultMeta,
 		searchModel,
-		updatePerpage,
-		viewDetailsPane
+		viewDetailsPane,
+		currentPage,
+		perPage,
+		lastPage,
+		totalRecords,
 	};
 }

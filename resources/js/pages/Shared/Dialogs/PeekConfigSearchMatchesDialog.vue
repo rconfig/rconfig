@@ -28,7 +28,11 @@ const props = defineProps({
 	},
 	searchString: {
 		type: String,
-		required: true,
+		default: "",
+	},
+	searchTerms: {
+		type: Array,
+		default: () => [],
 	},
 });
 // Destructuring props
@@ -41,16 +45,23 @@ onMounted(() => {
 });
 
 const highlightMatch = (context) => {
-	if (!props.searchString || !context) return context;
+	if (!context) return context;
 
 	// Convert context to string if it's an array
 	const contextString = Array.isArray(context) ? context.join("\n") : String(context);
 
-	// Escape special regex characters in the search string
-	const escapedSearchString = props.searchString.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+	// Build the list of terms to highlight, preferring the multi-term array
+	const terms = [...new Set((props.searchTerms.length ? props.searchTerms : props.searchString ? [props.searchString] : []).map((term) => String(term ?? "").trim()).filter(Boolean))].sort(
+		(left, right) => right.length - left.length,
+	);
 
-	// Create a regular expression to highlight all occurrences of searchString
-	const regex = new RegExp(`(${escapedSearchString})`, "gi");
+	if (terms.length === 0) {
+		return contextString.replace(/\n/g, "<br>");
+	}
+
+	// Escape special regex characters in each term and combine into one pattern
+	const pattern = terms.map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
+	const regex = new RegExp(`(${pattern})`, "gi");
 
 	// Replace matches with highlighted spans and preserve line breaks
 	const highlightedContext = contextString.replace(regex, '<span class="highlightMatch">$1</span>').replace(/\n/g, "<br>");

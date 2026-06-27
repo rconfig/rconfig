@@ -1,83 +1,74 @@
-import axios from 'axios';
-import { ref, onMounted } from 'vue';
-import { useToaster } from '@/composables/useToaster';
+import { computed, ref } from "vue";
+import {
+	buildConfigSearchPayload,
+	cloneConfigSearchModel,
+	createDefaultConfigSearchModel,
+	createEmptySearchCriterion,
+	hasSearchCriteria,
+	hydrateConfigSearchModel,
+} from "./configSearchFilters";
 
-export function useFilterCard(emit) {
-	const { toastError } = useToaster();
-	const model = ref({
-		device_name: "",
-		command: "",
-		device_category: "",
-		search_string: "",
-		lines_before: 5,
-		lines_after: 5,
-		latest_version_only: ref(true),
-		ignore_case: ref(true),
-		start_date: "",
-		end_date: ""
-	});
-	const daterange = ref(null);
-	const commands = ref([]);
-
-	onMounted(() => {
-		// window.addEventListener('wheel', handleScroll, { passive: true });
-
-		getDistinctCommands();
-	});
-
-	function getDistinctCommands() {
-		axios
-			.get('/api/configs/distinct-commands/0')
-			.then(response => {
-				commands.value = response.data.data;
-			})
-			.catch(error => {
-				toastError('Error', error.response.data.message);
-			});
-	}
+export function useFilterCard(emit, initialModel = null) {
+	const model = ref(initialModel ? hydrateConfigSearchModel(initialModel) : createDefaultConfigSearchModel());
+	const datePickerKey = ref(0);
+	const canSearch = computed(() => hasSearchCriteria(model.value.criteria));
 
 	function clearAll() {
-		model.value.device_name = "";
-		model.value.command = "";
-		model.value.device_category = "";
-		model.value.search_string = "";
-		model.value.lines_before = 5;
-		model.value.lines_after = 5;
-		model.value.latest_version_only = ref(true);
-		model.value.ignore_case = ref(true);
-		model.value.start_date = "";
-		model.value.end_date = "";
-		emit('searchCompleted', model.value);
+		model.value = createDefaultConfigSearchModel();
+		datePickerKey.value += 1;
+	}
+
+	function addCriterion() {
+		model.value.criteria.push(createEmptySearchCriterion());
+	}
+
+	function clearAllTerms() {
+		model.value.criteria = [createEmptySearchCriterion()];
+	}
+
+	function removeCriterion(criterionId) {
+		if (model.value.criteria.length === 1) {
+			model.value.criteria = [createEmptySearchCriterion()];
+
+			return;
+		}
+
+		model.value.criteria = model.value.criteria.filter((criterion) => criterion.id !== criterionId);
 	}
 
 	function setDates(dateRange) {
 		if (dateRange.start && dateRange.end) {
-		// Convert the start and end dates to the desired format (YYYY-MM-DD)
-		const startDate = `${dateRange.start.year}-${String(dateRange.start.month).padStart(2, '0')}-${String(dateRange.start.day).padStart(2, '0')}`;
-		const endDate = `${dateRange.end.year}-${String(dateRange.end.month).padStart(2, '0')}-${String(dateRange.end.day).padStart(2, '0')}`;
+			const startDate = `${dateRange.start.year}-${String(dateRange.start.month).padStart(2, "0")}-${String(dateRange.start.day).padStart(2, "0")}`;
+			const endDate = `${dateRange.end.year}-${String(dateRange.end.month).padStart(2, "0")}-${String(dateRange.end.day).padStart(2, "0")}`;
 
-		// Update the model with the transformed dates
-		model.value.start_date = startDate;
-		model.value.end_date = endDate;
+			model.value.start_date = startDate;
+			model.value.end_date = endDate;
 		} else {
-		// If no date range is provided, reset the model
-		model.value.start_date = "";
-		model.value.end_date = "";
+			model.value.start_date = "";
+			model.value.end_date = "";
 		}
-
-		// Optional: Update the Vue state or other reactive properties
-		daterange.value = dateRange;
 	}
 
 	function performSearch() {
-		emit('searchCompleted', model.value);
+		if (!canSearch.value) {
+			return;
+		}
+
+		emit("searchCompleted", {
+			payload: buildConfigSearchPayload(model.value),
+			model: cloneConfigSearchModel(model.value),
+		});
 	}
 
-  	return {
+	return {
+		addCriterion,
+		canSearch,
 		clearAll,
-		commands,
+		clearAllTerms,
+		datePickerKey,
 		model,
 		performSearch,
-		setDates
+		removeCriterion,
+		setDates,
 	};
 }
