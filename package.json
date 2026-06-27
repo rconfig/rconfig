@@ -90,7 +90,6 @@
         "vue-axios": "^3.4.0",
         "vue-clipboard3": "^2.0.0",
         "vue-router": "^5.0.2",
-        "vue-sonner": "^2.0.9",
-        "vue3-highlightjs": "^1.0.5"
+        "vue-sonner": "^2.0.9"
     }
 }

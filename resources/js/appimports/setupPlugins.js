@@ -1,13 +1,13 @@
-import VueHighlightJS from "vue3-highlightjs";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import router from "@/router";
 import { createPinia } from "pinia";
 import RcIcon from "@/pages/Shared/Icon/RcIcon.vue"; // Import RcIcon component
+import { highlightDirective } from "@/appimports/highlightDirective";
 
 export function setupPlugins(app) {
 	// Register core plugins
 	app.use(router);
-	app.use(VueHighlightJS);
+	app.directive("highlightjs", highlightDirective);
 
 	// Register Pinia store
 	const pinia = createPinia();
