@@ -79,4 +79,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [8.0.0] - 2026-05-29
 
 ### Added
-- Initial release of rConfig v8 Core: network device configuration backup and versioning, multi vendor templates and commands, SSH and Telnet downloads, scheduled and on demand tasks with run monitoring, Horizon queue monitoring, a REST API with a Vue 3 SPA front end, and SSO via Socialite.
+- Initial release of rConfig v8 Core tagged updates: network device configuration backup and versioning, multi vendor templates and commands, SSH and Telnet downloads, scheduled and on demand tasks with run monitoring, Horizon queue monitoring, a REST API with a Vue 3 SPA front end, and SSO via Socialite.
