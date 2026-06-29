@@ -93,17 +93,35 @@ rConfig v8 Core is a **powerful, free, and open-source** Network Configuration M
 ---
 ## 📸 Screenshots
 
+See rConfig in action. Here's the dashboard to get you started:
+
+<p align="center">
+  <img src="public/images/brand/v8core/dashboard.png" alt="rConfig Dashboard" width="900">
+</p>
+
 <details>
+<summary>
+  <strong>🖼️ Click to expand the full gallery — 6 more screenshots</strong><br>
+  <sub>Devices · Config Search · Side-by-side Diffs · SSO · Notifications &amp; more</sub>
+</summary>
+<br>
 
-<summary><strong>Click to view screenshots</strong></summary>
-
-### Dashboard
-![Dashboard](public/images/brand/v8core/dashboard.png)
+### Devices
 ![Devices](public/images/brand/v8core/devices.png)
+
+### Config Search
 ![Search](public/images/brand/v8core/search.png)
+
+### Config Diffs
 ![Diffs](public/images/brand/v8core/diffs.png)
+
+### Promo
 ![Promo Image](public/images/brand/v8core/promo_image.png)
+
+### SSO
 ![SSO](public/images/brand/v8core/sso.png)
+
+### Notifications
 ![Notifications](public/images/brand/v8core/notifications.png)
 
 </details>
