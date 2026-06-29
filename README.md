@@ -71,6 +71,9 @@ rConfig v8 Core is a **powerful, free, and open-source** Network Configuration M
 > 🔎 **New: Upgraded Configuration Search (Launched July 2026)**
 > Search every stored config with multiple terms and All (AND) or Any (OR) matching. Narrow the scope by tags, devices, command groups, and commands, set a result limit, and read highlighted match previews inline, all under Config Tools → Config Search.
 
+<img src="public/images/promo_image.png" alt="rConfig" width="600">
+
+
 ### Why Choose rConfig?
 
 - 🆕 **Config Versioning & Diff** - Automatic version tracking and visual diffs *(new in July 2026)*
