@@ -59,6 +59,8 @@ If a front end change is not visible, the user may need to run `npm run dev` or 
 
 **Never run `npm run build` or `npm run dev` yourself.** The user always runs these manually. After making front end changes, just tell the user to rebuild; do not invoke either command.
 
+**Built assets are committed to the repo.** The compiled output in `public/build` is tracked, not gitignored. Before opening a PR that includes front end changes, the user runs `npm run build` and then the built assets must be committed and pushed as part of the branch, so a reviewer or deployer does not have to rebuild. When preparing a PR, after the user has rebuilt, stage and commit any changed `public/build` files (commit them alongside or right after the source changes). If the working tree shows no `public/build` changes, the build was already current and there is nothing to commit.
+
 ### Testing
 
 This project uses PHPUnit. All tests are PHPUnit classes. If you see a test written for Pest, convert it to PHPUnit.
