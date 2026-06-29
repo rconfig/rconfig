@@ -147,6 +147,12 @@ This project uses the Laravel 10 style file structure (it upgraded from Laravel 
 - Humanise written content. Do not use em dashes in body copy. Use a period, comma, parentheses, or colon instead. The hyphen is fine in compound terms like `Cisco-Edge`.
 - Be concise. Focus on what matters rather than explaining the obvious.
 
+### Releases and tagging
+
+- **All release tags MUST be prefixed with `core-`**, for example `core-8.2.6`. Never create a bare version tag like `8.2.6`. Use annotated tags: `git tag -a core-8.2.6 -m "rConfig V8 Core 8.2.6 - <summary>"`.
+- Bump the version in both `composer.json` and `config/app.php` before tagging, and run the tests first.
+- A few historical tags (`8.2.1` through `8.2.5`) were created without the prefix. They have been supplemented with correctly prefixed `core-` tags at the same commits; do not add new unprefixed tags.
+
 ## Notes for AI assistants
 
 - This is a Laravel 13 application using modern PHP 8 features. Prefer Laravel conventions and built in features.
