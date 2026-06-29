@@ -5,14 +5,14 @@ import { useRouter } from 'vue-router';
 
 export function useConfigCompare() {
   const leftConfigData = ref({
-    selectedCommand: [],
-    device: [],
+    selectedCommand: '',
+    device: {},
     start_date: '',
     end_date: ''
   });
   const rightConfigData = ref({
-    selectedCommand: [],
-    device: [],
+    selectedCommand: '',
+    device: {},
     start_date: '',
     end_date: ''
   });
@@ -32,11 +32,11 @@ export function useConfigCompare() {
   const updateConfigFilterData = (position, data) => {
     if (position === 'left') {
       leftConfigData.value = data;
+      leftConfigResultsKey.value += 1;
     } else if (position === 'right') {
       rightConfigData.value = data;
+      rightConfigResultsKey.value += 1;
     }
-    leftConfigResultsKey.value += 1;
-    rightConfigResultsKey.value += 1;
   };
 
   const sendConfigCompare = () => {
@@ -57,15 +57,15 @@ export function useConfigCompare() {
   const reset = () => {
     leftSelectedId.value = [];
     leftConfigData.value = {
-      selectedCommand: [],
-      device: [],
+      selectedCommand: '',
+      device: {},
       start_date: '',
       end_date: ''
     };
     rightSelectedId.value = [];
     rightConfigData.value = {
-      selectedCommand: [],
-      device: [],
+      selectedCommand: '',
+      device: {},
       start_date: '',
       end_date: ''
     };

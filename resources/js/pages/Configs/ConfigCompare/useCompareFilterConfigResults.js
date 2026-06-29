@@ -12,19 +12,26 @@ export function useCompareFilterConfigResults(props, emit) {
   const results = ref([]);
 
   onMounted(() => {
-    if (props.filterData.device.length >= 1) {
+    if (Object.keys(props.filterData.device).length >= 1) {
       getFilteredConfigRecords();
     }
   });
 
   function getFilteredConfigRecords() {
     isLoading.value = true;
-    if (props.filterData.device.length === 0) {
+    if (Object.keys(props.filterData.device).length === 0) {
       console.error('No device selected.');
       return;
     }
+
+    let url = '/api/configs/all-by-deviceid/' + props.filterData.device.id + '?filter[q]=' + props.filterData.selectedCommand;
+
+    if (props.filterData.start_date && props.filterData.end_date) {
+      url += '&filter[created_at_between]=' + props.filterData.start_date + ',' + props.filterData.end_date;
+    }
+
     axios
-      .get('/api/configs/all-by-deviceid/' + props.filterData.device[0].id + '/1?filter[q]=' + props.filterData.selectedCommand, {
+      .get(url, {
         params: {
           perPage: perPage.value,
           page: currentPage.value

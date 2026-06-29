@@ -46,10 +46,10 @@
   <!-- Technology Badges -->
   <p align="center">
     <img src="https://img.shields.io/badge/PHP-8.4+-777BB4?logo=php&logoColor=white&style=for-the-badge" alt="PHP 8.4+"/>
-    <img src="https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white&style=for-the-badge" alt="Laravel"/>
+    <img src="https://img.shields.io/badge/Laravel-13-FF2D20?logo=laravel&logoColor=white&style=for-the-badge" alt="Laravel"/>
     <img src="https://img.shields.io/badge/Vue.js-3-4FC08D?logo=vue.js&logoColor=white&style=for-the-badge" alt="Vue 3"/>
     <img src="https://img.shields.io/badge/Vite-Latest-646CFF?logo=vite&logoColor=white&style=for-the-badge" alt="Vite"/>
-    <img src="https://img.shields.io/badge/MySQL-8.0+-4479A1?logo=mysql&logoColor=white&style=for-the-badge" alt="MySQL"/>
+    <img src="https://img.shields.io/badge/MariaDB-10.6+-003545?logo=mariadb&logoColor=white&style=for-the-badge" alt="MariaDB"/>
   </p>
 </div>
 
@@ -114,6 +114,9 @@ See rConfig in action. Here's the dashboard to get you started:
 
 ### Config Diffs
 ![Diffs](public/images/brand/v8core/diffs.png)
+
+### Config Compare
+![Compare](public/images/brand/v8core/compare.png)
 
 ### Promo
 ![Promo Image](public/images/brand/v8core/promo_image.png)

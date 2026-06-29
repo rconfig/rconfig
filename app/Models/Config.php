@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use File;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -86,6 +87,9 @@ class Config extends BaseModel
 
     public function scopeCreatedAtBetween($query, $startDate, $endDate)
     {
-        return $query->whereBetween('created_at', [$startDate, $endDate]);
+        return $query->whereBetween('created_at', [
+            Carbon::parse($startDate)->startOfDay(),
+            Carbon::parse($endDate)->endOfDay(),
+        ]);
     }
 }

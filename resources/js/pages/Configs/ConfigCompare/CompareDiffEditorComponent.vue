@@ -2,6 +2,7 @@
 import * as monaco from 'monaco-editor';
 import useCodeEditor from '@/composables/codeEditorFunctions';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Icon } from '@iconify/vue';
 import { ref, onMounted } from 'vue';
 
 const props = defineProps({

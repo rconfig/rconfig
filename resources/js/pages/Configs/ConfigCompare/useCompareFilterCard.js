@@ -8,8 +8,8 @@ export function useCompareFilterCard(emit) {
   const commands = ref([]);
 
   const model = ref({
-    selectedCommand: [],
-    device: [],
+    selectedCommand: '',
+    device: {},
     start_date: '',
     end_date: ''
   });
@@ -33,8 +33,8 @@ export function useCompareFilterCard(emit) {
 
   function clearAll() {
     // Reset the model
-    model.value.selectedCommand = [];
-    model.value.device = [];
+    model.value.selectedCommand = '';
+    model.value.device = {};
     model.value.start_date = '';
     model.value.end_date = '';
     emit('updateConfigFilter', model.value);
