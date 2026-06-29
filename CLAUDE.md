@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Technology stack
 
-- **Backend**: PHP 8.4 (supports 8.2 to 8.4), Laravel 12.
+- **Backend**: PHP 8.4 (supports 8.2 to 8.4), Laravel 13.
 - **Frontend**: Vue 3 single page app, Vite, Tailwind CSS 4, shadcn-vue, Pinia, vue-router, Monaco editor, TypeScript. The SPA is served by `SpaController`. Note the Vite config files are `vite.dev.config.js` and `vite.prod.config.js` (there is no `vite.config.js`).
 - **Database**: MySQL 8 / MariaDB (SQLite or a dedicated `test_mysql` connection for tests).
 - **Queue / cache**: Redis (`predis/predis`) with Laravel Horizon.
@@ -128,7 +128,7 @@ When modifying a column in a migration, include all attributes the column previo
 - Prefer named routes and the `route()` function for links.
 - Casts should be set in a `casts()` method on the model, following existing models.
 
-### Laravel 12 structure
+### Laravel 13 structure
 
 This project uses the Laravel 10 style file structure (it upgraded from Laravel 10 and did not migrate to the streamlined layout, which is fine). So middleware registration is in `app/Http/Kernel.php`, console commands and the schedule register in `app/Console/Kernel.php`, and there is no `bootstrap/app.php` application config. Do not migrate the structure unless the user asks.
 
@@ -147,7 +147,7 @@ This project uses the Laravel 10 style file structure (it upgraded from Laravel 
 
 ## Notes for AI assistants
 
-- This is a Laravel 12 application using modern PHP 8 features. Prefer Laravel conventions and built in features.
+- This is a Laravel 13 application using modern PHP 8 features. Prefer Laravel conventions and built in features.
 - Respect the service layer. Keep controllers thin and put long running work on the queue.
 - Verify a package exists in this project's `composer.json` or `package.json` before using it.
 - Network device connections handle sensitive infrastructure. Handle errors gracefully and keep security in mind.
@@ -172,7 +172,7 @@ The Laravel Boost guidelines are specifically curated by Laravel maintainers for
 This application is a Laravel application and its main Laravel ecosystems package & versions are below. You are an expert with them all. Ensure you abide by these specific packages & versions.
 
 - php - 8.4
-- laravel/framework (LARAVEL) - v12
+- laravel/framework (LARAVEL) - v13
 - laravel/horizon (HORIZON) - v5
 - laravel/prompts (PROMPTS) - v0
 - laravel/sanctum (SANCTUM) - v4
@@ -310,9 +310,9 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 
 - If you receive an "Illuminate\Foundation\ViteException: Unable to locate file in Vite manifest" error, ask the user to run `npm run dev`, `npm run build`, or `composer run dev`. Do not run these yourself.
 
-=== laravel/v12 rules ===
+=== laravel/v13 rules ===
 
-# Laravel 12
+# Laravel 13
 
 - CRITICAL: ALWAYS use `search-docs` tool for version-specific Laravel documentation and updated code examples.
 - This project upgraded from Laravel 10 without migrating to the new streamlined Laravel file structure.
@@ -330,7 +330,7 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 ## Database
 
 - When modifying a column, the migration must include all of the attributes that were previously defined on the column. Otherwise, they will be dropped and lost.
-- Laravel 12 allows limiting eagerly loaded records natively, without external packages: `$query->latest()->limit(10);`.
+- Laravel 13 allows limiting eagerly loaded records natively, without external packages: `$query->latest()->limit(10);`.
 
 ### Models
 
