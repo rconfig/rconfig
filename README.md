@@ -99,6 +99,12 @@ rConfig v8 Core is a **powerful, free, and open-source** Network Configuration M
 
 ### Dashboard
 ![Dashboard](public/images/brand/v8core/dashboard.png)
+![Devices](public/images/brand/v8core/devices.png)
+![Search](public/images/brand/v8core/search.png)
+![Diffs](public/images/brand/v8core/diffs.png)
+![Promo Image](public/images/brand/v8core/promo_image.png)
+![SSO](public/images/brand/v8core/sso.png)
+![Notifications](public/images/brand/v8core/notifications.png)
 
 </details>
 
