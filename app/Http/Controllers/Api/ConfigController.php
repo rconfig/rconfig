@@ -82,6 +82,7 @@ class ConfigController extends ApiBaseController
                 AllowedFilter::exact('latest_version'),
                 AllowedFilter::exact('command'),
                 AllowedFilter::exact('download_status'),
+                AllowedFilter::scope('created_at_between'),
             ])
             ->allowedSorts('id', 'created_at', 'command')
             ->defaultSort($sortCol === 'created_at' ? ($sortOrd === 'desc' ? '-created_at' : 'created_at') : ($sortOrd === 'desc' ? '-' . $sortCol : $sortCol));

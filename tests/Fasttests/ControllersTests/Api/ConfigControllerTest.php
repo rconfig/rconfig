@@ -138,6 +138,29 @@ class ConfigControllerTest extends TestCase
         $this->assertEquals(3, count($responseData['data']));
     }
 
+    public function test_get_all_configs_for_given_device_id_filter_by_date_range()
+    {
+        Config::factory(5)->create(['device_id' => 1001, 'created_at' => Carbon::parse('2026-06-10 09:00:00')]);
+        Config::factory(8)->create(['device_id' => 1001, 'created_at' => Carbon::parse('2026-06-15 12:00:00')]);
+        Config::factory(4)->create(['device_id' => 1001, 'created_at' => Carbon::parse('2026-06-25 08:00:00')]);
+
+        $response = $this->get('/api/configs/all-by-deviceid/1001?page=1&perPage=100&filter[created_at_between]=2026-06-12,2026-06-20');
+        $response->assertStatus(200);
+
+        $this->assertEquals(8, count($response->json('data')));
+    }
+
+    public function test_get_all_configs_for_given_device_id_date_range_end_is_inclusive_of_full_day()
+    {
+        // A config created late on the end date must still be matched.
+        Config::factory()->create(['device_id' => 1001, 'created_at' => Carbon::parse('2026-06-20 23:30:00')]);
+
+        $response = $this->get('/api/configs/all-by-deviceid/1001?page=1&perPage=100&filter[created_at_between]=2026-06-20,2026-06-20');
+        $response->assertStatus(200);
+
+        $this->assertEquals(1, count($response->json('data')));
+    }
+
     public function test_get_distinct_commands_for_given_device_id()
     {
         Config::factory(100)->create(['device_id' => 1001]);

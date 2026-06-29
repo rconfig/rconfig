@@ -29,7 +29,7 @@ watch(selectedRows, val => {
 		<!-- First element -->
 		<!-- NO RESULTS -->
 		<div
-			v-if="filterData.device.length === 0"
+			v-if="Object.keys(filterData.device).length === 0"
 			class="min-h-[35dvh] flex items-center justify-center"
 		>
 			<div class="text-sm text-center">
@@ -41,7 +41,7 @@ watch(selectedRows, val => {
 
 		<!-- NO RESULTS -->
 		<div
-			v-if="filterData.device.length > 0"
+			v-if="Object.keys(filterData.device).length > 0"
 			class="min-h-[35dvh] flex-1 w-full"
 		>
 			<div class="px-6">
@@ -104,7 +104,7 @@ watch(selectedRows, val => {
 										:id="'select-' + row.id"
 										class="cursor-pointer"
 										:checked="selectedRows.includes(row.id) ? true : false"
-										@click="toggleSingleSelectRow(row.id)"
+										@click.stop="toggleSingleSelectRow(row.id)"
 									/>
 								</TableCell>
 								<TableCell class="text-start">
@@ -167,9 +167,9 @@ watch(selectedRows, val => {
 						variant="outline"
 						class="py-1 mt-1 bg-rcgray-800"
 					>
-						<Icon
-							icon="mdi:check-circle"
-							class="mr-2 text-green-500"
+						<RcIcon
+							name="status-green"
+							class="mr-2"
 						/>
 						<span class="text-sm">Config ID {{ selectedRows }} selected for comparison</span>
 					</Badge>

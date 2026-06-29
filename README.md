@@ -115,6 +115,9 @@ See rConfig in action. Here's the dashboard to get you started:
 ### Config Diffs
 ![Diffs](public/images/brand/v8core/diffs.png)
 
+### Config Compare
+![Compare](public/images/brand/v8core/compare.png)
+
 ### Promo
 ![Promo Image](public/images/brand/v8core/promo_image.png)
 
