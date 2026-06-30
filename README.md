@@ -32,8 +32,8 @@
 
   <!-- Badges -->
   <p align="center">
-    <a href="https://github.com/rconfig/rconfig/actions">
-      <img src="https://github.com/eliashaeussler/typo3-badges/actions/workflows/tests.yaml/badge.svg" alt="Tests"/>
+    <a href="https://github.com/rconfig/rconfig/actions/workflows/ci.yml">
+      <img src="https://github.com/rconfig/rconfig/actions/workflows/ci.yml/badge.svg" alt="CI"/>
     </a>
     <a href="LICENSE">
       <img src="https://img.shields.io/github/license/rconfig/rconfig" alt="License"/>
