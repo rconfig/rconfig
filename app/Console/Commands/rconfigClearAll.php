@@ -68,11 +68,30 @@ class rconfigClearAll extends Command
 
             custom_chown(rconfig_appdir_path());
         }
-        if (getenv('IS_DOCKER') === 'true') {
-            chmod('/var/www/html/storage', 0777);
-        }
+
+        $this->applyDockerStoragePermissions();
 
         echo exec('composer dump-autoload') . PHP_EOL;
         $this->info(config('app.name') . ' application settings have been cleared!');
+    }
+
+    /**
+     * Loosen storage permissions when running inside the Docker image.
+     *
+     * Uses the configured application storage path rather than a hard coded
+     * one, and skips silently when the directory is absent, so it never emits
+     * a warning on layouts where storage lives elsewhere.
+     */
+    public function applyDockerStoragePermissions(): void
+    {
+        if (getenv('IS_DOCKER') !== 'true') {
+            return;
+        }
+
+        $storagePath = rconfig_appdir_storage_path();
+
+        if (is_dir($storagePath)) {
+            chmod($storagePath, 0777);
+        }
     }
 }
