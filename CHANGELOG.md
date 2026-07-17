@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - The `role` field on user create and update now validates against a fixed set of allowed values instead of accepting any string.
 - Granting the Admin role to a user, including changing your own role, now requires the acting account to already hold the Admin role.
+- The device reachability check job now looks up the device by ID when it runs instead of carrying the full device record in the queued job payload.
 
 ## [8.2.6] - 2026-06-29
 
