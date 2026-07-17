@@ -5,6 +5,12 @@ All notable changes to rConfig v8 Core are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.2.8] - 2026-07-17
+
+### Changed
+- The `role` field on user create and update now validates against a fixed set of allowed values instead of accepting any string.
+- Granting the Admin role to a user, including changing your own role, now requires the acting account to already hold the Admin role.
+
 ## [8.2.6] - 2026-06-29
 
 ### Fixed
