@@ -10,11 +10,25 @@ class StoreUserRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      *
+     * Only an existing Admin may set or change a user's role to Admin, whether
+     * creating a new user, updating another user, or updating their own account.
+     * Any other requested role is left to the validation rules below.
+     *
      * @return bool
      */
     public function authorize()
     {
-        return auth()->check(); // returning true if user is logged in
+        $actingUser = $this->user();
+
+        if (! $actingUser) {
+            return false;
+        }
+
+        if ($this->input('role') !== 'Admin') {
+            return true;
+        }
+
+        return in_array($actingUser->role, ['Admin', 'admin'], true);
     }
 
     /**
@@ -32,7 +46,7 @@ class StoreUserRequest extends FormRequest
                 'email' => 'required|email|unique:users|max:255',
                 'password' => 'required|min:8',
                 'repeat_password' => 'required|min:8',
-                'role' => 'required',
+                'role' => 'required|in:Admin,User',
             ];
         }
 
@@ -42,7 +56,7 @@ class StoreUserRequest extends FormRequest
                 'email' => 'required|email|max:255',
                 'password' => 'required|min:8',
                 'repeat_password' => 'required|min:8',
-                'role' => 'required',
+                'role' => 'required|in:Admin,User',
             ];
         }
 
