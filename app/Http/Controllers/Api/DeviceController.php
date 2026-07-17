@@ -156,7 +156,7 @@ class DeviceController extends ApiBaseController
 
         $model->save();
 
-        dispatch(new CheckDeviceReachabilityJob($model))->onQueue('rConfigDefault');
+        dispatch(new CheckDeviceReachabilityJob($model->id))->onQueue('rConfigDefault');
 
         $model->Tag()->attach($request->device_tags);
         $model->Vendor()->attach($request->device_vendor);
@@ -247,7 +247,7 @@ class DeviceController extends ApiBaseController
         $model = Device::findOrFail($id);
 
         // ping device
-        dispatch(new CheckDeviceReachabilityJob($model))->onQueue('rConfigDefault');
+        dispatch(new CheckDeviceReachabilityJob($model->id))->onQueue('rConfigDefault');
 
         $model->save();
 

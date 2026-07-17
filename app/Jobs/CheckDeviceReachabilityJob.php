@@ -12,18 +12,15 @@ class CheckDeviceReachabilityJob implements ShouldQueue
 {
     use Dispatchable, Queueable;
 
-    protected $device;
-
-    public function __construct(Device $device)
-    {
-        $this->device = $device;
-    }
+    public function __construct(protected int $device_id) {}
 
     public function handle(PingService $pingService)
     {
-        $reachable = $pingService->check($this->device->device_ip);
+        $device = Device::findOrFail($this->device_id);
 
-        $this->device->update([
+        $reachable = $pingService->check($device->device_ip);
+
+        $device->update([
             'status' => $reachable ? 1 : 0,
         ]);
     }
