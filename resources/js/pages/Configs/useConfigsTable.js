@@ -87,7 +87,7 @@ export function useConfigsTable(props) {
 
 		try {
 			const pageToFetch = append ? loadMorePage.value : currentPage.value;
-			const response = await axios.get(`/api/configs/`, {
+			const response = await axios.get(`/api/configs`, {
 				params: {
 					page: pageToFetch,
 					perPage: perPage.value,

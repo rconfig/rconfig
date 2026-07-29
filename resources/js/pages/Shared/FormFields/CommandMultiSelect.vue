@@ -48,7 +48,7 @@ onMounted(() => {
 
 function fetchCommands() {
 	isLoading.value = true;
-	axios.get("/api/commands/?perPage=10000").then((response) => {
+	axios.get("/api/commands?perPage=10000").then((response) => {
 		commands.value = response.data.data;
 		isLoading.value = false;
 	});

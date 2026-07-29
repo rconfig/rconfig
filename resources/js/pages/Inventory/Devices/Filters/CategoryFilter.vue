@@ -65,7 +65,7 @@ function selectItem(item) {
 }
 
 function fetchCategories() {
-	axios.get("/api/categories/?perPage=10000&sort=categoryName").then((response) => {
+	axios.get("/api/categories?perPage=10000&sort=categoryName").then((response) => {
 		options.value = response.data.data;
 	});
 }

@@ -46,7 +46,7 @@ onMounted(() => {
 
 function fetchTemplates() {
 	isLoading.value = true;
-	axios.get("/api/templates/?perPage=10000").then((response) => {
+	axios.get("/api/templates?perPage=10000").then((response) => {
 		templates.value = response.data.data;
 		isLoading.value = false;
 	});

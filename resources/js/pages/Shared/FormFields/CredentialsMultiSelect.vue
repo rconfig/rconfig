@@ -55,7 +55,7 @@ watch(newCredModalKey, () => {
 
 function fetchCredentials() {
 	isLoading.value = true;
-	axios.get("/api/settings/credentials/?perPage=10000").then((response) => {
+	axios.get("/api/settings/credentials?perPage=10000").then((response) => {
 		credentials.value = response.data.data;
 		isLoading.value = false;
 	});

@@ -49,7 +49,7 @@ watch(newVendorModalKey, () => {
 
 function fetchVendors() {
 	isLoading.value = true;
-	axios.get("/api/vendors/?perPage=10000&sort=vendorName").then((response) => {
+	axios.get("/api/vendors?perPage=10000&sort=vendorName").then((response) => {
 		vendors.value = response.data.data;
 		isLoading.value = false;
 	});

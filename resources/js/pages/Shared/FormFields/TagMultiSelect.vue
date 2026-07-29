@@ -57,7 +57,7 @@ watch(
 
 function fetchTags() {
 	isLoading.value = true;
-	axios.get("/api/tags/?perPage=10000").then((response) => {
+	axios.get("/api/tags?perPage=10000").then((response) => {
 		tags.value = response.data.data;
 		isLoading.value = false;
 	});
