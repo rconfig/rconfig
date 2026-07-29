@@ -62,7 +62,7 @@ function selectItem(item) {
 }
 
 function fetchDeviceModels() {
-	axios.get("/api/device-models/?perPage=10000&sort=name").then((response) => {
+	axios.get("/api/device-models?perPage=10000&sort=name").then((response) => {
 		options.value = response.data.data;
 	});
 }

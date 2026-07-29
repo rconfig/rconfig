@@ -48,7 +48,7 @@ onMounted(() => {
 
 function fetchDeviceModels() {
   isLoading.value = true;
-  axios.get("/api/get-device-models/?perPage=10000").then((response) => {
+  axios.get("/api/get-device-models?perPage=10000").then((response) => {
     DeviceModels.value = response.data.data;
   }).finally(() => {
     isLoading.value = false;

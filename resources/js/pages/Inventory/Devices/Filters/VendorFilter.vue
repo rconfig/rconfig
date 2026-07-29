@@ -62,7 +62,7 @@ function selectItem(item) {
 }
 
 function fetchVendor() {
-	axios.get("/api/vendors/?perPage=10000&sort=vendorName").then((response) => {
+	axios.get("/api/vendors?perPage=10000&sort=vendorName").then((response) => {
 		options.value = response.data.data;
 	});
 }

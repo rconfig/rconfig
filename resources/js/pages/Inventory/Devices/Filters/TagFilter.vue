@@ -65,7 +65,7 @@ function selectItem(item) {
 }
 
 function fetchTags() {
-	axios.get("/api/tags/?perPage=10000&sort=tagname").then((response) => {
+	axios.get("/api/tags?perPage=10000&sort=tagname").then((response) => {
 		options.value = response.data.data;
 	});
 }
