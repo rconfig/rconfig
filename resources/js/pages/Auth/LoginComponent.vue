@@ -18,11 +18,15 @@ const socialProviders = ref({
 	google: false,
 	saml2: false,
 });
+const saml2DisplayName = ref('Shibboleth');
 
 onMounted(async () => {
 	try {
 		const { data } = await axios.get("/api/auth/providers");
 		socialProviders.value = data;
+		if (data.saml2_display_name) {
+			saml2DisplayName.value = data.saml2_display_name;
+		}
 	} catch (e) {
 		console.warn("Could not load social providers config", e);
 	}
@@ -223,7 +227,7 @@ const forgotPassword = () => {
 									/>
 								</svg>
 							</div>
-							<span class="group-hover:text-gray-900 dark:group-hover:text-white transition-colors"> Login with Shibboleth </span>
+							<span class="group-hover:text-gray-900 dark:group-hover:text-white transition-colors"> Login with {{ saml2DisplayName }} </span>
 						</a>
 					</div>
 				</div>

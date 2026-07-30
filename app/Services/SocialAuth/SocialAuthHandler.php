@@ -9,7 +9,16 @@ class SocialAuthHandler
 {
     public static function checkErrors(Request $request, $driver)
     {
-        if (! $request->has('code')) {
+        if ($driver === 'saml2') {
+            // SAML2 responses arrive as a POSTed SAMLResponse (or SAMLart), not an
+            // OAuth2 'code' query param, so the OAuth-style check below doesn't apply here.
+            if (! $request->has('SAMLResponse') && ! $request->has('SAMLart')) {
+                activityLogIt(__CLASS__, __FUNCTION__, 'error', 'SAML response is missing. Please try again.', 'auth');
+
+                return redirect()->to('/login')
+                    ->with('message', 'SAML response is missing. Please try again.');
+            }
+        } elseif (! $request->has('code')) {
             activityLogIt(__CLASS__, __FUNCTION__, 'error', 'Authorization code is missing. Please try again.', 'auth');
 
             return redirect()->to('/login')

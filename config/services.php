@@ -52,6 +52,7 @@ return [
     ],
     'saml2' => [
         'metadata' => env('SAML2_METADATA_URL', null), // must be in the public dir of this app url
+        'display_name' => env('SAML2_DISPLAY_NAME', 'Shibboleth'), // text shown on the login button, e.g. "diaz.cloud"
         'sp_certificate' => env('SAML2_SP_CERTIFICATE') ? file_get_contents(env('SAML2_SP_CERTIFICATE')) : null,
         'sp_private_key' => env('SAML2_SP_KEY') ? file_get_contents(env('SAML2_SP_KEY')) : null,
         'sp_sign_assertions' => true, // or false to disable assertion signing
