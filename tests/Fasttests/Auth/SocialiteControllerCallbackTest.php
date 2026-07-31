@@ -2,6 +2,7 @@
 
 namespace Tests\Fasttests\Auth;
 
+use App\Services\SocialAuth\GoogleAuth;
 use Laravel\Socialite\Facades\Socialite;
 use Tests\TestCase;
 
@@ -95,7 +96,7 @@ class SocialiteControllerCallbackTest extends TestCase
         // rather than resolving it from the container, so we use Mockery's
         // class-overload mocking to control what register() returns without
         // needing to organically reproduce a specific DB integrity violation.
-        $mock = \Mockery::mock('overload:' . \App\Services\SocialAuth\GoogleAuth::class);
+        $mock = \Mockery::mock('overload:' . GoogleAuth::class);
         $mock->shouldReceive('register')->andReturn(null);
 
         $response = $this->get('/auth/callback/google?code=some-code');
