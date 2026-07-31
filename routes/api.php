@@ -9,7 +9,9 @@ Route::get('/auth/providers', function () {
         'okta' => ! empty(config('services.okta.client_id')),
         'google' => ! empty(config('services.google.client_id')),
         'saml2' => ! empty(config('services.saml2.metadata')),
-        'saml2_display_name' => config('services.saml2.display_name', 'Shibboleth'),
+        'saml2_display_name' => ! empty(config('services.saml2.metadata'))
+            ? config('services.saml2.display_name')
+            : null,
     ]);
 });
 
