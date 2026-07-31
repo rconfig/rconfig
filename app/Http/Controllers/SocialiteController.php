@@ -39,41 +39,30 @@ class SocialiteController
         switch ($provider) {
             case 'saml2':
                 $user = (new Saml2Auth)->register($request);
-
-                if (! $user instanceof User) {
-                    return redirect()->to('/login')
-                        ->with('message', 'SAML2 authentication failed. Please contact your administrator.');
-                }
                 break;
             case 'google':
                 $user = (new GoogleAuth)->register($request);
-
-                if (! $user instanceof User) {
-                    return redirect()->to('/login')
-                        ->with('message', 'Google authentication failed. Please contact your administrator.');
-                }
                 break;
             case 'okta':
                 $user = (new OktaAuth)->register($request);
-
-                if (! $user instanceof User) {
-                    return redirect()->to('/login')
-                        ->with('message', 'Okta authentication failed. Please contact your administrator.');
-                }
                 break;
             case 'microsoft':
                 $user = (new MicrosoftAuth)->register($request);
-
-                if (! $user instanceof User) {
-                    return redirect()->to('/login')
-                        ->with('message', 'Microsoft authentication failed. Please contact your administrator.');
-                }
                 break;
             default:
                 activityLogIt(__CLASS__, __FUNCTION__, 'error', "Unsupported authentication provider: {$provider}", 'auth');
 
                 return redirect()->to('/login')
                     ->with('message', 'Authentication provider is not supported.');
+        }
+
+        // register() returns either the authenticated User or a RedirectResponse
+        // carrying a specific error message set by SocialAuthHandler (missing
+        // code/SAMLResponse, denied, provider failure, account not registered,
+        // etc.). Return that response as-is so the specific message reaches the
+        // user, rather than discarding it in favor of a generic fallback.
+        if (! $user instanceof User) {
+            return $user;
         }
 
         try {
