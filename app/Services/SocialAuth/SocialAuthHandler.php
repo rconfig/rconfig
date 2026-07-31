@@ -25,7 +25,10 @@ class SocialAuthHandler
                 ->with('message', 'Authorization code is missing. Please try again.');
         }
 
-        if ($request->has('denied')) {
+        // SAML2 has no OAuth-style 'denied' query param -- denial/errors are
+        // encoded inside the SAMLResponse body itself, so this check only
+        // applies to OAuth-style drivers.
+        if ($driver !== 'saml2' && $request->has('denied')) {
             activityLogIt(__CLASS__, __FUNCTION__, 'error', 'Access was denied. Please try again.', 'auth');
 
             return redirect()->route('login')

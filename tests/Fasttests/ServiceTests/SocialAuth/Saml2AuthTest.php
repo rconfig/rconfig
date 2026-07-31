@@ -66,6 +66,30 @@ class Saml2AuthTest extends TestCase
         $this->assertStringNotContainsString('SAML response is missing', session('message'));
     }
 
+    public function test_login_ignores_stray_denied_param()
+    {
+        // SAML2 has no OAuth-style 'denied' query param -- denial/errors are
+        // encoded inside the SAMLResponse body itself. Confirm a stray
+        // 'denied' param on a SAML2 callback does not trigger the
+        // OAuth-specific "Access was denied" message and the flow proceeds
+        // normally based on the SAMLResponse content.
+        $request = Request::create('/login', 'POST', [
+            'SAMLResponse' => 'encoded-response',
+            'denied' => true,
+        ]);
+
+        Socialite::shouldReceive('driver->user')->andReturn(null);
+
+        $service = new Saml2Auth;
+
+        $response = $service->register($request);
+
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertArrayHasKey('message', session()->all());
+        $this->assertStringNotContainsString('Access was denied', session('message'));
+        $this->assertStringContainsString('Your account is not registered', session('message'));
+    }
+
     public function test_login_redirects_with_error_if_provider_fails()
     {
         $request = Request::create('/login', 'POST', ['SAMLResponse' => 'encoded-response']);
