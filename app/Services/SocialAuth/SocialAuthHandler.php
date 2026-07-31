@@ -58,10 +58,10 @@ class SocialAuthHandler
     /**
      * Human-friendly label for a driver, used in user-facing error messages.
      */
-    private static function driverLabel($driver)
+    private static function driverLabel(string $driver): string
     {
         return match ($driver) {
-            'saml2' => 'SAML2',
+            'saml2' => config('services.saml2.display_name', 'SAML2'),
             default => ucfirst($driver),
         };
     }

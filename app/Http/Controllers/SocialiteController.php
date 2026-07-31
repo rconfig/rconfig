@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
+use Symfony\Component\HttpFoundation\Response;
 
 class SocialiteController
 {
@@ -56,13 +57,27 @@ class SocialiteController
                     ->with('message', 'Authentication provider is not supported.');
         }
 
-        // register() returns either the authenticated User or a RedirectResponse
-        // carrying a specific error message set by SocialAuthHandler (missing
-        // code/SAMLResponse, denied, provider failure, account not registered,
-        // etc.). Return that response as-is so the specific message reaches the
-        // user, rather than discarding it in favor of a generic fallback.
-        if (! $user instanceof User) {
+        // register() normally returns either the authenticated User or a
+        // Response carrying a specific error message set by SocialAuthHandler
+        // (missing code/SAMLResponse, denied, provider failure, account not
+        // registered, etc.). Return that response as-is so the specific
+        // message reaches the user, rather than discarding it in favor of a
+        // generic fallback.
+        if ($user instanceof Response) {
             return $user;
+        }
+
+        // Guards against a third, unexpected case: the duplicate-key ('23000')
+        // branch in each *Auth::register() falls back to
+        // User::where('email', ...)->first(), which returns null if no row
+        // matches (e.g. the integrity violation was on a different
+        // constraint). Without this, a null $user would fall through to
+        // $user->is_socialite_approved below and throw.
+        if (! $user instanceof User) {
+            activityLogIt(__CLASS__, __FUNCTION__, 'error', "{$provider} authentication failed during user registration.", 'auth');
+
+            return redirect()->to('/login')
+                ->with('message', 'Authentication failed. Please contact your administrator.');
         }
 
         try {

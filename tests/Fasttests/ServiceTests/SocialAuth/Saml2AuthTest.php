@@ -92,6 +92,12 @@ class Saml2AuthTest extends TestCase
 
     public function test_login_redirects_with_error_if_provider_fails()
     {
+        // driverLabel() reads services.saml2.display_name (the same config
+        // that drives the login button text) rather than a hardcoded
+        // 'SAML2' string; set it explicitly so the assertion doesn't depend
+        // on the .env default.
+        config(['services.saml2.display_name' => 'Company SSO']);
+
         $request = Request::create('/login', 'POST', ['SAMLResponse' => 'encoded-response']);
 
         Socialite::shouldReceive('driver->user')->andThrow(new \Exception);
@@ -102,7 +108,7 @@ class Saml2AuthTest extends TestCase
 
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertArrayHasKey('message', session()->all());
-        $this->assertStringContainsString('Unable to authenticate using SAML2', session('message'));
+        $this->assertStringContainsString('Unable to authenticate using Company SSO', session('message'));
     }
 
     public function test_login_redirects_with_error_if_user_not_found()
