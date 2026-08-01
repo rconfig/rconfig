@@ -226,11 +226,11 @@ async function copyCommand(command) {
 					>
 						<TabsList class="grid w-full grid-cols-2 max-w-sm">
 							<TabsTrigger value="standard">
-								<Server class="w-4 h-4 mr-2" />
+								<Server class="w-4 h-4 shrink-0" />
 								Standard
 							</TabsTrigger>
 							<TabsTrigger value="docker">
-								<Container class="w-4 h-4 mr-2" />
+								<Container class="w-4 h-4 shrink-0" />
 								Docker
 							</TabsTrigger>
 						</TabsList>
