@@ -4,13 +4,10 @@ namespace Tests\Fasttests\ControllersTests\Api\RestApi\V2;
 
 use App\Models\RestApiToken;
 use App\Models\User;
-use Tests\Fasttests\ControllersTests\Api\RestApi\Concerns\TolerantOfTransientDbLocks;
 use Tests\TestCase;
 
 class UsersApiV2Test extends TestCase
 {
-    use TolerantOfTransientDbLocks;
-
     protected RestApiToken $token;
 
     public function setUp(): void
@@ -91,7 +88,8 @@ class UsersApiV2Test extends TestCase
     {
         $user = User::factory()->create();
 
-        $this->deleteJsonTolerant('/api/v2/users/' . $user->id, $this->authHeader())
+        $this->withHeaders($this->authHeader())
+            ->deleteJson('/api/v2/users/' . $user->id)
             ->assertStatus(200);
 
         $this->assertDatabaseMissing('users', ['id' => $user->id]);

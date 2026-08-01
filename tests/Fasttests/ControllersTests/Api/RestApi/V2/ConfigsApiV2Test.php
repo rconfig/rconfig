@@ -5,13 +5,10 @@ namespace Tests\Fasttests\ControllersTests\Api\RestApi\V2;
 use App\Models\Config;
 use App\Models\RestApiToken;
 use App\Models\User;
-use Tests\Fasttests\ControllersTests\Api\RestApi\Concerns\TolerantOfTransientDbLocks;
 use Tests\TestCase;
 
 class ConfigsApiV2Test extends TestCase
 {
-    use TolerantOfTransientDbLocks;
-
     protected RestApiToken $token;
 
     public function setUp(): void
@@ -57,7 +54,8 @@ class ConfigsApiV2Test extends TestCase
             'config_location' => 'tests/storage/configs/does-not-exist-' . uniqid() . '.txt',
         ]);
 
-        $this->deleteJsonTolerant('/api/v2/configs/' . $config->id, $this->authHeader())
+        $this->withHeaders($this->authHeader())
+            ->deleteJson('/api/v2/configs/' . $config->id)
             ->assertStatus(200)
             ->assertJsonFragment(['success' => true]);
 

@@ -5,13 +5,10 @@ namespace Tests\Fasttests\ControllersTests\Api\RestApi;
 use App\Models\DeviceCredentials;
 use App\Models\RestApiToken;
 use App\Models\User;
-use Tests\Fasttests\ControllersTests\Api\RestApi\Concerns\TolerantOfTransientDbLocks;
 use Tests\TestCase;
 
 class DeviceCredentialsApiV1Test extends TestCase
 {
-    use TolerantOfTransientDbLocks;
-
     protected RestApiToken $token;
 
     public function setUp(): void
@@ -94,7 +91,8 @@ class DeviceCredentialsApiV1Test extends TestCase
     {
         $cred = DeviceCredentials::factory()->create();
 
-        $this->deleteJsonTolerant('/api/v1/device-credentials/' . $cred->id, $this->authHeader())
+        $this->withHeaders($this->authHeader())
+            ->deleteJson('/api/v1/device-credentials/' . $cred->id)
             ->assertStatus(200);
 
         $this->assertDatabaseMissing('device_credentials', ['id' => $cred->id]);

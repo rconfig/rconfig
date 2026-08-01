@@ -5,13 +5,10 @@ namespace Tests\Fasttests\ControllersTests\Api\RestApi;
 use App\Models\Category;
 use App\Models\RestApiToken;
 use App\Models\User;
-use Tests\Fasttests\ControllersTests\Api\RestApi\Concerns\TolerantOfTransientDbLocks;
 use Tests\TestCase;
 
 class CategoriesApiV1Test extends TestCase
 {
-    use TolerantOfTransientDbLocks;
-
     protected RestApiToken $token;
 
     public function setUp(): void
@@ -92,7 +89,8 @@ class CategoriesApiV1Test extends TestCase
     {
         $category = Category::factory()->create();
 
-        $this->deleteJsonTolerant('/api/v1/categories/' . $category->id, $this->authHeader())
+        $this->withHeaders($this->authHeader())
+            ->deleteJson('/api/v1/categories/' . $category->id)
             ->assertStatus(200);
 
         $this->assertDatabaseMissing('categories', ['id' => $category->id]);

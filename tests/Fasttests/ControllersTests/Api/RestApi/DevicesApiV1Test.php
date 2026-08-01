@@ -14,13 +14,10 @@ use App\Models\Vendor;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Queue;
-use Tests\Fasttests\ControllersTests\Api\RestApi\Concerns\TolerantOfTransientDbLocks;
 use Tests\TestCase;
 
 class DevicesApiV1Test extends TestCase
 {
-    use TolerantOfTransientDbLocks;
-
     protected RestApiToken $token;
 
     public function setUp(): void
@@ -174,7 +171,8 @@ class DevicesApiV1Test extends TestCase
     {
         $device = Device::factory()->create();
 
-        $this->deleteJsonTolerant('/api/v1/devices/' . $device->id, $this->authHeader())
+        $this->withHeaders($this->authHeader())
+            ->deleteJson('/api/v1/devices/' . $device->id)
             ->assertStatus(200)
             ->assertJsonFragment(['success' => true]);
 
