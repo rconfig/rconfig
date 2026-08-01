@@ -2,11 +2,17 @@
 
 namespace App\Services\SocialAuth;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialAuthHandler
 {
+    /**
+     * The role a freshly provisioned SSO account receives.
+     */
+    public const DEFAULT_ROLE = 'User';
+
     public static function checkErrors(Request $request, $driver)
     {
         if ($driver === 'saml2') {
@@ -52,5 +58,30 @@ class SocialAuthHandler
         }
 
         return $authedUser;
+    }
+
+    /**
+     * Give a newly provisioned SSO account the lowest privilege role.
+     *
+     * None of the provider services passed `role` to updateOrCreate(), so new
+     * SSO accounts silently inherited the users.role column default, which used
+     * to be 'Admin'. The default is now 'User', but relying on a column default
+     * for a privilege decision is what made the self-registration bug critical,
+     * so set it explicitly here as well.
+     *
+     * Only applies on creation. An existing Administrator signing in through
+     * SSO must not be demoted.
+     */
+    public static function assignDefaultRoleOnCreate(User $user): void
+    {
+        if (! $user->wasRecentlyCreated) {
+            return;
+        }
+
+        if ($user->role === self::DEFAULT_ROLE) {
+            return;
+        }
+
+        $user->forceFill(['role' => self::DEFAULT_ROLE])->save();
     }
 }
