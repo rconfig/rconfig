@@ -6,11 +6,20 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import axios from 'axios';
 
+// Server-flashed message (e.g. SSO callback errors) passed in from the
+// Blade view via <login-component flashmessage="{{ session('message') }}">.
+// Without reading this prop, server-side redirects with a flashed
+// session('message') -- such as every SocialAuthHandler error path --
+// silently never reach the user.
+const props = defineProps<{
+	flashmessage?: string;
+}>();
+
 // Form state
 const username = ref('');
 const password = ref('');
 const isLoading = ref(false);
-const errorMessage = ref('');
+const errorMessage = ref(props.flashmessage || '');
 
 const socialProviders = ref({
 	microsoft: false,
