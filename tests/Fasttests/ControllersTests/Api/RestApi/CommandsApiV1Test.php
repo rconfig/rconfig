@@ -6,13 +6,10 @@ use App\Models\Category;
 use App\Models\Command;
 use App\Models\RestApiToken;
 use App\Models\User;
-use Tests\Fasttests\ControllersTests\Api\RestApi\Concerns\TolerantOfTransientDbLocks;
 use Tests\TestCase;
 
 class CommandsApiV1Test extends TestCase
 {
-    use TolerantOfTransientDbLocks;
-
     protected RestApiToken $token;
 
     public function setUp(): void
@@ -96,7 +93,8 @@ class CommandsApiV1Test extends TestCase
     {
         $command = Command::factory()->create();
 
-        $this->deleteJsonTolerant('/api/v1/commands/' . $command->id, $this->authHeader())
+        $this->withHeaders($this->authHeader())
+            ->deleteJson('/api/v1/commands/' . $command->id)
             ->assertStatus(200);
 
         $this->assertDatabaseMissing('commands', ['id' => $command->id]);

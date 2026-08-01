@@ -10,21 +10,14 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication, ManagesTransactions, MigrateFreshSeedOnce;
 
+    /**
+     * Close out any transaction the test left open before the application goes
+     * away. Without this the connection lingers until PHP garbage collects it,
+     * and the locks it holds cause "Lock wait timeout exceeded" in later tests.
+     */
     protected function tearDown(): void
     {
-        // TEMP INSTRUMENTATION
-        try {
-            $level = \Illuminate\Support\Facades\DB::transactionLevel();
-            if ($level > 0) {
-                file_put_contents(
-                    '/tmp/claude-0/-var-www-html-v8core/2d5eca03-ca40-4991-9e32-0c360f23c9a2/scratchpad/leaks.log',
-                    date('H:i:s') . ' level=' . $level . ' ' . static::class . '::' . $this->name() . "\n",
-                    FILE_APPEND
-                );
-            }
-        } catch (\Throwable $e) {
-            // ignore
-        }
+        $this->rollBackTransaction();
 
         parent::tearDown();
     }

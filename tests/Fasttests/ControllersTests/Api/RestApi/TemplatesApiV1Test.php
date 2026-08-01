@@ -6,13 +6,10 @@ use App\Models\RestApiToken;
 use App\Models\Template;
 use App\Models\User;
 use Illuminate\Support\Facades\File;
-use Tests\Fasttests\ControllersTests\Api\RestApi\Concerns\TolerantOfTransientDbLocks;
 use Tests\TestCase;
 
 class TemplatesApiV1Test extends TestCase
 {
-    use TolerantOfTransientDbLocks;
-
     protected RestApiToken $token;
 
     /** @var array<int, string> */
@@ -82,7 +79,8 @@ class TemplatesApiV1Test extends TestCase
             ->assertJsonFragment(['templateName' => $templateName]);
 
         // Destroy removes the record and the file.
-        $this->deleteJsonTolerant('/api/v1/templates/' . $template->id, $this->authHeader())
+        $this->withHeaders($this->authHeader())
+            ->deleteJson('/api/v1/templates/' . $template->id)
             ->assertStatus(200);
 
         $this->assertDatabaseMissing('templates', ['id' => $template->id]);
@@ -93,7 +91,8 @@ class TemplatesApiV1Test extends TestCase
         // Factory templates have no file on disk; destroy tolerates this gracefully.
         $template = Template::factory()->create();
 
-        $this->deleteJsonTolerant('/api/v1/templates/' . $template->id, $this->authHeader())
+        $this->withHeaders($this->authHeader())
+            ->deleteJson('/api/v1/templates/' . $template->id)
             ->assertStatus(200);
 
         $this->assertDatabaseMissing('templates', ['id' => $template->id]);
