@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use Carbon\Carbon;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -69,6 +71,10 @@ class LoginController extends Controller
 
             if ($this->attemptLogin($request)) {
                 if ($user = Auth::user()) {
+                    if ($this->isUnapprovedSocialiteUser($user)) {
+                        return $this->rejectUnapprovedSocialiteUser($request, $user);
+                    }
+
                     $msg = 'Local authentication for user ' . $user->email;
                     activityLogIt(__CLASS__, __FUNCTION__, 'info', $msg, 'authentication');
 
@@ -87,6 +93,37 @@ class LoginController extends Controller
 
             return $this->sendFailedLoginResponse($request);
         }
+    }
+
+    /**
+     * An SSO provisioned account that an administrator has not approved yet.
+     *
+     * SocialiteController gates the SSO callback on is_socialite_approved, but
+     * that gate did not cover the local login path. An unapproved SSO account
+     * could set a password through the standard reset flow and sign in here,
+     * skipping approval entirely. Local only accounts are unaffected, since the
+     * check requires is_socialite.
+     */
+    private function isUnapprovedSocialiteUser(Authenticatable $user): bool
+    {
+        return (bool) $user->is_socialite && ! $user->is_socialite_approved;
+    }
+
+    /**
+     * Tear down the session established by attemptLogin() and send the user
+     * back to the login page with the same message the SSO callback uses.
+     */
+    private function rejectUnapprovedSocialiteUser(Request $request, Authenticatable $user): RedirectResponse
+    {
+        $msg = 'Your account is not approved to use rConfig yet. Please contact the administrator.';
+
+        activityLogIt(__CLASS__, __FUNCTION__, 'error', 'Local authentication blocked for unapproved SSO user ' . $user->email, 'authentication');
+
+        $this->guard()->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/login')->with('message', $msg);
     }
 
     public function showLoginForm()

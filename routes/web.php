@@ -8,6 +8,13 @@ use Illuminate\Support\Facades\Route;
 
 /* AUTHENTICATION */
 
+/*
+ * Accounts in rConfig are admin provisioned or created through SSO, so self
+ * service registration is deliberately disabled. Do not add a second, bare
+ * Auth::routes() call anywhere in this file. Laravel does not deduplicate or
+ * retract routes, so a later call silently re-enables `register` and every new
+ * account lands on the users.role column default. See RegistrationDisabledTest.
+ */
 Auth::routes(['register' => false]);
 Route::get('/logged-out', [LoginController::class, 'showLoggedOut']);
 
@@ -19,7 +26,6 @@ Route::post('/auth/callback/{provider}', SocialiteController::class . '@callback
 Route::get('/auth/saml2/logout', function () {
     $response = Socialite::driver('saml2')->logoutResponse();
 });
-Auth::routes();
 Route::get('auth/redirect/{provider}', SocialiteController::class . '@redirect');
 Route::get('auth/callback/{provider}', SocialiteController::class . '@callback');
 

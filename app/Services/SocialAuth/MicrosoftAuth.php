@@ -33,7 +33,7 @@ class MicrosoftAuth
                     'email_verified_at' => now(),
                     'is_socialite' => true,
                 ]), function (User $authedUser) {
-                    // $this->createTeam($authedUser);
+                    SocialAuthHandler::assignDefaultRoleOnCreate($authedUser);
                 });
             } catch (\Throwable $th) {
                 activityLogIt(__CLASS__, __FUNCTION__, 'error', 'An error occurred while updating your information. Please contact support. Error: ' . $th->getMessage(), 'auth');

@@ -35,7 +35,7 @@ class OktaAuth
                     'email_verified_at' => now(),
                     'is_socialite' => true,
                 ]), function (User $user) {
-                    // $this->createTeam($user);
+                    SocialAuthHandler::assignDefaultRoleOnCreate($user);
                 });
             } catch (\Throwable $th) {
                 if ($th->getCode() == 23000) {
