@@ -10,18 +10,108 @@ permissions:
   contents: read
   packages: write
 
+env:
+  DOCKERHUB_IMAGE: docker.io/rconfig/rconfig
+  GHCR_IMAGE: ghcr.io/rconfig/rconfig
+
 jobs:
-  build-push:
-    runs-on: ubuntu-latest
+  # Each architecture builds on a runner of its own architecture, so nothing is
+  # emulated. The previous single-runner linux/amd64,linux/arm64 build ran the
+  # arm64 half under QEMU, where compiling the PHP extensions dominated the run
+  # (measured: 2919s of a 2945s build). The two jobs here also run in parallel,
+  # so wall clock is the slower of the two rather than the sum.
+  #
+  # Each job pushes an untagged, digest-addressed image. The merge job below
+  # assembles those digests into the tagged manifest lists.
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            arch: amd64
+            runner: ubuntu-latest
+          - platform: linux/arm64
+            arch: arm64
+            # Free for public repositories. No QEMU needed.
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v4
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Login to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push by digest
+        id: build
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          platforms: ${{ matrix.platform }}
+          outputs: type=image,"name=${{ env.DOCKERHUB_IMAGE }},${{ env.GHCR_IMAGE }}",push-by-digest=true,name-canonical=true,push=true
+          # Registry cache rather than type=gha. The GitHub Actions cache evicts
+          # entries that go untouched for 7 days, and releases are further apart
+          # than that, so the old cache-from never hit and every release rebuilt
+          # the whole image from scratch. A registry ref does not expire.
+          cache-from: type=registry,ref=${{ env.GHCR_IMAGE }}:buildcache-${{ matrix.arch }}
+          cache-to: type=registry,ref=${{ env.GHCR_IMAGE }}:buildcache-${{ matrix.arch }},mode=max
+
+      - name: Export digest
+        run: |
+          mkdir -p /tmp/digests
+          digest='${{ steps.build.outputs.digest }}'
+          touch "/tmp/digests/${digest#sha256:}"
+
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-${{ matrix.arch }}
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  # Assembles the per-architecture digests into one tagged manifest list per
+  # registry. Tag selection is unchanged from the previous workflow.
+  merge:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download digests
+        uses: actions/download-artifact@v4
+        with:
+          path: /tmp/digests
+          pattern: digests-*
+          merge-multiple: true
 
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Login to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Determine version
         id: run
@@ -39,26 +129,13 @@ jobs:
             echo "minor=${version%.*}" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v4
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Login to GHCR
-        uses: docker/login-action@v4
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Docker metadata
         id: meta
         uses: docker/metadata-action@v6
         with:
           images: |
-            rconfig/rconfig
-            ghcr.io/rconfig/rconfig
+            ${{ env.DOCKERHUB_IMAGE }}
+            ${{ env.GHCR_IMAGE }}
           # Take full control of the latest tag below rather than the auto flavour.
           flavor: |
             latest=false
@@ -70,15 +147,35 @@ jobs:
             type=raw,value=${{ steps.run.outputs.major }},enable=${{ steps.run.outputs.is_prerelease == 'false' }}
             type=raw,value=latest,enable=${{ steps.run.outputs.is_prerelease == 'false' }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          # Fixed scope so consecutive release builds share the layer cache
-          # instead of each tag ref starting cold.
-          cache-from: type=gha,scope=release
-          cache-to: type=gha,mode=max,scope=release
+      - name: Create manifest lists and push
+        working-directory: /tmp/digests
+        run: |
+          set -euo pipefail
+
+          digest_count=$(find . -type f | wc -l)
+          if [ "$digest_count" -eq 0 ]; then
+            echo 'No digests were downloaded from the build jobs.' >&2
+            exit 1
+          fi
+          echo "Assembling ${digest_count} architecture digests."
+
+          for image in "${DOCKERHUB_IMAGE}" "${GHCR_IMAGE}"; do
+            # Select only the tags belonging to this registry, then point them
+            # at the per-architecture digests pushed by the build jobs.
+            tag_args=$(jq -cr --arg image "$image" \
+              '.tags | map(select(startswith($image + ":")) | "-t " + .) | join(" ")' \
+              <<< "$DOCKER_METADATA_OUTPUT_JSON")
+
+            if [ -z "$tag_args" ]; then
+              echo "No tags resolved for ${image}" >&2
+              exit 1
+            fi
+
+            # shellcheck disable=SC2086
+            docker buildx imagetools create $tag_args \
+              $(printf "${image}@sha256:%s " *)
+          done
+
+      - name: Inspect
+        run: |
+          docker buildx imagetools inspect "${DOCKERHUB_IMAGE}:${{ steps.run.outputs.version }}"

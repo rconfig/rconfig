@@ -10,6 +10,25 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication, ManagesTransactions, MigrateFreshSeedOnce;
 
+    protected function tearDown(): void
+    {
+        // TEMP INSTRUMENTATION
+        try {
+            $level = \Illuminate\Support\Facades\DB::transactionLevel();
+            if ($level > 0) {
+                file_put_contents(
+                    '/tmp/claude-0/-var-www-html-v8core/2d5eca03-ca40-4991-9e32-0c360f23c9a2/scratchpad/leaks.log',
+                    date('H:i:s') . ' level=' . $level . ' ' . static::class . '::' . $this->name() . "\n",
+                    FILE_APPEND
+                );
+            }
+        } catch (\Throwable $e) {
+            // ignore
+        }
+
+        parent::tearDown();
+    }
+
     public function actingAs($user, $guard = null)
     {
         if ($guard !== null) {
