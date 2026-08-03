@@ -5,13 +5,10 @@ namespace Tests\Fasttests\ControllersTests\Api\RestApi;
 use App\Models\RestApiToken;
 use App\Models\User;
 use App\Models\Vendor;
-use Tests\Fasttests\ControllersTests\Api\RestApi\Concerns\TolerantOfTransientDbLocks;
 use Tests\TestCase;
 
 class VendorsApiV1Test extends TestCase
 {
-    use TolerantOfTransientDbLocks;
-
     protected RestApiToken $token;
 
     public function setUp(): void
@@ -88,7 +85,8 @@ class VendorsApiV1Test extends TestCase
     {
         $vendor = Vendor::factory()->create();
 
-        $this->deleteJsonTolerant('/api/v1/vendors/' . $vendor->id, $this->authHeader())
+        $this->withHeaders($this->authHeader())
+            ->deleteJson('/api/v1/vendors/' . $vendor->id)
             ->assertStatus(200);
 
         $this->assertDatabaseMissing('vendors', ['id' => $vendor->id]);

@@ -5,6 +5,19 @@ All notable changes to rConfig v8 Core are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.2.10] - 2026-08-01
+
+### Fixed
+- Removed a duplicate `Auth::routes()` call from the web routes. The second, unqualified call re-registered the default authentication routes and reinstated the registration endpoints that the preceding call had disabled.
+- The SSO approval check now also applies to the local login form. An SSO account that an administrator has not approved can no longer sign in through it. Local accounts are unaffected.
+
+### Changed
+- A user record created without an explicit role now defaults to the `User` role instead of `Admin`. Existing users are unchanged.
+- Accounts provisioned through SSO are assigned the `User` role when they are created. Administrators keep their role when signing in.
+
+### Removed
+- The unused registration controller. Its view was removed in 8.1 and nothing referenced it.
+
 ## [8.2.8] - 2026-07-17
 
 ### Changed

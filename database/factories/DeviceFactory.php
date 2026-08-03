@@ -25,7 +25,9 @@ class DeviceFactory extends Factory
             'device_enable_prompt' => 'anEnablePrompt>',
             'device_category_id' => 9999,
             'device_template' => $this->faker->numberBetween(10, 100),
-            'device_model' => $this->faker->word,
+            // Not faker->word(): its list contains "a", which fails the min:2
+            // rule on device_model and makes device create tests flaky.
+            'device_model' => 'model' . $this->faker->randomNumber(4),
             'device_version' => $this->faker->randomDigit,
             'device_added_by' => $this->faker->userName,
             'created_at' => $this->faker->dateTimeThisDecade($max = 'now', $timezone = null),

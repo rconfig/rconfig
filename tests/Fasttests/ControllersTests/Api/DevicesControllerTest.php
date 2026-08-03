@@ -278,50 +278,8 @@ class DevicesControllerTest extends TestCase
             'config_location' => 'tests/storage/configs/' . $device->id . '_two.txt',
         ]);
 
-        $response = null;
-        $lockTimeout = false;
-        for ($attempt = 1; $attempt <= 3; $attempt++) {
-            // The shared test DB can throw a lock wait timeout either as a rendered 500
-            // response or as an exception propagated straight out of the request.
-            try {
-                $response = $this->delete('/api/devices/' . $device->id);
-            } catch (\Throwable $e) {
-                if (! str_contains($e->getMessage(), 'Lock wait timeout exceeded')) {
-                    throw $e;
-                }
-                $lockTimeout = true;
-                $response = null;
-                if ($attempt === 3) {
-                    break;
-                }
-
-                continue;
-            }
-
-            if ($response->getStatusCode() === 200) {
-                break;
-            }
-
-            // When the framework handles the exception it renders a generic 500 body, so the
-            // lock wait detail lives on the logged exception rather than the response content.
-            $loggedException = $response->exceptions->last();
-            $exceptionMessage = $loggedException ? $loggedException->getMessage() : '';
-            $hasLockTimeout = str_contains((string) $response->getContent(), 'Lock wait timeout exceeded')
-                || str_contains($exceptionMessage, 'Lock wait timeout exceeded');
-            if ($hasLockTimeout) {
-                $lockTimeout = true;
-            }
-            if (! $hasLockTimeout || $attempt === 3) {
-                break;
-            }
-        }
-
-        if ($lockTimeout && ($response === null || $response->getStatusCode() !== 200)) {
-            $this->markTestSkipped('Skipping due to transient test DB lock wait timeout while deleting device_tag rows.');
-        }
-
-        $this->assertNotNull($response);
-        $response->assertStatus(200);
+        $this->delete('/api/devices/' . $device->id)
+            ->assertStatus(200);
 
         $this->assertDatabaseMissing('devices', ['id' => $device->id]);
         $this->assertDatabaseMissing('configs', ['id' => $configOne->id]);
