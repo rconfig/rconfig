@@ -1,6 +1,6 @@
 <script setup>
-import "monaco-editor/esm/vs/language/json/monaco.contribution";
-import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
+import "monaco-editor/languages/features/json/register";
+import * as monaco from "monaco-editor/editor";
 import RcToolTip from "@/pages/Shared/Tooltips/RcToolTip.vue";
 import useCodeEditor from "@/composables/codeEditorFunctions";
 import useConfigViewMainPanel from "@/pages/Configs/ConfigView/useConfigViewMainPanel";

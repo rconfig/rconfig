@@ -16,9 +16,9 @@ vi.mock("@/composables/useCopy", () => ({
 }));
 
 // Monaco language contributions are side-effect imports; neutralise them.
-vi.mock("monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution", () => ({}));
-vi.mock("monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution", () => ({}));
-vi.mock("monaco-editor/esm/vs/basic-languages/xml/xml.contribution", () => ({}));
+vi.mock("monaco-editor/languages/definitions/javascript/register", () => ({}));
+vi.mock("monaco-editor/languages/definitions/yaml/register", () => ({}));
+vi.mock("monaco-editor/languages/definitions/xml/register", () => ({}));
 
 // @ts-ignore — composable is JS, no type declarations
 import useCodeEditor from "../codeEditorFunctions";

@@ -6,9 +6,9 @@ import { saveAs } from "file-saver";
 import { useCopy } from "@/composables/useCopy";
 
 // Import extra language support
-import "monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution";
-import "monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution";
-import "monaco-editor/esm/vs/basic-languages/xml/xml.contribution";
+import "monaco-editor/languages/definitions/javascript/register";
+import "monaco-editor/languages/definitions/yaml/register";
+import "monaco-editor/languages/definitions/xml/register";
 
 export default function useCodeEditor(monaco) {
 	const { copyItem, activeCopyIcon } = useCopy();
