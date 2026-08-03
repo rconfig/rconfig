@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
+use Symfony\Component\HttpFoundation\Response;
 
 class SocialiteController
 {
@@ -38,42 +39,45 @@ class SocialiteController
         }
         switch ($provider) {
             case 'saml2':
-                $user = (new Saml2Auth)->register($request);
-
-                if (! $user instanceof User) {
-                    return redirect()->to('/login')
-                        ->with('message', 'SAML2 authentication failed. Please contact your administrator.');
-                }
+                $user = app(Saml2Auth::class)->register($request);
                 break;
             case 'google':
-                $user = (new GoogleAuth)->register($request);
-
-                if (! $user instanceof User) {
-                    return redirect()->to('/login')
-                        ->with('message', 'Google authentication failed. Please contact your administrator.');
-                }
+                $user = app(GoogleAuth::class)->register($request);
                 break;
             case 'okta':
-                $user = (new OktaAuth)->register($request);
-
-                if (! $user instanceof User) {
-                    return redirect()->to('/login')
-                        ->with('message', 'Okta authentication failed. Please contact your administrator.');
-                }
+                $user = app(OktaAuth::class)->register($request);
                 break;
             case 'microsoft':
-                $user = (new MicrosoftAuth)->register($request);
-
-                if (! $user instanceof User) {
-                    return redirect()->to('/login')
-                        ->with('message', 'Microsoft authentication failed. Please contact your administrator.');
-                }
+                $user = app(MicrosoftAuth::class)->register($request);
                 break;
             default:
                 activityLogIt(__CLASS__, __FUNCTION__, 'error', "Unsupported authentication provider: {$provider}", 'auth');
 
                 return redirect()->to('/login')
                     ->with('message', 'Authentication provider is not supported.');
+        }
+
+        // register() normally returns either the authenticated User or a
+        // Response carrying a specific error message set by SocialAuthHandler
+        // (missing code/SAMLResponse, denied, provider failure, account not
+        // registered, etc.). Return that response as-is so the specific
+        // message reaches the user, rather than discarding it in favor of a
+        // generic fallback.
+        if ($user instanceof Response) {
+            return $user;
+        }
+
+        // Guards against a third, unexpected case: the duplicate-key ('23000')
+        // branch in each *Auth::register() falls back to
+        // User::where('email', ...)->first(), which returns null if no row
+        // matches (e.g. the integrity violation was on a different
+        // constraint). Without this, a null $user would fall through to
+        // $user->is_socialite_approved below and throw.
+        if (! $user instanceof User) {
+            activityLogIt(__CLASS__, __FUNCTION__, 'error', "{$provider} authentication failed during user registration.", 'auth');
+
+            return redirect()->to('/login')
+                ->with('message', 'Authentication failed. Please contact your administrator.');
         }
 
         try {

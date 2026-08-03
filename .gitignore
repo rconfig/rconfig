@@ -36,3 +36,4 @@ CLAUDE.local.md
 jsconfig.json 
 supervisord.pid
 
+.DS_Store

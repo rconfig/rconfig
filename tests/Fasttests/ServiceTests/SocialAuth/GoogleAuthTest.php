@@ -56,7 +56,7 @@ class GoogleAuthTest extends TestCase
 
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertArrayHasKey('message', session()->all());
-        $this->assertStringContainsString('Unable to authenticate using Microsoft', session('message'));
+        $this->assertStringContainsString('Unable to authenticate using Google', session('message'));
     }
 
     public function test_login_redirects_with_error_if_user_not_found()

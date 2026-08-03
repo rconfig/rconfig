@@ -44,10 +44,11 @@ class SocialAuthHandler
         try {
             $authedUser = Socialite::driver($driver)->user();
         } catch (\Exception $e) {
-            activityLogIt(__CLASS__, __FUNCTION__, 'error', 'Unable to authenticate using Microsoft. Please try again. Error: ' . $e->getMessage(), 'auth');
+            $driverLabel = self::driverLabel($driver);
+            activityLogIt(__CLASS__, __FUNCTION__, 'error', "Unable to authenticate using {$driverLabel}. Please try again. Error: " . $e->getMessage(), 'auth');
 
             return redirect()->route('login')
-                ->with('message', 'Unable to authenticate using Microsoft. Please try again. Error: ' . $e->getMessage());
+                ->with('message', "Unable to authenticate using {$driverLabel}. Please try again. Error: " . $e->getMessage());
         }
 
         if (! $authedUser) {
@@ -58,6 +59,17 @@ class SocialAuthHandler
         }
 
         return $authedUser;
+    }
+
+    /**
+     * Human-friendly label for a driver, used in user-facing error messages.
+     */
+    private static function driverLabel(string $driver): string
+    {
+        return match ($driver) {
+            'saml2' => config('services.saml2.display_name', 'SAML2'),
+            default => ucfirst($driver),
+        };
     }
 
     /**
