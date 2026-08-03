@@ -1,5 +1,5 @@
 <script setup>
-import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
+import * as monaco from "monaco-editor/editor";
 import RcConfirmAlertDialog from "@/pages/Shared/ConfirmAlertDialog/RcConfirmAlertDialog.vue";
 import RcToolTip from "@/pages/Shared/Tooltips/RcToolTip.vue";
 import useCompareOptions from "./useCompareOptions";

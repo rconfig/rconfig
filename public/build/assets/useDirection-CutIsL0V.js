@@ -1,0 +1,1 @@
+import{g as e,mt as t}from"./vue.esm-bundler-BzN7c71p.js";import{c as n}from"./Primitive-ChJU6kVT.js";function r(r){let i=n({dir:t(`ltr`)});return e(()=>r?.value||i.dir?.value||`ltr`)}export{r as t};

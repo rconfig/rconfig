@@ -1,7 +1,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import axios from "axios";
 import { useToaster } from "@/composables/useToaster";
-import jsYaml from "js-yaml";
+import { load as loadYaml } from "js-yaml";
 
 export default function useTemplateAddEdit(props, emit) {
 	const { toastSuccess, toastError } = useToaster();
@@ -37,7 +37,7 @@ export default function useTemplateAddEdit(props, emit) {
 
 	function parseYaml(yamlString) {
 		try {
-			const result = jsYaml.load(yamlString);
+			const result = loadYaml(yamlString);
 			return result;
 		} catch (e) {
 			console.error("Error parsing YAML:", e);

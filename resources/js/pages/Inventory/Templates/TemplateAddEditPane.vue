@@ -3,7 +3,6 @@ import * as monaco from "monaco-editor";
 import GenericPopover from "@/pages/Shared/Popover/GeneralPopover.vue";
 import RcToolTip from "@/pages/Shared/Tooltips/RcToolTip.vue";
 import TemplateImportDialog from "@/pages/Inventory/Templates/TemplateImportDialog.vue";
-import jsYaml from "js-yaml";
 import useCodeEditor from "@/composables/codeEditorFunctions";
 import useTemplateAddEdit from "@/pages/Inventory/Templates/useTemplateAddEdit";
 import { ScrollArea } from "@/components/ui/scroll-area";
