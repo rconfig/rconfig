@@ -5,6 +5,18 @@ All notable changes to rConfig v8 Core are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.2.11] - 2026-08-03
+
+### Fixed
+- SSO error messages now name the provider that actually failed. Every failure previously said Microsoft, whichever provider was in use. The SAML2 label comes from the configured display name.
+- A failed SSO sign in now shows the specific reason (access denied, missing callback parameters, account not registered) instead of a generic message. The controller was replacing the handler's response with its own fallback.
+- The login page now displays messages flashed by the server. The Vue component did not read the prop the view passes it, so SSO callback errors never reached the user.
+- Tab icons sit beside their labels rather than above them, as seen on the Standard and Docker tabs of the settings update panel.
+
+### Changed
+- Docker release images build each architecture on a runner of that architecture. The arm64 half previously ran under emulation and dominated the build time.
+- Test isolation reworked so a test cannot leak an open transaction into the next one, which was causing lock wait timeouts on the shared test database.
+
 ## [8.2.10] - 2026-08-01
 
 ### Fixed
