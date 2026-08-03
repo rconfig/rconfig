@@ -39,16 +39,16 @@ class SocialiteController
         }
         switch ($provider) {
             case 'saml2':
-                $user = (new Saml2Auth)->register($request);
+                $user = app(Saml2Auth::class)->register($request);
                 break;
             case 'google':
-                $user = (new GoogleAuth)->register($request);
+                $user = app(GoogleAuth::class)->register($request);
                 break;
             case 'okta':
-                $user = (new OktaAuth)->register($request);
+                $user = app(OktaAuth::class)->register($request);
                 break;
             case 'microsoft':
-                $user = (new MicrosoftAuth)->register($request);
+                $user = app(MicrosoftAuth::class)->register($request);
                 break;
             default:
                 activityLogIt(__CLASS__, __FUNCTION__, 'error', "Unsupported authentication provider: {$provider}", 'auth');

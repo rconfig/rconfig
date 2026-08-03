@@ -92,12 +92,17 @@ class SocialiteControllerCallbackTest extends TestCase
         // the controller would return null directly, which Laravel renders
         // as a blank 200 response instead of any error message.
         //
-        // SocialiteController instantiates GoogleAuth directly (new GoogleAuth)
-        // rather than resolving it from the container, so we use Mockery's
-        // class-overload mocking to control what register() returns without
-        // needing to organically reproduce a specific DB integrity violation.
-        $mock = \Mockery::mock('overload:' . GoogleAuth::class);
-        $mock->shouldReceive('register')->andReturn(null);
+        // SocialiteController now resolves GoogleAuth via app(GoogleAuth::class)
+        // rather than `new GoogleAuth`, so it can be swapped out through
+        // Laravel's standard container-mocking helper. This avoids Mockery's
+        // 'overload:' mocking, which requires the class not be loaded yet --
+        // fragile here since earlier tests in this class already trigger
+        // GoogleAuth via the real callback route, and forcing process
+        // isolation would re-trigger MigrateFreshSeedOnce's migrate:fresh
+        // against the shared test database mid-suite.
+        $this->mock(GoogleAuth::class, function ($mock) {
+            $mock->shouldReceive('register')->andReturn(null);
+        });
 
         $response = $this->get('/auth/callback/google?code=some-code');
 
