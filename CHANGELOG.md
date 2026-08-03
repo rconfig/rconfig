@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Docker release images build each architecture on a runner of that architecture. The arm64 half previously ran under emulation and dominated the build time.
 - Test isolation reworked so a test cannot leak an open transaction into the next one, which was causing lock wait timeouts on the shared test database.
+- Front end dependencies updated, including js-yaml 5, monaco-editor 0.56, and Pinia 4. js-yaml and monaco-editor both reorganised their module exports in these versions, so the YAML parsing and code editor imports now use the new entry points.
 
 ## [8.2.10] - 2026-08-01
 
