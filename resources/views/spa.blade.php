@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}" class="layout-pf layout-pf-fixed h-full" data-theme="dark">
+<html lang="{{ app()->getLocale() }}" class="dark layout-pf layout-pf-fixed h-full" data-theme="dark" data-force-dark="true">
 <!--When we are ready to have light mode: 
     <html lang="{{ app()->getLocale() }}" class="layout-pf layout-pf-fixed" :class="{ 'dark': darkMode }" data-theme="auto">
 -->

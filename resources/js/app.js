@@ -60,7 +60,7 @@ app.provide("serverDisplayColor", globalProperties.$serverDisplayColor);
 app.provide("serverDisplaySize", globalProperties.$serverDisplaySize); // New
 
 // provide colorMode globally so it can be injected in any component without needing to import useColorMode everywhere
-const colorMode = useColorMode();
+const colorMode = useColorMode({ initialValue: "dark" });
 app.provide("colorMode", colorMode);
 
 // Mount the Vue app with error handling

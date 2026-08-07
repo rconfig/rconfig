@@ -5,6 +5,11 @@ All notable changes to rConfig v8 Core are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.2.12] - 2026-08-07
+
+### Fixed
+- The login page is no longer unreadable on a fresh install. It hardcodes a black background, but the dark theme class was only applied once the SPA had loaded, so a browser or operating system set to light mode rendered the form with the light colour palette: near black text on a black page. The theme now resolves to dark before the page paints, and the auth and SPA layouts pin themselves to dark regardless of the system setting.
+
 ## [8.2.11] - 2026-08-03
 
 ### Fixed
