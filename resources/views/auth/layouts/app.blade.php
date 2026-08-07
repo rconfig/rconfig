@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-force-dark="true" data-theme="dark" class="dark">
 
 <head>
     <meta charset="utf-8">
@@ -13,6 +13,7 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     {{-- <link rel="shortcut icon" href="{{ asset('images/new/white/rConfig_white_trnsprnt_1_32px.png') }}"> --}}
  
+    @include('includes.theme-bootstrap')
     @vite(['resources/css/global.css', 'resources/js/app.js'])
     <script id="app-config" type="application/json">
     {!! json_encode([

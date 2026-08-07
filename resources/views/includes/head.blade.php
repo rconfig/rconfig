@@ -19,6 +19,8 @@
 
 <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
 
+@include('includes.theme-bootstrap')
+
 @vite(['resources/css/global.css', 'resources/js/app.js'])
 
       <script id="app-config" type="application/json">
