@@ -62,7 +62,7 @@ return [
         'throttle_notifications_for_minutes' => 60,
 
         'mail' => [
-            'to' => 'your@example.com',
+            'to' => env('HEALTH_MAIL_TO', 'your@example.com'),
 
             'from' => [
                 'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
