@@ -16,10 +16,18 @@ class StoreTemplateRequest extends FormRequest
     {
         $rules = [];
 
+        /**
+         * fileName is derived server side from templateName, so a caller never needs
+         * to send a path. Reject traversal sequences outright rather than trusting
+         * every downstream consumer to sanitize.
+         */
+        $fileNameRules = ['nullable', 'string', 'max:255', 'not_regex:/\.\./'];
+
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'templateName' => 'required|max:255',
                 'code' => 'required',
+                'fileName' => $fileNameRules,
             ];
         }
 
@@ -27,6 +35,7 @@ class StoreTemplateRequest extends FormRequest
             $rules = [
                 'templateName' => 'required|max:255',
                 'code' => 'required',
+                'fileName' => $fileNameRules,
             ];
         }
 

@@ -73,18 +73,27 @@ class TemplateController extends ApiBaseController
         return response()->json($result);
     }
 
+    /**
+     * Replace a template, removing the file the record currently points at.
+     *
+     * The name of the outgoing file is taken from the stored record rather than
+     * from the request, so a caller cannot nominate a file outside the templates
+     * directory for deletion. It is reduced to a basename as well, so a record
+     * written by some other path cannot escape either.
+     */
     public function update($id, StoreTemplateRequest $request)
     {
+        $template = Template::findOrFail($id);
 
-        $oldFilename = $request->fileName;
+        $storage_dir = storage_path() . '/app/rconfig/templates/';
 
-        if (File::exists(storage_path() . '/app/rconfig/templates/' . $oldFilename)) {
-            File::delete(storage_path() . '/app/rconfig/templates/' . $oldFilename);
+        $oldFilename = basename((string) $template->fileName);
+        if ($oldFilename !== '' && File::exists($storage_dir . $oldFilename)) {
+            File::delete($storage_dir . $oldFilename);
         }
 
         $fileName = $this->sanitizeFileName($request['templateName']);
 
-        $storage_dir = storage_path() . '/app/rconfig/templates/';
         $filePath = $storage_dir . $fileName;
 
         if (File::exists($filePath)) {
