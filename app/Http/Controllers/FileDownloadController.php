@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Exports\DeviceImportTemplateExport;
 use App\Traits\RespondsWithHttpStatus;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class FileDownloadController extends Controller
 {
@@ -18,21 +21,50 @@ class FileDownloadController extends Controller
         return Excel::download(new DeviceImportTemplateExport, 'device_import_template.xlsx');
     }
 
-    public function download_export()
+    /**
+     * Stream a previously generated export file back to the user.
+     *
+     * The requested name is reduced to a bare basename and the resolved path is
+     * checked to sit inside the export directory, so a caller cannot walk out of
+     * it. Every legitimate caller already links to a basename, so this is not a
+     * behaviour change for the UI.
+     */
+    public function download_export(Request $request): BinaryFileResponse|JsonResponse
     {
-        $path = export_path() . $_GET['filename'];
-        if (file_exists($path)) {
-            $logmsg = 'File download: ' . basename($path) . ' was downloaded';
+        $filename = basename((string) $request->query('filename', ''));
+        $path = export_path() . $filename;
+
+        if ($filename !== '' && $this->isContainedInExportPath($path)) {
+            $logmsg = 'File download: ' . $filename . ' was downloaded';
             activityLogIt(__CLASS__, __FUNCTION__, 'info', $logmsg, 'downloader');
 
             return response()->download($path);
         } else {
-            $logmsg = 'FILE DOWNLOAD: ' . basename($path) . ' could not be downloaded';
+            $logmsg = 'FILE DOWNLOAD: ' . $filename . ' could not be downloaded';
             activityLogIt(__CLASS__, __FUNCTION__, 'warn', $logmsg, 'downloader');
 
             $responseArray = ['error' => 404, 'message' => $logmsg];
 
             return \Response::json($responseArray);
         }
+    }
+
+    /**
+     * Confirm the path resolves to a real file physically inside the export directory.
+     *
+     * realpath() collapses any traversal and follows symlinks, so comparing the
+     * resolved value against the resolved export directory catches both.
+     */
+    private function isContainedInExportPath(string $path): bool
+    {
+        $resolvedPath = realpath($path);
+        $resolvedExportPath = realpath(export_path());
+
+        if ($resolvedPath === false || $resolvedExportPath === false) {
+            return false;
+        }
+
+        return is_file($resolvedPath)
+            && str_starts_with($resolvedPath, rtrim($resolvedExportPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR);
     }
 }
