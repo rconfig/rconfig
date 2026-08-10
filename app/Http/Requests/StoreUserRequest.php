@@ -10,9 +10,14 @@ class StoreUserRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      *
-     * Only an existing Admin may set or change a user's role to Admin, whether
-     * creating a new user, updating another user, or updating their own account.
-     * Any other requested role is left to the validation rules below.
+     * Creating and editing accounts is Admin only. The routes carry the `admin`
+     * middleware as well; this is a second, independent check so the rule does
+     * not rest on routing alone.
+     *
+     * Checking only the requested role is not enough. An attacker does not need
+     * to promote themselves to Admin: resetting an existing Admin's password
+     * while sending role 'User' would take over that account instead. So the
+     * acting user must be an Admin regardless of what role is being written.
      *
      * @return bool
      */
@@ -20,15 +25,7 @@ class StoreUserRequest extends FormRequest
     {
         $actingUser = $this->user();
 
-        if (! $actingUser) {
-            return false;
-        }
-
-        if ($this->input('role') !== 'Admin') {
-            return true;
-        }
-
-        return in_array($actingUser->role, ['Admin', 'admin'], true);
+        return $actingUser !== null && $actingUser->isAdmin();
     }
 
     /**

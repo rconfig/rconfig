@@ -40,6 +40,18 @@ class User extends Authenticatable
         );
     }
 
+    /**
+     * Whether this account holds the Admin role.
+     *
+     * The column has held both 'Admin' and 'admin' over the life of the schema,
+     * so the comparison is deliberately case insensitive. Every other value,
+     * including null, is treated as a standard user.
+     */
+    public function isAdmin(): bool
+    {
+        return strcasecmp((string) $this->role, 'admin') === 0;
+    }
+
     public function notificationPreferences(): HasMany
     {
         return $this->hasMany(NotificationUserPreference::class);

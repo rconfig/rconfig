@@ -14,7 +14,11 @@ class UsersControllerTest extends TestCase
     {
         parent::setUp();
         $this->beginTransaction();
-        $this->user = User::factory()->create();
+
+        // User administration is Admin only, so the acting user needs that role to
+        // exercise the CRUD surface here. The Admin boundary itself is covered in
+        // UserManagementAuthorizationTest.
+        $this->user = User::factory()->create(['role' => 'Admin']);
         $this->actingAs($this->user);
     }
 

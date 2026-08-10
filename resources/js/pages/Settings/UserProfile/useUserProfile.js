@@ -27,8 +27,9 @@ export function useUserProfile(profileUserId, loggedInUserId) {
 			isLoading.value = true;
 			error.value = null;
 
-			// Only proceed with fetching the profile if authorized
-			const response = await axios.get(`/api/users/${profileUserId}`);
+			// Self service endpoint: returns the signed in user. The user administration
+			// endpoints under /api/users are admin only.
+			const response = await axios.get("/api/user/profile");
 			user.value = response.data;
 		} catch (err) {
 			console.log(err);

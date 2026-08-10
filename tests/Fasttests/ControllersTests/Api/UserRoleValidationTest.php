@@ -102,6 +102,10 @@ class UserRoleValidationTest extends TestCase
      */
     public function test_role_field_only_accepts_known_values(): void
     {
+        // Act as an Admin: a standard user is now refused before validation runs,
+        // so the allowlist would never be reached.
+        $this->actingAs(User::factory()->create(['role' => 'Admin']));
+
         $response = $this->postJson('/api/users', [
             'name' => 'Garbage Role User',
             'email' => 'garbage-role@example.com',
