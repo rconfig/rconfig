@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\StoreDeviceCredentialsRequest;
 use App\Models\DeviceCredentials;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -17,15 +18,25 @@ class DeviceCredentialsController extends ApiBaseController
 
     public function index(Request $request, $searchCols = null, $relationship = null, $withCount = null)
     {
+        return response()->json($this->paginateCredentials($request));
+    }
 
-        $response = QueryBuilder::for(DeviceCredentials::class)
+    /**
+     * Build the paginated credential listing shared by the internal and external APIs.
+     *
+     * Kept separate from index() so the external REST API can mask secrets on the way out
+     * without duplicating the query definition.
+     *
+     * @return LengthAwarePaginator<int, DeviceCredentials>
+     */
+    protected function paginateCredentials(Request $request): LengthAwarePaginator
+    {
+        return QueryBuilder::for(DeviceCredentials::class)
             ->with('device')
             ->allowedFilters(...['cred_name'])
             ->defaultSort('-id')
             ->allowedSorts(...['id', 'cred_name'])
             ->paginate((int) $request->perPage);
-
-        return response()->json($response);
     }
 
     public function store(StoreDeviceCredentialsRequest $request)
