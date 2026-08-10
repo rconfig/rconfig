@@ -2190,7 +2190,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-CZLcb0nm.js",
+    "file": "assets/app-PgkhyFEp.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -2936,7 +2936,7 @@
     ]
   },
   "resources/js/pages/Settings/UserProfile/Main.vue": {
-    "file": "assets/Main-DlYNB9TQ.js",
+    "file": "assets/Main-Clthh8hy.js",
     "name": "Main",
     "src": "resources/js/pages/Settings/UserProfile/Main.vue",
     "isDynamicEntry": true,

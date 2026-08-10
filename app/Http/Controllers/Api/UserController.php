@@ -51,6 +51,17 @@ class UserController extends ApiBaseController
         return parent::updateResource($id, $request->toDTO()->toArray());
     }
 
+    /**
+     * Return the authenticated user's own record.
+     *
+     * Self service counterpart to the Admin only show() above, so the profile
+     * screen does not need access to the user administration endpoints.
+     */
+    public function profile()
+    {
+        return response()->json(Auth::user());
+    }
+
     public function updateProfile(Request $request)
     {
         $user = Auth::user();
@@ -66,32 +77,44 @@ class UserController extends ApiBaseController
         return parent::destroy($id);
     }
 
+    /**
+     * Set the notification preference for the authenticated user.
+     *
+     * The {userid} route segment is ignored. It is retained only so existing
+     * clients keep working, and carries no authority over which account changes.
+     */
     public function setNotificationStatus($userid, Request $request)
     {
-        $status = $request->input('status');
-
-        $user = User::find($userid);
-        $user->get_notifications = $status;
+        $user = Auth::user();
+        $user->get_notifications = $request->input('status');
         $user->save();
 
         return response()->json(['status' => 'success']);
     }
 
+    /**
+     * Approve or revoke an SSO account. Admin only, enforced by route middleware.
+     *
+     * Approval decides whether the account can sign in, so unlike the other
+     * endpoints here it does act on the id supplied by the caller.
+     */
     public function setSocialiteApprovalStatus($userid, Request $request)
     {
-        // $this->authorize('user.update');
-        $status = $request->input('status');
-
-        $user = User::find($userid);
-        $user->is_socialite_approved = $status;
+        $user = User::findOrFail($userid);
+        $user->is_socialite_approved = $request->input('status');
         $user->save();
 
         return response()->json(['status' => 'success']);
     }
 
+    /**
+     * Set locale and date preferences for the authenticated user.
+     *
+     * The {userid} route segment is ignored, as with setNotificationStatus().
+     */
     public function setLocale($userid, Request $request)
     {
-        $user = User::find($userid);
+        $user = Auth::user();
         $user->locale = $request->input('locale');
         $user->datestyle = $request->input('datestyle');
         $user->timestyle = $request->input('timestyle');
@@ -152,11 +175,19 @@ class UserController extends ApiBaseController
 
     public function getExternalLinks($id)
     {
-        $user = User::findOrFail($id);
+        $user = Auth::user();
 
         return response()->json($user->external_links);
     }
 
+    /**
+     * Change the authenticated user's own password.
+     *
+     * Self service, so the current password must be supplied. An Admin resetting
+     * someone else's password does so through the user administration endpoints
+     * and is not asked for the existing one. The {userid} route segment is
+     * ignored: a caller cannot change an account other than their own here.
+     */
     public function changePassword(Request $request, $userid)
     {
         $validator = Validator::make($request->all(), [
@@ -168,7 +199,7 @@ class UserController extends ApiBaseController
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $user = User::findOrFail($userid);
+        $user = Auth::user();
 
         if (! Hash::check($request->current_password, $user->password)) {
             return response()->json([
