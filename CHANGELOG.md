@@ -5,6 +5,35 @@ All notable changes to rConfig v8 Core are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.2.13] - 2026-08-10
+
+Security release. Upgrade is recommended for all 8.x installations.
+
+### Security
+- The device credentials endpoints on the v1 REST API returned `cred_password` and `cred_enable_password` in cleartext. Both fields are now masked on the way out. Masking is unconditional on the external API: the `MASK_DEVICE_CREDENTIALS` setting governs the device endpoints only and can no longer re-enable cleartext secrets for a token authenticated caller.
+- The export download endpoint built its path by concatenating the raw `filename` query parameter onto the export directory, so a request could walk out of that directory and read any file readable by the web user. The filename is now reduced to a basename and the resolved path confirmed to be a real file inside the export directory.
+- Updating a template deleted the outgoing file using the `fileName` value from the request body, so any authenticated user could nominate an arbitrary writable file for deletion, including `.env` and stored configuration history. The outgoing name is now taken from the persisted template record and reduced to a basename, and traversal sequences in `fileName` are rejected at the form request.
+- The `/api/users` resource acted on arbitrary accounts but was reachable by any authenticated user, and the store request only validated the role being written. A standard user could reset an administrator's password while submitting the `User` role, then sign in as that account. Listing, viewing and deleting users and approving SSO accounts were equally open. The resource now requires an administrator, enforced by new middleware and by an independent check in the form request.
+- Self service account endpoints resolve the account from the session rather than the `{userid}` in the URL, so a caller can only affect their own record. The route segments are retained so existing clients keep working. Changing your own password still requires the current one.
+- The template repository browser accepted an absolute path from the caller and globbed it, so the endpoints listing folder contents and reading template files could enumerate and read files outside the cloned templates repository. Both now resolve the supplied path through a containment check against the repository directory, and file reads are restricted to `.yml` and `.yaml`.
+- Report retrieval concatenated the supplied id onto the report directory. A report id is a UUID, so the id is now validated as one before the path is built, and the resolved path is confirmed to sit inside the report directory.
+
+### Added
+- `GET /api/user/profile` returns the signed in user, so the profile screen no longer reaches into the administration endpoints.
+- `PathContainmentService` for resolving a file or directory and confirming it sits inside an expected root. Used by the export download, template repository and report endpoints.
+- `SECURITY.md`, so vulnerability reports have a documented private channel.
+- Health check email notification settings in `.env.example`. Thanks to @vitor-ao.
+
+### Changed
+- The health check mail configuration reads from an environment variable rather than a hardcoded value. Thanks to @vitor-ao.
+
+### Fixed
+- Field widths in the templates import dialog.
+- Reading a malformed template file returned a 500 whose exception message embedded a snippet of the file. The parse is now handled and the failure logged.
+
+### Removed
+- `TaskReportController::getReport()`, which duplicated `show()` and was not routed.
+
 ## [8.2.12] - 2026-08-07
 
 ### Fixed
