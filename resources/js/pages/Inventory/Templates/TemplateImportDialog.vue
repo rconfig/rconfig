@@ -55,9 +55,9 @@ function saveDialog() {
 				<DialogDescription>Choose a vendor and template file to import</DialogDescription>
 			</DialogHeader>
 			<div class="grid gap-2 py-4">
-				<div class="grid items-center grid-cols-4 gap-4">
+				<div class="w-full">
 					<Select v-model="vendorOptionSelected">
-						<SelectTrigger class-name="w-[280px] flex h-9 items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:truncate text-start w-[180px]">
+						<SelectTrigger class="w-full">
 							<SelectValue placeholder="Select a vendor" />
 						</SelectTrigger>
 						<SelectContent position="popper">
@@ -77,12 +77,12 @@ function saveDialog() {
 						</SelectContent>
 					</Select>
 				</div>
-				<div class="grid items-center grid-cols-4 gap-4">
+				<div class="w-full">
 					<Select
 						v-if="showFileOptions"
 						v-model="fileOptionSelected"
 					>
-						<SelectTrigger class-name="w-[280px] flex h-9 items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:truncate text-start w-[180px]">
+						<SelectTrigger class="w-full">
 							<SelectValue placeholder="Select a template file" />
 						</SelectTrigger>
 						<SelectContent position="popper">
