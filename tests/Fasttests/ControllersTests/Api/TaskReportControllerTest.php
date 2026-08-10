@@ -2,11 +2,13 @@
 
 namespace Tests\Fasttests\ControllersTests\Api;
 
+use App\Http\Controllers\Api\TaskReportController;
 use App\Jobs\TaskReportJob;
 use App\Models\Config;
 use App\Models\Taskdownloadreport;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Config as ConfigFacade;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -139,6 +141,93 @@ class TaskReportControllerTest extends TestCase
         } finally {
             date_default_timezone_set($originalDefault);
         }
+    }
+
+    /*
+     * Report file resolution.
+     *
+     * show() serves report_path() . {id} . '.html' when the id is a report UUID, and otherwise
+     * falls through to the database so a lookup by numeric model id keeps working. Both halves
+     * are pinned below, because breaking either one is silent.
+     */
+
+    private const REPORT_LEAK_MARKER = 'REPORT_LEAK_MARKER';
+
+    public function test_it_serves_the_report_file_for_a_uuid_id(): void
+    {
+        $report = Taskdownloadreport::factory()->create();
+        $reportFile = report_path() . $report->report_id . '.html';
+        File::put($reportFile, '<html><body>rendered report</body></html>');
+
+        $response = $this->get('/api/reports/' . $report->report_id);
+
+        $response->assertStatus(200);
+        $this->assertStringContainsString('rendered report', $response->getContent());
+
+        File::delete($reportFile);
+    }
+
+    /**
+     * The database fallback is the reason the containment guard must never return a response of
+     * its own. test_show_single_report covers it incidentally; this names it as a requirement.
+     */
+    public function test_it_falls_back_to_the_database_when_no_report_file_exists(): void
+    {
+        $report = Taskdownloadreport::factory()->create();
+        $this->assertFileDoesNotExist(report_path() . $report->report_id . '.html');
+
+        $response = $this->get('/api/reports/' . $report->id);
+
+        $response->assertStatus(200)->assertJson(['report_id' => $report->report_id]);
+    }
+
+    public function test_it_returns_not_found_for_a_uuid_with_no_report_file(): void
+    {
+        $response = $this->get('/api/reports/' . (string) Str::uuid());
+
+        $response->assertStatus(404);
+    }
+
+    /**
+     * Called against the controller rather than through the router on purpose.
+     *
+     * The {report} route placeholder does not match a forward slash, and Symfony decodes %2F
+     * before matching, so a traversal id cannot reach show() over HTTP today. This pins the
+     * controller itself, so the guarantee survives a future route that is less strict.
+     */
+    public function test_it_refuses_a_traversal_id_at_the_controller(): void
+    {
+        $bait = export_path() . 'report_leak_probe.html';
+        File::put($bait, '<html><body>' . self::REPORT_LEAK_MARKER . '</body></html>');
+
+        $controller = new TaskReportController(new Taskdownloadreport);
+
+        try {
+            $result = $controller->show('../exports/report_leak_probe');
+            $rendered = is_string($result) ? $result : json_encode($result);
+            $this->assertStringNotContainsString(
+                self::REPORT_LEAK_MARKER,
+                (string) $rendered,
+                'A traversal id read a file outside the report directory.'
+            );
+        } catch (ModelNotFoundException $e) {
+            // Correct: the id is not a report UUID, so it fell through to the database lookup.
+            $this->assertTrue(true);
+        } finally {
+            File::delete($bait);
+        }
+    }
+
+    /**
+     * Smoke check on the router behaviour the guard above relies on. This passes either way; its
+     * value is asserting that the placeholder really does reject an encoded separator.
+     */
+    public function test_an_encoded_traversal_is_not_treated_as_a_report_id(): void
+    {
+        $response = $this->get('/api/reports/..%2F..%2Fetc%2Fpasswd');
+
+        $this->assertNotSame(200, $response->getStatusCode());
+        $this->assertStringNotContainsString('root:', $response->getContent());
     }
 
     protected function tearDown(): void

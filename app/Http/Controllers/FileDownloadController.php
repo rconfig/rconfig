@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\DeviceImportTemplateExport;
+use App\Services\Utilities\PathContainmentService;
 use App\Traits\RespondsWithHttpStatus;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -52,19 +53,10 @@ class FileDownloadController extends Controller
     /**
      * Confirm the path resolves to a real file physically inside the export directory.
      *
-     * realpath() collapses any traversal and follows symlinks, so comparing the
-     * resolved value against the resolved export directory catches both.
+     * @see PathContainmentService for the traversal and symlink handling
      */
     private function isContainedInExportPath(string $path): bool
     {
-        $resolvedPath = realpath($path);
-        $resolvedExportPath = realpath(export_path());
-
-        if ($resolvedPath === false || $resolvedExportPath === false) {
-            return false;
-        }
-
-        return is_file($resolvedPath)
-            && str_starts_with($resolvedPath, rtrim($resolvedExportPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR);
+        return (new PathContainmentService)->resolveFileWithin(export_path(), $path) !== null;
     }
 }
