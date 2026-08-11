@@ -55,26 +55,24 @@
 
 ---
 
-## 🎯 About rConfig v8 Core
+## 🎯 About rConfig V8 Core
 
-rConfig V8 Core is a **free and open-source Network Configuration Management (NCM)** platform. Back up, manage, and track network configurations from one place, across networks of any size.
+rConfig V8 Core is a **free and open-source Network Configuration Management (NCM)** platform. Back up, manage, and track network configs from one place.
 
-> [!IMPORTANT]
-> 🎉 **New: Config Versioning & Diff — Launched July 2026**
-> Track every config version. See what changed with side-by-side or inline diffs. View the full history for any device. Ignore noise such as timestamps and uptime.
+### ✨ What's new
 
-> [!IMPORTANT]
-> 🚀 **New: REST API (v1 & v2) — Launched July 2026**
-> Use the REST API to work with rConfig. Manage devices, configs, templates, tasks, vendors, and more. Use API keys for secure access. View the API docs under **Settings → REST API**.
+**Config Versioning & Diff**  
+Track every config version. See what changed with side-by-side or inline diffs. View the full history for any device.
 
-> [!IMPORTANT]
-> 🔎 **New: Upgraded Configuration Search (Launched July 2026)**
-> Search all saved configs with one or more terms. Match **All (AND)** or **Any (OR)** terms. Filter by tags, devices, command groups, or commands. View matched text under **Config Tools → Config Search**.
+**REST API**  
+Manage devices, configs, templates, tasks, vendors, and more through the REST API. Use API keys for secure access.
+
+**Configuration Search**  
+Search all saved configs with one or more terms. Filter by tags, devices, command groups, or commands.
 
 <p align="center">
   <img src="public/images/promo_image.png" alt="rConfig" width="900">
 </p>
-
 
 ### Why Choose rConfig?
 
