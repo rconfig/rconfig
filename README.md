@@ -57,19 +57,19 @@
 
 ## 🎯 About rConfig v8 Core
 
-rConfig v8 Core is a **powerful, free, and open-source** Network Configuration Management (NCM) solution designed to help you easily manage configurations across networks of any size—from small deployments to large, heterogeneous enterprise environments.
+rConfig V8 Core is a **free and open-source Network Configuration Management (NCM)** platform. Back up, manage, and track network configurations from one place, across networks of any size.
 
 > [!IMPORTANT]
 > 🎉 **New: Config Versioning & Diff — Launched July 2026**
-> Track every configuration version automatically, see exactly what changed between versions with side-by-side and inline diffs, and drill into a device's full config history. Includes configurable ignore rules so routine noise (timestamps, uptime) never flags as a change.
+> Track every config version. See what changed with side-by-side or inline diffs. View the full history for any device. Ignore noise such as timestamps and uptime.
 
 > [!IMPORTANT]
 > 🚀 **New: REST API (v1 & v2) — Launched July 2026**
-> Programmatic access to rConfig with token-based authentication. Manage devices, configurations, templates, tasks, vendors, categories and more over a versioned REST API. Generate and manage API keys, and browse built-in endpoint documentation, all under Settings → REST API.
+> Use the REST API to work with rConfig. Manage devices, configs, templates, tasks, vendors, and more. Use API keys for secure access. View the API docs under **Settings → REST API**.
 
 > [!IMPORTANT]
 > 🔎 **New: Upgraded Configuration Search (Launched July 2026)**
-> Search every stored config with multiple terms and All (AND) or Any (OR) matching. Narrow the scope by tags, devices, command groups, and commands, set a result limit, and read highlighted match previews inline, all under Config Tools → Config Search.
+> Search all saved configs with one or more terms. Match **All (AND)** or **Any (OR)** terms. Filter by tags, devices, command groups, or commands. View matched text under **Config Tools → Config Search**.
 
 <p align="center">
   <img src="public/images/promo_image.png" alt="rConfig" width="900">
@@ -299,7 +299,9 @@ DB_USERNAME=rconfig_user
 DB_PASSWORD=your_secure_password
 ```
 
-> 💡 **Best practice:** Set `APP_URL` to the exact hostname (and scheme) users will browse to, and match it to the Apache `ServerName` further below. This drives absolute URL generation, password reset links, and Sanctum's stateful-domain check. The SPA will still log in if `APP_URL` is left as a placeholder — same-origin requests are accepted automatically — but mail links and OAuth/SAML callbacks will be wrong until you set it correctly.
+> 💡 **Best practice:** Set `APP_URL` to the exact URL users will use to access rConfig. It should also match the Apache `ServerName` below.
+rConfig may still work if `APP_URL` is left as a placeholder. However, password reset links and OAuth or SAML callbacks may be wrong.
+
 ```bash
 # 5. Install PHP dependencies
 export COMPOSER_ALLOW_SUPERUSER=1
