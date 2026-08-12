@@ -59,6 +59,9 @@ class ConfigCompareExclusionCleaner
         if ($cleanedText !== $originalContent) {
             $tempFileName = tmp_dir() . 'temp_' . uniqid() . '.txt';
             File::put($tempFileName, $cleanedText);
+            // This holds device config content, so it must not be left at the
+            // default 0644 where any local account could read it.
+            @chmod($tempFileName, (int) config('rConfig.config_file_mode'));
 
             return $tempFileName;
         }

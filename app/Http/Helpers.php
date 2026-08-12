@@ -106,12 +106,18 @@ function report_path()
 
 function tmp_dir()
 {
-    if (! File::exists(rconfig_appdir_storage_path() . '/app/rconfig/tempdir/')) {
-        File::makeDirectory(rconfig_appdir_storage_path() . '/app/rconfig/tempdir/', 0777, true, true);
-        custom_chown(rconfig_appdir_storage_path() . '/app/rconfig/tempdir/');
+    $tempDir = rconfig_appdir_storage_path() . '/app/rconfig/tempdir/';
+
+    if (! File::exists($tempDir)) {
+        // Cleaned copies of device configs land here, so it gets the same
+        // treatment as the config data dir rather than being world readable.
+        $mode = (int) Config::get('rConfig.config_dir_mode');
+        File::makeDirectory($tempDir, $mode, true, true);
+        @chmod($tempDir, $mode);
+        custom_chown($tempDir);
     }
 
-    return rconfig_appdir_storage_path() . '/app/rconfig/tempdir/';
+    return $tempDir;
 }
 
 function custom_chown($path)

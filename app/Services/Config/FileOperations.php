@@ -69,7 +69,6 @@ class FileOperations
 
         if (! file_exists($fullpath) || filesize($fullpath) == 0) {
             $logmsg = $this->_deviceName . ' - Could not save the file for command: ' . $this->_command . '. Or the configuration was blank.';
-            dump($logmsg);
             activityLogIt(__CLASS__, __FUNCTION__, 'error', $logmsg, 'connection', $this->_deviceName, $this->_deviceid, 'device');
             $downloadStatus = false;
         }
@@ -95,7 +94,7 @@ class FileOperations
         if (! file_exists($fullpath)) {
             $fullpath = str_replace(' ', '_', $fullpath); // Replace spaces in path
             exec('touch ' . escapeshellarg($fullpath)); // Escape the filename for security
-            chmod($fullpath, 0666);
+            @chmod($fullpath, $this->writableFileMode());
         }
 
         return (string) $fullpath;
@@ -104,20 +103,53 @@ class FileOperations
     private function ensureDirectoryExists($directory)
     {
         if (! is_dir($directory)) {
-            mkdir($directory, 0755, true); // Ensure all parent directories are created
+            $mode = $this->directoryMode();
+            mkdir($directory, $mode, true); // Ensure all parent directories are created
+            // mkdir()'s mode is masked by the process umask, so set it explicitly.
+            // Without this the tree can land world traversable on a default umask.
+            @chmod($directory, $mode);
             custom_chown($directory);
         }
     }
 
     private function _insertFileContents($lines, $fullpath)
     {
-        // if the file is alread in place chmod it to 666 before writing info
-        @chmod($fullpath, 0666); // disabled errors in case ops is not permitted
-        // dump array into file & chmod back to RO
-        $filehandle = fopen($fullpath, 'w+');
+        // Configs are left read only, so open a write window first. Errors are
+        // suppressed in case the ops is not permitted on this filesystem.
+        @chmod($fullpath, $this->writableFileMode());
         file_put_contents($fullpath, $lines);
-        fclose($filehandle);
-        @chmod($fullpath, 0444); // disabled errors in case ops is not permitted
+        // Back to read only, with no access for "other". Device configs contain
+        // secrets and must not be readable by unprivileged local accounts.
+        @chmod($fullpath, $this->fileMode());
+    }
+
+    /**
+     * Final mode for a stored config file. Read only, no "other" bits.
+     */
+    private function fileMode(): int
+    {
+        return (int) config('rConfig.config_file_mode');
+    }
+
+    /**
+     * Mode for the directories holding stored configs. A tight file mode is
+     * defeated by a traversable parent, so these are locked down to match.
+     */
+    private function directoryMode(): int
+    {
+        return (int) config('rConfig.config_dir_mode');
+    }
+
+    /**
+     * The file mode with write added wherever read is already granted, used for
+     * the brief window while contents are written. 0440 becomes 0660, so an
+     * operator who tightens the file mode does not have it widened here.
+     */
+    private function writableFileMode(): int
+    {
+        $mode = $this->fileMode();
+
+        return $mode | (($mode & 0444) >> 1);
     }
 
     private function createFileName($command)

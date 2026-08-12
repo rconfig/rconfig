@@ -72,7 +72,12 @@ RUN mkdir -p storage/framework/{sessions,views,cache} \
     && mkdir -p storage/logs \
     && mkdir -p bootstrap/cache \
     && chown -R www-data:www-data /var/www/html/rconfig/storage /var/www/html/rconfig/bootstrap/cache \
-    && chmod -R 775 /var/www/html/rconfig/storage /var/www/html/rconfig/bootstrap/cache
+    && chmod -R 775 /var/www/html/rconfig/storage/framework /var/www/html/rconfig/storage/logs /var/www/html/rconfig/bootstrap/cache \
+    && chmod 775 /var/www/html/rconfig/storage
+# Note: the chmod above deliberately targets framework/logs/cache rather than
+# recursing over all of storage/. storage/app/rconfig/data holds downloaded
+# device configs, which carry device secrets and are kept non world readable by
+# FileOperations. A recursive chmod here would undo that on every build.
 
 # Marks the runtime as containerised. rconfig:clear-all keys off this to skip
 # the bare-metal supervisor/systemctl restarts (which need sudo) and to manage
