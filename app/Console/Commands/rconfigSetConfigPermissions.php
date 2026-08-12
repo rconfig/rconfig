@@ -7,14 +7,14 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
 
-class rconfigFixConfigPermissions extends Command
+class rconfigSetConfigPermissions extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'rconfig:fix-config-permissions {--dry-run : Report what would change without altering anything}';
+    protected $signature = 'rconfig:set-config-permissions {--dry-run : Report what would change without altering anything}';
 
     /**
      * The console command description.

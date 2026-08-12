@@ -420,6 +420,7 @@ php artisan rconfig:sync-tasks
 composer install
 systemctl restart httpd
 php artisan rconfig:clear-all
+php artisan rconfig:set-config-permissions
 
 # Ubuntu:
 cd /var/www/html/rconfig
@@ -429,6 +430,7 @@ php artisan rconfig:sync-tasks
 composer install
 systemctl restart apache2
 php artisan rconfig:clear-all
+php artisan rconfig:set-config-permissions
 ```
 
 > 💡 **Git Conflicts?** Try: `git stash && git pull`

@@ -4,6 +4,9 @@ namespace App\Console\Commands;
 
 use Artisan;
 use Illuminate\Console\Command;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use SplFileInfo;
 
 class rconfigClearAll extends Command
 {
@@ -73,6 +76,69 @@ class rconfigClearAll extends Command
 
         echo exec('composer dump-autoload') . PHP_EOL;
         $this->info(config('app.name') . ' application settings have been cleared!');
+
+        if ($this->configPermissionsAreLoose()) {
+            $this->newLine();
+            $this->warn('Stored device configurations are readable by other local accounts on this host.');
+            $this->warn('Run: php artisan rconfig:set-config-permissions');
+        }
+    }
+
+    /**
+     * Number of configuration files to inspect before giving up.
+     */
+    private const PERMISSION_SAMPLE_SIZE = 25;
+
+    /**
+     * Whether stored configurations still carry permissions that expose them to
+     * other local accounts.
+     *
+     * This samples a handful of files rather than walking the tree. clear-all is
+     * a fast command that gets run often, and the config data directory can hold
+     * hundreds of thousands of files, so a full walk here would be far too
+     * expensive. Remediation is the job of rconfig:set-config-permissions; this
+     * only nags. Returns false on any error, since a warning is not worth
+     * breaking a cache clear over.
+     */
+    public function configPermissionsAreLoose(): bool
+    {
+        $dataPath = config_data_path();
+
+        if (! is_dir($dataPath)) {
+            return false;
+        }
+
+        try {
+            $iterator = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($dataPath, RecursiveDirectoryIterator::SKIP_DOTS),
+                RecursiveIteratorIterator::LEAVES_ONLY
+            );
+
+            $inspected = 0;
+
+            /** @var SplFileInfo $item */
+            foreach ($iterator as $item) {
+                // Only stored configurations, so unrelated artefacts such as a
+                // .gitignore do not raise a false alarm.
+                if ($item->isLink() || ! $item->isFile() || ! in_array($item->getExtension(), ['txt', 'json'], true)) {
+                    continue;
+                }
+
+                $mode = @fileperms($item->getPathname());
+
+                if ($mode !== false && ($mode & 0007) !== 0) {
+                    return true;
+                }
+
+                if (++$inspected >= self::PERMISSION_SAMPLE_SIZE) {
+                    break;
+                }
+            }
+        } catch (\Exception) {
+            return false;
+        }
+
+        return false;
     }
 
     /**

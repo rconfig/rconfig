@@ -9,7 +9,7 @@ use Tests\TestCase;
  * Tightening FileOperations only affects newly written configs, so upgrading
  * installs rely on this command to remediate configs already on disk.
  */
-class rconfigFixConfigPermissionsTest extends TestCase
+class rconfigSetConfigPermissionsTest extends TestCase
 {
     private string $appDirPath;
     private string $dataPath;
@@ -49,7 +49,7 @@ class rconfigFixConfigPermissionsTest extends TestCase
     {
         $this->assertSame(0444, $this->modeOf($this->configFile), 'Precondition: the fixture starts world readable.');
 
-        $this->artisan('rconfig:fix-config-permissions')
+        $this->artisan('rconfig:set-config-permissions')
             ->assertExitCode(0);
 
         $this->assertSame(0440, $this->modeOf($this->configFile));
@@ -59,7 +59,7 @@ class rconfigFixConfigPermissionsTest extends TestCase
 
     public function test_it_tightens_every_level_of_the_directory_tree(): void
     {
-        $this->artisan('rconfig:fix-config-permissions')->assertExitCode(0);
+        $this->artisan('rconfig:set-config-permissions')->assertExitCode(0);
 
         $directory = $this->configDir;
 
@@ -74,7 +74,7 @@ class rconfigFixConfigPermissionsTest extends TestCase
 
     public function test_dry_run_reports_without_changing_anything(): void
     {
-        $this->artisan('rconfig:fix-config-permissions --dry-run')
+        $this->artisan('rconfig:set-config-permissions --dry-run')
             ->expectsOutputToContain('[dry run]')
             ->assertExitCode(0);
 
@@ -86,7 +86,7 @@ class rconfigFixConfigPermissionsTest extends TestCase
     {
         $original = file_get_contents($this->configFile);
 
-        $this->artisan('rconfig:fix-config-permissions')->assertExitCode(0);
+        $this->artisan('rconfig:set-config-permissions')->assertExitCode(0);
 
         $this->assertSame($original, file_get_contents($this->configFile));
     }
@@ -95,7 +95,7 @@ class rconfigFixConfigPermissionsTest extends TestCase
     {
         config(['rConfig.config_file_mode' => 0400, 'rConfig.config_dir_mode' => 0700]);
 
-        $this->artisan('rconfig:fix-config-permissions')->assertExitCode(0);
+        $this->artisan('rconfig:set-config-permissions')->assertExitCode(0);
 
         $this->assertSame(0400, $this->modeOf($this->configFile));
         $this->assertSame(0700, $this->modeOf($this->configDir));
@@ -115,7 +115,7 @@ class rconfigFixConfigPermissionsTest extends TestCase
         chmod($tempDir, 0777);
         chmod($tempFile, 0644);
 
-        $this->artisan('rconfig:fix-config-permissions')->assertExitCode(0);
+        $this->artisan('rconfig:set-config-permissions')->assertExitCode(0);
 
         $this->assertSame(0750, $this->modeOf($tempDir));
         $this->assertSame(0440, $this->modeOf($tempFile));
@@ -126,7 +126,7 @@ class rconfigFixConfigPermissionsTest extends TestCase
     {
         File::deleteDirectory($this->appDirPath);
 
-        $this->artisan('rconfig:fix-config-permissions')
+        $this->artisan('rconfig:set-config-permissions')
             ->expectsOutputToContain('nothing to do')
             ->assertExitCode(0);
     }
