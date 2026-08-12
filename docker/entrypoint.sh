@@ -43,7 +43,12 @@ mkdir -p \
 echo "🔒 Setting permissions..."
 chown -R www-data:www-data /var/www/html/rconfig/storage
 chown -R www-data:www-data /var/www/html/rconfig/bootstrap/cache
-chmod -R 775 /var/www/html/rconfig/storage
+# Scoped rather than recursive over all of storage/: storage/app/rconfig/data
+# holds downloaded device configs containing device secrets, kept non world
+# readable by FileOperations. Recursing here would re-open them every start.
+chmod 775 /var/www/html/rconfig/storage
+chmod -R 775 /var/www/html/rconfig/storage/framework
+chmod -R 775 /var/www/html/rconfig/storage/logs
 chmod -R 775 /var/www/html/rconfig/bootstrap/cache
 
 # Re-link public/storage to storage/app/public. public/ ships in the image while

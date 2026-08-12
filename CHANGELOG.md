@@ -5,6 +5,21 @@ All notable changes to rConfig v8 Core are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Security
+- Downloaded device configurations were written world readable (`0444`) inside world traversable directories (`0755`), so any unprivileged local account on the host could read every stored configuration, including the secrets they contain such as VPN pre shared keys, RADIUS secrets and SNMP community strings. Because the application set these modes with an explicit `chmod`, a hardened host umask was overridden on every write. Configs are now written `0440` in `0750` directories, and the brief window while contents are written is `0660` rather than `0666`. Reported in #354.
+- The temporary copies of configuration content created during a config compare were written `0644` into a `0777` directory, exposing the same content by another route. Both are now created with the configured config modes.
+- The Docker image and container entrypoint applied `chmod -R 775` across the whole `storage` tree, which re-granted "other" read and traverse on the config data directory on every build and every container start. Both are now scoped to the framework, log and bootstrap cache directories.
+
+### Added
+- `rconfig:fix-config-permissions` re-applies the configured modes to configurations already on disk. **Existing installations must run this once after upgrading**, because the code change only affects newly written files and historic configs keep their original permissions. Supports `--dry-run` and `-v`.
+- `RCONFIG_CONFIG_FILE_MODE` and `RCONFIG_CONFIG_DIR_MODE` for environments where the web server and the queue worker run as users that share no common group. The secure defaults are `0440` and `0750`.
+
+### Fixed
+- A stray `dump()` in the configuration save path wrote to standard output from queue workers when a download produced no configuration. The failure was already recorded in the activity log.
+- The root `VERSION` file was left at `8.2.12` when `8.2.13` was released. It is now covered by a test asserting it matches `composer.json` and `config/app.php`, and by a release workflow job that fails the build if a pushed `core-*` tag disagrees with any of the three.
+
 ## [8.2.13] - 2026-08-10
 
 Security release. Upgrade is recommended for all 8.x installations.
