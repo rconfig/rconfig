@@ -33,4 +33,22 @@ class ComposerJsonTest extends TestCase
         // should have a 6000 s timeout
         $this->assertEquals(6000, $composerJson['config']['process-timeout'], 'The process-timeout in composer.json is not set to 6000 seconds.');
     }
+
+    /**
+     * The root VERSION file is a third place the release version lives. It has
+     * silently drifted from composer.json and config/app.php across several
+     * releases, so pin it here alongside the other two.
+     */
+    public function test_version_file_matches_app_version()
+    {
+        $versionFilePath = base_path('VERSION');
+
+        $this->assertFileExists($versionFilePath, 'The root VERSION file is missing.');
+
+        $this->assertSame(
+            (string) config('app.version'),
+            trim((string) file_get_contents($versionFilePath)),
+            'The root VERSION file does not match the app version in config. Bump VERSION, composer.json and config/app.php together when releasing.'
+        );
+    }
 }

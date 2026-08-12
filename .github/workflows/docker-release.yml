@@ -15,6 +15,49 @@ env:
   GHCR_IMAGE: ghcr.io/rconfig/rconfig
 
 jobs:
+  # Guard the release before anything expensive runs. The image version is
+  # derived from the git tag, so a tag pushed without bumping the in-repo
+  # version ships an image whose reported version disagrees with its tag. This
+  # has happened: core-8.2.13 was tagged with VERSION still reading 8.2.12.
+  verify-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Assert tag matches in-repo version
+        run: |
+          set -euo pipefail
+          tag_version="${GITHUB_REF#refs/tags/core-}"
+          # Pre-release tags (core-8.2.7-rc.1) carry the base version in-repo.
+          base_version="${tag_version%%-*}"
+
+          composer_version="$(jq -r '.version' composer.json)"
+          config_version="$(sed -n "s/.*'version'[[:space:]]*=>[[:space:]]*'\([^']*\)'.*/\1/p" config/app.php | head -1)"
+          file_version="$(tr -d '[:space:]' < VERSION)"
+
+          echo "tag:            ${tag_version} (base ${base_version})"
+          echo "composer.json:  ${composer_version}"
+          echo "config/app.php: ${config_version}"
+          echo "VERSION:        ${file_version}"
+
+          status=0
+          for pair in "composer.json:${composer_version}" "config/app.php:${config_version}" "VERSION:${file_version}"; do
+            source_name="${pair%%:*}"
+            source_version="${pair#*:}"
+            if [[ "${source_version}" != "${base_version}" ]]; then
+              echo "::error file=${source_name}::${source_name} is ${source_version}, expected ${base_version} to match tag ${tag_version}"
+              status=1
+            fi
+          done
+
+          if [[ "${status}" -ne 0 ]]; then
+            echo "Release aborted. Bump VERSION, composer.json and config/app.php to ${base_version}, then re-tag."
+            exit 1
+          fi
+
+          echo "All version sources agree with the tag."
+
   # Each architecture builds on a runner of its own architecture, so nothing is
   # emulated. The previous single-runner linux/amd64,linux/arm64 build ran the
   # arm64 half under QEMU, where compiling the PHP extensions dominated the run
@@ -24,6 +67,7 @@ jobs:
   # Each job pushes an untagged, digest-addressed image. The merge job below
   # assembles those digests into the tagged manifest lists.
   build:
+    needs: verify-version
     strategy:
       fail-fast: false
       matrix:
