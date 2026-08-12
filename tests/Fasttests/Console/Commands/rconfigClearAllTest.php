@@ -4,6 +4,7 @@ namespace Tests\Fasttests\Console\Commands;
 
 use App\Console\Commands\rconfigClearAll;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 
 class rconfigClearAllTest extends TestCase
@@ -25,11 +26,13 @@ class rconfigClearAllTest extends TestCase
 
         $storage = $this->appDir . '/storage';
         if (is_dir($storage)) {
+            // The docker test loosens this to 0777; restore a sane mode first.
             chmod($storage, 0755);
-            rmdir($storage);
         }
         if (is_dir($this->appDir)) {
-            rmdir($this->appDir);
+            // Recursive: some tests build a nested config data tree here, which
+            // rmdir cannot remove.
+            File::deleteDirectory($this->appDir);
         }
 
         parent::tearDown();
@@ -71,5 +74,51 @@ class rconfigClearAllTest extends TestCase
         (new rconfigClearAll)->applyDockerStoragePermissions();
 
         $this->assertSame(0755, fileperms($storage) & 0777);
+    }
+
+    public function test_it_detects_configurations_readable_by_other(): void
+    {
+        $config = $this->writeStoredConfig('showrunningconfig_1200.txt', 0444);
+
+        $this->assertSame(0444, fileperms($config) & 0777, 'Precondition: the fixture is world readable.');
+        $this->assertTrue((new rconfigClearAll)->configPermissionsAreLoose());
+    }
+
+    public function test_it_stays_quiet_when_configurations_are_locked_down(): void
+    {
+        $this->writeStoredConfig('showrunningconfig_1200.txt', 0440);
+
+        $this->assertFalse((new rconfigClearAll)->configPermissionsAreLoose());
+    }
+
+    /**
+     * A .gitignore ships in the data directory at 0644. It is not a stored
+     * configuration, so it must not trigger the warning on its own.
+     */
+    public function test_it_ignores_files_that_are_not_stored_configurations(): void
+    {
+        $this->writeStoredConfig('.gitignore', 0644);
+
+        $this->assertFalse((new rconfigClearAll)->configPermissionsAreLoose());
+    }
+
+    public function test_it_stays_quiet_when_no_configurations_exist(): void
+    {
+        $this->assertFalse((new rconfigClearAll)->configPermissionsAreLoose());
+    }
+
+    /**
+     * Writes a file into the configured config data tree and returns its path.
+     */
+    private function writeStoredConfig(string $filename, int $mode): string
+    {
+        $directory = $this->appDir . '/storage/app/rconfig/data/Routers/r1/2026/Aug/01';
+        mkdir($directory, 0750, true);
+
+        $path = $directory . '/' . $filename;
+        file_put_contents($path, "hostname r1\n");
+        chmod($path, $mode);
+
+        return $path;
     }
 }

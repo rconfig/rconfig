@@ -31,7 +31,7 @@ return [
     | fixing the group membership instead.
     |
     | Values are octal strings, for example '0440'. Changing them affects newly
-    | written configs only, so run rconfig:fix-config-permissions afterwards to
+    | written configs only, so run rconfig:set-config-permissions afterwards to
     | apply the change to configs already on disk.
     |
      */

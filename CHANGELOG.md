@@ -5,7 +5,9 @@ All notable changes to rConfig v8 Core are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [8.2.14] - 2026-08-13
+
+Security release. Upgrade is recommended for all 8.x installations. **Run `php artisan rconfig:fix-config-permissions` once after upgrading**, because the permission changes below apply to newly written configurations only and configurations already on disk keep the permissions they were written with.
 
 ### Security
 - Downloaded device configurations were written world readable (`0444`) inside world traversable directories (`0755`), so any unprivileged local account on the host could read every stored configuration, including the secrets they contain such as VPN pre shared keys, RADIUS secrets and SNMP community strings. Because the application set these modes with an explicit `chmod`, a hardened host umask was overridden on every write. Configs are now written `0440` in `0750` directories, and the brief window while contents are written is `0660` rather than `0666`. Reported in #354.

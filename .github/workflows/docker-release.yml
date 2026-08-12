@@ -223,3 +223,66 @@ jobs:
       - name: Inspect
         run: |
           docker buildx imagetools inspect "${DOCKERHUB_IMAGE}:${{ steps.run.outputs.version }}"
+
+  # GitHub Releases were created by hand, which meant they were forgotten: tags
+  # through core-8.2.13 published Docker images with no matching Release. This
+  # opens a DRAFT release for the tag so one always exists and is visible in the
+  # Releases UI straight away.
+  #
+  # The body is deliberately a scaffold rather than the CHANGELOG section
+  # verbatim. Release notes here are condensed one line bullets per section with
+  # a pointer to CHANGELOG.md, not the full prose entry, so a human fills it in
+  # and publishes. Draft means nothing unreviewed goes public.
+  #
+  # Runs after merge so the release never appears before its images exist.
+  github-release:
+    needs: merge
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Open draft release if one does not exist
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_REF#refs/tags/}"
+          version="${tag#core-}"
+
+          # Idempotent: never clobber a release someone already wrote by hand.
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release already exists for ${tag}, leaving it untouched."
+            exit 0
+          fi
+
+          prerelease_flag=""
+          if [[ "${version}" == *-* ]]; then
+            prerelease_flag="--prerelease"
+          fi
+
+          {
+            echo "<!-- Condense the CHANGELOG entry into one line bullets under the"
+            echo "     headings below, drop any heading that does not apply, then"
+            echo "     publish. Do not paste the CHANGELOG section verbatim. -->"
+            echo
+            echo "### Security"
+            echo
+            echo "### Added"
+            echo
+            echo "### Changed"
+            echo
+            echo "### Fixed"
+            echo
+            echo "See CHANGELOG.md for detail."
+          } > release-notes.md
+
+          # shellcheck disable=SC2086
+          gh release create "$tag" \
+            --title "rConfig V8 Core ${version}" \
+            --notes-file release-notes.md \
+            --draft \
+            --verify-tag \
+            ${prerelease_flag}
+
+          echo "::notice title=Draft release created::Edit and publish the draft release for ${tag}."
