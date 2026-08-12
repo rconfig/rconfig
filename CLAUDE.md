@@ -150,7 +150,9 @@ This project uses the Laravel 10 style file structure (it upgraded from Laravel 
 ### Releases and tagging
 
 - **All release tags MUST be prefixed with `core-`**, for example `core-8.2.6`. Never create a bare version tag like `8.2.6`. Use annotated tags: `git tag -a core-8.2.6 -m "rConfig V8 Core 8.2.6 - <summary>"`.
-- Bump the version in both `composer.json` and `config/app.php` before tagging, and run the tests first.
+- **The version lives in three places and they must all be bumped together**: `composer.json`, `config/app.php`, and the root `VERSION` file. Do this before tagging, and run the tests first. `VERSION` has been forgotten in several past releases (`core-8.2.13` was tagged with `VERSION` still at `8.2.12`), so treat it as part of the same edit, not an afterthought.
+- Two guards enforce this, do not work around them. `tests/Unit/ComposerJsonTest.php` asserts all three agree, and the `verify-version` job in `.github/workflows/docker-release.yml` fails the release build if the pushed `core-*` tag does not match all three. If that job fails, fix the version files and re-tag rather than re-running the build.
+- Never move or re-point a tag that has already been pushed. If a published tag has a version mismatch, leave it and correct it in the next release.
 - A few historical tags (`8.2.1` through `8.2.5`) were created without the prefix. They have been supplemented with correctly prefixed `core-` tags at the same commits; do not add new unprefixed tags.
 
 ## Notes for AI assistants
