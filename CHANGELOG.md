@@ -5,7 +5,7 @@ All notable changes to rConfig v8 Core are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [8.2.15] - unreleased
+## [8.2.15] - 2026-08-13
 
 ### Fixed
 - Docker installs using the optional `storage` bind mount were never seeded from the image, because Docker masks image content under a bind mount and the entrypoint recreated only part of the tree. `storage/app/rconfig` and the five bundled template files were absent, giving a 500 on template import and on opening a template, and silent failures writing task reports. The image now ships a storage skeleton that the entrypoint restores missing paths from, without overwriting existing data. Named volume installs were never affected. Present since Docker images were introduced in 8.2.7. Reported in #357.
