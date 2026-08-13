@@ -13,6 +13,8 @@ on:
       - 'docker/**'
       - 'storage/app/rconfig/**'
       - '.github/workflows/docker-storage-seeding.yml'
+  # So the job can be run against a branch without opening a pull request.
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -49,6 +51,17 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      # .dockerignore excludes .env.* so .env.example is not in the image, and
+      # the entrypoint copies from it only when .env is absent. The published
+      # compose always bind mounts .env from the host, so that path never runs
+      # in a real deployment. Mirror the published arrangement here, or the
+      # container dies on the missing example file before it reaches the seed.
+      #
+      # Deliberately not named .env: compose treats a file of that name in the
+      # project directory as its own variable interpolation source.
+      - name: Provide the application env file
+        run: cp .env.example app.env
+
       - name: Write compose file
         run: |
           set -euo pipefail
@@ -66,6 +79,7 @@ jobs:
                 - REDIS_PORT=6379
               volumes:
                 - ${BIND_DIR:?}:/var/www/html/rconfig/storage
+                - ./app.env:/var/www/html/rconfig/.env
               depends_on:
                 db:
                   condition: service_healthy
@@ -94,6 +108,18 @@ jobs:
               echo "Storage seeded."
               exit 0
             fi
+
+            # A container that has already died will never seed anything, so
+            # stop rather than sitting out the full timeout. The entrypoint
+            # exits non-zero by design when it cannot write to storage, and
+            # that is a failure worth reporting immediately.
+            cid="$(docker compose -f compose.ci.yml ps -q app || true)"
+            if [ -z "${cid}" ] || [ "$(docker inspect -f '{{.State.Status}}' "${cid}" 2>/dev/null || echo gone)" != "running" ]; then
+              echo "::error::The app container is no longer running, so storage was never seeded."
+              docker compose -f compose.ci.yml logs app
+              exit 1
+            fi
+
             sleep 5
           done
           echo "::error::Storage was not seeded within the timeout."
