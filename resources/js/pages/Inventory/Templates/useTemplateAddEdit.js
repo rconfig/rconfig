@@ -70,6 +70,12 @@ export default function useTemplateAddEdit(props, emit) {
 				code.value = response.data.code;
 				meditor.getModel().setValue(response.data.code);
 				isLoading.value = false;
+
+				// The record can outlive its yml file, so say so rather than
+				// leaving the user staring at an empty editor.
+				if (response.data.fileMissing) {
+					toastError("Template file missing", `The file '${response.data.fileName}' was not found in the templates directory. Save this template to recreate it.`);
+				}
 			})
 			.catch((error) => {
 				meditor.updateOptions({

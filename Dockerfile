@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
     supervisor \
     cron \
+    git \
     netcat-openbsd \
     libsnmp-dev \
     snmp \
@@ -78,6 +79,20 @@ RUN mkdir -p storage/framework/{sessions,views,cache} \
 # recursing over all of storage/. storage/app/rconfig/data holds downloaded
 # device configs, which carry device secrets and are kept non world readable by
 # FileOperations. A recursive chmod here would undo that on every build.
+
+# The config data directory ships at whatever mode the checkout carries, which
+# is world traversable. FileOperations creates the directories beneath it at
+# 0750, so stored configs were never exposed, but the root of that tree should
+# not be an exception to the rule. Set here so both the image and the skeleton
+# below carry it, which covers the named volume path as well as the bind mount.
+RUN chmod 750 /var/www/html/rconfig/storage/app/rconfig/data
+
+# Snapshot the pristine storage tree. A bind mounted storage/ masks everything
+# the image ships, so the entrypoint restores missing paths from this copy. It
+# lives outside the mount point, which is what keeps it visible. Taken after the
+# ownership and mode work above so the skeleton carries the same modes.
+RUN mkdir -p /usr/local/share/rconfig \
+    && cp -a /var/www/html/rconfig/storage /usr/local/share/rconfig/storage-skeleton
 
 # Marks the runtime as containerised. rconfig:clear-all keys off this to skip
 # the bare-metal supervisor/systemctl restarts (which need sudo) and to manage

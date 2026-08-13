@@ -1,0 +1,241 @@
+name: Docker storage seeding
+
+# The container entrypoint has to rebuild the storage tree itself, because a
+# bind mounted storage volume masks everything the image ships under storage/.
+# The unit tests for this only read the entrypoint as text, so this is the job
+# that actually proves it: bring the image up against a host directory and
+# check what lands there. See issue #357.
+on:
+  pull_request:
+    paths:
+      - 'Dockerfile'
+      - '.dockerignore'
+      - 'docker/**'
+      - 'storage/app/rconfig/**'
+      - '.github/workflows/docker-storage-seeding.yml'
+
+permissions:
+  contents: read
+  # Buildx writes its layer cache to the Actions cache service.
+  actions: write
+
+concurrency:
+  group: docker-storage-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bind-mount-seeding:
+    name: Bind-mounted storage is seeded
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v4
+
+      # amd64 only and loaded locally. This job is checking entrypoint
+      # behaviour, which is architecture independent, so the arm64 half of the
+      # release build would buy nothing here.
+      - name: Build image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          platforms: linux/amd64
+          load: true
+          tags: rconfig-storage-test:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Write compose file
+        run: |
+          set -euo pipefail
+          cat > compose.ci.yml <<'YAML'
+          services:
+            app:
+              image: rconfig-storage-test:ci
+              environment:
+                - DB_HOST=db
+                - DB_PORT=3306
+                - DB_DATABASE=rconfig
+                - DB_USERNAME=rconfig_user
+                - DB_PASSWORD=rconfig_pass
+                - REDIS_HOST=redis
+                - REDIS_PORT=6379
+              volumes:
+                - ${BIND_DIR:?}:/var/www/html/rconfig/storage
+              depends_on:
+                db:
+                  condition: service_healthy
+            db:
+              image: mariadb:10.11
+              environment:
+                MYSQL_ROOT_PASSWORD: root_password
+                MYSQL_DATABASE: rconfig
+                MYSQL_USER: rconfig_user
+                MYSQL_PASSWORD: rconfig_pass
+              healthcheck:
+                test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+                interval: 10s
+                timeout: 10s
+                retries: 10
+                start_period: 60s
+            redis:
+              image: redis:7-alpine
+          YAML
+
+          cat > wait-for-seed.sh <<'SH'
+          #!/bin/bash
+          set -euo pipefail
+          for _ in $(seq 1 60); do
+            if sudo test -f "${BIND_DIR}/app/rconfig/templates/ios-ssh-enable.yml"; then
+              echo "Storage seeded."
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::Storage was not seeded within the timeout."
+          docker compose -f compose.ci.yml logs app
+          exit 1
+          SH
+          chmod +x wait-for-seed.sh
+
+      # ------------------------------------------------------------------
+      # Scenario A: an empty host directory. This is the exact case in #357.
+      # ------------------------------------------------------------------
+      - name: 'A: start against an empty bind mount'
+        env:
+          BIND_DIR: ${{ github.workspace }}/bind-empty
+        run: |
+          set -euo pipefail
+          mkdir -p "${BIND_DIR}"
+          docker compose -f compose.ci.yml up -d
+          ./wait-for-seed.sh
+
+      - name: 'A: assert the bundled templates were seeded'
+        env:
+          BIND_DIR: ${{ github.workspace }}/bind-empty
+        run: |
+          set -euo pipefail
+          status=0
+          for template in default ios-ssh-enable ios-ssh-noenable ios-telnet-enable ios-telnet-noenable; do
+            if ! sudo test -f "${BIND_DIR}/app/rconfig/templates/${template}.yml"; then
+              echo "::error::app/rconfig/templates/${template}.yml is missing. This is issue #357."
+              status=1
+            fi
+          done
+          exit "${status}"
+
+      - name: 'A: assert the storage layout was restored'
+        env:
+          BIND_DIR: ${{ github.workspace }}/bind-empty
+        run: |
+          set -euo pipefail
+          status=0
+          for directory in \
+            app/rconfig/templates \
+            app/rconfig/data \
+            app/rconfig/reports \
+            app/rconfig/backups \
+            app/rconfig/exports \
+            app/public \
+            framework/cache/data \
+            framework/sessions \
+            framework/views \
+            logs \
+            files/uploads; do
+            if ! sudo test -d "${BIND_DIR}/${directory}"; then
+              echo "::error::${directory} was not created by the entrypoint."
+              status=1
+            fi
+          done
+          exit "${status}"
+
+      # Regression guard for the 8.2.14 security fix. Device configs live here
+      # and the directory must not be world traversable, whatever the host umask.
+      - name: 'A: assert the config data directory is not world readable'
+        env:
+          BIND_DIR: ${{ github.workspace }}/bind-empty
+        run: |
+          set -euo pipefail
+          mode="$(sudo stat -c '%a' "${BIND_DIR}/app/rconfig/data")"
+          echo "app/rconfig/data is ${mode}"
+          if [ "${mode}" != "750" ]; then
+            echo "::error::app/rconfig/data is ${mode}, expected 750."
+            exit 1
+          fi
+
+      - name: 'A: assert git is available for template import'
+        env:
+          BIND_DIR: ${{ github.workspace }}/bind-empty
+        run: docker compose -f compose.ci.yml exec -T app git --version
+
+      - name: 'A: logs and teardown'
+        if: always()
+        env:
+          BIND_DIR: ${{ github.workspace }}/bind-empty
+        run: |
+          docker compose -f compose.ci.yml logs app || true
+          docker compose -f compose.ci.yml down -v || true
+
+      # ------------------------------------------------------------------
+      # Scenario B: an existing install being upgraded. The seed must add what
+      # is missing and disturb nothing else, including a tightened directory
+      # mode. cp -a passes scenario A and fails this one.
+      # ------------------------------------------------------------------
+      - name: 'B: start against a populated bind mount'
+        env:
+          BIND_DIR: ${{ github.workspace }}/bind-existing
+        run: |
+          set -euo pipefail
+          sudo mkdir -p "${BIND_DIR}/app/rconfig/templates" "${BIND_DIR}/app/rconfig/data"
+          echo 'do-not-overwrite' | sudo tee "${BIND_DIR}/app/rconfig/templates/default.yml" > /dev/null
+          echo 'device-secret' | sudo tee "${BIND_DIR}/app/rconfig/data/existing-config.txt" > /dev/null
+          sudo chmod 700 "${BIND_DIR}/app/rconfig/data"
+
+          docker compose -f compose.ci.yml up -d
+          ./wait-for-seed.sh
+
+      - name: 'B: assert existing content was not overwritten'
+        env:
+          BIND_DIR: ${{ github.workspace }}/bind-existing
+        run: |
+          set -euo pipefail
+          status=0
+          if [ "$(sudo cat "${BIND_DIR}/app/rconfig/templates/default.yml")" != 'do-not-overwrite' ]; then
+            echo "::error::The seed overwrote an existing template. It must not clobber user data."
+            status=1
+          fi
+          if [ "$(sudo cat "${BIND_DIR}/app/rconfig/data/existing-config.txt")" != 'device-secret' ]; then
+            echo "::error::The seed overwrote an existing device config."
+            status=1
+          fi
+          if ! sudo test -f "${BIND_DIR}/app/rconfig/templates/ios-ssh-enable.yml"; then
+            echo "::error::The seed skipped the whole directory rather than the existing file."
+            status=1
+          fi
+          exit "${status}"
+
+      # The one cp -a would fail. An operator who tightened this directory must
+      # not find it widened again on the next restart.
+      - name: 'B: assert a tightened directory mode was preserved'
+        env:
+          BIND_DIR: ${{ github.workspace }}/bind-existing
+        run: |
+          set -euo pipefail
+          mode="$(sudo stat -c '%a' "${BIND_DIR}/app/rconfig/data")"
+          echo "app/rconfig/data is ${mode}"
+          if [ "${mode}" != "700" ]; then
+            echo "::error::app/rconfig/data is ${mode}, expected the pre-existing 700 to be left alone."
+            exit 1
+          fi
+
+      - name: 'B: logs and teardown'
+        if: always()
+        env:
+          BIND_DIR: ${{ github.workspace }}/bind-existing
+        run: |
+          docker compose -f compose.ci.yml logs app || true
+          docker compose -f compose.ci.yml down -v || true
