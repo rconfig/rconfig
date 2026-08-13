@@ -2190,7 +2190,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-C8KVHqTl.js",
+    "file": "assets/app-DGLP1RNc.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -4161,7 +4161,7 @@
     ]
   },
   "resources/js/pages/Shared/Panels/ContentPanel.vue": {
-    "file": "assets/ContentPanel-BSlQ8m_q.js",
+    "file": "assets/ContentPanel-DkYJagot.js",
     "name": "ContentPanel",
     "src": "resources/js/pages/Shared/Panels/ContentPanel.vue",
     "isDynamicEntry": true,
