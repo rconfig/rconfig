@@ -28,16 +28,66 @@ if ! grep -q "APP_KEY=base64:" /var/www/html/rconfig/.env; then
     php artisan key:generate --force
 fi
 
-# Ensure the storage tree exists before setting permissions. The storage volume
-# (or a bind mount) can start empty, and the Laravel directory layout can change
-# between image versions, so recreate the expected structure on every start.
-echo "🗂️  Ensuring storage directories..."
+# Seed the storage tree from the skeleton baked into the image. A named volume
+# gets the image content copied in by Docker on first mount, but a bind mount
+# masks it, so an empty host directory would otherwise start with none of the
+# application's storage layout and none of the bundled template files.
+#
+# tar --skip-old-files rather than cp -an. Both leave existing files alone, but
+# cp -a also re-applies the skeleton's mode to directories that already exist,
+# so an operator who had tightened storage/app/rconfig/data would find it
+# widened again on every restart. tar touches only what it creates, and creates
+# it with the skeleton's modes rather than the host umask.
+STORAGE_DIR=/var/www/html/rconfig/storage
+STORAGE_SKELETON=/usr/local/share/rconfig/storage-skeleton
+
+echo "🗂️  Seeding storage from image skeleton..."
+
+# Checked as root, which is what this script runs as. A root owned host
+# directory is fine and is handled by the chown below; what this catches is a
+# read only mount or an SELinux denial, both of which would otherwise leave the
+# container running against a storage tree that was never seeded.
+if ! touch "${STORAGE_DIR}/.write-test" 2>/dev/null; then
+    echo "ERROR: ${STORAGE_DIR} is not writable inside the container." >&2
+    echo "If this is a bind mount, check the host directory is not read only." >&2
+    echo "On SELinux hosts (Rocky, RHEL, Fedora) add :z to the volume line," >&2
+    echo "for example: - ./storage:/var/www/html/rconfig/storage:z" >&2
+    exit 1
+fi
+rm -f "${STORAGE_DIR}/.write-test"
+
+if [ -d "${STORAGE_SKELETON}" ]; then
+    # pipefail is scoped to this subshell so a failure in the reading tar is not
+    # hidden by the writing tar exiting cleanly.
+    if ! ( set -o pipefail; tar -C "${STORAGE_SKELETON}" -cf - . | tar -C "${STORAGE_DIR}" -xf - --skip-old-files ); then
+        echo "ERROR: failed to seed storage from ${STORAGE_SKELETON}." >&2
+        exit 1
+    fi
+fi
+
+# Directories the skeleton cannot carry, because they are gitignored and so are
+# absent from the image build context. All of these are also created on demand
+# at runtime; creating them here means a fresh container starts with the full
+# layout rather than growing it on first use.
 mkdir -p \
     /var/www/html/rconfig/storage/framework/cache/data \
     /var/www/html/rconfig/storage/framework/sessions \
     /var/www/html/rconfig/storage/framework/views \
     /var/www/html/rconfig/storage/logs \
-    /var/www/html/rconfig/storage/app/public
+    /var/www/html/rconfig/storage/app/public \
+    /var/www/html/rconfig/storage/app/rconfig/templates \
+    /var/www/html/rconfig/storage/app/rconfig/reports \
+    /var/www/html/rconfig/storage/app/rconfig/backups \
+    /var/www/html/rconfig/storage/app/rconfig/exports \
+    /var/www/html/rconfig/storage/files/uploads
+
+# The config data directory is created apart from the list above. It holds
+# downloaded device configs, so its mode is deliberate rather than whatever the
+# umask yields, and it is configurable via RCONFIG_CONFIG_DIR_MODE. mkdir -m
+# sets the mode only when it creates the directory, so an existing one restored
+# from the skeleton or carried over from an older install keeps its own mode.
+mkdir -p -m "${RCONFIG_CONFIG_DIR_MODE:-0750}" \
+    /var/www/html/rconfig/storage/app/rconfig/data
 
 # Set correct permissions
 echo "🔒 Setting permissions..."

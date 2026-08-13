@@ -18,6 +18,11 @@ class CreateTaskReport
     {
         $this->report_data->duration = $this->report_data->end_time->diffInSeconds($this->report_data->start_time);
 
+        // The report directory can be absent on an install whose storage tree
+        // was never fully seeded. Without this the write throws inside a queued
+        // job and the task run reports nothing.
+        File::ensureDirectoryExists(report_path());
+
         File::put(
             $this->report_data->report_path,
             view('report_templates.task_report')

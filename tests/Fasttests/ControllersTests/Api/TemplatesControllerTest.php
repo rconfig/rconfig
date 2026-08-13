@@ -59,6 +59,50 @@ class TemplatesControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
+    /**
+     * A template row can outlive its file, most often on an install whose
+     * storage tree is incomplete. That used to 500 from an unguarded read.
+     */
+    public function test_show_template_with_missing_file_reports_it_rather_than_failing()
+    {
+        $template = Template::factory()->create([
+            'fileName' => '/app/rconfig/templates/definitely_not_on_disk.yml',
+        ]);
+
+        $response = $this->get('/api/templates/' . $template->id);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'fileMissing' => true,
+            'code' => '',
+            'fileName' => 'definitely_not_on_disk.yml',
+        ]);
+    }
+
+    /**
+     * The response says which file is missing, but the absolute path stays in
+     * the log. Leaking it would undo the containment work done in 8.2.13.
+     */
+    public function test_missing_template_file_response_does_not_disclose_the_absolute_path()
+    {
+        $template = Template::factory()->create([
+            'fileName' => '/app/rconfig/templates/definitely_not_on_disk.yml',
+        ]);
+
+        $response = $this->get('/api/templates/' . $template->id);
+
+        $response->assertDontSee(storage_path(), false);
+        $response->assertDontSee('/app/rconfig/templates/definitely_not_on_disk.yml', false);
+    }
+
+    public function test_show_template_present_on_disk_is_not_flagged_as_missing()
+    {
+        $response = $this->get('/api/templates/' . 1);
+
+        $response->assertStatus(200);
+        $response->assertJson(['fileMissing' => false]);
+    }
+
     public function test_get_all_templates()
     {
         $template = Template::factory(10)->create();

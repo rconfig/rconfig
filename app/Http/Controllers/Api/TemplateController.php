@@ -64,10 +64,29 @@ class TemplateController extends ApiBaseController
         return parent::storeResource($request->toDTO()->toArray(), 0);
     }
 
+    /**
+     * Return a template record along with the contents of its yml file.
+     *
+     * A template row can outlive the file it points at, most often on an install
+     * whose storage tree is incomplete, for example a restored backup or a
+     * container started against an unseeded volume. That used to surface as a
+     * 500 from an unguarded read. The record is now returned with empty code and
+     * a fileMissing flag so the caller can say something useful. The absolute
+     * path stays in the log rather than the response body.
+     */
     public function show($id, $relationship = null, $withCount = null)
     {
         $result = parent::show($id);
-        $result['code'] = File::get(storage_path() . $result['fileName']);
+        $templateFile = storage_path() . $result['fileName'];
+        $result['fileMissing'] = ! File::exists($templateFile);
+
+        if ($result['fileMissing']) {
+            $result['code'] = '';
+            activityLogIt(__CLASS__, __FUNCTION__, 'warn', 'Template file missing on disk: ' . $templateFile, 'templates');
+        } else {
+            $result['code'] = File::get($templateFile);
+        }
+
         $result['fileName'] = basename($result['fileName']);
 
         return response()->json($result);
