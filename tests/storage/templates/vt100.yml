@@ -1,0 +1,41 @@
+# rConfig connection template - DO NOT EDIT DIRECTLY
+## Notes:
+## all items below that contain free text should be contained within quotation marks " "
+## For new community submitted templates visit: https://github.com/rconfig/rConfig-templates
+
+main:
+  name: 'RuggedCom Splash Screen Template'
+  desc: 'RuggedCom SSH with splash screen handling'
+connect:
+  # connection timeout in seconds
+  timeout: 10
+  # type either telnet or ssh - must be in lowercase
+  protocol: ssh
+  # type port number for connection protocol choose from 1 - 65535
+  port: 22
+auth:
+  # Set username name prompt. Must be in quotes. If left blank, username will not be sent.
+  username: 'Username:'
+  # Set password name prompt. Must be in quotes
+  password: 'Password:'
+  # Set enable mode on or off
+  enable: off
+config:
+  linebreak: 'n'
+  paging: off
+  pagingCmd: 'terminal length 0'
+  exitCmd: 'quit'
+options:
+  # AnsiHost required in special cases for HP and Mikrotik devices.
+  AnsiHost: 'yes'
+vt100:
+  # Device shows a splash screen before the login prompt
+  hasSplashScreen: on
+  hasSplashScreenEnterKey: off
+  splashScreenReadToText: 'Ctrl-Y'
+  splashScreenSendControlCode: 'Y'
+failure_criteria:
+  exit_codes: [1, 2, 255] # List of exit codes that indicate failure
+  error_patterns: # String patterns in output that indicate failure
+    - 'Connection refused'
+    - 'Authentication failed'

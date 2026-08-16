@@ -3,6 +3,7 @@
 namespace Tests\Fasttests\ServiceTests\Templates;
 
 use App\Services\Templates\TemplateReformatter;
+use Symfony\Component\Yaml\Yaml;
 use Tests\TestCase;
 
 class TemplateReformatterTest extends TestCase
@@ -10,6 +11,7 @@ class TemplateReformatterTest extends TestCase
     protected string $oldFormatPath;
     protected string $newFormatPath;
     protected string $inlineCommentsPath;
+    protected string $vt100Path;
     protected TemplateReformatter $reformatter;
 
     public function setUp(): void
@@ -19,6 +21,7 @@ class TemplateReformatterTest extends TestCase
         $this->oldFormatPath = base_path('tests/storage/templates/oldformat.yml');
         $this->newFormatPath = base_path('tests/storage/templates/newformat.yml');
         $this->inlineCommentsPath = base_path('tests/storage/templates/inlinecomments.yml');
+        $this->vt100Path = base_path('tests/storage/templates/vt100.yml');
 
         $this->reformatter = new TemplateReformatter;
     }
@@ -120,5 +123,72 @@ class TemplateReformatterTest extends TestCase
 
         $this->assertStringContainsString('name: "Cisco #1 Core"', $result);
         $this->assertStringNotContainsString('inline note', $result);
+    }
+
+    /**
+     * Regression for RCO-1300: reformatting must not drop the vt100 section, which
+     * drives splash screen login on RuggedCom and Avaya style devices.
+     */
+    public function test_vt100_section_survives_a_reformat(): void
+    {
+        $result = $this->reformatter->reformatTemplateFile($this->vt100Path);
+
+        $parsed = Yaml::parse($result);
+
+        $this->assertArrayHasKey('vt100', $parsed);
+        $this->assertSame('on', $parsed['vt100']['hasSplashScreen']);
+        $this->assertSame('off', $parsed['vt100']['hasSplashScreenEnterKey']);
+        $this->assertSame('Ctrl-Y', $parsed['vt100']['splashScreenReadToText']);
+        $this->assertSame('Y', $parsed['vt100']['splashScreenSendControlCode']);
+
+        // The vt100 keys must not leak into the preceding section
+        $this->assertArrayNotHasKey('vt100', $parsed['options']);
+        $this->assertArrayNotHasKey('hasSplashScreen', $parsed['options']);
+
+        // And the section is documented like every other known section
+        $this->assertStringContainsString('# Device shows a splash screen before login?', $result);
+    }
+
+    /**
+     * Regression for RCO-1300: every section present in the input must be present
+     * in the output, including sections the reformatter knows nothing about.
+     */
+    public function test_no_section_is_lost_during_a_reformat(): void
+    {
+        $before = Yaml::parse(file_get_contents($this->vt100Path));
+        $after = Yaml::parse($this->reformatter->reformatTemplateFile($this->vt100Path));
+
+        $this->assertSame(array_keys($before), array_keys($after));
+    }
+
+    /**
+     * Sections the reformatter cannot represent as a flat mapping, such as the
+     * nested lists in failure_criteria, are carried through unchanged.
+     */
+    public function test_nested_sections_are_preserved_verbatim(): void
+    {
+        $before = Yaml::parse(file_get_contents($this->vt100Path));
+        $result = $this->reformatter->reformatTemplateFile($this->vt100Path);
+
+        $after = Yaml::parse($result);
+
+        $this->assertSame($before['failure_criteria'], $after['failure_criteria']);
+        $this->assertSame([1, 2, 255], $after['failure_criteria']['exit_codes']);
+        $this->assertSame(
+            ['Connection refused', 'Authentication failed'],
+            $after['failure_criteria']['error_patterns']
+        );
+    }
+
+    /**
+     * A reformat of an already reformatted template must be a no-op beyond
+     * whitespace, so repeated clicks of the button cannot erode a template.
+     */
+    public function test_reformatting_is_stable_across_repeated_runs(): void
+    {
+        $once = $this->reformatter->reformatTemplate(file_get_contents($this->vt100Path));
+        $twice = $this->reformatter->reformatTemplate($once);
+
+        $this->assertSame(Yaml::parse($once), Yaml::parse($twice));
     }
 }

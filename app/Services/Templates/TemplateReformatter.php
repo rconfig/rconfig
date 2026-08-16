@@ -41,8 +41,16 @@ class TemplateReformatter
             'setWindowSize' => 'Terminal window size [columns, rows] - v6 Only',
             'setTerminalDimensions' => 'Terminal dimensions for Ansi sessions [width, height] - v6 Only',
         ],
+        'vt100' => [
+            'hasSplashScreen' => 'Device shows a splash screen before login? \'on\' or \'off\'',
+            'hasSplashScreenEnterKey' => 'Send an enter key to clear the splash screen? \'on\' or \'off\'',
+            'splashScreenReadToText' => 'Text on the splash screen to read up to',
+            'splashScreenSendControlCode' => 'Control code to send once the splash screen is read',
+        ],
     ];
-    private $sectionOrder = ['main', 'connect', 'auth', 'config', 'options'];
+
+    /** @var array<int, string> */
+    private $sectionOrder = ['main', 'connect', 'auth', 'config', 'options', 'vt100'];
 
     public function reformatTemplateFile(string $inputFile): string
     {
@@ -133,49 +141,120 @@ class TemplateReformatter
         return $string . '.yml';
     }
 
+    /**
+     * Splits the template into sections, keeping the raw body of every section so
+     * that nothing can be lost. A section whose body is a flat list of key/value
+     * pairs also gets a parsed `pairs` array and is rewritten with comments; any
+     * other section (nested keys, list items) is carried through verbatim.
+     *
+     * @return array<string, array{pairs: array<string, string|array<int, string>>|null, lines: array<int, string>}>
+     */
     private function parseYamlLike(string $content): array
     {
-        $lines = explode("\n", $content);
+        $lines = preg_split('/\r\n|\r|\n/', $content) ?: [];
         $parsed = [];
         $currentSection = null;
-        $inComment = false;
 
         foreach ($lines as $line) {
+            $line = rtrim($line);
             $trimmed = trim($line);
 
-            // Skip comments and empty lines during parsing
-            if (empty($trimmed) || $trimmed[0] === '#') {
-                continue;
-            }
-
-            // Check if this is a section header
-            if (preg_match('/^([a-zA-Z]+):$/', $trimmed, $matches)) {
+            // A section header sits at the start of the line with no value after the colon
+            if (preg_match('/^([a-zA-Z][a-zA-Z0-9_]*):$/', $line, $matches)) {
                 $currentSection = $matches[1];
-                $parsed[$currentSection] = [];
+                $parsed[$currentSection] = ['pairs' => null, 'lines' => []];
 
                 continue;
             }
 
-            // Parse key-value pairs
-            if ($currentSection && preg_match('/^([a-zA-Z][a-zA-Z0-9]*)\s*:\s*(.*)$/', $trimmed, $matches)) {
-                $key = $matches[1];
-                $value = $this->stripInlineComment($matches[2]);
-
-                // Handle array values like [240, 2048]
-                if (preg_match('/^\[(.*)\]$/', $value, $arrayMatches)) {
-                    $arrayValues = array_map('trim', explode(',', $arrayMatches[1]));
-                    $parsed[$currentSection][$key] = $arrayValues;
-                } else {
-                    // Remove quotes and store the raw value
-                    $value = trim($value, '\'"');
-                    $parsed[$currentSection][$key] = $value;
-                }
+            // Anything before the first section header is the old file header, which is regenerated
+            if ($currentSection === null) {
+                continue;
             }
+
+            // Do not open a section body with blank lines
+            if ($trimmed === '' && $parsed[$currentSection]['lines'] === []) {
+                continue;
+            }
+
+            $parsed[$currentSection]['lines'][] = $line;
+        }
+
+        foreach ($parsed as $section => $data) {
+            $parsed[$section]['lines'] = $this->trimTrailingBlankLines($data['lines']);
+            $parsed[$section]['pairs'] = $this->parseFlatPairs($parsed[$section]['lines']);
         }
 
         return $parsed;
     }
 
+    /**
+     * Parses a section body into key/value pairs, or returns null when the body is
+     * not a flat mapping and therefore must be preserved as written.
+     *
+     * @param  array<int, string>  $lines
+     * @return array<string, string|array<int, string>>|null
+     */
+    private function parseFlatPairs(array $lines): ?array
+    {
+        $pairs = [];
+        $baseIndent = null;
+
+        foreach ($lines as $line) {
+            $trimmed = trim($line);
+
+            if ($trimmed === '' || $trimmed[0] === '#') {
+                continue;
+            }
+
+            $indent = strlen($line) - strlen(ltrim($line));
+
+            if ($baseIndent === null) {
+                $baseIndent = $indent;
+            }
+
+            // Deeper indentation means nested structure this parser cannot represent
+            if ($indent !== $baseIndent) {
+                return null;
+            }
+
+            if (! preg_match('/^([a-zA-Z][a-zA-Z0-9_]*)\s*:\s*(.*)$/', $trimmed, $matches)) {
+                return null;
+            }
+
+            $key = $matches[1];
+            $value = $this->stripInlineComment($matches[2]);
+
+            // Handle array values like [240, 2048]
+            if (preg_match('/^\[(.*)\]$/', $value, $arrayMatches)) {
+                $pairs[$key] = array_map('trim', explode(',', $arrayMatches[1]));
+
+                continue;
+            }
+
+            // Remove quotes and store the raw value
+            $pairs[$key] = trim($value, '\'"');
+        }
+
+        return $pairs;
+    }
+
+    /**
+     * @param  array<int, string>  $lines
+     * @return array<int, string>
+     */
+    private function trimTrailingBlankLines(array $lines): array
+    {
+        while ($lines !== [] && trim((string) end($lines)) === '') {
+            array_pop($lines);
+        }
+
+        return array_values($lines);
+    }
+
+    /**
+     * @param  array<string, array{pairs: array<string, string|array<int, string>>|null, lines: array<int, string>}>  $parsed
+     */
     private function generateReformattedTemplate(array $parsed): string
     {
         $output = [];
@@ -188,31 +267,57 @@ class TemplateReformatter
         $output[] = '## - Community templates and contributions: https://github.com/rconfig/rConfig-templates';
         $output[] = '';
 
-        // Process sections in order
+        // Known sections first, in the documented order
         foreach ($this->sectionOrder as $section) {
             if (! isset($parsed[$section])) {
                 continue;
             }
 
-            $output[] = "$section:";
+            $output = array_merge($output, $this->renderSection($section, $parsed[$section]));
+        }
 
-            foreach ($parsed[$section] as $key => $value) {
-                $comment = $this->commentMappings[$section][$key] ?? '';
-                $formattedValue = $this->formatValue($value);
-
-                if ($comment) {
-                    $line = sprintf('  %-40s # %s', "$key: $formattedValue", $comment);
-                } else {
-                    $line = "  $key: $formattedValue";
-                }
-
-                $output[] = $line;
+        // Then anything else the template carried, in the order it was written
+        foreach ($parsed as $section => $data) {
+            if (in_array($section, $this->sectionOrder, true)) {
+                continue;
             }
 
-            $output[] = ''; // Empty line after each section
+            $output = array_merge($output, $this->renderSection($section, $data));
         }
 
         return implode("\n", $output);
+    }
+
+    /**
+     * @param  array{pairs: array<string, string|array<int, string>>|null, lines: array<int, string>}  $data
+     * @return array<int, string>
+     */
+    private function renderSection(string $section, array $data): array
+    {
+        $output = ["$section:"];
+
+        if ($data['pairs'] === null) {
+            // Not a flat mapping, so keep the section exactly as the author wrote it
+            $output = array_merge($output, $data['lines']);
+            $output[] = '';
+
+            return $output;
+        }
+
+        foreach ($data['pairs'] as $key => $value) {
+            $comment = $this->commentMappings[$section][$key] ?? '';
+            $formattedValue = $this->formatValue($value);
+
+            if ($comment) {
+                $output[] = sprintf('  %-40s # %s', "$key: $formattedValue", $comment);
+            } else {
+                $output[] = "  $key: $formattedValue";
+            }
+        }
+
+        $output[] = ''; // Empty line after each section
+
+        return $output;
     }
 
     /**
