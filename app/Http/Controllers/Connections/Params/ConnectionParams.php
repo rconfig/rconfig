@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Connections\Params;
 
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -23,7 +24,7 @@ class ConnectionParams
     {
         $templateArray = $this->getTemplateArray();
 
-        return $this->templateToArray($templateArray['code']);
+        return (new TemplateNormaliser(Log::channel()))->normalise($this->templateToArray($templateArray['code']));
     }
 
     private function getTemplateArray()

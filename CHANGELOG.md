@@ -5,6 +5,29 @@ All notable changes to rConfig v8 Core are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.2.16] - 2026-08-16
+
+### Fixed
+- Template values were consumed raw at each point of use, so every consumer invented its own comparison and the comparisons disagreed. Symfony's YAML parser types `on`, `off`, `yes` and `no` as strings but types `true` and `false` as real booleans, so one authoring mistake produced opposite outcomes: `enable: true` still turned enable mode on because the comparison was loose, while `paging: true` silently stopped disabling the pager, which surfaces as configuration output truncated at the pager with nothing logged. Template switches and `connect.protocol` are now normalised once, immediately after the YAML parse, so booleans, `yes` / `no`, `true` / `false`, casing and stray whitespace all settle on the same values. `protocol: SSH` now dispatches instead of falling through to a generic "template file could be invalid" exception, and that exception now names the offending value. A value nobody recognises keeps its current off by default behaviour and is logged as a warning rather than guessed at.
+- The telnet read loop interpolated the device prompt straight into a regular expression without escaping it, so a prompt carrying the pattern delimiter, such as `admin@sw1/config#` or a MikroTik `[admin@MikroTik] /interface>`, closed the pattern early. Every match then failed and the loop read until the socket died instead of matching. The prompt is now escaped once per read, falls back to a fully quoted literal if it still will not compile, and the buffer tail is compared literally first so a prompt containing regex metacharacters matches as typed.
+- `dropFirstAndLastLinesFromArray` strips the echoed command from the front of a command result and the trailing prompt from the back. Both are positional guesses, and on a result of fewer than three lines the strip consumed the entire output, persisting an empty configuration as a successful backup. Short results are now left untouched. Applies to both SSH and Telnet.
+- A telnet port that was null, empty or outside 1 to 65535, whether from the template or a device level override, was dialled as written because the validation helper returned the original value from both of its branches and its result was never assigned. Such ports now fall back to the telnet default of 23.
+- The template `setTerminalDimensions` value was read from a dynamic property on the phpseclib connection object, which PHP 8.2 deprecated, so it never sized the ANSI screen. It is now read from the connection object this application owns, and a missing or malformed value leaves the ANSI default in place.
+- Every rConfig-templates URL in the demo and test data seeders pointed at the pre restructure layout of the templates repository, which has moved to a lowercase hyphenated convention with no redirect stubs left behind. All eight URLs now resolve. The Palo Alto entry used percent encoded spaces against a directory that used underscores, so that one had never resolved in any release.
+- The demo template seeder paired the SonicWall filename with the PAN-OS URL, duplicating the PAN-OS entry while shadowing the real SonicWall pair. Because the seeder skips a file that already exists, the SonicWall demo template was seeded with Palo Alto content. The redundant entry is removed and every filename and URL pair is now unique.
+
+- The test suite rebuilds its schema with `migrate:fresh`, which drops every table, once per test process, while every run shares a single test database. Two overlapping runs destroyed each other, and the second run dropping tables under the first surfaced as missing tables, tables missing the columns their later migrations add, and lock wait timeouts scattered across unrelated tests. A run now holds a database level lock for its lifetime, so a competing run waits and then reports the collision instead of corrupting both. Affects the test suite only.
+- Test expectations that still described the templates repository before its restructure, covering the default branch name and the capitalised vendor directories and file names. The behaviour they were asserting against was already correct.
+
+### Added
+- `vt100` is a recognised template section. It carries comment mappings for `hasSplashScreen`, `hasSplashScreenEnterKey`, `splashScreenReadToText` and `splashScreenSendControlCode`, and it is emitted last in the section order.
+
+### Changed
+- The template reformatter keeps the raw body of every section, so a section it cannot parse as flat key and value pairs, such as one using nested keys or list items, is carried through verbatim rather than dropped. It also now accepts CRLF and CR line endings.
+
+### Deprecated
+- The template keys `auth.hpAnyKeyPrmpt`, `config.linebreak`, `config.pagerPrompt` and `config.pagerPromptCmd` are formally deprecated. Nothing read them, and they are no longer loaded. Templates carrying them continue to parse and connect unchanged.
+
 ## [8.2.15] - 2026-08-13
 
 ### Fixed

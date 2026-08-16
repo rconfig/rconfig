@@ -12,6 +12,11 @@ class Connect
 {
     use NotificationDispatcher;
 
+    /**
+     * Port dialled when the template or the device override does not carry a usable one.
+     */
+    private const DEFAULT_SSH_PORT = 22;
+
     public $connection;
 
     /* MAIN */
@@ -34,18 +39,14 @@ class Connect
     public $enableUsernamePrmpt;
     public $enablePassPrmpt;
     public $hpAnyKeyStatus;
-    public $hpAnyKeyPrmpt;
     public $device_cred_id;
     public $sshPrivKey;
     public $ssh_key_id;
 
     /* CONFIG */
-    public $linebreak;
     public $paging;
     public $pagingCmd;
     public $resetPagingCmd;
-    public $pagerPrompt;
-    public $pagerPromptCmd;
     public $saveConfig;
     public $exitCmd;
     public $isMikrotik;
@@ -95,18 +96,17 @@ class Connect
         $this->enableUsernamePrmpt = $deviceParamsObject->auth['enableUsernamePrmpt'] ?? null;
         $this->enablePassPrmpt = $deviceParamsObject->auth['enablePassPrmpt'];
         $this->hpAnyKeyStatus = $deviceParamsObject->auth['hpAnyKeyStatus'];
-        $this->hpAnyKeyPrmpt = $deviceParamsObject->auth['hpAnyKeyPrmpt'];
+        // auth['hpAnyKeyPrmpt'] is deprecated and deliberately not read, see HPChecks in Login
         // Send in Cred ID for Optional SSHPrivKey Setting
         $this->device_cred_id = $deviceParamsObject->deviceparams['device_cred_id'] ?? null;
         // Optional SSHPrivKey Setting
         $this->sshPrivKey = isset($deviceParamsObject->auth['sshPrivKey']) ? $deviceParamsObject->auth['sshPrivKey'] : null;
         /* CONFIG */
-        $this->linebreak = $deviceParamsObject->config['linebreak'];
+        // config['linebreak'], config['pagerPrompt'] and config['pagerPromptCmd'] are
+        // deprecated. Nothing reads them, so they are deliberately not loaded here.
         $this->paging = $deviceParamsObject->config['paging'];
         $this->pagingCmd = $deviceParamsObject->config['pagingCmd'];
         $this->resetPagingCmd = $deviceParamsObject->config['resetPagingCmd'];
-        $this->pagerPrompt = $deviceParamsObject->config['pagerPrompt'];
-        $this->pagerPromptCmd = $deviceParamsObject->config['pagerPromptCmd'];
         $this->saveConfig = $deviceParamsObject->config['saveConfig'];
         $this->exitCmd = $deviceParamsObject->config['exitCmd'];
         /* DEVICEPARAMS */
@@ -127,7 +127,8 @@ class Connect
         /* OPTIONS */
         $this->AnsiHost = isset($deviceParamsObject->options['AnsiHost']) ? $deviceParamsObject->options['AnsiHost'] : null;
         $this->setWindowSize = isset($deviceParamsObject->options['setWindowSize']) ? $deviceParamsObject->options['setWindowSize'] : null;
-        // next is implementation of https://api.phpseclib.org/2.0/File_ANSI.html#method_setDimensions
+        // Screen size for ANSI output rendering only, it does not change the negotiated
+        // terminal. See https://api.phpseclib.org/2.0/File_ANSI.html#method_setDimensions
         $this->setTerminalDimensions = isset($deviceParamsObject->options['setTerminalDimensions']) ? $deviceParamsObject->options['setTerminalDimensions'] : null;
 
         /* VT100 */
@@ -146,13 +147,10 @@ class Connect
 
     public function connect()
     {
-        $this->sshPortValidOrDefault();
+        $this->port = $this->sshPortValidOrDefault();
         $this->connection = new SSH2($this->hostname, $this->port, $this->timeout);
         if ($this->setWindowSize != null) {
             $this->connection->setWindowSize($this->setWindowSize[0], $this->setWindowSize[1]);
-        }
-        if ($this->setTerminalDimensions != null) {
-            $this->connection->setTerminalDimensions = [$this->setTerminalDimensions[0], $this->setTerminalDimensions[1]];
         }
         $this->checkConnectionState();
         $this->SSHdebuggingCheck();
@@ -160,13 +158,19 @@ class Connect
         return $this->connection;
     }
 
-    private function sshPortValidOrDefault()
+    /**
+     * A template or a device port override can carry a null, empty or out of range
+     * port, which would otherwise be dialled as written. Fall back to the SSH default.
+     */
+    private function sshPortValidOrDefault(): int
     {
-        if ($this->port == null || $this->port <= 0 || $this->port > 65535) {
-            return $this->port;
-        } else {
-            return $this->port;
+        $port = (int) $this->port;
+
+        if ($port > 0 && $port <= 65535) {
+            return $port;
         }
+
+        return self::DEFAULT_SSH_PORT;
     }
 
     private function SSHdebuggingCheck()

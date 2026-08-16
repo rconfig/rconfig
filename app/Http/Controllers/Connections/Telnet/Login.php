@@ -21,7 +21,7 @@ class Login
     public function login()
     {
 
-        if (isset($this->connectionObj->hasSplashScreen) && $this->connectionObj->hasSplashScreen == 'on') {
+        if (isset($this->connectionObj->hasSplashScreen) && $this->connectionObj->hasSplashScreen === 'on') {
             // avaya login
             $this->read->readTo($this->connectionObj->splashScreenReadToText);
             $this->send->sendControlCode($this->connectionObj->splashScreenSendControlCode);
@@ -35,7 +35,7 @@ class Login
         $this->read->readTo($this->connectionObj->passwordPrompt);
         $this->send->sendString($this->connectionObj->password);
 
-        if ($this->connectionObj->enable == 'on') {
+        if ($this->connectionObj->enable === 'on') {
             $devicePromptValid = $this->enableModeLogin();
         } else {
             $devicePromptValid = $this->read->readTo($this->connectionObj->devicePrompt);

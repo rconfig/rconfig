@@ -22,7 +22,7 @@ class SendCommand
     public function sendShowCommand($command)
     {
 
-        if ($this->connectionObj->sshPrivKey && $this->connectionObj->isNonInteractiveMode) {
+        if ($this->connectionObj->sshPrivKey && $this->connectionObj->isNonInteractiveMode === 'on') {
             return $this->execShowCommand($command);
         }
 
@@ -30,15 +30,15 @@ class SendCommand
             return $this->ansiShowCommand($command);
         }
 
-        if ($this->connectionObj->isNonInteractiveMode) {
+        if ($this->connectionObj->isNonInteractiveMode === 'on') {
             return $this->execShowCommand($command);
         }
 
-        if ($this->connectionObj->AnsiHost === 'yes') {
+        if ($this->connectionObj->AnsiHost === 'on') {
             return $this->ansiShowCommand($command);
         }
 
-        if ($this->connectionObj->isMikrotik === 'yes') {
+        if ($this->connectionObj->isMikrotik === 'on') {
             // need to remove prompt. Mikrotik does not respond well to having a prompt configured. See the mikrotik function in the console rconfig:test command
             $this->connectionObj->devicePrompt = '';
             $this->data = $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
@@ -53,12 +53,27 @@ class SendCommand
         return $this->data = $this->send->sendStringExec($command);
     }
 
-    private function ansiShowCommand($command)
+    /**
+     * The template's setTerminalDimensions sizes the ANSI screen the device output is
+     * rendered into, nothing else. It is read from the connection object this
+     * application owns rather than from a dynamic property on the phpseclib object,
+     * which PHP 8.2 deprecated. A missing or malformed value leaves the ANSI default.
+     */
+    private function ansiForSession(): ANSI
     {
         $ansi = new ANSI;
-        if (isset($this->connectionObj->connection->setTerminalDimensions)) {
-            $ansi->setDimensions($this->connectionObj->connection->setTerminalDimensions[0], $this->connectionObj->connection->setTerminalDimensions[1]);
+        $dimensions = $this->connectionObj->setTerminalDimensions;
+
+        if (is_array($dimensions) && count($dimensions) === 2) {
+            $ansi->setDimensions((int) $dimensions[0], (int) $dimensions[1]);
         }
+
+        return $ansi;
+    }
+
+    private function ansiShowCommand($command)
+    {
+        $ansi = $this->ansiForSession();
         $ansi->appendString($this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX));
         $this->send->sendString($command);
         $ansi->appendString($this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX));
@@ -123,8 +138,20 @@ class SendCommand
         return explode("\r\n", $this->data);
     }
 
-    public function dropFirstAndLastLinesFromArray()
+    /**
+     * Strip the echoed command from the front and the trailing prompt from the back.
+     *
+     * Both are positional guesses, so they are only safe when at least one line of
+     * real output survives. With fewer than three lines the strip would consume the
+     * entire result and persist an empty config as a successful backup, so leave the
+     * output untouched instead.
+     */
+    public function dropFirstAndLastLinesFromArray(): void
     {
+        if (count($this->data) < 3) {
+            return;
+        }
+
         array_shift($this->data); // drops the command that was run from the output
         array_pop($this->data); // removes last line, usually a prompt
     }

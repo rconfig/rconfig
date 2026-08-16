@@ -38,7 +38,7 @@ class Login
 
         $this->handleSplashScreen();
 
-        if ($this->connectionObj->enable == 'on') {
+        if ($this->connectionObj->enable === 'on') {
             $this->enableModeLogin();
         } else {
             $this->sendPagingCommand();
@@ -106,7 +106,7 @@ class Login
 
     private function shouldUseInteractiveLogin(): bool
     {
-        return $this->connectionObj->sshInteractive === 'on' || $this->connectionObj->sshInteractive === 'yes';
+        return $this->connectionObj->sshInteractive === 'on';
     }
 
     private function handleSplashScreen(): void
@@ -116,7 +116,7 @@ class Login
             return;
         }
 
-        if (isset($this->connectionObj->hasSplashScreenEnterKey) && $this->connectionObj->hasSplashScreenEnterKey == 'on') {
+        if (isset($this->connectionObj->hasSplashScreenEnterKey) && $this->connectionObj->hasSplashScreenEnterKey === 'on') {
             // some devices require an enter key to be sent to get past the splash screen
             $this->connectionObj->connection->write("\n");
             sleep(1);
@@ -188,10 +188,14 @@ class Login
         $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
     }
 
+    /**
+     * Clears an HP style 'press any key to continue' banner by sending returns and
+     * reading on to the device prompt. The template's hpAnyKeyPrmpt is deprecated:
+     * the read is bounded by the device prompt, not by that string.
+     */
     private function HPChecks()
     {
         if ($this->connectionObj->hpAnyKeyStatus === 'on') {
-            // $this->connectionObj->connection->read($this->connectionObj->hpAnyKeyPrmpt, SSH2::READ_REGEX);
             $this->connectionObj->connection->write("\n");
             $this->connectionObj->connection->write("\n");
             $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
