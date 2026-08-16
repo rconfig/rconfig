@@ -152,7 +152,10 @@ class SSHConnectionTest extends TestCase
         $time = microtime(true) - $start;
         $this->assertLessThan(5, $time);
         $this->assertIsObject($result);
-        $this->assertEquals($result->options['AnsiHost'], 'yes');
+        // The fixture still authors AnsiHost as "yes", which is the point: TemplateNormaliser
+        // settles every switch on 'on' or 'off' right after the YAML parse, and the consumer
+        // in SSH\SendCommand compares against the canonical 'on'.
+        $this->assertEquals('on', $result->options['AnsiHost']);
         $this->assertEquals($result->options['setWindowSize'][0], 240);
 
         unlink(storage_path() . '/app/rconfig/templates/fake_template_with_options.yml');

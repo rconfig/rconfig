@@ -29,7 +29,8 @@ class TemplateGithubControllerTest extends TestCase
         $response = $this->json('GET', '/api/test-template-repo-connection');
 
         $response->assertStatus(200)->assertJsonFragment([
-            'html_url' => 'https://github.com/rconfig/rConfig-templates/blob/master/.gitignore',
+            // The templates repo's default branch is now main, not master.
+            'html_url' => 'https://github.com/rconfig/rConfig-templates/blob/main/.gitignore',
         ]);
         $response->assertStatus(200)->assertJsonFragment([
             'msg' => 'Successfully connected to rConfig Templates Github repo',
@@ -60,13 +61,13 @@ class TemplateGithubControllerTest extends TestCase
         $response = $this->json('GET', '/api/list-template-repo-folders');
 
         $response->assertStatus(200)->assertJsonFragment([
-            'path' => rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/Brocade',
+            'path' => rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/brocade',
         ]);
         $response->assertStatus(200)->assertJsonFragment([
-            'path' => rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/Checkpoint',
+            'path' => rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/checkpoint',
         ]);
         $response->assertStatus(200)->assertJsonFragment([
-            'path' => rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/Sonicwall',
+            'path' => rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/sonicwall',
         ]);
 
         if (is_dir($this->templatesDstDir)) {
@@ -100,13 +101,13 @@ class TemplateGithubControllerTest extends TestCase
 
         $response = $this->json('GET', '/api/list-template-repo-folders');
         $response->assertStatus(200)->assertJsonFragment([
-            'path' => rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/Brocade',
+            'path' => rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/brocade',
         ]);
         $response->assertStatus(200)->assertJsonFragment([
-            'path' => rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/Checkpoint',
+            'path' => rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/checkpoint',
         ]);
         $response->assertStatus(200)->assertJsonFragment([
-            'path' => rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/Sonicwall',
+            'path' => rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/sonicwall',
         ]);
 
         if (is_dir($this->templatesDstDir)) {
@@ -126,21 +127,21 @@ class TemplateGithubControllerTest extends TestCase
 
         $this->assertGreaterThan(0, count($arr));
 
-        $response = $this->json('POST', '/api/list-repo-folders-contents', ['directory' => rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/Cisco']);
+        $response = $this->json('POST', '/api/list-repo-folders-contents', ['directory' => rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/cisco']);
 
         $response->assertStatus(200)->assertJsonFragment([
-            rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/Cisco/asa-ssh-enable.yml',
+            rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/cisco/cisco-asa-ssh-enable.yml',
         ]);
         $response->assertStatus(200)->assertJsonFragment([
-            rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/Cisco/ciscowlc-ssh-noenable.yml',
+            rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/cisco/cisco-wlc-ssh-noenable.yml',
         ]);
         $response->assertStatus(200)->assertJsonFragment([
-            rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/Cisco/ios-ssh-noenable.yml',
+            rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/cisco/cisco-ios-ssh-noenable.yml',
         ]);
 
         // has readme.md
         $response->assertStatus(200)->assertJsonFragment([
-            rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/Cisco/README.md',
+            rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/cisco/README.md',
         ]);
 
         if (is_dir($this->templatesDstDir)) {
@@ -152,7 +153,7 @@ class TemplateGithubControllerTest extends TestCase
     {
         Artisan::call('rconfig:clone-templates');
 
-        $response = $this->json('POST', '/api/get-template-file-contents', ['filepath' => rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/Cisco/asa-ssh-enable.yml']);
+        $response = $this->json('POST', '/api/get-template-file-contents', ['filepath' => rconfig_appdir_path() . '/storage/app/rconfig/templates/rConfig-templates/cisco/cisco-asa-ssh-enable.yml']);
 
         $response->assertStatus(200)->assertJsonFragment([
             'templateName' => 'Cisco ASA - SSH - Enable',
