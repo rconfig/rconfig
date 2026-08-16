@@ -33,42 +33,37 @@ class DemoTemplateSeeder extends Seeder
             [
                 'name' => 'Template 1',
                 'fileName' => '/app/rconfig/templates/brocade.yml',
-                'url' => 'https://raw.githubusercontent.com/rconfig/rConfig-templates/master/Brocade/brocade.yml',
+                'url' => 'https://raw.githubusercontent.com/rconfig/rConfig-templates/main/brocade/brocade-fastiron-ssh-noenable.yml',
             ],
             [
                 'name' => 'Template 2',
                 'fileName' => '/app/rconfig/templates/CheckpointGaiaOS_NoEnable.yml',
-                'url' => 'https://raw.githubusercontent.com/rconfig/rConfig-templates/master/Checkpoint/CheckpointGaiaOS_NoEnable.yml',
+                'url' => 'https://raw.githubusercontent.com/rconfig/rConfig-templates/main/checkpoint/checkpoint-gaia-ssh-noenable.yml',
             ],
             [
                 'name' => 'Template 3',
                 'fileName' => '/app/rconfig/templates/dell-s4048-ssh-noenable.yml',
-                'url' => 'https://raw.githubusercontent.com/rconfig/rConfig-templates/master/Dell/dell-s4048-ssh-noenable.yml',
+                'url' => 'https://raw.githubusercontent.com/rconfig/rConfig-templates/main/dell/dell-networking-ssh-noenable.yml',
             ],
             [
                 'name' => 'Template 4',
                 'fileName' => '/app/rconfig/templates/hp-procurve-ssh-noenable-v2.yml',
-                'url' => 'https://raw.githubusercontent.com/rconfig/rConfig-templates/master/HP/hp-procurve-ssh-noenable-v2.yml',
-            ],
-            [
-                'name' => 'Template 5',
-                'fileName' => '/app/rconfig/templates/Sonicwall-ssh-no-enable.yml',
-                'url' => 'https://raw.githubusercontent.com/rconfig/rConfig-templates/master/Palo%20Alto%20Networks/panos-ssh.yml',
+                'url' => 'https://raw.githubusercontent.com/rconfig/rConfig-templates/main/hp/hp-procurve-ssh-noenable.yml',
             ],
             [
                 'name' => 'Template 6',
                 'fileName' => '/app/rconfig/templates/panos-ssh.yml',
-                'url' => 'https://raw.githubusercontent.com/rconfig/rConfig-templates/master/Palo%20Alto%20Networks/panos-ssh.yml',
+                'url' => 'https://raw.githubusercontent.com/rconfig/rConfig-templates/main/palo-alto/palo-alto-panos-ssh-enable.yml',
             ],
             [
                 'name' => 'Template 7',
                 'fileName' => '/app/rconfig/templates/Sonicwall-ssh-no-enable.yml',
-                'url' => 'https://raw.githubusercontent.com/rconfig/rConfig-templates/master/Sonicwall/Sonicwall-ssh-no-enable.yml',
+                'url' => 'https://raw.githubusercontent.com/rconfig/rConfig-templates/main/sonicwall/sonicwall-sonicos-ssh-noenable.yml',
             ],
             [
                 'name' => 'Template 8',
                 'fileName' => '/app/rconfig/templates/centos-7-ssh.yml',
-                'url' => 'https://raw.githubusercontent.com/rconfig/rConfig-templates/master/linux/centos-7-ssh.yml',
+                'url' => 'https://raw.githubusercontent.com/rconfig/rConfig-templates/main/linux/linux-el-ssh-noenable.yml',
             ],
         ];
     }
