@@ -123,8 +123,20 @@ class SendCommand
         return explode("\r\n", $this->data);
     }
 
-    public function dropFirstAndLastLinesFromArray()
+    /**
+     * Strip the echoed command from the front and the trailing prompt from the back.
+     *
+     * Both are positional guesses, so they are only safe when at least one line of
+     * real output survives. With fewer than three lines the strip would consume the
+     * entire result and persist an empty config as a successful backup, so leave the
+     * output untouched instead.
+     */
+    public function dropFirstAndLastLinesFromArray(): void
     {
+        if (count($this->data) < 3) {
+            return;
+        }
+
         array_shift($this->data); // drops the command that was run from the output
         array_pop($this->data); // removes last line, usually a prompt
     }
