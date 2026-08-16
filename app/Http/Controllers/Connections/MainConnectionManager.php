@@ -22,16 +22,20 @@ class MainConnectionManager
     {
         $this->getAllConnectionParamsArray();
 
-        if ($this->deviceParamsObject->connect['protocol'] == 'telnet') {
+        // TemplateNormaliser has already lowercased and trimmed this, so a compare
+        // against the lowercase literals is all that is needed here.
+        $protocol = $this->deviceParamsObject->connect['protocol'] ?? null;
+
+        if ($protocol === 'telnet') {
             $this->telnetConnection = new TelnetConnectionManager($this->deviceParamsObject, $this->debug);
 
             return $this->telnetConnection->telnetConnectionAndOutput();
-        } elseif ($this->deviceParamsObject->connect['protocol'] == 'ssh') {
+        } elseif ($protocol === 'ssh') {
             $this->sshConnection = new SSHConnectionManager($this->deviceParamsObject, $this->debug);
 
             return $this->sshConnection->SshConnectionAndOutput();
         } else {
-            throw new \Exception('Error Processing ' . __CLASS__ . ' - ' . __FUNCTION__ . ' Request. Your rConfig template file could be invalid.', 1);
+            throw new \Exception('Error Processing ' . __CLASS__ . ' - ' . __FUNCTION__ . ' Request. Your rConfig template file carries connect.protocol "' . (is_scalar($protocol) ? $protocol : gettype($protocol)) . '", which is not one of ssh or telnet.', 1);
         }
     }
 

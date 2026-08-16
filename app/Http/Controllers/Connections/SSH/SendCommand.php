@@ -22,7 +22,7 @@ class SendCommand
     public function sendShowCommand($command)
     {
 
-        if ($this->connectionObj->sshPrivKey && $this->connectionObj->isNonInteractiveMode) {
+        if ($this->connectionObj->sshPrivKey && $this->connectionObj->isNonInteractiveMode === 'on') {
             return $this->execShowCommand($command);
         }
 
@@ -30,15 +30,15 @@ class SendCommand
             return $this->ansiShowCommand($command);
         }
 
-        if ($this->connectionObj->isNonInteractiveMode) {
+        if ($this->connectionObj->isNonInteractiveMode === 'on') {
             return $this->execShowCommand($command);
         }
 
-        if ($this->connectionObj->AnsiHost === 'yes') {
+        if ($this->connectionObj->AnsiHost === 'on') {
             return $this->ansiShowCommand($command);
         }
 
-        if ($this->connectionObj->isMikrotik === 'yes') {
+        if ($this->connectionObj->isMikrotik === 'on') {
             // need to remove prompt. Mikrotik does not respond well to having a prompt configured. See the mikrotik function in the console rconfig:test command
             $this->connectionObj->devicePrompt = '';
             $this->data = $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
