@@ -188,10 +188,14 @@ class Login
         $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);
     }
 
+    /**
+     * Clears an HP style 'press any key to continue' banner by sending returns and
+     * reading on to the device prompt. The template's hpAnyKeyPrmpt is deprecated:
+     * the read is bounded by the device prompt, not by that string.
+     */
     private function HPChecks()
     {
         if ($this->connectionObj->hpAnyKeyStatus === 'on') {
-            // $this->connectionObj->connection->read($this->connectionObj->hpAnyKeyPrmpt, SSH2::READ_REGEX);
             $this->connectionObj->connection->write("\n");
             $this->connectionObj->connection->write("\n");
             $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX);

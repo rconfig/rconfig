@@ -181,6 +181,55 @@ class TemplateReformatterTest extends TestCase
     }
 
     /**
+     * Regression for RCO-1299: linebreak and hpAnyKeyPrmpt are read by nothing, so a
+     * reformat must label them the way pagerPrompt is already labelled rather than
+     * describing them as working settings.
+     */
+    public function test_dead_template_keys_are_documented_as_deprecated(): void
+    {
+        $result = $this->reformatter->reformatTemplateFile($this->oldFormatPath);
+
+        foreach (['linebreak', 'hpAnyKeyPrmpt', 'pagerPrompt', 'pagerPromptCmd'] as $key) {
+            $this->assertMatchesRegularExpression(
+                '/^\s{2}' . $key . ':.*# DEPRECATED: This value is ignored$/m',
+                $result,
+                "{$key} must be documented as deprecated."
+            );
+        }
+
+        $this->assertStringNotContainsString('Linebreak setting', $result);
+        $this->assertStringNotContainsString('HP-style prompt string', $result);
+    }
+
+    /**
+     * Deprecated keys are documented, not deleted, so a template carrying them
+     * survives a reformat untouched.
+     */
+    public function test_deprecated_keys_keep_their_values_through_a_reformat(): void
+    {
+        $after = Yaml::parse($this->reformatter->reformatTemplateFile($this->oldFormatPath));
+
+        $this->assertSame('n', $after['config']['linebreak']);
+        $this->assertSame('--More--', $after['config']['pagerPrompt']);
+        $this->assertSame('Press any key to continue', $after['auth']['hpAnyKeyPrmpt']);
+    }
+
+    /**
+     * setTerminalDimensions only ever drove ANSI output rendering, never the
+     * negotiated terminal, so the comment must not claim otherwise.
+     */
+    public function test_terminal_dimensions_are_documented_as_ansi_only(): void
+    {
+        $result = $this->reformatter->reformatTemplateFile($this->oldFormatPath);
+
+        $this->assertMatchesRegularExpression(
+            '/^\s{2}setTerminalDimensions:.*# .*ANSI.*$/m',
+            $result
+        );
+        $this->assertStringNotContainsString('Terminal dimensions for Ansi sessions', $result);
+    }
+
+    /**
      * A reformat of an already reformatted template must be a no-op beyond
      * whitespace, so repeated clicks of the button cannot erode a template.
      */

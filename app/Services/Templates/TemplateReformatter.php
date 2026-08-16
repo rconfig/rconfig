@@ -24,10 +24,10 @@ class TemplateReformatter
             'enableCmd' => 'Command to enter enable mode',
             'enablePassPrmpt' => 'Prompt when enable password is requested',
             'hpAnyKeyStatus' => 'HP-style \'press any key\' prompt active? \'on\' or \'off\'',
-            'hpAnyKeyPrmpt' => 'HP-style prompt string (if used)',
+            'hpAnyKeyPrmpt' => 'DEPRECATED: This value is ignored',
         ],
         'config' => [
-            'linebreak' => 'Linebreak setting: \'n\' (default) or \'r\'',
+            'linebreak' => 'DEPRECATED: This value is ignored',
             'paging' => 'Set to \'on\' to disable paging',
             'pagingCmd' => 'Command to disable CLI paging',
             'resetPagingCmd' => 'Command to restore CLI paging (optional)',
@@ -39,7 +39,7 @@ class TemplateReformatter
         'options' => [
             'AnsiHost' => 'AnsiHost required for HP and Mikrotik devices - v6 Only',
             'setWindowSize' => 'Terminal window size [columns, rows] - v6 Only',
-            'setTerminalDimensions' => 'Terminal dimensions for Ansi sessions [width, height] - v6 Only',
+            'setTerminalDimensions' => 'Screen size [columns, rows] for ANSI output rendering only',
         ],
         'vt100' => [
             'hasSplashScreen' => 'Device shows a splash screen before login? \'on\' or \'off\'',

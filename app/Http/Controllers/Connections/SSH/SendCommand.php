@@ -53,12 +53,27 @@ class SendCommand
         return $this->data = $this->send->sendStringExec($command);
     }
 
-    private function ansiShowCommand($command)
+    /**
+     * The template's setTerminalDimensions sizes the ANSI screen the device output is
+     * rendered into, nothing else. It is read from the connection object this
+     * application owns rather than from a dynamic property on the phpseclib object,
+     * which PHP 8.2 deprecated. A missing or malformed value leaves the ANSI default.
+     */
+    private function ansiForSession(): ANSI
     {
         $ansi = new ANSI;
-        if (isset($this->connectionObj->connection->setTerminalDimensions)) {
-            $ansi->setDimensions($this->connectionObj->connection->setTerminalDimensions[0], $this->connectionObj->connection->setTerminalDimensions[1]);
+        $dimensions = $this->connectionObj->setTerminalDimensions;
+
+        if (is_array($dimensions) && count($dimensions) === 2) {
+            $ansi->setDimensions((int) $dimensions[0], (int) $dimensions[1]);
         }
+
+        return $ansi;
+    }
+
+    private function ansiShowCommand($command)
+    {
+        $ansi = $this->ansiForSession();
         $ansi->appendString($this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX));
         $this->send->sendString($command);
         $ansi->appendString($this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX));

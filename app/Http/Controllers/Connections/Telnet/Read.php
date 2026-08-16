@@ -12,17 +12,14 @@ class Read
     // ];
     protected $connection;
     protected $cliDebugStatus;
-    protected $pagerPrompt;
     private $character;
     protected $data;
     private $prompt;
-    protected $send;
 
     public function __construct($connectionObj)
     {
         $this->connection = $connectionObj->connection;
         $this->cliDebugStatus = $connectionObj->cliDebugStatus;
-        $this->pagerPrompt = $connectionObj->pagerPrompt;
     }
 
     /**
@@ -56,7 +53,6 @@ class Read
 
             return true;
         }
-        // $this->keystrokeOnMatchToPageDownConfig();
         // $promptLength = gmp_strval(gmp_neg(strlen($this->prompt)));
         // if (substr(trim($this->data), $promptLength) === $this->prompt)
         // {
@@ -76,15 +72,6 @@ class Read
             throw new \Exception('Telnet connection failed');
         }
     }
-
-    // public function keystrokeOnMatchToPageDownConfig()
-    // {
-    //     // dump(strpos($this->data, '--More--'));
-    //     if (strpos($this->data, $this->pagerPrompt) != false) {
-    //         $this->send = new Send($this->connection);
-    //         $this->send->sendString("   ");
-    //     }
-    // }
 
     /* FOR FUTURE USE */
     // private function filterData()
