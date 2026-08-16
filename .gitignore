@@ -29,6 +29,11 @@ yarn-error.log
 CLAUDE.local.md
 .claude/settings.local.json
 
+# Everything else under .claude is local scratch (evidence docs, local settings).
+# The committed skills directory is the deliberate exception.
+/.claude/*
+!/.claude/skills/
+
 .editorconfig 
 .eslintrc.js
 .prettierrc 
