@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use Tests\UnitTestCase;
 
 /**
  * A bind mounted storage volume masks everything the image ships under
@@ -11,7 +11,7 @@ use Tests\TestCase;
  * workflow. These are the cheap tripwires: they read the two files as text and
  * assert the pieces that, if dropped, silently reintroduce issue #357.
  */
-class DockerEntrypointTest extends TestCase
+class DockerEntrypointTest extends UnitTestCase
 {
     private const SKELETON_PATH = '/usr/local/share/rconfig/storage-skeleton';
 

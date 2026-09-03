@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use Tests\UnitTestCase;
 
-class BasicPublicAssetTest extends TestCase
+class BasicPublicAssetTest extends UnitTestCase
 {
     public function test_index_php()
     {

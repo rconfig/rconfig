@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use Tests\UnitTestCase;
 
-class BasicStorageAssetTest extends TestCase
+class BasicStorageAssetTest extends UnitTestCase
 {
     public function test_data_dir_is_present()
     {

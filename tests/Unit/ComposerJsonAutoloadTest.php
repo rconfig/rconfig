@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use Tests\UnitTestCase;
 
-class ComposerJsonAutoloadTest extends TestCase
+class ComposerJsonAutoloadTest extends UnitTestCase
 {
     /**
      * Ensure composer.json contains PSR-4 autoload for App\

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Services\Email;
+namespace Tests\Fasttests\ServiceTests\Email;
 
 use App\Models\Setting;
 use App\Services\Email\MailConfigService;

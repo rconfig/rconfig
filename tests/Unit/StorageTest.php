@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use Tests\UnitTestCase;
 
-class StorageTest extends TestCase
+class StorageTest extends UnitTestCase
 {
     public function test_get_rconfig_appdir_paths()
     {

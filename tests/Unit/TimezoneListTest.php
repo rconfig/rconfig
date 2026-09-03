@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use Tests\UnitTestCase;
 
-class TimezoneListTest extends TestCase
+class TimezoneListTest extends UnitTestCase
 {
     protected array $timezones;
 

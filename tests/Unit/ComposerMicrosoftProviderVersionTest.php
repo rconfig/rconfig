@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use Tests\UnitTestCase;
 
-class ComposerMicrosoftProviderVersionTest extends TestCase
+class ComposerMicrosoftProviderVersionTest extends UnitTestCase
 {
     public function test_only_specific_microsoft_provider_version_present()
     {

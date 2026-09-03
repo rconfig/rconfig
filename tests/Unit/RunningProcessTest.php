@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use Tests\UnitTestCase;
 
-class RunningProcessTest extends TestCase
+class RunningProcessTest extends UnitTestCase
 {
     public function test_check_supervisord_is_running()
     {

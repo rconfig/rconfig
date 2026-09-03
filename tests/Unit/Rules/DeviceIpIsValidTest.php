@@ -4,9 +4,9 @@ namespace Tests\Unit\Rules;
 
 use App\Rules\DeviceIpIsValid;
 use Illuminate\Support\Facades\Validator;
-use Tests\TestCase;
+use Tests\UnitTestCase;
 
-class DeviceIpIsValidTest extends TestCase
+class DeviceIpIsValidTest extends UnitTestCase
 {
     public function setUp(): void
     {

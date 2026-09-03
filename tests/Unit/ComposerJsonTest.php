@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use Tests\UnitTestCase;
 
-class ComposerJsonTest extends TestCase
+class ComposerJsonTest extends UnitTestCase
 {
     public function test_composer_json()
     {

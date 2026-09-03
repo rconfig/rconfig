@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Console\Commands;
 
-use Tests\TestCase;
+use Tests\UnitTestCase;
 
-class BasicCommandsTest extends TestCase
+class BasicCommandsTest extends UnitTestCase
 {
     protected $user;
     protected $output;

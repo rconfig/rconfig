@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Tests\TestCase;
+use Tests\UnitTestCase;
 
 /**
  * The Docker entrypoint seeds the storage tree, but a bare metal install can
@@ -16,7 +16,7 @@ use Tests\TestCase;
  * data directory, a manually moved storage path. These cover the two writes
  * that used to throw rather than create the directory they needed. See #357.
  */
-class StorageTreeSelfHealingTest extends TestCase
+class StorageTreeSelfHealingTest extends UnitTestCase
 {
     private string $appDirPath;
 

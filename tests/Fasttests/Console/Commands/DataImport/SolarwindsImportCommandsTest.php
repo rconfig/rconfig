@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Console\Commands\DataImport;
+namespace Tests\Fasttests\Console\Commands\DataImport;
 
 use App\Models\Category;
 use App\Models\Device;
