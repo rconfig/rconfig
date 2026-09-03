@@ -74,6 +74,8 @@ class CommandsControllerTest extends TestCase
 
     public function test_get_all_commands_with_filter()
     {
+        Command::factory(10)->create();
+
         $response = $this->getJson('/api/commands?page=1&perPage=100&q=show clock');
         $response->assertStatus(200);
 

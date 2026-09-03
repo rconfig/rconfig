@@ -4,6 +4,7 @@ namespace Tests\Fasttests\ControllersTests\Api;
 
 use App\Jobs\TaskCompleteNotificationJob;
 use App\Models\Setting;
+use App\Models\Task;
 use App\Models\User;
 use App\Notifications\MailTaskCompleteNotification;
 use Carbon\Carbon;
@@ -44,27 +45,29 @@ class TaskManualRunControllerTest extends TestCase
         Notification::fake();
         Notification::assertNothingSent();
 
+        $task = Task::factory()->create(['task_email_notify' => 1]);
+
         $this->assertDatabaseHas('tasks', [
-            'id' => 555555,
+            'id' => $task->id,
             'task_email_notify' => '1',
         ]);
 
-        $response = $this->json('post', '/api/tasks/run-manual-task', ['id' => '555555']);
+        $response = $this->json('post', '/api/tasks/run-manual-task', ['id' => (string) $task->id]);
 
         $response->assertJson(
             ['message' => 'TaskDownloadRun task pushed to queues successfully.']
         );
         $this->assertDatabaseHas('monitored_scheduled_tasks', [
-            'task_id' => 555555,
+            'task_id' => $task->id,
             'type' => 'rconfig:download-device',
 
         ]);
         $this->assertDatabaseHas('monitored_scheduled_task_log_items', [
-            'task_id' => 555555,
+            'task_id' => $task->id,
             'meta' => 'Task started',
         ]);
         $this->assertDatabaseHas('monitored_scheduled_task_log_items', [
-            'task_id' => 555555,
+            'task_id' => $task->id,
             'meta' => 'Task finished',
         ]);
     }
@@ -108,17 +111,19 @@ class TaskManualRunControllerTest extends TestCase
     {
         config(['queue.default' => 'redis']);
 
-        $response = $this->json('post', '/api/tasks/run-manual-task', ['id' => '555555']);
+        $task = Task::factory()->create();
+
+        $response = $this->json('post', '/api/tasks/run-manual-task', ['id' => (string) $task->id]);
 
         $this->assertDatabaseHas('tasks', [
-            'id' => 555555,
+            'id' => $task->id,
         ]);
 
         $this->assertDatabaseHas('monitored_scheduled_tasks', [
-            'task_id' => 555555,
+            'task_id' => $task->id,
         ]);
         $this->assertDatabaseHas('monitored_scheduled_task_log_items', [
-            'task_id' => 555555,
+            'task_id' => $task->id,
         ]);
 
         $response->assertJson(

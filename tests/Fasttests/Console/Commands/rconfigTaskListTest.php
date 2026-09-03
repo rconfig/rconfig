@@ -30,7 +30,7 @@ class rconfigTaskListTest extends TestCase
         $arr = explode("\n", $result);
 
         $this->assertStringContainsString($arr[0], 'Results for Tasks List:');
-        $this->assertTrue($this->array_search_partial('555555', $arr));
+        $this->assertTrue($this->array_search_partial((string) $tasks->first()->id, $arr));
 
         $this->assertGreaterThan(20, $arr);
     }

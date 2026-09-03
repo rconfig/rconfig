@@ -316,29 +316,17 @@ class TasksControllerTest extends TestCase
 
     public function test_create_task_with_real_props_and_transform_some_props_and_verify_device_relationship()
     {
+        $devices = Device::factory(4)->create();
+
         $task = [
             'task_name' => 'avsasvascasc123123',
             'task_desc' => 'asvsavascasc123123',
             'task_command' => 'rconfig:download-device',
             'category' => '',
-            'device' => [
-                0 => [
-                    'id' => 1004,
-                    'device_name' => 'router4',
-                ],
-                1 => [
-                    'id' => 1005,
-                    'device_name' => 'router5',
-                ],
-                2 => [
-                    'id' => 1006,
-                    'device_name' => 'router6',
-                ],
-                3 => [
-                    'id' => 1008,
-                    'device_name' => 'router8',
-                ],
-            ],
+            'device' => $devices->map(fn ($device) => [
+                'id' => $device->id,
+                'device_name' => $device->device_name,
+            ])->values()->toArray(),
             'task_tags' => null,
             'task_cron' => [
                 0 => '0',
@@ -647,8 +635,17 @@ class TasksControllerTest extends TestCase
 
     public function test_get_task_device_relationship_but_not_disabled_devices()
     {
+        $seededTasks = Task::factory(2)->create()->sortBy('id')->values();
+        $devices = Device::factory(2)->create();
 
-        $tasks = Task::with('device')->whereIn('id', [555555, 666666])->get();
+        foreach ($devices as $device) {
+            DB::table('device_task')->insert([
+                'device_id' => $device->id,
+                'task_id' => $seededTasks->first()->id,
+            ]);
+        }
+
+        $tasks = Task::with('device')->whereIn('id', $seededTasks->pluck('id'))->orderBy('id', 'asc')->get();
 
         $this->assertCount(2, $tasks);
         $this->assertCount(2, $tasks[0]->device);

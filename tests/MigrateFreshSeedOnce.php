@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Database\Seeders\testdata\DeviceTableSeeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use PDO;
@@ -37,6 +38,11 @@ trait MigrateFreshSeedOnce
     protected static $setUpHasRunOnce = false;
 
     /**
+     * If true, the Slowtests lab-hardware device fixture has been seeded.
+     */
+    private static bool $deviceFixturesSeeded = false;
+
+    /**
      * Dedicated connection holding the suite lock for the lifetime of the process.
      */
     private static ?PDO $suiteLockConnection = null;
@@ -48,6 +54,15 @@ trait MigrateFreshSeedOnce
 
     /**
      * After the first run of setUp "migrate:fresh --seed"
+     *
+     * The lab-hardware device fixture is seeded separately from, and after, the base
+     * migrate:fresh/seed above, gated on the test's own namespace rather than a suite
+     * flag: `$setUpHasRunOnce` and `$deviceFixturesSeeded` are independent statics shared
+     * by every Tests\TestCase subclass in the process (PHP inherits static storage), so
+     * this fires exactly once regardless of whether Fasttests or Slowtests happens to run
+     * first, and works whether the suites run combined in one process or filtered
+     * separately. Only Slowtests' real SSH/Telnet/ICMP tests are hard-coded against these
+     * fixed devices, so no other suite needs them.
      */
     public function setUp(): void
     {
@@ -63,6 +78,12 @@ trait MigrateFreshSeedOnce
             );
 
             static::$setUpHasRunOnce = true;
+        }
+
+        if (! static::$deviceFixturesSeeded && str_starts_with(static::class, 'Tests\\Slowtests\\')) {
+            Artisan::call('db:seed', ['--class' => DeviceTableSeeder::class]);
+
+            static::$deviceFixturesSeeded = true;
         }
     }
 

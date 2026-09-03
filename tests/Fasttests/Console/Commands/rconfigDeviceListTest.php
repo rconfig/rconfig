@@ -31,7 +31,16 @@ class rconfigDeviceListTest extends TestCase
         $arr = explode("\n", $result);
 
         $this->assertStringContainsString($arr[0], 'Results for Devices List:');
-        $this->assertStringContainsString('1001', $arr[4]);
+        $this->assertTrue($this->array_search_partial((string) $devices->first()->id, $arr));
         $this->assertGreaterThan(20, count($arr));
+    }
+
+    public function array_search_partial($keyword, $arr)
+    {
+        foreach ($arr as $index => $string) {
+            if (strpos($string, $keyword) !== false) {
+                return true;
+            }
+        }
     }
 }

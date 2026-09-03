@@ -5,6 +5,7 @@ namespace Tests\Fasttests\ControllersTests\Api;
 use App\Models\Device;
 use App\Models\Tag;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class TagsControllerTest extends TestCase
@@ -149,7 +150,15 @@ class TagsControllerTest extends TestCase
 
     public function test_get_tag_device_relationship_but_not_disabled_devices()
     {
-        $tags = Tag::with('device')->whereIn('id', [1, 2, 1003])->orderBy('id', 'asc')->get();
+        $seededTags = Tag::factory(3)->create()->sortBy('id')->values();
+        $device = Device::factory()->create(['status' => 1]);
+
+        DB::table('device_tag')->insert([
+            'device_id' => $device->id,
+            'tag_id' => $seededTags->last()->id,
+        ]);
+
+        $tags = Tag::with('device')->whereIn('id', $seededTags->pluck('id'))->orderBy('id', 'asc')->get();
 
         $this->assertCount(3, $tags);
         $this->assertGreaterThan(0, count($tags[2]->device));

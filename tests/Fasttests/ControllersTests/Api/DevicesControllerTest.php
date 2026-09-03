@@ -39,6 +39,8 @@ class DevicesControllerTest extends TestCase
 
     public function test_get_all_devices_but_not_creds_when_password_mask_is_enabled()
     {
+        Device::factory(2)->create();
+
         Config::set('rConfig.mask_device_credentials', true);
         $this->assertTrue(Config::get('rConfig.mask_device_credentials'));
 
@@ -68,8 +70,11 @@ class DevicesControllerTest extends TestCase
 
     public function test_get_all_devices_with_generic_filter()
     {
-        $response = $this->get('/api/devices?page=1&perPage=100&filter[q]=10.1.1.170');
-        $response->assertJsonFragment(['device_ip' => '10.1.1.170']);
+        $sharedIp = '203.0.113.5';
+        Device::factory(4)->create(['device_ip' => $sharedIp]);
+
+        $response = $this->get('/api/devices?page=1&perPage=100&filter[q]=' . $sharedIp);
+        $response->assertJsonFragment(['device_ip' => $sharedIp]);
         $response->assertJsonFragment(['total' => 4]);
         $response->assertStatus(200);
     }
@@ -298,6 +303,11 @@ class DevicesControllerTest extends TestCase
 
     public function test_add_serialised_encrypted_password_and_decrypt_correctly_if_pw_is_serialised_v5_migration_bug()
     {
+        $nativelyEncryptedDevice = Device::factory()->create([
+            'device_password' => 'cisco',
+            'device_enable_password' => 'cisco',
+        ]);
+
         Device::where('id', 1111111)->delete();
         DB::table('devices')->insert([
             'id' => 1111111,
@@ -312,14 +322,14 @@ class DevicesControllerTest extends TestCase
         // dd(Device::all());
         $v5EncryptedPassword = Device::select('device_password')->where('id', 1111111)->first();
         // dd($v5EncryptedPassword->device_password);
-        $v6EncryptedPassword = Device::select('device_password')->where('id', 1001)->first();
+        $v6EncryptedPassword = Device::select('device_password')->where('id', $nativelyEncryptedDevice->id)->first();
         $this->assertFalse($this->is_serialized($v5EncryptedPassword->device_password));
         $this->assertFalse($this->is_serialized($v6EncryptedPassword->device_password));
 
-        $response = $this->get('/api/devices/' . 1001);
+        $response = $this->get('/api/devices/' . $nativelyEncryptedDevice->id);
         $response->assertStatus(200);
         $response->assertJson([
-            'id' => 1001,
+            'id' => $nativelyEncryptedDevice->id,
             'device_password' => 'cisco',
             'device_enable_password' => 'cisco',
         ]);
