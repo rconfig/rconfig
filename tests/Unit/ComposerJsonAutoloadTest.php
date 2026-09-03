@@ -1,30 +1,15 @@
 <?php
 
-namespace Tests\Unit;
+test('composer json has correct namespace configuration', function () {
+    $composerJsonPath = base_path('composer.json');
+    expect($composerJsonPath)->toBeFile('composer.json file does not exist');
 
-use Tests\UnitTestCase;
+    $composerJson = json_decode(file_get_contents($composerJsonPath), true);
 
-class ComposerJsonAutoloadTest extends UnitTestCase
-{
-    /**
-     * Ensure composer.json contains PSR-4 autoload for App\
-     */
-    public function test_composer_json_has_correct_namespace_configuration(): void
-    {
-        $composerJsonPath = base_path('composer.json');
-        $this->assertFileExists($composerJsonPath, 'composer.json file does not exist');
+    expect($composerJson)->toBeArray('composer.json content could not be parsed as JSON');
+    expect($composerJson)->toHaveKey('autoload', message: 'composer.json is missing autoload section');
+    expect($composerJson['autoload'])->toHaveKey('psr-4', message: 'composer.json autoload is missing psr-4 section');
 
-        $composerJson = json_decode(file_get_contents($composerJsonPath), true);
-
-        $this->assertIsArray($composerJson, 'composer.json content could not be parsed as JSON');
-        $this->assertArrayHasKey('autoload', $composerJson, 'composer.json is missing autoload section');
-        $this->assertArrayHasKey('psr-4', $composerJson['autoload'], 'composer.json autoload is missing psr-4 section');
-
-        $this->assertArrayHasKey('App\\', $composerJson['autoload']['psr-4'], 'The App\\ namespace is missing in composer.json autoload psr-4 section');
-        $this->assertEquals(
-            'app/',
-            $composerJson['autoload']['psr-4']['App\\'],
-            'The App\\ namespace should map to app/ directory'
-        );
-    }
-}
+    expect($composerJson['autoload']['psr-4'])->toHaveKey('App\\', message: 'The App\\ namespace is missing in composer.json autoload psr-4 section');
+    expect($composerJson['autoload']['psr-4']['App\\'])->toEqual('app/', 'The App\\ namespace should map to app/ directory');
+});

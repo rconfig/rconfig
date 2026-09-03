@@ -185,8 +185,8 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 
 # PHPUnit
 
-- This application uses PHPUnit for testing. All tests must be written as PHPUnit classes. Use `php artisan make:test --phpunit {name}` to create a new test.
-- If you see a test using "Pest", convert it to PHPUnit.
+- This application uses Pest 5 (on PHPUnit 13) as the testing standard. Write new tests in Pest syntax. Existing PHPUnit-style class tests are not being bulk-converted: leave them as classic classes, do not rewrite one to Pest syntax just because you touched it, and do not convert a Pest test back to PHPUnit.
+- `Unit` tests extend `Tests\UnitTestCase` (no database). `Fasttests`/`Slowtests` extend `Tests\TestCase` (transaction-wrapped, DB-aware). Only `Slowtests` seeds the lab-hardware device fixture; `Fasttests` builds its own data via model factories.
 - Every time a test has been updated, run that singular test.
 - When the tests relating to your feature are passing, ask the user if they would like to also run the entire test suite to make sure everything is still passing.
 - Tests should cover all happy paths, failure paths, and edge cases.
