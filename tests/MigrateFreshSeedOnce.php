@@ -64,7 +64,7 @@ trait MigrateFreshSeedOnce
      * separately. Only Slowtests' real SSH/Telnet/ICMP tests are hard-coded against these
      * fixed devices, so no other suite needs them.
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

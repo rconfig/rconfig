@@ -1,69 +1,54 @@
 <?php
 
-namespace Tests\Fasttests\ControllersTests\Api;
-
 use App\Http\Controllers\Api\ExportController;
 use App\Models\User;
-use Tests\TestCase;
 
-class ExportControllerTest extends TestCase
-{
-    /** @var User */
-    protected $user;
+beforeEach(function () {
+    $this->beginTransaction();
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->beginTransaction();
+    $this->user = User::factory()->create();
+    $this->actingAs($this->user);
+});
 
-        $this->user = User::factory()->create();
-        $this->actingAs($this->user);
-    }
+afterEach(function () {
+    $this->rollBackTransaction();
+});
 
-    protected function tearDown(): void
-    {
-        $this->rollBackTransaction();
-        parent::tearDown();
-    }
+test('it can get the list of exportable tables', function () {
+    $response = $this->get('/api/settings/export/list-tables');
+    $response->assertStatus(200);
+    expect($response->json()['data'])->toHaveKey('tables');
+    expect($response->json()['data']['tables'])->toContain('activity_log');
+    expect($response->json()['data']['tables'])->toContain('devices');
+    expect($response->json()['data']['tables'])->toContain('users');
+    expect($response->json()['data']['tables'])->not->toContain('migrations');
+    expect($response->json()['data']['tables'])->not->toContain('sessions');
+    expect($response->json()['data']['tables'])->not->toContain('jobs');
 
-    public function test_it_can_get_the_list_of_exportable_tables()
-    {
-        $response = $this->get('/api/settings/export/list-tables');
-        $response->assertStatus(200);
-        $this->assertArrayHasKey('tables', $response->json()['data']);
-        $this->assertContains('activity_log', $response->json()['data']['tables']);
-        $this->assertContains('devices', $response->json()['data']['tables']);
-        $this->assertContains('users', $response->json()['data']['tables']);
-        $this->assertNotContains('migrations', $response->json()['data']['tables']);
-        $this->assertNotContains('sessions', $response->json()['data']['tables']);
-        $this->assertNotContains('jobs', $response->json()['data']['tables']);
+    // check that the list of tables matches the expected list based on the excluded tables
+    $expected = array_values(array_diff(
+        ExportController::listAllBaseTables(),
+        ExportController::EXCLUDED_TABLES
+    ));
+    $response->assertJsonCount(count($expected), 'data.tables');
+    expect($response->json('data.tables'))->toEqualCanonicalizing($expected);
+});
 
-        // check that the list of tables matches the expected list based on the excluded tables
-        $expected = array_values(array_diff(
-            ExportController::listAllBaseTables(),
-            ExportController::EXCLUDED_TABLES
-        ));
-        $response->assertJsonCount(count($expected), 'data.tables');
-        $this->assertEqualsCanonicalizing($expected, $response->json('data.tables'));
-    }
+test('it can export a table', function () {
+    // https://docs.laravel-excel.com/3.1/exports/testing.html#testing-downloads
+    $table = 'users';
 
-    public function test_it_can_export_a_table()
-    {
-        // https://docs.laravel-excel.com/3.1/exports/testing.html#testing-downloads
-        $table = 'users';
-
-        $response = $this->get('/api/settings/export/get-table/' . $table)
-            ->assertStatus(200);
-        $response->assertJsonStructure([
-            'data' => [
-                'downloadLink',
-                'downloadUrl',
-                'filename',
-            ],
-        ]);
-        $response->assertJsonFragment([
-            'downloadUrl' => '/download-export?filename=users.csv&type=export',
-            'filename' => 'users.csv',
-        ]);
-    }
-}
+    $response = $this->get('/api/settings/export/get-table/' . $table)
+        ->assertStatus(200);
+    $response->assertJsonStructure([
+        'data' => [
+            'downloadLink',
+            'downloadUrl',
+            'filename',
+        ],
+    ]);
+    $response->assertJsonFragment([
+        'downloadUrl' => '/download-export?filename=users.csv&type=export',
+        'filename' => 'users.csv',
+    ]);
+});

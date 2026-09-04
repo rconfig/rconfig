@@ -1,139 +1,88 @@
 <?php
 
-namespace Tests\Fasttests\ControllersTests\Api;
-
 use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
-use Tests\TestCase;
 
-/**
- * Regression tests for role field validation and privilege checks on user
- * create/update.
- *
- * Enforcement under test:
- *  - app/Http/Requests/StoreUserRequest.php: `role` is validated against a
- *    fixed allowlist, and `authorize()` requires the acting user to already
- *    hold the Admin role before it can be granted to any account, their own
- *    or another's.
- */
-class UserRoleValidationTest extends TestCase
-{
-    protected User $nonAdmin;
+beforeEach(function () {
+    $this->beginTransaction();
+    $this->nonAdmin = User::factory()->create(['role' => 'User']);
+    $this->actingAs($this->nonAdmin);
+});
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->beginTransaction();
-        $this->nonAdmin = User::factory()->create(['role' => 'User']);
-        $this->actingAs($this->nonAdmin);
-    }
+afterEach(function () {
+    $this->rollBackTransaction();
+});
 
-    protected function tearDown(): void
-    {
-        $this->rollBackTransaction();
-        parent::tearDown();
-    }
+test('creating a user with admin role requires existing admin privilege', function () {
+    $response = $this->postJson('/api/users', [
+        'name' => 'Attacker Created Admin',
+        'email' => 'pwned-admin@example.com',
+        'username' => 'pwnedadmin',
+        'password' => 'password1',
+        'repeat_password' => 'password1',
+        'role' => 'Admin',
+    ]);
 
-    /**
-     * Claim: no allowlist on `role` + no privilege check on store() lets any
-     * authenticated user mint a brand new Admin account.
-     */
-    public function test_creating_a_user_with_admin_role_requires_existing_admin_privilege(): void
-    {
-        $response = $this->postJson('/api/users', [
-            'name' => 'Attacker Created Admin',
-            'email' => 'pwned-admin@example.com',
-            'username' => 'pwnedadmin',
-            'password' => 'password1',
-            'repeat_password' => 'password1',
-            'role' => 'Admin',
-        ]);
+    $response->assertStatus(403);
 
-        $response->assertStatus(403);
+    $this->assertDatabaseMissing('users', [
+        'email' => 'pwned-admin@example.com',
+        'role' => 'Admin',
+    ]);
+});
 
-        $this->assertDatabaseMissing('users', [
-            'email' => 'pwned-admin@example.com',
-            'role' => 'Admin',
-        ]);
-    }
+test('updating own role to admin requires existing admin privilege', function () {
+    $response = $this->patchJson('/api/users/' . $this->nonAdmin->id, [
+        'name' => $this->nonAdmin->name,
+        'email' => $this->nonAdmin->email,
+        'password' => 'password1',
+        'repeat_password' => 'password1',
+        'role' => 'Admin',
+    ]);
 
-    /**
-     * Claim: the same missing check applies to update(), letting a user
-     * change their own role instead of creating a new account.
-     */
-    public function test_updating_own_role_to_admin_requires_existing_admin_privilege(): void
-    {
-        $response = $this->patchJson('/api/users/' . $this->nonAdmin->id, [
-            'name' => $this->nonAdmin->name,
-            'email' => $this->nonAdmin->email,
-            'password' => 'password1',
-            'repeat_password' => 'password1',
-            'role' => 'Admin',
-        ]);
+    $response->assertStatus(403);
 
-        $response->assertStatus(403);
+    $this->assertDatabaseHas('users', [
+        'id' => $this->nonAdmin->id,
+        'role' => 'User',
+    ]);
+});
 
-        $this->assertDatabaseHas('users', [
-            'id' => $this->nonAdmin->id,
-            'role' => 'User',
-        ]);
-    }
+test('store user request authorize checks privilege for admin role', function () {
+    $request = StoreUserRequest::create('/api/users', 'POST', [
+        'role' => 'Admin',
+    ]);
+    $request->setUserResolver(fn () => $this->nonAdmin);
 
-    /**
-     * Claim: StoreUserRequest::authorize() must check privilege, not just
-     * whether the caller is logged in.
-     */
-    public function test_store_user_request_authorize_checks_privilege_for_admin_role(): void
-    {
-        $request = StoreUserRequest::create('/api/users', 'POST', [
-            'role' => 'Admin',
-        ]);
-        $request->setUserResolver(fn () => $this->nonAdmin);
+    expect($request->authorize())->toBeFalse('StoreUserRequest::authorize() returned true for a non-admin user attempting to set role=Admin.');
+});
 
-        $this->assertFalse(
-            $request->authorize(),
-            'StoreUserRequest::authorize() returned true for a non-admin user attempting to set role=Admin.'
-        );
-    }
+test('role field only accepts known values', function () {
+    // Act as an Admin: a standard user is now refused before validation runs,
+    // so the allowlist would never be reached.
+    $this->actingAs(User::factory()->create(['role' => 'Admin']));
 
-    /**
-     * Claim: the `role` validation rule must reject values outside the
-     * known set, not just require the field to be present.
-     */
-    public function test_role_field_only_accepts_known_values(): void
-    {
-        // Act as an Admin: a standard user is now refused before validation runs,
-        // so the allowlist would never be reached.
-        $this->actingAs(User::factory()->create(['role' => 'Admin']));
+    $response = $this->postJson('/api/users', [
+        'name' => 'Garbage Role User',
+        'email' => 'garbage-role@example.com',
+        'username' => 'garbagerole',
+        'password' => 'password1',
+        'repeat_password' => 'password1',
+        'role' => 'TotallyBogusRoleThatDoesNotExist12345',
+    ]);
 
-        $response = $this->postJson('/api/users', [
-            'name' => 'Garbage Role User',
-            'email' => 'garbage-role@example.com',
-            'username' => 'garbagerole',
-            'password' => 'password1',
-            'repeat_password' => 'password1',
-            'role' => 'TotallyBogusRoleThatDoesNotExist12345',
-        ]);
+    $response->assertStatus(422);
+    expect($response->json('errors') ?? [])->toHaveKey('role');
+});
 
-        $response->assertStatus(422);
-        $this->assertArrayHasKey('role', $response->json('errors') ?? []);
-    }
+test('horizon access requires admin role', function () {
+    $admin = User::factory()->create(['role' => 'Admin']);
 
-    /**
-     * Claim (downstream effect): whatever gates Horizon access reads the
-     * same role field, so a non-admin must be forbidden and an Admin must
-     * be let through.
-     */
-    public function test_horizon_access_requires_admin_role(): void
-    {
-        $admin = User::factory()->create(['role' => 'Admin']);
+    $nonAdminResponse = $this->actingAs($this->nonAdmin)->get('horizon');
+    $nonAdminResponse->assertForbidden();
 
-        $nonAdminResponse = $this->actingAs($this->nonAdmin)->get('horizon');
-        $nonAdminResponse->assertForbidden();
+    $this->app['session']->flush();
 
-        $this->app['session']->flush();
-
-        $adminResponse = $this->actingAs($admin)->get('horizon');
-        $adminResponse->assertStatus(200);
-    }
-}
+    $adminResponse = $this->actingAs($admin)->get('horizon');
+    $adminResponse->assertStatus(200);
+});

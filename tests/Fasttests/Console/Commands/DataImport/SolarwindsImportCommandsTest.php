@@ -1,7 +1,5 @@
 <?php
 
-namespace Tests\Fasttests\Console\Commands\DataImport;
-
 use App\Models\Category;
 use App\Models\Device;
 use App\Models\DeviceCredentials;
@@ -10,694 +8,607 @@ use App\Models\Template;
 use App\Models\User;
 use App\Models\Vendor;
 use Illuminate\Support\Facades\File;
-use Tests\TestCase;
 
-class SolarwindsImportCommandsTest extends TestCase
-{
-    /** @var User */
-    protected $user;
+beforeEach(function () {
+    $this->beginTransaction();
 
-    protected $connectionFile;
-    protected $mappingsFile;
-    protected $tempDir;
-    protected $template;
-    protected $vendor;
-    protected $category;
-    protected $credential;
-    protected $tag;
+    $this->user = User::factory()->create();
+    $this->actingAs($this->user);
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->beginTransaction();
+    $this->connectionFile = storage_path('app/rconfig/solarwinds_connection.json');
+    $this->mappingsFile = storage_path('app/rconfig/solarwinds_mappings.json');
+    $this->tempDir = storage_path('app/rconfig/tempdir');
 
-        $this->user = User::factory()->create();
-        $this->actingAs($this->user);
-
-        $this->connectionFile = storage_path('app/rconfig/solarwinds_connection.json');
-        $this->mappingsFile = storage_path('app/rconfig/solarwinds_mappings.json');
-        $this->tempDir = storage_path('app/rconfig/tempdir');
-
-        $dir = storage_path('app/rconfig');
-        if (! File::exists($dir)) {
-            File::makeDirectory($dir, 0755, true);
-        }
-
-        if (! File::exists($this->tempDir)) {
-            File::makeDirectory($this->tempDir, 0755, true);
-        }
-
-        $this->template = Template::factory()->create(['templateName' => 'solarwinds_test_template']);
-        $this->vendor = Vendor::factory()->create(['vendorName' => 'solarwinds_test_vendor']);
-        $this->category = Category::factory()->create(['categoryName' => 'solarwinds_test_category']);
-        $this->credential = DeviceCredentials::factory()->create([
-            'cred_name' => 'solarwinds_test_cred',
-            'cred_description' => 'SolarWinds Test Credentials',
-        ]);
-        $this->tag = Tag::factory()->create(['tagname' => 'solarwinds_test_tag']);
+    $dir = storage_path('app/rconfig');
+    if (! File::exists($dir)) {
+        File::makeDirectory($dir, 0755, true);
     }
 
-    /** @test */
-    public function test_solarwinds_connection_command_exists()
-    {
-        $exitCode = $this->artisan('rconfig:solarwinds-connection --info')->run();
-        $this->assertEquals(0, $exitCode);
+    if (! File::exists($this->tempDir)) {
+        File::makeDirectory($this->tempDir, 0755, true);
     }
 
-    /** @test */
-    public function test_solarwinds_connection_creates_stub_file()
-    {
-        $stubFile = storage_path('app/rconfig/solarwinds_connection.stub.json');
+    $this->template = Template::factory()->create(['templateName' => 'solarwinds_test_template']);
+    $this->vendor = Vendor::factory()->create(['vendorName' => 'solarwinds_test_vendor']);
+    $this->category = Category::factory()->create(['categoryName' => 'solarwinds_test_category']);
+    $this->credential = DeviceCredentials::factory()->create([
+        'cred_name' => 'solarwinds_test_cred',
+        'cred_description' => 'SolarWinds Test Credentials',
+    ]);
+    $this->tag = Tag::factory()->create(['tagname' => 'solarwinds_test_tag']);
+});
 
-        $this->artisan('rconfig:solarwinds-connection --info')->run();
+test('solarwinds connection command exists', function () {
+    $exitCode = $this->artisan('rconfig:solarwinds-connection --info')->run();
+    expect($exitCode)->toEqual(0);
+});
 
-        $this->assertFileExists($stubFile);
+test('solarwinds connection creates stub file', function () {
+    $stubFile = storage_path('app/rconfig/solarwinds_connection.stub.json');
 
-        $stub = json_decode(File::get($stubFile), true);
-        $this->assertArrayHasKey('swis_url', $stub);
-        $this->assertArrayHasKey('username', $stub);
-        $this->assertArrayHasKey('filters', $stub);
+    $this->artisan('rconfig:solarwinds-connection --info')->run();
+
+    expect($stubFile)->toBeFile();
+
+    $stub = json_decode(File::get($stubFile), true);
+    expect($stub)->toHaveKey('swis_url');
+    expect($stub)->toHaveKey('username');
+    expect($stub)->toHaveKey('filters');
+});
+
+test('solarwinds device mappings command exists', function () {
+    $exitCode = $this->artisan('rconfig:solarwinds-device-mappings --info')->run();
+    expect($exitCode)->toEqual(0);
+});
+
+test('solarwinds device mappings creates empty file', function () {
+    if (File::exists($this->mappingsFile)) {
+        File::delete($this->mappingsFile);
     }
 
-    /** @test */
-    public function test_solarwinds_device_mappings_command_exists()
-    {
-        $exitCode = $this->artisan('rconfig:solarwinds-device-mappings --info')->run();
-        $this->assertEquals(0, $exitCode);
-    }
+    $this->artisan('rconfig:solarwinds-device-mappings --list')->run();
 
-    /** @test */
-    public function test_solarwinds_device_mappings_creates_empty_file()
-    {
-        if (File::exists($this->mappingsFile)) {
-            File::delete($this->mappingsFile);
-        }
+    expect($this->mappingsFile)->toBeFile();
 
-        $this->artisan('rconfig:solarwinds-device-mappings --list')->run();
+    $content = json_decode(File::get($this->mappingsFile), true);
+    expect($content)->toBeArray();
+    expect($content)->toBeEmpty();
+});
 
-        $this->assertFileExists($this->mappingsFile);
-
-        $content = json_decode(File::get($this->mappingsFile), true);
-        $this->assertIsArray($content);
-        $this->assertEmpty($content);
-    }
-
-    /** @test */
-    public function test_solarwinds_device_mappings_can_list_existing()
-    {
-        $mappings = [
-            'Cisco IOS' => [
-                'template_id' => $this->template->id,
-                'vendor_id' => $this->vendor->id,
-                'category_id' => $this->category->id,
-                'credential_id' => $this->credential->id,
-                'prompts' => [
-                    'device_enable_prompt' => '{device_name}>',
-                    'device_main_prompt' => '{device_name}#',
-                ],
-                'tags' => [$this->tag->id],
-                'device_type' => 'cisco_ios',
-                'custom_property_tag_mapping' => [],
-                'node_group_mapping' => [],
-            ],
-        ];
-
-        File::put($this->mappingsFile, json_encode($mappings, JSON_PRETTY_PRINT));
-
-        $exitCode = $this->artisan('rconfig:solarwinds-device-mappings --list')->run();
-        $this->assertEquals(0, $exitCode);
-
-        $loaded = json_decode(File::get($this->mappingsFile), true);
-        $this->assertArrayHasKey('Cisco IOS', $loaded);
-    }
-
-    /** @test */
-    public function test_solarwinds_load_devices_command_exists()
-    {
-        $exitCode = $this->artisan('rconfig:solarwinds-load-devices --info')->run();
-        $this->assertEquals(0, $exitCode);
-    }
-
-    /** @test */
-    public function test_solarwinds_import_devices_fails_with_missing_file()
-    {
-        $nonExistentFile = $this->tempDir . '/does_not_exist.json';
-
-        $exitCode = $this->artisan('rconfig:solarwinds-import-devices', ['file' => $nonExistentFile])->run();
-        $this->assertEquals(1, $exitCode);
-    }
-
-    /** @test */
-    public function test_solarwinds_import_devices_fails_with_invalid_json()
-    {
-        $invalidJsonFile = $this->tempDir . '/invalid.json';
-        File::put($invalidJsonFile, 'this is not valid json');
-
-        $exitCode = $this->artisan('rconfig:solarwinds-import-devices', ['file' => $invalidJsonFile])->run();
-        $this->assertEquals(1, $exitCode);
-
-        File::delete($invalidJsonFile);
-    }
-
-    /** @test */
-    public function test_solarwinds_import_devices_fails_with_empty_array()
-    {
-        $emptyFile = $this->tempDir . '/empty.json';
-        File::put($emptyFile, json_encode([]));
-
-        $exitCode = $this->artisan('rconfig:solarwinds-import-devices', ['file' => $emptyFile])->run();
-        $this->assertEquals(1, $exitCode);
-
-        File::delete($emptyFile);
-    }
-
-    /** @test */
-    public function test_solarwinds_import_devices_dry_run_with_valid_device()
-    {
-        $validDevice = [
-            [
-                'device_name' => 'test-switch-01',
-                'device_ip' => '10.1.1.1',
-                'device_model' => 'Cisco IOS',
-                'template_id' => $this->template->id,
-                'vendor_id' => $this->vendor->id,
-                'device_category_id' => $this->category->id,
-                'device_cred_id' => $this->credential->id,
-                'prompts' => [
-                    'device_enable_prompt' => 'test-switch-01>',
-                    'device_main_prompt' => 'test-switch-01#',
-                ],
-                'tags' => [$this->tag->id],
-                'solarwinds_machine_type' => 'Cisco IOS',
-                'solarwinds_node_groups' => ['Core Routers'],
-                'solarwinds_custom_properties' => ['Location' => 'DC-East'],
-                'connection_type' => 'ssh',
-                'port' => 22,
-            ],
-        ];
-
-        $validFile = $this->tempDir . '/valid_device.json';
-        File::put($validFile, json_encode($validDevice));
-
-        $exitCode = $this->artisan('rconfig:solarwinds-import-devices', [
-            'file' => $validFile,
-            '--dry-run' => true,
-        ])->run();
-
-        $this->assertEquals(0, $exitCode);
-
-        $this->assertDatabaseMissing('devices', [
-            'device_name' => 'test-switch-01',
-        ]);
-
-        File::delete($validFile);
-    }
-
-    /** @test */
-    public function test_solarwinds_workflow_file_dependencies()
-    {
-        $this->artisan('rconfig:solarwinds-connection --info')->run();
-        $stubFile = storage_path('app/rconfig/solarwinds_connection.stub.json');
-        $this->assertFileExists($stubFile);
-
-        if (File::exists($this->mappingsFile)) {
-            File::delete($this->mappingsFile);
-        }
-
-        $this->artisan('rconfig:solarwinds-device-mappings --list')->run();
-        $this->assertFileExists($this->mappingsFile);
-
-        $mappings = json_decode(File::get($this->mappingsFile), true);
-        $this->assertIsArray($mappings);
-    }
-
-    /** @test */
-    public function test_solarwinds_connection_stub_has_proper_structure()
-    {
-        $this->artisan('rconfig:solarwinds-connection --info')->run();
-
-        $stubFile = storage_path('app/rconfig/solarwinds_connection.stub.json');
-        $stub = json_decode(File::get($stubFile), true);
-
-        $this->assertArrayHasKey('swis_url', $stub);
-        $this->assertArrayHasKey('username', $stub);
-        $this->assertArrayHasKey('verify_ssl', $stub);
-        $this->assertArrayHasKey('filters', $stub);
-        $this->assertArrayHasKey('_comment', $stub);
-        $this->assertArrayHasKey('_instructions', $stub);
-    }
-
-    /** @test */
-    public function test_solarwinds_mappings_preserves_structure()
-    {
-        $mapping = [
-            'Cisco IOS' => [
-                'template_id' => $this->template->id,
-                'vendor_id' => $this->vendor->id,
-                'category_id' => $this->category->id,
-                'credential_id' => $this->credential->id,
-                'default_group_id' => 1,
-                'prompts' => [
-                    'device_enable_prompt' => '{device_name}>',
-                    'device_main_prompt' => '{device_name}#',
-                ],
-                'tags' => [$this->tag->id],
-                'device_type' => 'cisco_ios',
-                'custom_property_tag_mapping' => [
-                    'Location' => 10,
-                    'Role' => 15,
-                ],
-                'node_group_mapping' => [
-                    'Core Routers' => 1,
-                    'Distribution' => 2,
-                ],
-            ],
-        ];
-
-        File::put($this->mappingsFile, json_encode($mapping, JSON_PRETTY_PRINT));
-
-        $loaded = json_decode(File::get($this->mappingsFile), true);
-
-        $this->assertArrayHasKey('Cisco IOS', $loaded);
-        $this->assertEquals($this->template->id, $loaded['Cisco IOS']['template_id']);
-        $this->assertEquals($this->credential->id, $loaded['Cisco IOS']['credential_id']);
-        $this->assertArrayHasKey('custom_property_tag_mapping', $loaded['Cisco IOS']);
-        $this->assertEquals(10, $loaded['Cisco IOS']['custom_property_tag_mapping']['Location']);
-        $this->assertArrayHasKey('node_group_mapping', $loaded['Cisco IOS']);
-        $this->assertEquals(1, $loaded['Cisco IOS']['node_group_mapping']['Core Routers']);
-    }
-
-    /** @test */
-    public function test_solarwinds_json_structure_is_correct()
-    {
-        $device = [
-            'device_name' => 'test-device',
-            'device_ip' => '10.1.1.1',
-            'device_model' => 'cisco_ios',
+test('solarwinds device mappings can list existing', function () {
+    $mappings = [
+        'Cisco IOS' => [
             'template_id' => $this->template->id,
             'vendor_id' => $this->vendor->id,
-            'device_category_id' => $this->category->id,
-            'device_cred_id' => $this->credential->id,
+            'category_id' => $this->category->id,
+            'credential_id' => $this->credential->id,
             'prompts' => [
-                'device_enable_prompt' => 'test>',
-                'device_main_prompt' => 'test#',
+                'device_enable_prompt' => '{device_name}>',
+                'device_main_prompt' => '{device_name}#',
             ],
             'tags' => [$this->tag->id],
-            'solarwinds_machine_type' => 'Cisco IOS',
-            'solarwinds_node_groups' => ['Core'],
-            'solarwinds_custom_properties' => ['Location' => 'DC1'],
-        ];
+            'device_type' => 'cisco_ios',
+            'custom_property_tag_mapping' => [],
+            'node_group_mapping' => [],
+        ],
+    ];
 
-        $file = $this->tempDir . '/structure_test.json';
-        File::put($file, json_encode([$device]));
+    File::put($this->mappingsFile, json_encode($mappings, JSON_PRETTY_PRINT));
 
-        $loaded = json_decode(File::get($file), true);
+    $exitCode = $this->artisan('rconfig:solarwinds-device-mappings --list')->run();
+    expect($exitCode)->toEqual(0);
 
-        $this->assertIsArray($loaded);
-        $this->assertCount(1, $loaded);
-        $this->assertEquals('test-device', $loaded[0]['device_name']);
-        $this->assertEquals('Cisco IOS', $loaded[0]['solarwinds_machine_type']);
-        $this->assertArrayHasKey('solarwinds_node_groups', $loaded[0]);
-        $this->assertArrayHasKey('solarwinds_custom_properties', $loaded[0]);
+    $loaded = json_decode(File::get($this->mappingsFile), true);
+    expect($loaded)->toHaveKey('Cisco IOS');
+});
 
-        File::delete($file);
-    }
+test('solarwinds load devices command exists', function () {
+    $exitCode = $this->artisan('rconfig:solarwinds-load-devices --info')->run();
+    expect($exitCode)->toEqual(0);
+});
 
-    /** @test */
-    public function test_solarwinds_mappings_file_location_is_correct()
-    {
-        $this->artisan('rconfig:solarwinds-device-mappings --list')->run();
+test('solarwinds import devices fails with missing file', function () {
+    $nonExistentFile = $this->tempDir . '/does_not_exist.json';
 
-        $this->assertFileExists($this->mappingsFile);
-        $this->assertEquals(
-            storage_path('app/rconfig/solarwinds_mappings.json'),
-            $this->mappingsFile
-        );
-    }
+    $exitCode = $this->artisan('rconfig:solarwinds-import-devices', ['file' => $nonExistentFile])->run();
+    expect($exitCode)->toEqual(1);
+});
 
-    /** @test */
-    public function test_solarwinds_connection_filters_structure()
-    {
-        $this->artisan('rconfig:solarwinds-connection --info')->run();
+test('solarwinds import devices fails with invalid json', function () {
+    $invalidJsonFile = $this->tempDir . '/invalid.json';
+    File::put($invalidJsonFile, 'this is not valid json');
 
-        $stubFile = storage_path('app/rconfig/solarwinds_connection.stub.json');
-        $stub = json_decode(File::get($stubFile), true);
+    $exitCode = $this->artisan('rconfig:solarwinds-import-devices', ['file' => $invalidJsonFile])->run();
+    expect($exitCode)->toEqual(1);
 
-        $this->assertArrayHasKey('filters', $stub);
-        $this->assertArrayHasKey('include_groups', $stub['filters']);
-        $this->assertArrayHasKey('exclude_groups', $stub['filters']);
-        $this->assertArrayHasKey('include_machine_types', $stub['filters']);
-        $this->assertArrayHasKey('exclude_machine_types', $stub['filters']);
-        $this->assertArrayHasKey('include_statuses', $stub['filters']);
-        $this->assertArrayHasKey('custom_property_filters', $stub['filters']);
-    }
+    File::delete($invalidJsonFile);
+});
 
-    /** @test */
-    public function test_solarwinds_custom_property_mapping_in_output()
-    {
-        $device = [
-            'device_name' => 'test-device',
+test('solarwinds import devices fails with empty array', function () {
+    $emptyFile = $this->tempDir . '/empty.json';
+    File::put($emptyFile, json_encode([]));
+
+    $exitCode = $this->artisan('rconfig:solarwinds-import-devices', ['file' => $emptyFile])->run();
+    expect($exitCode)->toEqual(1);
+
+    File::delete($emptyFile);
+});
+
+test('solarwinds import devices dry run with valid device', function () {
+    $validDevice = [
+        [
+            'device_name' => 'test-switch-01',
             'device_ip' => '10.1.1.1',
-            'device_model' => 'cisco_ios',
-            'template_id' => $this->template->id,
-            'vendor_id' => $this->vendor->id,
-            'device_category_id' => $this->category->id,
-            'device_cred_id' => $this->credential->id,
-            'prompts' => [
-                'device_enable_prompt' => 'test>',
-                'device_main_prompt' => 'test#',
-            ],
-            'tags' => [$this->tag->id, 10, 15], // Including custom property mapped tags
-            'solarwinds_machine_type' => 'Cisco IOS',
-            'solarwinds_custom_properties' => [
-                'Location' => 'DC-East',
-                'Role' => 'Core',
-            ],
-        ];
-
-        $file = $this->tempDir . '/custom_prop_test.json';
-        File::put($file, json_encode([$device]));
-
-        $loaded = json_decode(File::get($file), true);
-
-        $this->assertArrayHasKey('solarwinds_custom_properties', $loaded[0]);
-        $this->assertEquals('DC-East', $loaded[0]['solarwinds_custom_properties']['Location']);
-        $this->assertContains(10, $loaded[0]['tags']);
-        $this->assertContains(15, $loaded[0]['tags']);
-
-        File::delete($file);
-    }
-
-    /**
-     * Build a fully valid device payload for the import command.
-     *
-     * @return array<string, mixed>
-     */
-    protected function validImportDevice(array $overrides = []): array
-    {
-        return array_merge([
-            'device_name' => 'sw-real-01',
-            'device_ip' => '10.60.70.80',
             'device_model' => 'Cisco IOS',
             'template_id' => $this->template->id,
             'vendor_id' => $this->vendor->id,
             'device_category_id' => $this->category->id,
             'device_cred_id' => $this->credential->id,
             'prompts' => [
-                'device_enable_prompt' => 'sw-real-01>',
-                'device_main_prompt' => 'sw-real-01#',
+                'device_enable_prompt' => 'test-switch-01>',
+                'device_main_prompt' => 'test-switch-01#',
             ],
             'tags' => [$this->tag->id],
             'solarwinds_machine_type' => 'Cisco IOS',
-        ], $overrides);
+            'solarwinds_node_groups' => ['Core Routers'],
+            'solarwinds_custom_properties' => ['Location' => 'DC-East'],
+            'connection_type' => 'ssh',
+            'port' => 22,
+        ],
+    ];
+
+    $validFile = $this->tempDir . '/valid_device.json';
+    File::put($validFile, json_encode($validDevice));
+
+    $exitCode = $this->artisan('rconfig:solarwinds-import-devices', [
+        'file' => $validFile,
+        '--dry-run' => true,
+    ])->run();
+
+    expect($exitCode)->toEqual(0);
+
+    $this->assertDatabaseMissing('devices', [
+        'device_name' => 'test-switch-01',
+    ]);
+
+    File::delete($validFile);
+});
+
+test('solarwinds workflow file dependencies', function () {
+    $this->artisan('rconfig:solarwinds-connection --info')->run();
+    $stubFile = storage_path('app/rconfig/solarwinds_connection.stub.json');
+    expect($stubFile)->toBeFile();
+
+    if (File::exists($this->mappingsFile)) {
+        File::delete($this->mappingsFile);
     }
 
-    /** @test */
-    public function test_solarwinds_import_creates_device_with_pivots()
-    {
-        $file = $this->tempDir . '/real_device.json';
-        File::put($file, json_encode([$this->validImportDevice()]));
+    $this->artisan('rconfig:solarwinds-device-mappings --list')->run();
+    expect($this->mappingsFile)->toBeFile();
 
-        $exitCode = $this->artisan('rconfig:solarwinds-import-devices', ['file' => $file])
-            ->expectsConfirmation('Return to main menu?', 'no')
-            ->run();
+    $mappings = json_decode(File::get($this->mappingsFile), true);
+    expect($mappings)->toBeArray();
+});
 
-        $this->assertEquals(0, $exitCode);
+test('solarwinds connection stub has proper structure', function () {
+    $this->artisan('rconfig:solarwinds-connection --info')->run();
 
-        $this->assertDatabaseHas('devices', [
-            'device_name' => 'sw-real-01',
-            'device_ip' => '10.60.70.80',
-            'device_template' => $this->template->id,
-            'device_category_id' => $this->category->id,
-            'device_cred_id' => $this->credential->id,
-            'status' => 1,
-        ]);
+    $stubFile = storage_path('app/rconfig/solarwinds_connection.stub.json');
+    $stub = json_decode(File::get($stubFile), true);
 
-        $created = Device::where('device_name', 'sw-real-01')->firstOrFail();
-        $this->assertTrue($created->Template()->where('templates.id', $this->template->id)->exists());
-        $this->assertTrue($created->Vendor()->where('vendors.id', $this->vendor->id)->exists());
-        $this->assertTrue($created->Category()->where('categories.id', $this->category->id)->exists());
-        $this->assertTrue($created->Tag()->where('tags.id', $this->tag->id)->exists());
+    expect($stub)->toHaveKey('swis_url');
+    expect($stub)->toHaveKey('username');
+    expect($stub)->toHaveKey('verify_ssl');
+    expect($stub)->toHaveKey('filters');
+    expect($stub)->toHaveKey('_comment');
+    expect($stub)->toHaveKey('_instructions');
+});
 
-        File::delete($file);
-    }
-
-    /** @test */
-    public function test_solarwinds_import_skips_duplicate_device()
-    {
-        Device::factory()->create([
-            'device_name' => 'sw-real-01',
-            'device_ip' => '10.60.70.80',
-        ]);
-
-        $file = $this->tempDir . '/dup_device.json';
-        File::put($file, json_encode([$this->validImportDevice()]));
-
-        $exitCode = $this->artisan('rconfig:solarwinds-import-devices', ['file' => $file])
-            ->expectsConfirmation('Continue with 0 valid devices?', 'no')
-            ->run();
-
-        $this->assertEquals(1, $exitCode);
-        $this->assertEquals(1, Device::where('device_name', 'sw-real-01')->count());
-
-        File::delete($file);
-    }
-
-    /** @test */
-    public function test_solarwinds_import_rejects_invalid_ip()
-    {
-        $file = $this->tempDir . '/bad_ip.json';
-        File::put($file, json_encode([$this->validImportDevice(['device_ip' => 'not-an-ip'])]));
-
-        $exitCode = $this->artisan('rconfig:solarwinds-import-devices', ['file' => $file])
-            ->expectsConfirmation('Continue with 0 valid devices?', 'no')
-            ->run();
-
-        $this->assertEquals(1, $exitCode);
-        $this->assertDatabaseMissing('devices', ['device_name' => 'sw-real-01']);
-
-        File::delete($file);
-    }
-
-    /** @test */
-    public function test_solarwinds_import_rejects_nonexistent_template()
-    {
-        $file = $this->tempDir . '/bad_template.json';
-        File::put($file, json_encode([$this->validImportDevice(['template_id' => 999999])]));
-
-        $exitCode = $this->artisan('rconfig:solarwinds-import-devices', ['file' => $file])
-            ->expectsConfirmation('Continue with 0 valid devices?', 'no')
-            ->run();
-
-        $this->assertEquals(1, $exitCode);
-        $this->assertDatabaseMissing('devices', ['device_name' => 'sw-real-01']);
-
-        File::delete($file);
-    }
-
-    /** @test */
-    public function test_solarwinds_import_rejects_nonexistent_credential()
-    {
-        $file = $this->tempDir . '/bad_cred.json';
-        File::put($file, json_encode([$this->validImportDevice(['device_cred_id' => 999999])]));
-
-        $exitCode = $this->artisan('rconfig:solarwinds-import-devices', ['file' => $file])
-            ->expectsConfirmation('Continue with 0 valid devices?', 'no')
-            ->run();
-
-        $this->assertEquals(1, $exitCode);
-        $this->assertDatabaseMissing('devices', ['device_name' => 'sw-real-01']);
-
-        File::delete($file);
-    }
-
-    /** @test */
-    public function test_solarwinds_import_rejects_missing_prompts()
-    {
-        $device = $this->validImportDevice();
-        unset($device['prompts']);
-
-        $file = $this->tempDir . '/no_prompts.json';
-        File::put($file, json_encode([$device]));
-
-        $exitCode = $this->artisan('rconfig:solarwinds-import-devices', ['file' => $file])
-            ->expectsConfirmation('Continue with 0 valid devices?', 'no')
-            ->run();
-
-        $this->assertEquals(1, $exitCode);
-        $this->assertDatabaseMissing('devices', ['device_name' => 'sw-real-01']);
-
-        File::delete($file);
-    }
-
-    /** @test */
-    public function test_solarwinds_load_devices_fails_without_connection_file()
-    {
-        if (File::exists($this->connectionFile)) {
-            File::delete($this->connectionFile);
-        }
-
-        $exitCode = $this->artisan('rconfig:solarwinds-load-devices')->run();
-        $this->assertEquals(1, $exitCode);
-    }
-
-    /** @test */
-    public function test_solarwinds_load_devices_fails_without_mappings_file()
-    {
-        File::put($this->connectionFile, json_encode([
-            'swis_url' => 'https://swis.test',
-            'username' => 'admin',
-            'password' => null,
-            'password_encrypted' => false,
-            'verify_ssl' => false,
-            'timeout' => 30,
-            'filters' => [],
-        ], JSON_PRETTY_PRINT));
-
-        if (File::exists($this->mappingsFile)) {
-            File::delete($this->mappingsFile);
-        }
-
-        $exitCode = $this->artisan('rconfig:solarwinds-load-devices')->run();
-        $this->assertEquals(1, $exitCode);
-    }
-
-    /** @test */
-    public function test_solarwinds_connection_set_url_updates_existing_connection()
-    {
-        File::put($this->connectionFile, json_encode([
-            'swis_url' => 'https://old.test',
-            'username' => 'admin',
-            'filters' => [],
-        ], JSON_PRETTY_PRINT));
-
-        $exitCode = $this->artisan('rconfig:solarwinds-connection', ['--set-url' => 'https://new.test/'])->run();
-        $this->assertEquals(0, $exitCode);
-
-        $config = json_decode(File::get($this->connectionFile), true);
-        $this->assertEquals('https://new.test', $config['swis_url']);
-    }
-
-    /** @test */
-    public function test_solarwinds_connection_set_url_fails_without_connection()
-    {
-        if (File::exists($this->connectionFile)) {
-            File::delete($this->connectionFile);
-        }
-
-        $exitCode = $this->artisan('rconfig:solarwinds-connection', ['--set-url' => 'https://new.test'])->run();
-        $this->assertEquals(1, $exitCode);
-    }
-
-    /** @test */
-    public function test_solarwinds_connection_show_with_existing_connection()
-    {
-        File::put($this->connectionFile, json_encode([
-            'swis_url' => 'https://swis.test',
-            'username' => 'admin',
-            'password' => null,
-            'password_encrypted' => false,
-            'verify_ssl' => false,
-            'timeout' => 30,
-            'connection_status' => 'untested',
-            'last_tested' => null,
-            'solarwinds_version' => null,
-            'node_count' => null,
-            'filters' => [
-                'include_groups' => [],
-                'exclude_groups' => [],
-                'include_machine_types' => [],
-                'exclude_machine_types' => [],
-                'include_statuses' => [1],
-                'custom_property_filters' => [],
+test('solarwinds mappings preserves structure', function () {
+    $mapping = [
+        'Cisco IOS' => [
+            'template_id' => $this->template->id,
+            'vendor_id' => $this->vendor->id,
+            'category_id' => $this->category->id,
+            'credential_id' => $this->credential->id,
+            'default_group_id' => 1,
+            'prompts' => [
+                'device_enable_prompt' => '{device_name}>',
+                'device_main_prompt' => '{device_name}#',
             ],
-        ], JSON_PRETTY_PRINT));
+            'tags' => [$this->tag->id],
+            'device_type' => 'cisco_ios',
+            'custom_property_tag_mapping' => [
+                'Location' => 10,
+                'Role' => 15,
+            ],
+            'node_group_mapping' => [
+                'Core Routers' => 1,
+                'Distribution' => 2,
+            ],
+        ],
+    ];
 
-        $exitCode = $this->artisan('rconfig:solarwinds-connection', ['--show' => true])->run();
-        $this->assertEquals(0, $exitCode);
-    }
+    File::put($this->mappingsFile, json_encode($mapping, JSON_PRETTY_PRINT));
 
-    /** @test */
-    public function test_solarwinds_connection_show_fails_without_connection()
-    {
-        if (File::exists($this->connectionFile)) {
-            File::delete($this->connectionFile);
-        }
+    $loaded = json_decode(File::get($this->mappingsFile), true);
 
-        $exitCode = $this->artisan('rconfig:solarwinds-connection', ['--show' => true])->run();
-        $this->assertEquals(1, $exitCode);
-    }
+    expect($loaded)->toHaveKey('Cisco IOS');
+    expect($loaded['Cisco IOS']['template_id'])->toEqual($this->template->id);
+    expect($loaded['Cisco IOS']['credential_id'])->toEqual($this->credential->id);
+    expect($loaded['Cisco IOS'])->toHaveKey('custom_property_tag_mapping');
+    expect($loaded['Cisco IOS']['custom_property_tag_mapping']['Location'])->toEqual(10);
+    expect($loaded['Cisco IOS'])->toHaveKey('node_group_mapping');
+    expect($loaded['Cisco IOS']['node_group_mapping']['Core Routers'])->toEqual(1);
+});
 
-    /** @test */
-    public function test_solarwinds_connection_clear_removes_file()
-    {
-        File::put($this->connectionFile, json_encode(['swis_url' => 'https://swis.test'], JSON_PRETTY_PRINT));
+test('solarwinds json structure is correct', function () {
+    $device = [
+        'device_name' => 'test-device',
+        'device_ip' => '10.1.1.1',
+        'device_model' => 'cisco_ios',
+        'template_id' => $this->template->id,
+        'vendor_id' => $this->vendor->id,
+        'device_category_id' => $this->category->id,
+        'device_cred_id' => $this->credential->id,
+        'prompts' => [
+            'device_enable_prompt' => 'test>',
+            'device_main_prompt' => 'test#',
+        ],
+        'tags' => [$this->tag->id],
+        'solarwinds_machine_type' => 'Cisco IOS',
+        'solarwinds_node_groups' => ['Core'],
+        'solarwinds_custom_properties' => ['Location' => 'DC1'],
+    ];
 
-        $exitCode = $this->artisan('rconfig:solarwinds-connection', ['--clear' => true])
-            ->expectsConfirmation('Are you sure you want to clear the SolarWinds connection configuration?', 'yes')
-            ->run();
+    $file = $this->tempDir . '/structure_test.json';
+    File::put($file, json_encode([$device]));
 
-        $this->assertEquals(0, $exitCode);
-        $this->assertFileDoesNotExist($this->connectionFile);
-    }
+    $loaded = json_decode(File::get($file), true);
 
-    /** @test */
-    public function test_solarwinds_connection_clear_cancelled_keeps_file()
-    {
-        File::put($this->connectionFile, json_encode(['swis_url' => 'https://swis.test'], JSON_PRETTY_PRINT));
+    expect($loaded)->toBeArray();
+    expect($loaded)->toHaveCount(1);
+    expect($loaded[0]['device_name'])->toEqual('test-device');
+    expect($loaded[0]['solarwinds_machine_type'])->toEqual('Cisco IOS');
+    expect($loaded[0])->toHaveKey('solarwinds_node_groups');
+    expect($loaded[0])->toHaveKey('solarwinds_custom_properties');
 
-        $exitCode = $this->artisan('rconfig:solarwinds-connection', ['--clear' => true])
-            ->expectsConfirmation('Are you sure you want to clear the SolarWinds connection configuration?', 'no')
-            ->run();
+    File::delete($file);
+});
 
-        $this->assertEquals(0, $exitCode);
-        $this->assertFileExists($this->connectionFile);
-    }
+test('solarwinds mappings file location is correct', function () {
+    $this->artisan('rconfig:solarwinds-device-mappings --list')->run();
 
-    /** @test */
-    public function test_solarwinds_mappings_delete_removes_entry()
-    {
-        File::put($this->mappingsFile, json_encode([
-            'Cisco IOS' => ['device_type' => 'cisco_ios', 'template_id' => $this->template->id],
-            'Juniper JUNOS' => ['device_type' => 'junos', 'template_id' => $this->template->id],
-        ], JSON_PRETTY_PRINT));
+    expect($this->mappingsFile)->toBeFile();
+    expect($this->mappingsFile)->toEqual(storage_path('app/rconfig/solarwinds_mappings.json'));
+});
 
-        $exitCode = $this->artisan('rconfig:solarwinds-device-mappings', ['--delete' => 'Cisco IOS'])
-            ->expectsConfirmation("Are you sure you want to delete the mapping for 'Cisco IOS'?", 'yes')
-            ->run();
+test('solarwinds connection filters structure', function () {
+    $this->artisan('rconfig:solarwinds-connection --info')->run();
 
-        $this->assertEquals(0, $exitCode);
+    $stubFile = storage_path('app/rconfig/solarwinds_connection.stub.json');
+    $stub = json_decode(File::get($stubFile), true);
 
-        $loaded = json_decode(File::get($this->mappingsFile), true);
-        $this->assertArrayNotHasKey('Cisco IOS', $loaded);
-        $this->assertArrayHasKey('Juniper JUNOS', $loaded);
-    }
+    expect($stub)->toHaveKey('filters');
+    expect($stub['filters'])->toHaveKey('include_groups');
+    expect($stub['filters'])->toHaveKey('exclude_groups');
+    expect($stub['filters'])->toHaveKey('include_machine_types');
+    expect($stub['filters'])->toHaveKey('exclude_machine_types');
+    expect($stub['filters'])->toHaveKey('include_statuses');
+    expect($stub['filters'])->toHaveKey('custom_property_filters');
+});
 
-    public function tearDown(): void
-    {
-        $filesToDelete = [
-            $this->connectionFile,
-            $this->mappingsFile,
-            storage_path('app/rconfig/solarwinds_connection.stub.json'),
-        ];
+test('solarwinds custom property mapping in output', function () {
+    $device = [
+        'device_name' => 'test-device',
+        'device_ip' => '10.1.1.1',
+        'device_model' => 'cisco_ios',
+        'template_id' => $this->template->id,
+        'vendor_id' => $this->vendor->id,
+        'device_category_id' => $this->category->id,
+        'device_cred_id' => $this->credential->id,
+        'prompts' => [
+            'device_enable_prompt' => 'test>',
+            'device_main_prompt' => 'test#',
+        ],
+        'tags' => [$this->tag->id, 10, 15], // Including custom property mapped tags
+        'solarwinds_machine_type' => 'Cisco IOS',
+        'solarwinds_custom_properties' => [
+            'Location' => 'DC-East',
+            'Role' => 'Core',
+        ],
+    ];
 
-        foreach ($filesToDelete as $file) {
-            if (File::exists($file)) {
-                File::delete($file);
-            }
-        }
+    $file = $this->tempDir . '/custom_prop_test.json';
+    File::put($file, json_encode([$device]));
 
-        if (File::exists($this->tempDir)) {
-            $files = glob($this->tempDir . '/*');
-            foreach ($files as $file) {
-                if (is_file($file)) {
-                    unlink($file);
-                }
-            }
-        }
+    $loaded = json_decode(File::get($file), true);
 
-        $this->rollBackTransaction();
+    expect($loaded[0])->toHaveKey('solarwinds_custom_properties');
+    expect($loaded[0]['solarwinds_custom_properties']['Location'])->toEqual('DC-East');
+    expect($loaded[0]['tags'])->toContain(10);
+    expect($loaded[0]['tags'])->toContain(15);
 
-        parent::tearDown();
-    }
+    File::delete($file);
+});
+
+/**
+ * Build a fully valid device payload for the import command.
+ *
+ * @return array<string, mixed>
+ */
+function solarwindsValidImportDevice(Template $template, Vendor $vendor, Category $category, DeviceCredentials $credential, Tag $tag, array $overrides = []): array
+{
+    return array_merge([
+        'device_name' => 'sw-real-01',
+        'device_ip' => '10.60.70.80',
+        'device_model' => 'Cisco IOS',
+        'template_id' => $template->id,
+        'vendor_id' => $vendor->id,
+        'device_category_id' => $category->id,
+        'device_cred_id' => $credential->id,
+        'prompts' => [
+            'device_enable_prompt' => 'sw-real-01>',
+            'device_main_prompt' => 'sw-real-01#',
+        ],
+        'tags' => [$tag->id],
+        'solarwinds_machine_type' => 'Cisco IOS',
+    ], $overrides);
 }
+
+test('solarwinds import creates device with pivots', function () {
+    $file = $this->tempDir . '/real_device.json';
+    File::put($file, json_encode([solarwindsValidImportDevice($this->template, $this->vendor, $this->category, $this->credential, $this->tag)]));
+
+    $exitCode = $this->artisan('rconfig:solarwinds-import-devices', ['file' => $file])
+        ->expectsConfirmation('Return to main menu?', 'no')
+        ->run();
+
+    expect($exitCode)->toEqual(0);
+
+    $this->assertDatabaseHas('devices', [
+        'device_name' => 'sw-real-01',
+        'device_ip' => '10.60.70.80',
+        'device_template' => $this->template->id,
+        'device_category_id' => $this->category->id,
+        'device_cred_id' => $this->credential->id,
+        'status' => 1,
+    ]);
+
+    $created = Device::where('device_name', 'sw-real-01')->firstOrFail();
+    expect($created->Template()->where('templates.id', $this->template->id)->exists())->toBeTrue();
+    expect($created->Vendor()->where('vendors.id', $this->vendor->id)->exists())->toBeTrue();
+    expect($created->Category()->where('categories.id', $this->category->id)->exists())->toBeTrue();
+    expect($created->Tag()->where('tags.id', $this->tag->id)->exists())->toBeTrue();
+
+    File::delete($file);
+});
+
+test('solarwinds import skips duplicate device', function () {
+    Device::factory()->create([
+        'device_name' => 'sw-real-01',
+        'device_ip' => '10.60.70.80',
+    ]);
+
+    $file = $this->tempDir . '/dup_device.json';
+    File::put($file, json_encode([solarwindsValidImportDevice($this->template, $this->vendor, $this->category, $this->credential, $this->tag)]));
+
+    $exitCode = $this->artisan('rconfig:solarwinds-import-devices', ['file' => $file])
+        ->expectsConfirmation('Continue with 0 valid devices?', 'no')
+        ->run();
+
+    expect($exitCode)->toEqual(1);
+    expect(Device::where('device_name', 'sw-real-01')->count())->toEqual(1);
+
+    File::delete($file);
+});
+
+test('solarwinds import rejects invalid ip', function () {
+    $file = $this->tempDir . '/bad_ip.json';
+    File::put($file, json_encode([solarwindsValidImportDevice($this->template, $this->vendor, $this->category, $this->credential, $this->tag, ['device_ip' => 'not-an-ip'])]));
+
+    $exitCode = $this->artisan('rconfig:solarwinds-import-devices', ['file' => $file])
+        ->expectsConfirmation('Continue with 0 valid devices?', 'no')
+        ->run();
+
+    expect($exitCode)->toEqual(1);
+    $this->assertDatabaseMissing('devices', ['device_name' => 'sw-real-01']);
+
+    File::delete($file);
+});
+
+test('solarwinds import rejects nonexistent template', function () {
+    $file = $this->tempDir . '/bad_template.json';
+    File::put($file, json_encode([solarwindsValidImportDevice($this->template, $this->vendor, $this->category, $this->credential, $this->tag, ['template_id' => 999999])]));
+
+    $exitCode = $this->artisan('rconfig:solarwinds-import-devices', ['file' => $file])
+        ->expectsConfirmation('Continue with 0 valid devices?', 'no')
+        ->run();
+
+    expect($exitCode)->toEqual(1);
+    $this->assertDatabaseMissing('devices', ['device_name' => 'sw-real-01']);
+
+    File::delete($file);
+});
+
+test('solarwinds import rejects nonexistent credential', function () {
+    $file = $this->tempDir . '/bad_cred.json';
+    File::put($file, json_encode([solarwindsValidImportDevice($this->template, $this->vendor, $this->category, $this->credential, $this->tag, ['device_cred_id' => 999999])]));
+
+    $exitCode = $this->artisan('rconfig:solarwinds-import-devices', ['file' => $file])
+        ->expectsConfirmation('Continue with 0 valid devices?', 'no')
+        ->run();
+
+    expect($exitCode)->toEqual(1);
+    $this->assertDatabaseMissing('devices', ['device_name' => 'sw-real-01']);
+
+    File::delete($file);
+});
+
+test('solarwinds import rejects missing prompts', function () {
+    $device = solarwindsValidImportDevice($this->template, $this->vendor, $this->category, $this->credential, $this->tag);
+    unset($device['prompts']);
+
+    $file = $this->tempDir . '/no_prompts.json';
+    File::put($file, json_encode([$device]));
+
+    $exitCode = $this->artisan('rconfig:solarwinds-import-devices', ['file' => $file])
+        ->expectsConfirmation('Continue with 0 valid devices?', 'no')
+        ->run();
+
+    expect($exitCode)->toEqual(1);
+    $this->assertDatabaseMissing('devices', ['device_name' => 'sw-real-01']);
+
+    File::delete($file);
+});
+
+test('solarwinds load devices fails without connection file', function () {
+    if (File::exists($this->connectionFile)) {
+        File::delete($this->connectionFile);
+    }
+
+    $exitCode = $this->artisan('rconfig:solarwinds-load-devices')->run();
+    expect($exitCode)->toEqual(1);
+});
+
+test('solarwinds load devices fails without mappings file', function () {
+    File::put($this->connectionFile, json_encode([
+        'swis_url' => 'https://swis.test',
+        'username' => 'admin',
+        'password' => null,
+        'password_encrypted' => false,
+        'verify_ssl' => false,
+        'timeout' => 30,
+        'filters' => [],
+    ], JSON_PRETTY_PRINT));
+
+    if (File::exists($this->mappingsFile)) {
+        File::delete($this->mappingsFile);
+    }
+
+    $exitCode = $this->artisan('rconfig:solarwinds-load-devices')->run();
+    expect($exitCode)->toEqual(1);
+});
+
+test('solarwinds connection set url updates existing connection', function () {
+    File::put($this->connectionFile, json_encode([
+        'swis_url' => 'https://old.test',
+        'username' => 'admin',
+        'filters' => [],
+    ], JSON_PRETTY_PRINT));
+
+    $exitCode = $this->artisan('rconfig:solarwinds-connection', ['--set-url' => 'https://new.test/'])->run();
+    expect($exitCode)->toEqual(0);
+
+    $config = json_decode(File::get($this->connectionFile), true);
+    expect($config['swis_url'])->toEqual('https://new.test');
+});
+
+test('solarwinds connection set url fails without connection', function () {
+    if (File::exists($this->connectionFile)) {
+        File::delete($this->connectionFile);
+    }
+
+    $exitCode = $this->artisan('rconfig:solarwinds-connection', ['--set-url' => 'https://new.test'])->run();
+    expect($exitCode)->toEqual(1);
+});
+
+test('solarwinds connection show with existing connection', function () {
+    File::put($this->connectionFile, json_encode([
+        'swis_url' => 'https://swis.test',
+        'username' => 'admin',
+        'password' => null,
+        'password_encrypted' => false,
+        'verify_ssl' => false,
+        'timeout' => 30,
+        'connection_status' => 'untested',
+        'last_tested' => null,
+        'solarwinds_version' => null,
+        'node_count' => null,
+        'filters' => [
+            'include_groups' => [],
+            'exclude_groups' => [],
+            'include_machine_types' => [],
+            'exclude_machine_types' => [],
+            'include_statuses' => [1],
+            'custom_property_filters' => [],
+        ],
+    ], JSON_PRETTY_PRINT));
+
+    $exitCode = $this->artisan('rconfig:solarwinds-connection', ['--show' => true])->run();
+    expect($exitCode)->toEqual(0);
+});
+
+test('solarwinds connection show fails without connection', function () {
+    if (File::exists($this->connectionFile)) {
+        File::delete($this->connectionFile);
+    }
+
+    $exitCode = $this->artisan('rconfig:solarwinds-connection', ['--show' => true])->run();
+    expect($exitCode)->toEqual(1);
+});
+
+test('solarwinds connection clear removes file', function () {
+    File::put($this->connectionFile, json_encode(['swis_url' => 'https://swis.test'], JSON_PRETTY_PRINT));
+
+    $exitCode = $this->artisan('rconfig:solarwinds-connection', ['--clear' => true])
+        ->expectsConfirmation('Are you sure you want to clear the SolarWinds connection configuration?', 'yes')
+        ->run();
+
+    expect($exitCode)->toEqual(0);
+    $this->assertFileDoesNotExist($this->connectionFile);
+});
+
+test('solarwinds connection clear cancelled keeps file', function () {
+    File::put($this->connectionFile, json_encode(['swis_url' => 'https://swis.test'], JSON_PRETTY_PRINT));
+
+    $exitCode = $this->artisan('rconfig:solarwinds-connection', ['--clear' => true])
+        ->expectsConfirmation('Are you sure you want to clear the SolarWinds connection configuration?', 'no')
+        ->run();
+
+    expect($exitCode)->toEqual(0);
+    expect($this->connectionFile)->toBeFile();
+});
+
+test('solarwinds mappings delete removes entry', function () {
+    File::put($this->mappingsFile, json_encode([
+        'Cisco IOS' => ['device_type' => 'cisco_ios', 'template_id' => $this->template->id],
+        'Juniper JUNOS' => ['device_type' => 'junos', 'template_id' => $this->template->id],
+    ], JSON_PRETTY_PRINT));
+
+    $exitCode = $this->artisan('rconfig:solarwinds-device-mappings', ['--delete' => 'Cisco IOS'])
+        ->expectsConfirmation("Are you sure you want to delete the mapping for 'Cisco IOS'?", 'yes')
+        ->run();
+
+    expect($exitCode)->toEqual(0);
+
+    $loaded = json_decode(File::get($this->mappingsFile), true);
+    $this->assertArrayNotHasKey('Cisco IOS', $loaded);
+    expect($loaded)->toHaveKey('Juniper JUNOS');
+});
+
+afterEach(function () {
+    $filesToDelete = [
+        $this->connectionFile,
+        $this->mappingsFile,
+        storage_path('app/rconfig/solarwinds_connection.stub.json'),
+    ];
+
+    foreach ($filesToDelete as $file) {
+        if (File::exists($file)) {
+            File::delete($file);
+        }
+    }
+
+    if (File::exists($this->tempDir)) {
+        $files = glob($this->tempDir . '/*');
+        foreach ($files as $file) {
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
+    }
+
+    $this->rollBackTransaction();
+
+});

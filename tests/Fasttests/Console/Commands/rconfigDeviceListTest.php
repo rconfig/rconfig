@@ -1,46 +1,30 @@
 <?php
 
-namespace Tests\Fasttests\Console\Commands;
-
 use App\Console\Commands\rconfigDeviceList;
 use App\Models\Device;
 use Illuminate\Support\Facades\Artisan;
-use Tests\TestCase;
 
-class rconfigDeviceListTest extends TestCase
+test('it has rconfig device list command', function () {
+    expect(class_exists(rconfigDeviceList::class))->toBeTrue();
+});
+
+test('list devices command', function () {
+    $devices = Device::factory(20)->create();
+
+    Artisan::call('rconfig:list-devices');
+    $result = Artisan::output();
+    $arr = explode("\n", $result);
+
+    $this->assertStringContainsString($arr[0], 'Results for Devices List:');
+    expect(deviceListSearchPartial((string) $devices->first()->id, $arr))->toBeTrue();
+    expect(count($arr))->toBeGreaterThan(20);
+});
+
+function deviceListSearchPartial($keyword, $arr)
 {
-    protected $user;
-    protected $output;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    public function test_it_has_rconfig_device_list_command()
-    {
-        $this->assertTrue(class_exists(rconfigDeviceList::class));
-    }
-
-    public function test_list_devices_command()
-    {
-        $devices = Device::factory(20)->create();
-
-        Artisan::call('rconfig:list-devices');
-        $result = Artisan::output();
-        $arr = explode("\n", $result);
-
-        $this->assertStringContainsString($arr[0], 'Results for Devices List:');
-        $this->assertTrue($this->array_search_partial((string) $devices->first()->id, $arr));
-        $this->assertGreaterThan(20, count($arr));
-    }
-
-    public function array_search_partial($keyword, $arr)
-    {
-        foreach ($arr as $index => $string) {
-            if (strpos($string, $keyword) !== false) {
-                return true;
-            }
+    foreach ($arr as $index => $string) {
+        if (strpos($string, $keyword) !== false) {
+            return true;
         }
     }
 }

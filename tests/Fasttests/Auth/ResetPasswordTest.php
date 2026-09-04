@@ -1,128 +1,125 @@
 <?php
 
-namespace Tests\Fasttests\Auth;
-
 // https://github.com/DCzajkowski/auth-tests
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Password;
-use Tests\TestCase;
 
-class ResetPasswordTest extends TestCase
+beforeEach(function () {
+    $this->beginTransaction();
+});
+
+afterEach(function () {
+    $this->rollBackTransaction();
+});
+
+function getValidToken($user)
 {
-    protected function getValidToken($user)
-    {
-        return Password::broker()->createToken($user);
-    }
-
-    protected function getInvalidToken()
-    {
-        return 'invalid-token';
-    }
-
-    protected function passwordResetGetRoute($token)
-    {
-        return route('password.request', $token);
-    }
-
-    protected function passwordResetPostRoute()
-    {
-        return '/password/reset';
-    }
-
-    protected function successfulPasswordResetRoute()
-    {
-        return 'dashboard';
-    }
-
-    public function test_user_can_view_a_password_reset_form()
-    {
-        $user = User::factory()->create();
-
-        $response = $this->get($this->passwordResetGetRoute($token = $this->getValidToken($user)));
-
-        $response->assertSuccessful();
-        $response->assertViewIs('auth.passwords.email');
-        // $response->assertViewHas('token', $token);
-    }
-
-    public function test_user_can_reset_password_with_valid_token()
-    {
-        Event::fake();
-        $user = User::factory()->create();
-
-        $response = $this->post($this->passwordResetPostRoute(), [
-            'token' => $this->getValidToken($user),
-            'email' => $user->email,
-            'password' => 'new-awesome-password',
-            'password_confirmation' => 'new-awesome-password',
-        ]);
-
-        $response->assertRedirect($this->successfulPasswordResetRoute());
-        $this->assertEquals($user->email, $user->fresh()->email);
-        $this->assertAuthenticatedAs($user);
-        Event::assertDispatched(PasswordReset::class, function ($e) use ($user) {
-            return $e->user->id === $user->id;
-        });
-    }
-
-    public function test_user_cannot_reset_password_with_invalid_token()
-    {
-        $user = User::factory()->create([
-            'password' => bcrypt('old-password'),
-        ]);
-
-        $response = $this->from($this->passwordResetGetRoute($this->getInvalidToken()))->post($this->passwordResetPostRoute(), [
-            'token' => $this->getInvalidToken(),
-            'email' => $user->email,
-            'password' => 'new-awesome-password',
-            'password_confirmation' => 'new-awesome-password',
-        ]);
-
-        $response->assertRedirect($this->passwordResetGetRoute($this->getInvalidToken()));
-        $this->assertEquals($user->email, $user->fresh()->email);
-        $this->assertGuest();
-    }
-
-    public function test_user_cannot_reset_password_without_providing_a_new_password()
-    {
-        $user = User::factory()->create([
-            'password' => bcrypt('old-password'),
-        ]);
-
-        $response = $this->from($this->passwordResetGetRoute($token = $this->getValidToken($user)))->post($this->passwordResetPostRoute(), [
-            'token' => $token,
-            'email' => $user->email,
-            'password' => '',
-            'password_confirmation' => '',
-        ]);
-
-        $response->assertRedirect($this->passwordResetGetRoute($token));
-        $response->assertSessionHasErrors('password');
-        $this->assertTrue(session()->hasOldInput('email'));
-        $this->assertFalse(session()->hasOldInput('password'));
-        $this->assertEquals($user->email, $user->fresh()->email);
-        $this->assertGuest();
-    }
-
-    public function test_user_cannot_reset_password_without_providing_an_email()
-    {
-        $user = User::factory()->create([
-            'password' => bcrypt('old-password'),
-        ]);
-
-        $response = $this->from($this->passwordResetGetRoute($token = $this->getValidToken($user)))->post($this->passwordResetPostRoute(), [
-            'token' => $token,
-            'email' => '',
-            'password' => 'new-awesome-password',
-            'password_confirmation' => 'new-awesome-password',
-        ]);
-
-        $response->assertRedirect($this->passwordResetGetRoute($token));
-        $response->assertSessionHasErrors('email');
-        $this->assertFalse(session()->hasOldInput('password'));
-        $this->assertEquals($user->email, $user->fresh()->email);
-        $this->assertGuest();
-    }
+    return Password::broker()->createToken($user);
 }
+
+function getInvalidToken()
+{
+    return 'invalid-token';
+}
+
+function passwordResetGetRoute($token)
+{
+    return route('password.request', $token);
+}
+
+function passwordResetPostRoute()
+{
+    return '/password/reset';
+}
+
+function successfulPasswordResetRoute()
+{
+    return 'dashboard';
+}
+
+test('user can view a password reset form', function () {
+    $user = User::factory()->create();
+
+    $response = $this->get(passwordResetGetRoute($token = getValidToken($user)));
+
+    $response->assertSuccessful();
+    $response->assertViewIs('auth.passwords.email');
+    // $response->assertViewHas('token', $token);
+});
+
+test('user can reset password with valid token', function () {
+    Event::fake();
+    $user = User::factory()->create();
+
+    $response = $this->post(passwordResetPostRoute(), [
+        'token' => getValidToken($user),
+        'email' => $user->email,
+        'password' => 'new-awesome-password',
+        'password_confirmation' => 'new-awesome-password',
+    ]);
+
+    $response->assertRedirect(successfulPasswordResetRoute());
+    expect($user->fresh()->email)->toEqual($user->email);
+    $this->assertAuthenticatedAs($user);
+    Event::assertDispatched(PasswordReset::class, function ($e) use ($user) {
+        return $e->user->id === $user->id;
+    });
+});
+
+test('user cannot reset password with invalid token', function () {
+    $user = User::factory()->create([
+        'password' => bcrypt('old-password'),
+    ]);
+
+    $response = $this->from(passwordResetGetRoute(getInvalidToken()))->post(passwordResetPostRoute(), [
+        'token' => getInvalidToken(),
+        'email' => $user->email,
+        'password' => 'new-awesome-password',
+        'password_confirmation' => 'new-awesome-password',
+    ]);
+
+    $response->assertRedirect(passwordResetGetRoute(getInvalidToken()));
+    expect($user->fresh()->email)->toEqual($user->email);
+    $this->assertGuest();
+});
+
+test('user cannot reset password without providing a new password', function () {
+    $user = User::factory()->create([
+        'password' => bcrypt('old-password'),
+    ]);
+
+    $response = $this->from(passwordResetGetRoute($token = getValidToken($user)))->post(passwordResetPostRoute(), [
+        'token' => $token,
+        'email' => $user->email,
+        'password' => '',
+        'password_confirmation' => '',
+    ]);
+
+    $response->assertRedirect(passwordResetGetRoute($token));
+    $response->assertSessionHasErrors('password');
+    expect(session()->hasOldInput('email'))->toBeTrue();
+    expect(session()->hasOldInput('password'))->toBeFalse();
+    expect($user->fresh()->email)->toEqual($user->email);
+    $this->assertGuest();
+});
+
+test('user cannot reset password without providing an email', function () {
+    $user = User::factory()->create([
+        'password' => bcrypt('old-password'),
+    ]);
+
+    $response = $this->from(passwordResetGetRoute($token = getValidToken($user)))->post(passwordResetPostRoute(), [
+        'token' => $token,
+        'email' => '',
+        'password' => 'new-awesome-password',
+        'password_confirmation' => 'new-awesome-password',
+    ]);
+
+    $response->assertRedirect(passwordResetGetRoute($token));
+    $response->assertSessionHasErrors('email');
+    expect(session()->hasOldInput('password'))->toBeFalse();
+    expect($user->fresh()->email)->toEqual($user->email);
+    $this->assertGuest();
+});

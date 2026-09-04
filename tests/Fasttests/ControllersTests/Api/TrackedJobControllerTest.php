@@ -1,33 +1,22 @@
 <?php
 
-namespace Tests\Fasttests\ControllersTests\Api;
-
 use App\Models\TrackedJob;
 use App\Models\User;
-use Tests\TestCase;
 
-class TrackedJobControllerTest extends TestCase
-{
-    protected $user;
+beforeEach(function () {
+    $this->user = User::factory()->create();
+    $this->actingAs($this->user);
+});
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->user = User::factory()->create();
-        $this->actingAs($this->user);
-    }
+test('show single latest tracked job', function () {
+    $job = TrackedJob::factory(100)->create();
+    $response = $this->get('/api/tracked-jobs/' . $job[0]->device_id);
 
-    public function test_show_single_latest_tracked_job()
-    {
-        $job = TrackedJob::factory(100)->create();
-        $response = $this->get('/api/tracked-jobs/' . $job[0]->device_id);
+    $response->assertStatus(200);
 
-        $response->assertStatus(200);
-
-        $response->assertJsonCount(13, 'data');
-        $response->assertJsonCount(3);
-        $response->assertJsonFragment([
-            'device_id' => $job[0]->device_id,
-        ]);
-    }
-}
+    $response->assertJsonCount(13, 'data');
+    $response->assertJsonCount(3);
+    $response->assertJsonFragment([
+        'device_id' => $job[0]->device_id,
+    ]);
+});

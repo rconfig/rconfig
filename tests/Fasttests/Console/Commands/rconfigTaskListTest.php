@@ -1,46 +1,31 @@
 <?php
 
-namespace Tests\Fasttests\Console\Commands;
-
 use App\Console\Commands\rconfigTaskList;
 use App\Models\Task;
-use Artisan;
-use Tests\TestCase;
+use Illuminate\Support\Facades\Artisan;
 
-class rconfigTaskListTest extends TestCase
+test('it has rconfig task list command', function () {
+    expect(class_exists(rconfigTaskList::class))->toBeTrue();
+});
+
+test('list tasks command', function () {
+    $tasks = Task::factory(20)->create();
+
+    Artisan::call('rconfig:list-tasks');
+    $result = Artisan::output();
+    $arr = explode("\n", $result);
+
+    $this->assertStringContainsString($arr[0], 'Results for Tasks List:');
+    expect(taskListSearchPartial((string) $tasks->first()->id, $arr))->toBeTrue();
+
+    expect($arr)->toBeGreaterThan(20);
+});
+
+function taskListSearchPartial($keyword, $arr)
 {
-    protected $output;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    public function test_it_has_rconfig_task_list_command()
-    {
-        $this->assertTrue(class_exists(rconfigTaskList::class));
-    }
-
-    public function test_list_tasks_command()
-    {
-        $tasks = Task::factory(20)->create();
-
-        Artisan::call('rconfig:list-tasks');
-        $result = Artisan::output();
-        $arr = explode("\n", $result);
-
-        $this->assertStringContainsString($arr[0], 'Results for Tasks List:');
-        $this->assertTrue($this->array_search_partial((string) $tasks->first()->id, $arr));
-
-        $this->assertGreaterThan(20, $arr);
-    }
-
-    public function array_search_partial($keyword, $arr)
-    {
-        foreach ($arr as $index => $string) {
-            if (strpos($string, $keyword) !== false) {
-                return true;
-            }
+    foreach ($arr as $index => $string) {
+        if (strpos($string, $keyword) !== false) {
+            return true;
         }
     }
 }
