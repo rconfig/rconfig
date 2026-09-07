@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 beforeEach(function () {
+    $this->beginTransaction();
+
     // A throwaway application root, so the real storage tree is untouched
     // and the directories under test genuinely start absent.
     $this->appDirPath = sys_get_temp_dir() . '/rconfig-storage-tree-' . uniqid();
@@ -19,6 +21,7 @@ afterEach(function () {
         File::deleteDirectory($this->appDirPath);
     }
 
+    $this->rollBackTransaction();
 });
 
 test('clone target is created when the templates directory is absent', function () {
