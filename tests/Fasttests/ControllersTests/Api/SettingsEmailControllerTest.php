@@ -212,7 +212,7 @@ test('sending a test email works', function () {
     ])->delete('http://devmailer.rconfig.com:8025/api/v1/messages');
 
     expect($response->status())->toEqual(200);
-});
+})->group('external-network');
 
 test('sending a test notification works', function () {
     $response = Http::withHeaders([
@@ -276,4 +276,4 @@ test('sending a test notification works', function () {
     ])->delete('http://devmailer.rconfig.com:8025/api/v1/messages');
 
     expect($response->status())->toEqual(200);
-});
+})->group('external-network');

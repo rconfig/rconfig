@@ -22,7 +22,7 @@ test('github connectivity test', function () {
     $response->assertStatus(200)->assertJsonFragment([
         'msg' => 'Successfully connected to rConfig Templates Github repo',
     ]);
-});
+})->group('external-network');
 
 test('failed github connectivity test', function () {
     Config::set('github.git.rconfig-template-repo', '123');
@@ -30,7 +30,7 @@ test('failed github connectivity test', function () {
 
     $response = $this->json('GET', '/api/test-template-repo-connection');
     $this->assertStringContainsString('Exception thrown: Could not connect to repo - HTTP request returned status code 404', $response->json()['message']['msg']);
-});
+})->group('external-network');
 
 test('storage has github clone', function () {
     if (is_dir($this->templatesDstDir)) {
@@ -58,7 +58,7 @@ test('storage has github clone', function () {
     if (is_dir($this->templatesDstDir)) {
         File::deleteDirectory($this->templatesDstDir);
     }
-});
+})->group('external-network');
 
 test('storage does not have github clone', function () {
     if (is_dir($this->templatesDstDir)) {
@@ -96,7 +96,7 @@ test('can get list of dirs', function () {
     if (is_dir($this->templatesDstDir)) {
         File::deleteDirectory($this->templatesDstDir);
     }
-});
+})->group('external-network');
 
 test('given dir can get list of files', function () {
     if (is_dir($this->templatesDstDir)) {
@@ -129,7 +129,7 @@ test('given dir can get list of files', function () {
     if (is_dir($this->templatesDstDir)) {
         File::deleteDirectory($this->templatesDstDir);
     }
-});
+})->group('external-network');
 
 test('given file can be read', function () {
     Artisan::call('rconfig:clone-templates');
@@ -146,7 +146,7 @@ test('given file can be read', function () {
     if (is_dir($this->templatesDstDir)) {
         File::deleteDirectory($this->templatesDstDir);
     }
-});
+})->group('external-network');
 
 /*
  * Containment cover for the two endpoints that take a path from the caller.

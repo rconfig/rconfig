@@ -3,7 +3,11 @@
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
 
-uses(WithFaker::class);
+// Checks that supervisord/redis/horizon are running as OS processes on this host —
+// an environment health-check, not a test of application logic. A CI runner has no
+// such process stack (and a Redis service container wouldn't help: service containers
+// run in a separate namespace, invisible to `ps` here), so this is excluded from CI.
+uses(WithFaker::class)->group('local-daemon');
 
 beforeEach(function () {
     $this->user = User::factory()->create();
