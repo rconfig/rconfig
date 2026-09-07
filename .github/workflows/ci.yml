@@ -151,3 +151,67 @@ jobs:
 
       - name: Run Vitest
         run: npm test
+
+  tests:
+    name: Tests (Unit + Fasttests)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_DATABASE: v8core_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout code
+        # actions/checkout v6.0.2 (runs on Node 24)
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Setup PHP
+        # shivammathur/setup-php v2.37.1
+        uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc
+        with:
+          php-version: '8.4'
+          extensions: ftp, gd, ldap, sockets, pdo_mysql
+          coverage: none
+
+      - name: Prepare .env
+        run: cp .env.example .env
+
+      - name: Configure MySQL connection
+        # test_mysql connection (config/database.php) reads TEST_DB_MYSQL_* vars,
+        # not the standard DB_* ones — phpunit.xml force="true"'s DB_CONNECTION to
+        # test_mysql regardless of .env, so these are the vars that actually matter.
+        run: |
+          {
+            echo "DB_CONNECTION=mysql"
+            echo "DB_HOST=127.0.0.1"
+            echo "DB_PORT=3306"
+            echo "DB_DATABASE=v8core_test"
+            echo "DB_USERNAME=root"
+            echo "DB_PASSWORD="
+            echo "TEST_DB_MYSQL_HOST=127.0.0.1"
+            echo "TEST_DB_MYSQL_PORT=3306"
+            echo "TEST_DB_MYSQL_DATABASE=v8core_test"
+            echo "TEST_DB_MYSQL_USERNAME=root"
+            echo "TEST_DB_MYSQL_PASSWORD="
+          } >> .env
+
+      - name: Install Composer dependencies
+        # ramsey/composer-install v4.0.0 (uses actions/cache v5, runs on Node 24)
+        uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda
+
+      - name: Generate app key
+        run: php artisan key:generate
+
+      - name: Run Unit + Fasttests
+        run: php artisan test --compact tests/Unit tests/Fasttests --exclude-group=device-hardware
