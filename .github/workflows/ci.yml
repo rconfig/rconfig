@@ -158,6 +158,11 @@ jobs:
     timeout-minutes: 60
 
     env:
+      # Forces custom_chown()'s suppressed-vs-loud branch (app/Http/Helpers.php) for
+      # every step in this job, not just the phpunit-invoked test run — the runner
+      # user can't chown() to apache/www-data (needs CAP_CHOWN), and that's expected
+      # here, not a real deployment problem worth failing loudly over.
+      APP_ENV: testing
       DB_CONNECTION: mysql
       DB_HOST: 127.0.0.1
       DB_PORT: 3306
@@ -202,7 +207,7 @@ jobs:
         uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda
 
       - name: Generate app key
-        run: php artisan key:generate
+        run: php artisan key:generate --force
 
       - name: Run Unit + Fasttests
         run: php artisan test --compact tests/Unit tests/Fasttests --exclude-group=device-hardware
