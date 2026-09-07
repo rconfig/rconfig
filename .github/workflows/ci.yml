@@ -157,6 +157,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
+    env:
+      DB_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: v8core_test
+      DB_USERNAME: root
+      DB_PASSWORD: ""
+      TEST_DB_MYSQL_HOST: 127.0.0.1
+      TEST_DB_MYSQL_PORT: 3306
+      TEST_DB_MYSQL_DATABASE: v8core_test
+      TEST_DB_MYSQL_USERNAME: root
+      TEST_DB_MYSQL_PASSWORD: ""
+
     services:
       mysql:
         image: mysql:8
@@ -173,11 +186,9 @@ jobs:
 
     steps:
       - name: Checkout code
-        # actions/checkout v6.0.2 (runs on Node 24)
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
       - name: Setup PHP
-        # shivammathur/setup-php v2.37.1
         uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc
         with:
           php-version: '8.4'
@@ -187,27 +198,7 @@ jobs:
       - name: Prepare .env
         run: cp .env.example .env
 
-      - name: Configure MySQL connection
-        # test_mysql connection (config/database.php) reads TEST_DB_MYSQL_* vars,
-        # not the standard DB_* ones — phpunit.xml force="true"'s DB_CONNECTION to
-        # test_mysql regardless of .env, so these are the vars that actually matter.
-        run: |
-          {
-            echo "DB_CONNECTION=mysql"
-            echo "DB_HOST=127.0.0.1"
-            echo "DB_PORT=3306"
-            echo "DB_DATABASE=v8core_test"
-            echo "DB_USERNAME=root"
-            echo "DB_PASSWORD="
-            echo "TEST_DB_MYSQL_HOST=127.0.0.1"
-            echo "TEST_DB_MYSQL_PORT=3306"
-            echo "TEST_DB_MYSQL_DATABASE=v8core_test"
-            echo "TEST_DB_MYSQL_USERNAME=root"
-            echo "TEST_DB_MYSQL_PASSWORD="
-          } >> .env
-
       - name: Install Composer dependencies
-        # ramsey/composer-install v4.0.0 (uses actions/cache v5, runs on Node 24)
         uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda
 
       - name: Generate app key
