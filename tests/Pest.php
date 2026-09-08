@@ -1,5 +1,6 @@
 <?php
 
+use Tests\SlowTestCase;
 use Tests\TestCase;
 use Tests\UnitTestCase;
 
@@ -20,7 +21,8 @@ pest()->extend(UnitTestCase::class)
 pest()->extend(TestCase::class)
     ->in('Fasttests');
 
-pest()->extend(TestCase::class)
+pest()->extend(SlowTestCase::class)
+    ->group('device-hardware')
     ->in('Slowtests');
 
 /*
