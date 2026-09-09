@@ -65,20 +65,22 @@ test('can run a download device task manually and notification sent', function (
 /**
  * getPrivateProperty
  *
+ * Not currently called by any test in this file, kept for reference.
+ *
  * @author	Joe Sexton <joe@webtipblog.com>
  *
  * @param  string  $className
  * @param  string  $propertyName
  * @return ReflectionProperty
  */
-function getPrivateProperty($className, $propertyName)
-{
-    $reflector = new ReflectionClass($className);
-    $property = $reflector->getProperty($propertyName);
-    $property->setAccessible(true);
-
-    return $property;
-}
+// function getPrivateProperty($className, $propertyName)
+// {
+//     $reflector = new ReflectionClass($className);
+//     $property = $reflector->getProperty($propertyName);
+//     $property->setAccessible(true);
+//
+//     return $property;
+// }
 
 test('run manual task test backup run fails with fake id', function () {
     Queue::fake();
@@ -122,29 +124,30 @@ test('test task logging for downloads', function () {
 });
 
 // functions below used from https://github.com/laravel/horizon/tree/4.x/tests/Slowtests for testing queues
-function work($times = 1)
-{
-    for ($i = 0; $i < $times; $i++) {
-        worker()->runNextJob(
-            'redis',
-            'default',
-            workerOptions()
-        );
-    }
-}
+// Not currently called by any test in this file, kept for reference.
+// function work($times = 1)
+// {
+//     for ($i = 0; $i < $times; $i++) {
+//         worker()->runNextJob(
+//             'redis',
+//             'default',
+//             workerOptions()
+//         );
+//     }
+// }
 
-function worker()
-{
-    return app('queue.worker');
-}
+// function worker()
+// {
+//     return app('queue.worker');
+// }
 
-function workerOptions()
-{
-    return tap(new WorkerOptions, function ($options) {
-        $options->sleep = 0;
-        $options->maxTries = 1;
-    });
-}
+// function workerOptions()
+// {
+//     return tap(new WorkerOptions, function ($options) {
+//         $options->sleep = 0;
+//         $options->maxTries = 1;
+//     });
+// }
 
 test('task complete notification job sent', function () {
     Queue::fake();

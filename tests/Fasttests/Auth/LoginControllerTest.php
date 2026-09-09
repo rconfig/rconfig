@@ -36,10 +36,11 @@ function successfulLogoutRoute()
     return '/login';
 }
 
-function guestMiddlewareRoute()
-{
-    return route('login');
-}
+// Not currently called by any test in this file, kept for reference.
+// function guestMiddlewareRoute()
+// {
+//     return route('login');
+// }
 
 function getTooManyLoginAttemptsMessage()
 {
