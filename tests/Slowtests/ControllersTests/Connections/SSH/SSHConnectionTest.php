@@ -6,8 +6,6 @@ use App\Models\Device;
 use App\Models\Template;
 use App\Services\Config\FileOperations;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
 beforeEach(function () {
@@ -21,7 +19,6 @@ beforeEach(function () {
     $pingresult = exec("ping -c 1 -W 1 $dev_cisco_ip", $outcome, $status);
 
     if (str_contains($outcome[3], '0 received')) {
-        expect(false)->toBeTrue();
         $this->markTestSkipped('Router is not reachable');
     }
 });
@@ -265,75 +262,4 @@ function downloaded_file_exists_on_disk($device, $command)
     $fullpath = $fileops->createFile($command);
 
     return File::exists($fullpath);
-}
-
-function setup_extra_devices()
-{
-    $dev_cisco_ip = '10.1.1.170';
-
-    // SSH no enable template with case affected prompts
-    DB::table('devices')->insert([
-        'id' => 10031,
-        'device_name' => 'router3',
-        'device_ip' => $dev_cisco_ip,
-        'device_default_creds_on' => 0,
-        'device_username' => 'cisco',
-        'device_password' => Crypt::encrypt('cisco'),
-        'device_enable_password' => Crypt::encrypt('cisco'),
-        'device_main_prompt' => 'ROUter1#',
-        'device_enable_prompt' => 'router1>',
-        'device_category_id' => 1,
-        'device_template' => 3,
-        'device_model' => 'CSR1000v',
-        'device_version' => '',
-        'device_added_by' => 1,
-        'status' => 1,
-    ]);
-
-    // SSH no enable with invalid prompt to test log event for invalid prompt
-    DB::table('devices')->insert([
-        'id' => 10032,
-        'device_name' => 'router3',
-        'device_ip' => $dev_cisco_ip,
-        'device_default_creds_on' => 0,
-        'device_username' => 'cisco',
-        'device_password' => Crypt::encrypt('cisco'),
-        'device_enable_password' => Crypt::encrypt('cisco'),
-        'device_main_prompt' => 'ROUter2#',
-        'device_enable_prompt' => 'router2>',
-        'device_category_id' => 1,
-        'device_template' => 3,
-        'device_model' => 'CSR1000v',
-        'device_version' => '',
-        'device_added_by' => 1,
-        'status' => 1,
-    ]);
-
-    DB::table('category_device')->insert([
-        'category_id' => 1,
-        'device_id' => '10031',
-    ]);
-    DB::table('device_vendor')->insert([
-        'vendor_id' => 1,
-        'device_id' => '10031',
-    ]);
-    DB::table('category_device')->insert([
-        'category_id' => 1,
-        'device_id' => '10032',
-    ]);
-    DB::table('device_vendor')->insert([
-        'vendor_id' => 1,
-        'device_id' => '10032',
-    ]);
-}
-
-// tear down
-function remove_extra_devices()
-{
-    Device::find(10031)->delete();
-    Device::find(10032)->delete();
-    DB::table('category_device')->where('device_id', 10031)->delete();
-    DB::table('device_vendor')->where('device_id', 10031)->delete();
-    DB::table('category_device')->where('device_id', 10032)->delete();
-    DB::table('device_vendor')->where('device_id', 10032)->delete();
 }
