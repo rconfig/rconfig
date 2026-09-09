@@ -21,7 +21,6 @@ beforeEach(function () {
     $pingresult = exec("ping -c 1 -W 1 $dev_cisco_ip", $outcome, $status);
 
     if (str_contains($outcome[3], '0 received')) {
-        expect(false)->toBeTrue();
         $this->markTestSkipped('Router is not reachable');
     }
 });
