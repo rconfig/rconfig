@@ -24,7 +24,17 @@ class EncryptStringCast implements CastsAttributes
         }
 
         if ($this->is_serialized($value)) {
-            $value = unserialize($value);
+            // allowed_classes => false blocks PHP object injection: any serialized object
+            // decodes to __PHP_Incomplete_Class and no gadget __wakeup/__destruct fires. See #369.
+            $unserialized = unserialize($value, ['allowed_classes' => false]);
+
+            // This unserialize only exists to decode legacy serialized scalar passwords
+            // (bug #100). A serialized object or array was never a valid secret, so never
+            // surface one: keep the raw decrypted string instead of a broken incomplete
+            // class or array that would later fail re-encryption.
+            if (! is_object($unserialized) && ! is_array($unserialized)) {
+                $value = $unserialized;
+            }
         }
 
         return $value;
@@ -38,7 +48,7 @@ class EncryptStringCast implements CastsAttributes
     private function is_serialized($string)
     {
         try {
-            unserialize($string);
+            unserialize($string, ['allowed_classes' => false]);
         } catch (\Exception $e) {
             return false;
         }
