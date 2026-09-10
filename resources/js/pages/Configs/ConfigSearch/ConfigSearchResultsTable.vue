@@ -10,6 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useResultsTable } from "./useResultsTable";
 import { Eye, FileSearch } from "lucide-vue-next";
+import { highlightTerms } from "@/lib/htmlHighlight";
 
 const props = defineProps({
 	filters: Object,
@@ -17,47 +18,13 @@ const props = defineProps({
 
 const { currentPage, errors, formatters, isDialogOpen, isFetching, lastPage, openDialog, perPage, resultMeta, results, searchModel, totalRecords, viewDetailsPane } = useResultsTable(props);
 
-function escapeHtml(value) {
-	return String(value ?? "")
-		.replaceAll("&", "&amp;")
-		.replaceAll("<", "&lt;")
-		.replaceAll(">", "&gt;")
-		.replaceAll('"', "&quot;")
-		.replaceAll("'", "&#39;");
-}
+const previewHighlightClass = "rounded bg-amber-200/80 px-1 py-0 text-foreground shadow-sm dark:bg-amber-500/30";
 
-function escapeRegExp(value) {
-	return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
+/**
+ * Render one preview line as HTML-escaped markup with the matched terms highlighted.
+ */
 function highlightPreviewText(lineText, matchedTerms = []) {
-	const sourceText = String(lineText ?? "");
-	const terms = [...new Set((Array.isArray(matchedTerms) ? matchedTerms : []).map((term) => String(term ?? "").trim()).filter(Boolean))]
-		.sort((left, right) => right.length - left.length);
-
-	if (sourceText.length === 0 || terms.length === 0) {
-		return escapeHtml(sourceText);
-	}
-
-	const pattern = new RegExp(terms.map(escapeRegExp).join("|"), "gi");
-	let highlighted = "";
-	let lastIndex = 0;
-
-	for (const match of sourceText.matchAll(pattern)) {
-		const matchText = match[0];
-		const matchIndex = match.index ?? 0;
-
-		highlighted += escapeHtml(sourceText.slice(lastIndex, matchIndex));
-		highlighted += `<mark class="rounded bg-amber-200/80 px-1 py-0 text-foreground shadow-sm dark:bg-amber-500/30">${escapeHtml(matchText)}</mark>`;
-		lastIndex = matchIndex + matchText.length;
-	}
-
-	if (lastIndex === 0) {
-		return escapeHtml(sourceText);
-	}
-
-	highlighted += escapeHtml(sourceText.slice(lastIndex));
-	return highlighted;
+	return highlightTerms(lineText, matchedTerms, { tag: "mark", className: previewHighlightClass });
 }
 </script>
 

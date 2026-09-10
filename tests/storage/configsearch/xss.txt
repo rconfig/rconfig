@@ -1,0 +1,12 @@
+!
+hostname sw-poisoned
+!
+banner motd ^C
+<img src=x onerror="window.__xss_368=1">
+<script>window.__xss_368=1</script>
+^C
+!
+interface GigabitEthernet0/0
+ description <svg/onload=alert(1)>
+!
+end

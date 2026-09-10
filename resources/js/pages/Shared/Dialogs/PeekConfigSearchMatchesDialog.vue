@@ -7,6 +7,7 @@ import { ref, onUnmounted, onMounted, computed } from "vue";
 import { useDialogStore } from "@/stores/dialogActions";
 import { useToaster } from "@/composables/useToaster"; // Import the composable
 import { useClipboard } from "@vueuse/core";
+import { highlightTerms } from "@/lib/htmlHighlight";
 
 const activeIcons = ref({});
 const dialogStore = useDialogStore();
@@ -44,29 +45,23 @@ onMounted(() => {
 	isLoading.value = false;
 });
 
+/**
+ * Build the highlighted markup for one match context.
+ *
+ * The context is raw device configuration text, so it is HTML-escaped by
+ * `highlightTerms` before any markup is added. Escaping leaves newlines alone,
+ * so converting them to `<br>` afterwards is safe.
+ */
 const highlightMatch = (context) => {
-	if (!context) return context;
+	if (!context) return "";
 
 	// Convert context to string if it's an array
 	const contextString = Array.isArray(context) ? context.join("\n") : String(context);
 
 	// Build the list of terms to highlight, preferring the multi-term array
-	const terms = [...new Set((props.searchTerms.length ? props.searchTerms : props.searchString ? [props.searchString] : []).map((term) => String(term ?? "").trim()).filter(Boolean))].sort(
-		(left, right) => right.length - left.length,
-	);
+	const terms = props.searchTerms.length ? props.searchTerms : props.searchString ? [props.searchString] : [];
 
-	if (terms.length === 0) {
-		return contextString.replace(/\n/g, "<br>");
-	}
-
-	// Escape special regex characters in each term and combine into one pattern
-	const pattern = terms.map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
-	const regex = new RegExp(`(${pattern})`, "gi");
-
-	// Replace matches with highlighted spans and preserve line breaks
-	const highlightedContext = contextString.replace(regex, '<span class="highlightMatch">$1</span>').replace(/\n/g, "<br>");
-
-	return highlightedContext;
+	return highlightTerms(contextString, terms, { tag: "span", className: "highlightMatch" }).replace(/\n/g, "<br>");
 };
 
 function handleKeyDown(event) {

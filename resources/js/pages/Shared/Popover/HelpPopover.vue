@@ -70,8 +70,7 @@ const onMouseLeave = () => {
 						<span
 							v-if="content"
 							class="text-sm text-muted-foreground mt-2"
-							v-html="content"
-						></span>
+						>{{ content }}</span>
 						<slot v-else />
 					</div>
 				</div>
