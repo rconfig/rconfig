@@ -1,39 +1,24 @@
 <?php
 
-namespace Tests\Fasttests\Auth;
+test('login page forces the dark theme on the root element', function () {
+    $response = $this->get(route('login'));
 
-use Tests\TestCase;
+    $response->assertOk();
+    $response->assertSee('data-force-dark="true"', false);
+    $response->assertSee('data-theme="dark"', false);
+    $response->assertSee('class="dark"', false);
+});
 
-/**
- * The auth pages hardcode a black background, so they must always resolve to the
- * dark theme. Without the forced dark class the light CSS variables apply and the
- * form renders near black text on a black page.
- */
-class LoginPageThemeTest extends TestCase
-{
-    public function test_login_page_forces_the_dark_theme_on_the_root_element(): void
-    {
-        $response = $this->get(route('login'));
+test('login page includes the theme bootstrap script', function () {
+    $response = $this->get(route('login'));
 
-        $response->assertOk();
-        $response->assertSee('data-force-dark="true"', false);
-        $response->assertSee('data-theme="dark"', false);
-        $response->assertSee('class="dark"', false);
-    }
+    $response->assertOk();
+    $response->assertSee('root.classList.toggle("dark", isDark)', false);
+});
 
-    public function test_login_page_includes_the_theme_bootstrap_script(): void
-    {
-        $response = $this->get(route('login'));
+test('theme bootstrap defaults to dark rather than the system preference', function () {
+    $rendered = view('includes.theme-bootstrap')->render();
 
-        $response->assertOk();
-        $response->assertSee('root.classList.toggle("dark", isDark)', false);
-    }
-
-    public function test_theme_bootstrap_defaults_to_dark_rather_than_the_system_preference(): void
-    {
-        $rendered = view('includes.theme-bootstrap')->render();
-
-        $this->assertStringContainsString('storedTheme || "dark"', $rendered);
-        $this->assertStringNotContainsString('prefers-color-scheme', $rendered);
-    }
-}
+    $this->assertStringContainsString('storedTheme || "dark"', $rendered);
+    $this->assertStringNotContainsString('prefers-color-scheme', $rendered);
+});

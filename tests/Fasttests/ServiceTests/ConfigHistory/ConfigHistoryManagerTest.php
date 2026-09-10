@@ -1,72 +1,59 @@
 <?php
 
-namespace Tests\Fasttests\ServiceTests\ConfigHistory;
-
 use App\Models\Config;
 use App\Services\ConfigHistory\ConfigHistoryManager;
-use Tests\TestCase;
 
-class ConfigHistoryManagerTest extends TestCase
+beforeEach(function () {
+    $this->beginTransaction();
+});
+
+afterEach(function () {
+    $this->rollBackTransaction();
+});
+
+/**
+ * Build a comparer factory whose version_compare() returns a fixed value
+ * (or throws), so the manager's orchestration can be tested in isolation.
+ */
+function factoryReturning(bool $result): callable
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->beginTransaction();
-    }
+    return function () use ($result) {
+        return new class($result)
+        {
+            public function __construct(private bool $result) {}
 
-    public function tearDown(): void
-    {
-        $this->rollBackTransaction();
-        parent::tearDown();
-    }
-
-    /**
-     * Build a comparer factory whose version_compare() returns a fixed value
-     * (or throws), so the manager's orchestration can be tested in isolation.
-     */
-    private function factoryReturning(bool $result): callable
-    {
-        return function () use ($result) {
-            return new class($result)
+            public function version_compare(): bool
             {
-                public function __construct(private bool $result) {}
-
-                public function version_compare(): bool
-                {
-                    return $this->result;
-                }
-            };
+                return $this->result;
+            }
         };
-    }
-
-    public function test_it_returns_true_when_version_compare_returns_true(): void
-    {
-        $manager = new ConfigHistoryManager($this->factoryReturning(true));
-
-        $this->assertTrue($manager->handleNewDownloadedConfig(new Config, 'show run'));
-    }
-
-    public function test_it_returns_false_when_version_compare_returns_false(): void
-    {
-        $manager = new ConfigHistoryManager($this->factoryReturning(false));
-
-        $this->assertFalse($manager->handleNewDownloadedConfig(new Config, 'show run'));
-    }
-
-    public function test_it_propagates_exceptions_from_version_compare(): void
-    {
-        $this->expectException(\RuntimeException::class);
-
-        $factory = function () {
-            return new class
-            {
-                public function version_compare(): bool
-                {
-                    throw new \RuntimeException('boom');
-                }
-            };
-        };
-
-        (new ConfigHistoryManager($factory))->handleNewDownloadedConfig(new Config, 'show run');
-    }
+    };
 }
+
+test('it returns true when version compare returns true', function () {
+    $manager = new ConfigHistoryManager(factoryReturning(true));
+
+    expect($manager->handleNewDownloadedConfig(new Config, 'show run'))->toBeTrue();
+});
+
+test('it returns false when version compare returns false', function () {
+    $manager = new ConfigHistoryManager(factoryReturning(false));
+
+    expect($manager->handleNewDownloadedConfig(new Config, 'show run'))->toBeFalse();
+});
+
+test('it propagates exceptions from version compare', function () {
+    $this->expectException(RuntimeException::class);
+
+    $factory = function () {
+        return new class
+        {
+            public function version_compare(): bool
+            {
+                throw new RuntimeException('boom');
+            }
+        };
+    };
+
+    (new ConfigHistoryManager($factory))->handleNewDownloadedConfig(new Config, 'show run');
+});

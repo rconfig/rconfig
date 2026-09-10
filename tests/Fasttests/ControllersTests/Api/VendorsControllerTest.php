@@ -1,86 +1,68 @@
 <?php
 
-namespace Tests\Fasttests\ControllersTests\Api;
-
 use App\Models\User;
 use App\Models\Vendor;
-use Tests\TestCase;
 
-class VendorsControllerTest extends TestCase
-{
-    protected $user;
+beforeEach(function () {
+    $this->beginTransaction();
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->beginTransaction();
+    $this->user = User::factory()->create();
+    $this->actingAs($this->user);
+});
 
-        $this->user = User::factory()->create();
-        $this->actingAs($this->user);
-    }
+test('a vendor requires a name', function () {
+    $response = $this->json('post', '/api/vendors', ['vendorName' => null]);
 
-    public function test_a_vendor_requires_a_name()
-    {
-        $response = $this->json('post', '/api/vendors', ['vendorName' => null]);
+    $response->assertJson(['errors' => true]);
+    expect($response['errors'])->toHaveKey('vendorName');
+    $response->assertStatus(422);
+});
 
-        $response->assertJson(['errors' => true]);
-        $this->assertArrayHasKey('vendorName', $response['errors']);
-        $response->assertStatus(422);
-    }
+test('show single vendor', function () {
+    $vendor = Vendor::factory()->create();
+    $response = $this->get('/api/vendors/' . $vendor->id);
 
-    public function test_show_single_vendor()
-    {
-        $vendor = Vendor::factory()->create();
-        $response = $this->get('/api/vendors/' . $vendor->id);
+    $response->assertJson(['vendorName' => $vendor->vendorName]);
+});
 
-        $response->assertJson(['vendorName' => $vendor->vendorName]);
-    }
+test('get all vendors', function () {
+    $vendor = Vendor::factory(100)->create();
+    $response = $this->get('/api/vendors?page=1&perPage=100');
+    expect(count($response['data']))->toEqual(100);
+    $response->assertStatus(200);
+});
 
-    public function test_get_all_vendors()
-    {
-        $vendor = Vendor::factory(100)->create();
-        $response = $this->get('/api/vendors?page=1&perPage=100');
-        $this->assertEquals(100, count($response['data']));
-        $response->assertStatus(200);
-    }
+test('create vendor', function () {
+    $vendor = Vendor::factory()->create();
+    $this->post('/api/vendors', $vendor->toArray());
 
-    public function test_create_vendor()
-    {
-        $vendor = Vendor::factory()->create();
-        $this->post('/api/vendors', $vendor->toArray());
+    $this->assertDatabaseHas('vendors', [
+        'id' => $vendor->id,
+        'vendorName' => $vendor->vendorName,
+    ]);
+});
 
-        $this->assertDatabaseHas('vendors', [
-            'id' => $vendor->id,
-            'vendorName' => $vendor->vendorName,
-        ]);
-    }
+test('edit vendor', function () {
+    $vendor = Vendor::factory()->create();
 
-    public function test_edit_vendor()
-    {
-        $vendor = Vendor::factory()->create();
+    $response = $this->patch('/api/vendors/' . $vendor->id, [
+        'vendorName' => 'a-new-vendor-name',
+    ]);
 
-        $response = $this->patch('/api/vendors/' . $vendor->id, [
-            'vendorName' => 'a-new-vendor-name',
-        ]);
+    $this->assertDatabaseHas('vendors', [
+        'id' => $vendor->id,
+        'vendorName' => 'a-new-vendor-name',
+    ]);
+});
 
-        $this->assertDatabaseHas('vendors', [
-            'id' => $vendor->id,
-            'vendorName' => 'a-new-vendor-name',
-        ]);
-    }
+test('delete vendor', function () {
+    $vendor = Vendor::factory()->create();
 
-    public function test_delete_vendor()
-    {
-        $vendor = Vendor::factory()->create();
+    $this->delete('/api/vendors/' . $vendor->id);
 
-        $this->delete('/api/vendors/' . $vendor->id);
+    $this->assertDatabaseMissing('vendors', ['id' => $vendor->id]);
+});
 
-        $this->assertDatabaseMissing('vendors', ['id' => $vendor->id]);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->rollBackTransaction();
-        parent::tearDown();
-    }
-}
+afterEach(function () {
+    $this->rollBackTransaction();
+});

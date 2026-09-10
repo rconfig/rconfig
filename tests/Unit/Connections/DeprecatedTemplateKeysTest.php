@@ -1,129 +1,102 @@
 <?php
 
-namespace Tests\Unit\Connections;
-
 use App\Http\Controllers\Connections\SSH\Connect as SshConnect;
 use App\Http\Controllers\Connections\Telnet\Connect as TelnetConnect;
 use App\Http\Controllers\Connections\Telnet\Read as TelnetRead;
-use PHPUnit\Framework\TestCase;
+use Tests\Unit\Connections\DeviceParamsBuilder;
 
 /**
- * config.linebreak, config.pagerPrompt, config.pagerPromptCmd and auth.hpAnyKeyPrmpt
- * were read off every template into properties nothing ever consumed. The reads were
- * unguarded, so a template that left a key out raised an undefined array key warning
- * for a value that was then discarded.
- *
- * All four are deprecated and no longer read. Templates carrying them still load,
- * templates without them no longer warn.
+ * @var array<int, string>
  */
-class DeprecatedTemplateKeysTest extends TestCase
+const DEPRECATED_KEYS = ['linebreak', 'pagerPrompt', 'pagerPromptCmd', 'hpAnyKeyPrmpt'];
+
+/**
+ * @param  callable(): void  $callback
+ * @return array<int, string>
+ */
+function phpErrorsWhile(callable $callback): array
 {
-    /**
-     * @var array<int, string>
-     */
-    private const DEPRECATED_KEYS = ['linebreak', 'pagerPrompt', 'pagerPromptCmd', 'hpAnyKeyPrmpt'];
+    $errors = [];
 
-    /**
-     * @param  callable(): void  $callback
-     * @return array<int, string>
-     */
-    private function phpErrorsWhile(callable $callback): array
-    {
-        $errors = [];
+    set_error_handler(function (int $errno, string $errstr) use (&$errors): bool {
+        $errors[] = $errstr;
 
-        set_error_handler(function (int $errno, string $errstr) use (&$errors): bool {
-            $errors[] = $errstr;
+        return true;
+    }, E_WARNING | E_NOTICE | E_DEPRECATED | E_USER_DEPRECATED);
 
-            return true;
-        }, E_WARNING | E_NOTICE | E_DEPRECATED | E_USER_DEPRECATED);
-
-        try {
-            $callback();
-        } finally {
-            restore_error_handler();
-        }
-
-        return $errors;
+    try {
+        $callback();
+    } finally {
+        restore_error_handler();
     }
 
-    public function test_ssh_connect_no_longer_declares_the_deprecated_properties(): void
-    {
-        foreach (self::DEPRECATED_KEYS as $key) {
-            $this->assertFalse(
-                property_exists(SshConnect::class, $key),
-                "SSH Connect still declares the deprecated {$key} property."
-            );
-        }
-    }
-
-    public function test_telnet_connect_no_longer_declares_the_deprecated_properties(): void
-    {
-        foreach (self::DEPRECATED_KEYS as $key) {
-            $this->assertFalse(
-                property_exists(TelnetConnect::class, $key),
-                "Telnet Connect still declares the deprecated {$key} property."
-            );
-        }
-    }
-
-    public function test_telnet_read_no_longer_declares_the_deprecated_pager_prompt(): void
-    {
-        $this->assertFalse(property_exists(TelnetRead::class, 'pagerPrompt'));
-    }
-
-    public function test_ssh_connect_builds_without_warnings_when_a_template_omits_the_deprecated_keys(): void
-    {
-        $params = DeviceParamsBuilder::forSsh([
-            'config' => ['linebreak' => null, 'pagerPrompt' => null, 'pagerPromptCmd' => null],
-            'auth' => ['hpAnyKeyPrmpt' => null],
-        ]);
-
-        $errors = $this->phpErrorsWhile(function () use ($params): void {
-            new SshConnect($params, false);
-        });
-
-        $this->assertSame([], $errors);
-    }
-
-    public function test_telnet_connect_builds_without_warnings_when_a_template_omits_the_deprecated_keys(): void
-    {
-        $params = DeviceParamsBuilder::forTelnet([
-            'config' => ['linebreak' => null, 'pagerPrompt' => null, 'pagerPromptCmd' => null],
-            'auth' => ['hpAnyKeyPrmpt' => null],
-        ]);
-
-        $errors = $this->phpErrorsWhile(function () use ($params): void {
-            new TelnetConnect($params, false);
-        });
-
-        $this->assertSame([], $errors);
-    }
-
-    public function test_ssh_connect_builds_without_warnings_when_a_template_still_carries_the_deprecated_keys(): void
-    {
-        $params = DeviceParamsBuilder::forSsh([
-            'config' => ['linebreak' => 'n', 'pagerPrompt' => '--More--', 'pagerPromptCmd' => ' '],
-            'auth' => ['hpAnyKeyPrmpt' => 'Press any key to continue'],
-        ]);
-
-        $errors = $this->phpErrorsWhile(function () use ($params): void {
-            new SshConnect($params, false);
-        });
-
-        $this->assertSame([], $errors);
-    }
-
-    public function test_telnet_connect_builds_without_warnings_when_a_template_still_carries_the_deprecated_keys(): void
-    {
-        $params = DeviceParamsBuilder::forTelnet([
-            'config' => ['linebreak' => 'n', 'pagerPrompt' => '--More--', 'pagerPromptCmd' => ' '],
-            'auth' => ['hpAnyKeyPrmpt' => 'Press any key to continue'],
-        ]);
-
-        $errors = $this->phpErrorsWhile(function () use ($params): void {
-            new TelnetConnect($params, false);
-        });
-
-        $this->assertSame([], $errors);
-    }
+    return $errors;
 }
+
+test('ssh connect no longer declares the deprecated properties', function () {
+    foreach (DEPRECATED_KEYS as $key) {
+        expect(property_exists(SshConnect::class, $key))->toBeFalse("SSH Connect still declares the deprecated {$key} property.");
+    }
+});
+
+test('telnet connect no longer declares the deprecated properties', function () {
+    foreach (DEPRECATED_KEYS as $key) {
+        expect(property_exists(TelnetConnect::class, $key))->toBeFalse("Telnet Connect still declares the deprecated {$key} property.");
+    }
+});
+
+test('telnet read no longer declares the deprecated pager prompt', function () {
+    expect(property_exists(TelnetRead::class, 'pagerPrompt'))->toBeFalse();
+});
+
+test('ssh connect builds without warnings when a template omits the deprecated keys', function () {
+    $params = DeviceParamsBuilder::forSsh([
+        'config' => ['linebreak' => null, 'pagerPrompt' => null, 'pagerPromptCmd' => null],
+        'auth' => ['hpAnyKeyPrmpt' => null],
+    ]);
+
+    $errors = phpErrorsWhile(function () use ($params): void {
+        new SshConnect($params, false);
+    });
+
+    expect($errors)->toBe([]);
+});
+
+test('telnet connect builds without warnings when a template omits the deprecated keys', function () {
+    $params = DeviceParamsBuilder::forTelnet([
+        'config' => ['linebreak' => null, 'pagerPrompt' => null, 'pagerPromptCmd' => null],
+        'auth' => ['hpAnyKeyPrmpt' => null],
+    ]);
+
+    $errors = phpErrorsWhile(function () use ($params): void {
+        new TelnetConnect($params, false);
+    });
+
+    expect($errors)->toBe([]);
+});
+
+test('ssh connect builds without warnings when a template still carries the deprecated keys', function () {
+    $params = DeviceParamsBuilder::forSsh([
+        'config' => ['linebreak' => 'n', 'pagerPrompt' => '--More--', 'pagerPromptCmd' => ' '],
+        'auth' => ['hpAnyKeyPrmpt' => 'Press any key to continue'],
+    ]);
+
+    $errors = phpErrorsWhile(function () use ($params): void {
+        new SshConnect($params, false);
+    });
+
+    expect($errors)->toBe([]);
+});
+
+test('telnet connect builds without warnings when a template still carries the deprecated keys', function () {
+    $params = DeviceParamsBuilder::forTelnet([
+        'config' => ['linebreak' => 'n', 'pagerPrompt' => '--More--', 'pagerPromptCmd' => ' '],
+        'auth' => ['hpAnyKeyPrmpt' => 'Press any key to continue'],
+    ]);
+
+    $errors = phpErrorsWhile(function () use ($params): void {
+        new TelnetConnect($params, false);
+    });
+
+    expect($errors)->toBe([]);
+});

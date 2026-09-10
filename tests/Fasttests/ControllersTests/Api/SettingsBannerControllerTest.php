@@ -1,43 +1,30 @@
 <?php
 
-namespace Tests\Fasttests\ControllersTests\Api;
-
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 
-class SettingsBannerControllerTest extends TestCase
-{
-    use WithFaker;
+uses(WithFaker::class);
 
-    protected $user;
-    protected $setting;
+beforeEach(function () {
+    $this->user = User::factory()->create();
+    $this->actingAs($this->user);
+});
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->user = User::factory()->create();
-        $this->actingAs($this->user);
-    }
+test('get login banner', function () {
+    $response = $this->get('/api/settings/banner/1');
+    $response->assertJson([
+        'login_banner' => 'Authorization message - You must be an authorized user to login and use this system.',
+    ]);
+});
 
-    public function test_get_login_banner()
-    {
-        $response = $this->get('/api/settings/banner/1');
-        $response->assertJson([
-            'login_banner' => 'Authorization message - You must be an authorized user to login and use this system.',
-        ]);
-    }
+test('update banner', function () {
+    $new_banner = $this->faker->sentence;
 
-    public function test_update_banner()
-    {
-        $new_banner = $this->faker->sentence;
+    $response = $this->patch('/api/settings/banner/1', ['login_banner' => $new_banner]);
 
-        $response = $this->patch('/api/settings/banner/1', ['login_banner' => $new_banner]);
-
-        $response->assertStatus(200);
-        $this->assertDatabaseHas('settings', [
-            'id' => 1,
-            'login_banner' => $new_banner,
-        ]);
-    }
-}
+    $response->assertStatus(200);
+    $this->assertDatabaseHas('settings', [
+        'id' => 1,
+        'login_banner' => $new_banner,
+    ]);
+});

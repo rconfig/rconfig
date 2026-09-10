@@ -1,134 +1,114 @@
 <?php
 
-namespace Tests\Fasttests\ServiceTests\SocialAuth;
-
-use App\Models\User;
 use App\Services\SocialAuth\Saml2Auth;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
-use Tests\TestCase;
 
-class Saml2AuthTest extends TestCase
-{
-    /** @var User */
-    protected $user;
+beforeEach(function () {
+    $this->beginTransaction();
+});
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->beginTransaction();
-    }
+test('login redirects with error if saml response is missing', function () {
+    $request = Request::create('/login', 'GET');
 
-    public function test_login_redirects_with_error_if_saml_response_is_missing()
-    {
-        $request = Request::create('/login', 'GET');
+    $service = new Saml2Auth;
 
-        $service = new Saml2Auth;
+    $response = $service->register($request);
+    expect($response->getStatusCode())->toEqual(302);
+    expect(session()->all())->toHaveKey('message');
+    $this->assertStringContainsString('SAML response is missing. Please try again.', session('message'));
+});
 
-        $response = $service->register($request);
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertArrayHasKey('message', session()->all());
-        $this->assertStringContainsString('SAML response is missing. Please try again.', session('message'));
-    }
+test('login does not require oauth code param', function () {
+    // A SAML2 callback never carries an OAuth-style 'code' param, only
+    // SAMLResponse/SAMLart. Confirm the OAuth 'code' check is bypassed
+    // for this driver and the flow proceeds past it once SAMLResponse
+    // is present.
+    $request = Request::create('/login', 'POST', ['SAMLResponse' => 'encoded-response']);
 
-    public function test_login_does_not_require_oauth_code_param()
-    {
-        // A SAML2 callback never carries an OAuth-style 'code' param, only
-        // SAMLResponse/SAMLart. Confirm the OAuth 'code' check is bypassed
-        // for this driver and the flow proceeds past it once SAMLResponse
-        // is present.
-        $request = Request::create('/login', 'POST', ['SAMLResponse' => 'encoded-response']);
+    Socialite::shouldReceive('driver->user')->andReturn(null);
 
-        Socialite::shouldReceive('driver->user')->andReturn(null);
+    $service = new Saml2Auth;
 
-        $service = new Saml2Auth;
+    $response = $service->register($request);
 
-        $response = $service->register($request);
+    expect($response->getStatusCode())->toEqual(302);
+    expect(session()->all())->toHaveKey('message');
+    $this->assertStringNotContainsString('Authorization code is missing', session('message'));
+    $this->assertStringContainsString('Your account is not registered', session('message'));
+});
 
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertArrayHasKey('message', session()->all());
-        $this->assertStringNotContainsString('Authorization code is missing', session('message'));
-        $this->assertStringContainsString('Your account is not registered', session('message'));
-    }
+test('login accepts samlart in place of saml response', function () {
+    $request = Request::create('/login', 'GET', ['SAMLart' => 'artifact-value']);
 
-    public function test_login_accepts_samlart_in_place_of_saml_response()
-    {
-        $request = Request::create('/login', 'GET', ['SAMLart' => 'artifact-value']);
+    Socialite::shouldReceive('driver->user')->andReturn(null);
 
-        Socialite::shouldReceive('driver->user')->andReturn(null);
+    $service = new Saml2Auth;
 
-        $service = new Saml2Auth;
+    $response = $service->register($request);
 
-        $response = $service->register($request);
+    expect($response->getStatusCode())->toEqual(302);
+    expect(session()->all())->toHaveKey('message');
+    $this->assertStringNotContainsString('SAML response is missing', session('message'));
+});
 
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertArrayHasKey('message', session()->all());
-        $this->assertStringNotContainsString('SAML response is missing', session('message'));
-    }
+test('login ignores stray denied param', function () {
+    // SAML2 has no OAuth-style 'denied' query param -- denial/errors are
+    // encoded inside the SAMLResponse body itself. Confirm a stray
+    // 'denied' param on a SAML2 callback does not trigger the
+    // OAuth-specific "Access was denied" message and the flow proceeds
+    // normally based on the SAMLResponse content.
+    $request = Request::create('/login', 'POST', [
+        'SAMLResponse' => 'encoded-response',
+        'denied' => true,
+    ]);
 
-    public function test_login_ignores_stray_denied_param()
-    {
-        // SAML2 has no OAuth-style 'denied' query param -- denial/errors are
-        // encoded inside the SAMLResponse body itself. Confirm a stray
-        // 'denied' param on a SAML2 callback does not trigger the
-        // OAuth-specific "Access was denied" message and the flow proceeds
-        // normally based on the SAMLResponse content.
-        $request = Request::create('/login', 'POST', [
-            'SAMLResponse' => 'encoded-response',
-            'denied' => true,
-        ]);
+    Socialite::shouldReceive('driver->user')->andReturn(null);
 
-        Socialite::shouldReceive('driver->user')->andReturn(null);
+    $service = new Saml2Auth;
 
-        $service = new Saml2Auth;
+    $response = $service->register($request);
 
-        $response = $service->register($request);
+    expect($response->getStatusCode())->toEqual(302);
+    expect(session()->all())->toHaveKey('message');
+    $this->assertStringNotContainsString('Access was denied', session('message'));
+    $this->assertStringContainsString('Your account is not registered', session('message'));
+});
 
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertArrayHasKey('message', session()->all());
-        $this->assertStringNotContainsString('Access was denied', session('message'));
-        $this->assertStringContainsString('Your account is not registered', session('message'));
-    }
+test('login redirects with error if provider fails', function () {
+    // driverLabel() reads services.saml2.display_name (the same config
+    // that drives the login button text) rather than a hardcoded
+    // 'SAML2' string; set it explicitly so the assertion doesn't depend
+    // on the .env default.
+    config(['services.saml2.display_name' => 'Company SSO']);
 
-    public function test_login_redirects_with_error_if_provider_fails()
-    {
-        // driverLabel() reads services.saml2.display_name (the same config
-        // that drives the login button text) rather than a hardcoded
-        // 'SAML2' string; set it explicitly so the assertion doesn't depend
-        // on the .env default.
-        config(['services.saml2.display_name' => 'Company SSO']);
+    $request = Request::create('/login', 'POST', ['SAMLResponse' => 'encoded-response']);
 
-        $request = Request::create('/login', 'POST', ['SAMLResponse' => 'encoded-response']);
+    Socialite::shouldReceive('driver->user')->andThrow(new Exception);
 
-        Socialite::shouldReceive('driver->user')->andThrow(new \Exception);
+    $service = new Saml2Auth;
 
-        $service = new Saml2Auth;
+    $response = $service->register($request);
 
-        $response = $service->register($request);
+    expect($response->getStatusCode())->toEqual(302);
+    expect(session()->all())->toHaveKey('message');
+    $this->assertStringContainsString('Unable to authenticate using Company SSO', session('message'));
+});
 
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertArrayHasKey('message', session()->all());
-        $this->assertStringContainsString('Unable to authenticate using Company SSO', session('message'));
-    }
+test('login redirects with error if user not found', function () {
+    $request = Request::create('/login', 'POST', ['SAMLResponse' => 'encoded-response']);
 
-    public function test_login_redirects_with_error_if_user_not_found()
-    {
-        $request = Request::create('/login', 'POST', ['SAMLResponse' => 'encoded-response']);
+    Socialite::shouldReceive('driver->user')->andReturn(null);
 
-        Socialite::shouldReceive('driver->user')->andReturn(null);
+    $service = new Saml2Auth;
 
-        $service = new Saml2Auth;
+    $response = $service->register($request);
 
-        $response = $service->register($request);
+    expect($response->getStatusCode())->toEqual(302);
+    expect(session()->all())->toHaveKey('message');
+    $this->assertStringContainsString('Your account is not registered', session('message'));
+});
 
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertArrayHasKey('message', session()->all());
-        $this->assertStringContainsString('Your account is not registered', session('message'));
-    }
-
-    protected function tearDown(): void
-    {
-        $this->rollbackTransaction();
-        parent::tearDown();
-    }
-}
+afterEach(function () {
+    $this->rollbackTransaction();
+});

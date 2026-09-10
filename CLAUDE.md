@@ -63,7 +63,7 @@ If a front end change is not visible, the user may need to run `npm run dev` or 
 
 ### Testing
 
-This project uses PHPUnit. All tests are PHPUnit classes. If you see a test written for Pest, convert it to PHPUnit.
+This project uses Pest 5 (running on PHPUnit 13) as the testing standard. New tests should be written in Pest syntax (`it()`/`test()` closures). Existing PHPUnit-style class tests are being converted to Pest syntax folder by folder (`Unit` first, then `Fasttests`, then `Slowtests`); do not convert a Pest test back to PHPUnit.
 
 ```bash
 php artisan test --compact
@@ -71,7 +71,20 @@ php artisan test --compact tests/Unit/ExampleTest.php
 php artisan test --compact --filter=testName
 ```
 
-Test suites are `Unit`, `Fasttests`, and `Slowtests`. `Slowtests` cover real device connections and longer running operations. Shared helpers live in `tests/Traits`. The test database uses a dedicated connection (see `phpunit.xml`).
+`vendor/bin/pest tests/Path` also works directly and is equivalent to the commands above.
+
+Test suites are `Unit`, `Fasttests`, and `Slowtests`. `Unit` tests extend `Tests\UnitTestCase` (boots the app, no database, no transactions, no seeding — use it only for logic with no DB dependency). `Fasttests` extends `Tests\TestCase` directly. `Slowtests` extends `Tests\SlowTestCase`, a marker subclass of `Tests\TestCase` bound to the suite via `tests/Pest.php` (`pest()->extend(SlowTestCase::class)->in('Slowtests')`) — it exists so `MigrateFreshSeedOnce`'s lab-hardware fixture gate can identify Slowtests test cases by their real class hierarchy (`is_a(static::class, SlowTestCase::class, true)`), which holds for Pest-generated test classes too. A new classic-style `Slowtests` test must `extend Tests\SlowTestCase`, not `Tests\TestCase`, or it silently loses the fixture. Both suites are transaction-wrapped per test, with the schema migrated once per test process via `MigrateFreshSeedOnce`.
+
+Seeding is minimal by default: every `Tests\TestCase` suite gets only `NotificationDefaultsSeeder`'s reference data. `Slowtests` additionally seeds a fixed lab-hardware device fixture (`DeviceTableSeeder` — devices 1001-1011) because its real SSH/Telnet/ICMP tests are hard-coded against those devices; that's also why `Slowtests` covers real device connections and longer running operations. `Fasttests` does not get that fixture — build any device/user/category/tag/etc. data a Fasttests test needs via model factories (`Device::factory()`, `User::factory()`, and so on), including any pivot rows the factories don't wire up automatically. `tests/Fasttests/ControllersTests/Api/DevicesControllerTest.php` is a good example of the pattern. The rule of thumb: seed only fixed catalog/reference data the app hard-depends on, and only for the suites that need it; use factories for everything else.
+
+Some `Unit`/`Fasttests` tests are tagged with a Pest group so `.github/workflows/ci.yml`'s `tests` job can exclude what an ephemeral GitHub Actions runner can't satisfy, while leaving them running normally everywhere else (local `php artisan test`, no exclude flags):
+- `external-network` — the test needs a real network resource CI doesn't control, e.g. `devmailer.rconfig.com` or a real GitHub API / `git clone` call (see `SettingsEmailControllerTest.php`, `TemplateGithubControllerTest.php`). Tag the specific `test(...)` call (`->group('external-network')`), not the whole file, if only some tests in it hit the network.
+- `local-daemon` — the test checks that `supervisord`/`redis`/`horizon` are running as OS processes (`ps`/`supervisorctl`). A CI service container doesn't help here — containers run in a separate namespace, invisible to `ps` on the job's own runner (see `RunningProcessTest.php` in both `tests/Unit` and `tests/Fasttests/OtherTests`). Tag the whole file with `uses()->group('local-daemon')` since every test in those files is this kind of check.
+- `device-hardware` — every `Slowtests` test, tagged directory-wide in `tests/Pest.php` (`pest()->extend(SlowTestCase::class)->group('device-hardware')->in('Slowtests')`), since the whole suite depends on the seeded lab-hardware fixture. CI's `tests` job doesn't run `Slowtests` at all today, so this exclude flag is currently a defensive no-op there — it only bites if `Slowtests` is ever added to that job's paths without separate hardware access.
+
+When a new test genuinely needs one of these, tag it the same way and it's automatically excluded from CI without any `ci.yml` change.
+
+Shared helpers live in `tests/Traits`. The test database uses a dedicated connection (see `phpunit.xml`).
 
 ### Code quality
 
@@ -360,8 +373,9 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 
 # PHPUnit
 
-- This application uses PHPUnit for testing. All tests must be written as PHPUnit classes. Use `php artisan make:test --phpunit {name}` to create a new test.
-- If you see a test using "Pest", convert it to PHPUnit.
+- This application uses Pest 5 (on PHPUnit 13) as the testing standard. Write new tests in Pest syntax. Existing PHPUnit-style class tests are being converted to Pest syntax folder by folder (`Unit` first, then `Fasttests`, then `Slowtests`); do not convert a Pest test back to PHPUnit.
+- `Unit` tests extend `Tests\UnitTestCase` (no database). `Fasttests` extends `Tests\TestCase`; `Slowtests` extends `Tests\SlowTestCase` (a `Tests\TestCase` subclass, bound via `tests/Pest.php`, that lets the lab-hardware fixture gate identify Slowtests test cases after Pest conversion) — both are transaction-wrapped and DB-aware. Only `Slowtests` seeds the lab-hardware device fixture; `Fasttests` builds its own data via model factories.
+- Some `Unit`/`Fasttests` tests carry a Pest group (`external-network`, `local-daemon`) so CI can exclude what an ephemeral runner can't satisfy — see the Testing section above for what each group means and when to use it.
 - Every time a test has been updated, run that singular test.
 - When the tests relating to your feature are passing, ask the user if they would like to also run the entire test suite to make sure everything is still passing.
 - Tests should cover all happy paths, failure paths, and edge cases.
