@@ -10,7 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Security release. Upgrade is recommended for all 8.x installations.
 
 ### Security
-- The Config Search "View Matches" dialog rendered device configuration text through `v-html` without HTML escaping it, so markup held in a stored configuration, which is whatever the device returned, ran as script in the browser of any user who opened that dialog on a matching search. Anyone able to set a banner, an interface description or an ACL remark on a monitored device could plant it, and configuration backups routinely carry enable secrets and community strings that the victim's session can then read. The escaping that the search results table already applied correctly is now a shared module used by both components, and the same change drops an unnecessary `v-html` in the help popover, where a device name could render as markup. The search API still returns configuration text verbatim, because exports, diffs and API clients need it byte for byte. Reported in #368 by 360 Alpha Lab.
+- Config Search "View Matches" rendered device configuration text through `v-html` without escaping it, so markup stored in a configuration ran as script in the viewer's browser. Reported in #368 by 360 Alpha Lab.
+- The help popover rendered its content as HTML, so a device name containing markup rendered as markup.
 
 ## [8.2.16] - 2026-08-16
 
