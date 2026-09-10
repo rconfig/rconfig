@@ -6,7 +6,7 @@ use App\Models\Device;
 
 beforeEach(function () {
     $this->device = Device::where('id', 20001)->first();
-    $this->template_filename = 'mikrotik-routeros-ssh-noenable.yml';
+    $this->template_filename = 'mikrotik-routeros-ssh-noenable-banner.yml';
 });
 
 test('check that mikrotik in db', function () {
@@ -33,7 +33,7 @@ test('check that mikrotik in db', function () {
 
 test('can read template', function () {
     $contents = File::get(templates_path() . $this->template_filename);
-    $this->assertStringContainsString('name: "MikroTik RouterOS - SSH - No Enable"', $contents);
+    $this->assertStringContainsString('name: "MikroTik RouterOS - SSH - No Enable - Banner"', $contents);
 });
 
 test('device has commands', function () {
@@ -64,11 +64,11 @@ test('download device config', function () {
     // mid config
     $this->assertStringContainsString('set time-zone-name=America/Los_Angeles', return_file_contents($devicerecord['commands'][5189], $this->device->id));
     // end of config
-    $this->assertStringContainsString('set filter-interface=ether1 filter-ip-address=1.1.1.1/32', return_file_contents($devicerecord['commands'][5189], $this->device->id));
+    $this->assertStringContainsString('set filter-interface=*2 filter-ip-address=1.1.1.1/32', return_file_contents($devicerecord['commands'][5189], $this->device->id));
 
-    $this->assertStringContainsString('0  R  ether1                              ether            1500', return_file_contents($devicerecord['commands'][5190], $this->device->id));
+    $this->assertStringContainsString('0 R ether4    ether           1500         BC:24:11:20:DB:55', return_file_contents($devicerecord['commands'][5190], $this->device->id));
     // top of the config
-    $this->assertStringContainsString('11     pppoe-out1                          pppoe-out', return_file_contents($devicerecord['commands'][5190], $this->device->id));
+    $this->assertStringContainsString('12 R lo        loopback       65536         00:00:00:00:00:00', return_file_contents($devicerecord['commands'][5190], $this->device->id));
 
     // top of the config
     expect(count($arr))->toBeGreaterThan(0);
