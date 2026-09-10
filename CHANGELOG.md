@@ -11,7 +11,7 @@ Security release. Upgrade is recommended for all 8.x installations.
 
 ### Security
 - Config Search "View Matches" rendered device configuration text through `v-html` without escaping it, so markup stored in a configuration ran as script in the viewer's browser. Reported in #368 by 360 Alpha Lab.
-- The help popover rendered its content as HTML, so a device name containing markup rendered as markup.
+- `EncryptStringCast` unserialized decrypted secrets without an `allowed_classes` allowlist, so a serialized PHP object stored in an encrypted field (device password, credential, mail or API token) was instantiated when read, reaching a remote code execution gadget. Both unserialize calls now block object instantiation. Reported in #369 by 360 Alpha Lab.
 
 ## [8.2.16] - 2026-08-16
 
