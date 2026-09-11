@@ -1,38 +1,30 @@
 <?php
 
-namespace Tests\Fasttests\ControllersTests\Api;
-
 use App\Http\Controllers\Api\ScheduleController;
-use Tests\TestCase;
 
-class ScheduleControllerTest extends TestCase
-{
-    public function test_list_returns_json_with_scheduled_tasks()
-    {
-        $controller = new ScheduleController;
-        $response = $controller->list();
+test('list returns json with scheduled tasks', function () {
+    $controller = new ScheduleController;
+    $response = $controller->list();
 
-        $this->assertEquals(200, $response->getStatusCode());
+    expect($response->getStatusCode())->toEqual(200);
 
-        $data = json_decode($response->getContent(), true);
+    $data = json_decode($response->getContent(), true);
 
-        $this->assertTrue($data['success']);
-        $this->assertArrayHasKey('scheduled_tasks', $data);
-        $this->assertIsArray($data['scheduled_tasks']);
+    expect($data['success'])->toBeTrue();
+    expect($data)->toHaveKey('scheduled_tasks');
+    expect($data['scheduled_tasks'])->toBeArray();
+});
+
+test('list includes timezone information', function () {
+    $controller = new ScheduleController;
+
+    $response = $controller->list();
+    $data = json_decode($response->getContent(), true);
+
+    if (! empty($data['scheduled_tasks'])) {
+        $task = $data['scheduled_tasks'][0];
+        expect($task['timezone'])->not->toBeEmpty();
+    } else {
+        expect(true)->toBeTrue(); // No tasks to test
     }
-
-    public function test_list_includes_timezone_information()
-    {
-        $controller = new ScheduleController;
-
-        $response = $controller->list();
-        $data = json_decode($response->getContent(), true);
-
-        if (! empty($data['scheduled_tasks'])) {
-            $task = $data['scheduled_tasks'][0];
-            $this->assertNotEmpty($task['timezone']);
-        } else {
-            $this->assertTrue(true); // No tasks to test
-        }
-    }
-}
+});

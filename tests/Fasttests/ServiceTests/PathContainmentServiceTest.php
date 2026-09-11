@@ -1,12 +1,9 @@
 <?php
 
-namespace Tests\Fasttests\ServiceTests;
-
 use App\Services\Utilities\PathContainmentService;
 use Illuminate\Support\Facades\File;
-use Tests\TestCase;
 
-/**
+/*
  * Cover for the shared path containment check.
  *
  * Endpoints that read a caller supplied path rely on this to decide whether the target is
@@ -14,157 +11,106 @@ use Tests\TestCase;
  * the doubled dot form that defeats a naive single pass strip, absolute paths, symlinks,
  * and a sibling directory whose name shares a prefix with the base.
  */
-class PathContainmentServiceTest extends TestCase
-{
-    private PathContainmentService $service;
-    private string $sandbox;
-    private string $base;
+beforeEach(function () {
+    $this->service = new PathContainmentService;
 
-    public function setUp(): void
-    {
-        parent::setUp();
+    $this->sandbox = sys_get_temp_dir() . '/rconfig_containment_' . getmypid();
+    $this->base = $this->sandbox . '/base';
 
-        $this->service = new PathContainmentService;
+    File::ensureDirectoryExists($this->base . '/nested/deeper');
+    File::ensureDirectoryExists($this->sandbox . '/base_evil');
 
-        $this->sandbox = sys_get_temp_dir() . '/rconfig_containment_' . getmypid();
-        $this->base = $this->sandbox . '/base';
+    File::put($this->base . '/inside.yml', 'inside');
+    File::put($this->base . '/nested/deeper/deep.yml', 'deep');
+    File::put($this->sandbox . '/outside.yml', 'outside');
+    File::put($this->sandbox . '/base_evil/sibling.yml', 'sibling');
+});
 
-        File::ensureDirectoryExists($this->base . '/nested/deeper');
-        File::ensureDirectoryExists($this->sandbox . '/base_evil');
+afterEach(function () {
+    File::deleteDirectory($this->sandbox);
+});
 
-        File::put($this->base . '/inside.yml', 'inside');
-        File::put($this->base . '/nested/deeper/deep.yml', 'deep');
-        File::put($this->sandbox . '/outside.yml', 'outside');
-        File::put($this->sandbox . '/base_evil/sibling.yml', 'sibling');
+test('it accepts a file directly inside the base', function () {
+    expect($this->service->resolveFileWithin($this->base, $this->base . '/inside.yml'))
+        ->toBe(realpath($this->base . '/inside.yml'));
+});
+
+test('it accepts a file nested below the base', function () {
+    // Arbitrary depth below the base has to be allowed: the template repository nests
+    // files as rConfig-templates/<Vendor>/<file>.yml.
+    expect($this->service->resolveFileWithin($this->base, $this->base . '/nested/deeper/deep.yml'))
+        ->toBe(realpath($this->base . '/nested/deeper/deep.yml'));
+});
+
+test('it rejects a parent traversal', function () {
+    expect($this->service->resolveFileWithin($this->base, $this->base . '/../outside.yml'))->toBeNull();
+});
+
+test('it rejects a doubled dot traversal', function () {
+    // The doubled dot form survives a sanitizer that strips '../' once, because removing
+    // the inner sequence from '....//' leaves a working '../' behind.
+    expect($this->service->resolveFileWithin($this->base, $this->base . '/....//outside.yml'))->toBeNull();
+});
+
+test('it rejects an absolute path elsewhere', function () {
+    expect($this->service->resolveFileWithin($this->base, '/etc/passwd'))->toBeNull();
+});
+
+test('it rejects a sibling directory sharing a name prefix', function () {
+    // The containment comparison must be separator terminated, or a sibling directory whose
+    // name merely starts with the base name passes.
+    expect($this->service->resolveFileWithin($this->base, $this->sandbox . '/base_evil/sibling.yml'))->toBeNull();
+    expect($this->service->resolveDirectoryWithin($this->base, $this->sandbox . '/base_evil'))->toBeNull();
+});
+
+test('it rejects a symlink pointing out of the base', function () {
+    $link = $this->base . '/escape.yml';
+    @symlink($this->sandbox . '/outside.yml', $link);
+
+    if (! is_link($link)) {
+        $this->markTestSkipped('Unable to create a symlink in the sandbox.');
     }
 
-    protected function tearDown(): void
-    {
-        File::deleteDirectory($this->sandbox);
+    expect($this->service->resolveFileWithin($this->base, $link))->toBeNull();
+});
 
-        parent::tearDown();
-    }
+test('it rejects a directory when a file is required', function () {
+    expect($this->service->resolveFileWithin($this->base, $this->base . '/nested'))->toBeNull();
+});
 
-    public function test_it_accepts_a_file_directly_inside_the_base(): void
-    {
-        $this->assertSame(
-            realpath($this->base . '/inside.yml'),
-            $this->service->resolveFileWithin($this->base, $this->base . '/inside.yml')
-        );
-    }
+test('it rejects a file when a directory is required', function () {
+    expect($this->service->resolveDirectoryWithin($this->base, $this->base . '/inside.yml'))->toBeNull();
+});
 
-    /**
-     * Arbitrary depth below the base has to be allowed: the template repository nests
-     * files as rConfig-templates/<Vendor>/<file>.yml.
-     */
-    public function test_it_accepts_a_file_nested_below_the_base(): void
-    {
-        $this->assertSame(
-            realpath($this->base . '/nested/deeper/deep.yml'),
-            $this->service->resolveFileWithin($this->base, $this->base . '/nested/deeper/deep.yml')
-        );
-    }
+test('it accepts the base directory itself as a directory', function () {
+    expect($this->service->resolveDirectoryWithin($this->base, $this->base))->toBe(realpath($this->base));
+});
 
-    public function test_it_rejects_a_parent_traversal(): void
-    {
-        $this->assertNull($this->service->resolveFileWithin($this->base, $this->base . '/../outside.yml'));
-    }
+test('it accepts a directory nested below the base', function () {
+    expect($this->service->resolveDirectoryWithin($this->base, $this->base . '/nested/deeper'))
+        ->toBe(realpath($this->base . '/nested/deeper'));
+});
 
-    /**
-     * The doubled dot form survives a sanitizer that strips '../' once, because removing
-     * the inner sequence from '....//' leaves a working '../' behind.
-     */
-    public function test_it_rejects_a_doubled_dot_traversal(): void
-    {
-        $this->assertNull($this->service->resolveFileWithin($this->base, $this->base . '/....//outside.yml'));
-    }
+test('it rejects everything when the base directory does not exist', function () {
+    // On a fresh install the storage directory may never have been created, so realpath()
+    // on the base returns false. Denying is correct rather than falling back to a loose check.
+    $missing = $this->sandbox . '/never_created';
 
-    public function test_it_rejects_an_absolute_path_elsewhere(): void
-    {
-        $this->assertNull($this->service->resolveFileWithin($this->base, '/etc/passwd'));
-    }
+    expect($this->service->resolveFileWithin($missing, $this->base . '/inside.yml'))->toBeNull();
+    expect($this->service->resolveDirectoryWithin($missing, $this->base))->toBeNull();
+});
 
-    /**
-     * The containment comparison must be separator terminated, or a sibling directory whose
-     * name merely starts with the base name passes.
-     */
-    public function test_it_rejects_a_sibling_directory_sharing_a_name_prefix(): void
-    {
-        $this->assertNull(
-            $this->service->resolveFileWithin($this->base, $this->sandbox . '/base_evil/sibling.yml')
-        );
-        $this->assertNull(
-            $this->service->resolveDirectoryWithin($this->base, $this->sandbox . '/base_evil')
-        );
-    }
+test('it rejects a target that does not exist', function () {
+    expect($this->service->resolveFileWithin($this->base, $this->base . '/no_such_file.yml'))->toBeNull();
+});
 
-    public function test_it_rejects_a_symlink_pointing_out_of_the_base(): void
-    {
-        $link = $this->base . '/escape.yml';
-        @symlink($this->sandbox . '/outside.yml', $link);
+test('it rejects empty input', function () {
+    expect($this->service->resolveFileWithin('', $this->base . '/inside.yml'))->toBeNull();
+    expect($this->service->resolveFileWithin($this->base, ''))->toBeNull();
+    expect($this->service->resolveDirectoryWithin('', ''))->toBeNull();
+});
 
-        if (! is_link($link)) {
-            $this->markTestSkipped('Unable to create a symlink in the sandbox.');
-        }
-
-        $this->assertNull($this->service->resolveFileWithin($this->base, $link));
-    }
-
-    public function test_it_rejects_a_directory_when_a_file_is_required(): void
-    {
-        $this->assertNull($this->service->resolveFileWithin($this->base, $this->base . '/nested'));
-    }
-
-    public function test_it_rejects_a_file_when_a_directory_is_required(): void
-    {
-        $this->assertNull($this->service->resolveDirectoryWithin($this->base, $this->base . '/inside.yml'));
-    }
-
-    public function test_it_accepts_the_base_directory_itself_as_a_directory(): void
-    {
-        $this->assertSame(
-            realpath($this->base),
-            $this->service->resolveDirectoryWithin($this->base, $this->base)
-        );
-    }
-
-    public function test_it_accepts_a_directory_nested_below_the_base(): void
-    {
-        $this->assertSame(
-            realpath($this->base . '/nested/deeper'),
-            $this->service->resolveDirectoryWithin($this->base, $this->base . '/nested/deeper')
-        );
-    }
-
-    /**
-     * On a fresh install the storage directory may never have been created, so realpath()
-     * on the base returns false. Denying is correct rather than falling back to a loose check.
-     */
-    public function test_it_rejects_everything_when_the_base_directory_does_not_exist(): void
-    {
-        $missing = $this->sandbox . '/never_created';
-
-        $this->assertNull($this->service->resolveFileWithin($missing, $this->base . '/inside.yml'));
-        $this->assertNull($this->service->resolveDirectoryWithin($missing, $this->base));
-    }
-
-    public function test_it_rejects_a_target_that_does_not_exist(): void
-    {
-        $this->assertNull($this->service->resolveFileWithin($this->base, $this->base . '/no_such_file.yml'));
-    }
-
-    public function test_it_rejects_empty_input(): void
-    {
-        $this->assertNull($this->service->resolveFileWithin('', $this->base . '/inside.yml'));
-        $this->assertNull($this->service->resolveFileWithin($this->base, ''));
-        $this->assertNull($this->service->resolveDirectoryWithin('', ''));
-    }
-
-    public function test_it_tolerates_a_base_given_with_a_trailing_separator(): void
-    {
-        $this->assertSame(
-            realpath($this->base . '/inside.yml'),
-            $this->service->resolveFileWithin($this->base . '/', $this->base . '/inside.yml')
-        );
-    }
-}
+test('it tolerates a base given with a trailing separator', function () {
+    expect($this->service->resolveFileWithin($this->base . '/', $this->base . '/inside.yml'))
+        ->toBe(realpath($this->base . '/inside.yml'));
+});

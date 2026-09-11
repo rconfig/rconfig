@@ -80,7 +80,7 @@ return [
 
     'name' => env('APP_NAME', 'rConfig v8 Core'),
     // run test before updating the version
-    'version' => '8.2.16',
+    'version' => '8.2.17',
     'force_https' => env('APP_FORCE_HTTPS', false),
 
     /*

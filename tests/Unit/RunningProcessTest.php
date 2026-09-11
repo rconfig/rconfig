@@ -1,36 +1,32 @@
 <?php
 
-namespace Tests\Unit;
+// Checks that supervisord/redis/horizon are running as OS processes on this host —
+// an environment health-check, not a test of application logic. A CI runner has no
+// such process stack (and a Redis service container wouldn't help: service containers
+// run in a separate namespace, invisible to `ps` here), so this is excluded from CI.
+uses()->group('local-daemon');
 
-use Tests\TestCase;
+test('check supervisord is running', function () {
+    expect(processExists('supervisord'))->toBeTrue();
+});
 
-class RunningProcessTest extends TestCase
+test('check redis is running', function () {
+    expect(processExists('redis'))->toBeTrue();
+});
+
+test('check supervisord is running horizon', function () {
+    exec('supervisorctl status', $result);
+    $expectedResult = 'horizon';
+    expect($result[0])->toContain($expectedResult);
+});
+
+function processExists($processName)
 {
-    public function test_check_supervisord_is_running()
-    {
-        $this->assertTrue($this->processExists('supervisord'));
+    $exists = false;
+    exec("ps -A | grep -i $processName | grep -v grep", $pids);
+    if (count($pids) > 0) {
+        $exists = true;
     }
 
-    public function test_check_redis_is_running()
-    {
-        $this->assertTrue($this->processExists('redis'));
-    }
-
-    public function test_check_supervisord_is_running_horizon()
-    {
-        exec('supervisorctl status', $result);
-        $expectedResult = 'horizon';
-        $this->assertStringContainsString($expectedResult, $result[0]);
-    }
-
-    public function processExists($processName)
-    {
-        $exists = false;
-        exec("ps -A | grep -i $processName | grep -v grep", $pids);
-        if (count($pids) > 0) {
-            $exists = true;
-        }
-
-        return $exists;
-    }
+    return $exists;
 }

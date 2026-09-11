@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Database\Seeders\testdata\DeviceTableSeeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use PDO;
@@ -37,6 +38,11 @@ trait MigrateFreshSeedOnce
     protected static $setUpHasRunOnce = false;
 
     /**
+     * If true, the Slowtests lab-hardware device fixture has been seeded.
+     */
+    private static bool $deviceFixturesSeeded = false;
+
+    /**
      * Dedicated connection holding the suite lock for the lifetime of the process.
      */
     private static ?PDO $suiteLockConnection = null;
@@ -48,8 +54,25 @@ trait MigrateFreshSeedOnce
 
     /**
      * After the first run of setUp "migrate:fresh --seed"
+     *
+     * The lab-hardware device fixture is seeded separately from, and after, the base
+     * migrate:fresh/seed above, gated on the test case's real class hierarchy rather than
+     * a suite flag: `$setUpHasRunOnce` and `$deviceFixturesSeeded` are independent statics
+     * shared by every Tests\TestCase subclass in the process (PHP inherits static
+     * storage), so this fires exactly once regardless of whether Fasttests or Slowtests
+     * happens to run first, and works whether the suites run combined in one process or
+     * filtered separately. Only Slowtests' real SSH/Telnet/ICMP tests are hard-coded
+     * against these fixed devices, so no other suite needs them.
+     *
+     * The seeder call below always runs after acquireSuiteLock() has already fired at
+     * least once in this process (either just above, on this same call, or on an earlier
+     * test's setUp) and that lock is held for the process's whole lifetime, so this insert
+     * is implicitly covered by the same cross-process exclusion the schema rebuild uses.
+     * That only holds for a single test process per shared database, which is the
+     * assumption the whole file is built on; a future `--parallel` run against the same
+     * database would need its own guard around this insert.
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -63,6 +86,12 @@ trait MigrateFreshSeedOnce
             );
 
             static::$setUpHasRunOnce = true;
+        }
+
+        if (! static::$deviceFixturesSeeded && is_a(static::class, SlowTestCase::class, true)) {
+            Artisan::call('db:seed', ['--class' => DeviceTableSeeder::class]);
+
+            static::$deviceFixturesSeeded = true;
         }
     }
 

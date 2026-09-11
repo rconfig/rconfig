@@ -1,118 +1,87 @@
 <?php
 
-namespace Tests\Fasttests\ControllersTests\Api;
-
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
-use Tests\TestCase;
 
-class SettingsTimezoneControllerTest extends TestCase
-{
-    protected $user;
-    protected $setting;
+beforeEach(function () {
+    $this->user = User::factory()->create();
+    $this->actingAs($this->user);
+});
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->user = User::factory()->create();
-        $this->actingAs($this->user);
-    }
+test('get timezone', function () {
+    $timezone = 'Europe/Dublin';
 
-    public function test_get_timezone()
-    {
-        $timezone = 'Europe/Dublin';
+    $this->assertDatabaseHas('settings', [
+        'id' => 1,
+        'timezone' => $timezone,
+    ]);
 
-        $this->assertDatabaseHas('settings', [
-            'id' => 1,
-            'timezone' => $timezone,
-        ]);
+    $response = $this->get('/api/settings/timezone/1');
+    $response->assertJson([
+        'timezone' => $timezone,
+    ]);
+});
 
-        $response = $this->get('/api/settings/timezone/1');
-        $response->assertJson([
-            'timezone' => $timezone,
-        ]);
-    }
+test('get timezone list', function () {
+    $response = $this->get('/api/settings/get-timezone-list');
+    $response->assertJsonFragment([
+        'Pacific/Fiji' => '(GMT+12:00) Fiji',
+    ]);
+});
 
-    public function test_get_timezone_list()
-    {
-        $response = $this->get('/api/settings/get-timezone-list');
-        $response->assertJsonFragment([
-            'Pacific/Fiji' => '(GMT+12:00) Fiji',
-        ]);
-    }
+test('update timezone', function () {
+    $timezone = 'Pacific/Midway';
+    $response = $this->patch('/api/settings/timezone/1', ['timezone' => $timezone]);
+    $response->assertStatus(200);
+    $response->assertJson(['success' => true]);
+    $this->assertDatabaseHas('settings', [
+        'id' => 1,
+        'timezone' => $timezone,
+    ]);
+    Artisan::call('config:cache');
 
-    public function test_update_timezone()
-    {
-        $timezone = 'Pacific/Midway';
-        $response = $this->patch('/api/settings/timezone/1', ['timezone' => $timezone]);
-        $response->assertStatus(200);
-        $response->assertJson(['success' => true]);
-        $this->assertDatabaseHas('settings', [
-            'id' => 1,
-            'timezone' => $timezone,
-        ]);
-        \Artisan::call('config:cache');
+    expect(Config::get('app.timezone'))->toEqual($timezone);
+    expect(env('TIMEZONE'))->toEqual($timezone);
 
-        $this->assertEquals($timezone, \Config::get('app.timezone'));
-        $this->assertEquals($timezone, env('TIMEZONE'));
+    // change back to Europe/Dublin
+    Artisan::call('env:set TIMEZONE=Europe/Dublin');
+    Artisan::call('config:cache');
+    // cannot to a config:cache when testing
+    expect(Config::get('app.timezone'))->toEqual('Europe/Dublin');
+    expect(env('TIMEZONE'))->toEqual('Europe/Dublin');
+});
 
-        // change back to Europe/Dublin
-        \Artisan::call('env:set TIMEZONE=Europe/Dublin');
-        \Artisan::call('config:cache'); // cannot to a config:cache when testing
-        $this->assertEquals('Europe/Dublin', \Config::get('app.timezone'));
-        $this->assertEquals('Europe/Dublin', env('TIMEZONE'));
-    }
+test('update timezone writes clean identifier to env', function () {
+    $timezone = 'Europe/Rome';
+    $response = $this->patch('/api/settings/timezone/1', ['timezone' => $timezone]);
+    $response->assertStatus(200);
 
-    /**
-     * The timezone must be written to .env without any slash escaping. A previous
-     * implementation mangled the value (Europe/Rome -> Europe\/\Rome) which only
-     * worked by accident, so guard the .env now holds the clean identifier.
-     */
-    public function test_update_timezone_writes_clean_identifier_to_env()
-    {
-        $timezone = 'Europe/Rome';
-        $response = $this->patch('/api/settings/timezone/1', ['timezone' => $timezone]);
-        $response->assertStatus(200);
+    $this->assertStringContainsString('TIMEZONE=Europe/Rome', file_get_contents(app()->environmentFilePath()));
 
-        $this->assertStringContainsString('TIMEZONE=Europe/Rome', file_get_contents(app()->environmentFilePath()));
+    // change back to Europe/Dublin
+    Artisan::call('env:set TIMEZONE=Europe/Dublin');
+});
 
-        // change back to Europe/Dublin
-        \Artisan::call('env:set TIMEZONE=Europe/Dublin');
-    }
+test('update timezone busts dashboard sysinfo cache', function () {
+    Cache::put('dashboard.sysinfo', ['timezone' => 'Europe/Dublin'], 600);
+    expect(Cache::has('dashboard.sysinfo'))->toBeTrue();
 
-    /**
-     * Regression for issue #307: the dashboard system-info card caches the timezone
-     * for a week. Updating the timezone must bust that cache so the dashboard reflects
-     * the change immediately instead of showing a stale (mismatched) timezone.
-     */
-    public function test_update_timezone_busts_dashboard_sysinfo_cache()
-    {
-        Cache::put('dashboard.sysinfo', ['timezone' => 'Europe/Dublin'], 600);
-        $this->assertTrue(Cache::has('dashboard.sysinfo'));
+    $response = $this->patch('/api/settings/timezone/1', ['timezone' => 'Pacific/Midway']);
+    $response->assertStatus(200);
 
-        $response = $this->patch('/api/settings/timezone/1', ['timezone' => 'Pacific/Midway']);
-        $response->assertStatus(200);
+    expect(Cache::has('dashboard.sysinfo'))->toBeFalse();
 
-        $this->assertFalse(Cache::has('dashboard.sysinfo'));
+    // change back to Europe/Dublin
+    Artisan::call('env:set TIMEZONE=Europe/Dublin');
+});
 
-        // change back to Europe/Dublin
-        \Artisan::call('env:set TIMEZONE=Europe/Dublin');
-    }
+test('update timezone rejects invalid timezone', function () {
+    $response = $this->patchJson('/api/settings/timezone/1', ['timezone' => 'Not/AZone']);
 
-    /**
-     * Regression for issue #251: an invalid timezone must be rejected. If it reached
-     * app.timezone the scheduler would silently fall back to UTC and run tasks at the
-     * wrong time.
-     */
-    public function test_update_timezone_rejects_invalid_timezone()
-    {
-        $response = $this->patchJson('/api/settings/timezone/1', ['timezone' => 'Not/AZone']);
-
-        $response->assertStatus(422);
-        $response->assertJsonValidationErrors('timezone');
-        $this->assertDatabaseMissing('settings', [
-            'id' => 1,
-            'timezone' => 'Not/AZone',
-        ]);
-    }
-}
+    $response->assertStatus(422);
+    $response->assertJsonValidationErrors('timezone');
+    $this->assertDatabaseMissing('settings', [
+        'id' => 1,
+        'timezone' => 'Not/AZone',
+    ]);
+});

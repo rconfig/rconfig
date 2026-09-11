@@ -1,99 +1,74 @@
 <?php
 
-namespace Tests\Unit\Connections;
-
 use App\Http\Controllers\Connections\SSH\Connect as SshConnect;
 use App\Http\Controllers\Connections\SSH\SendCommand as SshSendCommand;
 use phpseclib3\File\ANSI;
-use PHPUnit\Framework\TestCase;
-use ReflectionClass;
+use Tests\Unit\Connections\DeviceParamsBuilder;
 
 /**
- * The template's setTerminalDimensions used to be written onto the phpseclib SSH2
- * object as a dynamic property and read back off it later. Creating a dynamic
- * property on a class that does not allow them is deprecated from PHP 8.2 and will
- * be removed, at which point the value would silently read back as unset. The value
- * belongs on the connection object this application owns.
- *
- * It only ever fed ANSI rendering, never the negotiated PTY, so these tests pin the
- * effect it actually has.
+ * @return array{0: int, 1: int} the ANSI object's max x and max y
  */
-class TerminalDimensionsTest extends TestCase
+function ansiDimensions(ANSI $ansi): array
 {
-    /**
-     * @return array{0: int, 1: int} the ANSI object's max x and max y
-     */
-    private function ansiDimensions(ANSI $ansi): array
-    {
-        $reflection = new ReflectionClass($ansi);
+    $reflection = new ReflectionClass($ansi);
 
-        return [
-            $reflection->getProperty('max_x')->getValue($ansi),
-            $reflection->getProperty('max_y')->getValue($ansi),
-        ];
-    }
-
-    private function ansiForConnectionObject(object $connectionObj): ANSI
-    {
-        $reflection = new ReflectionClass(SshSendCommand::class);
-        $sendCommand = $reflection->newInstanceWithoutConstructor();
-        $reflection->getProperty('connectionObj')->setValue($sendCommand, $connectionObj);
-
-        return $reflection->getMethod('ansiForSession')->invoke($sendCommand);
-    }
-
-    public function test_connect_does_not_bolt_a_dynamic_property_onto_the_ssh_object(): void
-    {
-        $connect = new SshConnect(
-            DeviceParamsBuilder::forSsh(['options' => ['setTerminalDimensions' => [132, 50]]]),
-            false
-        );
-
-        $connection = $connect->connect();
-
-        $this->assertFalse(
-            property_exists($connection, 'setTerminalDimensions'),
-            'setTerminalDimensions must not be set as a dynamic property on the phpseclib SSH2 object.'
-        );
-    }
-
-    public function test_connect_keeps_the_template_dimensions_on_the_connection_object(): void
-    {
-        $connect = new SshConnect(
-            DeviceParamsBuilder::forSsh(['options' => ['setTerminalDimensions' => [132, 50]]]),
-            false
-        );
-
-        $connect->connect();
-
-        $this->assertSame([132, 50], $connect->setTerminalDimensions);
-    }
-
-    public function test_ansi_session_uses_the_template_dimensions(): void
-    {
-        $ansi = $this->ansiForConnectionObject((object) ['setTerminalDimensions' => [132, 50]]);
-
-        $this->assertSame([131, 49], $this->ansiDimensions($ansi));
-    }
-
-    public function test_ansi_session_uses_the_template_dimensions_given_as_strings(): void
-    {
-        $ansi = $this->ansiForConnectionObject((object) ['setTerminalDimensions' => ['132', '50']]);
-
-        $this->assertSame([131, 49], $this->ansiDimensions($ansi));
-    }
-
-    public function test_ansi_session_falls_back_to_the_default_dimensions_when_the_template_omits_them(): void
-    {
-        $ansi = $this->ansiForConnectionObject((object) ['setTerminalDimensions' => null]);
-
-        $this->assertSame([79, 23], $this->ansiDimensions($ansi));
-    }
-
-    public function test_ansi_session_ignores_a_malformed_dimensions_value(): void
-    {
-        $ansi = $this->ansiForConnectionObject((object) ['setTerminalDimensions' => [132]]);
-
-        $this->assertSame([79, 23], $this->ansiDimensions($ansi));
-    }
+    return [
+        $reflection->getProperty('max_x')->getValue($ansi),
+        $reflection->getProperty('max_y')->getValue($ansi),
+    ];
 }
+
+function ansiForConnectionObject(object $connectionObj): ANSI
+{
+    $reflection = new ReflectionClass(SshSendCommand::class);
+    $sendCommand = $reflection->newInstanceWithoutConstructor();
+    $reflection->getProperty('connectionObj')->setValue($sendCommand, $connectionObj);
+
+    return $reflection->getMethod('ansiForSession')->invoke($sendCommand);
+}
+
+test('connect does not bolt a dynamic property onto the ssh object', function () {
+    $connect = new SshConnect(
+        DeviceParamsBuilder::forSsh(['options' => ['setTerminalDimensions' => [132, 50]]]),
+        false
+    );
+
+    $connection = $connect->connect();
+
+    expect(property_exists($connection, 'setTerminalDimensions'))->toBeFalse('setTerminalDimensions must not be set as a dynamic property on the phpseclib SSH2 object.');
+});
+
+test('connect keeps the template dimensions on the connection object', function () {
+    $connect = new SshConnect(
+        DeviceParamsBuilder::forSsh(['options' => ['setTerminalDimensions' => [132, 50]]]),
+        false
+    );
+
+    $connect->connect();
+
+    expect($connect->setTerminalDimensions)->toBe([132, 50]);
+});
+
+test('ansi session uses the template dimensions', function () {
+    $ansi = ansiForConnectionObject((object) ['setTerminalDimensions' => [132, 50]]);
+
+    expect(ansiDimensions($ansi))->toBe([131, 49]);
+});
+
+test('ansi session uses the template dimensions given as strings', function () {
+    $ansi = ansiForConnectionObject((object) ['setTerminalDimensions' => ['132', '50']]);
+
+    expect(ansiDimensions($ansi))->toBe([131, 49]);
+});
+
+test('ansi session falls back to the default dimensions when the template omits them', function () {
+    $ansi = ansiForConnectionObject((object) ['setTerminalDimensions' => null]);
+
+    expect(ansiDimensions($ansi))->toBe([79, 23]);
+});
+
+test('ansi session ignores a malformed dimensions value', function () {
+    $ansi = ansiForConnectionObject((object) ['setTerminalDimensions' => [132]]);
+
+    expect(ansiDimensions($ansi))->toBe([79, 23]);
+});

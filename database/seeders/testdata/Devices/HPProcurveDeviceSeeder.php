@@ -80,7 +80,7 @@ class HPProcurveDeviceSeeder extends Seeder
         Device::create([
             'id' => $device_id,
             'device_name' => 'mikrotik',
-            'device_ip' => '192.168.1.188',
+            'device_ip' => '10.1.1.188',
             'device_default_creds_on' => 0,
             'device_username' => 'admin+cte',
             'device_password' => 'nokia5110',

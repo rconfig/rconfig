@@ -1,96 +1,80 @@
 <?php
 
-namespace Tests\Fasttests\ControllersTests\Api\RestApi;
-
 use App\Models\RestApiToken;
 use App\Models\Tag;
 use App\Models\User;
-use Tests\TestCase;
 
-class TagsApiV1Test extends TestCase
+beforeEach(function () {
+    $this->beginTransaction();
+
+    User::factory()->create();
+    $this->token = RestApiToken::factory()->create();
+});
+
+/**
+ * @return array<string, string>
+ */
+function tagsApiV1AuthHeader(RestApiToken $token): array
 {
-    protected RestApiToken $token;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->beginTransaction();
-
-        User::factory()->create();
-        $this->token = RestApiToken::factory()->create();
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    private function authHeader(): array
-    {
-        return ['apitoken' => $this->token->api_token];
-    }
-
-    public function test_index_returns_tags(): void
-    {
-        Tag::factory(3)->create();
-
-        $this->withHeaders($this->authHeader())
-            ->getJson('/api/v1/tags?perPage=50')
-            ->assertStatus(200)
-            ->assertJsonStructure(['data', 'total']);
-    }
-
-    public function test_show_returns_tag(): void
-    {
-        $tag = Tag::factory()->create();
-
-        $this->withHeaders($this->authHeader())
-            ->getJson('/api/v1/tags/' . $tag->id)
-            ->assertStatus(200)
-            ->assertJsonFragment(['tagname' => $tag->tagname]);
-    }
-
-    public function test_store_creates_tag(): void
-    {
-        $this->withHeaders($this->authHeader())
-            ->postJson('/api/v1/tags', [
-                'tagname' => 'Site-USA-API',
-                'tagDescription' => 'Created via REST API test',
-            ])
-            ->assertStatus(200)
-            ->assertJsonFragment(['success' => true]);
-
-        $this->assertDatabaseHas('tags', ['tagname' => 'Site-USA-API']);
-    }
-
-    public function test_store_validation_failure_returns_422(): void
-    {
-        $this->withHeaders($this->authHeader())
-            ->postJson('/api/v1/tags', [])
-            ->assertStatus(422)
-            ->assertJsonValidationErrors(['tagname']);
-    }
-
-    public function test_update_edits_tag(): void
-    {
-        $tag = Tag::factory()->create();
-
-        $this->withHeaders($this->authHeader())
-            ->patchJson('/api/v1/tags/' . $tag->id, [
-                'tagname' => 'a-new-tag-name-api',
-                'tagDescription' => 'updated',
-            ])
-            ->assertStatus(200);
-
-        $this->assertDatabaseHas('tags', ['id' => $tag->id, 'tagname' => 'a-new-tag-name-api']);
-    }
-
-    public function test_destroy_deletes_tag(): void
-    {
-        $tag = Tag::factory()->create();
-
-        $this->withHeaders($this->authHeader())
-            ->deleteJson('/api/v1/tags/' . $tag->id)
-            ->assertStatus(200);
-
-        $this->assertDatabaseMissing('tags', ['id' => $tag->id]);
-    }
+    return ['apitoken' => $token->api_token];
 }
+
+test('index returns tags', function () {
+    Tag::factory(3)->create();
+
+    $this->withHeaders(tagsApiV1AuthHeader($this->token))
+        ->getJson('/api/v1/tags?perPage=50')
+        ->assertStatus(200)
+        ->assertJsonStructure(['data', 'total']);
+});
+
+test('show returns tag', function () {
+    $tag = Tag::factory()->create();
+
+    $this->withHeaders(tagsApiV1AuthHeader($this->token))
+        ->getJson('/api/v1/tags/' . $tag->id)
+        ->assertStatus(200)
+        ->assertJsonFragment(['tagname' => $tag->tagname]);
+});
+
+test('store creates tag', function () {
+    $this->withHeaders(tagsApiV1AuthHeader($this->token))
+        ->postJson('/api/v1/tags', [
+            'tagname' => 'Site-USA-API',
+            'tagDescription' => 'Created via REST API test',
+        ])
+        ->assertStatus(200)
+        ->assertJsonFragment(['success' => true]);
+
+    $this->assertDatabaseHas('tags', ['tagname' => 'Site-USA-API']);
+});
+
+test('store validation failure returns 422', function () {
+    $this->withHeaders(tagsApiV1AuthHeader($this->token))
+        ->postJson('/api/v1/tags', [])
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['tagname']);
+});
+
+test('update edits tag', function () {
+    $tag = Tag::factory()->create();
+
+    $this->withHeaders(tagsApiV1AuthHeader($this->token))
+        ->patchJson('/api/v1/tags/' . $tag->id, [
+            'tagname' => 'a-new-tag-name-api',
+            'tagDescription' => 'updated',
+        ])
+        ->assertStatus(200);
+
+    $this->assertDatabaseHas('tags', ['id' => $tag->id, 'tagname' => 'a-new-tag-name-api']);
+});
+
+test('destroy deletes tag', function () {
+    $tag = Tag::factory()->create();
+
+    $this->withHeaders(tagsApiV1AuthHeader($this->token))
+        ->deleteJson('/api/v1/tags/' . $tag->id)
+        ->assertStatus(200);
+
+    $this->assertDatabaseMissing('tags', ['id' => $tag->id]);
+});

@@ -1,82 +1,64 @@
 <?php
 
-namespace Tests\Fasttests\ServiceTests\SocialAuth;
-
-use App\Models\User;
 use App\Services\SocialAuth\GoogleAuth;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
-use Tests\TestCase;
 
-class GoogleAuthTest extends TestCase
-{
-    /** @var User */
-    protected $user;
+beforeEach(function () {
+    $this->beginTransaction();
+});
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->beginTransaction();
-    }
+test('login redirects with error if code is missing', function () {
+    $request = Request::create('/login', 'GET');
 
-    public function test_login_redirects_with_error_if_code_is_missing()
-    {
-        $request = Request::create('/login', 'GET');
+    $service = new GoogleAuth;
 
-        $service = new GoogleAuth;
+    $response = $service->register($request);
+    expect($response->getStatusCode())->toEqual(302);
+    expect(session()->all())->toHaveKey('message');
+    $this->assertStringContainsString('Authorization code is missing. Please try again.', session('message'));
+});
 
-        $response = $service->register($request);
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertArrayHasKey('message', session()->all());
-        $this->assertStringContainsString('Authorization code is missing. Please try again.', session('message'));
-    }
+test('login redirects with error if access is denied', function () {
+    $request = Request::create('/login', 'GET', ['denied' => true, 'code' => '1234']);
 
-    public function test_login_redirects_with_error_if_access_is_denied()
-    {
-        $request = Request::create('/login', 'GET', ['denied' => true, 'code' => '1234']);
+    $service = new GoogleAuth;
 
-        $service = new GoogleAuth;
+    $response = $service->register($request);
 
-        $response = $service->register($request);
+    expect($response->getStatusCode())->toEqual(302);
+    expect(session()->all())->toHaveKey('message');
+    $this->assertStringContainsString('Access was denied. Please try again.', session('message'));
+});
 
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertArrayHasKey('message', session()->all());
-        $this->assertStringContainsString('Access was denied. Please try again.', session('message'));
-    }
+test('login redirects with error if provider fails', function () {
+    $request = Request::create('/login', 'GET', ['code' => 'valid-code']);
 
-    public function test_login_redirects_with_error_if_provider_fails()
-    {
-        $request = Request::create('/login', 'GET', ['code' => 'valid-code']);
+    Socialite::shouldReceive('driver->user')->andThrow(new Exception);
 
-        Socialite::shouldReceive('driver->user')->andThrow(new \Exception);
+    $service = new GoogleAuth;
 
-        $service = new GoogleAuth;
+    $response = $service->register($request);
 
-        $response = $service->register($request);
+    expect($response->getStatusCode())->toEqual(302);
+    expect(session()->all())->toHaveKey('message');
+    $this->assertStringContainsString('Unable to authenticate using Google', session('message'));
+});
 
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertArrayHasKey('message', session()->all());
-        $this->assertStringContainsString('Unable to authenticate using Google', session('message'));
-    }
+test('login redirects with error if user not found', function () {
+    $request = Request::create('/login', 'GET', ['code' => 'valid-code']);
 
-    public function test_login_redirects_with_error_if_user_not_found()
-    {
-        $request = Request::create('/login', 'GET', ['code' => 'valid-code']);
+    Socialite::shouldReceive('driver->user')->andReturn(null);
 
-        Socialite::shouldReceive('driver->user')->andReturn(null);
+    $service = new GoogleAuth;
 
-        $service = new GoogleAuth;
+    $response = $service->register($request);
 
-        $response = $service->register($request);
+    expect($response->getStatusCode())->toEqual(302);
+    expect(session()->all())->toHaveKey('message');
+    $this->assertStringContainsString('Your account is not registered', session('message'));
+});
 
-        $this->assertEquals(302, $response->getStatusCode());
-        $this->assertArrayHasKey('message', session()->all());
-        $this->assertStringContainsString('Your account is not registered', session('message'));
-    }
-
-    protected function tearDown(): void
-    {
-        $this->rollbackTransaction();
-        parent::tearDown();
-    }
-}
+afterEach(function () {
+    $this->rollbackTransaction();
+});

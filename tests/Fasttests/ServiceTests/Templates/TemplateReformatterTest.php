@@ -1,243 +1,165 @@
 <?php
 
-namespace Tests\Fasttests\ServiceTests\Templates;
-
 use App\Services\Templates\TemplateReformatter;
 use Symfony\Component\Yaml\Yaml;
-use Tests\TestCase;
 
-class TemplateReformatterTest extends TestCase
-{
-    protected string $oldFormatPath;
-    protected string $newFormatPath;
-    protected string $inlineCommentsPath;
-    protected string $vt100Path;
-    protected TemplateReformatter $reformatter;
+beforeEach(function () {
+    $this->oldFormatPath = base_path('tests/storage/templates/oldformat.yml');
+    $this->newFormatPath = base_path('tests/storage/templates/newformat.yml');
+    $this->inlineCommentsPath = base_path('tests/storage/templates/inlinecomments.yml');
+    $this->vt100Path = base_path('tests/storage/templates/vt100.yml');
 
-    public function setUp(): void
-    {
-        parent::setUp();
+    $this->reformatter = new TemplateReformatter;
+});
 
-        $this->oldFormatPath = base_path('tests/storage/templates/oldformat.yml');
-        $this->newFormatPath = base_path('tests/storage/templates/newformat.yml');
-        $this->inlineCommentsPath = base_path('tests/storage/templates/inlinecomments.yml');
-        $this->vt100Path = base_path('tests/storage/templates/vt100.yml');
+test('can instantiate template reformatter', function () {
+    expect($this->reformatter)->toBeInstanceOf(TemplateReformatter::class);
+});
 
-        $this->reformatter = new TemplateReformatter;
-    }
+test('detects already new format template', function () {
+    $this->expectException(Exception::class);
+    $this->expectExceptionMessage('Template file is already in the new format: ' . $this->newFormatPath);
 
-    public function test_can_instantiate_template_reformatter(): void
-    {
-        $this->assertInstanceOf(TemplateReformatter::class, $this->reformatter);
-    }
+    $this->reformatter->reformatTemplateFile($this->newFormatPath);
+});
 
-    public function test_detects_already_new_format_template(): void
-    {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Template file is already in the new format: ' . $this->newFormatPath);
+test('can determine template format correctly', function () {
+    expect($this->reformatter->isNewFormat($this->oldFormatPath))->toBeFalse();
+    expect($this->reformatter->isNewFormat($this->newFormatPath))->toBeTrue();
+});
 
-        $this->reformatter->reformatTemplateFile($this->newFormatPath);
-    }
+test('can convert old format to new format', function () {
+    $result = $this->reformatter->reformatTemplateFile($this->oldFormatPath);
 
-    public function test_can_determine_template_format_correctly(): void
-    {
-        $this->assertFalse($this->reformatter->isNewFormat($this->oldFormatPath));
-        $this->assertTrue($this->reformatter->isNewFormat($this->newFormatPath));
-    }
+    expect($result)->toBeString();
+    expect($result)->not->toBeEmpty();
+});
 
-    public function test_can_convert_old_format_to_new_format(): void
-    {
-        $result = $this->reformatter->reformatTemplateFile($this->oldFormatPath);
+test('converted template has correct structure', function () {
+    $result = $this->reformatter->reformatTemplateFile($this->oldFormatPath);
 
-        $this->assertIsString($result);
-        $this->assertNotEmpty($result);
-    }
+    $this->assertStringContainsString('name: "SSH Private Key Template"', $result);
+    $this->assertStringContainsString('# Unique name for this template', $result);
+    $this->assertStringContainsString('# Port number for connection', $result);
+    $this->assertStringContainsString('exitCmd: "quit"', $result);
+    $this->assertStringContainsString('setTerminalDimensions: [260, 100000]', $result);
+});
 
-    public function test_converted_template_has_correct_structure(): void
-    {
-        $result = $this->reformatter->reformatTemplateFile($this->oldFormatPath);
+test('handles invalid file path', function () {
+    $this->expectException(Exception::class);
 
-        $this->assertStringContainsString('name: "SSH Private Key Template"', $result);
-        $this->assertStringContainsString('# Unique name for this template', $result);
-        $this->assertStringContainsString('# Port number for connection', $result);
-        $this->assertStringContainsString('exitCmd: "quit"', $result);
-        $this->assertStringContainsString('setTerminalDimensions: [260, 100000]', $result);
-    }
+    $this->reformatter->reformatTemplateFile(base_path('tests/storage/templates/does-not-exist.yml'));
+});
 
-    public function test_handles_invalid_file_path(): void
-    {
-        $this->expectException(\Exception::class);
+test('reformatting template with inline comments does not break quotes', function () {
+    $result = $this->reformatter->reformatTemplateFile($this->inlineCommentsPath);
 
-        $this->reformatter->reformatTemplateFile(base_path('tests/storage/templates/does-not-exist.yml'));
-    }
+    // The original inline comment text must not survive inside the value
+    $this->assertStringNotContainsString('# Cisco IOS via TELNET without enable mode"', $result);
+    $this->assertStringNotContainsString('# Disable CLI paging"', $result);
 
-    /**
-     * Regression for issue #303: an input that already carries inline comments
-     * must not produce values with unclosed quotes.
-     */
-    public function test_reformatting_template_with_inline_comments_does_not_break_quotes(): void
-    {
-        $result = $this->reformatter->reformatTemplateFile($this->inlineCommentsPath);
+    // The name value is cleanly quoted and the rConfig comment sits outside it
+    $this->assertStringContainsString('name: "Cisco IOS - TELNET - No Enable - test 2500"', $result);
+    $this->assertStringContainsString('# Unique name for this template', $result);
 
-        // The original inline comment text must not survive inside the value
-        $this->assertStringNotContainsString('# Cisco IOS via TELNET without enable mode"', $result);
-        $this->assertStringNotContainsString('# Disable CLI paging"', $result);
-
-        // The name value is cleanly quoted and the rConfig comment sits outside it
-        $this->assertStringContainsString('name: "Cisco IOS - TELNET - No Enable - test 2500"', $result);
-        $this->assertStringContainsString('# Unique name for this template', $result);
-
-        // Every value line must have a balanced number of double quotes (0 or 2)
-        foreach (explode("\n", $result) as $line) {
-            if (! preg_match('/^\s{2}[a-zA-Z]/', $line)) {
-                continue;
-            }
-
-            $this->assertSame(
-                0,
-                substr_count($line, '"') % 2,
-                "Line has unbalanced quotes: {$line}"
-            );
-        }
-    }
-
-    public function test_unquoted_and_array_values_drop_their_inline_comments(): void
-    {
-        $result = $this->reformatter->reformatTemplateFile($this->inlineCommentsPath);
-
-        // Unquoted scalars keep their bare value with the original comment stripped
-        $this->assertStringContainsString('protocol: telnet ', $result);
-        $this->assertStringContainsString('port: 23 ', $result);
-        $this->assertStringNotContainsString('protocol: "telnet', $result);
-
-        // Array value is preserved without the trailing inline comment
-        $this->assertStringContainsString('setWindowSize: [240, 2048]', $result);
-        $this->assertStringNotContainsString('setWindowSize: "[240, 2048]', $result);
-    }
-
-    public function test_hash_inside_quoted_value_is_preserved(): void
-    {
-        $template = "main:\n  name: \"Cisco #1 Core\"   # inline note\n  desc: \"edge\"\n";
-
-        $result = $this->reformatter->reformatTemplate($template);
-
-        $this->assertStringContainsString('name: "Cisco #1 Core"', $result);
-        $this->assertStringNotContainsString('inline note', $result);
-    }
-
-    /**
-     * Regression for RCO-1300: reformatting must not drop the vt100 section, which
-     * drives splash screen login on RuggedCom and Avaya style devices.
-     */
-    public function test_vt100_section_survives_a_reformat(): void
-    {
-        $result = $this->reformatter->reformatTemplateFile($this->vt100Path);
-
-        $parsed = Yaml::parse($result);
-
-        $this->assertArrayHasKey('vt100', $parsed);
-        $this->assertSame('on', $parsed['vt100']['hasSplashScreen']);
-        $this->assertSame('off', $parsed['vt100']['hasSplashScreenEnterKey']);
-        $this->assertSame('Ctrl-Y', $parsed['vt100']['splashScreenReadToText']);
-        $this->assertSame('Y', $parsed['vt100']['splashScreenSendControlCode']);
-
-        // The vt100 keys must not leak into the preceding section
-        $this->assertArrayNotHasKey('vt100', $parsed['options']);
-        $this->assertArrayNotHasKey('hasSplashScreen', $parsed['options']);
-
-        // And the section is documented like every other known section
-        $this->assertStringContainsString('# Device shows a splash screen before login?', $result);
-    }
-
-    /**
-     * Regression for RCO-1300: every section present in the input must be present
-     * in the output, including sections the reformatter knows nothing about.
-     */
-    public function test_no_section_is_lost_during_a_reformat(): void
-    {
-        $before = Yaml::parse(file_get_contents($this->vt100Path));
-        $after = Yaml::parse($this->reformatter->reformatTemplateFile($this->vt100Path));
-
-        $this->assertSame(array_keys($before), array_keys($after));
-    }
-
-    /**
-     * Sections the reformatter cannot represent as a flat mapping, such as the
-     * nested lists in failure_criteria, are carried through unchanged.
-     */
-    public function test_nested_sections_are_preserved_verbatim(): void
-    {
-        $before = Yaml::parse(file_get_contents($this->vt100Path));
-        $result = $this->reformatter->reformatTemplateFile($this->vt100Path);
-
-        $after = Yaml::parse($result);
-
-        $this->assertSame($before['failure_criteria'], $after['failure_criteria']);
-        $this->assertSame([1, 2, 255], $after['failure_criteria']['exit_codes']);
-        $this->assertSame(
-            ['Connection refused', 'Authentication failed'],
-            $after['failure_criteria']['error_patterns']
-        );
-    }
-
-    /**
-     * Regression for RCO-1299: linebreak and hpAnyKeyPrmpt are read by nothing, so a
-     * reformat must label them the way pagerPrompt is already labelled rather than
-     * describing them as working settings.
-     */
-    public function test_dead_template_keys_are_documented_as_deprecated(): void
-    {
-        $result = $this->reformatter->reformatTemplateFile($this->oldFormatPath);
-
-        foreach (['linebreak', 'hpAnyKeyPrmpt', 'pagerPrompt', 'pagerPromptCmd'] as $key) {
-            $this->assertMatchesRegularExpression(
-                '/^\s{2}' . $key . ':.*# DEPRECATED: This value is ignored$/m',
-                $result,
-                "{$key} must be documented as deprecated."
-            );
+    // Every value line must have a balanced number of double quotes (0 or 2)
+    foreach (explode("\n", $result) as $line) {
+        if (! preg_match('/^\s{2}[a-zA-Z]/', $line)) {
+            continue;
         }
 
-        $this->assertStringNotContainsString('Linebreak setting', $result);
-        $this->assertStringNotContainsString('HP-style prompt string', $result);
+        expect(substr_count($line, '"') % 2)->toBe(0, "Line has unbalanced quotes: {$line}");
+    }
+});
+
+test('unquoted and array values drop their inline comments', function () {
+    $result = $this->reformatter->reformatTemplateFile($this->inlineCommentsPath);
+
+    // Unquoted scalars keep their bare value with the original comment stripped
+    $this->assertStringContainsString('protocol: telnet ', $result);
+    $this->assertStringContainsString('port: 23 ', $result);
+    $this->assertStringNotContainsString('protocol: "telnet', $result);
+
+    // Array value is preserved without the trailing inline comment
+    $this->assertStringContainsString('setWindowSize: [240, 2048]', $result);
+    $this->assertStringNotContainsString('setWindowSize: "[240, 2048]', $result);
+});
+
+test('hash inside quoted value is preserved', function () {
+    $template = "main:\n  name: \"Cisco #1 Core\"   # inline note\n  desc: \"edge\"\n";
+
+    $result = $this->reformatter->reformatTemplate($template);
+
+    $this->assertStringContainsString('name: "Cisco #1 Core"', $result);
+    $this->assertStringNotContainsString('inline note', $result);
+});
+
+test('vt100 section survives a reformat', function () {
+    $result = $this->reformatter->reformatTemplateFile($this->vt100Path);
+
+    $parsed = Yaml::parse($result);
+
+    expect($parsed)->toHaveKey('vt100');
+    expect($parsed['vt100']['hasSplashScreen'])->toBe('on');
+    expect($parsed['vt100']['hasSplashScreenEnterKey'])->toBe('off');
+    expect($parsed['vt100']['splashScreenReadToText'])->toBe('Ctrl-Y');
+    expect($parsed['vt100']['splashScreenSendControlCode'])->toBe('Y');
+
+    // The vt100 keys must not leak into the preceding section
+    $this->assertArrayNotHasKey('vt100', $parsed['options']);
+    $this->assertArrayNotHasKey('hasSplashScreen', $parsed['options']);
+
+    // And the section is documented like every other known section
+    $this->assertStringContainsString('# Device shows a splash screen before login?', $result);
+});
+
+test('no section is lost during a reformat', function () {
+    $before = Yaml::parse(file_get_contents($this->vt100Path));
+    $after = Yaml::parse($this->reformatter->reformatTemplateFile($this->vt100Path));
+
+    expect(array_keys($after))->toBe(array_keys($before));
+});
+
+test('nested sections are preserved verbatim', function () {
+    $before = Yaml::parse(file_get_contents($this->vt100Path));
+    $result = $this->reformatter->reformatTemplateFile($this->vt100Path);
+
+    $after = Yaml::parse($result);
+
+    expect($after['failure_criteria'])->toBe($before['failure_criteria']);
+    expect($after['failure_criteria']['exit_codes'])->toBe([1, 2, 255]);
+    expect($after['failure_criteria']['error_patterns'])->toBe(['Connection refused', 'Authentication failed']);
+});
+
+test('dead template keys are documented as deprecated', function () {
+    $result = $this->reformatter->reformatTemplateFile($this->oldFormatPath);
+
+    foreach (['linebreak', 'hpAnyKeyPrmpt', 'pagerPrompt', 'pagerPromptCmd'] as $key) {
+        expect($result)->toMatch('/^\s{2}' . $key . ':.*# DEPRECATED: This value is ignored$/m', "{$key} must be documented as deprecated.");
     }
 
-    /**
-     * Deprecated keys are documented, not deleted, so a template carrying them
-     * survives a reformat untouched.
-     */
-    public function test_deprecated_keys_keep_their_values_through_a_reformat(): void
-    {
-        $after = Yaml::parse($this->reformatter->reformatTemplateFile($this->oldFormatPath));
+    $this->assertStringNotContainsString('Linebreak setting', $result);
+    $this->assertStringNotContainsString('HP-style prompt string', $result);
+});
 
-        $this->assertSame('n', $after['config']['linebreak']);
-        $this->assertSame('--More--', $after['config']['pagerPrompt']);
-        $this->assertSame('Press any key to continue', $after['auth']['hpAnyKeyPrmpt']);
-    }
+test('deprecated keys keep their values through a reformat', function () {
+    $after = Yaml::parse($this->reformatter->reformatTemplateFile($this->oldFormatPath));
 
-    /**
-     * setTerminalDimensions only ever drove ANSI output rendering, never the
-     * negotiated terminal, so the comment must not claim otherwise.
-     */
-    public function test_terminal_dimensions_are_documented_as_ansi_only(): void
-    {
-        $result = $this->reformatter->reformatTemplateFile($this->oldFormatPath);
+    expect($after['config']['linebreak'])->toBe('n');
+    expect($after['config']['pagerPrompt'])->toBe('--More--');
+    expect($after['auth']['hpAnyKeyPrmpt'])->toBe('Press any key to continue');
+});
 
-        $this->assertMatchesRegularExpression(
-            '/^\s{2}setTerminalDimensions:.*# .*ANSI.*$/m',
-            $result
-        );
-        $this->assertStringNotContainsString('Terminal dimensions for Ansi sessions', $result);
-    }
+test('terminal dimensions are documented as ansi only', function () {
+    $result = $this->reformatter->reformatTemplateFile($this->oldFormatPath);
 
-    /**
-     * A reformat of an already reformatted template must be a no-op beyond
-     * whitespace, so repeated clicks of the button cannot erode a template.
-     */
-    public function test_reformatting_is_stable_across_repeated_runs(): void
-    {
-        $once = $this->reformatter->reformatTemplate(file_get_contents($this->vt100Path));
-        $twice = $this->reformatter->reformatTemplate($once);
+    expect($result)->toMatch('/^\s{2}setTerminalDimensions:.*# .*ANSI.*$/m');
+    $this->assertStringNotContainsString('Terminal dimensions for Ansi sessions', $result);
+});
 
-        $this->assertSame(Yaml::parse($once), Yaml::parse($twice));
-    }
-}
+test('reformatting is stable across repeated runs', function () {
+    $once = $this->reformatter->reformatTemplate(file_get_contents($this->vt100Path));
+    $twice = $this->reformatter->reformatTemplate($once);
+
+    expect(Yaml::parse($twice))->toBe(Yaml::parse($once));
+});

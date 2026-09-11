@@ -1,120 +1,87 @@
 <?php
 
-namespace Tests\Unit\Connections;
-
 use App\Http\Controllers\Connections\SSH\Connect as SshConnect;
 use App\Http\Controllers\Connections\Telnet\Connect as TelnetConnect;
-use PHPUnit\Framework\TestCase;
-use ReflectionClass;
+use Tests\Unit\Connections\DeviceParamsBuilder;
 
-/**
- * Both connection classes carried a port guard whose two branches returned the same
- * value, and whose return value the caller threw away. A template or device override
- * holding a null or out of range port was handed to the socket layer as written, so
- * the guard's name promised a check it never made.
- *
- * The classes hold a live socket, so they are built without their constructors and
- * driven through the port resolution alone.
- */
-class ConnectPortValidationTest extends TestCase
+function resolveSshPort(mixed $port): int
 {
-    private function resolveSshPort(mixed $port): int
-    {
-        $reflection = new ReflectionClass(SshConnect::class);
-        $connect = $reflection->newInstanceWithoutConstructor();
-        $reflection->getProperty('port')->setValue($connect, $port);
+    $reflection = new ReflectionClass(SshConnect::class);
+    $connect = $reflection->newInstanceWithoutConstructor();
+    $reflection->getProperty('port')->setValue($connect, $port);
 
-        return $reflection->getMethod('sshPortValidOrDefault')->invoke($connect);
-    }
-
-    private function resolveTelnetPort(mixed $port): int
-    {
-        $reflection = new ReflectionClass(TelnetConnect::class);
-        $connect = $reflection->newInstanceWithoutConstructor();
-        $reflection->getProperty('port')->setValue($connect, $port);
-
-        return $reflection->getMethod('telnetPortValidOrDefault')->invoke($connect);
-    }
-
-    public function test_ssh_keeps_a_valid_port(): void
-    {
-        $this->assertSame(2222, $this->resolveSshPort(2222));
-    }
-
-    public function test_ssh_keeps_a_valid_port_given_as_a_string(): void
-    {
-        $this->assertSame(22, $this->resolveSshPort('22'));
-    }
-
-    public function test_ssh_defaults_a_null_port(): void
-    {
-        $this->assertSame(22, $this->resolveSshPort(null));
-    }
-
-    public function test_ssh_defaults_an_empty_port(): void
-    {
-        $this->assertSame(22, $this->resolveSshPort(''));
-    }
-
-    public function test_ssh_defaults_a_zero_or_negative_port(): void
-    {
-        $this->assertSame(22, $this->resolveSshPort(0));
-        $this->assertSame(22, $this->resolveSshPort(-1));
-    }
-
-    public function test_ssh_defaults_a_port_above_the_valid_range(): void
-    {
-        $this->assertSame(22, $this->resolveSshPort(70000));
-    }
-
-    public function test_telnet_keeps_a_valid_port(): void
-    {
-        $this->assertSame(2323, $this->resolveTelnetPort(2323));
-    }
-
-    public function test_telnet_keeps_a_valid_port_given_as_a_string(): void
-    {
-        $this->assertSame(23, $this->resolveTelnetPort('23'));
-    }
-
-    public function test_telnet_defaults_a_null_port(): void
-    {
-        $this->assertSame(23, $this->resolveTelnetPort(null));
-    }
-
-    public function test_telnet_defaults_an_empty_port(): void
-    {
-        $this->assertSame(23, $this->resolveTelnetPort(''));
-    }
-
-    public function test_telnet_defaults_a_zero_or_negative_port(): void
-    {
-        $this->assertSame(23, $this->resolveTelnetPort(0));
-        $this->assertSame(23, $this->resolveTelnetPort(-1));
-    }
-
-    public function test_telnet_defaults_a_port_above_the_valid_range(): void
-    {
-        $this->assertSame(23, $this->resolveTelnetPort(70000));
-    }
-
-    /**
-     * The resolved port has to reach the socket, which is what the old code missed.
-     * SSH2 does not dial on construction, so the whole of connect() can run here.
-     */
-    public function test_ssh_connect_dials_the_resolved_port(): void
-    {
-        $connect = new SshConnect(DeviceParamsBuilder::forSsh(['connect' => ['port' => 0]]), false);
-        $connect->connect();
-
-        $this->assertSame(22, $connect->port);
-    }
-
-    public function test_ssh_connect_keeps_a_valid_port(): void
-    {
-        $connect = new SshConnect(DeviceParamsBuilder::forSsh(['connect' => ['port' => 2222]]), false);
-        $connect->connect();
-
-        $this->assertSame(2222, $connect->port);
-    }
+    return $reflection->getMethod('sshPortValidOrDefault')->invoke($connect);
 }
+
+function resolveTelnetPort(mixed $port): int
+{
+    $reflection = new ReflectionClass(TelnetConnect::class);
+    $connect = $reflection->newInstanceWithoutConstructor();
+    $reflection->getProperty('port')->setValue($connect, $port);
+
+    return $reflection->getMethod('telnetPortValidOrDefault')->invoke($connect);
+}
+
+test('ssh keeps a valid port', function () {
+    expect(resolveSshPort(2222))->toBe(2222);
+});
+
+test('ssh keeps a valid port given as a string', function () {
+    expect(resolveSshPort('22'))->toBe(22);
+});
+
+test('ssh defaults a null port', function () {
+    expect(resolveSshPort(null))->toBe(22);
+});
+
+test('ssh defaults an empty port', function () {
+    expect(resolveSshPort(''))->toBe(22);
+});
+
+test('ssh defaults a zero or negative port', function () {
+    expect(resolveSshPort(0))->toBe(22);
+    expect(resolveSshPort(-1))->toBe(22);
+});
+
+test('ssh defaults a port above the valid range', function () {
+    expect(resolveSshPort(70000))->toBe(22);
+});
+
+test('telnet keeps a valid port', function () {
+    expect(resolveTelnetPort(2323))->toBe(2323);
+});
+
+test('telnet keeps a valid port given as a string', function () {
+    expect(resolveTelnetPort('23'))->toBe(23);
+});
+
+test('telnet defaults a null port', function () {
+    expect(resolveTelnetPort(null))->toBe(23);
+});
+
+test('telnet defaults an empty port', function () {
+    expect(resolveTelnetPort(''))->toBe(23);
+});
+
+test('telnet defaults a zero or negative port', function () {
+    expect(resolveTelnetPort(0))->toBe(23);
+    expect(resolveTelnetPort(-1))->toBe(23);
+});
+
+test('telnet defaults a port above the valid range', function () {
+    expect(resolveTelnetPort(70000))->toBe(23);
+});
+
+test('ssh connect dials the resolved port', function () {
+    $connect = new SshConnect(DeviceParamsBuilder::forSsh(['connect' => ['port' => 0]]), false);
+    $connect->connect();
+
+    expect($connect->port)->toBe(22);
+});
+
+test('ssh connect keeps a valid port', function () {
+    $connect = new SshConnect(DeviceParamsBuilder::forSsh(['connect' => ['port' => 2222]]), false);
+    $connect->connect();
+
+    expect($connect->port)->toBe(2222);
+});

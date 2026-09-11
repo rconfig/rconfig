@@ -122,7 +122,9 @@ function tmp_dir()
 
 function custom_chown($path)
 {
-    File::exists('/etc/redhat-release') ? chown($path, 'apache') : chown($path, 'www-data');
+    $chown = fn () => File::exists('/etc/redhat-release') ? chown($path, 'apache') : chown($path, 'www-data');
+
+    app()->environment('testing') ? @$chown() : $chown();
 }
 
 function isDocker(): bool

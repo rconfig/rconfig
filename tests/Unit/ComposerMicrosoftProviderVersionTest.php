@@ -1,16 +1,8 @@
 <?php
 
-namespace Tests\Unit;
-
-use Tests\TestCase;
-
-class ComposerMicrosoftProviderVersionTest extends TestCase
-{
-    public function test_only_specific_microsoft_provider_version_present()
-    {
-        $composer = json_decode(file_get_contents(base_path('composer.json')), true);
-        $require = $composer['require'] ?? [];
-        $this->assertArrayHasKey('socialiteproviders/microsoft', $require, 'Missing socialiteproviders/microsoft in composer.json');
-        $this->assertEquals('^4.9', $require['socialiteproviders/microsoft'], 'socialiteproviders/microsoft must be constrained to ^4.9');
-    }
-}
+test('only specific microsoft provider version present', function () {
+    $composer = json_decode(file_get_contents(base_path('composer.json')), true);
+    $require = $composer['require'] ?? [];
+    expect($require)->toHaveKey('socialiteproviders/microsoft', message: 'Missing socialiteproviders/microsoft in composer.json');
+    expect($require['socialiteproviders/microsoft'])->toEqual('^4.9', 'socialiteproviders/microsoft must be constrained to ^4.9');
+});

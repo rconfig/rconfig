@@ -1,9 +1,8 @@
 <?php
 
-namespace Tests\Fasttests\ControllersTests\Api;
-
 use App\Jobs\TaskCompleteNotificationJob;
 use App\Models\Setting;
+use App\Models\Task;
 use App\Models\User;
 use App\Notifications\MailTaskCompleteNotification;
 use Carbon\Carbon;
@@ -12,232 +11,223 @@ use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
-use ReflectionClass;
-use Tests\TestCase;
+use Tests\Fasttests\ControllersTests\Api\BackupRun;
 
-class TaskManualRunControllerTest extends TestCase
-{
-    protected $user;
-    protected $user2;
-    protected $report_data;
+beforeEach(function () {
+    $this->beginTransaction();
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->user = User::factory()->create();
-        $this->user2 = User::factory()->create();
-        $this->actingAs($this->user);
-        $this->report_data = collect();
-        $this->report_data->report_id = (string) Str::uuid();
-        $this->report_data->task_type = 'Task Download Report';
-        $this->report_data->task = '123';
-        $this->report_data->start_time = Carbon::now();
-        $this->report_data->end_time = Carbon::now();
-        $this->report_data->file_name = $this->report_data->report_id . '.html';
-        $this->report_data->report_path = report_path() . $this->report_data->file_name;
+    $this->user = User::factory()->create();
+    $this->user2 = User::factory()->create();
+    $this->actingAs($this->user);
+    $this->report_data = collect();
+    $this->report_data->report_id = (string) Str::uuid();
+    $this->report_data->task_type = 'Task Download Report';
+    $this->report_data->task = '123';
+    $this->report_data->start_time = Carbon::now();
+    $this->report_data->end_time = Carbon::now();
+    $this->report_data->file_name = $this->report_data->report_id . '.html';
+    $this->report_data->report_path = report_path() . $this->report_data->file_name;
 
-        Redis::flushall();
-    }
+    Redis::flushall();
+});
 
-    public function test_can_run_a_download_device_task_manually_and_notification_sent()
-    {
-        Notification::fake();
-        Notification::assertNothingSent();
+test('can run a download device task manually and notification sent', function () {
+    Notification::fake();
+    Notification::assertNothingSent();
 
-        $this->assertDatabaseHas('tasks', [
-            'id' => 555555,
-            'task_email_notify' => '1',
-        ]);
+    $task = Task::factory()->create(['task_email_notify' => 1]);
 
-        $response = $this->json('post', '/api/tasks/run-manual-task', ['id' => '555555']);
+    $this->assertDatabaseHas('tasks', [
+        'id' => $task->id,
+        'task_email_notify' => '1',
+    ]);
 
-        $response->assertJson(
-            ['message' => 'TaskDownloadRun task pushed to queues successfully.']
-        );
-        $this->assertDatabaseHas('monitored_scheduled_tasks', [
-            'task_id' => 555555,
-            'type' => 'rconfig:download-device',
+    $response = $this->json('post', '/api/tasks/run-manual-task', ['id' => (string) $task->id]);
 
-        ]);
-        $this->assertDatabaseHas('monitored_scheduled_task_log_items', [
-            'task_id' => 555555,
-            'meta' => 'Task started',
-        ]);
-        $this->assertDatabaseHas('monitored_scheduled_task_log_items', [
-            'task_id' => 555555,
-            'meta' => 'Task finished',
-        ]);
-    }
+    $response->assertJson(
+        ['message' => 'TaskDownloadRun task pushed to queues successfully.']
+    );
+    $this->assertDatabaseHas('monitored_scheduled_tasks', [
+        'task_id' => $task->id,
+        'type' => 'rconfig:download-device',
 
-    /**
-     * getPrivateProperty
-     *
-     * @author	Joe Sexton <joe@webtipblog.com>
-     *
-     * @param  string  $className
-     * @param  string  $propertyName
-     * @return ReflectionProperty
-     */
-    public function getPrivateProperty($className, $propertyName)
-    {
-        $reflector = new ReflectionClass($className);
-        $property = $reflector->getProperty($propertyName);
-        $property->setAccessible(true);
+    ]);
+    $this->assertDatabaseHas('monitored_scheduled_task_log_items', [
+        'task_id' => $task->id,
+        'meta' => 'Task started',
+    ]);
+    $this->assertDatabaseHas('monitored_scheduled_task_log_items', [
+        'task_id' => $task->id,
+        'meta' => 'Task finished',
+    ]);
+});
 
-        return $property;
-    }
+/**
+ * getPrivateProperty
+ *
+ * Not currently called by any test in this file, kept for reference.
+ *
+ * @author	Joe Sexton <joe@webtipblog.com>
+ *
+ * @param  string  $className
+ * @param  string  $propertyName
+ * @return ReflectionProperty
+ */
+// function getPrivateProperty($className, $propertyName)
+// {
+//     $reflector = new ReflectionClass($className);
+//     $property = $reflector->getProperty($propertyName);
+//     $property->setAccessible(true);
+//
+//     return $property;
+// }
 
-    public function test_run_manual_task_test_backup_run_fails_with_fake_id()
-    {
-        Queue::fake();
-        Queue::assertNothingPushed();
+test('run manual task test backup run fails with fake id', function () {
+    Queue::fake();
+    Queue::assertNothingPushed();
 
-        $response = $this->post('/api/tasks/run-manual-task', [
-            'id' => '123456',
-        ]);
+    $response = $this->post('/api/tasks/run-manual-task', [
+        'id' => '123456',
+    ]);
 
-        $response->assertJson(
-            ['message' => 'No query results for model [App\\Models\\Task] 123456']
-        );
+    $response->assertJson(
+        ['message' => 'No query results for model [App\\Models\\Task] 123456']
+    );
 
-        Queue::assertNotPushed(BackupRun::class);
-        $response->assertStatus(422);
-    }
+    Queue::assertNotPushed(BackupRun::class);
+    $response->assertStatus(422);
+});
 
-    public function test_test_task_logging_for_downloads()
-    {
-        config(['queue.default' => 'redis']);
+test('test task logging for downloads', function () {
+    config(['queue.default' => 'redis']);
 
-        $response = $this->json('post', '/api/tasks/run-manual-task', ['id' => '555555']);
+    $task = Task::factory()->create();
 
-        $this->assertDatabaseHas('tasks', [
-            'id' => 555555,
-        ]);
+    $response = $this->json('post', '/api/tasks/run-manual-task', ['id' => (string) $task->id]);
 
-        $this->assertDatabaseHas('monitored_scheduled_tasks', [
-            'task_id' => 555555,
-        ]);
-        $this->assertDatabaseHas('monitored_scheduled_task_log_items', [
-            'task_id' => 555555,
-        ]);
+    $this->assertDatabaseHas('tasks', [
+        'id' => $task->id,
+    ]);
 
-        $response->assertJson(
-            ['message' => 'TaskDownloadRun task pushed to queues successfully.']
-        );
+    $this->assertDatabaseHas('monitored_scheduled_tasks', [
+        'task_id' => $task->id,
+    ]);
+    $this->assertDatabaseHas('monitored_scheduled_task_log_items', [
+        'task_id' => $task->id,
+    ]);
 
-        config(['queue.default' => 'sync']);
-    }
+    $response->assertJson(
+        ['message' => 'TaskDownloadRun task pushed to queues successfully.']
+    );
 
-    // functions below used from https://github.com/laravel/horizon/tree/4.x/tests/Slowtests for testing queues
-    protected function work($times = 1)
-    {
-        for ($i = 0; $i < $times; $i++) {
-            $this->worker()->runNextJob(
-                'redis',
-                'default',
-                $this->workerOptions()
-            );
-        }
-    }
+    config(['queue.default' => 'sync']);
+});
 
-    protected function worker()
-    {
-        return app('queue.worker');
-    }
+// functions below used from https://github.com/laravel/horizon/tree/4.x/tests/Slowtests for testing queues
+// Not currently called by any test in this file, kept for reference.
+// function work($times = 1)
+// {
+//     for ($i = 0; $i < $times; $i++) {
+//         worker()->runNextJob(
+//             'redis',
+//             'default',
+//             workerOptions()
+//         );
+//     }
+// }
 
-    protected function workerOptions()
-    {
-        return tap(new WorkerOptions, function ($options) {
-            $options->sleep = 0;
-            $options->maxTries = 1;
-        });
-    }
+// function worker()
+// {
+//     return app('queue.worker');
+// }
 
-    public function test_task_complete_notification_job_sent()
-    {
-        Queue::fake();
+// function workerOptions()
+// {
+//     return tap(new WorkerOptions, function ($options) {
+//         $options->sleep = 0;
+//         $options->maxTries = 1;
+//     });
+// }
 
-        dispatch(new TaskCompleteNotificationJob($this->report_data));
-        Queue::assertPushed(TaskCompleteNotificationJob::class);
-    }
+test('task complete notification job sent', function () {
+    Queue::fake();
 
-    public function test_mail_task_complete_notification_sent_to_all_users()
-    {
-        Notification::fake();
-        Notification::assertNothingSent();
+    dispatch(new TaskCompleteNotificationJob($this->report_data));
+    Queue::assertPushed(TaskCompleteNotificationJob::class);
+});
 
-        Notification::send(User::allUsersAndRecipients(), new MailTaskCompleteNotification($this->report_data));
+test('mail task complete notification sent to all users', function () {
+    Notification::fake();
+    Notification::assertNothingSent();
 
-        Notification::assertSentTo(
-            $this->user,
-            MailTaskCompleteNotification::class
-        );
-        Notification::assertSentTo(
-            $this->user2,
-            MailTaskCompleteNotification::class
-        );
-    }
+    Notification::send(User::allUsersAndRecipients(), new MailTaskCompleteNotification($this->report_data));
 
-    public function test_mail_task_complete_notification_sent_to_all_users_and_recipients()
-    {
-        Notification::fake();
-        Notification::assertNothingSent();
+    Notification::assertSentTo(
+        $this->user,
+        MailTaskCompleteNotification::class
+    );
+    Notification::assertSentTo(
+        $this->user2,
+        MailTaskCompleteNotification::class
+    );
+});
 
-        Setting::where('id', 1)->update(['mail_to_email' => 'stephenstack@gmail.com; alan@rconfig.com; helpdesk@rconfig.com']);
+test('mail task complete notification sent to all users and recipients', function () {
+    Notification::fake();
+    Notification::assertNothingSent();
 
-        $users = User::allUsersAndRecipients();
+    Setting::where('id', 1)->update(['mail_to_email' => 'stephenstack@gmail.com; alan@rconfig.com; helpdesk@rconfig.com']);
 
-        Notification::send($users, new MailTaskCompleteNotification($this->report_data));
+    $users = User::allUsersAndRecipients();
 
-        Notification::assertSentTo(
-            $this->user,
-            MailTaskCompleteNotification::class
-        );
-        Notification::assertSentTo(
-            $this->user2,
-            MailTaskCompleteNotification::class
-        );
-        Notification::assertSentTo(
-            $users->get(3),
-            MailTaskCompleteNotification::class
-        );
-        Notification::assertSentTo(
-            $users->get(4),
-            MailTaskCompleteNotification::class
-        );
-        Notification::assertSentTo(
-            $users->get(5),
-            MailTaskCompleteNotification::class
-        );
-    }
+    Notification::send($users, new MailTaskCompleteNotification($this->report_data));
 
-    public function test_mail_task_complete_notification_sent_to_all_users_and_recipients_is_empty()
-    {
-        Notification::fake();
-        Notification::assertNothingSent();
+    Notification::assertSentTo(
+        $this->user,
+        MailTaskCompleteNotification::class
+    );
+    Notification::assertSentTo(
+        $this->user2,
+        MailTaskCompleteNotification::class
+    );
+    Notification::assertSentTo(
+        $users->get(3),
+        MailTaskCompleteNotification::class
+    );
+    Notification::assertSentTo(
+        $users->get(4),
+        MailTaskCompleteNotification::class
+    );
+    Notification::assertSentTo(
+        $users->get(5),
+        MailTaskCompleteNotification::class
+    );
+});
 
-        Setting::where('id', 1)->update(['mail_to_email' => '']);
-        $users = User::allUsersAndRecipients();
+test('mail task complete notification sent to all users and recipients is empty', function () {
+    Notification::fake();
+    Notification::assertNothingSent();
 
-        Notification::send($users, new MailTaskCompleteNotification($this->report_data));
+    Setting::where('id', 1)->update(['mail_to_email' => '']);
+    $users = User::allUsersAndRecipients();
 
-        Notification::assertSentTo(
-            $this->user,
-            MailTaskCompleteNotification::class
-        );
-        Notification::assertSentTo(
-            $this->user2,
-            MailTaskCompleteNotification::class
-        );
-    }
+    Notification::send($users, new MailTaskCompleteNotification($this->report_data));
 
-    /**
-     * Tear down the test case.
-     */
-    protected function tearDown(): void
-    {
-        parent::tearDown();
+    Notification::assertSentTo(
+        $this->user,
+        MailTaskCompleteNotification::class
+    );
+    Notification::assertSentTo(
+        $this->user2,
+        MailTaskCompleteNotification::class
+    );
+});
 
-        Redis::flushall();
-    }
-}
+/**
+ * Tear down the test case.
+ */
+afterEach(function () {
+    $this->rollBackTransaction();
+
+    Redis::flushall();
+});

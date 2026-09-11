@@ -151,3 +151,82 @@ jobs:
 
       - name: Run Vitest
         run: npm test
+
+  tests:
+    name: Tests (Unit + Fasttests)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    env:
+      # Forces custom_chown()'s suppressed-vs-loud branch (app/Http/Helpers.php) for
+      # every step in this job, not just the phpunit-invoked test run — the runner
+      # user can't chown() to apache/www-data (needs CAP_CHOWN), and that's expected
+      # here, not a real deployment problem worth failing loudly over.
+      APP_ENV: testing
+      DB_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: v8core_test
+      DB_USERNAME: root
+      DB_PASSWORD: ""
+      TEST_DB_MYSQL_HOST: 127.0.0.1
+      TEST_DB_MYSQL_PORT: 3306
+      TEST_DB_MYSQL_DATABASE: v8core_test
+      TEST_DB_MYSQL_USERNAME: root
+      TEST_DB_MYSQL_PASSWORD: ""
+      # Read by config/database.php's 'redis' connection (predis client).
+      REDIS_HOST: 127.0.0.1
+      REDIS_PORT: 6379
+
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_DATABASE: v8core_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc
+        with:
+          php-version: '8.4'
+          extensions: ftp, gd, ldap, sockets, pdo_mysql
+          coverage: none
+
+      - name: Prepare .env.testing
+        # tests/CreatesApplication.php forces .env.testing for every Unit/Fasttests
+        # test regardless of APP_ENV, and it's gitignored (developer-machine-only),
+        # so CI has to create its own throwaway copy rather than relying on plain .env.
+        run: cp .env.example .env.testing
+
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda
+
+      - name: Generate app key
+        # APP_ENV=testing (job env, above) + .env.testing already existing means
+        # Laravel's normal bootstrap resolves .env.testing as the target file here,
+        # matching the file tests/CreatesApplication.php force-loads for every test.
+        run: php artisan key:generate --force
+
+      - name: Run Unit + Fasttests
+        run: php artisan test --compact tests/Unit tests/Fasttests --exclude-group=device-hardware --exclude-group=external-network --exclude-group=local-daemon

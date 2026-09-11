@@ -1,146 +1,98 @@
 <?php
 
-namespace Tests\Unit;
+beforeEach(function () {
+    $this->timezones = require app_path('Http/Controllers/Api/timezone_list.php');
+});
 
-use Tests\TestCase;
+test('timezone list file exists', function () {
+    expect(app_path('Http/Controllers/Api/timezone_list.php'))->toBeFile();
+});
 
-class TimezoneListTest extends TestCase
-{
-    protected array $timezones;
+test('timezone list is array', function () {
+    expect($this->timezones)->toBeArray();
+    expect($this->timezones)->not->toBeEmpty();
+});
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->timezones = require app_path('Http/Controllers/Api/timezone_list.php');
+test('all timezone identifiers are valid iana timezones', function () {
+    $validTimezones = DateTimeZone::listIdentifiers();
+    $invalidTimezones = [];
+
+    foreach (array_keys($this->timezones) as $timezone) {
+        if (! in_array($timezone, $validTimezones)) {
+            $invalidTimezones[] = $timezone;
+        }
     }
 
-    public function test_timezone_list_file_exists()
-    {
-        $this->assertFileExists(app_path('Http/Controllers/Api/timezone_list.php'));
-    }
+    expect($invalidTimezones)->toBeEmpty('The following timezone identifiers are not valid IANA timezones: ' . implode(', ', $invalidTimezones));
+});
 
-    public function test_timezone_list_is_array()
-    {
-        $this->assertIsArray($this->timezones);
-        $this->assertNotEmpty($this->timezones);
-    }
+test('no deprecated us timezone identifiers', function () {
+    $deprecatedPatterns = ['US/', 'Canada/', 'Etc/'];
+    $foundDeprecated = [];
 
-    public function test_all_timezone_identifiers_are_valid_iana_timezones()
-    {
-        $validTimezones = \DateTimeZone::listIdentifiers();
-        $invalidTimezones = [];
-
-        foreach (array_keys($this->timezones) as $timezone) {
-            if (! in_array($timezone, $validTimezones)) {
-                $invalidTimezones[] = $timezone;
+    foreach (array_keys($this->timezones) as $timezone) {
+        foreach ($deprecatedPatterns as $pattern) {
+            if (str_starts_with($timezone, $pattern) && $pattern !== 'Etc/') {
+                $foundDeprecated[] = $timezone;
             }
         }
-
-        $this->assertEmpty(
-            $invalidTimezones,
-            'The following timezone identifiers are not valid IANA timezones: ' . implode(', ', $invalidTimezones)
-        );
     }
 
-    public function test_no_deprecated_us_timezone_identifiers()
-    {
-        $deprecatedPatterns = ['US/', 'Canada/', 'Etc/'];
-        $foundDeprecated = [];
+    expect($foundDeprecated)->toBeEmpty('The following deprecated timezone identifiers should be replaced with canonical IANA identifiers: ' . implode(', ', $foundDeprecated));
+});
 
-        foreach (array_keys($this->timezones) as $timezone) {
-            foreach ($deprecatedPatterns as $pattern) {
-                if (str_starts_with($timezone, $pattern) && $pattern !== 'Etc/') {
-                    $foundDeprecated[] = $timezone;
-                }
-            }
-        }
+test('timezone identifiers can be instantiated', function () {
+    $failedTimezones = [];
 
-        $this->assertEmpty(
-            $foundDeprecated,
-            'The following deprecated timezone identifiers should be replaced with canonical IANA identifiers: ' . implode(', ', $foundDeprecated)
-        );
-    }
-
-    public function test_timezone_identifiers_can_be_instantiated()
-    {
-        $failedTimezones = [];
-
-        foreach (array_keys($this->timezones) as $timezone) {
-            try {
-                new \DateTimeZone($timezone);
-            } catch (\Exception $e) {
-                $failedTimezones[$timezone] = $e->getMessage();
-            }
-        }
-
-        $this->assertEmpty(
-            $failedTimezones,
-            'The following timezones could not be instantiated: ' . json_encode($failedTimezones, JSON_PRETTY_PRINT)
-        );
-    }
-
-    public function test_timezone_labels_are_not_empty()
-    {
-        $emptyLabels = [];
-
-        foreach ($this->timezones as $identifier => $label) {
-            if (empty(trim($label))) {
-                $emptyLabels[] = $identifier;
-            }
-        }
-
-        $this->assertEmpty(
-            $emptyLabels,
-            'The following timezone identifiers have empty labels: ' . implode(', ', $emptyLabels)
-        );
-    }
-
-    public function test_no_duplicate_timezone_identifiers()
-    {
-        $identifiers = array_keys($this->timezones);
-        $uniqueIdentifiers = array_unique($identifiers);
-
-        $this->assertCount(
-            count($uniqueIdentifiers),
-            $identifiers,
-            'Duplicate timezone identifiers found'
-        );
-    }
-
-    public function test_essential_us_timezones_are_present()
-    {
-        $essentialTimezones = [
-            'America/New_York',
-            'America/Chicago',
-            'America/Denver',
-            'America/Los_Angeles',
-            'America/Anchorage',
-            'Pacific/Honolulu',
-        ];
-
-        foreach ($essentialTimezones as $timezone) {
-            $this->assertArrayHasKey(
-                $timezone,
-                $this->timezones,
-                "Essential timezone '{$timezone}' is missing from the list"
-            );
+    foreach (array_keys($this->timezones) as $timezone) {
+        try {
+            new DateTimeZone($timezone);
+        } catch (Exception $e) {
+            $failedTimezones[$timezone] = $e->getMessage();
         }
     }
 
-    public function test_timezone_count_is_reasonable()
-    {
-        $count = count($this->timezones);
+    expect($failedTimezones)->toBeEmpty('The following timezones could not be instantiated: ' . json_encode($failedTimezones, JSON_PRETTY_PRINT));
+});
 
-        $this->assertGreaterThanOrEqual(
-            50,
-            $count,
-            'Timezone list should contain at least 50 timezones'
-        );
+test('timezone labels are not empty', function () {
+    $emptyLabels = [];
 
-        $this->assertLessThanOrEqual(
-            200,
-            $count,
-            'Timezone list contains an unusually high number of timezones'
-        );
+    foreach ($this->timezones as $identifier => $label) {
+        if (empty(trim($label))) {
+            $emptyLabels[] = $identifier;
+        }
     }
-}
+
+    expect($emptyLabels)->toBeEmpty('The following timezone identifiers have empty labels: ' . implode(', ', $emptyLabels));
+});
+
+test('no duplicate timezone identifiers', function () {
+    $identifiers = array_keys($this->timezones);
+    $uniqueIdentifiers = array_unique($identifiers);
+
+    expect($identifiers)->toHaveCount(count($uniqueIdentifiers), 'Duplicate timezone identifiers found');
+});
+
+test('essential us timezones are present', function () {
+    $essentialTimezones = [
+        'America/New_York',
+        'America/Chicago',
+        'America/Denver',
+        'America/Los_Angeles',
+        'America/Anchorage',
+        'Pacific/Honolulu',
+    ];
+
+    foreach ($essentialTimezones as $timezone) {
+        expect($this->timezones)->toHaveKey($timezone, message: "Essential timezone '{$timezone}' is missing from the list");
+    }
+});
+
+test('timezone count is reasonable', function () {
+    $count = count($this->timezones);
+
+    expect($count)->toBeGreaterThanOrEqual(50, 'Timezone list should contain at least 50 timezones');
+
+    expect($count)->toBeLessThanOrEqual(200, 'Timezone list contains an unusually high number of timezones');
+});

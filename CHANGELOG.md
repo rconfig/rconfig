@@ -5,6 +5,17 @@ All notable changes to rConfig v8 Core are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.2.17] - 2026-09-10
+
+Security release. Upgrade is recommended for all 8.x installations.
+
+### Security
+- Config Search "View Matches" rendered device configuration text through `v-html` without escaping it, so markup stored in a configuration ran as script in the viewer's browser. Reported in #368 by 360 Alpha Lab.
+- `EncryptStringCast` unserialized decrypted secrets without an `allowed_classes` allowlist, so a serialized PHP object stored in an encrypted field (device password, credential, mail or API token) was instantiated when read, reaching a remote code execution gadget. Both unserialize calls now block object instantiation. Reported in #369 by 360 Alpha Lab.
+
+### Changed
+- The test suite is now Pest based, with a per suite base class split (`Unit` has no database, `Fasttests` and `Slowtests` are transaction wrapped) and the lab hardware device fixture scoped to `Slowtests` only, so `Fasttests` builds its own data with factories. CI now runs `Unit` and `Fasttests` against a real MySQL service, excluding the groups an ephemeral runner cannot satisfy. Affects the test suite only.
+
 ## [8.2.16] - 2026-08-16
 
 ### Fixed

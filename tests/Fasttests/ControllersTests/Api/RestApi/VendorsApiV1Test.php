@@ -1,94 +1,78 @@
 <?php
 
-namespace Tests\Fasttests\ControllersTests\Api\RestApi;
-
 use App\Models\RestApiToken;
 use App\Models\User;
 use App\Models\Vendor;
-use Tests\TestCase;
 
-class VendorsApiV1Test extends TestCase
+beforeEach(function () {
+    $this->beginTransaction();
+
+    User::factory()->create();
+    $this->token = RestApiToken::factory()->create();
+});
+
+/**
+ * @return array<string, string>
+ */
+function vendorsApiV1AuthHeader(RestApiToken $token): array
 {
-    protected RestApiToken $token;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->beginTransaction();
-
-        User::factory()->create();
-        $this->token = RestApiToken::factory()->create();
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    private function authHeader(): array
-    {
-        return ['apitoken' => $this->token->api_token];
-    }
-
-    public function test_index_returns_vendors(): void
-    {
-        Vendor::factory(3)->create();
-
-        $this->withHeaders($this->authHeader())
-            ->getJson('/api/v1/vendors?perPage=50')
-            ->assertStatus(200)
-            ->assertJsonStructure(['data', 'total']);
-    }
-
-    public function test_show_returns_vendor(): void
-    {
-        $vendor = Vendor::factory()->create();
-
-        $this->withHeaders($this->authHeader())
-            ->getJson('/api/v1/vendors/' . $vendor->id)
-            ->assertStatus(200)
-            ->assertJsonFragment(['vendorName' => $vendor->vendorName]);
-    }
-
-    public function test_store_creates_vendor(): void
-    {
-        $this->withHeaders($this->authHeader())
-            ->postJson('/api/v1/vendors', [
-                'vendorName' => 'CiscoApiTest12345',
-            ])
-            ->assertStatus(200)
-            ->assertJsonFragment(['success' => true]);
-
-        $this->assertDatabaseHas('vendors', ['vendorName' => 'CiscoApiTest12345']);
-    }
-
-    public function test_store_validation_failure_returns_422(): void
-    {
-        $this->withHeaders($this->authHeader())
-            ->postJson('/api/v1/vendors', [])
-            ->assertStatus(422)
-            ->assertJsonValidationErrors(['vendorName']);
-    }
-
-    public function test_update_edits_vendor(): void
-    {
-        $vendor = Vendor::factory()->create();
-
-        $this->withHeaders($this->authHeader())
-            ->patchJson('/api/v1/vendors/' . $vendor->id, [
-                'vendorName' => 'a-new-vendor-name-api',
-            ])
-            ->assertStatus(200);
-
-        $this->assertDatabaseHas('vendors', ['id' => $vendor->id, 'vendorName' => 'a-new-vendor-name-api']);
-    }
-
-    public function test_destroy_deletes_vendor(): void
-    {
-        $vendor = Vendor::factory()->create();
-
-        $this->withHeaders($this->authHeader())
-            ->deleteJson('/api/v1/vendors/' . $vendor->id)
-            ->assertStatus(200);
-
-        $this->assertDatabaseMissing('vendors', ['id' => $vendor->id]);
-    }
+    return ['apitoken' => $token->api_token];
 }
+
+test('index returns vendors', function () {
+    Vendor::factory(3)->create();
+
+    $this->withHeaders(vendorsApiV1AuthHeader($this->token))
+        ->getJson('/api/v1/vendors?perPage=50')
+        ->assertStatus(200)
+        ->assertJsonStructure(['data', 'total']);
+});
+
+test('show returns vendor', function () {
+    $vendor = Vendor::factory()->create();
+
+    $this->withHeaders(vendorsApiV1AuthHeader($this->token))
+        ->getJson('/api/v1/vendors/' . $vendor->id)
+        ->assertStatus(200)
+        ->assertJsonFragment(['vendorName' => $vendor->vendorName]);
+});
+
+test('store creates vendor', function () {
+    $this->withHeaders(vendorsApiV1AuthHeader($this->token))
+        ->postJson('/api/v1/vendors', [
+            'vendorName' => 'CiscoApiTest12345',
+        ])
+        ->assertStatus(200)
+        ->assertJsonFragment(['success' => true]);
+
+    $this->assertDatabaseHas('vendors', ['vendorName' => 'CiscoApiTest12345']);
+});
+
+test('store validation failure returns 422', function () {
+    $this->withHeaders(vendorsApiV1AuthHeader($this->token))
+        ->postJson('/api/v1/vendors', [])
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['vendorName']);
+});
+
+test('update edits vendor', function () {
+    $vendor = Vendor::factory()->create();
+
+    $this->withHeaders(vendorsApiV1AuthHeader($this->token))
+        ->patchJson('/api/v1/vendors/' . $vendor->id, [
+            'vendorName' => 'a-new-vendor-name-api',
+        ])
+        ->assertStatus(200);
+
+    $this->assertDatabaseHas('vendors', ['id' => $vendor->id, 'vendorName' => 'a-new-vendor-name-api']);
+});
+
+test('destroy deletes vendor', function () {
+    $vendor = Vendor::factory()->create();
+
+    $this->withHeaders(vendorsApiV1AuthHeader($this->token))
+        ->deleteJson('/api/v1/vendors/' . $vendor->id)
+        ->assertStatus(200);
+
+    $this->assertDatabaseMissing('vendors', ['id' => $vendor->id]);
+});

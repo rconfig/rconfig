@@ -1,57 +1,41 @@
 <?php
 
-namespace Tests\Fasttests\OtherTests;
-
 use App\Models\User;
-use Tests\TestCase;
 
-class HorizonBasicTest extends TestCase
-{
-    protected $user;
+test('horizon dashboard accessible', function () {
+    $user = User::factory()->create(['role' => 'Admin']);
 
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
+    $response = $this->actingAs($user)->get('horizon');
+    $response->assertStatus(200);
+    expect($response->getContent())->toContain(config('app.name'));
+});
 
-    public function test_horizon_dashboard_accessible()
-    {
-        $user = User::factory()->create(['role' => 'Admin']);
+test('horizon timeout value can be changed', function () {
+    // clear the config cache
+    $this->artisan('config:clear');
+    $this->artisan('config:cache');
 
-        $response = $this->actingAs($user)->get('horizon');
-        $response->assertStatus(200);
-        $this->assertStringContainsString(config('app.name'), $response->getContent());
-    }
+    expect(config('horizon.environments.production.HorizonOne.timeout'))->toEqual(120);
+    expect(config('horizon.environments.local.HorizonOne.timeout'))->toEqual(120);
 
-    public function test_horizon_timeout_value_can_be_changed()
-    {
-        // clear the config cache
-        $this->artisan('config:clear');
-        $this->artisan('config:cache');
+    // change the timeout in the env file
+    $this->artisan('env:set HORIZON_LOCAL_TIMEOUT=320');
+    $this->artisan('env:set HORIZON_PROD_TIMEOUT=320');
 
-        $this->assertEquals(120, config('horizon.environments.production.HorizonOne.timeout'));
-        $this->assertEquals(120, config('horizon.environments.local.HorizonOne.timeout'));
+    $this->artisan('config:cache');
+    expect(config('horizon.environments.production.HorizonOne.timeout'))->toEqual(320);
+    expect(config('horizon.environments.local.HorizonOne.timeout'))->toEqual(320);
 
-        // change the timeout in the env file
-        $this->artisan('env:set HORIZON_LOCAL_TIMEOUT=320');
-        $this->artisan('env:set HORIZON_PROD_TIMEOUT=320');
+    $this->artisan('env:set HORIZON_LOCAL_TIMEOUT=120');
+    $this->artisan('env:set HORIZON_PROD_TIMEOUT=120');
 
-        $this->artisan('config:cache');
-        $this->assertEquals(320, config('horizon.environments.production.HorizonOne.timeout'));
-        $this->assertEquals(320, config('horizon.environments.local.HorizonOne.timeout'));
+    $envExample = file_get_contents(base_path('.env.testing'));
+    expect($envExample)->toContain('HORIZON_LOCAL_TIMEOUT=120');
+    expect($envExample)->toContain('HORIZON_PROD_TIMEOUT=120');
+});
 
-        $this->artisan('env:set HORIZON_LOCAL_TIMEOUT=120');
-        $this->artisan('env:set HORIZON_PROD_TIMEOUT=120');
-
-        $envExample = file_get_contents(base_path('.env.testing'));
-        $this->assertStringContainsString('HORIZON_LOCAL_TIMEOUT=120', $envExample);
-        $this->assertStringContainsString('HORIZON_PROD_TIMEOUT=120', $envExample);
-    }
-
-    public function test_env_example_has_env_timeout_values()
-    {
-        $envExample = file_get_contents(base_path('.env.example'));
-        $this->assertStringContainsString('HORIZON_LOCAL_TIMEOUT=120', $envExample);
-        $this->assertStringContainsString('HORIZON_PROD_TIMEOUT=120', $envExample);
-    }
-}
+test('env example has env timeout values', function () {
+    $envExample = file_get_contents(base_path('.env.example'));
+    expect($envExample)->toContain('HORIZON_LOCAL_TIMEOUT=120');
+    expect($envExample)->toContain('HORIZON_PROD_TIMEOUT=120');
+});

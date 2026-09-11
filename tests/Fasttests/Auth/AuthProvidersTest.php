@@ -1,65 +1,51 @@
 <?php
 
-namespace Tests\Fasttests\Auth;
+beforeEach(function () {
+    $this->beginTransaction();
+});
 
-use Tests\TestCase;
+test('saml2 display name is null when saml2 is not configured', function () {
+    config(['services.saml2.metadata' => null]);
 
-class AuthProvidersTest extends TestCase
-{
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->beginTransaction();
-    }
+    $response = $this->getJson('/api/auth/providers');
 
-    public function test_saml2_display_name_is_null_when_saml2_is_not_configured()
-    {
-        config(['services.saml2.metadata' => null]);
+    $response->assertSuccessful();
+    $response->assertJson([
+        'saml2' => false,
+        'saml2_display_name' => null,
+    ]);
+});
 
-        $response = $this->getJson('/api/auth/providers');
+test('saml2 display name is returned when saml2 is configured', function () {
+    config([
+        'services.saml2.metadata' => 'https://idp.example.com/metadata',
+        'services.saml2.display_name' => 'Acme Corp SSO',
+    ]);
 
-        $response->assertSuccessful();
-        $response->assertJson([
-            'saml2' => false,
-            'saml2_display_name' => null,
-        ]);
-    }
+    $response = $this->getJson('/api/auth/providers');
 
-    public function test_saml2_display_name_is_returned_when_saml2_is_configured()
-    {
-        config([
-            'services.saml2.metadata' => 'https://idp.example.com/metadata',
-            'services.saml2.display_name' => 'Acme Corp SSO',
-        ]);
+    $response->assertSuccessful();
+    $response->assertJson([
+        'saml2' => true,
+        'saml2_display_name' => 'Acme Corp SSO',
+    ]);
+});
 
-        $response = $this->getJson('/api/auth/providers');
+test('saml2 display name falls back to default when configured without custom name', function () {
+    config([
+        'services.saml2.metadata' => 'https://idp.example.com/metadata',
+        'services.saml2.display_name' => 'Shibboleth', // env default from config/services.php
+    ]);
 
-        $response->assertSuccessful();
-        $response->assertJson([
-            'saml2' => true,
-            'saml2_display_name' => 'Acme Corp SSO',
-        ]);
-    }
+    $response = $this->getJson('/api/auth/providers');
 
-    public function test_saml2_display_name_falls_back_to_default_when_configured_without_custom_name()
-    {
-        config([
-            'services.saml2.metadata' => 'https://idp.example.com/metadata',
-            'services.saml2.display_name' => 'Shibboleth', // env default from config/services.php
-        ]);
+    $response->assertSuccessful();
+    $response->assertJson([
+        'saml2' => true,
+        'saml2_display_name' => 'Shibboleth',
+    ]);
+});
 
-        $response = $this->getJson('/api/auth/providers');
-
-        $response->assertSuccessful();
-        $response->assertJson([
-            'saml2' => true,
-            'saml2_display_name' => 'Shibboleth',
-        ]);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->rollbackTransaction();
-        parent::tearDown();
-    }
-}
+afterEach(function () {
+    $this->rollbackTransaction();
+});

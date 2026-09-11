@@ -1,98 +1,82 @@
 <?php
 
-namespace Tests\Fasttests\ControllersTests\Api\RestApi;
-
 use App\Models\Category;
 use App\Models\RestApiToken;
 use App\Models\User;
-use Tests\TestCase;
 
-class CategoriesApiV1Test extends TestCase
+beforeEach(function () {
+    $this->beginTransaction();
+
+    User::factory()->create();
+    $this->token = RestApiToken::factory()->create();
+});
+
+/**
+ * @return array<string, string>
+ */
+function categoriesApiV1AuthHeader(RestApiToken $token): array
 {
-    protected RestApiToken $token;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->beginTransaction();
-
-        User::factory()->create();
-        $this->token = RestApiToken::factory()->create();
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    private function authHeader(): array
-    {
-        return ['apitoken' => $this->token->api_token];
-    }
-
-    public function test_index_returns_categories(): void
-    {
-        Category::factory(3)->create();
-
-        $this->withHeaders($this->authHeader())
-            ->getJson('/api/v1/categories?perPage=50')
-            ->assertStatus(200)
-            ->assertJsonStructure(['data', 'total']);
-    }
-
-    public function test_show_returns_category(): void
-    {
-        $category = Category::factory()->create();
-
-        $this->withHeaders($this->authHeader())
-            ->getJson('/api/v1/categories/' . $category->id)
-            ->assertStatus(200)
-            ->assertJsonFragment(['categoryName' => $category->categoryName]);
-    }
-
-    public function test_store_creates_category(): void
-    {
-        $this->withHeaders($this->authHeader())
-            ->postJson('/api/v1/categories', [
-                'categoryName' => 'Core-Switches-API',
-                'categoryDescription' => 'Created via REST API test',
-                'badgeColor' => 'blue',
-            ])
-            ->assertStatus(200)
-            ->assertJsonFragment(['success' => true]);
-
-        $this->assertDatabaseHas('categories', ['categoryName' => 'Core-Switches-API']);
-    }
-
-    public function test_store_validation_failure_returns_422(): void
-    {
-        $this->withHeaders($this->authHeader())
-            ->postJson('/api/v1/categories', [])
-            ->assertStatus(422)
-            ->assertJsonValidationErrors(['categoryName']);
-    }
-
-    public function test_update_edits_category(): void
-    {
-        $category = Category::factory()->create();
-
-        $this->withHeaders($this->authHeader())
-            ->patchJson('/api/v1/categories/' . $category->id, [
-                'categoryName' => 'Updated-Category-Name',
-                'categoryDescription' => 'updated',
-                'badgeColor' => 'red',
-            ])
-            ->assertStatus(200);
-
-        $this->assertDatabaseHas('categories', ['id' => $category->id, 'categoryName' => 'Updated-Category-Name']);
-    }
-
-    public function test_destroy_deletes_category(): void
-    {
-        $category = Category::factory()->create();
-
-        $this->withHeaders($this->authHeader())
-            ->deleteJson('/api/v1/categories/' . $category->id)
-            ->assertStatus(200);
-
-        $this->assertDatabaseMissing('categories', ['id' => $category->id]);
-    }
+    return ['apitoken' => $token->api_token];
 }
+
+test('index returns categories', function () {
+    Category::factory(3)->create();
+
+    $this->withHeaders(categoriesApiV1AuthHeader($this->token))
+        ->getJson('/api/v1/categories?perPage=50')
+        ->assertStatus(200)
+        ->assertJsonStructure(['data', 'total']);
+});
+
+test('show returns category', function () {
+    $category = Category::factory()->create();
+
+    $this->withHeaders(categoriesApiV1AuthHeader($this->token))
+        ->getJson('/api/v1/categories/' . $category->id)
+        ->assertStatus(200)
+        ->assertJsonFragment(['categoryName' => $category->categoryName]);
+});
+
+test('store creates category', function () {
+    $this->withHeaders(categoriesApiV1AuthHeader($this->token))
+        ->postJson('/api/v1/categories', [
+            'categoryName' => 'Core-Switches-API',
+            'categoryDescription' => 'Created via REST API test',
+            'badgeColor' => 'blue',
+        ])
+        ->assertStatus(200)
+        ->assertJsonFragment(['success' => true]);
+
+    $this->assertDatabaseHas('categories', ['categoryName' => 'Core-Switches-API']);
+});
+
+test('store validation failure returns 422', function () {
+    $this->withHeaders(categoriesApiV1AuthHeader($this->token))
+        ->postJson('/api/v1/categories', [])
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['categoryName']);
+});
+
+test('update edits category', function () {
+    $category = Category::factory()->create();
+
+    $this->withHeaders(categoriesApiV1AuthHeader($this->token))
+        ->patchJson('/api/v1/categories/' . $category->id, [
+            'categoryName' => 'Updated-Category-Name',
+            'categoryDescription' => 'updated',
+            'badgeColor' => 'red',
+        ])
+        ->assertStatus(200);
+
+    $this->assertDatabaseHas('categories', ['id' => $category->id, 'categoryName' => 'Updated-Category-Name']);
+});
+
+test('destroy deletes category', function () {
+    $category = Category::factory()->create();
+
+    $this->withHeaders(categoriesApiV1AuthHeader($this->token))
+        ->deleteJson('/api/v1/categories/' . $category->id)
+        ->assertStatus(200);
+
+    $this->assertDatabaseMissing('categories', ['id' => $category->id]);
+});
