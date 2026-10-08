@@ -2190,7 +2190,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-CjW77p-Z.js",
+    "file": "assets/app-CtAGEksT.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -2872,7 +2872,7 @@
     ]
   },
   "resources/js/pages/Settings/Panels/Components/RestApiDocs/412Configs.vue": {
-    "file": "assets/412Configs-DoqMAKP6.js",
+    "file": "assets/412Configs-CfPTERw_.js",
     "name": "412Configs",
     "src": "resources/js/pages/Settings/Panels/Components/RestApiDocs/412Configs.vue",
     "isDynamicEntry": true,
