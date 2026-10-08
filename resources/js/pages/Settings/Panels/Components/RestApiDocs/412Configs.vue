@@ -44,15 +44,28 @@ const endpoints = {
       },
       {
         name: "filter[created_at]",
-        description: "optional|date",
+        description: "optional|date (matches the whole day)",
         type: "date string (YYYY-MM-DD)",
         example: "2022-03-18",
       },
       {
-        name: "filter[config_downloaded]",
-        description: "optional|boolean",
-        type: "boolean",
-        example: true,
+        name: "filter[created_at_between]",
+        description: "optional|two comma-separated dates",
+        type: "date string (YYYY-MM-DD,YYYY-MM-DD)",
+        example: "2022-03-01,2022-03-31",
+      },
+      {
+        name: "filter[q]",
+        description: "optional|string (LIKE on id or device_name)",
+        type: "string",
+        example: "router",
+      },
+      {
+        name: "sort",
+        description:
+          "optional|id, device_name, command, download_status, created_at (prefix - for descending)",
+        type: "string",
+        example: "-created_at",
       },
       {
         name: "fields",
@@ -80,7 +93,7 @@ const endpoints = {
       },
     ],
     parametersdescription:
-      "Filters use the QueryBuilder format: filter[field]=value. Exact filters accept comma-separated values (e.g., filter[device_id]=1001,1002 or filter[command]=show%20run,show%20version). filter[device_name] performs a partial match (LIKE). Results are sorted by created_at (newest first). Use includeConfig=true to include the config contents.",
+      "Filters use the QueryBuilder format: filter[field]=value. Exact filters accept comma-separated values (e.g., filter[device_id]=1001,1002 or filter[command]=show%20run,show%20version). filter[device_name] performs a partial match (LIKE). Results are sorted by created_at (newest first) unless sort is passed. perPage defaults to 10. Unknown filters, sorts, or fields return 400. Use includeConfig=true to include the config contents; a missing or unreadable file returns a message in the config field instead.",
     responses: {
       current_page: 1,
       data: [
@@ -239,50 +252,22 @@ const endpoints = {
   },
   4: {
     name: "Config",
-    description:
-      "Search within configs using single-term or multi-term criteria",
+    description: "Search within stored configs for a term",
     method: "post",
     url: "/api/v2/configs/search",
     parametersUrlOnly: false,
     parameters: [
       {
-        name: "criteria",
-        description: "optional|array|min:1 (preferred multi-term format)",
-        type: "array of objects",
-        example: [
-          { id: "one", term: "hostname" },
-          { id: "two", term: "interface" },
-        ],
-      },
-      {
-        name: "criteria_mode",
-        description: "optional|in:all,any",
-        type: "string",
-        example: "all",
-      },
-      {
-        name: "results_per_config",
-        description: "optional|in:first_match,all_matches",
-        type: "string",
-        example: "first_match",
-      },
-      {
         name: "searchTerm",
-        description: "optional|string|min:1",
+        description: "required|string|min:3",
         type: "string",
         example: "hostname",
       },
       {
         name: "search_term",
-        description: "optional|string|min:1 (legacy compatibility)",
+        description: "optional|string|min:3 (alias of searchTerm)",
         type: "string",
         example: "hostname",
-      },
-      {
-        name: "dateFrom",
-        description: "optional|date",
-        type: "string",
-        example: "2022-03-01",
       },
       {
         name: "devices",
@@ -291,32 +276,14 @@ const endpoints = {
         example: [1001, 1002],
       },
       {
-        name: "categories",
-        description: "optional|array",
-        type: "array of category IDs",
-        example: [1, 2],
-      },
-      {
-        name: "tags",
-        description: "optional|array",
-        type: "array of tag IDs",
-        example: [10, 12],
-      },
-      {
-        name: "vendors",
-        description: "optional|array",
-        type: "array of vendor IDs",
-        example: [3, 7],
-      },
-      {
         name: "commands",
         description: "optional|array",
         type: "array of command IDs or strings",
         example: [1, "show run"],
       },
       {
-        name: "from_date",
-        description: "optional|date (legacy alias)",
+        name: "dateFrom",
+        description: "optional|date",
         type: "date string (YYYY-MM-DD)",
         example: "2022-03-01",
       },
@@ -327,16 +294,16 @@ const endpoints = {
         example: "2022-03-31",
       },
       {
-        name: "to_date",
-        description: "optional|date (legacy alias)",
+        name: "from_date",
+        description: "optional|date (alias of dateFrom)",
         type: "date string (YYYY-MM-DD)",
-        example: "2022-03-31",
+        example: "2022-03-01",
       },
       {
-        name: "latest_version_only",
-        description: "optional|boolean",
-        type: "boolean",
-        example: true,
+        name: "to_date",
+        description: "optional|date (alias of dateTo)",
+        type: "date string (YYYY-MM-DD)",
+        example: "2022-03-31",
       },
       {
         name: "case_sensitive",
@@ -345,50 +312,25 @@ const endpoints = {
         example: false,
       },
       {
-        name: "lines_before",
-        description: "optional|integer|min:0|max:50",
-        type: "integer",
-        example: 2,
-      },
-      {
-        name: "lines_after",
-        description: "optional|integer|min:0|max:50",
-        type: "integer",
-        example: 2,
-      },
-      {
         name: "limit",
-        description: "optional|integer (defaults to 50)",
+        description: "optional|integer|min:1 (no limit when omitted)",
         type: "integer",
         example: 50,
       },
     ],
     parametersdescription:
-      "Use `criteria` for the richer multi-term search flow. `criteria_mode=all` requires every term to be present somewhere in the config, while `criteria_mode=any` returns configs matching at least one term. `results_per_config` controls whether the API emphasizes the first preview match or all matches. `limit` defaults to 50 matching configs when omitted. If you pass only `search_term`, the endpoint returns the legacy wrapped payload.",
+      "GET and POST are both accepted. Searches every stored config version (newest first) for lines containing searchTerm and returns each matching line with two lines of context either side. Without limit, every matching config is returned, so pass limit or a date range on large installations.",
     responses: {
       success: true,
-      meta: {
-        limit: 50,
-        results_returned: 50,
-        limit_reached: true,
-      },
       data: [
         {
           id: 45,
           device_id: 1001,
-          file_id: 45,
           config_location:
             "/var/www/html/rconfig8/storage/app/rconfig/data/Routers/router1/2022/Mar/27/showrun_0630.txt",
           config_filename: "showrun_0630.txt",
           config_command: "show run",
-          command: "show run",
-          device_name: "router1",
-          device_category: "Routers",
-          file: "/var/www/html/rconfig8/storage/app/rconfig/data/Routers/router1/2022/Mar/27/showrun_0630.txt",
-          config_filesize: 2367,
           config_date: "2022-03-27",
-          config_time: "06:30:00",
-          created_at: "2022-03-27T06:30:00.000000Z",
           device: {
             id: 1001,
             device_name: "router1",
@@ -396,46 +338,23 @@ const endpoints = {
           },
           matches: [
             {
-              line_number: 1,
+              line_number: 3,
               line_text: "hostname router1",
               context: [
+                "version 15.1",
+                "!",
                 "hostname router1",
-                "interface GigabitEthernet0/0",
-                " ip address 10.1.1.170 255.255.255.0",
-              ],
-              matched_terms: ["hostname"],
-            },
-            {
-              line_number: 42,
-              line_text: "interface GigabitEthernet0/0",
-              context: [
                 "!",
                 "interface GigabitEthernet0/0",
-                " ip address 10.1.1.170 255.255.255.0",
-                " duplex auto",
               ],
-              matched_terms: ["interface"],
             },
           ],
-          preview_match: {
-            line_number: 1,
-            line_text: "hostname router1",
-            context: [
-              "hostname router1",
-              "interface GigabitEthernet0/0",
-              " ip address 10.1.1.170 255.255.255.0",
-            ],
-            matched_terms: ["hostname"],
-          },
-          match_count: 2,
-          matched_terms: ["hostname", "interface"],
-          criteria_mode: "all",
-          results_per_config: "first_match",
         },
       ],
+      message: "Search results",
     },
     responsesdescription:
-      "Successful response for the preferred multi-term request format. When the request uses only `search_term`, the endpoint returns the older wrapped payload with `search_term`, `search_terms`, `total_matches`, `matches_returned`, and `results`.",
+      "Successful response. A missing or too short searchTerm returns 422 with success false and a message.",
   },
 };
 </script>
