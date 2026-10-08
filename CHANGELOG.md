@@ -5,6 +5,20 @@ All notable changes to rConfig v8 Core are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.2.18] - 2026-10-08
+
+Security release. Upgrade is recommended for all 8.x installations.
+
+### Security
+- `TaskDownloadRun` passed the command and ID from its own serialized properties straight to `Artisan::call()`, so a crafted queue payload could run any Artisan command. It now only runs the download task command with an integer ID.
+
+### Fixed
+- The v2 configs API ignored `includeConfig` and rejected the documented `device_id`, `device_name` and `created_at` filters, so token API integrations could not read config text. Reported in #376 by bennetgallein.
+- The in-app REST API docs for configs listed a `config_downloaded` filter that does not exist and described Pro's multi-term search instead of Core's search endpoint.
+
+### Changed
+- Updated the favicon.
+
 ## [8.2.17] - 2026-09-10
 
 Security release. Upgrade is recommended for all 8.x installations.
