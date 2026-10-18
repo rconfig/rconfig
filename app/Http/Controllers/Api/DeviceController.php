@@ -109,7 +109,7 @@ class DeviceController extends ApiBaseController
                 AllowedFilter::exact('id'),
             ])
             ->defaultSort('device_name') // Default alphabetical sort
-            ->paginate($request->get('per_page', 50)); // Smaller page size for infinite scroll
+            ->paginate($request->input('per_page', 50)); // Smaller page size for infinite scroll
 
         return response()->json($devices);
     }
