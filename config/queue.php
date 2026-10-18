@@ -66,7 +66,24 @@ return [
             'driver' => 'redis',
             'connection' => 'default',
             'queue' => env('REDIS_QUEUE', 'default'),
-            'retry_after' => 65,
+            // Must stay above the HorizonOne worker timeout (HORIZON_PROD_TIMEOUT),
+            // see REDIS_QUEUE_RETRY_AFTER in .env.example.
+            'retry_after' => (int) env('REDIS_QUEUE_RETRY_AFTER', 65),
+            'block_for' => null,
+            'after_commit' => false,
+        ],
+
+        // Used by the HorizonTwo supervisor (TaskDownloadQueue, TaskSnippetQueue,
+        // ManualDownloadQueue), whose workers run with a one day timeout. Jobs are
+        // still dispatched through the default redis connection; this connection
+        // only gives the long-running workers a retry_after above their timeout so
+        // a download that runs longer than the redis connection's retry_after is
+        // not released and retried while it is still running.
+        'redis-long-running' => [
+            'driver' => 'redis',
+            'connection' => 'default',
+            'queue' => env('REDIS_QUEUE', 'default'),
+            'retry_after' => 86400 + 60,
             'block_for' => null,
             'after_commit' => false,
         ],

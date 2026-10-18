@@ -199,7 +199,7 @@ return [
                 'timeout' => (int) env('HORIZON_PROD_TIMEOUT', 60),
             ],
             'HorizonTwo' => [
-                'connection' => 'redis',
+                'connection' => 'redis-long-running',
                 'queue' => ['TaskDownloadQueue', 'TaskSnippetQueue', 'ManualDownloadQueue'],
                 'balance' => 'auto',
                 'minProcesses' => (int) env('HORIZON_MIN_PROCESS', 1),
@@ -226,7 +226,7 @@ return [
                 'timeout' => (int) env('HORIZON_PROD_TIMEOUT', 60),
             ],
             'HorizonTwo' => [
-                'connection' => 'redis',
+                'connection' => 'redis-long-running',
                 // 'queue' => ['downloadqueue'],
                 'queue' => ['TaskDownloadQueue', 'TaskSnippetQueue', 'ManualDownloadQueue'],
                 'balance' => 'auto',
