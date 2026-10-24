@@ -435,8 +435,6 @@ php artisan rconfig:sync-tasks
 systemctl restart httpd
 php artisan rconfig:clear-all
 php artisan rconfig:set-config-permissions
-sudo ./setup_supervisor.sh
-sudo ./setup_cron.sh
 
 # Ubuntu:
 cd /var/www/html/rconfig
@@ -447,8 +445,6 @@ php artisan rconfig:sync-tasks
 systemctl restart apache2
 php artisan rconfig:clear-all
 php artisan rconfig:set-config-permissions
-sudo ./setup_supervisor.sh
-sudo ./setup_cron.sh
 ```
 
 ### PHP 8.4 Update (Required as of Feb 2024)
