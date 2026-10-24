@@ -320,7 +320,7 @@ sudo ./setup_supervisor.sh
 php artisan v8core:install
 ```
 
-> 🎉 When prompted about cron scheduling, type `yes` and press Enter.
+> 🎉 When prompted about the scheduler cron file, type `yes` and press Enter. This writes `/etc/cron.d/rconfig-core`, which runs the scheduler as the web user (never root), and removes any old rConfig V8 Core `schedule:run` line from root's crontab and the web user's crontab. If the installer is not running as root it cannot write that file and prints the command instead: run `sudo ./setup_cron.sh` from the rConfig folder.
 
 ---
 
@@ -423,6 +423,8 @@ composer install
 systemctl restart httpd
 php artisan rconfig:clear-all
 php artisan rconfig:set-config-permissions
+sudo ./setup_supervisor.sh
+sudo ./setup_cron.sh
 
 # Ubuntu:
 cd /var/www/html/rconfig
@@ -433,6 +435,8 @@ composer install
 systemctl restart apache2
 php artisan rconfig:clear-all
 php artisan rconfig:set-config-permissions
+sudo ./setup_supervisor.sh
+sudo ./setup_cron.sh
 ```
 
 > 💡 **Git Conflicts?** Try: `git stash && git pull`

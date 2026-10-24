@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Services\Utilities\HostFilesystem;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 
@@ -89,14 +90,14 @@ class V8CoreInstallCommand extends Command
         $this->components->info('✓ rConfig v8 Core installed successfully!');
         $this->newLine();
 
-        // Ask about cron
-        $setupCron = $this->components->confirm(
-            'Add a cron entry for task scheduling?',
-            true
-        );
+        // The scheduler runs from /etc/cron.d as the web user, never from
+        // root's crontab. Docker runs it from the container's Supervisor.
+        $cronInstalled = true;
 
-        if ($setupCron) {
-            $this->setupCron();
+        if (app(HostFilesystem::class)->isDocker()) {
+            $this->components->info('Running in Docker: the container runs the scheduler itself, no cron file is needed.');
+        } elseif ($this->components->confirm('Install the scheduler cron file (/etc/cron.d/rconfig-core)?', true)) {
+            $cronInstalled = $this->setupCron();
         }
 
         $this->newLine();
@@ -113,7 +114,7 @@ class V8CoreInstallCommand extends Command
         $this->newLine();
         $this->displayNextSteps();
 
-        return Command::SUCCESS;
+        return $cronInstalled ? Command::SUCCESS : Command::FAILURE;
     }
 
     /**
@@ -138,28 +139,17 @@ class V8CoreInstallCommand extends Command
         });
     }
 
-    protected function setupCron()
+    /**
+     * Installs the scheduler cron file through rconfig:setup-cron, which runs
+     * setup_cron.sh as root or prints the sudo command otherwise.
+     */
+    protected function setupCron(): bool
     {
-        $cronEntry = '* * * * * cd ' . base_path() . ' && php artisan schedule:run >> /dev/null 2>&1';
-
-        $currentCron = shell_exec('crontab -l 2>/dev/null') ?? '';
-
-        if (strpos($currentCron, 'artisan schedule:run') === false) {
-            $newCron = trim($currentCron) . "\n" . $cronEntry . "\n";
-
-            $tempFile = tempnam(sys_get_temp_dir(), 'crontab');
-            file_put_contents($tempFile, $newCron);
-            shell_exec("crontab $tempFile");
-            unlink($tempFile);
-
-            $this->components->success('Cron entry added successfully!');
-        } else {
-            $this->components->info('Cron entry already exists');
-        }
+        $exitCode = Artisan::call('rconfig:setup-cron', [], $this->output);
 
         $this->newLine();
 
-        $this->components->info("Cron entry: $cronEntry");
+        return $exitCode === Command::SUCCESS;
     }
 
     protected function openGitHub()

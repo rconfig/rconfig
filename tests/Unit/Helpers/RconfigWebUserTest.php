@@ -45,3 +45,11 @@ test('the group always matches the user', function () {
 
     expect($group)->toBe($user);
 });
+
+test('agrees with the setup scripts on the OS family of every supported OS', function (string $osRelease, string $id, string $family) {
+    $this->fakeHostFilesystem(osRelease: $osRelease);
+
+    $expected = $family === 'rhel' ? 'apache' : 'www-data';
+
+    expect(rconfig_web_user())->toBe([$expected, $expected]);
+})->with('supported os-release files');

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Process;
  * never reloads Supervisor or touches /etc. RCONFIG_PHP points at a stub that
  * prints FAKE_WEB_USER in place of artisan rconfig:web-user. "nobody" is used
  * as the web user because it exists on RHEL, Ubuntu and the CI runner.
+ * RCONFIG_OS_RELEASE points at a Rocky 9 os-release in the sandbox, so the
+ * result never depends on the OS the suite runs on.
  */
 const SETUP_SUPERVISOR_STUB_PLACEHOLDER = 'user=RCONFIG_WEB_USER';
 
@@ -21,6 +23,7 @@ beforeEach(function () {
         'app' => "{$root}/app",
         'sup' => "{$root}/supervisor",
         'php' => "{$root}/fake-php",
+        'os-release' => "{$root}/os-release",
     ];
 
     File::makeDirectory($this->sandbox['app'], 0755, true);
@@ -29,6 +32,7 @@ beforeEach(function () {
     File::copy(base_path('setup_supervisor.sh'), "{$this->sandbox['app']}/setup_supervisor.sh");
     chmod("{$this->sandbox['app']}/setup_supervisor.sh", 0755);
     File::copy(base_path('horizon_supervisor.ini'), "{$this->sandbox['app']}/horizon_supervisor.ini");
+    File::put($this->sandbox['os-release'], "NAME=\"Rocky Linux\"\nID=\"rocky\"\nID_LIKE=\"rhel centos fedora\"\n");
 
     File::put($this->sandbox['php'], "#!/bin/sh\nprintf '%s\\n' \"\$FAKE_WEB_USER\"\nexit \"\${FAKE_PHP_EXIT:-0}\"\n");
     chmod($this->sandbox['php'], 0755);
@@ -53,7 +57,7 @@ afterEach(function () {
 });
 
 /**
- * @param  array{root: string, app: string, sup: string, php: string}  $sandbox
+ * @param  array{root: string, app: string, sup: string, php: string, os-release: string}  $sandbox
  * @param  array<string, string>  $env
  */
 function runSetupSupervisor(array $sandbox, string $webUser = 'nobody', array $env = []): ProcessResult
@@ -62,6 +66,7 @@ function runSetupSupervisor(array $sandbox, string $webUser = 'nobody', array $e
         'RCONFIG_SUPERVISOR_DIR' => $sandbox['sup'],
         'RCONFIG_SUPERVISOR_EXT' => 'ini',
         'RCONFIG_PHP' => $sandbox['php'],
+        'RCONFIG_OS_RELEASE' => $sandbox['os-release'],
         'FAKE_WEB_USER' => $webUser,
         'PATH' => "{$sandbox['root']}/bin:" . getenv('PATH'),
     ], $env))->run(["{$sandbox['app']}/setup_supervisor.sh"]);
@@ -273,6 +278,68 @@ test('fails when the Supervisor config folder does not exist', function () {
         ->and($result->errorOutput())->toContain('Supervisor config folder')
         ->and($result->errorOutput())->toContain('not found');
 });
+
+test('detects each supported OS from os-release and picks its config extension and service', function (string $osRelease, string $id, string $family) {
+    File::put($this->sandbox['os-release'], $osRelease);
+
+    $result = runSetupSupervisor($this->sandbox, env: ['RCONFIG_SUPERVISOR_EXT' => '']);
+
+    [$extension, $service] = $family === 'rhel' ? ['ini', 'supervisord'] : ['conf', 'supervisor'];
+
+    expect($result->successful())->toBeTrue($result->errorOutput())
+        ->and($result->output())->toContain("OS: {$id} ({$family} family), Supervisor service {$service}")
+        ->and(supervisorDirEntries($this->sandbox['sup']))->toBe(["rconfig-core-horizon.{$extension}"]);
+})->with('supported os-release files');
+
+test('refuses an unsupported OS before writing anything', function (string $osRelease) {
+    File::put($this->sandbox['os-release'], $osRelease);
+
+    $result = runSetupSupervisor($this->sandbox);
+
+    expect($result->exitCode())->not->toBe(0)
+        ->and($result->errorOutput())->toContain('unsupported OS')
+        ->and(supervisorDirEntries($this->sandbox['sup']))->toBe([]);
+})->with('unsupported os-release files');
+
+test('fails without an os-release file rather than guessing the OS', function () {
+    File::delete($this->sandbox['os-release']);
+
+    $result = runSetupSupervisor($this->sandbox);
+
+    expect($result->exitCode())->not->toBe(0)
+        ->and($result->errorOutput())->toContain("cannot read {$this->sandbox['os-release']}")
+        ->and(supervisorDirEntries($this->sandbox['sup']))->toBe([]);
+});
+
+test('neither setup script detects the OS from redhat-release, debian_version or lsb-release', function (string $script) {
+    $code = collect(file(base_path($script), FILE_IGNORE_NEW_LINES))
+        ->reject(fn (string $line): bool => str_starts_with(ltrim($line), '#'))
+        ->implode("\n");
+
+    expect($code)->not->toMatch('#/etc/(redhat-release|debian_version|lsb-release|system-release)#');
+})->with(['setup_supervisor.sh', 'setup_cron.sh']);
+
+test('reads single quoted os-release values', function () {
+    File::put($this->sandbox['os-release'], "ID='ubuntu'\nID_LIKE='debian'\n");
+
+    $result = runSetupSupervisor($this->sandbox);
+
+    expect($result->successful())->toBeTrue($result->errorOutput())
+        ->and($result->output())->toContain('OS: ubuntu (debian family), Supervisor service supervisor');
+});
+
+test('a missing Supervisor folder says how to install Supervisor on the detected OS', function (string $osRelease, string $hint) {
+    File::put($this->sandbox['os-release'], $osRelease);
+
+    $result = runSetupSupervisor($this->sandbox, env: ['RCONFIG_SUPERVISOR_DIR' => "{$this->sandbox['root']}/missing"]);
+
+    expect($result->exitCode())->not->toBe(0)
+        ->and($result->errorOutput())->toContain($hint);
+})->with([
+    'Rocky' => ["ID=\"rocky\"\nID_LIKE=\"rhel centos fedora\"\n", 'dnf install supervisor'],
+    'Ubuntu' => ["ID=ubuntu\nID_LIKE=debian\n", 'apt install supervisor'],
+    'Amazon Linux 2023' => ["ID=\"amzn\"\nID_LIKE=\"fedora\"\n", 'pip3 install supervisor'],
+]);
 
 test('rendered files are owned by root with mode 0644 when run as root', function () {
     if (! function_exists('posix_geteuid') || posix_geteuid() !== 0) {

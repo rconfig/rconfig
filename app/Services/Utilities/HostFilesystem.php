@@ -32,6 +32,14 @@ class HostFilesystem
         return function_exists('posix_geteuid') && posix_geteuid() === 0;
     }
 
+    /**
+     * Whether this process runs inside a Docker container.
+     */
+    public function isDocker(): bool
+    {
+        return isDocker();
+    }
+
     public function isDirectory(string $path): bool
     {
         clearstatcache(true, $path);

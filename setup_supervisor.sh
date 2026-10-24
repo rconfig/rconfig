@@ -21,6 +21,8 @@
 #   RCONFIG_SUPERVISOR_EXT  file extension to use with RCONFIG_SUPERVISOR_DIR
 #                           (ini or conf). Defaults to the OS default.
 #   RCONFIG_PHP             PHP binary used to run artisan. Defaults to php.
+#   RCONFIG_OS_RELEASE      os-release file to detect the OS from. Defaults to
+#                           /etc/os-release.
 
 set -euo pipefail
 
@@ -46,36 +48,74 @@ info() {
     echo "setup_supervisor: $*"
 }
 
-# --- Work out the Supervisor config folder ----------------------------------
+# --- Work out the OS ---------------------------------------------------------
 
-if [ -f /etc/redhat-release ]; then
-    OS_SUPDIR=/etc/supervisord.d
-    OS_EXT=ini
-    SUPERVISOR_SERVICE=supervisord
-elif [ -f /etc/debian_version ]; then
-    OS_SUPDIR=/etc/supervisor/conf.d
-    OS_EXT=conf
-    SUPERVISOR_SERVICE=supervisor
-else
-    OS_SUPDIR=""
-    OS_EXT=""
-    SUPERVISOR_SERVICE=""
+# Detected from ID and ID_LIKE in /etc/os-release, the file rconfig_web_user()
+# reads. /etc/redhat-release is missing on Amazon Linux 2023 and
+# /etc/debian_version says nothing about Ubuntu. The file is parsed, never
+# sourced, so nothing in it runs as root.
+OS_RELEASE="${RCONFIG_OS_RELEASE:-/etc/os-release}"
+
+os_release_value() {
+    sed -n "s/^$1=//p" "${OS_RELEASE}" | tail -n 1 \
+        | sed -e 's/^"\(.*\)"$/\1/' -e "s/^'\\(.*\\)'\$/\\1/" | tr '[:upper:]' '[:lower:]'
+}
+
+[ -r "${OS_RELEASE}" ] || fail "cannot read ${OS_RELEASE}, so the OS cannot be detected."
+OS_ID="$(os_release_value ID)"
+OS_ID_LIKE="$(os_release_value ID_LIKE)"
+
+# ID comes before ID_LIKE, so a distribution is matched on its own name first.
+OS_FAMILY=""
+read -ra OS_WORDS <<<"${OS_ID} ${OS_ID_LIKE}"
+for word in "${OS_WORDS[@]}"; do
+    case "${word}" in
+        rhel | centos | rocky | almalinux | ol | amzn) OS_FAMILY=rhel; break ;;
+        ubuntu | debian) OS_FAMILY=debian; break ;;
+    esac
+done
+
+case "${OS_FAMILY}" in
+    rhel)
+        OS_SUPDIR=/etc/supervisord.d
+        OS_EXT=ini
+        SUPERVISOR_SERVICE=supervisord
+        SUPERVISOR_INSTALL="Install it from EPEL (dnf install epel-release, or on RHEL the epel-release RPM from dl.fedoraproject.org), then: dnf install supervisor"
+        ;;
+    debian)
+        OS_SUPDIR=/etc/supervisor/conf.d
+        OS_EXT=conf
+        SUPERVISOR_SERVICE=supervisor
+        SUPERVISOR_INSTALL="Install it with: apt install supervisor"
+        ;;
+    *)
+        fail "unsupported OS (ID=${OS_ID:-none}, ID_LIKE=${OS_ID_LIKE:-none} in ${OS_RELEASE}). Supported: Rocky, AlmaLinux, RHEL and CentOS 8 or 9, Ubuntu 22.04 or later, and Amazon Linux 2023."
+        ;;
+esac
+
+# Amazon Linux 2023 has no supervisor package and does not support EPEL.
+if [ "${OS_ID}" = "amzn" ]; then
+    SUPERVISOR_INSTALL="Amazon Linux 2023 has no Supervisor package. Install it with pip3 install supervisor, then create /etc/supervisord.d, an /etc/supervisord.conf whose [include] has files = /etc/supervisord.d/*.ini, and a supervisord.service systemd unit."
 fi
+
+info "OS: ${OS_ID} (${OS_FAMILY} family), Supervisor service ${SUPERVISOR_SERVICE}"
+
+# --- Work out the Supervisor config folder ----------------------------------
 
 if [ -n "${RCONFIG_SUPERVISOR_DIR:-}" ]; then
     TEST_MODE=1
     SUPDIR="${RCONFIG_SUPERVISOR_DIR}"
-    EXT="${RCONFIG_SUPERVISOR_EXT:-${OS_EXT:-ini}}"
+    EXT="${RCONFIG_SUPERVISOR_EXT:-${OS_EXT}}"
 else
     TEST_MODE=0
     SUPDIR="${OS_SUPDIR}"
     EXT="${OS_EXT}"
 
+    # pip installs supervisorctl here, and sudo's secure_path leaves it out.
+    PATH="${PATH}:/usr/local/sbin:/usr/local/bin"
+
     if [ "$(id -u)" -ne 0 ]; then
         fail "this script writes to the Supervisor config folder and must be run as root, for example: sudo ./setup_supervisor.sh"
-    fi
-    if [ -z "${SUPDIR}" ]; then
-        fail "unsupported OS. Expected /etc/redhat-release (RHEL family) or /etc/debian_version (Ubuntu or Debian)."
     fi
 fi
 
@@ -85,8 +125,20 @@ case "${EXT}" in
 esac
 
 if [ ! -d "${SUPDIR}" ]; then
-    fail "Supervisor config folder ${SUPDIR} not found. Is Supervisor installed?"
+    fail "Supervisor config folder ${SUPDIR} not found, so Supervisor is not installed. ${SUPERVISOR_INSTALL}"
 fi
+
+if [ "${TEST_MODE}" -eq 0 ]; then
+    command -v supervisorctl >/dev/null 2>&1 \
+        || fail "supervisorctl not found, so Supervisor is not installed. ${SUPERVISOR_INSTALL}"
+    systemctl cat "${SUPERVISOR_SERVICE}.service" >/dev/null 2>&1 \
+        || fail "no ${SUPERVISOR_SERVICE}.service systemd unit found. ${SUPERVISOR_INSTALL}"
+fi
+
+for tool in cmp getent awk; do
+    command -v "${tool}" >/dev/null 2>&1 \
+        || fail "required command ${tool} not found. Install it (cmp is in the diffutils package) and run this script again."
+done
 
 # The app folder goes into command= and stdout_logfile=. Supervisor splits
 # command= on whitespace, and anything outside this set is more likely a
@@ -281,6 +333,13 @@ done
 if [ "${TEST_MODE}" -eq 1 ]; then
     info "RCONFIG_SUPERVISOR_DIR is set, not reloading Supervisor"
     exit 0
+fi
+
+# The EPEL and pip installs do not enable the service, so without this Horizon
+# would stop at the next reboot.
+if ! systemctl is-enabled --quiet "${SUPERVISOR_SERVICE}"; then
+    info "${SUPERVISOR_SERVICE} does not start at boot, enabling it"
+    systemctl enable "${SUPERVISOR_SERVICE}" || fail "could not enable ${SUPERVISOR_SERVICE}."
 fi
 
 # reread and update apply only the changed programs, so anything else this
