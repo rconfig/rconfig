@@ -78,6 +78,13 @@ class V8CoreInstallCommand extends Command
             return true;
         });
 
+        // Step 8: Secure Redis. Generates a password once and requires it on the
+        // live instance so a fresh box ships closed. Idempotent: re-running the
+        // installer detects the existing password and does not regenerate. Never
+        // fatal to the install, because Redis may not be running yet on a
+        // bare-metal box; the dashboard health check nags until it is secured.
+        $this->secureRedis();
+
         $this->newLine();
         $this->components->info('✓ rConfig v8 Core installed successfully!');
         $this->newLine();
@@ -107,6 +114,28 @@ class V8CoreInstallCommand extends Command
         $this->displayNextSteps();
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * Generate and apply a Redis password at install time so a fresh install is
+     * never left with an unauthenticated queue. Idempotent and non-fatal.
+     */
+    protected function secureRedis(): void
+    {
+        $this->components->task('Securing Redis', function () {
+            // --no-restart: consumers are not running yet during install, and a
+            // horizon:terminate here would be a no-op at best.
+            $exitCode = Artisan::call('rconfig:redis-secure', ['--no-restart' => true]);
+
+            if ($exitCode !== Command::SUCCESS) {
+                $this->components->warn(
+                    'Could not secure Redis automatically (is Redis running?). '
+                    . 'Run: php artisan rconfig:redis-secure once Redis is available.'
+                );
+            }
+
+            return true;
+        });
     }
 
     protected function setupCron()

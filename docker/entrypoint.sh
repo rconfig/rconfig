@@ -28,6 +28,37 @@ if ! grep -q "APP_KEY=base64:" /var/www/html/rconfig/.env; then
     php artisan key:generate --force
 fi
 
+# Secure Redis so a fresh container ships closed. Redis runs in this image under
+# Supervisor (see supervisord.conf), so generate a strong password once, write it
+# to .env, and require it in the Redis config BEFORE Supervisor starts Redis. This
+# runs ahead of the config cache below and the scheduler's first health run, so a
+# new box never reports an unauthenticated window. Idempotent: an existing
+# non-null password is reused, not regenerated, keeping .env and the config in
+# sync across restarts.
+ENV_FILE=/var/www/html/rconfig/.env
+REDIS_CONF=/etc/redis/rconfig-redis.conf
+
+CURRENT_REDIS_PW=$(grep -E '^REDIS_PASSWORD=' "$ENV_FILE" 2>/dev/null | head -n1 | cut -d= -f2- | tr -d '"'\''' )
+
+if [ -z "$CURRENT_REDIS_PW" ] || [ "$CURRENT_REDIS_PW" = "null" ]; then
+    echo "🔒 Generating Redis password..."
+    REDIS_SECRET=$(php -r 'echo bin2hex(random_bytes(32));')
+    php artisan env:set REDIS_PASSWORD "$REDIS_SECRET"
+else
+    echo "🔒 Reusing existing Redis password."
+    REDIS_SECRET="$CURRENT_REDIS_PW"
+fi
+
+# Require the password in the Redis config Supervisor launches. Replace an
+# existing requirepass line or append one; leave bind/protected-mode untouched.
+if [ -f "$REDIS_CONF" ]; then
+    if grep -qE '^[[:space:]]*requirepass[[:space:]]' "$REDIS_CONF"; then
+        sed -i -E "s|^[[:space:]]*requirepass[[:space:]].*|requirepass ${REDIS_SECRET}|" "$REDIS_CONF"
+    else
+        printf '\nrequirepass %s\n' "$REDIS_SECRET" >> "$REDIS_CONF"
+    fi
+fi
+
 # Seed the storage tree from the skeleton baked into the image. A named volume
 # gets the image content copied in by Docker on first mount, but a bind mount
 # masks it, so an empty host directory would otherwise start with none of the
