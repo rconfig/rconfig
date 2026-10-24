@@ -5,6 +5,11 @@ All notable changes to rConfig v8 Core are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.2.19] - Unreleased
+
+### Security
+- **Redis now requires authentication.** rConfig secures its Redis instance with a password to close a potential remote code execution path through the job queue. Fresh installs are secured automatically. On existing systems, a dashboard health check flags the box until you run `php artisan rconfig:redis-secure` once.
+
 ## [8.2.18] - 2026-10-08
 
 Security release. Upgrade is recommended for all 8.x installations.
