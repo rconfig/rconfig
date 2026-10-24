@@ -84,8 +84,12 @@ class RedisSecure extends Command
      */
     private function restartConsumers(): void
     {
-        Artisan::call('queue:restart');
-        $this->components->info('Broadcast queue restart signal.');
+        try {
+            Artisan::call('queue:restart');
+            $this->components->info('Broadcast queue restart signal.');
+        } catch (Throwable $e) {
+            $this->components->warn('Could not broadcast the queue restart signal: ' . $e->getMessage());
+        }
 
         try {
             Artisan::call('horizon:terminate');

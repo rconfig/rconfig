@@ -230,7 +230,7 @@ class RedisSecurityService
             $this->restoreRawEnvValue($previousRaw);
 
             if ($wasCached) {
-                Artisan::call('config:cache');
+                $this->rebuildConfigCache();
             }
 
             throw new RuntimeException('Failed to set requirepass on Redis; rolled back .env. ' . $e->getMessage(), 0, $e);
@@ -248,15 +248,10 @@ class RedisSecurityService
 
         // 5. Make this process's framework connection use the new password so the
         //    command's queue:restart / horizon:terminate can still reach Redis.
-        config([
-            'database.redis.default.password' => $secret,
-            'database.redis.cache.password' => $secret,
-        ]);
-        app('redis')->purge('default');
-        app('redis')->purge('cache');
+        $this->refreshFrameworkConnections($secret);
 
         if ($wasCached) {
-            Artisan::call('config:cache');
+            $this->rebuildConfigCache();
         }
 
         $verified = $this->canAuthenticateWith($secret);
@@ -361,6 +356,49 @@ class RedisSecurityService
         [$updated] = (new EnvironmentSetCommand)->setEnvVariable($content, self::ENV_KEY, $value);
 
         file_put_contents($this->envPath, $updated, LOCK_EX);
+    }
+
+    /**
+     * Rebuild the config cache and hand it back to the web user. Run as root,
+     * config:clear + config:cache leaves a root-owned cache file that the web
+     * user cannot replace later. A no-op chown when not run as root.
+     */
+    private function rebuildConfigCache(): void
+    {
+        Artisan::call('config:cache');
+        custom_chown(App::getCachedConfigPath());
+    }
+
+    /**
+     * Point this process at the new password. Every named connection is updated,
+     * including the `horizon` one Horizon copies from `default` at boot.
+     * RedisManager copies the redis config when it is built, so updating config()
+     * and purging connections is not enough: the manager would reconnect with the
+     * old credential. Rebuild it, and drop the Redis-backed cache stores that
+     * hold the old manager.
+     */
+    private function refreshFrameworkConnections(string $secret): void
+    {
+        $connections = collect(config('database.redis', []))
+            ->except(['client', 'options', 'clusters'])
+            ->filter(fn (mixed $connection): bool => is_array($connection))
+            ->keys();
+
+        foreach ($connections as $name) {
+            config(["database.redis.{$name}.password" => $secret]);
+            app('redis')->purge($name);
+        }
+
+        app()->forgetInstance('redis');
+        Redis::clearResolvedInstance('redis');
+
+        $redisStores = collect(config('cache.stores', []))
+            ->filter(fn (mixed $store): bool => is_array($store) && ($store['driver'] ?? null) === 'redis')
+            ->keys()
+            ->all();
+
+        app('cache')->forgetDriver($redisStores);
+        app()->forgetInstance('cache.store');
     }
 
     /**

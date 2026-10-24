@@ -1,8 +1,14 @@
 <?php
 
 use App\Services\Utilities\RedisSecurityService;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 use Predis\Client;
 use Predis\Response\ServerException;
+use Tests\Traits\FakesHostFilesystem;
+
+uses(FakesHostFilesystem::class);
 
 /**
  * An in-memory stand-in for a Redis server. Lets the service be exercised end to
@@ -236,4 +242,80 @@ test('secure reports unpersisted when CONFIG REWRITE fails but does not roll bac
     expect($result['persisted'])->toBeFalse();
     expect($server->requirepass)->toBe($result['secret']);
     expect(file_get_contents($envPath))->toContain('REDIS_PASSWORD=' . $result['secret']);
+});
+
+/**
+ * The password a real framework connection would AUTH with. Predis connects
+ * lazily, so reading the parameters never opens a socket.
+ */
+function frameworkRedisPassword(string $connection): ?string
+{
+    return Redis::connection($connection)->client()->getConnection()->getParameters()->password;
+}
+
+test('secure points every framework Redis connection at the new password, including horizon', function () {
+    // Horizon copies `default` into its own `horizon` connection at boot.
+    expect(config('database.redis'))->toHaveKey('horizon');
+    config(['database.redis.reporting' => ['host' => '127.0.0.1', 'port' => 6390, 'password' => null, 'database' => 3]]);
+
+    // Resolve the manager and its connections first, as a running command would.
+    $staleManager = app('redis');
+    foreach (['default', 'cache', 'horizon', 'reporting'] as $name) {
+        expect(frameworkRedisPassword($name))->toBeNull();
+    }
+
+    [$service] = makeService(new FakeRedisServer);
+    $secret = $service->secure()['secret'];
+
+    expect(app('redis'))->not->toBe($staleManager);
+
+    foreach (['default', 'cache', 'horizon', 'reporting'] as $name) {
+        expect(config("database.redis.{$name}.password"))->toBe($secret);
+        expect(frameworkRedisPassword($name))->toBe($secret);
+    }
+});
+
+test('secure rebuilds the Redis cache store so it no longer holds the stale manager', function () {
+    $staleStore = Cache::store('redis')->getStore();
+    expect($staleStore->connection()->client()->getConnection()->getParameters()->password)->toBeNull();
+
+    [$service] = makeService(new FakeRedisServer);
+    $secret = $service->secure()['secret'];
+
+    $store = Cache::store('redis')->getStore();
+
+    expect($store)->not->toBe($staleStore);
+    expect($store->getRedis())->toBe(app('redis'));
+    expect($store->connection()->client()->getConnection()->getParameters()->password)->toBe($secret);
+});
+
+test('secure hands a rebuilt config cache back to the web user', function () {
+    $filesystem = $this->fakeHostFilesystem();
+    app()->instance('config_loaded_from_cache', true);
+
+    Artisan::shouldReceive('call')->once()->with('config:clear')->andReturn(0);
+    Artisan::shouldReceive('call')->once()->with('config:cache')->andReturn(0);
+
+    [$service] = makeService(new FakeRedisServer);
+    $service->secure();
+
+    $cachePath = app()->getCachedConfigPath();
+
+    expect($filesystem->chowned)->toBe([['path' => $cachePath, 'user' => 'apache']]);
+    expect($filesystem->chgrped)->toBe([['path' => $cachePath, 'group' => 'apache']]);
+});
+
+test('secure hands the config cache back to the web user after a rollback too', function () {
+    $filesystem = $this->fakeHostFilesystem();
+    app()->instance('config_loaded_from_cache', true);
+
+    Artisan::shouldReceive('call')->once()->with('config:clear')->andReturn(0);
+    Artisan::shouldReceive('call')->once()->with('config:cache')->andReturn(0);
+
+    $server = new FakeRedisServer;
+    $server->up = false;
+    [$service] = makeService($server);
+
+    expect(fn () => $service->secure())->toThrow(RuntimeException::class, 'rolled back');
+    expect($filesystem->chowned)->toBe([['path' => app()->getCachedConfigPath(), 'user' => 'apache']]);
 });

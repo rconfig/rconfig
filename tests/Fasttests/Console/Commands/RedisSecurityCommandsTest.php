@@ -1,6 +1,8 @@
 <?php
 
 use App\Services\Utilities\RedisSecurityService;
+use Illuminate\Console\Command;
+use Illuminate\Contracts\Console\Kernel;
 
 /**
  * The commands are tested against a mocked service so the suite never touches a
@@ -136,4 +138,83 @@ test('secure --dry-run changes nothing and reports the plan', function () {
     $this->artisan('rconfig:redis-secure --dry-run')
         ->expectsOutputToContain('[dry run]')
         ->assertExitCode(0);
+});
+
+/**
+ * Replace a consumer restart command with a stand-in so the secure command's
+ * restart path runs without reaching any Redis. Records each call.
+ *
+ * @param  array<int, string>  $calls
+ */
+function standInRestartCommand(string $name, array &$calls, ?Throwable $failure = null): void
+{
+    $command = new class($name, $calls, $failure) extends Command
+    {
+        /**
+         * @param  array<int, string>  $calls
+         */
+        public function __construct(string $name, private array &$calls, private ?Throwable $failure)
+        {
+            $this->signature = $name;
+            parent::__construct();
+        }
+
+        public function handle(): int
+        {
+            $this->calls[] = $this->getName();
+
+            if ($this->failure !== null) {
+                throw $this->failure;
+            }
+
+            return self::SUCCESS;
+        }
+    };
+
+    app(Kernel::class)->registerCommand($command);
+}
+
+function securedResult(): array
+{
+    return [
+        'action' => 'secured',
+        'changed' => true,
+        'persisted' => true,
+        'secret' => str_repeat('c', 64),
+    ];
+}
+
+test('secure command restarts queue workers and Horizon', function () {
+    mockRedisSecurity(function ($mock) {
+        $mock->shouldReceive('secure')->once()->with(false)->andReturn(securedResult());
+    });
+
+    $calls = [];
+    standInRestartCommand('queue:restart', $calls);
+    standInRestartCommand('horizon:terminate', $calls);
+
+    $this->artisan('rconfig:redis-secure')
+        ->expectsOutputToContain('Broadcast queue restart signal')
+        ->expectsOutputToContain('Signalled Horizon to restart')
+        ->assertExitCode(0);
+
+    expect($calls)->toBe(['queue:restart', 'horizon:terminate']);
+});
+
+test('secure command only warns when queue:restart fails and still signals Horizon', function () {
+    mockRedisSecurity(function ($mock) {
+        $mock->shouldReceive('secure')->once()->with(false)->andReturn(securedResult());
+    });
+
+    $calls = [];
+    standInRestartCommand('queue:restart', $calls, new RuntimeException('NOAUTH Authentication required.'));
+    standInRestartCommand('horizon:terminate', $calls);
+
+    $this->artisan('rconfig:redis-secure')
+        ->expectsOutputToContain('Could not broadcast the queue restart signal: NOAUTH Authentication required.')
+        ->expectsOutputToContain('Signalled Horizon to restart')
+        ->expectsOutputToContain('Redis is now secured')
+        ->assertExitCode(0);
+
+    expect($calls)->toBe(['queue:restart', 'horizon:terminate']);
 });
