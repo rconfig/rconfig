@@ -310,9 +310,11 @@ yes | composer install --no-dev
 chmod +x setup_apache.sh
 ./setup_apache.sh
 
-# 7. Setup Supervisor
+# 7. Setup Supervisor (run as root). Writes a root owned Horizon config into
+#    /etc/supervisord.d (RHEL) or /etc/supervisor/conf.d (Ubuntu) that runs
+#    Horizon as the web user. Re-run it after every upgrade.
 chmod +x setup_supervisor.sh
-./setup_supervisor.sh
+sudo ./setup_supervisor.sh
 
 # 8. Run the beautiful installation wizard, and answer yes to all prompts 🎨
 php artisan v8core:install
