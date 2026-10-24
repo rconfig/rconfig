@@ -61,7 +61,9 @@ class rConfigCloneTemplates extends Command
      */
     public function ensureCloneDirectoryExists(string $dstDir): void
     {
-        File::ensureDirectoryExists(templates_path());
-        File::makeDirectory($dstDir, 0775, true, true);
+        // 0755 keeps the effective mode these got before, when 0775 was
+        // masked by the default umask. The helper chmods explicitly, so
+        // passing 0775 here would now make the tree group writable.
+        rconfig_make_directory($dstDir, 0755);
     }
 }

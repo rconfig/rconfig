@@ -154,6 +154,15 @@ This project uses the Laravel 10 style file structure (it upgraded from Laravel 
 - Run the minimum set of tests with a filter before finalizing. When your feature's tests pass, ask the user if they want the full suite run.
 - Do not remove tests or test files without approval.
 
+### Process privilege and filesystem ownership
+
+- Processes (Horizon, queue workers, the scheduler) run as the web user, never root. Detect it with `rconfig_web_user()`; never hardcode `apache`, `www-data` or `nginx`. It does not check the user exists, so anything that writes Supervisor or cron config, or chowns, must validate it with `posix_getpwnam()` first and fail loudly if it is missing.
+- Create directories with `rconfig_make_directory($path, $mode)`, always passing the mode explicitly (`config('rConfig.config_dir_mode')` for anything holding device configs). Never use a bare `mkdir`/`File::makeDirectory` followed by a chown on the leaf: that leaves every ancestor it created owned by the process user. `tests/Unit/RconfigMakeDirectoryModeArgumentTest.php` fails if a call omits the mode.
+- Nothing that root loads or executes may be writable by the web user (Supervisor conf, cron files, scripts run through sudo, app code while any process runs it as root).
+- When changing the privilege of any process, search `vendor/` as well as `app/` for code paths it runs.
+- Any change that affects existing installs must be flagged in the PR description under a "Deployment impact" heading.
+- Ownership code is tested with OS calls faked through `App\Services\Utilities\HostFilesystem` (see `tests/Traits/FakesHostFilesystem.php`), so tests never depend on running as root. Each ownership bug fixed gets a regression test that fails under the old behaviour. Real-ownership tests skip cleanly when not root.
+
 ### Documentation and replies
 
 - Only create documentation files when the user explicitly asks.
