@@ -114,7 +114,34 @@ class V8CoreInstallCommand extends Command
         $this->newLine();
         $this->displayNextSteps();
 
-        return $cronInstalled ? Command::SUCCESS : Command::FAILURE;
+        // Last, so a failure is the final thing the operator sees.
+        $workerUserOk = app(HostFilesystem::class)->isDocker() || $this->checkWorkerUser();
+
+        return $cronInstalled && $workerUserOk ? Command::SUCCESS : Command::FAILURE;
+    }
+
+    /**
+     * Runs rconfig:check-worker-user and, if it fails, says that rConfig is
+     * installed but something still runs as root, and how to fix it.
+     */
+    protected function checkWorkerUser(): bool
+    {
+        $this->components->info('Checking that nothing runs as root');
+
+        $exitCode = Artisan::call('rconfig:check-worker-user', [], $this->output);
+
+        $this->newLine();
+
+        if ($exitCode === Command::SUCCESS) {
+            return true;
+        }
+
+        $this->components->error('rConfig is installed, but the worker user check failed (see the FAIL lines above).');
+        $this->line('   Fix: run <fg=cyan>sudo ./update.sh --no-pull</> from ' . base_path());
+        $this->line('   Then check again with: <fg=cyan>php artisan rconfig:check-worker-user</>');
+        $this->newLine();
+
+        return false;
     }
 
     /**

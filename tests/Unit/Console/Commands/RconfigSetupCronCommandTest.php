@@ -67,11 +67,19 @@ test('skips in Docker and runs nothing', function () {
 test('no application code writes to a crontab directly', function () {
     // setup_cron.sh is the single place a crontab is changed. The old
     // installer wrote the scheduler into whichever user's crontab ran it.
-    $offenders = collect(File::allFiles(app_path()))
-        ->filter(fn (SplFileInfo $file): bool => preg_match('/\bcrontab\s/', File::get($file->getPathname())) === 1)
-        ->map(fn (SplFileInfo $file): string => $file->getRelativePathname())
+    // A crontab call is a string that starts with the binary, as in
+    // ['crontab', ...] or "crontab -". The only one allowed is the read-only
+    // crontab -u <user> -l in HostFilesystem, used by rconfig:check-worker-user.
+    $calls = collect(File::allFiles(app_path()))
+        ->flatMap(function (SplFileInfo $file): array {
+            preg_match_all('/^.*[\'"]crontab[\'"\s].*$/m', File::get($file->getPathname()), $matches);
+
+            return array_map(fn (string $line): string => $file->getRelativePathname() . ': ' . trim($line), $matches[0]);
+        })
         ->values()
         ->all();
 
-    expect($offenders)->toBe([]);
+    expect($calls)->toBe([
+        "Services/Utilities/HostFilesystem.php: \$result = Process::timeout(30)->run(['crontab', '-u', \$user, '-l']);",
+    ]);
 });

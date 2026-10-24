@@ -151,11 +151,19 @@ function buildUpdateBin(array $sandbox): void
                 rconfig:web-user) printf '%s\n' "${FAKE_WEB_USER:-nobody}" ;;
                 down) touch "$app/storage/framework/down" ;;
                 up) rm -f "$app/storage/framework/down" ;;
-                list)
-                    printf 'migrate   Run the database migrations\n'
-                    if [ -n "${FAKE_HAS_CHECK_WORKER_USER:-}" ]; then
-                        printf 'rconfig:check-worker-user   Verify the worker user\n'
+                rconfig:check-worker-user)
+                    if [ -n "${FAKE_NO_CHECK_WORKER_USER:-}" ]; then
+                        echo 'ERROR  Command "rconfig:check-worker-user" is not defined.' >&2
+                        exit 1
                     fi
+                    if [ -n "${FAKE_WORKER_CHECK_FAILS:-}" ]; then
+                        printf 'FAIL Horizon: Horizon runs as root (PID 4321). It must run as nobody only.\n'
+                        printf 'OK   Scheduler cron file: /etc/cron.d/rconfig-core is root:root 0644 and runs the scheduler as nobody.\n'
+                        printf 'FAIL Supervisor config: /etc/supervisord.d/rconfig-core-horizon.ini sets user=root, not nobody.\n'
+                        printf 'Overall: Still running as root\nFix: Run sudo ./update.sh from %s\n' "$app"
+                        exit 1
+                    fi
+                    printf 'OK   Horizon: Horizon runs as nobody (PID 4321).\nOverall: All good\n'
                     ;;
             esac
             SH,
@@ -360,7 +368,7 @@ test('a full run does every step in the right order and ends with the app up and
         'systemctl restart httpd',
         "[nobody] php {$app}/artisan up",
         "[nobody] php {$app}/artisan rconfig:set-config-permissions",
-        "[nobody] php {$app}/artisan list --raw",
+        "[nobody] php {$app}/artisan rconfig:check-worker-user",
     ];
 
     $positions = array_map(fn (string $needle): ?int => firstCall($calls, $needle), $order);
@@ -505,7 +513,7 @@ test('after git pull the rest of the run uses the new copy of the script', funct
         ->and($calls[$pull])->toContain("git -C {$this->sandbox['app']} pull --ff-only")
         ->and($started)->toBeGreaterThan($pull)
         ->and(firstCall($calls, 'composer install'))->toBeGreaterThan($started)
-        ->and(lastCall($calls, 'list --raw'))->toBeGreaterThan($started)
+        ->and(lastCall($calls, 'rconfig:check-worker-user'))->toBeGreaterThan($started)
         ->and(count(array_filter($calls, fn (string $call): bool => str_contains($call, 'composer install'))))->toBe(1);
 });
 
@@ -586,16 +594,31 @@ test('a failure stopping Horizon rolls back and never pulls', function () {
         ->and(file_exists("{$this->sandbox['app']}/storage/framework/down"))->toBeFalse();
 });
 
-test('a failed worker check after the app is up says the app is up and exits non-zero', function () {
-    $result = runUpdate($this->sandbox, ['--no-pull'], [
-        'FAKE_HAS_CHECK_WORKER_USER' => '1',
-        'FAKE_FAIL' => 'artisan rconfig:check-worker-user',
-    ]);
+test('a failed worker check after the app is up says the app is up, lists the failed checks and gives the fix', function () {
+    $result = runUpdate($this->sandbox, ['--no-pull'], ['FAKE_WORKER_CHECK_FAILS' => '1']);
+    $output = updateOutput($result);
 
     expect($result->exitCode())->toBe(1)
-        ->and(updateOutput($result))->toContain("the step 'check the worker user' failed")
-        ->and(updateOutput($result))->toContain('the app is up')
-        ->and(file_exists("{$this->sandbox['app']}/storage/framework/down"))->toBeFalse();
+        ->and($output)->toContain("the step 'check the worker user' failed (exit 1)")
+        ->and($output)->toContain('The upgrade itself finished. rConfig is up and running.')
+        ->and($output)->toContain("Failed checks:\nupdate:   FAIL Horizon: Horizon runs as root (PID 4321).")
+        ->and($output)->toContain('update:   FAIL Supervisor config:')
+        ->and($output)->not->toContain('update:   OK')
+        ->and($output)->toContain("Fix: correct each failed check, then run: cd {$this->sandbox['app']} && sudo ./update.sh --no-pull")
+        ->and($output)->not->toContain('left in maintenance mode and Horizon is stopped')
+        ->and($output)->not->toContain('done. rConfig V8 Core is upgraded.')
+        ->and(file_exists("{$this->sandbox['app']}/storage/framework/down"))->toBeFalse()
+        ->and(trim(File::get("{$this->sandbox['sup']}/rconfig-core-horizon")))->toBe('RUNNING');
+});
+
+test('a failed worker check on a box that was already in maintenance mode says it was left that way', function () {
+    touch("{$this->sandbox['app']}/storage/framework/down");
+
+    $result = runUpdate($this->sandbox, ['--no-pull'], ['FAKE_WORKER_CHECK_FAILS' => '1']);
+
+    expect($result->exitCode())->toBe(1)
+        ->and(updateOutput($result))->toContain('left in maintenance mode as it was before this run')
+        ->and(updateOutput($result))->not->toContain('rConfig is up and running');
 });
 
 test('Horizon that never reaches RUNNING fails the run', function () {
@@ -690,20 +713,23 @@ test('a failed redis-secure is a warning and the upgrade carries on', function (
 
 // --- check-worker-user ------------------------------------------------------------------
 
-test('check-worker-user runs as the web user when the command exists', function () {
-    $result = runUpdate($this->sandbox, env: ['FAKE_HAS_CHECK_WORKER_USER' => '1']);
-
-    expect($result->successful())->toBeTrue($result->errorOutput())
-        ->and(firstCall(updateCalls($this->sandbox), "[nobody] php {$this->sandbox['app']}/artisan rconfig:check-worker-user"))->not->toBeNull()
-        ->and(updateOutput($result))->not->toContain('RCO-1801');
-});
-
-test('a clear notice is printed when check-worker-user does not exist yet', function () {
+test('check-worker-user always runs, as the web user, and its output reaches the log', function () {
     $result = runUpdate($this->sandbox);
 
     expect($result->successful())->toBeTrue($result->errorOutput())
-        ->and(firstCall(updateCalls($this->sandbox), 'rconfig:check-worker-user'))->toBeNull()
-        ->and(updateOutput($result))->toContain('NOTICE: rconfig:check-worker-user is not in this release yet (RCO-1801)');
+        ->and(firstCall(updateCalls($this->sandbox), "[nobody] php {$this->sandbox['app']}/artisan rconfig:check-worker-user"))->not->toBeNull()
+        ->and(updateOutput($result))->toContain('Overall: All good')
+        ->and(updateOutput($result))->toContain('done. rConfig V8 Core is upgraded.');
+});
+
+test('a missing check-worker-user command fails the run instead of being skipped', function () {
+    $result = runUpdate($this->sandbox, ['--no-pull'], ['FAKE_NO_CHECK_WORKER_USER' => '1']);
+
+    expect($result->exitCode())->toBe(1)
+        ->and(updateOutput($result))->toContain('Command "rconfig:check-worker-user" is not defined.')
+        ->and(updateOutput($result))->toContain("the step 'check the worker user' failed")
+        ->and(updateOutput($result))->toContain('none listed, see the output above.')
+        ->and(updateOutput($result))->not->toContain('done. rConfig V8 Core is upgraded.');
 });
 
 // --- Re-runs and maintenance mode -------------------------------------------------------

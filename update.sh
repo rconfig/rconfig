@@ -254,6 +254,48 @@ fix_ownership() {
     fi
 }
 
+# Runs rconfig:check-worker-user, the last step. By now the upgrade has
+# finished and the app is back, so a failure says that plainly, lists the
+# failed checks and gives the fix, instead of the message for a half finished
+# upgrade. It runs as the web user, so root's crontab is not read here:
+# setup_cron.sh has already cleaned it earlier in this run.
+check_worker_user() {
+    local output status=0 failed
+
+    output="$(artisan rconfig:check-worker-user 2>&1)" || status=$?
+    printf '%s\n' "${output}"
+
+    if [ "${status}" -eq 0 ]; then
+        return 0
+    fi
+
+    trap - ERR
+    failed="$(printf '%s\n' "${output}" | grep '^FAIL' || true)"
+
+    {
+        echo
+        echo "update: ERROR: the step '${CURRENT_STEP}' failed (exit ${status})."
+        if [ "${WAS_DOWN}" -eq 1 ]; then
+            echo "update: The upgrade itself finished. rConfig is running, and left in maintenance mode as it was before this run."
+        else
+            echo "update: The upgrade itself finished. rConfig is up and running."
+        fi
+        echo "update: Failed checks:"
+        if [ -n "${failed}" ]; then
+            printf '%s\n' "${failed}" | sed 's/^/update:   /'
+        else
+            echo "update:   none listed, see the output above."
+        fi
+        echo "update: Fix: correct each failed check, then run: cd ${APP_DIR} && sudo ./${SCRIPT_NAME} --no-pull"
+        echo "update: To check again without upgrading: php artisan rconfig:check-worker-user"
+        if [ -n "${LOG_FILE:-}" ]; then
+            echo "update: Full log: ${LOG_FILE}"
+        fi
+    } >&2
+
+    exit 1
+}
+
 # --- The run ---------------------------------------------------------------
 
 main() {
@@ -580,11 +622,7 @@ main() {
     artisan rconfig:set-config-permissions
 
     step "check the worker user"
-    if artisan list --raw | awk '$1 == "rconfig:check-worker-user" { found = 1 } END { exit !found }'; then
-        artisan rconfig:check-worker-user
-    else
-        info "NOTICE: rconfig:check-worker-user is not in this release yet (RCO-1801), so the worker user was not checked. supervisorctl reports ${PROGRAM} as RUNNING."
-    fi
+    check_worker_user
 
     echo
     info "done. rConfig V8 Core is upgraded."

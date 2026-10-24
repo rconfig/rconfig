@@ -322,6 +322,8 @@ php artisan v8core:install
 
 > 🎉 When prompted about the scheduler cron file, type `yes` and press Enter. This writes `/etc/cron.d/rconfig-core`, which runs the scheduler as the web user (never root), and removes any old rConfig V8 Core `schedule:run` line from root's crontab and the web user's crontab. If the installer is not running as root it cannot write that file and prints the command instead: run `sudo ./setup_cron.sh` from the rConfig folder.
 
+> ✅ The installer ends by running `php artisan rconfig:check-worker-user`, which checks that Horizon, the scheduler and the Supervisor config run nothing as root. It prints one OK, WARN or FAIL line per check. On any FAIL the installer exits non-zero: fix what it lists, then run `sudo ./update.sh --no-pull`. You can run the check yourself at any time, with `sudo` to include root's crontab, or with `--json` for scripts.
+
 ---
 
 ### 🔧 Final Configuration
@@ -408,6 +410,7 @@ This one command does the whole upgrade in a safe order: maintenance mode, stop 
 - If you check out a release tag yourself, run `sudo ./update.sh --no-pull` so it does not pull.
 - `--skip-redis-secure` stops it setting a Redis password. One is set automatically when Redis has none, unless another app's Horizon (such as rConfig Pro) runs on the same server.
 - If a step fails, it says which one and stops. Before any code has changed it puts everything back. After that it leaves the app in maintenance mode: fix the problem, then run `sudo ./update.sh --no-pull`. It is safe to run more than once.
+- The last step runs `php artisan rconfig:check-worker-user`. If it fails, the upgrade itself has finished and rConfig is up and running, but something still runs as root or a Supervisor or cron file was changed by hand. The script lists the failed checks: fix them, then run `sudo ./update.sh --no-pull`.
 
 > 💡 **Git conflicts?** Run `git stash`, then `sudo ./update.sh` again.
 
