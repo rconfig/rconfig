@@ -70,4 +70,53 @@ class HostFilesystem
     {
         return @chgrp($path, $group);
     }
+
+    public function fileExists(string $path): bool
+    {
+        clearstatcache(true, $path);
+
+        return file_exists($path);
+    }
+
+    /**
+     * Every process visible in /proc, with its effective uid and arguments.
+     * Processes that exit while being read are skipped.
+     *
+     * @return list<array{pid: int, uid: int, arguments: list<string>}>
+     */
+    public function processes(): array
+    {
+        $processes = [];
+
+        foreach (glob('/proc/[0-9]*', GLOB_ONLYDIR) ?: [] as $dir) {
+            $status = @file_get_contents("{$dir}/status");
+            $cmdline = @file_get_contents("{$dir}/cmdline");
+
+            if ($status === false || $cmdline === false || ! preg_match('/^Uid:\s+\d+\s+(\d+)/m', $status, $uid)) {
+                continue;
+            }
+
+            $processes[] = [
+                'pid' => (int) basename($dir),
+                'uid' => (int) $uid[1],
+                'arguments' => array_values(array_filter(explode("\0", $cmdline), fn (string $argument): bool => $argument !== '')),
+            ];
+        }
+
+        return $processes;
+    }
+
+    /**
+     * The user name for a uid, or null when it has none.
+     */
+    public function userName(int $uid): ?string
+    {
+        if (! function_exists('posix_getpwuid')) {
+            return null;
+        }
+
+        $entry = posix_getpwuid($uid);
+
+        return $entry === false ? null : $entry['name'];
+    }
 }

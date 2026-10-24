@@ -395,6 +395,62 @@ Open your browser and navigate to: `https://your-server.domain.com`
 > - Backup your `storage` directory
 > - Backup your entire server if possible
 
+### On 8.2.19 or later
+
+```bash
+cd /var/www/html/rconfig
+sudo ./update.sh
+```
+
+This one command does the whole upgrade in a safe order: maintenance mode, stop Horizon, `git pull`, `composer install --no-dev`, migrate, Supervisor and cron files, caches, file ownership, then start Horizon, restart Apache and bring the app back up. Horizon and the scheduler run as the web user, never root.
+
+- The full run is logged to `/var/log/rconfig-core-update-<date>.log`.
+- If you check out a release tag yourself, run `sudo ./update.sh --no-pull` so it does not pull.
+- `--skip-redis-secure` stops it setting a Redis password. One is set automatically when Redis has none, unless another app's Horizon (such as rConfig Pro) runs on the same server.
+- If a step fails, it says which one and stops. Before any code has changed it puts everything back. After that it leaves the app in maintenance mode: fix the problem, then run `sudo ./update.sh --no-pull`. It is safe to run more than once.
+
+> 💡 **Git conflicts?** Run `git stash`, then `sudo ./update.sh` again.
+
+### First upgrade from 8.2.18 or earlier to 8.2.19 or later
+
+`update.sh` is not on your server until you pull 8.2.19, so pull once by hand, then let the script do the rest:
+
+```bash
+cd /var/www/html/rconfig
+git pull
+sudo ./update.sh --no-pull
+```
+
+### Legacy method (before 8.2.19)
+
+Only for upgrading to a release older than 8.2.19, which has no `update.sh`.
+
+```bash
+# CentOS/Rocky/RHEL:
+cd /var/www/html/rconfig
+git pull
+composer install
+php artisan migrate --force
+php artisan rconfig:sync-tasks
+systemctl restart httpd
+php artisan rconfig:clear-all
+php artisan rconfig:set-config-permissions
+sudo ./setup_supervisor.sh
+sudo ./setup_cron.sh
+
+# Ubuntu:
+cd /var/www/html/rconfig
+git pull
+composer install
+php artisan migrate --force
+php artisan rconfig:sync-tasks
+systemctl restart apache2
+php artisan rconfig:clear-all
+php artisan rconfig:set-config-permissions
+sudo ./setup_supervisor.sh
+sudo ./setup_cron.sh
+```
+
 ### PHP 8.4 Update (Required as of Feb 2024)
 ```bash
 # For CentOS/RHEL/Rocky:
@@ -411,35 +467,6 @@ wget https://dl.rconfig.com/downloads/php-updates/ubuntu-php8-update.sh -O /home
 chmod +x ubuntu-php8-update.sh
 ./ubuntu-php8-update.sh
 ```
-
-### Update Commands
-```bash
-# CentOS/Rocky/RHEL:
-cd /var/www/html/rconfig
-git pull
-php artisan migrate
-php artisan rconfig:sync-tasks
-composer install
-systemctl restart httpd
-php artisan rconfig:clear-all
-php artisan rconfig:set-config-permissions
-sudo ./setup_supervisor.sh
-sudo ./setup_cron.sh
-
-# Ubuntu:
-cd /var/www/html/rconfig
-git pull
-php artisan migrate
-php artisan rconfig:sync-tasks
-composer install
-systemctl restart apache2
-php artisan rconfig:clear-all
-php artisan rconfig:set-config-permissions
-sudo ./setup_supervisor.sh
-sudo ./setup_cron.sh
-```
-
-> 💡 **Git Conflicts?** Try: `git stash && git pull`
 
 <p align="right">(<a href="#readme-top">⬆ back to top</a>)</p>
 

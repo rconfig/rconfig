@@ -23,6 +23,15 @@
 #   RCONFIG_PHP             PHP binary used to run artisan. Defaults to php.
 #   RCONFIG_OS_RELEASE      os-release file to detect the OS from. Defaults to
 #                           /etc/os-release.
+#   RCONFIG_SUPERVISOR_DEFER_START
+#                           set to 1 to write the config and reread it, but not
+#                           start Horizon or supervisord. update.sh uses this
+#                           so Horizon only starts once ownership is fixed; it
+#                           then runs supervisorctl update itself.
+#   RCONFIG_SUPERVISOR_TEST_RELOAD
+#                           set to 1 with RCONFIG_SUPERVISOR_DIR to run the
+#                           reload steps too. Only for tests that put fake
+#                           supervisorctl and systemctl first on PATH.
 
 set -euo pipefail
 
@@ -330,16 +339,30 @@ done
 
 # --- Reload Supervisor ------------------------------------------------------
 
-if [ "${TEST_MODE}" -eq 1 ]; then
+if [ "${TEST_MODE}" -eq 1 ] && [ "${RCONFIG_SUPERVISOR_TEST_RELOAD:-0}" != "1" ]; then
     info "RCONFIG_SUPERVISOR_DIR is set, not reloading Supervisor"
     exit 0
 fi
+
+DEFER_START="${RCONFIG_SUPERVISOR_DEFER_START:-0}"
 
 # The EPEL and pip installs do not enable the service, so without this Horizon
 # would stop at the next reboot.
 if ! systemctl is-enabled --quiet "${SUPERVISOR_SERVICE}"; then
     info "${SUPERVISOR_SERVICE} does not start at boot, enabling it"
     systemctl enable "${SUPERVISOR_SERVICE}" || fail "could not enable ${SUPERVISOR_SERVICE}."
+fi
+
+# reread only loads and checks the new config. It never starts anything, so
+# the caller decides when Horizon starts.
+if [ "${DEFER_START}" = "1" ]; then
+    if systemctl is-active --quiet "${SUPERVISOR_SERVICE}"; then
+        supervisorctl reread || fail "supervisorctl reread failed, see the error above. The rendered files are in ${SUPDIR}."
+    else
+        info "${SUPERVISOR_SERVICE} is not running, leaving it stopped"
+    fi
+    info "RCONFIG_SUPERVISOR_DEFER_START is set, not starting Horizon. Apply the config with: supervisorctl update"
+    exit 0
 fi
 
 # reread and update apply only the changed programs, so anything else this

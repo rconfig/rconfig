@@ -9,7 +9,8 @@ use Closure;
  * Swaps the HostFilesystem OS seam for a fake, so ownership code can be tested
  * without running as root. mkdir, chmod and is_dir stay real (tests work in a
  * temp dir); os-release, the root and Docker checks, chown and chgrp are faked
- * and every ownership call is recorded.
+ * and every ownership call is recorded. The process list and user names are
+ * faked too, and file_exists can be, through the public properties.
  */
 trait FakesHostFilesystem
 {
@@ -33,6 +34,15 @@ trait FakesHostFilesystem
 
             /** @var list<array{path: string, mode: int}> */
             public array $chmodded = [];
+
+            /** @var list<array{pid: int, uid: int, arguments: list<string>}> */
+            public array $processList = [];
+
+            /** @var list<string>|null paths that exist; null checks the real filesystem */
+            public ?array $existingPaths = null;
+
+            /** @var array<int, string> */
+            public array $userNames = [0 => 'root'];
 
             public function __construct(
                 private ?string $osRelease,
@@ -85,6 +95,23 @@ trait FakesHostFilesystem
                 $this->chgrped[] = ['path' => $path, 'group' => $group];
 
                 return $this->ownershipSucceeds;
+            }
+
+            public function fileExists(string $path): bool
+            {
+                return $this->existingPaths === null
+                    ? parent::fileExists($path)
+                    : in_array($path, $this->existingPaths, true);
+            }
+
+            public function processes(): array
+            {
+                return $this->processList;
+            }
+
+            public function userName(int $uid): ?string
+            {
+                return $this->userNames[$uid] ?? null;
             }
 
             /**

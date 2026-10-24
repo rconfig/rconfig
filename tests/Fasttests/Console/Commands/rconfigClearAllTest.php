@@ -1,6 +1,7 @@
 <?php
 
 use App\Console\Commands\rconfigClearAll;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 
@@ -97,3 +98,18 @@ function writeStoredConfig(string $appDir, string $filename, int $mode): string
 
     return $path;
 }
+
+test('it restarts Horizon through horizon:terminate so Supervisor relaunches it', function () {
+    Artisan::shouldReceive('call')->once()->with('horizon:terminate');
+
+    (new rconfigClearAll)->restartHorizon();
+});
+
+test('it never restarts Supervisor or sniffs the OS release files', function () {
+    $source = File::get(app_path('Console/Commands/rconfigClearAll.php'));
+
+    expect($source)->not->toContain('supervisorctl')
+        ->and($source)->not->toContain('systemctl')
+        ->and($source)->not->toContain('/etc/redhat-release')
+        ->and($source)->not->toContain('/etc/lsb-release');
+});

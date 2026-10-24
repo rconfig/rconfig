@@ -64,10 +64,8 @@ class rconfigClearAll extends Command
         $this->info('------  Queues Restarted!  ------');
 
         if (! getenv('IS_DOCKER')) {
-            echo exec('sudo supervisorctl update') . PHP_EOL;
-            echo exec('sudo supervisorctl reread') . PHP_EOL;
-            echo exec('if [ -f /etc/redhat-release ]; then systemctl restart supervisord; fi;') . PHP_EOL;
-            echo exec('if [ -f /etc/lsb-release ]; then systemctl restart supervisor; fi;') . PHP_EOL;
+            $this->restartHorizon();
+            $this->info('------  Horizon Restarted!  ------');
 
             custom_chown(rconfig_appdir_path());
         }
@@ -82,6 +80,17 @@ class rconfigClearAll extends Command
             $this->warn('Stored device configurations are readable by other local accounts on this host.');
             $this->warn('Run: php artisan rconfig:set-config-permissions');
         }
+    }
+
+    /**
+     * Makes Horizon exit so Supervisor relaunches it, as the configured user,
+     * with the fresh config. It never restarts Supervisor itself: that would
+     * bounce every program on the box, including rConfig PRO's on a shared
+     * host, and needs sudo the web user does not have.
+     */
+    public function restartHorizon(): void
+    {
+        Artisan::call('horizon:terminate');
     }
 
     /**

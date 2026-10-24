@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\HealthChecks\RcDiskSpaceCheck;
 use App\HealthChecks\RedisAuthCheck;
+use App\HealthChecks\WorkerPrivilegeCheck;
 use Illuminate\Support\ServiceProvider;
 use Spatie\CpuLoadHealthCheck\CpuLoadCheck;
 use Spatie\Health\Checks\Checks\CacheCheck;
@@ -42,6 +43,7 @@ class HealthCheckProvider extends ServiceProvider
             HorizonCheck::new(),
             RedisCheck::new(),
             RedisAuthCheck::new()->name('Redis Auth'),
+            WorkerPrivilegeCheck::new()->name('Worker Privilege'),
             ScheduleCheck::new()->heartbeatMaxAgeInMinutes(10),
             RcDiskSpaceCheck::new()
                 ->name('Disk Space: /storage')

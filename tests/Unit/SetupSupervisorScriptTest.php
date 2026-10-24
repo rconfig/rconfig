@@ -95,7 +95,8 @@ test('writes the CORE file name and program name with the user and app folder fi
         ->and($rendered)->not->toContain('[program:horizon]')
         ->and($rendered)->toContain("\nuser=nobody\n")
         ->and($rendered)->toContain("command=php {$this->sandbox['app']}/artisan horizon")
-        ->and($rendered)->toContain("stdout_logfile={$this->sandbox['app']}/storage/logs/horizon.log")
+        ->and($rendered)->toContain("\nstdout_logfile=/var/log/rconfig-core-horizon.log\n")
+        ->and($rendered)->not->toContain('storage/logs/horizon.log')
         ->and($rendered)->not->toContain('RCONFIG_')
         ->and($rendered)->not->toMatch('/^user\s*=\s*root\s*$/mi')
         ->and(supervisorDirEntries($this->sandbox['sup']))->toBe(["rconfig-core-horizon.{$extension}"]);
@@ -366,4 +367,80 @@ test('no Supervisor stub in the repo runs as root', function () {
         $this->assertDoesNotMatchRegularExpression('/^\s*user\s*=\s*root\s*$/mi', $contents, basename($stub) . ' sets user=root.');
         $this->assertStringContainsString(SETUP_SUPERVISOR_STUB_PLACEHOLDER, $contents, basename($stub) . ' must use the RCONFIG_WEB_USER placeholder.');
     }
+});
+
+/**
+ * Swaps the tripwire supervisorctl and systemctl for recording fakes that
+ * succeed, so the reload steps can run in test mode. Calls go to
+ * reload-calls, not host-calls, so the afterEach tripwire still guards
+ * every other test.
+ *
+ * @param  array{root: string}  $sandbox
+ */
+function useRecordingReloadFakes(array $sandbox, bool $supervisordActive = true): void
+{
+    $active = $supervisordActive ? 'exit 0' : 'exit 3';
+
+    foreach (['supervisorctl', 'systemctl'] as $binary) {
+        File::put("{$sandbox['root']}/bin/{$binary}", <<<SH
+            #!/bin/sh
+            echo "{$binary} \$*" >> '{$sandbox['root']}/reload-calls'
+            if [ "{$binary}" = "systemctl" ] && [ "\$1" = "is-active" ]; then {$active}; fi
+            exit 0
+            SH);
+        chmod("{$sandbox['root']}/bin/{$binary}", 0755);
+    }
+}
+
+/**
+ * @param  array{root: string}  $sandbox
+ * @return list<string>
+ */
+function reloadCalls(array $sandbox): array
+{
+    $log = "{$sandbox['root']}/reload-calls";
+
+    return file_exists($log) ? file($log, FILE_IGNORE_NEW_LINES) : [];
+}
+
+test('deferred start writes and rereads the config but never starts Horizon', function () {
+    useRecordingReloadFakes($this->sandbox);
+
+    $result = runSetupSupervisor($this->sandbox, env: [
+        'RCONFIG_SUPERVISOR_TEST_RELOAD' => '1',
+        'RCONFIG_SUPERVISOR_DEFER_START' => '1',
+    ]);
+    $calls = reloadCalls($this->sandbox);
+
+    expect($result->successful())->toBeTrue($result->errorOutput())
+        ->and(is_file("{$this->sandbox['sup']}/rconfig-core-horizon.ini"))->toBeTrue()
+        ->and($calls)->toContain('supervisorctl reread')
+        ->and($calls)->not->toContain('supervisorctl update')
+        ->and(array_filter($calls, fn (string $call): bool => str_starts_with($call, 'systemctl start')))->toBe([])
+        ->and($result->output())->toContain('not starting Horizon');
+});
+
+test('deferred start leaves a stopped supervisord stopped', function () {
+    useRecordingReloadFakes($this->sandbox, supervisordActive: false);
+
+    $result = runSetupSupervisor($this->sandbox, env: [
+        'RCONFIG_SUPERVISOR_TEST_RELOAD' => '1',
+        'RCONFIG_SUPERVISOR_DEFER_START' => '1',
+    ]);
+    $calls = reloadCalls($this->sandbox);
+
+    expect($result->successful())->toBeTrue($result->errorOutput())
+        ->and(array_filter($calls, fn (string $call): bool => str_starts_with($call, 'supervisorctl')))->toBe([])
+        ->and(array_filter($calls, fn (string $call): bool => str_starts_with($call, 'systemctl start')))->toBe([])
+        ->and($result->output())->toContain('leaving it stopped');
+});
+
+test('without deferred start the reload still rereads and updates', function () {
+    useRecordingReloadFakes($this->sandbox);
+
+    $result = runSetupSupervisor($this->sandbox, env: ['RCONFIG_SUPERVISOR_TEST_RELOAD' => '1']);
+    $calls = reloadCalls($this->sandbox);
+
+    expect($result->successful())->toBeTrue($result->errorOutput())
+        ->and(array_search('supervisorctl reread', $calls, true))->toBeLessThan(array_search('supervisorctl update', $calls, true));
 });
