@@ -39,8 +39,14 @@ return [
     'notifications' => [
         /*
          * Notifications will only get sent if this option is set to `true`.
+         *
+         * Only enabled when both HEALTH_MAIL_TO and MAIL_FROM_ADDRESS are valid
+         * addresses. health:check sends notifications before it stores results,
+         * so a missing address would crash every run and leave the dashboard
+         * showing stale health data.
          */
-        'enabled' => true,
+        'enabled' => filter_var(env('HEALTH_MAIL_TO'), FILTER_VALIDATE_EMAIL) !== false
+            && filter_var(env('MAIL_FROM_ADDRESS'), FILTER_VALIDATE_EMAIL) !== false,
 
         'notifications' => [
             CheckFailedNotification::class => ['mail'],
@@ -62,7 +68,7 @@ return [
         'throttle_notifications_for_minutes' => 60,
 
         'mail' => [
-            'to' => env('HEALTH_MAIL_TO', 'your@example.com'),
+            'to' => env('HEALTH_MAIL_TO'),
 
             'from' => [
                 'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),

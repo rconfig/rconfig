@@ -7,8 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [8.2.19] - Unreleased
 
+Security release. Recommended for all 8.x installations. **First upgrade from 8.2.18 or earlier: run `git pull`, then `sudo ./update.sh --no-pull`.** After that, `sudo ./update.sh` is the only upgrade command.
+
 ### Security
-- **Redis now requires authentication.** rConfig secures its Redis instance with a password to close a potential remote code execution path through the job queue. Fresh installs are secured automatically. On existing systems, a dashboard health check flags the box until you run `php artisan rconfig:redis-secure` once.
+- **Redis now requires authentication**, closing a potential remote code execution path through the job queue. Set automatically on fresh installs and upgrades. If another rConfig edition shares the same server, a dashboard health check flags the box until you run `php artisan rconfig:redis-secure` once.
+- **Background services no longer run as root.** Horizon and the scheduler now run as the web user, so a flaw in any job no longer has full system rights.
+- **(Docker) Tightened permissions on the `storage` folder** so local accounts can no longer modify its contents directly.
+
+### Added
+- **`update.sh`**, a single, safe upgrade command that handles the whole process and logs to `/var/log/`.
+- **Worker privilege check**, on the dashboard and at the end of an upgrade, that flags anything still running as root.
+
+### Changed
+- Horizon and the scheduler moved to managed system locations and now run as the web user.
+- `rconfig:clear-all` no longer restarts all of Supervisor, so it won't disrupt other apps on the same server.
 
 ## [8.2.18] - 2026-10-08
 

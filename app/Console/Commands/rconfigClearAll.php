@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Services\Utilities\HostFilesystem;
 use Artisan;
 use Illuminate\Console\Command;
 use RecursiveDirectoryIterator;
@@ -70,7 +71,7 @@ class rconfigClearAll extends Command
             custom_chown(rconfig_appdir_path());
         }
 
-        $this->applyDockerStoragePermissions();
+        $this->restoreDockerStoragePermissions();
 
         echo exec('composer dump-autoload') . PHP_EOL;
         $this->info(config('app.name') . ' application settings have been cleared!');
@@ -151,13 +152,25 @@ class rconfigClearAll extends Command
     }
 
     /**
-     * Loosen storage permissions when running inside the Docker image.
-     *
-     * Uses the configured application storage path rather than a hard coded
-     * one, and skips silently when the directory is absent, so it never emits
-     * a warning on layouts where storage lives elsewhere.
+     * Folders clear-all rebuilds, relative to the app folder.
      */
-    public function applyDockerStoragePermissions(): void
+    private const DOCKER_REBUILT_PATHS = ['bootstrap/cache', 'storage/framework', 'storage/logs'];
+
+    /**
+     * Put storage back the way the Docker entrypoint leaves it.
+     *
+     * Inside the container this command usually runs as root through docker
+     * compose exec, so the caches it just rebuilt are root owned and Apache,
+     * running as www-data, cannot replace them. Hand those folders back to the
+     * web user and reset the storage folder to the entrypoint's 0775. It used
+     * to chmod storage 0777 to paper over the ownership problem, which let any
+     * local account add, rename or delete entries directly under storage.
+     *
+     * Only the rebuilt folders are chowned, never the whole tree: the config
+     * data directory can hold hundreds of thousands of files. Bare metal is
+     * left alone. Skips silently when storage is absent.
+     */
+    public function restoreDockerStoragePermissions(): void
     {
         if (getenv('IS_DOCKER') !== 'true') {
             return;
@@ -165,8 +178,19 @@ class rconfigClearAll extends Command
 
         $storagePath = rconfig_appdir_storage_path();
 
-        if (is_dir($storagePath)) {
-            chmod($storagePath, 0777);
+        if (! is_dir($storagePath)) {
+            return;
+        }
+
+        app(HostFilesystem::class)->chmod($storagePath, 0775);
+        custom_chown($storagePath);
+
+        foreach (self::DOCKER_REBUILT_PATHS as $relativePath) {
+            $path = rconfig_appdir_path() . '/' . $relativePath;
+
+            if (is_dir($path)) {
+                custom_chown($path, true);
+            }
         }
     }
 }

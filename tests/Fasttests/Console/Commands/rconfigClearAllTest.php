@@ -4,6 +4,9 @@ use App\Console\Commands\rconfigClearAll;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
+use Tests\Traits\FakesHostFilesystem;
+
+uses(FakesHostFilesystem::class);
 
 beforeEach(function () {
     $this->appDir = sys_get_temp_dir() . '/rconfig-clear-all-' . uniqid();
@@ -16,7 +19,7 @@ afterEach(function () {
 
     $storage = $this->appDir . '/storage';
     if (is_dir($storage)) {
-        // The docker test loosens this to 0777; restore a sane mode first.
+        // Restore a sane mode first in case a test left it unusable.
         chmod($storage, 0755);
     }
     if (is_dir($this->appDir)) {
@@ -31,35 +34,73 @@ test('it has rconfig clear all command', function () {
     expect(class_exists(rconfigClearAll::class))->toBeTrue();
 });
 
-test('it loosens the configured storage path when in docker', function () {
+test('it never leaves storage world writable in docker', function () {
     $storage = $this->appDir . '/storage';
     mkdir($storage, 0755, true);
-    chmod($storage, 0755);
+    chmod($storage, 0777);
+    $this->fakeHostFilesystem(osRelease: "ID=debian\n");
     putenv('IS_DOCKER=true');
 
-    (new rconfigClearAll)->applyDockerStoragePermissions();
+    (new rconfigClearAll)->restoreDockerStoragePermissions();
 
-    expect(fileperms($storage) & 0777)->toBe(0777);
+    clearstatcache();
+    expect(fileperms($storage) & 0002)->toBe(0)
+        ->and(fileperms($storage) & 0777)->toBe(0775);
+});
+
+test('it hands the rebuilt caches back to the web user in docker', function () {
+    foreach (['storage/framework/views', 'storage/logs', 'bootstrap/cache', 'storage/app/rconfig/data/Routers'] as $path) {
+        mkdir($this->appDir . '/' . $path, 0755, true);
+    }
+    touch($this->appDir . '/bootstrap/cache/config.php');
+    touch($this->appDir . '/storage/framework/views/compiled.php');
+    $host = $this->fakeHostFilesystem(osRelease: "ID=debian\n");
+    putenv('IS_DOCKER=true');
+
+    (new rconfigClearAll)->restoreDockerStoragePermissions();
+
+    $chowned = $host->chownedPaths();
+    expect($chowned)->toContain(
+        $this->appDir . '/storage',
+        $this->appDir . '/bootstrap/cache',
+        $this->appDir . '/bootstrap/cache/config.php',
+        $this->appDir . '/storage/framework/views/compiled.php',
+        $this->appDir . '/storage/logs',
+    )
+        ->and(array_unique(array_column($host->chowned, 'user')))->toBe(['www-data']);
+
+    // Never walks the config data tree.
+    expect(array_filter($chowned, fn (string $path): bool => str_contains($path, '/storage/app')))->toBeEmpty();
 });
 
 test('it skips silently when the storage path is absent', function () {
+    $host = $this->fakeHostFilesystem(osRelease: "ID=debian\n");
     putenv('IS_DOCKER=true');
 
-    (new rconfigClearAll)->applyDockerStoragePermissions();
+    (new rconfigClearAll)->restoreDockerStoragePermissions();
 
     $this->assertDirectoryDoesNotExist($this->appDir . '/storage');
+    expect($host->chowned)->toBeEmpty()
+        ->and($host->chmodded)->toBeEmpty();
 });
 
-test('it does nothing when not running in docker', function () {
+test('it does nothing on bare metal', function (string|false $isDocker) {
     $storage = $this->appDir . '/storage';
-    mkdir($storage, 0755, true);
+    mkdir($storage . '/framework', 0755, true);
     chmod($storage, 0755);
-    putenv('IS_DOCKER');
+    $host = $this->fakeHostFilesystem();
+    $isDocker === false ? putenv('IS_DOCKER') : putenv("IS_DOCKER={$isDocker}");
 
-    (new rconfigClearAll)->applyDockerStoragePermissions();
+    (new rconfigClearAll)->restoreDockerStoragePermissions();
 
-    expect(fileperms($storage) & 0777)->toBe(0755);
-});
+    clearstatcache();
+    expect(fileperms($storage) & 0777)->toBe(0755)
+        ->and($host->chowned)->toBeEmpty()
+        ->and($host->chmodded)->toBeEmpty();
+})->with([
+    'unset' => [false],
+    'false' => ['false'],
+]);
 
 test('it detects configurations readable by other', function () {
     $config = writeStoredConfig($this->appDir, 'showrunningconfig_1200.txt', 0444);

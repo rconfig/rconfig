@@ -218,7 +218,7 @@ cd rconfig8coredocker
 
 ```
 
-To complete the setup, follow the remaining instructions in the V8 Core Docker documentation: [https://v8coredocs.rconfig.com/getting-started/docker-installation/](https://v8coredocs.rconfig.com/installation-upgrades/v8-core/docker-setup/)
+To complete the setup, follow the remaining instructions in the V8 Core Docker documentation: [https://v8coredocs.rconfig.com/installation-upgrades/v8-core/docker-setup/](https://v8coredocs.rconfig.com/installation-upgrades/v8-core/docker-setup/)
 
 **Default credentials:**
 - 📧 Email: `admin@domain.com`
@@ -312,7 +312,7 @@ chmod +x setup_apache.sh
 
 # 7. Setup Supervisor (run as root). Writes a root owned Horizon config into
 #    /etc/supervisord.d (RHEL) or /etc/supervisor/conf.d (Ubuntu) that runs
-#    Horizon as the web user. Re-run it after every upgrade.
+#    Horizon as the web user. update.sh re-runs it on every upgrade.
 chmod +x setup_supervisor.sh
 sudo ./setup_supervisor.sh
 
@@ -349,16 +349,17 @@ sudo systemctl restart httpd
 # Ubuntu:
 sudo systemctl restart apache2
 
-# Set permissions and clear cache
+# Clear caches, then set ownership. Clear first: run as root, clear-all
+# rebuilds the caches as root-owned files, and the chown hands them back.
 # CentOS/RHEL:
 cd /var/www/html/rconfig
-chown -R apache storage bootstrap/cache
 php artisan rconfig:clear-all
+chown -R apache:apache storage bootstrap/cache
 
 # Ubuntu:
 cd /var/www/html/rconfig
-chown -R www-data storage bootstrap/cache
 php artisan rconfig:clear-all
+chown -R www-data:www-data storage bootstrap/cache
 ```
 
 ---
