@@ -15,7 +15,7 @@ class DeviceFactory extends Factory
     {
         return [
             'device_name' => 'device' . $this->faker->randomNumber($nbDigits = 9),
-            'device_ip' => $this->faker->ipv4,
+            'device_ip' => $this->faker->localIpv4,
             'device_default_creds_on' => 0,
             'device_username' => $this->faker->userName,
             'device_password' => $this->faker->password,
