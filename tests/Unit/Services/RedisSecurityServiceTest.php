@@ -167,9 +167,24 @@ function frameworkRedisPassword(string $connection): ?string
     return Redis::connection($connection)->client()->getConnection()->getParameters()->password;
 }
 
+/**
+ * Start from an unsecured Redis whatever REDIS_PASSWORD the environment
+ * loaded, so a developer's secured local Redis cannot fail these tests.
+ */
+function startWithoutRedisPassword(): void
+{
+    foreach (['default', 'cache', 'horizon'] as $name) {
+        config(["database.redis.{$name}.password" => null]);
+    }
+
+    app()->forgetInstance('redis');
+    Cache::forgetDriver('redis');
+}
+
 test('secure points every framework Redis connection at the new password, including horizon', function () {
     // Horizon copies `default` into its own `horizon` connection at boot.
     expect(config('database.redis'))->toHaveKey('horizon');
+    startWithoutRedisPassword();
     config(['database.redis.reporting' => ['host' => '127.0.0.1', 'port' => 6390, 'password' => null, 'database' => 3]]);
 
     // Resolve the manager and its connections first, as a running command would.
@@ -190,6 +205,7 @@ test('secure points every framework Redis connection at the new password, includ
 });
 
 test('secure rebuilds the Redis cache store so it no longer holds the stale manager', function () {
+    startWithoutRedisPassword();
     $staleStore = Cache::store('redis')->getStore();
     expect($staleStore->connection()->client()->getConnection()->getParameters()->password)->toBeNull();
 
