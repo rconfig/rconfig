@@ -66,6 +66,8 @@ PUT_DOWN=0
 WAS_DOWN=0
 declare -a STOPPED_PROGRAMS=()
 WORK_DIR=""
+# What to do next, in place of the usual advice. Only set before anything changes.
+NEXT_STEPS=""
 
 info() {
     echo "update: $*"
@@ -98,7 +100,9 @@ on_error() {
     echo >&2
     echo "update: ERROR: the step '${CURRENT_STEP}' failed (exit ${status})." >&2
 
-    if [ "${CAN_ROLL_BACK}" -eq 1 ]; then
+    if [ -n "${NEXT_STEPS}" ]; then
+        printf '%s\n' "${NEXT_STEPS}" >&2
+    elif [ "${CAN_ROLL_BACK}" -eq 1 ]; then
         roll_back
         echo "update: Nothing was changed. Fix the error above and run: sudo ./${SCRIPT_NAME}" >&2
     elif [ "${APP_IS_UP}" -eq 1 ]; then
@@ -139,6 +143,27 @@ roll_back() {
     if [ "${PUT_DOWN}" -eq 1 ] && [ "${WAS_DOWN}" -eq 0 ]; then
         php "${APP_DIR}/artisan" up || echo "update: could not leave maintenance mode, run: php artisan up" >&2
     fi
+}
+
+# How an Amazon Linux user stays on the version they had. The OS check runs
+# before anything changes, so only a git pull or composer install they ran by
+# hand needs undoing.
+amazon_linux_next_steps() {
+    if [ ! -d "${APP_DIR}/.git" ]; then
+        echo "update: This script changed nothing."
+        return
+    fi
+
+    local owner
+    owner="$(stat -c '%U' "${APP_DIR}/.git")"
+    cat <<EOF
+update: This script changed nothing. If you already pulled 8.2.19, go back to
+update: the version you had with:
+update:     cd ${APP_DIR} && sudo -u ${owner} git reset --keep ORIG_HEAD
+update: If you also ran composer install after the pull, run it again so the
+update: vendor folder matches that version:
+update:     cd ${APP_DIR} && sudo -u ${owner} composer install --no-dev --optimize-autoloader
+EOF
 }
 
 # shellcheck disable=SC2317 # Runs from the EXIT trap.
@@ -327,8 +352,7 @@ main() {
 
     step "checks"
 
-    # pip installs supervisorctl and composer usually lives here, and sudo's
-    # secure_path leaves both out.
+    # composer usually lives here, and sudo's secure_path leaves it out.
     if [ "${RCONFIG_UPDATE_KEEP_PATH:-0}" != "1" ]; then
         PATH="${PATH}:/usr/local/sbin:/usr/local/bin"
     fi
@@ -360,16 +384,23 @@ main() {
     read -ra os_words <<<"${os_id} ${os_id_like}"
     for word in "${os_words[@]}"; do
         case "${word}" in
-            rhel | centos | rocky | almalinux | ol | amzn) os_family=rhel; break ;;
+            rhel | centos | rocky | almalinux | ol) os_family=rhel; break ;;
             ubuntu | debian) os_family=debian; break ;;
         esac
     done
 
     local apache_service supervisor_service
+    local supported="Supported: Rocky, AlmaLinux, RHEL and CentOS 8 or 9, and Ubuntu 22.04 or later."
     case "${os_family}" in
         rhel) apache_service=httpd; supervisor_service=supervisord ;;
         debian) apache_service=apache2; supervisor_service=supervisor ;;
-        *) fail "unsupported OS (ID=${os_id:-none}, ID_LIKE=${os_id_like:-none} in ${OS_RELEASE}). Supported: Rocky, AlmaLinux, RHEL and CentOS 8 or 9, Ubuntu 22.04 or later, and Amazon Linux 2023." ;;
+        *)
+            if [ "${os_id}" = "amzn" ]; then
+                NEXT_STEPS="$(amazon_linux_next_steps)"
+                fail "Amazon Linux is no longer supported from 8.2.19. Stay on your current version and contact support. ${supported}"
+            fi
+            fail "unsupported OS (ID=${os_id:-none}, ID_LIKE=${os_id_like:-none} in ${OS_RELEASE}). ${supported}"
+            ;;
     esac
 
     local tool

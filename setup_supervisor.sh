@@ -60,9 +60,9 @@ info() {
 # --- Work out the OS ---------------------------------------------------------
 
 # Detected from ID and ID_LIKE in /etc/os-release, the file rconfig_web_user()
-# reads. /etc/redhat-release is missing on Amazon Linux 2023 and
-# /etc/debian_version says nothing about Ubuntu. The file is parsed, never
-# sourced, so nothing in it runs as root.
+# reads. It is on every supported OS, and /etc/debian_version says nothing
+# about Ubuntu. The file is parsed, never sourced, so nothing in it runs as
+# root.
 OS_RELEASE="${RCONFIG_OS_RELEASE:-/etc/os-release}"
 
 os_release_value() {
@@ -79,7 +79,7 @@ OS_FAMILY=""
 read -ra OS_WORDS <<<"${OS_ID} ${OS_ID_LIKE}"
 for word in "${OS_WORDS[@]}"; do
     case "${word}" in
-        rhel | centos | rocky | almalinux | ol | amzn) OS_FAMILY=rhel; break ;;
+        rhel | centos | rocky | almalinux | ol) OS_FAMILY=rhel; break ;;
         ubuntu | debian) OS_FAMILY=debian; break ;;
     esac
 done
@@ -98,14 +98,12 @@ case "${OS_FAMILY}" in
         SUPERVISOR_INSTALL="Install it with: apt install supervisor"
         ;;
     *)
-        fail "unsupported OS (ID=${OS_ID:-none}, ID_LIKE=${OS_ID_LIKE:-none} in ${OS_RELEASE}). Supported: Rocky, AlmaLinux, RHEL and CentOS 8 or 9, Ubuntu 22.04 or later, and Amazon Linux 2023."
+        if [ "${OS_ID}" = "amzn" ]; then
+            fail "Amazon Linux is no longer supported from 8.2.19. Stay on your current version and contact support. Supported: Rocky, AlmaLinux, RHEL and CentOS 8 or 9, and Ubuntu 22.04 or later."
+        fi
+        fail "unsupported OS (ID=${OS_ID:-none}, ID_LIKE=${OS_ID_LIKE:-none} in ${OS_RELEASE}). Supported: Rocky, AlmaLinux, RHEL and CentOS 8 or 9, and Ubuntu 22.04 or later."
         ;;
 esac
-
-# Amazon Linux 2023 has no supervisor package and does not support EPEL.
-if [ "${OS_ID}" = "amzn" ]; then
-    SUPERVISOR_INSTALL="Amazon Linux 2023 has no Supervisor package. Install it with pip3 install supervisor, then create /etc/supervisord.d, an /etc/supervisord.conf whose [include] has files = /etc/supervisord.d/*.ini, and a supervisord.service systemd unit."
-fi
 
 info "OS: ${OS_ID} (${OS_FAMILY} family), Supervisor service ${SUPERVISOR_SERVICE}"
 
@@ -119,9 +117,6 @@ else
     TEST_MODE=0
     SUPDIR="${OS_SUPDIR}"
     EXT="${OS_EXT}"
-
-    # pip installs supervisorctl here, and sudo's secure_path leaves it out.
-    PATH="${PATH}:/usr/local/sbin:/usr/local/bin"
 
     if [ "$(id -u)" -ne 0 ]; then
         fail "this script writes to the Supervisor config folder and must be run as root, for example: sudo ./setup_supervisor.sh"

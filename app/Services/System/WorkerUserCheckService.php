@@ -575,7 +575,7 @@ class WorkerUserCheckService
         }
 
         foreach ($words as $word) {
-            if (in_array($word, ['rhel', 'centos', 'rocky', 'almalinux', 'ol', 'amzn'], true)) {
+            if (in_array($word, ['rhel', 'centos', 'rocky', 'almalinux', 'ol'], true)) {
                 return ['/etc/supervisord.d', 'ini'];
             }
 

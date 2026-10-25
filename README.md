@@ -247,7 +247,7 @@ When setting up your VM, we have provided detailed instructions for both CentOS/
 
 OS Requirements: [System Requirements](https://v8coredocs.rconfig.com/getting-started/os-configuration/#system-requirements)
 
-**Supported OS:** Rocky Linux 8/9+ (recommended), CentOS 8/9+, RHEL 8/9+, Ubuntu 22.04+, Alma Linux 8/9+, AWS Linux 2023
+**Supported OS:** Rocky Linux 8/9+ (recommended), CentOS 8/9+, RHEL 8/9+, Ubuntu 22.04+, Alma Linux 8/9+
 
 **Required Software:** PHP 8.4+, Composer 2.4+, Apache 2.4+, MySQL 5.7+/MariaDB 10.5+, Node.js 14.17+, Git 2.25+, Supervisor 4.2+
 

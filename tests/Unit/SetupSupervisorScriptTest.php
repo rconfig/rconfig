@@ -298,9 +298,20 @@ test('refuses an unsupported OS before writing anything', function (string $osRe
     $result = runSetupSupervisor($this->sandbox);
 
     expect($result->exitCode())->not->toBe(0)
-        ->and($result->errorOutput())->toContain('unsupported OS')
+        ->and($result->errorOutput())->toContain('Supported: Rocky, AlmaLinux, RHEL and CentOS 8 or 9, and Ubuntu 22.04 or later.')
         ->and(supervisorDirEntries($this->sandbox['sup']))->toBe([]);
 })->with('unsupported os-release files');
+
+test('refuses Amazon Linux and tells the user to stay on their current version', function () {
+    File::put($this->sandbox['os-release'], "NAME=\"Amazon Linux\"\nID=\"amzn\"\nID_LIKE=\"fedora\"\nVERSION_ID=\"2023\"\n");
+
+    $result = runSetupSupervisor($this->sandbox);
+
+    expect($result->exitCode())->not->toBe(0)
+        ->and($result->errorOutput())->toContain('Amazon Linux is no longer supported from 8.2.19. Stay on your current version and contact support. Supported: Rocky, AlmaLinux, RHEL and CentOS 8 or 9, and Ubuntu 22.04 or later.')
+        ->and($result->errorOutput())->not->toContain('pip3')
+        ->and(supervisorDirEntries($this->sandbox['sup']))->toBe([]);
+});
 
 test('fails without an os-release file rather than guessing the OS', function () {
     File::delete($this->sandbox['os-release']);
@@ -339,7 +350,6 @@ test('a missing Supervisor folder says how to install Supervisor on the detected
 })->with([
     'Rocky' => ["ID=\"rocky\"\nID_LIKE=\"rhel centos fedora\"\n", 'dnf install supervisor'],
     'Ubuntu' => ["ID=ubuntu\nID_LIKE=debian\n", 'apt install supervisor'],
-    'Amazon Linux 2023' => ["ID=\"amzn\"\nID_LIKE=\"fedora\"\n", 'pip3 install supervisor'],
 ]);
 
 test('rendered files are owned by root with mode 0644 when run as root', function () {

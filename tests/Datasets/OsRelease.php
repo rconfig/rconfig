@@ -99,7 +99,20 @@ dataset('supported os-release files', [
         ID_LIKE=debian
         UBUNTU_CODENAME=noble
         OS, 'ubuntu', 'debian'],
-    'Amazon Linux 2023' => [<<<'OS'
+]);
+
+/**
+ * os-release files the setup scripts must refuse. Fedora is listed because
+ * RHEL and Amazon Linux both say ID_LIKE="fedora", so matching on fedora
+ * would accept a distribution rConfig does not support. Amazon Linux is no
+ * longer supported from 8.2.19.
+ */
+dataset('unsupported os-release files', [
+    'Fedora' => "NAME=\"Fedora Linux\"\nID=fedora\nVERSION_ID=42\n",
+    'openSUSE Leap' => "NAME=\"openSUSE Leap\"\nID=\"opensuse-leap\"\nID_LIKE=\"suse opensuse\"\n",
+    'Arch Linux' => "NAME=\"Arch Linux\"\nID=arch\n",
+    'no ID line' => "NAME=\"Mystery Linux\"\n",
+    'Amazon Linux 2023' => <<<'OS'
         NAME="Amazon Linux"
         VERSION="2023"
         ID="amzn"
@@ -108,17 +121,5 @@ dataset('supported os-release files', [
         PLATFORM_ID="platform:al2023"
         PRETTY_NAME="Amazon Linux 2023.8.20250818"
         SUPPORT_END="2029-06-30"
-        OS, 'amzn', 'rhel'],
-]);
-
-/**
- * os-release files the setup scripts must refuse. Fedora is listed because
- * RHEL and Amazon Linux both say ID_LIKE="fedora", so matching on fedora
- * would accept a distribution rConfig does not support.
- */
-dataset('unsupported os-release files', [
-    'Fedora' => "NAME=\"Fedora Linux\"\nID=fedora\nVERSION_ID=42\n",
-    'openSUSE Leap' => "NAME=\"openSUSE Leap\"\nID=\"opensuse-leap\"\nID_LIKE=\"suse opensuse\"\n",
-    'Arch Linux' => "NAME=\"Arch Linux\"\nID=arch\n",
-    'no ID line' => "NAME=\"Mystery Linux\"\n",
+        OS,
 ]);

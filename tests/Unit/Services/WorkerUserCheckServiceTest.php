@@ -311,6 +311,12 @@ describe('report', function () {
         expect(reportCheck(workerReport(), 'supervisor_config')['status'])->toBe(WorkerCheckStatus::Warn);
     });
 
+    test('Amazon Linux is no longer a supported OS family for the Supervisor config', function () {
+        $this->fakeHostFilesystem(osRelease: "NAME=\"Amazon Linux\"\nID=\"amzn\"\nID_LIKE=\"fedora\"\n", isRoot: false);
+
+        expect(reportCheck(workerReport(), 'supervisor_config')['status'])->toBe(WorkerCheckStatus::Warn);
+    });
+
     test('a missing Supervisor config fails', function () {
         unset($this->host->pathStats['/etc/supervisord.d/rconfig-core-horizon.ini']);
 

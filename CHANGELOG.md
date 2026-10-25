@@ -22,8 +22,12 @@ Security release. Recommended for all 8.x installations. **Before upgrading, upd
 
 ### Changed
 - Horizon and the scheduler moved to managed system locations and now run as the web user.
+- The Supervisor program is now `rconfig-core-horizon`, so update any script that runs `supervisorctl restart horizon`.
+- The Horizon log is now `/var/log/rconfig-core-horizon.log`.
+- The scheduler now runs from `/etc/cron.d/rconfig-core`, not root's crontab.
 - `rconfig:clear-all` no longer restarts all of Supervisor, so it won't disrupt other apps on the same server.
 - Minimum PHP raised to 8.2.35, 8.3.36 or 8.4.27, SSH connections moved to phpseclib 4, and Composer and front end dependencies updated.
+- Removed direct support for Amazon Linux, which is no longer supported from version 8.2.19.
 
 ### Fixed
 - Folders created while a worker ran as root left their parent folders owned by root, so the web server could not read stored configs. Every folder level rConfig creates now belongs to the web user.

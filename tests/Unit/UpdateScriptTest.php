@@ -836,7 +836,26 @@ test('it refuses to run on an unsupported OS', function () {
 
     expect($result->exitCode())->toBe(1)
         ->and(updateOutput($result))->toContain('unsupported OS (ID=arch')
+        ->and(updateOutput($result))->toContain('Supported: Rocky, AlmaLinux, RHEL and CentOS 8 or 9, and Ubuntu 22.04 or later.')
         ->and(updateCalls($this->sandbox))->toBe([]);
+});
+
+test('it refuses Amazon Linux before changing anything and says how to stay on the current version', function () {
+    putOsRelease($this->sandbox, "NAME=\"Amazon Linux\"\nID=\"amzn\"\nID_LIKE=\"fedora\"\nVERSION_ID=\"2023\"\n");
+
+    $result = runUpdate($this->sandbox);
+    $output = updateOutput($result);
+    $app = $this->sandbox['app'];
+    $owner = sandboxCodeOwner($this->sandbox);
+
+    expect($result->exitCode())->toBe(1)
+        ->and($output)->toContain('update: ERROR: Amazon Linux is no longer supported from 8.2.19. Stay on your current version and contact support. Supported: Rocky, AlmaLinux, RHEL and CentOS 8 or 9, and Ubuntu 22.04 or later.')
+        ->and($output)->toContain("cd {$app} && sudo -u {$owner} git reset --keep ORIG_HEAD")
+        ->and($output)->toContain("cd {$app} && sudo -u {$owner} composer install --no-dev --optimize-autoloader")
+        ->and($output)->not->toContain('--no-pull')
+        ->and($output)->not->toContain('Fix the error above')
+        ->and(updateCalls($this->sandbox))->toBe([])
+        ->and(file_exists("{$app}/storage/framework/down"))->toBeFalse();
 });
 
 test('it refuses to run inside Docker', function () {

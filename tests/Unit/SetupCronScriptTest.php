@@ -451,10 +451,21 @@ test('refuses an unsupported OS before reading or writing anything', function (s
     $result = runSetupCron($this->sandbox);
 
     expect($result->exitCode())->not->toBe(0)
-        ->and($result->errorOutput())->toContain('unsupported OS')
+        ->and($result->errorOutput())->toContain('Supported: Rocky, AlmaLinux, RHEL and CentOS 8 or 9, and Ubuntu 22.04 or later.')
         ->and(dirEntries($this->sandbox['cron']))->toBe([])
         ->and(file_exists("{$this->sandbox['root']}/crontab-calls"))->toBeFalse();
 })->with('unsupported os-release files');
+
+test('refuses Amazon Linux and tells the user to stay on their current version', function () {
+    File::put($this->sandbox['os-release'], "NAME=\"Amazon Linux\"\nID=\"amzn\"\nID_LIKE=\"fedora\"\nVERSION_ID=\"2023\"\n");
+
+    $result = runSetupCron($this->sandbox);
+
+    expect($result->exitCode())->not->toBe(0)
+        ->and($result->errorOutput())->toContain('Amazon Linux is no longer supported from 8.2.19. Stay on your current version and contact support. Supported: Rocky, AlmaLinux, RHEL and CentOS 8 or 9, and Ubuntu 22.04 or later.')
+        ->and(dirEntries($this->sandbox['cron']))->toBe([])
+        ->and(file_exists("{$this->sandbox['root']}/crontab-calls"))->toBeFalse();
+});
 
 test('fails without an os-release file rather than guessing the OS', function () {
     File::delete($this->sandbox['os-release']);
@@ -476,11 +487,10 @@ test('a missing cron folder says how to install cron on the detected OS', functi
 })->with([
     'Rocky' => ["ID=\"rocky\"\nID_LIKE=\"rhel centos fedora\"\n", 'dnf install cronie, then: systemctl enable --now crond'],
     'Ubuntu' => ["ID=ubuntu\nID_LIKE=debian\n", 'apt install cron, then: systemctl enable --now cron'],
-    'Amazon Linux 2023' => ["ID=\"amzn\"\nID_LIKE=\"fedora\"\n", 'Amazon Linux 2023 does not install cron by default. Install it with: dnf install cronie'],
 ]);
 
 test('a missing crontab command says how to install cron on the detected OS', function () {
-    File::put($this->sandbox['os-release'], "ID=\"amzn\"\nID_LIKE=\"fedora\"\n");
+    File::put($this->sandbox['os-release'], "ID=\"rocky\"\nID_LIKE=\"rhel centos fedora\"\n");
 
     $result = runSetupCron($this->sandbox, env: ['RCONFIG_CRONTAB' => "{$this->sandbox['root']}/no-such-crontab"]);
 
