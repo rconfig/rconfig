@@ -1,7 +1,7 @@
 <?php
 
 use App\Providers\AppServiceProvider;
-use Illuminate\Support\ServiceProvider;
+use Tests\Unit\Providers\IdeHelperStandInServiceProvider;
 
 /**
  * update.sh runs composer install --no-dev, which removes ide-helper. A box
@@ -9,8 +9,6 @@ use Illuminate\Support\ServiceProvider;
  * package discovered on a dev box, so a stand-in provider is used to see
  * whether registerIdeHelper() itself registers anything.
  */
-class IdeHelperStandInServiceProvider extends ServiceProvider {}
-
 function ideHelperProviderFor(string $providerClass): AppServiceProvider
 {
     return new class(app(), $providerClass) extends AppServiceProvider
