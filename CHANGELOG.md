@@ -7,20 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [8.2.19] - Unreleased
 
-Security release. Recommended for all 8.x installations. **First upgrade from 8.2.18 or earlier: run `git pull`, then `sudo ./update.sh --no-pull`.** After that, `sudo ./update.sh` is the only upgrade command.
+Security release. Recommended for all 8.x installations. **Before upgrading, update PHP to at least 8.2.35, 8.3.36 or 8.4.27: Composer refuses older patch releases.** **First upgrade from 8.2.18 or earlier: run `git pull`, then `sudo ./update.sh --no-pull`.** After that, `sudo ./update.sh` is the only upgrade command.
 
 ### Security
 - **Redis now requires authentication**, closing a potential remote code execution path through the job queue. Set automatically on fresh installs and upgrades. If another rConfig edition shares the same server, a dashboard health check flags the box until you run `php artisan rconfig:redis-secure` once.
 - **Background services no longer run as root.** Horizon and the scheduler now run as the web user, so a flaw in any job no longer has full system rights.
 - **(Docker) Tightened permissions on the `storage` folder** so local accounts can no longer modify its contents directly.
+- A failed SSH login no longer writes a stack trace to the log, which could hold fragments of a private key or passphrase.
 
 ### Added
 - **`update.sh`**, a single, safe upgrade command that handles the whole process and logs to `/var/log/`.
-- **Worker privilege check**, on the dashboard and at the end of an upgrade, that flags anything still running as root.
+- **`php artisan rconfig:check-worker-user`** and a matching Worker Privilege dashboard check that flag anything still running as root. `update.sh` and the installer run it as their last step and fail if it fails.
+- Redis authentication alerts on the dashboard, with a link to the fix.
 
 ### Changed
 - Horizon and the scheduler moved to managed system locations and now run as the web user.
 - `rconfig:clear-all` no longer restarts all of Supervisor, so it won't disrupt other apps on the same server.
+- Minimum PHP raised to 8.2.35, 8.3.36 or 8.4.27, SSH connections moved to phpseclib 4, and Composer and front end dependencies updated.
+
+### Fixed
+- Folders created while a worker ran as root left their parent folders owned by root, so the web server could not read stored configs. Every folder level rConfig creates now belongs to the web user.
+- `rconfig:redis-secure` left Horizon and the queue workers on the old Redis password, and when run as root left a config cache the web server could not read.
+- An SSH device that refused the connection, never sent a banner or had an invalid template timeout could stop the whole download job instead of failing only that device.
+- A device with no stored SSH password raised an error instead of trying a login with no password.
 
 ## [8.2.18] - 2026-10-08
 
