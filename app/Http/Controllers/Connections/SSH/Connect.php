@@ -6,7 +6,7 @@ use App\CustomClasses\SetDeviceStatus;
 use App\Enums\NotificationType;
 use App\Notifications\DBDeviceConnectionFailureNotification;
 use App\Traits\NotificationDispatcher;
-use phpseclib3\Net\SSH2;
+use phpseclib4\Net\SSH2;
 
 class Connect
 {
@@ -148,9 +148,10 @@ class Connect
     public function connect()
     {
         $this->port = $this->sshPortValidOrDefault();
+        $this->timeout = $this->sshTimeoutValidOrNone();
         $this->connection = new SSH2($this->hostname, $this->port, $this->timeout);
-        if ($this->setWindowSize != null) {
-            $this->connection->setWindowSize($this->setWindowSize[0], $this->setWindowSize[1]);
+        if (is_array($this->setWindowSize) && count($this->setWindowSize) === 2) {
+            $this->connection->setWindowSize((int) $this->setWindowSize[0], (int) $this->setWindowSize[1]);
         }
         $this->checkConnectionState();
         $this->SSHdebuggingCheck();
@@ -171,6 +172,22 @@ class Connect
         }
 
         return self::DEFAULT_SSH_PORT;
+    }
+
+    /**
+     * phpseclib 4 types the timeout as int, so a template timeout that is null, empty
+     * or not a number would throw a TypeError before the device is dialled. phpseclib
+     * 3 treated a missing timeout as no timeout, which phpseclib 4 spells as 0, so
+     * anything unusable maps to 0 and keeps that behaviour. A fractional timeout rounds
+     * up so it never collapses to 0.
+     */
+    private function sshTimeoutValidOrNone(): int
+    {
+        if (! is_numeric($this->timeout) || $this->timeout < 0) {
+            return 0;
+        }
+
+        return (int) ceil((float) $this->timeout);
     }
 
     private function SSHdebuggingCheck()

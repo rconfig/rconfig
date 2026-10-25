@@ -7,8 +7,8 @@ namespace App\Http\Controllers\Connections\SSH;
 // use App\Http\use App\Services\Connections\Params\DeviceParams;\SSH\Quit;
 
 use App\Models\DeviceCredentials;
-use phpseclib3\Crypt\PublicKeyLoader;
-use phpseclib3\Net\SSH2;
+use phpseclib4\Crypt\PublicKeyLoader;
+use phpseclib4\Net\SSH2;
 
 class Login
 {
@@ -95,10 +95,11 @@ class Login
             $this->loadedKey = PublicKeyLoader::load($cred->ssh_key, $cred->ssh_key_passphrase ?? null);
 
             return $this->privKeyloginErrorCheck();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $logmsg = 'Authentication Failed using SSH Private key for ' . ($this->connectionObj->hostname . ' ID:' . $this->connectionObj->device_id) . '. Check key and passphrase.';
             activityLogIt(__CLASS__, __FUNCTION__, 'error', $logmsg, 'connection', $this->connectionObj->hostname, $this->connectionObj->device_id, 'device');
-            \Log::error($e);
+            // Class and message only: a stack trace can carry fragments of the key or passphrase in its arguments.
+            \Log::error($logmsg, ['exception' => $e::class, 'message' => $e->getMessage()]);
 
             return false;
         }
@@ -122,17 +123,26 @@ class Login
             sleep(1);
         }
 
-        $this->connectionObj->connection->read($this->connectionObj->splashScreenReadToText);
-        $this->send->sendControlCode($this->connectionObj->splashScreenSendControlCode);
+        $this->connectionObj->connection->read((string) $this->connectionObj->splashScreenReadToText);
+        $this->send->sendControlCode((string) $this->connectionObj->splashScreenSendControlCode);
     }
 
-    public function loginErrorCheck()
+    /**
+     * phpseclib 4 rejects a null password with a TypeError. phpseclib 3 treated a null
+     * password as "try the none method only", which phpseclib 4 spells as login() with
+     * no credential, so a device with no stored password keeps that behaviour.
+     */
+    public function loginErrorCheck(): bool
     {
-        $loginSuccess = $this->connectionObj->connection->login($this->connectionObj->username, $this->connectionObj->password);
+        $username = (string) $this->connectionObj->username;
+        $password = $this->connectionObj->password;
+
+        $loginSuccess = $password === null
+            ? $this->connectionObj->connection->login($username)
+            : $this->connectionObj->connection->login($username, (string) $password);
 
         if (! $loginSuccess) {
             $logmsg = 'Authentication Failed for ' . ($this->connectionObj->hostname . ' ID:' . $this->connectionObj->device_id) . '. Or wrong prompt configured for this device! Check your device settings.';
-            $logmsg = $this->appendLastError($logmsg);
             activityLogIt(__CLASS__, __FUNCTION__, 'error', $logmsg, 'connection', $this->connectionObj->hostname, $this->connectionObj->device_id, 'device');
 
             return false;
@@ -141,13 +151,12 @@ class Login
         return true;
     }
 
-    public function privKeyloginErrorCheck()
+    public function privKeyloginErrorCheck(): bool
     {
-        $loginSuccess = $this->connectionObj->connection->login($this->connectionObj->username, $this->loadedKey);
+        $loginSuccess = $this->connectionObj->connection->login((string) $this->connectionObj->username, $this->loadedKey);
 
         if (! $loginSuccess) {
             $logmsg = 'Authentication Failed for ' . ($this->connectionObj->hostname . ' ID:' . $this->connectionObj->device_id) . '. Or wrong prompt configured for this device! Check your device settings.';
-            $logmsg = $this->appendLastError($logmsg);
             activityLogIt(__CLASS__, __FUNCTION__, 'error', $logmsg, 'connection', $this->connectionObj->hostname, $this->connectionObj->device_id, 'device');
 
             return false;
@@ -213,19 +222,5 @@ class Login
         $this->connectionObj->enableCmd = str_replace('~', '\~', $this->connectionObj->enableCmd);
         $this->connectionObj->enablePassPrmpt = str_replace('~', '\~', $this->connectionObj->enablePassPrmpt);
         $this->connectionObj->devicePrompt = str_replace('~', '\~', $this->connectionObj->devicePrompt);
-    }
-
-    private function appendLastError(string $logmsg): string
-    {
-        if (! method_exists($this->connectionObj->connection, 'getLastError')) {
-            return $logmsg;
-        }
-
-        $lastError = trim((string) $this->connectionObj->connection->getLastError());
-        if ($lastError === '') {
-            return $logmsg;
-        }
-
-        return $logmsg . ' Last error: ' . $lastError;
     }
 }
