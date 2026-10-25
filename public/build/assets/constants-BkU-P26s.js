@@ -1,0 +1,1 @@
+var e=`https://v8coredocs.rconfig.com`;export{e as t};
