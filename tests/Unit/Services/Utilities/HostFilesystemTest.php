@@ -50,6 +50,19 @@ test('readFile and resolvePath return null for a missing path', function () {
         ->and($this->host->resolvePath("{$this->dir}/missing"))->toBeNull();
 });
 
+test('writeFile, listDirectory and deleteFile work on real files', function () {
+    symlink("{$this->dir}/missing-target", "{$this->dir}/dangling");
+
+    expect($this->host->writeFile("{$this->dir}/vhost.conf", 'contents'))->toBeTrue()
+        ->and(file_get_contents("{$this->dir}/vhost.conf"))->toBe('contents')
+        ->and($this->host->listDirectory($this->dir))->toEqualCanonicalizing(["{$this->dir}/dangling", "{$this->dir}/vhost.conf"])
+        ->and($this->host->listDirectory("{$this->dir}/missing"))->toBe([])
+        ->and($this->host->deleteFile("{$this->dir}/vhost.conf"))->toBeTrue()
+        ->and(file_exists("{$this->dir}/vhost.conf"))->toBeFalse()
+        ->and($this->host->deleteFile("{$this->dir}/vhost.conf"))->toBeFalse()
+        ->and($this->host->writeFile("{$this->dir}/missing/vhost.conf", 'x'))->toBeFalse();
+});
+
 test('readCrontab only ever lists a crontab', function () {
     Process::preventStrayProcesses();
     Process::fake(['*' => Process::result(errorOutput: "no crontab for root\n", exitCode: 1)]);

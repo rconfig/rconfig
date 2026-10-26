@@ -6,9 +6,10 @@ use Illuminate\Support\Facades\Process;
 
 /**
  * Thin wrapper over the OS calls used to create directories and hand them to
- * the web user. The global helpers in app/Http/Helpers.php resolve this from
- * the container, so tests can swap in a fake rather than needing to run as
- * root. Keep it free of logic: one method per OS call.
+ * the web user, and to write Apache config for rconfig:ssl-self-signed. The
+ * global helpers in app/Http/Helpers.php resolve this from the container, so
+ * tests can swap in a fake rather than needing to run as root. Keep it free
+ * of logic: one method per OS call.
  */
 class HostFilesystem
 {
@@ -104,6 +105,39 @@ class HostFilesystem
         };
 
         return ['uid' => $stat['uid'], 'gid' => $stat['gid'], 'mode' => $stat['mode'] & 07777, 'type' => $type];
+    }
+
+    /**
+     * Write a whole file. An existing file keeps its owner and mode.
+     */
+    public function writeFile(string $path, string $contents): bool
+    {
+        return @file_put_contents($path, $contents) !== false;
+    }
+
+    public function deleteFile(string $path): bool
+    {
+        return @unlink($path);
+    }
+
+    /**
+     * Full paths of the entries in a directory, symlinks included. Empty when
+     * the directory is missing or unreadable.
+     *
+     * @return list<string>
+     */
+    public function listDirectory(string $directory): array
+    {
+        $entries = @scandir($directory);
+
+        if ($entries === false) {
+            return [];
+        }
+
+        return array_values(array_map(
+            fn (string $entry): string => "{$directory}/{$entry}",
+            array_filter($entries, fn (string $entry): bool => $entry !== '.' && $entry !== '..'),
+        ));
     }
 
     /**

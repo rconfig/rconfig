@@ -19,6 +19,7 @@ Security release. Recommended for all 8.x installations. **Before upgrading, upd
 - **`update.sh`**, a single, safe upgrade command that handles the whole process and logs to `/var/log/`.
 - **`php artisan rconfig:check-worker-user`** and a matching Worker Privilege dashboard check that flag anything still running as root. `update.sh` and the installer run it as their last step and fail if it fails.
 - Redis authentication alerts on the dashboard, with a link to the fix.
+- **`sudo php artisan rconfig:ssl-self-signed`** switches a new install from HTTP to HTTPS in one step: a self-signed certificate, an HTTPS virtual host with an HTTP to HTTPS redirect, port 443 in the firewall and `APP_URL`. It never edits `rconfig-vhost.conf`, and it rolls everything back if Apache rejects the change. An HTTPS dashboard alert and the installer's next steps point to it while `APP_URL` is `http://`.
 
 ### Changed
 - Horizon and the scheduler moved to managed system locations and now run as the web user.

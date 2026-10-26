@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Services\System\SelfSignedSslService;
 use App\Services\Utilities\HostFilesystem;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
@@ -206,6 +207,14 @@ class V8CoreInstallCommand extends Command
 
         $this->newLine();
         $this->components->warn('⚠️  Please change the default credentials immediately!');
+
+        // A fresh install serves plain HTTP; Docker leaves TLS to the reverse proxy.
+        if (! SelfSignedSslService::appUsesHttps() && ! app(HostFilesystem::class)->isDocker()) {
+            $this->components->warn('🔒 rConfig is served over HTTP. Enable HTTPS with a self-signed certificate:');
+            $this->line('   <fg=cyan>' . SelfSignedSslService::COMMAND . '</>');
+            $this->line('   Or install your own certificate: ' . SelfSignedSslService::DOCS_URL);
+        }
+
         $this->newLine();
 
         $this->line('<fg=blue>Thank you for choosing rConfig v8 Core! 🚀</>');

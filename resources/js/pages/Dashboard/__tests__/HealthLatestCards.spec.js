@@ -71,6 +71,19 @@ describe("healthStatus helpers", () => {
 		]);
 	});
 
+	it("raises an HTTPS alert with the ssl command, linked to the Core SSL page", () => {
+		const alerts = securityAlerts([row("HTTPS", "warning", "Enable HTTPS", "rConfig is served over HTTP. Run: sudo php artisan rconfig:ssl-self-signed for a self-signed certificate, or install your own certificate.")]);
+
+		expect(alerts).toHaveLength(1);
+		expect(alerts[0].severity).toBe("warning");
+		expect(alerts[0].message).toContain("sudo php artisan rconfig:ssl-self-signed");
+		expect(alerts[0].docsUrl).toBe("https://v8coredocs.rconfig.com/auth-security/ssl-setup/");
+	});
+
+	it("raises no HTTPS alert once rConfig is served over HTTPS", () => {
+		expect(securityAlerts([row("HTTPS", "ok", "Ok", "rConfig is served over HTTPS.")])).toEqual([]);
+	});
+
 	it("treats an unreachable Redis (warning) as an alert", () => {
 		const alerts = securityAlerts([row("Redis Auth", "warning", "unreachable", "Redis is unreachable; authentication state could not be determined.")]);
 

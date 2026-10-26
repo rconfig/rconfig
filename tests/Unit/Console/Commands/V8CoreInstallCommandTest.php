@@ -74,6 +74,39 @@ test('the installer prints the check output and the fix, and fails, when the che
         ->assertExitCode(1);
 });
 
+test('the installer points an HTTP install at the ssl command', function () {
+    config(['app.url' => 'http://rconfig.example.com']);
+    $this->fakeHealthyWorkerBox(isRoot: true);
+
+    $this->artisan('v8core:install')
+        ->expectsConfirmation('Install the scheduler cron file (/etc/cron.d/rconfig-core)?', 'yes')
+        ->expectsConfirmation('All done! Would you like to show some love by starring the rConfig v8 Core repo on GitHub?', 'no')
+        ->expectsOutputToContain('rConfig is served over HTTP')
+        ->expectsOutputToContain('sudo php artisan rconfig:ssl-self-signed')
+        ->assertExitCode(0);
+});
+
+test('the installer says nothing about HTTPS once APP_URL is https', function () {
+    config(['app.url' => 'https://rconfig.example.com']);
+    $this->fakeHealthyWorkerBox(isRoot: true);
+
+    $this->artisan('v8core:install')
+        ->expectsConfirmation('Install the scheduler cron file (/etc/cron.d/rconfig-core)?', 'yes')
+        ->expectsConfirmation('All done! Would you like to show some love by starring the rConfig v8 Core repo on GitHub?', 'no')
+        ->doesntExpectOutputToContain('rconfig:ssl-self-signed')
+        ->assertExitCode(0);
+});
+
+test('the installer does not suggest the ssl command in Docker', function () {
+    config(['app.url' => 'http://rconfig.example.com']);
+    $this->fakeHealthyWorkerBox(isRoot: true, isDocker: true);
+
+    $this->artisan('v8core:install')
+        ->expectsConfirmation('All done! Would you like to show some love by starring the rConfig v8 Core repo on GitHub?', 'no')
+        ->doesntExpectOutputToContain('rconfig:ssl-self-signed')
+        ->assertExitCode(0);
+});
+
 test('the installer does not run the worker user check in Docker', function () {
     $host = $this->fakeHealthyWorkerBox(isRoot: true, isDocker: true);
     $host->processList[0]['uid'] = 0;

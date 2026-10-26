@@ -10,9 +10,10 @@ use Closure;
  * without running as root. mkdir, chmod and is_dir stay real (tests work in a
  * temp dir); os-release, the root and Docker checks, chown and chgrp are faked
  * and every ownership call is recorded. The process list and user names are
- * faked too, and file_exists can be, through the public properties. lstat,
- * file reads, realpath and crontab reads are always faked: a path the test
- * did not put in place does not exist, so a test never reads the real /etc.
+ * faked too, and file_exists and is_dir can be, through the public properties.
+ * lstat, file reads and writes, deletes, directory listings, realpath and
+ * crontab reads are always faked: a path the test did not put in place does
+ * not exist, so a test never reads or changes the real /etc.
  */
 trait FakesHostFilesystem
 {
@@ -61,6 +62,15 @@ trait FakesHostFilesystem
             /** @var list<string> users whose crontab was read */
             public array $crontabReads = [];
 
+            /** @var list<string>|null directories that exist; null checks the real filesystem */
+            public ?array $directories = null;
+
+            /** @var list<string> paths written, in order */
+            public array $writes = [];
+
+            /** @var list<string> paths deleted, in order */
+            public array $deletes = [];
+
             public function __construct(
                 private ?string $osRelease,
                 private bool $ownershipSucceeds,
@@ -97,7 +107,61 @@ trait FakesHostFilesystem
             {
                 $this->chmodded[] = ['path' => $path, 'mode' => $mode];
 
+                // A faked file has no real counterpart to chmod.
+                if (array_key_exists($path, $this->fileContents)) {
+                    $this->pathStats[$path]['mode'] = $mode;
+
+                    return true;
+                }
+
                 return parent::chmod($path, $mode);
+            }
+
+            public function isDirectory(string $path): bool
+            {
+                return $this->directories === null
+                    ? parent::isDirectory($path)
+                    : in_array($path, $this->directories, true);
+            }
+
+            /**
+             * Writes only to the fake. Requires faked paths ($existingPaths) so
+             * fileExists sees the new file.
+             */
+            public function writeFile(string $path, string $contents): bool
+            {
+                $this->writes[] = $path;
+                $this->fileContents[$path] = $contents;
+                $this->pathStats[$path] ??= ['uid' => 0, 'gid' => 0, 'mode' => 0644, 'type' => 'file'];
+
+                if ($this->existingPaths !== null && ! in_array($path, $this->existingPaths, true)) {
+                    $this->existingPaths[] = $path;
+                }
+
+                return true;
+            }
+
+            public function deleteFile(string $path): bool
+            {
+                $this->deletes[] = $path;
+                $existed = array_key_exists($path, $this->fileContents);
+                unset($this->fileContents[$path], $this->pathStats[$path]);
+
+                if ($this->existingPaths !== null) {
+                    $this->existingPaths = array_values(array_diff($this->existingPaths, [$path]));
+                }
+
+                return $existed;
+            }
+
+            /**
+             * Faked files, existing paths and symlinks directly inside $directory.
+             */
+            public function listDirectory(string $directory): array
+            {
+                $paths = array_unique([...array_keys($this->fileContents), ...($this->existingPaths ?? []), ...array_keys($this->resolvedPaths)]);
+
+                return array_values(array_filter($paths, fn (string $path): bool => dirname($path) === $directory));
             }
 
             public function chown(string $path, string $user): bool

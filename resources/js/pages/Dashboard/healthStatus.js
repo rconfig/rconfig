@@ -16,6 +16,7 @@ import { RCONFIG_DOCS_URL } from "@/config/constants";
 export const SECURITY_CHECK_DOCS = {
 	"Redis Auth": `${RCONFIG_DOCS_URL}/auth-security/redis-authentication/`,
 	"Worker Privilege": `${RCONFIG_DOCS_URL}/auth-security/worker-privilege/`,
+	HTTPS: `${RCONFIG_DOCS_URL}/auth-security/ssl-setup/`,
 };
 
 export const SECURITY_CHECK_NAMES = Object.keys(SECURITY_CHECK_DOCS);

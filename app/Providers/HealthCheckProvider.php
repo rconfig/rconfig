@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\HealthChecks\HttpsCheck;
 use App\HealthChecks\RcDiskSpaceCheck;
 use App\HealthChecks\RedisAuthCheck;
 use App\HealthChecks\WorkerPrivilegeCheck;
@@ -44,6 +45,7 @@ class HealthCheckProvider extends ServiceProvider
             RedisCheck::new(),
             RedisAuthCheck::new()->name('Redis Auth'),
             WorkerPrivilegeCheck::new()->name('Worker Privilege'),
+            HttpsCheck::new()->name('HTTPS'),
             ScheduleCheck::new()->heartbeatMaxAgeInMinutes(10),
             RcDiskSpaceCheck::new()
                 ->name('Disk Space: /storage')
