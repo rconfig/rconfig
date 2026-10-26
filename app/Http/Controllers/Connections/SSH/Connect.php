@@ -28,6 +28,8 @@ class Connect
     public $protocol;
     public $port;
     public $isNonInteractiveMode;
+    public $kexOverride;
+    public $kexAlgorithms;
 
     /* AUTH */
     public $sshInteractive;
@@ -44,6 +46,7 @@ class Connect
     public $ssh_key_id;
 
     /* CONFIG */
+    public $commandLinebreak;
     public $paging;
     public $pagingCmd;
     public $resetPagingCmd;
@@ -86,6 +89,8 @@ class Connect
         $this->protocol = $deviceParamsObject->connect['protocol'];
         $this->port = $deviceParamsObject->deviceparams['device_port_override'] ?? $deviceParamsObject->connect['port'];
         $this->isNonInteractiveMode = $deviceParamsObject->connect['isNonInteractiveMode'] ?? null;
+        $this->kexOverride = $deviceParamsObject->connect['kexOverride'] ?? null;
+        $this->kexAlgorithms = $deviceParamsObject->connect['kexAlgorithms'] ?? null;
         /* AUTH */
         $this->sshInteractive = $deviceParamsObject->auth['sshInteractive'] ?? null;
         $this->usernamePrompt = $deviceParamsObject->auth['username'];
@@ -104,6 +109,7 @@ class Connect
         /* CONFIG */
         // config['linebreak'], config['pagerPrompt'] and config['pagerPromptCmd'] are
         // deprecated. Nothing reads them, so they are deliberately not loaded here.
+        $this->commandLinebreak = $this->resolveCommandLinebreak($deviceParamsObject->config['commandLinebreak'] ?? null);
         $this->paging = $deviceParamsObject->config['paging'];
         $this->pagingCmd = $deviceParamsObject->config['pagingCmd'];
         $this->resetPagingCmd = $deviceParamsObject->config['resetPagingCmd'];
@@ -150,6 +156,7 @@ class Connect
         $this->port = $this->sshPortValidOrDefault();
         $this->timeout = $this->sshTimeoutValidOrNone();
         $this->connection = new SSH2($this->hostname, $this->port, $this->timeout);
+        $this->applyKexAlgorithmOverride();
         if (is_array($this->setWindowSize) && count($this->setWindowSize) === 2) {
             $this->connection->setWindowSize((int) $this->setWindowSize[0], (int) $this->setWindowSize[1]);
         }
@@ -188,6 +195,62 @@ class Connect
         }
 
         return (int) ceil((float) $this->timeout);
+    }
+
+    /**
+     * Restricts key exchange to the template's algorithm list, for vendor sshd builds
+     * that hang negotiating phpseclib's default preferences (e.g. curve25519) but
+     * complete the handshake against a specific classic Diffie-Hellman group. Off by
+     * default: only applies when the template opts in via connect.kexOverride.
+     * Ported from Pro RCO-1191, see RCO-1588.
+     */
+    private function applyKexAlgorithmOverride(): void
+    {
+        if (! $this->kexOverrideEnabled() || empty($this->kexAlgorithms) || ! is_array($this->kexAlgorithms)) {
+            return;
+        }
+
+        $this->connection->setPreferredAlgorithms(['kex' => array_values($this->kexAlgorithms)]);
+    }
+
+    /**
+     * Matches Pro's tolerant reading of connect.kexOverride: 'on', 'yes', 'true' and '1'
+     * in any case, plus the YAML boolean true and the integer 1, all mean enabled.
+     */
+    private function kexOverrideEnabled(): bool
+    {
+        $value = $this->kexOverride;
+
+        if (is_bool($value)) {
+            return $value;
+        }
+
+        if (is_int($value)) {
+            return $value === 1;
+        }
+
+        if (! is_string($value)) {
+            return false;
+        }
+
+        return in_array(strtolower(trim($value)), ['on', 'yes', 'true', '1'], true);
+    }
+
+    /**
+     * Resolves the line ending appended to every command written to the interactive shell.
+     * Opt-in via config.commandLinebreak ('r', 'n' or 'rn') for devices such as Force10/FTOS
+     * that ignore a bare carriage return. Absent or unrecognised values keep the historical
+     * "\r", so existing templates behave exactly as before. Ported from Pro RCO-1546, see RCO-1588.
+     */
+    private function resolveCommandLinebreak(mixed $value): string
+    {
+        $lineEndings = ['r' => "\r", 'n' => "\n", 'rn' => "\r\n"];
+
+        if (! is_string($value)) {
+            return $lineEndings['r'];
+        }
+
+        return $lineEndings[strtolower(trim($value))] ?? $lineEndings['r'];
     }
 
     private function SSHdebuggingCheck()

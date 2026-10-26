@@ -19,6 +19,8 @@ Security release. Recommended for all 8.x installations. **Before upgrading, upd
 - **`update.sh`**, a single, safe upgrade command that handles the whole process and logs to `/var/log/`.
 - **`php artisan rconfig:check-worker-user`** and a matching Worker Privilege dashboard check that flag anything still running as root. `update.sh` and the installer run it as their last step and fail if it fails.
 - Redis authentication alerts on the dashboard, with a link to the fix.
+- **`config.commandLinebreak` template key** sets the line ending rConfig sends after each SSH command: `r` (default), `n` or `rn`. Set `n` for devices such as Dell Force10 FTOS that ignore a bare carriage return. Templates without the key behave as before. Brings Core in line with Pro.
+- **`connect.kexOverride` and `connect.kexAlgorithms` template keys** limit the SSH key-exchange algorithms rConfig offers, for devices whose SSH server hangs during key exchange. Set `kexOverride: "on"` and list the algorithms in order of preference. Off by default. Brings Core in line with Pro.
 - **`sudo php artisan rconfig:ssl-self-signed`** switches a new install from HTTP to HTTPS in one step: a self-signed certificate, an HTTPS virtual host with an HTTP to HTTPS redirect, port 443 in the firewall and `APP_URL`. It never edits `rconfig-vhost.conf`, and it rolls everything back if Apache rejects the change. An HTTPS dashboard alert and the installer's next steps point to it while `APP_URL` is `http://`.
 
 ### Changed
