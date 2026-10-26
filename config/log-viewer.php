@@ -177,11 +177,6 @@ return [
         '/var/log/httpd/*' => 'Apache',
         '/var/log/nginx/*' => 'Nginx',
 
-        // Horizon's output, written by Supervisor outside the app folder (see
-        // horizon_supervisor.ini). The wildcard picks up Supervisor's rotated
-        // copies. This entry is the only change from the package default.
-        '/var/log/rconfig-core-horizon.log*' => 'Horizon',
-
         // MacOS Apple Silicon logs
         '/opt/homebrew/var/log/nginx/*',
         '/opt/homebrew/var/log/httpd/*',

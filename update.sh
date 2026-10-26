@@ -613,7 +613,7 @@ main() {
     local waited=0
     until [ "$(program_state "${PROGRAM}")" = "RUNNING" ]; do
         if [ "${waited}" -ge "${HORIZON_START_WAIT}" ]; then
-            fail "${PROGRAM} did not reach RUNNING within ${HORIZON_START_WAIT} seconds. Check: supervisorctl status ${PROGRAM}, and /var/log/rconfig-core-horizon.log"
+            fail "${PROGRAM} did not reach RUNNING within ${HORIZON_START_WAIT} seconds. Check: supervisorctl status ${PROGRAM}, ${APP_DIR}/storage/logs/horizon.log, and that ${WEB_USER} can write that file"
         fi
         sleep 1
         waited=$((waited + 1))

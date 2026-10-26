@@ -367,6 +367,32 @@ describe('report', function () {
             ->and($report['state'])->toBe('mixed');
     })->with(['symlink', 'regular file']);
 
+    test('the rendered stub, which runs Horizon through a /bin/sh log wrapper, passes', function () {
+        $rendered = str_replace(
+            ['RCONFIG_APP_DIR', 'RCONFIG_WEB_USER'],
+            [$this->appDir, 'apache'],
+            file_get_contents(base_path('horizon_supervisor.ini'))
+        );
+        $this->host->putFile('/etc/supervisord.d/rconfig-core-horizon.ini', $rendered);
+
+        expect($rendered)->toContain("command=/bin/sh -c 'exec php {$this->appDir}/artisan horizon")
+            ->and(reportCheck(workerReport(), 'supervisor_config')['status'])->toBe(WorkerCheckStatus::Ok);
+    });
+
+    test('an old Supervisor file whose shell wrapped command runs this install fails', function () {
+        $legacy = '/etc/supervisord.d/horizon_supervisor.ini';
+        $this->host->putFile($legacy, "[program:horizon]\ncommand=/bin/sh -c 'exec php {$this->appDir}/artisan horizon >> {$this->appDir}/storage/logs/horizon.log 2>&1'\nuser=apache\n");
+
+        expect(reportCheck(workerReport(), 'supervisor_config')['message'])->toContain("Old Supervisor config {$legacy} still runs this install");
+    });
+
+    test('rConfig PRO\'s shell wrapped Supervisor file is ignored, even from a folder sharing this one\'s prefix', function (string $proDir) {
+        $proDir = str_replace('APP', $this->appDir, $proDir);
+        $this->host->putFile('/etc/supervisord.d/horizon_supervisor.ini', "[program:horizon]\ncommand=/bin/sh -c 'exec php {$proDir}/artisan horizon >> {$proDir}/storage/logs/horizon.log 2>&1'\nuser=apache\n");
+
+        expect(reportCheck(workerReport(), 'supervisor_config')['status'])->toBe(WorkerCheckStatus::Ok);
+    })->with(['/var/www/html/rconfig8', 'APP8']);
+
     test('rConfig PRO\'s old Supervisor file is ignored', function () {
         $legacy = '/etc/supervisord.d/horizon_supervisor.ini';
         $this->host->putFile($legacy, "[program:horizon]\ncommand=php /var/www/html/rconfig8/artisan horizon\nuser=apache\n");

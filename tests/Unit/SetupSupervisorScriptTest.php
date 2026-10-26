@@ -24,10 +24,12 @@ beforeEach(function () {
         'sup' => "{$root}/supervisor",
         'php' => "{$root}/fake-php",
         'os-release' => "{$root}/os-release",
+        'logrotate' => "{$root}/logrotate.d",
     ];
 
     File::makeDirectory($this->sandbox['app'], 0755, true);
     File::makeDirectory($this->sandbox['sup'], 0755, true);
+    File::makeDirectory($this->sandbox['logrotate'], 0755, true);
 
     File::copy(base_path('setup_supervisor.sh'), "{$this->sandbox['app']}/setup_supervisor.sh");
     chmod("{$this->sandbox['app']}/setup_supervisor.sh", 0755);
@@ -57,7 +59,7 @@ afterEach(function () {
 });
 
 /**
- * @param  array{root: string, app: string, sup: string, php: string, os-release: string}  $sandbox
+ * @param  array{root: string, app: string, sup: string, php: string, os-release: string, logrotate: string}  $sandbox
  * @param  array<string, string>  $env
  */
 function runSetupSupervisor(array $sandbox, string $webUser = 'nobody', array $env = []): ProcessResult
@@ -67,6 +69,7 @@ function runSetupSupervisor(array $sandbox, string $webUser = 'nobody', array $e
         'RCONFIG_SUPERVISOR_EXT' => 'ini',
         'RCONFIG_PHP' => $sandbox['php'],
         'RCONFIG_OS_RELEASE' => $sandbox['os-release'],
+        'RCONFIG_LOGROTATE_DIR' => $sandbox['logrotate'],
         'FAKE_WEB_USER' => $webUser,
         'PATH' => "{$sandbox['root']}/bin:" . getenv('PATH'),
     ], $env))->run(["{$sandbox['app']}/setup_supervisor.sh"]);
@@ -94,13 +97,55 @@ test('writes the CORE file name and program name with the user and app folder fi
         ->and($rendered)->toContain("\n[program:rconfig-core-horizon]\n")
         ->and($rendered)->not->toContain('[program:horizon]')
         ->and($rendered)->toContain("\nuser=nobody\n")
-        ->and($rendered)->toContain("command=php {$this->sandbox['app']}/artisan horizon")
-        ->and($rendered)->toContain("\nstdout_logfile=/var/log/rconfig-core-horizon.log\n")
-        ->and($rendered)->not->toContain('storage/logs/horizon.log')
+        ->and($rendered)->toContain("\ncommand=/bin/sh -c 'exec php {$this->sandbox['app']}/artisan horizon >> {$this->sandbox['app']}/storage/logs/horizon.log 2>&1'\n")
+        ->and($rendered)->toContain("\nstdout_logfile=/dev/null\n")
+        ->and($rendered)->toContain("\nstderr_logfile=/dev/null\n")
+        ->and($rendered)->not->toContain('/var/log/rconfig-core-horizon.log')
         ->and($rendered)->not->toContain('RCONFIG_')
         ->and($rendered)->not->toMatch('/^user\s*=\s*root\s*$/mi')
         ->and(supervisorDirEntries($this->sandbox['sup']))->toBe(["rconfig-core-horizon.{$extension}"]);
 })->with(['ini', 'conf']);
+
+test('supervisord opens no log file in the app folder, in the stub or the rendered file', function () {
+    expect(runSetupSupervisor($this->sandbox)->successful())->toBeTrue();
+
+    $files = [
+        'stub' => File::get(base_path('horizon_supervisor.ini')),
+        'rendered' => File::get("{$this->sandbox['sup']}/rconfig-core-horizon.ini"),
+    ];
+
+    foreach ($files as $name => $contents) {
+        preg_match_all('/^\s*(\w*logfile)\s*=\s*(.*?)\s*$/mi', $contents, $matches, PREG_SET_ORDER);
+        $logFiles = collect($matches)->mapWithKeys(fn (array $match): array => [strtolower($match[1]) => $match[2]]);
+
+        expect($logFiles->keys()->sort()->values()->all())->toBe(['stderr_logfile', 'stdout_logfile'], "{$name} must set both supervisord log files.")
+            ->and($logFiles->unique()->all())->toBe(['stdout_logfile' => '/dev/null'], "{$name} must send supervisord's own logs to /dev/null.")
+            ->and($contents)->not->toMatch('/^\s*redirect_stderr\s*=\s*true/mi');
+    }
+});
+
+test('the rendered command makes Horizon append its output and errors to storage/logs/horizon.log', function () {
+    expect(runSetupSupervisor($this->sandbox)->successful())->toBeTrue();
+
+    preg_match("/^command=\\/bin\\/sh -c '(.*)'$/m", File::get("{$this->sandbox['sup']}/rconfig-core-horizon.ini"), $match);
+    expect($match)->toHaveCount(2);
+
+    $phpDir = "{$this->sandbox['root']}/php-bin";
+    File::makeDirectory($phpDir);
+    File::put("{$phpDir}/php", "#!/bin/sh\necho \"out \$*\"\necho 'err line' >&2\n");
+    chmod("{$phpDir}/php", 0755);
+
+    $log = "{$this->sandbox['app']}/storage/logs/horizon.log";
+    File::makeDirectory(dirname($log), 0755, true);
+    File::put($log, "kept from an older release\n");
+
+    $result = Process::env(['PATH' => "{$phpDir}:/usr/bin:/bin"])->run(['/bin/sh', '-c', $match[1]]);
+
+    expect($result->successful())->toBeTrue($result->errorOutput())
+        ->and($result->output())->toBe('')
+        ->and($result->errorOutput())->toBe('')
+        ->and(File::get($log))->toBe("kept from an older release\nout {$this->sandbox['app']}/artisan horizon\nerr line\n");
+});
 
 test('removes an old CORE symlink under the old name and leaves the stub alone', function (string $extension) {
     $stub = "{$this->sandbox['app']}/horizon_supervisor.ini";
@@ -150,6 +195,45 @@ test('leaves a PRO style horizon_supervisor.ini that runs from another folder un
         ->and(File::glob("{$old}.rconfig-bak-*"))->toBe([])
         ->and($result->output())->toContain("note: left {$old} alone")
         ->and(supervisorDirEntries($this->sandbox['sup']))->toBe(['horizon_supervisor.ini', 'rconfig-core-horizon.ini']);
+});
+
+test('removes an old file under the old name whose shell wrapped command runs this install', function () {
+    $app = $this->sandbox['app'];
+    $old = "{$this->sandbox['sup']}/horizon_supervisor.ini";
+    File::put($old, "[program:horizon]\ncommand=/bin/sh -c 'exec php {$app}/artisan horizon >> {$app}/storage/logs/horizon.log 2>&1'\nuser=nobody\n");
+
+    $result = runSetupSupervisor($this->sandbox);
+
+    expect($result->successful())->toBeTrue($result->errorOutput())
+        ->and(file_exists($old))->toBeFalse()
+        ->and(File::glob("{$old}.rconfig-bak-*"))->toHaveCount(1)
+        ->and($result->output())->toContain("removed old {$old}, which ran this install");
+});
+
+test('leaves PRO\'s shell wrapped horizon_supervisor.ini alone when it runs from another folder', function () {
+    $pro = "{$this->sandbox['app']}8";
+    $old = "{$this->sandbox['sup']}/horizon_supervisor.ini";
+    $proConfig = "[program:horizon]\ncommand=/bin/sh -c 'exec php {$pro}/artisan horizon >> {$pro}/storage/logs/horizon.log 2>&1'\nuser=apache\nstdout_logfile=/dev/null\n";
+    File::put($old, $proConfig);
+
+    $result = runSetupSupervisor($this->sandbox);
+
+    expect($result->successful())->toBeTrue($result->errorOutput())
+        ->and(File::get($old))->toBe($proConfig)
+        ->and(File::glob("{$old}.rconfig-bak-*"))->toBe([])
+        ->and($result->output())->toContain("note: left {$old} alone")
+        ->and($result->output())->not->toContain('WARNING');
+});
+
+test('warns about a hand made file under another name whose shell wrapped command runs this install', function () {
+    $handMade = "{$this->sandbox['sup']}/my_horizon.ini";
+    File::put($handMade, "[program:my_horizon]\ncommand=/bin/sh -c 'exec php {$this->sandbox['app']}/artisan horizon'\n");
+
+    $result = runSetupSupervisor($this->sandbox);
+
+    expect($result->successful())->toBeTrue($result->errorOutput())
+        ->and(is_file($handMade))->toBeTrue()
+        ->and($result->output())->toContain("WARNING: {$handMade} also runs a program from {$this->sandbox['app']}");
 });
 
 test('leaves an old-name symlink that points outside this app folder untouched', function () {
@@ -358,12 +442,132 @@ test('rendered files are owned by root with mode 0644 when run as root', functio
     }
 
     $result = runSetupSupervisor($this->sandbox);
-    $target = "{$this->sandbox['sup']}/rconfig-core-horizon.ini";
+
+    expect($result->successful())->toBeTrue($result->errorOutput());
+
+    foreach (["{$this->sandbox['sup']}/rconfig-core-horizon.ini", "{$this->sandbox['logrotate']}/rconfig-core-horizon"] as $target) {
+        expect(fileowner($target))->toBe(0, $target)
+            ->and(filegroup($target))->toBe(0, $target)
+            ->and(fileperms($target) & 0777)->toBe(0644, $target);
+    }
+});
+
+// --- logrotate ---------------------------------------------------------------
+
+/**
+ * The primary group name of the sandbox web user: nobody on RHEL, nogroup on
+ * Ubuntu.
+ */
+function nobodyGroup(): string
+{
+    return posix_getgrgid(posix_getpwnam('nobody')['gid'])['name'];
+}
+
+test('writes a logrotate file for the Horizon log as a regular 0644 file', function () {
+    $result = runSetupSupervisor($this->sandbox);
+    $target = "{$this->sandbox['logrotate']}/rconfig-core-horizon";
+    $group = nobodyGroup();
 
     expect($result->successful())->toBeTrue($result->errorOutput())
-        ->and(fileowner($target))->toBe(0)
-        ->and(filegroup($target))->toBe(0)
-        ->and(fileperms($target) & 0777)->toBe(0644);
+        ->and(is_link($target))->toBeFalse()
+        ->and(is_file($target))->toBeTrue()
+        ->and(fileperms($target) & 0777)->toBe(0644)
+        ->and(File::get($target))->toBe(<<<CONF
+            {$this->sandbox['app']}/storage/logs/horizon.log {
+                su nobody {$group}
+                size 50M
+                rotate 10
+                compress
+                missingok
+                notifempty
+                copytruncate
+            }
+
+            CONF)
+        ->and(supervisorDirEntries($this->sandbox['logrotate']))->toBe(['rconfig-core-horizon']);
+});
+
+test('the logrotate file rotates only the log Horizon writes, inside this app\'s storage/logs', function () {
+    expect(runSetupSupervisor($this->sandbox)->successful())->toBeTrue();
+
+    $logrotate = File::get("{$this->sandbox['logrotate']}/rconfig-core-horizon");
+    preg_match_all('/^(\S.*?)\s*\{\s*$/m', $logrotate, $paths);
+    preg_match("/>> (\S+) 2>&1'$/m", File::get("{$this->sandbox['sup']}/rconfig-core-horizon.ini"), $commandLog);
+
+    expect($paths[1])->toBe(["{$this->sandbox['app']}/storage/logs/horizon.log"])
+        ->and($paths[1][0])->toBe($commandLog[1])
+        ->and($paths[1][0])->not->toContain('..')
+        ->and($paths[1][0])->not->toContain('*')
+        ->and(dirname($paths[1][0]))->toBe("{$this->sandbox['app']}/storage/logs");
+});
+
+test('fails before writing anything when the stub logs somewhere the logrotate file would not rotate', function () {
+    $stub = "{$this->sandbox['app']}/horizon_supervisor.ini";
+    File::put($stub, str_replace('storage/logs/horizon.log', 'storage/logs/other.log', File::get($stub)));
+
+    $result = runSetupSupervisor($this->sandbox);
+
+    expect($result->exitCode())->not->toBe(0)
+        ->and($result->errorOutput())->toContain('so the logrotate file would rotate the wrong file')
+        ->and(supervisorDirEntries($this->sandbox['sup']))->toBe([])
+        ->and(supervisorDirEntries($this->sandbox['logrotate']))->toBe([]);
+});
+
+test('a failed user check writes no logrotate file', function (string $webUser) {
+    $result = runSetupSupervisor($this->sandbox, $webUser);
+
+    expect($result->exitCode())->not->toBe(0)
+        ->and(supervisorDirEntries($this->sandbox['logrotate']))->toBe([]);
+})->with(['missing user' => 'rconfig_no_such_user', 'root' => 'root']);
+
+test('replaces an existing logrotate file in place and keeps no copy in logrotate.d', function () {
+    $target = "{$this->sandbox['logrotate']}/rconfig-core-horizon";
+    File::put($target, "/somewhere/else.log {\n    rotate 1\n}\n");
+
+    $result = runSetupSupervisor($this->sandbox);
+
+    expect($result->successful())->toBeTrue($result->errorOutput())
+        ->and(File::get($target))->toStartWith("{$this->sandbox['app']}/storage/logs/horizon.log {\n")
+        ->and(supervisorDirEntries($this->sandbox['logrotate']))->toBe(['rconfig-core-horizon']);
+
+    expect(runSetupSupervisor($this->sandbox)->successful())->toBeTrue()
+        ->and(supervisorDirEntries($this->sandbox['logrotate']))->toBe(['rconfig-core-horizon']);
+});
+
+test('test mode without RCONFIG_LOGROTATE_DIR writes no logrotate file anywhere', function () {
+    $result = runSetupSupervisor($this->sandbox, env: ['RCONFIG_LOGROTATE_DIR' => '']);
+
+    expect($result->successful())->toBeTrue($result->errorOutput())
+        ->and($result->output())->toContain('not writing a logrotate file')
+        ->and($result->output())->not->toContain('logrotate.d')
+        ->and(supervisorDirEntries($this->sandbox['logrotate']))->toBe([]);
+});
+
+test('a missing logrotate folder is a warning and the Supervisor config is still written', function () {
+    $missing = "{$this->sandbox['root']}/no-logrotate.d";
+
+    $result = runSetupSupervisor($this->sandbox, env: ['RCONFIG_LOGROTATE_DIR' => $missing]);
+
+    expect($result->successful())->toBeTrue($result->errorOutput())
+        ->and($result->output())->toContain("WARNING: {$missing} not found, so logrotate is not installed")
+        ->and(file_exists($missing))->toBeFalse()
+        ->and(is_file("{$this->sandbox['sup']}/rconfig-core-horizon.ini"))->toBeTrue();
+});
+
+test('logrotate parses the rendered file', function () {
+    $logrotate = trim((string) shell_exec('command -v logrotate 2>/dev/null'));
+    if ($logrotate === '') {
+        $this->markTestSkipped('logrotate is not installed.');
+    }
+
+    expect(runSetupSupervisor($this->sandbox)->successful())->toBeTrue();
+    $config = "{$this->sandbox['logrotate']}/rconfig-core-horizon";
+
+    $result = Process::run([$logrotate, '-d', '-s', "{$this->sandbox['root']}/logrotate.state", $config]);
+    $output = $result->output() . $result->errorOutput();
+
+    expect($output)->toContain("rotating pattern: {$this->sandbox['app']}/storage/logs/horizon.log  52428800 bytes (10 rotations)")
+        ->and($output)->not->toContain("error: {$config}:");
 });
 
 test('no Supervisor stub in the repo runs as root', function () {

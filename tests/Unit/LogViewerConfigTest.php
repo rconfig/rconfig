@@ -3,29 +3,35 @@
 use Illuminate\Support\Facades\File;
 
 /**
- * Horizon's log moved out of storage/logs to /var/log, so the log viewer
- * config is published only to list it. These tests keep the stub and the
- * viewer pointing at the same file, and the published config otherwise equal
- * to the package default, so nothing else drifts unnoticed.
+ * Horizon writes its own log to storage/logs/horizon.log, as the web user,
+ * which the package default *.log pattern already lists. These tests keep the
+ * stub and the viewer pointing at the same file, and the published config
+ * equal to the package default, so nothing else drifts unnoticed.
  */
-const HORIZON_LOG = '/var/log/rconfig-core-horizon.log';
+const HORIZON_LOG = 'horizon.log';
 
-test('the log viewer lists the Horizon log and its rotated copies', function () {
-    expect(config('log-viewer.include_files'))->toHaveKey(HORIZON_LOG . '*')
-        ->and(config('log-viewer.include_files')[HORIZON_LOG . '*'])->toBe('Horizon');
+test('the log viewer lists the Horizon log in storage/logs and does not exclude it', function () {
+    $relative = fn (array $patterns): array => collect($patterns)
+        ->map(fn (string $alias, int|string $pattern): string => is_int($pattern) ? $alias : $pattern)
+        ->reject(fn (string $pattern): bool => str_starts_with($pattern, '/'))
+        ->filter(fn (string $pattern): bool => fnmatch($pattern, HORIZON_LOG))
+        ->values()
+        ->all();
+
+    expect($relative(config('log-viewer.include_files')))->not->toBeEmpty()
+        ->and($relative(config('log-viewer.exclude_files')))->toBe([]);
 });
 
-test('the Supervisor stub writes Horizon output to the file the log viewer lists', function () {
+test('the Supervisor stub has Horizon write the file the log viewer lists', function () {
     expect(File::get(base_path('horizon_supervisor.ini')))
-        ->toContain("\nstdout_logfile=" . HORIZON_LOG . "\n")
-        ->not->toContain('storage/logs/horizon.log');
+        ->toContain('>> RCONFIG_APP_DIR/storage/logs/' . HORIZON_LOG . ' 2>&1')
+        ->not->toContain('/var/log/rconfig-core-horizon.log');
 });
 
-test('the published log viewer config only adds the Horizon log to the package default', function () {
+test('the published log viewer config is the package default with no /var/log Horizon entry', function () {
     $published = require config_path('log-viewer.php');
     $default = require base_path('vendor/opcodesio/log-viewer/config/log-viewer.php');
 
-    unset($published['include_files'][HORIZON_LOG . '*']);
-
-    expect($published)->toEqual($default);
+    expect($published['include_files'])->not->toHaveKey('/var/log/rconfig-core-horizon.log*')
+        ->and($published)->toEqual($default);
 });

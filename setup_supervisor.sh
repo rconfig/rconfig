@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
-# Renders the rConfig Supervisor stubs into the Supervisor config folder.
+# Renders the rConfig Supervisor stubs into the Supervisor config folder, and
+# writes /etc/logrotate.d/rconfig-core-horizon to rotate the Horizon log.
 #
 # The rendered files are regular files owned by root:root with mode 0644. They
 # are never symlinks into the app folder: the web user owns that folder, and
@@ -20,6 +21,10 @@
 #                           Supervisor is not reloaded and restorecon is not run.
 #   RCONFIG_SUPERVISOR_EXT  file extension to use with RCONFIG_SUPERVISOR_DIR
 #                           (ini or conf). Defaults to the OS default.
+#   RCONFIG_LOGROTATE_DIR   with RCONFIG_SUPERVISOR_DIR, write the logrotate
+#                           file into this folder. Without it, test mode writes
+#                           no logrotate file. Ignored outside test mode, which
+#                           always uses /etc/logrotate.d.
 #   RCONFIG_PHP             PHP binary used to run artisan. Defaults to php.
 #   RCONFIG_OS_RELEASE      os-release file to detect the OS from. Defaults to
 #                           /etc/os-release.
@@ -113,10 +118,12 @@ if [ -n "${RCONFIG_SUPERVISOR_DIR:-}" ]; then
     TEST_MODE=1
     SUPDIR="${RCONFIG_SUPERVISOR_DIR}"
     EXT="${RCONFIG_SUPERVISOR_EXT:-${OS_EXT}}"
+    LOGROTATE_DIR="${RCONFIG_LOGROTATE_DIR:-}"
 else
     TEST_MODE=0
     SUPDIR="${OS_SUPDIR}"
     EXT="${OS_EXT}"
+    LOGROTATE_DIR=/etc/logrotate.d
 
     if [ "$(id -u)" -ne 0 ]; then
         fail "this script writes to the Supervisor config folder and must be run as root, for example: sudo ./setup_supervisor.sh"
@@ -144,9 +151,10 @@ for tool in cmp getent awk; do
         || fail "required command ${tool} not found. Install it (cmp is in the diffutils package) and run this script again."
 done
 
-# The app folder goes into command= and stdout_logfile=. Supervisor splits
-# command= on whitespace, and anything outside this set is more likely a
-# mistake than a real install path.
+# The app folder goes into command=, inside a single quoted sh -c string.
+# Supervisor splits command= on whitespace, a quote would end the sh -c
+# string, and anything outside this set is more likely a mistake than a real
+# install path.
 if [[ ! "${APP_DIR}" =~ ^/[A-Za-z0-9._/-]+$ ]]; then
     fail "app folder '${APP_DIR}' contains characters that cannot be written into a Supervisor config safely."
 fi
@@ -172,6 +180,15 @@ fi
 WEB_UID="$(printf '%s' "${PASSWD_ENTRY}" | cut -d: -f3)"
 if [ "${WEB_UID}" = "0" ]; then
     fail "web user '${WEB_USER}' has uid 0. Horizon must never run as root."
+fi
+
+WEB_GID="$(printf '%s' "${PASSWD_ENTRY}" | cut -d: -f4)"
+if ! WEB_GROUP_ENTRY="$(getent group "${WEB_GID}")"; then
+    fail "the primary group (gid ${WEB_GID}) of web user '${WEB_USER}' does not exist on this host."
+fi
+WEB_GROUP="$(printf '%s' "${WEB_GROUP_ENTRY}" | cut -d: -f1)"
+if [[ ! "${WEB_GROUP}" =~ ^[a-z_][a-z0-9_-]*$ ]]; then
+    fail "the primary group of web user '${WEB_USER}' is '${WEB_GROUP}', which is not a valid group name."
 fi
 
 info "web user: ${WEB_USER}"
@@ -208,6 +225,36 @@ ${leftover}"
 
     RENDERED["${stub}"]="${content}"
 done
+
+# --- Render the logrotate file and check it ---------------------------------
+
+# Horizon appends to its log itself, so nothing else rotates it. copytruncate
+# keeps Horizon's open file working, and su runs the rotation as the web user,
+# which owns storage/logs. No backup of an older file is kept in
+# logrotate.d: logrotate loads every file there, whatever its name, so a copy
+# would rotate the log twice.
+HORIZON_LOG="${APP_DIR}/storage/logs/horizon.log"
+LOGROTATE_NAME=rconfig-core-horizon
+LOGROTATE_CONTENT="${HORIZON_LOG} {
+    su ${WEB_USER} ${WEB_GROUP}
+    size 50M
+    rotate 10
+    compress
+    missingok
+    notifempty
+    copytruncate
+}"
+
+if [[ "${RENDERED[horizon_supervisor]}" != *">> ${HORIZON_LOG} 2>&1'"* ]]; then
+    fail "horizon_supervisor.ini does not write Horizon's log to ${HORIZON_LOG}, so the logrotate file would rotate the wrong file. Nothing was written."
+fi
+
+if [ -n "${LOGROTATE_DIR}" ] && [ ! -d "${LOGROTATE_DIR}" ]; then
+    info "WARNING: ${LOGROTATE_DIR} not found, so logrotate is not installed and ${HORIZON_LOG} will not be rotated. Install logrotate and run this script again."
+    LOGROTATE_DIR=""
+elif [ -z "${LOGROTATE_DIR}" ]; then
+    info "RCONFIG_LOGROTATE_DIR is not set in test mode, not writing a logrotate file"
+fi
 
 # --- Write the rendered files into place ------------------------------------
 
@@ -261,6 +308,23 @@ for stub in "${STUBS[@]}"; do
         restorecon -F "${target}" || info "restorecon failed on ${target}, check its SELinux context"
     fi
 done
+
+if [ -n "${LOGROTATE_DIR}" ]; then
+    target="${LOGROTATE_DIR}/${LOGROTATE_NAME}"
+    TMP_FILE="$(mktemp "${LOGROTATE_DIR}/.${LOGROTATE_NAME}.XXXXXX")"
+    printf '%s\n' "${LOGROTATE_CONTENT}" >"${TMP_FILE}"
+    chmod 0644 "${TMP_FILE}"
+    if [ "$(id -u)" -eq 0 ]; then
+        chown root:root "${TMP_FILE}"
+    fi
+    mv -fT "${TMP_FILE}" "${target}"
+    TMP_FILE=""
+    info "wrote ${target}"
+
+    if [ "${TEST_MODE}" -eq 0 ] && command -v restorecon >/dev/null 2>&1; then
+        restorecon -F "${target}" || info "restorecon failed on ${target}, check its SELinux context"
+    fi
+fi
 
 # Whether a Supervisor config file has a command= that runs something from
 # this app folder. Matched per word, so /var/www/html/rconfig/ does not match
