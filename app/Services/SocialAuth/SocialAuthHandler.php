@@ -43,7 +43,7 @@ class SocialAuthHandler
 
         try {
             $authedUser = Socialite::driver($driver)->user();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $driverLabel = self::driverLabel($driver);
             activityLogIt(__CLASS__, __FUNCTION__, 'error', "Unable to authenticate using {$driverLabel}. Please try again. Error: " . $e->getMessage(), 'auth');
 

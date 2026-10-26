@@ -38,6 +38,8 @@ class OktaAuth
                     SocialAuthHandler::assignDefaultRoleOnCreate($user);
                 });
             } catch (\Throwable $th) {
+                activityLogIt(__CLASS__, __FUNCTION__, 'error', 'An error occurred while updating your information. Please contact support. Error: ' . $th->getMessage(), 'auth');
+
                 if ($th->getCode() == 23000) {
                     User::where('email', $authedUser->email)->update([
                         'microsoft_id' => $authedUser->id,
