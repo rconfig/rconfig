@@ -1,8 +1,7 @@
 <?php
 
+use App\HealthChecks\Notifications\HealthAlertResultStore;
 use Spatie\Health\Models\HealthCheckResultHistoryItem;
-use Spatie\Health\Notifications\CheckFailedNotification;
-use Spatie\Health\Notifications\Notifiable;
 use Spatie\Health\ResultStores\EloquentHealthResultStore;
 
 return [
@@ -11,8 +10,13 @@ return [
      * A result store is responsible for saving the results of the checks. The
      * `EloquentHealthResultStore` will save results in the database. You
      * can use multiple stores at the same time.
+     *
+     * HealthAlertResultStore must stay first: it compares each result with the
+     * previous one in the history table before the Eloquent store saves this run.
      */
     'result_stores' => [
+        HealthAlertResultStore::class,
+
         EloquentHealthResultStore::class => [
             'model' => HealthCheckResultHistoryItem::class,
             'keep_history_for_days' => 30,
@@ -33,61 +37,12 @@ return [
     ],
 
     /*
-     * You can get notified when specific events occur. Out of the box you can use 'mail' and 'slack'.
-     * For Slack you need to install laravel/slack-notification-channel.
+     * Spatie's own notifications stay off. Mail settings live in the settings table, not
+     * config or .env, so spatie cannot address them. Health alerts are raised by
+     * HealthAlertResultStore through rConfig's notification channels instead (RCO-1836).
      */
     'notifications' => [
-        /*
-         * Notifications will only get sent if this option is set to `true`.
-         *
-         * Only enabled when both HEALTH_MAIL_TO and MAIL_FROM_ADDRESS are valid
-         * addresses. health:check sends notifications before it stores results,
-         * so a missing address would crash every run and leave the dashboard
-         * showing stale health data.
-         */
-        'enabled' => filter_var(env('HEALTH_MAIL_TO'), FILTER_VALIDATE_EMAIL) !== false
-            && filter_var(env('MAIL_FROM_ADDRESS'), FILTER_VALIDATE_EMAIL) !== false,
-
-        'notifications' => [
-            CheckFailedNotification::class => ['mail'],
-        ],
-
-        /*
-         * Here you can specify the notifiable to which the notifications should be sent. The default
-         * notifiable will use the variables specified in this config file.
-         */
-        'notifiable' => Notifiable::class,
-
-        /*
-         * When checks start failing, you could potentially end up getting
-         * a notification every minute.
-         *
-         * With this setting, notifications are throttled. By default, you'll
-         * only get one notification per hour.
-         */
-        'throttle_notifications_for_minutes' => 60,
-
-        'mail' => [
-            'to' => env('HEALTH_MAIL_TO'),
-
-            'from' => [
-                'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-                'name' => env('MAIL_FROM_NAME', 'Example'),
-            ],
-        ],
-
-        'slack' => [
-            'webhook_url' => config('logging.channels.slack.url', ''),
-
-            /*
-             * If this is set to null the default channel of the webhook will be used.
-             */
-            'channel' => null,
-
-            'username' => null,
-
-            'icon' => null,
-        ],
+        'enabled' => false,
     ],
 
     /*

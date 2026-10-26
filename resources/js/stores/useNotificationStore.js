@@ -86,6 +86,22 @@ export const useNotificationStore = defineStore("notifications", () => {
 					severity: "info",
 					channels: ["db", "mail"],
 				},
+				{
+					key: "system.health_check_failed",
+					category: "system",
+					label: types.system_health_check_failed.label,
+					description: types.system_health_check_failed.description,
+					severity: "error",
+					channels: ["db", "mail"],
+				},
+				{
+					key: "system.health_check_recovered",
+					category: "system",
+					label: types.system_health_check_recovered.label,
+					description: types.system_health_check_recovered.description,
+					severity: "info",
+					channels: ["db", "mail"],
+				},
 				// Config
 				{
 					key: "config.download_completed",

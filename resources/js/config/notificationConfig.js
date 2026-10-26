@@ -34,6 +34,14 @@ export const notificationConfig = {
                 label: "Notification System Error",
                 description: "Alerts when notification system encounters errors",
             },
+            system_health_check_failed: {
+                label: "Health Check Failed",
+                description: "Alerts when a system health check (database, Redis, Horizon, disk space, etc.) starts failing",
+            },
+            system_health_check_recovered: {
+                label: "Health Check Recovered",
+                description: "Notifications when a failing system health check passes again",
+            },
             // Config
             config_download_completed: {
                 label: "Configuration Download Completed",
