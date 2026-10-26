@@ -1,1 +1,0 @@
-import{H as e,v as t,wt as n}from"./vue.esm-bundler-B6jF-ycY.js";import{Tn as r}from"./app-BONljptu.js";var i={__name:`AgentLogIcon`,props:{height:{type:Number,default:24},width:{type:Number,default:24}},setup(i){return(a,o)=>(e(),t(n(r),{width:i.width,height:i.height,class:`text-blue-400`},null,8,[`width`,`height`]))}};export{i as default};
