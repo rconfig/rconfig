@@ -83,6 +83,13 @@ export default function useCodeEditor(monaco) {
 			language: language || "javascript",
 			lineNumbers: lineNumbers.value,
 			renderOverviewRuler: false, //https://github.com/microsoft/monaco-editor/issues/1689
+			// Collapse unchanged lines so large configs show only the changed hunks.
+			hideUnchangedRegions: {
+				enabled: localStorage.getItem("rConfig.editorHideUnchanged") === "true",
+				revealLineCount: 3,
+				minimumLineCount: 3,
+				contextLineCount: 3,
+			},
 			roundedSelection: false,
 			readOnly: false,
 			theme: darkmode.value,
@@ -213,6 +220,31 @@ export default function useCodeEditor(monaco) {
 		});
 	}
 
+	/* HIDE UNCHANGED REGIONS (diff editor only) */
+	const hideUnchanged = reactive({
+		enabled: false,
+	});
+
+	function checkHideUnchangedIsSet() {
+		if (localStorage.getItem("rConfig.editorHideUnchanged") === null) {
+			localStorage.setItem("rConfig.editorHideUnchanged", false);
+		}
+		hideUnchanged.enabled = localStorage.getItem("rConfig.editorHideUnchanged") === "true";
+
+		return hideUnchanged.enabled;
+	}
+
+	function toggleHideUnchanged() {
+		hideUnchanged.enabled = localStorage.getItem("rConfig.editorHideUnchanged") !== "true";
+		localStorage.setItem("rConfig.editorHideUnchanged", hideUnchanged.enabled);
+
+		meditor.updateOptions({
+			hideUnchangedRegions: {
+				enabled: hideUnchanged.enabled,
+			},
+		});
+	}
+
 	function download(filename = null) {
 		isDownloaded.value = true;
 
@@ -275,6 +307,7 @@ export default function useCodeEditor(monaco) {
 
 		// functions
 		checkDarkModeIsSet,
+		checkHideUnchangedIsSet,
 		checkLineNumbersIsSet,
 		checkMiniMapIsSet,
 		checkStickyScrollIsSet,
@@ -288,6 +321,7 @@ export default function useCodeEditor(monaco) {
 		toggleEditorDarkMode,
 		toggleEditorLineNumbers,
 		toggleEditorMinimap,
+		toggleHideUnchanged,
 		toggleStickyScroll,
 	};
 }
