@@ -43,7 +43,9 @@ CURRENT_REDIS_PW=$(grep -E '^REDIS_PASSWORD=' "$ENV_FILE" 2>/dev/null | head -n1
 if [ -z "$CURRENT_REDIS_PW" ] || [ "$CURRENT_REDIS_PW" = "null" ]; then
     echo "🔒 Generating Redis password..."
     REDIS_SECRET=$(php -r 'echo bin2hex(random_bytes(32));')
-    php artisan env:set REDIS_PASSWORD "$REDIS_SECRET"
+    # Silence env:set: it echoes the new value, which would put the password in
+    # the container log (docker compose logs).
+    php artisan env:set REDIS_PASSWORD "$REDIS_SECRET" > /dev/null
 else
     echo "🔒 Reusing existing Redis password."
     REDIS_SECRET="$CURRENT_REDIS_PW"
