@@ -125,7 +125,7 @@ function buildUpdateBin(array $sandbox): void
         'sleep' => ':',
         'chown' => <<<SH
             record chown "\$@"
-            if [ -n "\${FAKE_CHOWN_FAIL_ONCE:-}" ] && [ ! -e '{$sandbox['root']}/chown-failed' ]; then
+            if [ -n "\${FAKE_CHOWN_FAIL_ONCE:-}" ] && [ "\$1" = "-h" ] && [ ! -e '{$sandbox['root']}/chown-failed' ]; then
                 touch '{$sandbox['root']}/chown-failed'
                 exit 1
             fi
@@ -735,15 +735,18 @@ test('a missing check-worker-user command fails the run instead of being skipped
 // --- Re-runs and maintenance mode -------------------------------------------------------
 
 test('running it twice gives the same calls and the same end state', function () {
+    // mktemp names differ on each run; they show up when the code owner is not root, as in CI.
+    $callsWithoutTempNames = fn (): array => preg_replace('/tmp\.[A-Za-z0-9]{10}\b/', 'tmp.XXXXXXXXXX', updateCalls($this->sandbox));
+
     $first = runUpdate($this->sandbox);
-    $firstCalls = updateCalls($this->sandbox);
+    $firstCalls = $callsWithoutTempNames();
     unlink($this->sandbox['calls']);
 
     $second = runUpdate($this->sandbox);
 
     expect($first->successful())->toBeTrue($first->errorOutput())
         ->and($second->successful())->toBeTrue($second->errorOutput())
-        ->and(updateCalls($this->sandbox))->toBe($firstCalls)
+        ->and($callsWithoutTempNames())->toBe($firstCalls)
         ->and(trim(File::get("{$this->sandbox['sup']}/rconfig-core-horizon")))->toBe('RUNNING')
         ->and(file_exists("{$this->sandbox['app']}/storage/framework/down"))->toBeFalse();
 });

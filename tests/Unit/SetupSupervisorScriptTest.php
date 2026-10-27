@@ -566,7 +566,10 @@ test('logrotate parses the rendered file', function () {
     $result = Process::run([$logrotate, '-d', '-s', "{$this->sandbox['root']}/logrotate.state", $config]);
     $output = $result->output() . $result->errorOutput();
 
-    expect($output)->toContain("rotating pattern: {$this->sandbox['app']}/storage/logs/horizon.log  52428800 bytes (10 rotations)")
+    // logrotate 3.21 splits this line across stdout and stderr, so its parts are checked separately.
+    expect($output)->toContain("rotating pattern: {$this->sandbox['app']}/storage/logs/horizon.log ")
+        ->and($output)->toContain('52428800 bytes')
+        ->and($output)->toContain('(10 rotations)')
         ->and($output)->not->toContain("error: {$config}:");
 });
 
