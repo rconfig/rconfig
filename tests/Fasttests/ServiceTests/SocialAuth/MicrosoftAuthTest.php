@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\User;
 use App\Services\SocialAuth\MicrosoftAuth;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\User as SocialiteUser;
 
 beforeEach(function () {
     $this->beginTransaction();
@@ -57,6 +59,28 @@ test('login redirects with error if user not found', function () {
     expect($response->getStatusCode())->toEqual(302);
     expect(session()->all())->toHaveKey('message');
     $this->assertStringContainsString('Your account is not registered', session('message'));
+});
+
+test('login logs the error if saving the user fails', function () {
+    User::creating(fn () => throw new RuntimeException('simulated write failure'));
+
+    $request = Request::create('/login', 'GET', ['code' => 'valid-code']);
+
+    Socialite::shouldReceive('driver->user')->andReturn((new SocialiteUser)->map([
+        'id' => 'microsoft-save-failure',
+        'name' => 'Microsoft Save Failure',
+        'email' => 'microsoft-save-failure@example.com',
+    ]));
+
+    $service = new MicrosoftAuth;
+
+    $response = $service->register($request);
+
+    expect($response->getStatusCode())->toEqual(302);
+    $this->assertStringContainsString('An error occurred while updating your information', session('message'));
+    $this->assertDatabaseHas('activity_log', [
+        'description' => 'An error occurred while updating your information. Please contact support. Error: simulated write failure',
+    ]);
 });
 
 afterEach(function () {

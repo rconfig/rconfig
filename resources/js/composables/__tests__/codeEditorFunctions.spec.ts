@@ -144,6 +144,64 @@ describe("useCodeEditor", () => {
 		});
 	});
 
+	describe("show only differences", () => {
+		const editorStub = { updateOptions: vi.fn() };
+
+		beforeEach(() => {
+			document.body.innerHTML = '<div id="code-editor__code-pre"></div>';
+			fakeMonaco.editor.createDiffEditor.mockReturnValue(editorStub);
+		});
+
+		it("defaults to off and seeds localStorage", () => {
+			const { api } = setupEditor();
+
+			expect(api.checkHideUnchangedIsSet()).toBe(false);
+			expect(localStorage.getItem("rConfig.editorHideUnchanged")).toBe("false");
+		});
+
+		it("reads an enabled preference", () => {
+			localStorage.setItem("rConfig.editorHideUnchanged", "true");
+			const { api } = setupEditor();
+
+			expect(api.checkHideUnchangedIsSet()).toBe(true);
+		});
+
+		it("creates the diff editor showing the full config by default, with a three-line context buffer", () => {
+			const { api } = setupEditor();
+
+			api.initDiffEditor("code-editor__code-pre", "rconfig");
+
+			expect(fakeMonaco.editor.createDiffEditor.mock.calls[0][1].hideUnchangedRegions).toEqual({
+				enabled: false,
+				revealLineCount: 3,
+				minimumLineCount: 3,
+				contextLineCount: 3,
+			});
+		});
+
+		it("creates the diff editor collapsed when the preference is on", () => {
+			localStorage.setItem("rConfig.editorHideUnchanged", "true");
+			const { api } = setupEditor();
+
+			api.initDiffEditor("code-editor__code-pre", "rconfig");
+
+			expect(fakeMonaco.editor.createDiffEditor.mock.calls[0][1].hideUnchangedRegions.enabled).toBe(true);
+		});
+
+		it("collapses and expands the live editor and persists each choice", () => {
+			const { api } = setupEditor();
+			api.initDiffEditor("code-editor__code-pre", "rconfig");
+
+			api.toggleHideUnchanged();
+			expect(localStorage.getItem("rConfig.editorHideUnchanged")).toBe("true");
+			expect(editorStub.updateOptions).toHaveBeenLastCalledWith({ hideUnchangedRegions: { enabled: true } });
+
+			api.toggleHideUnchanged();
+			expect(localStorage.getItem("rConfig.editorHideUnchanged")).toBe("false");
+			expect(editorStub.updateOptions).toHaveBeenLastCalledWith({ hideUnchangedRegions: { enabled: false } });
+		});
+	});
+
 	describe("download + copy helpers", () => {
 		it("downloadCompare saves a string blob under the given filename", () => {
 			vi.useFakeTimers();

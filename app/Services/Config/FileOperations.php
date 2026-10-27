@@ -100,16 +100,14 @@ class FileOperations
         return (string) $fullpath;
     }
 
-    private function ensureDirectoryExists($directory)
+    /**
+     * Create the directory and any missing ancestors (including parts of the
+     * data base dir), each chmodded to the config dir mode and owned by the
+     * web user. See rconfig_make_directory().
+     */
+    private function ensureDirectoryExists(string $directory): void
     {
-        if (! is_dir($directory)) {
-            $mode = $this->directoryMode();
-            mkdir($directory, $mode, true); // Ensure all parent directories are created
-            // mkdir()'s mode is masked by the process umask, so set it explicitly.
-            // Without this the tree can land world traversable on a default umask.
-            @chmod($directory, $mode);
-            custom_chown($directory);
-        }
+        rconfig_make_directory($directory, $this->directoryMode());
     }
 
     private function _insertFileContents($lines, $fullpath)

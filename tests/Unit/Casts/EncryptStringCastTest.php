@@ -3,6 +3,7 @@
 use App\Casts\EncryptStringCast;
 use App\Models\Device;
 use Illuminate\Support\Facades\Crypt;
+use Tests\Unit\Casts\EncryptStringCastCanary;
 
 /**
  * Regression cover for the stored PHP object injection reported in rconfig/rconfig#369.
@@ -17,26 +18,6 @@ use Illuminate\Support\Facades\Crypt;
  * that: an object payload must never be brought to life, while legacy serialized scalars
  * (the reason the cast unserializes at all, bug #100) must still decode.
  */
-
-/**
- * Canary "gadget". If EncryptStringCast ever instantiates a serialized object, __wakeup()
- * (or __destruct() on a real instance) flips the static flag and the security test fails.
- */
-class EncryptStringCastCanary
-{
-    public static bool $awoke = false;
-
-    public function __wakeup(): void
-    {
-        self::$awoke = true;
-    }
-
-    public function __destruct()
-    {
-        self::$awoke = true;
-    }
-}
-
 beforeEach(function () {
     EncryptStringCastCanary::$awoke = false;
 });

@@ -20,10 +20,8 @@ class DeviceInventoryExport implements FromCollection, WithHeadings
 
     /**
      * Return a collection of data to be exported.
-     *
-     * @return Collection
      */
-    public function collection()
+    public function collection(): Collection
     {
         return collect($this->data);
     }

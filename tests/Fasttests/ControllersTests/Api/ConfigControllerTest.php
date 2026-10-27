@@ -152,6 +152,27 @@ test('get distinct commands for given device id', function () {
     $response->assertStatus(200);
 });
 
+test('distinct commands for a device exclude other devices commands', function () {
+    Config::factory()->create(['device_id' => 1001, 'command' => 'show run']);
+    Config::factory()->create(['device_id' => 1001, 'command' => 'show run']);
+    Config::factory()->create(['device_id' => 1001, 'command' => 'show version']);
+    Config::factory()->create(['device_id' => 1002, 'command' => 'show full-configuration']);
+
+    $response = $this->getJson('/api/configs/distinct-commands/1001');
+
+    $response->assertOk();
+    expect(collect($response->json('data'))->pluck('command')->sort()->values()->all())
+        ->toBe(['show run', 'show version']);
+});
+
+test('distinct commands for a device without configs is empty', function () {
+    Config::factory()->create(['device_id' => 1001, 'command' => 'show run']);
+
+    $this->getJson('/api/configs/distinct-commands/999999')
+        ->assertOk()
+        ->assertJsonPath('data', []);
+});
+
 test('get latest configs for given device id', function () {
     Config::truncate();
     fakeConfigInserts();

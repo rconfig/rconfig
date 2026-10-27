@@ -47,6 +47,8 @@ php artisan serve
 php artisan optimize:clear
 ```
 
+Production installs upgrade with `sudo ./update.sh` (see "Process privilege and filesystem ownership" below), never with a hand run list of commands.
+
 ### Frontend
 
 ```bash
@@ -153,6 +155,26 @@ This project uses the Laravel 10 style file structure (it upgraded from Laravel 
 - Most tests should be feature or integration tests. Use factories and their custom states for test data.
 - Run the minimum set of tests with a filter before finalizing. When your feature's tests pass, ask the user if they want the full suite run.
 - Do not remove tests or test files without approval.
+
+### Process privilege and filesystem ownership
+
+- Processes (Horizon, queue workers, the scheduler) run as the web user, never root. Detect it with `rconfig_web_user()`; never hardcode `apache`, `www-data` or `nginx`. It does not check the user exists, so anything that writes Supervisor or cron config, or chowns, must validate it with `posix_getpwnam()` first and fail loudly if it is missing.
+- Create directories with `rconfig_make_directory($path, $mode)`, always passing the mode explicitly (`config('rConfig.config_dir_mode')` for anything holding device configs). Never use a bare `mkdir`/`File::makeDirectory` followed by a chown on the leaf: that leaves every ancestor it created owned by the process user. `tests/Unit/RconfigMakeDirectoryModeArgumentTest.php` fails if a call omits the mode.
+- Nothing that root loads or executes may be writable by the web user (Supervisor conf, cron files, scripts run through sudo, app code while any process runs it as root).
+- Supervisor config is rendered from the repo stubs into `/etc` as `root:root` 0644 by `setup_supervisor.sh`, as `rconfig-core-horizon.ini` (RHEL) or `.conf` (Ubuntu) with `[program:rconfig-core-horizon]`, so it never clashes with PRO's `horizon_supervisor.ini` on a shared box. Never symlink config from the app folder. The old `horizon_supervisor.*` name is removed only when it provably belongs to this install. Horizon's output goes to `storage/logs/horizon.log`, written by Horizon itself as the web user: the stub runs it through `/bin/sh -c 'exec php ... >> .../storage/logs/horizon.log 2>&1'`, and sets `stdout_logfile` and `stderr_logfile` to `/dev/null` so supervisord (root) never opens a file in the app folder. Never point a supervisord `*_logfile` into the app folder. The package default `*.log` pattern lists the file in the log viewer, and `tests/Unit/LogViewerConfigTest.php` keeps `config/log-viewer.php` equal to the package default.
+- Stubs use the `RCONFIG_WEB_USER` placeholder and never `user=root`. The script validates the user and fails before writing if any placeholder remains, because supervisord rejects an unknown user for every program, not just one. `tests/Unit/SetupSupervisorScriptTest.php` covers this.
+- The scheduler runs from `/etc/cron.d/rconfig-core` as the web user, never from root's crontab. `setup_cron.sh` is the only code that writes it or changes a crontab (`v8core:install` calls it through `rconfig:setup-cron`). It removes this install's `schedule:run` line from root's and the web user's crontab, matched by exact app folder so PRO's line survives, and keeps every other line. `tests/Unit/SetupCronScriptTest.php` covers this.
+- cron.d file names have no dots (Debian cron ignores them) and files are `root:root` 0644 (cron skips group- or world-writable files). Never put backups in cron.d: RHEL's cronie loads them whatever their name.
+- Upgrades go through `update.sh`, the only supported upgrade path. A new upgrade step goes into `update.sh`, not into a README command list. Its order is fixed and enforced by `tests/Unit/UpdateScriptTest.php`: Horizon is stopped before any code changes, composer runs before migrate, ownership is fixed after the last step that runs artisan as root (the two setup scripts), and Horizon starts only after that. `setup_supervisor.sh` is called with `RCONFIG_SUPERVISOR_DEFER_START=1` so it cannot start Horizon early.
+- In `update.sh`, git and composer run as the owner of the app folder, artisan runs as the web user through `runuser`, and root only writes `/etc` and manages services. Ownership fixes only touch files not already owned by the web user (`find ... ! -user`), and use `chown -h` so a symlink is never followed.
+- The old Supervisor program name `horizon` is shared with PRO. Only stop or remove it when its process provably runs this app folder's artisan.
+- Scripts never call `rconfig:clear-all`. It is for operators, and restarts Horizon with `horizon:terminate`, never by restarting Supervisor.
+- `rconfig:check-worker-user` is the single check that a bare-metal install runs nothing as root: Horizon, `/etc/cron.d/rconfig-core`, root's crontab (read only when run as root, otherwise reported as skipped) and the Supervisor config. All its logic lives in `WorkerUserCheckService::report()`, and the `WorkerPrivilegeCheck` dashboard check reads the same report, so the two never disagree. Add a new check there, never in the command or the health check. Only a FAIL exits non-zero; WARN and SKIP exit 0, and Docker skips everything and exits 0. `update.sh` runs it unconditionally as its last step and `v8core:install` runs it last outside Docker; both fail on a non-zero exit. Only processes and files that provably belong to this app folder count, never a pattern such as `pgrep -f 'artisan horizon$'`, which also matches PRO and Prism on a shared box.
+- `HostFilesystem::readCrontab()` is the only place app code calls `crontab`, and it only lists. `tests/Unit/Console/Commands/RconfigSetupCronCommandTest.php` fails on any other call.
+- `update.sh` tests put only fakes and an allow-list of harmless tools on PATH, so any unplanned binary fails the test instead of reaching the host. Never run `update.sh` or a step of it outside that sandbox.
+- When changing the privilege of any process, search `vendor/` as well as `app/` for code paths it runs.
+- Any change that affects existing installs must be flagged in the PR description under a "Deployment impact" heading.
+- Ownership code is tested with OS calls faked through `App\Services\Utilities\HostFilesystem` (see `tests/Traits/FakesHostFilesystem.php`), so tests never depend on running as root. Each ownership bug fixed gets a regression test that fails under the old behaviour. Real-ownership tests skip cleanly when not root.
 
 ### Documentation and replies
 

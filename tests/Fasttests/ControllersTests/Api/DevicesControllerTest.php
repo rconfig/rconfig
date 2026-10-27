@@ -197,6 +197,32 @@ test('create device', function () {
     Queue::assertPushed(DownloadConfigNowJob::class);
 });
 
+/*
+ * A device on loopback let any user make rConfig write into its own Redis. See RCO-1813.
+ */
+test('create device rejects a loopback target', function () {
+    Queue::fake();
+
+    $device = Device::factory()->make(['device_ip' => '127.0.0.1']);
+
+    $response = $this->json('post', '/api/devices', $device->toArray());
+
+    $response->assertStatus(422);
+    $response->assertJsonValidationErrors(['device_ip']);
+    $this->assertDatabaseMissing('devices', ['device_name' => $device->device_name]);
+    Queue::assertNotPushed(DownloadConfigNowJob::class);
+});
+
+test('edit device rejects a localhost target', function () {
+    $device = Device::factory()->create();
+
+    $response = $this->json('patch', '/api/devices/' . $device->id, array_merge($device->toArray(), ['device_ip' => 'localhost']));
+
+    $response->assertStatus(422);
+    $response->assertJsonValidationErrors(['device_ip']);
+    $this->assertDatabaseHas('devices', ['id' => $device->id, 'device_ip' => $device->device_ip]);
+});
+
 test('edit device', function () {
     $category = Category::factory()->create();
     $vendor = Vendor::factory(1)->create();

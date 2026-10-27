@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Connections\SSH;
 
-use phpseclib3\File\ANSI;
-use phpseclib3\Net\SSH2;
+use phpseclib4\File\ANSI;
+use phpseclib4\Net\SSH2;
 
 class SendCommand
 {
@@ -74,9 +74,10 @@ class SendCommand
     private function ansiShowCommand($command)
     {
         $ansi = $this->ansiForSession();
-        $ansi->appendString($this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX));
+        // read() is typed string|bool and phpseclib 4's appendString() only accepts a string
+        $ansi->appendString((string) $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX));
         $this->send->sendString($command);
-        $ansi->appendString($this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX));
+        $ansi->appendString((string) $this->connectionObj->connection->read('~' . $this->connectionObj->devicePrompt . '~', SSH2::READ_REGEX));
         // echo $ansi->getScreen(); // outputs current screen HTML
         // echo $ansi->getHistory(); // outputs current history HTML
         // $this->data = htmlspecialchars_decode(strip_tags($ansi->getScreen())); //$ansi->getScreen() returns what'd be seen on the current screen. In the case of top this is desirable
