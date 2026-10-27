@@ -5,7 +5,7 @@ All notable changes to rConfig v8 Core are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [8.2.19] - Unreleased
+## [8.2.19] - 2026-10-27
 
 Security release. Recommended for all 8.x installations. **Before upgrading, update PHP to at least 8.2.35, 8.3.36 or 8.4.27: Composer refuses older patch releases.** **First upgrade from 8.2.18 or earlier: run `git pull`, then `sudo ./update.sh --no-pull`.** After that, `sudo ./update.sh` is the only upgrade command.
 
@@ -14,6 +14,8 @@ Security release. Recommended for all 8.x installations. **Before upgrading, upd
 - **Background services no longer run as root.** Horizon and the scheduler now run as the web user, so a flaw in any job no longer has full system rights.
 - **(Docker) Tightened permissions on the `storage` folder** so local accounts can no longer modify its contents directly.
 - A failed SSH login no longer writes a stack trace to the log, which could hold fragments of a private key or passphrase.
+- Devices can no longer target the rConfig server itself (loopback, `localhost` or the configured Redis host), which let any user write into rConfig's own Redis.
+- (Docker) The entrypoint no longer prints the generated Redis password to the container log.
 
 ### Added
 - **`update.sh`**, a single, safe upgrade command that handles the whole process and logs to `/var/log/`.
@@ -22,11 +24,13 @@ Security release. Recommended for all 8.x installations. **Before upgrading, upd
 - **`config.commandLinebreak` template key** sets the line ending rConfig sends after each SSH command: `r` (default), `n` or `rn`. Set `n` for devices such as Dell Force10 FTOS that ignore a bare carriage return. Templates without the key behave as before. Brings Core in line with Pro.
 - **`connect.kexOverride` and `connect.kexAlgorithms` template keys** limit the SSH key-exchange algorithms rConfig offers, for devices whose SSH server hangs during key exchange. Set `kexOverride: "on"` and list the algorithms in order of preference. Off by default. Brings Core in line with Pro.
 - **`sudo php artisan rconfig:ssl-self-signed`** switches a new install from HTTP to HTTPS in one step: a self-signed certificate, an HTTPS virtual host with an HTTP to HTTPS redirect, port 443 in the firewall and `APP_URL`. It never edits `rconfig-vhost.conf`, and it rolls everything back if Apache rejects the change. An HTTPS dashboard alert and the installer's next steps point to it while `APP_URL` is `http://`.
+- Health check failures and recoveries now send in-app and email notifications through the standard notification settings.
 
 ### Changed
 - Horizon and the scheduler moved to managed system locations and now run as the web user.
 - The Supervisor program is now `rconfig-core-horizon`, so update any script that runs `supervisorctl restart horizon`.
-- The Horizon log is now `/var/log/rconfig-core-horizon.log`.
+- The Horizon log stays at `storage/logs/horizon.log`, now written by Horizon as the web user and rotated by `/etc/logrotate.d/rconfig-core-horizon`.
+- Health check alert emails no longer use `HEALTH_MAIL_TO`; they go to users through their notification preferences.
 - The scheduler now runs from `/etc/cron.d/rconfig-core`, not root's crontab.
 - `rconfig:clear-all` no longer restarts all of Supervisor, so it won't disrupt other apps on the same server.
 - Minimum PHP raised to 8.2.35, 8.3.36 or 8.4.27, SSH connections moved to phpseclib 4, and Composer and front end dependencies updated.
@@ -37,6 +41,8 @@ Security release. Recommended for all 8.x installations. **Before upgrading, upd
 - `rconfig:redis-secure` left Horizon and the queue workers on the old Redis password, and when run as root left a config cache the web server could not read.
 - An SSH device that refused the connection, never sent a banner or had an invalid template timeout could stop the whole download job instead of failing only that device.
 - A device with no stored SSH password raised an error instead of trying a login with no password.
+- An SSO provider error showed a 500 page instead of returning to the login screen, and failed SSO user saves for Google, Okta and SAML2 were not logged.
+- Config Compare listed every device's commands instead of only the selected device's.
 
 ## [8.2.18] - 2026-10-08
 
