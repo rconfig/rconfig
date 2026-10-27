@@ -1,1 +1,0 @@
-import{ht as e}from"./vue.esm-bundler-B6jF-ycY.js";import{di as t}from"./app-DyKyazxY.js";function n(){let{text:n,copy:r,copied:i,isSupported:a}=t(),o=e({});return{copyItem:async(e,t)=>{try{r(t),o.value[e]=!0,setTimeout(()=>{o.value[e]=!1},1500)}catch(e){console.error(`Failed to copy:`,e)}},activeCopyIcon:o}}export{n as t};
