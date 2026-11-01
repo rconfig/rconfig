@@ -16,6 +16,7 @@ Security release. Recommended for all 8.x installations. **Before upgrading, upd
 - A failed SSH login no longer writes a stack trace to the log, which could hold fragments of a private key or passphrase.
 - Devices can no longer target the rConfig server itself (loopback, `localhost` or the configured Redis host), which let any user write into rConfig's own Redis.
 - (Docker) The entrypoint no longer prints the generated Redis password to the container log.
+- (Docker) The image now ships Debian's patched Brotli library (`libbrotli1 1.0.9-2+deb12u1`, DLA-4855-1) for the Brotli decoder RCE CVE-2026-111497. Images up to 8.2.18 carry the vulnerable `1.0.9-2+b6`. Reported in #384 by KBCrek.
 
 ### Added
 - **`update.sh`**, a single, safe upgrade command that handles the whole process and logs to `/var/log/`.
