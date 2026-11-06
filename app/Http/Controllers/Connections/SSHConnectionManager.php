@@ -58,7 +58,9 @@ class SSHConnectionManager
             }
 
             return true;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+            // Throwable, not Exception: phpseclib 4's typed API raises a TypeError for a bad
+            // template value, which must fail this device rather than the whole download job.
             if ($this->debug) {
                 dump($e->getMessage());
             }

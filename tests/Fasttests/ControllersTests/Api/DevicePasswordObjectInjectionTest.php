@@ -2,6 +2,7 @@
 
 use App\Models\Device;
 use App\Models\User;
+use Tests\Fasttests\ControllersTests\Api\DevicePwnCanary;
 
 /**
  * DB-backed regression cover for the stored PHP object injection in rconfig/rconfig#369.
@@ -15,28 +16,6 @@ use App\Models\User;
  * both directly off the model and through the API, asserting the gadget is never woken.
  * The unit-level proof lives in tests/Unit/Casts/EncryptStringCastTest.php.
  */
-
-/**
- * Canary "gadget" — woken only if the cast instantiates a serialized object. Guarded so it
- * does not clash with the same-named class in the unit test when the whole suite runs.
- */
-if (! class_exists('DevicePwnCanary')) {
-    class DevicePwnCanary
-    {
-        public static bool $awoke = false;
-
-        public function __wakeup(): void
-        {
-            self::$awoke = true;
-        }
-
-        public function __destruct()
-        {
-            self::$awoke = true;
-        }
-    }
-}
-
 beforeEach(function () {
     $this->beginTransaction();
     $this->user = User::factory()->create();

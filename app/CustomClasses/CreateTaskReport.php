@@ -21,7 +21,7 @@ class CreateTaskReport
         // The report directory can be absent on an install whose storage tree
         // was never fully seeded. Without this the write throws inside a queued
         // job and the task run reports nothing.
-        File::ensureDirectoryExists(report_path());
+        rconfig_make_directory(report_path(), (int) config('rConfig.config_dir_mode'));
 
         File::put(
             $this->report_data->report_path,

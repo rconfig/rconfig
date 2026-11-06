@@ -1,14 +1,15 @@
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import HorizonLogo from "@/pages/Shared/Icon/Icons/HorizonLogo.vue";
-import { Archive } from "lucide-vue-next";
+import { Archive, ShieldAlert } from "lucide-vue-next";
+import { dotClass, securityAlerts } from "./healthStatus";
 
 const hoverIcons = ref({});
 const activeIcons = ref({});
 const emit = defineEmits(["refresh"]);
 
-defineProps({
+const props = defineProps({
 	healthLatest: {
 		type: Object,
 		required: true,
@@ -21,6 +22,8 @@ defineProps({
 		type: String,
 	},
 });
+
+const alerts = computed(() => securityAlerts(props.healthLatest?.data));
 
 function refresh() {
 	emit("refresh");
@@ -86,6 +89,34 @@ function refresh() {
 				v-else-if="healthLatest.data"
 				class="space-y-3 text-sm min-h-[175px]"
 			>
+				<!-- Security alerts (Redis auth, worker privilege) -->
+				<div
+					v-for="alert in alerts"
+					:key="alert.name"
+					role="alert"
+					:data-testid="`security-alert-${alert.name}`"
+					class="flex items-start gap-2 rounded-lg border p-3 text-xs"
+					:class="alert.severity === 'failed' ? 'border-red-500/40 bg-red-500/10 text-red-600 dark:text-red-400' : 'border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-400'"
+				>
+					<ShieldAlert class="w-4 h-4 shrink-0 mt-0.5" />
+					<div class="space-y-0.5">
+						<p class="font-semibold">
+							{{ alert.label }}
+						</p>
+						<p class="break-words">
+							{{ alert.message }}
+						</p>
+						<a
+							:href="alert.docsUrl"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-block pt-1 font-medium underline underline-offset-2 hover:opacity-80"
+						>
+							How to fix this
+						</a>
+					</div>
+				</div>
+
 				<!-- CPU Load -->
 				<div
 					v-for="item in healthLatest.data.filter((h) => h.name === 'CpuLoad')"
@@ -110,7 +141,10 @@ function refresh() {
 					</div>
 					<div class="flex items-center gap-2">
 						<span class="font-medium">{{ item.status }}</span>
-						<div class="w-2 h-2 rounded-full bg-green-500"></div>
+						<div
+							class="w-2 h-2 rounded-full"
+							:class="dotClass(item)"
+						></div>
 						<!-- <Button class="h-6 p-1 ml-auto text-muted-foreground" variant="ghost" title="copy raw data" @click="copyItem(item.name, item.status)">
 							<RcIcon name="copy-transition" :isActive="activeCopyIcon[item.name]" :size="16" />
 						</Button> -->
@@ -131,7 +165,7 @@ function refresh() {
 						<span class="font-medium">{{ item.status }}</span>
 						<div
 							class="w-2 h-2 rounded-full"
-							:class="item.status === 'Running' ? 'bg-green-500' : 'bg-red-500'"
+							:class="dotClass(item)"
 						></div>
 					</div>
 				</div>
@@ -162,7 +196,7 @@ function refresh() {
 						<span class="font-medium">{{ item.status }}</span>
 						<div
 							class="w-2 h-2 rounded-full"
-							:class="parseInt(item.status) < 80 ? 'bg-green-500' : 'bg-red-500'"
+							:class="dotClass(item)"
 						></div>
 					</div>
 				</div>
@@ -193,7 +227,7 @@ function refresh() {
 						<span class="font-medium">{{ item.status }}</span>
 						<div
 							class="w-2 h-2 rounded-full"
-							:class="item.status === 'Reachable' ? 'bg-green-500' : 'bg-red-500'"
+							:class="dotClass(item)"
 						></div>
 					</div>
 				</div>
@@ -216,7 +250,7 @@ function refresh() {
 						<span class="font-medium">{{ item.status }}</span>
 						<div
 							class="w-2 h-2 rounded-full"
-							:class="item.status === 'Ok' ? 'bg-green-500' : 'bg-red-500'"
+							:class="dotClass(item)"
 						></div>
 					</div>
 				</div>
@@ -327,7 +361,7 @@ function refresh() {
 										<span class="text-right">{{ item.status }}</span>
 										<div
 											class="w-2 h-2 rounded-full"
-											:class="['Ok', 'Running', 'Reachable'].includes(item.status) || (item.name.includes('Disk') && parseInt(item.status) < 80) ? 'bg-green-500' : 'bg-red-500'"
+											:class="dotClass(item)"
 										></div>
 									</div>
 								</div>

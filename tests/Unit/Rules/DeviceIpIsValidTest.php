@@ -46,3 +46,43 @@ test('it allows mixed case fqdn', function () {
     $validator = makeValidator(['ip_address' => 'ExAmPle.CoM']);
     expect($validator->passes())->toBeTrue();
 });
+
+/*
+ * A device on loopback let any user make rConfig write into its own Redis. CORE has no
+ * RBAC, so every user can add a device. See RCO-1813.
+ */
+test('it rejects targets pointing at this server', function (string $target) {
+    $validator = makeValidator(['ip_address' => $target]);
+
+    expect($validator->passes())->toBeFalse();
+    expect($validator->errors()->first('ip_address'))->toEqual('The ip address cannot point at this rConfig server (loopback, localhost or its Redis host).');
+})->with([
+    'ipv4 loopback' => '127.0.0.1',
+    'ipv4 loopback range' => '127.5.5.5',
+    'ipv6 loopback' => '::1',
+    'ipv4 mapped loopback' => '::ffff:127.0.0.1',
+    'unspecified ipv4' => '0.0.0.0',
+    'unspecified ipv6' => '::',
+    'localhost' => 'localhost',
+    'localhost uppercase' => 'LOCALHOST',
+    'localhost subdomain' => 'redis.localhost',
+]);
+
+test('it rejects the configured redis host', function () {
+    config(['database.redis.default.host' => 'redis']);
+
+    expect(makeValidator(['ip_address' => 'redis'])->passes())->toBeFalse();
+    expect(makeValidator(['ip_address' => 'REDIS'])->passes())->toBeFalse();
+});
+
+test('it still allows normal device addresses', function (string $target) {
+    expect(makeValidator(['ip_address' => $target])->passes())->toBeTrue();
+})->with([
+    'rfc1918 10/8' => '10.0.0.1',
+    'rfc1918 172.16/12' => '172.16.5.5',
+    'rfc1918 192.168/16' => '192.168.1.1',
+    'public ipv4' => '8.8.8.8',
+    'ipv6' => '2001:db8::1',
+    'hostname' => 'core-sw01',
+    'hostname starting with 127' => '127-router.example.com',
+]);

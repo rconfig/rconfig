@@ -3,7 +3,7 @@ import ConfigSearchFilterCardDateRangePicker from "@/pages/Configs/ConfigSearch/
 import DeviceMultiSelect from "@/pages/Shared/FormFields/DeviceMultiSelect.vue";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { inject, ref } from "vue";
+import { computed, inject } from "vue";
 import { useCompareFilterCard } from "./useCompareFilterCard";
 
 defineProps({
@@ -13,7 +13,20 @@ defineProps({
 const emit = defineEmits(["updateConfigFilter"]);
 const formatters = inject("formatters");
 
-const { clearAll, commands, model, performFilter, setDates } = useCompareFilterCard(emit);
+const { clearAll, commands, hasDevice, isLoadingCommands, model, performFilter, setDates } = useCompareFilterCard(emit);
+
+const commandPlaceholder = computed(() => {
+	if (!hasDevice.value) {
+		return "Select a device first";
+	}
+	if (isLoadingCommands.value) {
+		return "Loading commands…";
+	}
+	if (commands.value.length === 0) {
+		return "No configs stored for this device yet";
+	}
+	return "Select a command";
+});
 </script>
 
 <template>
@@ -54,9 +67,9 @@ const { clearAll, commands, model, performFilter, setDates } = useCompareFilterC
 						</div>
 
 						<div class="grid items-center">
-							<Select v-model="model.selectedCommand">
+							<Select v-model="model.selectedCommand" :disabled="!hasDevice || isLoadingCommands || commands.length === 0">
 								<SelectTrigger class="w-full">
-									<SelectValue class="placeholder:text-muted-foreground" placeholder="Select a command" />
+									<SelectValue class="placeholder:text-muted-foreground" :placeholder="commandPlaceholder" />
 								</SelectTrigger>
 								<SelectContent class="w-full mb-1 focus:outline-none focus-visible:ring-0">
 									<SelectGroup>

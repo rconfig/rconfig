@@ -70,6 +70,31 @@ test('google callback unregistered account shows specific message', function () 
     $this->assertStringNotContainsString('Google authentication failed', session('message'));
 });
 
+test('google callback provider php error redirects to login instead of a server error', function () {
+    // checkErrors() only caught \Exception, so an \Error from the provider
+    // (e.g. a TypeError in a Socialite driver) escaped to a 500 page.
+    Socialite::shouldReceive('driver->user')->andThrow(new TypeError('provider returned an unexpected payload'));
+
+    $response = $this->get('/auth/callback/google?code=some-code');
+
+    $response->assertRedirect('/login');
+    $this->assertStringContainsString('Unable to authenticate using Google', session('message'));
+    $this->assertDatabaseHas('activity_log', [
+        'description' => 'Unable to authenticate using Google. Please try again. Error: provider returned an unexpected payload',
+    ]);
+});
+
+test('saml2 callback provider php error redirects to login instead of a server error', function () {
+    config(['services.saml2.display_name' => 'Company SSO']);
+
+    Socialite::shouldReceive('driver->user')->andThrow(new TypeError('provider returned an unexpected payload'));
+
+    $response = $this->post('/auth/callback/saml2', ['SAMLResponse' => 'encoded-response']);
+
+    $response->assertRedirect('/login');
+    $this->assertStringContainsString('Unable to authenticate using Company SSO', session('message'));
+});
+
 test('google callback shows generic error when register returns null', function () {
     // Regression test: register() can return null (not a User, not a
     // Response) via the 23000/duplicate-key branch in *Auth::register(),

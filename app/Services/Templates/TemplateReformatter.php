@@ -15,6 +15,8 @@ class TemplateReformatter
             'timeout' => 'Connection timeout (in seconds)',
             'protocol' => 'Protocol to use: \'telnet\' or \'ssh\'',
             'port' => 'Port number for connection (1–65535)',
+            'kexOverride' => 'Restrict SSH key-exchange algorithms to the list below? \'on\' or \'off\' - for vendor sshd builds that hang during KEX negotiation',
+            'kexAlgorithms' => 'Ordered list of KEX algorithms to offer when kexOverride is on, e.g. diffie-hellman-group14-sha256',
         ],
         'auth' => [
             'sshPrivKey' => 'SSH Private Key authentication enabled',
@@ -28,6 +30,7 @@ class TemplateReformatter
         ],
         'config' => [
             'linebreak' => 'DEPRECATED: This value is ignored',
+            'commandLinebreak' => 'Line ending for commands: \'r\' (default), \'n\' or \'rn\' - set \'n\' for devices such as Force10/FTOS that ignore \\r',
             'paging' => 'Set to \'on\' to disable paging',
             'pagingCmd' => 'Command to disable CLI paging',
             'resetPagingCmd' => 'Command to restore CLI paging (optional)',

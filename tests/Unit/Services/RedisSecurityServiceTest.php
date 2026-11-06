@@ -1,0 +1,251 @@
+<?php
+
+use App\Services\Utilities\RedisSecurityService;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
+use Tests\Traits\FakesHostFilesystem;
+use Tests\Unit\Services\FakeRedisClient;
+use Tests\Unit\Services\FakeRedisServer;
+
+uses(FakesHostFilesystem::class);
+
+function makeService(FakeRedisServer $server, string $envContent = "REDIS_PASSWORD=null\n"): array
+{
+    $envPath = tempnam(sys_get_temp_dir(), 'redissec_');
+    file_put_contents($envPath, $envContent);
+
+    $factory = fn (?string $password): FakeRedisClient => new FakeRedisClient($server, $password);
+
+    return [new RedisSecurityService($envPath, $factory), $envPath];
+}
+
+afterEach(function () {
+    foreach (glob(sys_get_temp_dir() . '/redissec_*') as $leftover) {
+        @unlink($leftover);
+    }
+});
+
+test('passwordIsRequired is false for an open server and true once a password is set', function () {
+    $server = new FakeRedisServer;
+    [$service] = makeService($server);
+
+    expect($service->passwordIsRequired())->toBeFalse();
+
+    $server->requirepass = 'secret';
+    expect($service->passwordIsRequired())->toBeTrue();
+});
+
+test('status reports insecure for an open server and secure once a password is set', function () {
+    $server = new FakeRedisServer;
+    [$service] = makeService($server);
+
+    $open = $service->status();
+    expect($open['reachable'])->toBeTrue();
+    expect($open['password_required'])->toBeFalse();
+    expect($open['secure'])->toBeFalse();
+    expect($open['bind'])->toBe('127.0.0.1');
+    expect($open['protected_mode'])->toBe('yes');
+
+    $server->requirepass = 'secret';
+    $secured = $service->status();
+    expect($secured['password_required'])->toBeTrue();
+    expect($secured['secure'])->toBeTrue();
+});
+
+test('status reports unreachable when the server is down', function () {
+    $server = new FakeRedisServer;
+    $server->up = false;
+    [$service] = makeService($server);
+
+    $status = $service->status();
+    expect($status['reachable'])->toBeFalse();
+    expect($status['secure'])->toBeFalse();
+    expect($status['password_required'])->toBeNull();
+});
+
+test('generateSecret returns a unique 64 character hex string', function () {
+    $server = new FakeRedisServer;
+    [$service] = makeService($server);
+
+    $a = $service->generateSecret();
+    $b = $service->generateSecret();
+
+    expect($a)->toMatch('/^[0-9a-f]{64}$/');
+    expect($a)->not->toBe($b);
+});
+
+test('currentEnvPassword treats null and empty as no password', function () {
+    [$nullService] = makeService(new FakeRedisServer, "REDIS_PASSWORD=null\n");
+    expect($nullService->currentEnvPassword())->toBeNull();
+
+    [$emptyService] = makeService(new FakeRedisServer, "REDIS_PASSWORD=\n");
+    expect($emptyService->currentEnvPassword())->toBeNull();
+
+    [$setService] = makeService(new FakeRedisServer, "REDIS_PASSWORD=abc123\n");
+    expect($setService->currentEnvPassword())->toBe('abc123');
+});
+
+test('secure writes the password to .env and requires it on the live instance', function () {
+    $server = new FakeRedisServer;
+    [$service, $envPath] = makeService($server);
+
+    $result = $service->secure();
+
+    expect($result['action'])->toBe('secured');
+    expect($result['changed'])->toBeTrue();
+    expect($result['persisted'])->toBeTrue();
+    expect($server->requirepass)->toBe($result['secret']);
+
+    $env = file_get_contents($envPath);
+    expect($env)->toContain('REDIS_PASSWORD=' . $result['secret']);
+    expect($service->passwordIsRequired())->toBeTrue();
+});
+
+test('secure is idempotent when already secured and in sync', function () {
+    $server = new FakeRedisServer;
+    $server->requirepass = 'existing-secret';
+    [$service] = makeService($server, "REDIS_PASSWORD=existing-secret\n");
+
+    $result = $service->secure();
+
+    expect($result['action'])->toBe('already_secured');
+    expect($result['changed'])->toBeFalse();
+    expect($server->requirepass)->toBe('existing-secret');
+});
+
+test('secure throws on a desync without force', function () {
+    $server = new FakeRedisServer; // open, no requirepass
+    [$service] = makeService($server, "REDIS_PASSWORD=stale-secret\n");
+
+    expect(fn () => $service->secure())->toThrow(RuntimeException::class, 'desync');
+});
+
+test('secure with force regenerates over an existing password', function () {
+    $server = new FakeRedisServer;
+    $server->requirepass = 'old-secret';
+    [$service, $envPath] = makeService($server, "REDIS_PASSWORD=old-secret\n");
+
+    $result = $service->secure(force: true);
+
+    expect($result['action'])->toBe('secured');
+    expect($result['secret'])->not->toBe('old-secret');
+    expect($server->requirepass)->toBe($result['secret']);
+    expect(file_get_contents($envPath))->toContain('REDIS_PASSWORD=' . $result['secret']);
+});
+
+test('secure rolls back the .env write when the live apply fails', function () {
+    $server = new FakeRedisServer;
+    $server->up = false; // CONFIG SET will fail
+    [$service, $envPath] = makeService($server);
+
+    expect(fn () => $service->secure())->toThrow(RuntimeException::class, 'rolled back');
+
+    expect(file_get_contents($envPath))->toContain('REDIS_PASSWORD=null');
+    expect(file_get_contents($envPath))->not->toMatch('/REDIS_PASSWORD=[0-9a-f]{64}/');
+});
+
+test('secure reports unpersisted when CONFIG REWRITE fails but does not roll back', function () {
+    $server = new FakeRedisServer;
+    $server->rewriteFails = true;
+    [$service, $envPath] = makeService($server);
+
+    $result = $service->secure();
+
+    expect($result['action'])->toBe('secured');
+    expect($result['persisted'])->toBeFalse();
+    expect($server->requirepass)->toBe($result['secret']);
+    expect(file_get_contents($envPath))->toContain('REDIS_PASSWORD=' . $result['secret']);
+});
+
+/**
+ * The password a real framework connection would AUTH with. Predis connects
+ * lazily, so reading the parameters never opens a socket.
+ */
+function frameworkRedisPassword(string $connection): ?string
+{
+    return Redis::connection($connection)->client()->getConnection()->getParameters()->password;
+}
+
+/**
+ * Start from an unsecured Redis whatever REDIS_PASSWORD the environment
+ * loaded, so a developer's secured local Redis cannot fail these tests.
+ */
+function startWithoutRedisPassword(): void
+{
+    foreach (['default', 'cache', 'horizon'] as $name) {
+        config(["database.redis.{$name}.password" => null]);
+    }
+
+    app()->forgetInstance('redis');
+    Cache::forgetDriver('redis');
+}
+
+test('secure points every framework Redis connection at the new password, including horizon', function () {
+    // Horizon copies `default` into its own `horizon` connection at boot.
+    expect(config('database.redis'))->toHaveKey('horizon');
+    startWithoutRedisPassword();
+    config(['database.redis.reporting' => ['host' => '127.0.0.1', 'port' => 6390, 'password' => null, 'database' => 3]]);
+
+    // Resolve the manager and its connections first, as a running command would.
+    $staleManager = app('redis');
+    foreach (['default', 'cache', 'horizon', 'reporting'] as $name) {
+        expect(frameworkRedisPassword($name))->toBeNull();
+    }
+
+    [$service] = makeService(new FakeRedisServer);
+    $secret = $service->secure()['secret'];
+
+    expect(app('redis'))->not->toBe($staleManager);
+
+    foreach (['default', 'cache', 'horizon', 'reporting'] as $name) {
+        expect(config("database.redis.{$name}.password"))->toBe($secret);
+        expect(frameworkRedisPassword($name))->toBe($secret);
+    }
+});
+
+test('secure rebuilds the Redis cache store so it no longer holds the stale manager', function () {
+    startWithoutRedisPassword();
+    $staleStore = Cache::store('redis')->getStore();
+    expect($staleStore->connection()->client()->getConnection()->getParameters()->password)->toBeNull();
+
+    [$service] = makeService(new FakeRedisServer);
+    $secret = $service->secure()['secret'];
+
+    $store = Cache::store('redis')->getStore();
+
+    expect($store)->not->toBe($staleStore);
+    expect($store->getRedis())->toBe(app('redis'));
+    expect($store->connection()->client()->getConnection()->getParameters()->password)->toBe($secret);
+});
+
+test('secure hands a rebuilt config cache back to the web user', function () {
+    $filesystem = $this->fakeHostFilesystem();
+    app()->instance('config_loaded_from_cache', true);
+
+    Artisan::shouldReceive('call')->once()->with('config:clear')->andReturn(0);
+    Artisan::shouldReceive('call')->once()->with('config:cache')->andReturn(0);
+
+    [$service] = makeService(new FakeRedisServer);
+    $service->secure();
+
+    $cachePath = app()->getCachedConfigPath();
+
+    expect($filesystem->chowned)->toBe([['path' => $cachePath, 'user' => 'apache']]);
+    expect($filesystem->chgrped)->toBe([['path' => $cachePath, 'group' => 'apache']]);
+});
+
+test('secure hands the config cache back to the web user after a rollback too', function () {
+    $filesystem = $this->fakeHostFilesystem();
+    app()->instance('config_loaded_from_cache', true);
+
+    Artisan::shouldReceive('call')->once()->with('config:clear')->andReturn(0);
+    Artisan::shouldReceive('call')->once()->with('config:cache')->andReturn(0);
+
+    $server = new FakeRedisServer;
+    $server->up = false;
+    [$service] = makeService($server);
+
+    expect(fn () => $service->secure())->toThrow(RuntimeException::class, 'rolled back');
+    expect($filesystem->chowned)->toBe([['path' => app()->getCachedConfigPath(), 'user' => 'apache']]);
+});

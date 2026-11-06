@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Connections\SSH\Connect as SshConnect;
 use App\Http\Controllers\Connections\SSH\SendCommand as SshSendCommand;
-use phpseclib3\File\ANSI;
+use phpseclib4\File\ANSI;
 use Tests\Unit\Connections\DeviceParamsBuilder;
 
 /**

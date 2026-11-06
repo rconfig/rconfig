@@ -1,11 +1,13 @@
 import axios from 'axios';
-import { ref, onMounted } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useToaster } from '@/composables/useToaster';
 
 export function useCompareFilterCard(emit) {
   const { toastError } = useToaster();
   const daterange = ref(null);
   const commands = ref([]);
+  const isLoadingCommands = ref(false);
+  let latestCommandsRequest = 0;
 
   const model = ref({
     selectedCommand: '',
@@ -14,20 +16,46 @@ export function useCompareFilterCard(emit) {
     end_date: ''
   });
 
-  onMounted(() => {
-    // window.addEventListener('wheel', handleScroll, { passive: true });
+  const selectedDeviceId = computed(() => model.value.device?.id ?? null);
+  const hasDevice = computed(() => selectedDeviceId.value !== null);
 
-    getDistinctCommands();
+  // Only list commands stored for the selected device; a command from the previous device is never valid.
+  watch(selectedDeviceId, deviceId => {
+    model.value.selectedCommand = '';
+
+    if (deviceId === null) {
+      latestCommandsRequest++;
+      commands.value = [];
+      isLoadingCommands.value = false;
+      return;
+    }
+
+    getDistinctCommands(deviceId);
   });
 
-  function getDistinctCommands() {
+  function getDistinctCommands(deviceId) {
+    const requestId = ++latestCommandsRequest;
+    commands.value = [];
+    isLoadingCommands.value = true;
+
     axios
-      .get('/api/configs/distinct-commands/0')
+      .get(`/api/configs/distinct-commands/${deviceId}`)
       .then(response => {
+        if (requestId !== latestCommandsRequest) {
+          return;
+        }
         commands.value = response.data.data;
       })
       .catch(error => {
-        toastError('Error', error.response.data.message);
+        if (requestId !== latestCommandsRequest) {
+          return;
+        }
+        toastError('Error', error.response?.data?.message || 'Failed to load commands.');
+      })
+      .finally(() => {
+        if (requestId === latestCommandsRequest) {
+          isLoadingCommands.value = false;
+        }
       });
   }
 
@@ -66,6 +94,8 @@ export function useCompareFilterCard(emit) {
   return {
     clearAll,
     commands,
+    hasDevice,
+    isLoadingCommands,
     model,
     performFilter,
     setDates

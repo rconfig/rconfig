@@ -12,8 +12,8 @@ const props = defineProps({
   configResultsRight: Object
 });
 
-const toggleStateMultiple = ref([]); //'dark', 'lineNumbers', 'minimap', 'stickyscroll'
-const { checkDarkModeIsSet, checkLineNumbersIsSet, checkMiniMapIsSet, checkStickyScrollIsSet, copied, copyItem, copyPath, darkmode, download, initDiffEditor, lineNumbers, meditorValue, minimap, search, toggleEditorDarkMode, toggleEditorLineNumbers, toggleEditorMinimap, toggleStickyScroll } = useCodeEditor(monaco);
+const toggleStateMultiple = ref([]); //'dark', 'lineNumbers', 'hideUnchanged', 'minimap', 'stickyscroll'
+const { checkDarkModeIsSet, checkHideUnchangedIsSet, checkLineNumbersIsSet, checkMiniMapIsSet, checkStickyScrollIsSet, copied, copyItem, copyPath, darkmode, download, initDiffEditor, lineNumbers, meditorValue, minimap, search, toggleEditorDarkMode, toggleEditorLineNumbers, toggleEditorMinimap, toggleHideUnchanged, toggleStickyScroll } = useCodeEditor(monaco);
 
 onMounted(() => {
   initializeToggleStates();
@@ -23,6 +23,7 @@ onMounted(() => {
 function initializeToggleStates() {
   if (checkDarkModeIsSet()) toggleStateMultiple.value.push('dark');
   if (checkLineNumbersIsSet()) toggleStateMultiple.value.push('lineNumbers');
+  if (checkHideUnchangedIsSet()) toggleStateMultiple.value.push('hideUnchanged');
   //   if (checkMiniMapIsSet()) toggleStateMultiple.value.push('minimap');
   //   if (checkStickyScrollIsSet()) toggleStateMultiple.value.push('stickyscroll');
 }
@@ -107,6 +108,16 @@ function initCodeEditor() {
 							class="w-4 h-4"
 						/>
 					</ToggleGroupItem>
+					<ToggleGroupItem
+						value="hideUnchanged"
+						title="Show only differences"
+						@click="toggleHideUnchanged()"
+					>
+						<Icon
+							icon="mdi:arrow-collapse-vertical"
+							class="w-4 h-4"
+						/>
+					</ToggleGroupItem>
 					<!-- <ToggleGroupItem
             value="minimap"
             title="Minimap"
@@ -137,3 +148,21 @@ function initCodeEditor() {
   <pre style="white-space: pre-wrap"> {{ configResultsRight }}</pre> -->
 	<!-- EDITOR -->
 </template>
+
+<style scoped>
+/* "N hidden lines" bars from "Show only differences" - make them stand out from config text. */
+.code-editor__code-pre :deep(.monaco-editor .diff-hidden-lines .center) {
+	background: #dbeafe;
+	color: #1e40af;
+	font-weight: 600;
+	border-top: 1px solid #93c5fd;
+	border-bottom: 1px solid #93c5fd;
+}
+
+.code-editor__code-pre :deep(.monaco-editor.vs-dark .diff-hidden-lines .center) {
+	background: rgba(59, 130, 246, 0.18);
+	color: #93c5fd;
+	border-top-color: rgba(96, 165, 250, 0.45);
+	border-bottom-color: rgba(96, 165, 250, 0.45);
+}
+</style>

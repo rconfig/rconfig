@@ -67,11 +67,23 @@ class AppServiceProvider extends ServiceProvider
         $this->configureQueueLogging();
     }
 
+    /**
+     * ide-helper is a dev dependency, so it is missing after update.sh runs
+     * composer install --no-dev. A box left on APP_ENV=local must still boot.
+     */
     protected function registerIdeHelper(): void
     {
-        if ($this->app->environment('local')) {
-            $this->app->register(IdeHelperServiceProvider::class);
+        if ($this->app->environment('local') && class_exists($this->ideHelperProvider())) {
+            $this->app->register($this->ideHelperProvider());
         }
+    }
+
+    /**
+     * @return class-string
+     */
+    protected function ideHelperProvider(): string
+    {
+        return IdeHelperServiceProvider::class;
     }
 
     protected function configureHttps(): void

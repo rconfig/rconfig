@@ -26,6 +26,8 @@ vi.mock("@/config/notificationConfig", () => ({
 			},
 			types: {
 				system_notification_error: { label: "Err", description: "d" },
+				system_health_check_failed: { label: "HealthF", description: "d" },
+				system_health_check_recovered: { label: "HealthR", description: "d" },
 				config_download_completed: { label: "Dl", description: "d" },
 				config_purge_completed: { label: "Purge", description: "d" },
 				config_purge_failed_completed: { label: "PurgeF", description: "d" },
@@ -122,7 +124,7 @@ describe("useNotificationStore", () => {
 
 			expect(store.enums.categories).toHaveLength(4);
 			expect(store.enums.channels).toHaveLength(2);
-			expect(store.enums.types).toHaveLength(8);
+			expect(store.enums.types).toHaveLength(10);
 		});
 	});
 

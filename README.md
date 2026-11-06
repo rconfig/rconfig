@@ -218,7 +218,7 @@ cd rconfig8coredocker
 
 ```
 
-To complete the setup, follow the remaining instructions in the V8 Core Docker documentation: [https://v8coredocs.rconfig.com/getting-started/docker-installation/](https://v8coredocs.rconfig.com/installation-upgrades/v8-core/docker-setup/)
+To complete the setup, follow the remaining instructions in the V8 Core Docker documentation: [https://v8coredocs.rconfig.com/installation-upgrades/v8-core/docker-setup/](https://v8coredocs.rconfig.com/installation-upgrades/v8-core/docker-setup/)
 
 **Default credentials:**
 - 📧 Email: `admin@domain.com`
@@ -247,7 +247,7 @@ When setting up your VM, we have provided detailed instructions for both CentOS/
 
 OS Requirements: [System Requirements](https://v8coredocs.rconfig.com/getting-started/os-configuration/#system-requirements)
 
-**Supported OS:** Rocky Linux 8/9+ (recommended), CentOS 8/9+, RHEL 8/9+, Ubuntu 22.04+, Alma Linux 8/9+, AWS Linux 2023
+**Supported OS:** Rocky Linux 8/9+ (recommended), CentOS 8/9+, RHEL 8/9+, Ubuntu 22.04+, Alma Linux 8/9+
 
 **Required Software:** PHP 8.4+, Composer 2.4+, Apache 2.4+, MySQL 5.7+/MariaDB 10.5+, Node.js 14.17+, Git 2.25+, Supervisor 4.2+
 
@@ -310,15 +310,19 @@ yes | composer install --no-dev
 chmod +x setup_apache.sh
 ./setup_apache.sh
 
-# 7. Setup Supervisor
+# 7. Setup Supervisor (run as root). Writes a root owned Horizon config into
+#    /etc/supervisord.d (RHEL) or /etc/supervisor/conf.d (Ubuntu) that runs
+#    Horizon as the web user. update.sh re-runs it on every upgrade.
 chmod +x setup_supervisor.sh
-./setup_supervisor.sh
+sudo ./setup_supervisor.sh
 
 # 8. Run the beautiful installation wizard, and answer yes to all prompts 🎨
 php artisan v8core:install
 ```
 
-> 🎉 When prompted about cron scheduling, type `yes` and press Enter.
+> 🎉 When prompted about the scheduler cron file, type `yes` and press Enter. This writes `/etc/cron.d/rconfig-core`, which runs the scheduler as the web user (never root), and removes any old rConfig V8 Core `schedule:run` line from root's crontab and the web user's crontab. If the installer is not running as root it cannot write that file and prints the command instead: run `sudo ./setup_cron.sh` from the rConfig folder.
+
+> ✅ The installer ends by running `php artisan rconfig:check-worker-user`, which checks that Horizon, the scheduler and the Supervisor config run nothing as root. It prints one OK, WARN or FAIL line per check. On any FAIL the installer exits non-zero: fix what it lists, then run `sudo ./update.sh --no-pull`. You can run the check yourself at any time, with `sudo` to include root's crontab, or with `--json` for scripts.
 
 ---
 
@@ -345,16 +349,17 @@ sudo systemctl restart httpd
 # Ubuntu:
 sudo systemctl restart apache2
 
-# Set permissions and clear cache
+# Clear caches, then set ownership. Clear first: run as root, clear-all
+# rebuilds the caches as root-owned files, and the chown hands them back.
 # CentOS/RHEL:
 cd /var/www/html/rconfig
-chown -R apache storage bootstrap/cache
 php artisan rconfig:clear-all
+chown -R apache:apache storage bootstrap/cache
 
 # Ubuntu:
 cd /var/www/html/rconfig
-chown -R www-data storage bootstrap/cache
 php artisan rconfig:clear-all
+chown -R www-data:www-data storage bootstrap/cache
 ```
 
 ---
@@ -393,6 +398,59 @@ Open your browser and navigate to: `https://your-server.domain.com`
 > - Backup your `storage` directory
 > - Backup your entire server if possible
 
+### On 8.2.19 or later
+
+```bash
+cd /var/www/html/rconfig
+sudo ./update.sh
+```
+
+This one command does the whole upgrade in a safe order: maintenance mode, stop Horizon, `git pull`, `composer install --no-dev`, migrate, Supervisor and cron files, caches, file ownership, then start Horizon, restart Apache and bring the app back up. Horizon and the scheduler run as the web user, never root.
+
+- The full run is logged to `/var/log/rconfig-core-update-<date>.log`.
+- If you check out a release tag yourself, run `sudo ./update.sh --no-pull` so it does not pull.
+- `--skip-redis-secure` stops it setting a Redis password. One is set automatically when Redis has none, unless another app's Horizon (such as rConfig Pro) runs on the same server.
+- If a step fails, it says which one and stops. Before any code has changed it puts everything back. After that it leaves the app in maintenance mode: fix the problem, then run `sudo ./update.sh --no-pull`. It is safe to run more than once.
+- The last step runs `php artisan rconfig:check-worker-user`. If it fails, the upgrade itself has finished and rConfig is up and running, but something still runs as root or a Supervisor or cron file was changed by hand. The script lists the failed checks: fix them, then run `sudo ./update.sh --no-pull`.
+
+> 💡 **Git conflicts?** Run `git stash`, then `sudo ./update.sh` again.
+
+### First upgrade from 8.2.18 or earlier to 8.2.19 or later
+
+`update.sh` is not on your server until you pull 8.2.19, so pull once by hand, then let the script do the rest:
+
+```bash
+cd /var/www/html/rconfig
+git pull
+sudo ./update.sh --no-pull
+```
+
+### Legacy method (before 8.2.19)
+
+Only for upgrading to a release older than 8.2.19, which has no `update.sh`.
+
+```bash
+# CentOS/Rocky/RHEL:
+cd /var/www/html/rconfig
+git pull
+composer install
+php artisan migrate --force
+php artisan rconfig:sync-tasks
+systemctl restart httpd
+php artisan rconfig:clear-all
+php artisan rconfig:set-config-permissions
+
+# Ubuntu:
+cd /var/www/html/rconfig
+git pull
+composer install
+php artisan migrate --force
+php artisan rconfig:sync-tasks
+systemctl restart apache2
+php artisan rconfig:clear-all
+php artisan rconfig:set-config-permissions
+```
+
 ### PHP 8.4 Update (Required as of Feb 2024)
 ```bash
 # For CentOS/RHEL/Rocky:
@@ -409,31 +467,6 @@ wget https://dl.rconfig.com/downloads/php-updates/ubuntu-php8-update.sh -O /home
 chmod +x ubuntu-php8-update.sh
 ./ubuntu-php8-update.sh
 ```
-
-### Update Commands
-```bash
-# CentOS/Rocky/RHEL:
-cd /var/www/html/rconfig
-git pull
-php artisan migrate
-php artisan rconfig:sync-tasks
-composer install
-systemctl restart httpd
-php artisan rconfig:clear-all
-php artisan rconfig:set-config-permissions
-
-# Ubuntu:
-cd /var/www/html/rconfig
-git pull
-php artisan migrate
-php artisan rconfig:sync-tasks
-composer install
-systemctl restart apache2
-php artisan rconfig:clear-all
-php artisan rconfig:set-config-permissions
-```
-
-> 💡 **Git Conflicts?** Try: `git stash && git pull`
 
 <p align="right">(<a href="#readme-top">⬆ back to top</a>)</p>
 

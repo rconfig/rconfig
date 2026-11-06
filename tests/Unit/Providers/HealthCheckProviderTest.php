@@ -1,5 +1,6 @@
 <?php
 
+use App\HealthChecks\WorkerPrivilegeCheck;
 use App\Providers\HealthCheckProvider;
 use Spatie\Health\Checks\Checks\PingCheck;
 use Spatie\Health\Facades\Health;
@@ -89,3 +90,13 @@ function containsCheck(array $checks, string $className): bool
 
     return false;
 }
+
+test('it registers the worker privilege check', function () {
+    Health::shouldReceive('checks')
+        ->once()
+        ->withArgs(function (array $checks) {
+            return containsCheck($checks, WorkerPrivilegeCheck::class);
+        });
+
+    (new HealthCheckProvider($this->app))->boot();
+});

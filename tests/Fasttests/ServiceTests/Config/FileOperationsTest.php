@@ -2,6 +2,9 @@
 
 use App\Services\Config\FileOperations;
 use Illuminate\Support\Facades\File;
+use Tests\Traits\FakesHostFilesystem;
+
+uses(FakesHostFilesystem::class);
 
 beforeEach(function () {
     $this->beginTransaction();
@@ -126,6 +129,47 @@ test('directory mode is not weakened by the process umask', function () {
     } finally {
         umask($originalUmask);
     }
+});
+
+/**
+ * RCO-1317 regression. When parts of the data base dir are missing, mkdir()
+ * creates them on the way to the category folder. The old code chowned only
+ * the five levels it named and left those ancestors owned by the process user
+ * (root under Horizon) with a umask mode, so this failed on both counts.
+ */
+test('missing data base dir ancestors are owned by the web user and get the dir mode', function () {
+    $fake = $this->fakeHostFilesystem();
+    $originalUmask = umask(0022);
+
+    $missingParent = $this->dataBaseDir . 'missing1';
+    $missingChild = $missingParent . '/missing2';
+
+    try {
+        $result = fileOpsSaveConfig($this->categoryName, $this->deviceName, $missingChild . '/', ['hostname r1']);
+    } finally {
+        umask($originalUmask);
+    }
+
+    expect($result['download_status'])->toBeTrue();
+
+    $expectedCreated = [$missingParent, $missingChild];
+    $directory = dirname($result['filepath']);
+
+    while ($directory !== $missingChild) {
+        $expectedCreated[] = $directory;
+        $directory = dirname($directory);
+    }
+
+    expect(count($expectedCreated))->toBe(7, 'Two missing ancestors plus category, host, year, month and day.');
+
+    foreach ($expectedCreated as $createdDirectory) {
+        expect(in_array($createdDirectory, $fake->chownedPaths(), true))->toBeTrue("Created directory was not chowned to the web user: {$createdDirectory}");
+        expect(in_array($createdDirectory, array_column($fake->chgrped, 'path'), true))->toBeTrue("Created directory was not chgrped to the web user: {$createdDirectory}");
+        expect(fileOpsModeOf($createdDirectory))->toBe(0750, "Created directory must be 0750: {$createdDirectory}");
+    }
+
+    expect(array_unique(array_column($fake->chowned, 'user')))->toBe(['apache']);
+    expect(in_array(rtrim($this->dataBaseDir, '/'), $fake->chownedPaths(), true))->toBeFalse('The pre-existing base dir must be left untouched.');
 });
 
 /**

@@ -150,6 +150,28 @@ test('deprecated keys keep their values through a reformat', function () {
     expect($after['auth']['hpAnyKeyPrmpt'])->toBe('Press any key to continue');
 });
 
+test('command linebreak is kept and annotated', function () {
+    $result = $this->reformatter->reformatTemplate("config:\n  linebreak: \"n\"\n  commandLinebreak: \"n\"\n");
+
+    $this->assertStringContainsString('commandLinebreak: "n"', $result);
+    $this->assertStringContainsString("# Line ending for commands: 'r' (default), 'n' or 'rn'", $result);
+});
+
+test('kex override keys keep their values through a reformat', function () {
+    $template = "connect:\n  protocol: ssh\n  kexOverride: \"on\"\n  kexAlgorithms:\n    - diffie-hellman-group14-sha256\n    - diffie-hellman-group14-sha1\n";
+
+    $after = Yaml::parse($this->reformatter->reformatTemplate($template));
+
+    expect($after['connect']['kexOverride'])->toBe('on');
+    expect($after['connect']['kexAlgorithms'])->toBe(['diffie-hellman-group14-sha256', 'diffie-hellman-group14-sha1']);
+});
+
+test('kex override flag is annotated', function () {
+    $result = $this->reformatter->reformatTemplate("connect:\n  protocol: ssh\n  kexOverride: \"on\"\n");
+
+    $this->assertStringContainsString('# Restrict SSH key-exchange algorithms to the list below?', $result);
+});
+
 test('terminal dimensions are documented as ansi only', function () {
     $result = $this->reformatter->reformatTemplateFile($this->oldFormatPath);
 

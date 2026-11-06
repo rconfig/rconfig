@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Services\System\SelfSignedSslService;
+use App\Services\Utilities\HostFilesystem;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 
@@ -78,18 +80,25 @@ class V8CoreInstallCommand extends Command
             return true;
         });
 
+        // Step 8: Secure Redis. Generates a password once and requires it on the
+        // live instance so a fresh box ships closed. Idempotent: re-running the
+        // installer detects the existing password and does not regenerate. Never
+        // fatal to the install, because Redis may not be running yet on a
+        // bare-metal box; the dashboard health check nags until it is secured.
+        $this->secureRedis();
+
         $this->newLine();
         $this->components->info('✓ rConfig v8 Core installed successfully!');
         $this->newLine();
 
-        // Ask about cron
-        $setupCron = $this->components->confirm(
-            'Add a cron entry for task scheduling?',
-            true
-        );
+        // The scheduler runs from /etc/cron.d as the web user, never from
+        // root's crontab. Docker runs it from the container's Supervisor.
+        $cronInstalled = true;
 
-        if ($setupCron) {
-            $this->setupCron();
+        if (app(HostFilesystem::class)->isDocker()) {
+            $this->components->info('Running in Docker: the container runs the scheduler itself, no cron file is needed.');
+        } elseif ($this->components->confirm('Install the scheduler cron file (/etc/cron.d/rconfig-core)?', true)) {
+            $cronInstalled = $this->setupCron();
         }
 
         $this->newLine();
@@ -106,31 +115,69 @@ class V8CoreInstallCommand extends Command
         $this->newLine();
         $this->displayNextSteps();
 
-        return Command::SUCCESS;
+        // Last, so a failure is the final thing the operator sees.
+        $workerUserOk = app(HostFilesystem::class)->isDocker() || $this->checkWorkerUser();
+
+        return $cronInstalled && $workerUserOk ? Command::SUCCESS : Command::FAILURE;
     }
 
-    protected function setupCron()
+    /**
+     * Runs rconfig:check-worker-user and, if it fails, says that rConfig is
+     * installed but something still runs as root, and how to fix it.
+     */
+    protected function checkWorkerUser(): bool
     {
-        $cronEntry = '* * * * * cd ' . base_path() . ' && php artisan schedule:run >> /dev/null 2>&1';
+        $this->components->info('Checking that nothing runs as root');
 
-        $currentCron = shell_exec('crontab -l 2>/dev/null') ?? '';
-
-        if (strpos($currentCron, 'artisan schedule:run') === false) {
-            $newCron = trim($currentCron) . "\n" . $cronEntry . "\n";
-
-            $tempFile = tempnam(sys_get_temp_dir(), 'crontab');
-            file_put_contents($tempFile, $newCron);
-            shell_exec("crontab $tempFile");
-            unlink($tempFile);
-
-            $this->components->success('Cron entry added successfully!');
-        } else {
-            $this->components->info('Cron entry already exists');
-        }
+        $exitCode = Artisan::call('rconfig:check-worker-user', [], $this->output);
 
         $this->newLine();
 
-        $this->components->info("Cron entry: $cronEntry");
+        if ($exitCode === Command::SUCCESS) {
+            return true;
+        }
+
+        $this->components->error('rConfig is installed, but the worker user check failed (see the FAIL lines above).');
+        $this->line('   Fix: run <fg=cyan>sudo ./update.sh --no-pull</> from ' . base_path());
+        $this->line('   Then check again with: <fg=cyan>php artisan rconfig:check-worker-user</>');
+        $this->newLine();
+
+        return false;
+    }
+
+    /**
+     * Generate and apply a Redis password at install time so a fresh install is
+     * never left with an unauthenticated queue. Idempotent and non-fatal.
+     */
+    protected function secureRedis(): void
+    {
+        $this->components->task('Securing Redis', function () {
+            // --no-restart: consumers are not running yet during install, and a
+            // horizon:terminate here would be a no-op at best.
+            $exitCode = Artisan::call('rconfig:redis-secure', ['--no-restart' => true]);
+
+            if ($exitCode !== Command::SUCCESS) {
+                $this->components->warn(
+                    'Could not secure Redis automatically (is Redis running?). '
+                    . 'Run: php artisan rconfig:redis-secure once Redis is available.'
+                );
+            }
+
+            return true;
+        });
+    }
+
+    /**
+     * Installs the scheduler cron file through rconfig:setup-cron, which runs
+     * setup_cron.sh as root or prints the sudo command otherwise.
+     */
+    protected function setupCron(): bool
+    {
+        $exitCode = Artisan::call('rconfig:setup-cron', [], $this->output);
+
+        $this->newLine();
+
+        return $exitCode === Command::SUCCESS;
     }
 
     protected function openGitHub()
@@ -160,6 +207,14 @@ class V8CoreInstallCommand extends Command
 
         $this->newLine();
         $this->components->warn('⚠️  Please change the default credentials immediately!');
+
+        // A fresh install serves plain HTTP; Docker leaves TLS to the reverse proxy.
+        if (! SelfSignedSslService::appUsesHttps() && ! app(HostFilesystem::class)->isDocker()) {
+            $this->components->warn('🔒 rConfig is served over HTTP. Enable HTTPS with a self-signed certificate:');
+            $this->line('   <fg=cyan>' . SelfSignedSslService::COMMAND . '</>');
+            $this->line('   Or install your own certificate: ' . SelfSignedSslService::DOCS_URL);
+        }
+
         $this->newLine();
 
         $this->line('<fg=blue>Thank you for choosing rConfig v8 Core! 🚀</>');

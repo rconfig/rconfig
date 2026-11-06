@@ -16,10 +16,7 @@ class ModelExport implements FromCollection, WithChunkReading, WithHeadings
         $this->model = $ModelName;
     }
 
-    /**
-     * @return Collection
-     */
-    public function collection()
+    public function collection(): Collection
     {
         if ($this->model == 'App\Models\Device') {
             return $this->set_device_data();

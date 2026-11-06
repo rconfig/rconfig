@@ -73,4 +73,7 @@ test('saving a task report creates the report directory when absent', function (
 
     expect(report_path())->toBeDirectory();
     expect($reportData->report_path)->toBeFile();
+
+    clearstatcache(true, report_path());
+    expect(fileperms(report_path()) & 0777)->toBe(0750, 'The reports folder must get the config dir mode, not a world readable 0755.');
 });
