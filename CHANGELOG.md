@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Settings table export now only exports tables on the export list and leaves out encrypted columns, so CSVs no longer contain decrypted device passwords or other secrets.
 
+### Fixed
+- Download Task Report emails followed the "Task Completed" preference instead of their own, so users got no report or a duplicate email; users who relied on "Task Completed" for the report must now tick "Download Task Report". Reported in #386 by br-amec.
+
 ## [8.2.19] - 2026-10-27
 
 Security release. Recommended for all 8.x installations. **Before upgrading, update PHP to at least 8.2.35, 8.3.36 or 8.4.27: Composer refuses older patch releases.** **First upgrade from 8.2.18 or earlier: run `git pull`, then `sudo ./update.sh --no-pull`.** After that, `sudo ./update.sh` is the only upgrade command.
