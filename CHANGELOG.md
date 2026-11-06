@@ -5,10 +5,14 @@ All notable changes to rConfig v8 Core are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [8.2.20] - Unreleased
+## [8.2.20] - 2026-11-06
+
+Security release. All users should upgrade. **After upgrading, check `storage/logs/laravel.log` for "Paused a task with an unsupported task command": any task listed there was paused and should be reviewed.**
 
 ### Security
 - Settings table export now only exports tables on the export list and leaves out encrypted columns, so CSVs no longer contain decrypted device passwords or other secrets.
+- Scheduled tasks now accept and run only the supported download task commands; existing tasks with any other command are paused on upgrade.
+- Template reformatting now only reads `.yml` and `.yaml` templates from the templates directory.
 
 ### Fixed
 - Download Task Report emails followed the "Task Completed" preference instead of their own, so users got no report or a duplicate email; users who relied on "Task Completed" for the report must now tick "Download Task Report". Reported in #386 by br-amec.
