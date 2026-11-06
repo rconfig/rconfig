@@ -3,12 +3,14 @@
 namespace App\Http\Requests;
 
 use App\DataTransferObjects\StoreTaskDTO;
+use App\Jobs\TaskDownloadRun;
 use App\Rules\TaskCronIsCorrectFormat;
 use App\Rules\TaskDownloadCategoryHasCategories;
 use App\Rules\TaskDownloadDeviceHasDevices;
 use App\Rules\TaskDownloadTagHasTags;
 use App\Rules\TaskPurgeDoesNotHaveDaysValue;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreTaskRequest extends FormRequest
 {
@@ -58,7 +60,7 @@ class StoreTaskRequest extends FormRequest
         if ($this->getMethod() == 'POST') {
             $rules = [
                 'task_name' => 'required|min:3|unique:tasks|max:255',
-                'task_command' => 'required',
+                'task_command' => ['required', 'string', Rule::in(TaskDownloadRun::ALLOWED_TASK_COMMANDS)],
                 'task_cron' => ['required', new TaskCronIsCorrectFormat],
                 'device' => new TaskDownloadDeviceHasDevices($this->request->get('task_command')),
                 'category' => new TaskDownloadCategoryHasCategories($this->request->get('task_command')),
