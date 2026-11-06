@@ -3,11 +3,13 @@
 namespace App\Console;
 
 use App\Jobs\CheckForUpdateJob;
+use App\Jobs\TaskDownloadRun;
 use App\Models\MonitoredScheduledTaskLogItems;
 use App\Models\Task;
 use App\Traits\LogsTaskActivity;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Spatie\Health\Commands\RunHealthChecksCommand;
 use Spatie\Health\Commands\ScheduleCheckHeartbeatCommand;
@@ -71,15 +73,25 @@ class Kernel extends ConsoleKernel
         $schedule->job(new CheckForUpdateJob)->weeklyOn(6, '03:00')->withoutOverlapping();
     }
 
+    /**
+     * Schedule a download task. Every supported task_command runs the fixed
+     * rconfig:download-task command with the task id as its only argument.
+     * A task with an unsupported task_command is skipped and logged.
+     */
     private function download_task($executionStartTime, $task)
     {
-        // Tasks Commands are stored in DB as the items in the $download_commands array. But they actually need to run as rconfig:download:task
-        // Next transforms the $download_commands, to download-task commands. - Bit Hacky
-        $download_commands = ['rconfig:download-device', 'rconfig:download-tag', 'rconfig:download-category'];
-        if (in_array($task->task_command, $download_commands)) {
-            $task->task_command = 'rconfig:download-task';
+        if (! in_array($task->task_command, TaskDownloadRun::ALLOWED_TASK_COMMANDS, true)) {
+            Log::warning('Scheduler skipped a task with an unsupported task command.', [
+                'task_id' => $task->id,
+                'task_command' => $task->task_command,
+            ]);
+
+            return;
         }
-        $this->schedule->command($task->task_command . ' ' . $task->id)
+
+        $task->task_command = TaskDownloadRun::RUN_COMMAND;
+
+        $this->schedule->command(TaskDownloadRun::RUN_COMMAND, [(int) $task->id])
             ->cron(implode(' ', $task->task_cron))
             ->before(function () use ($task) {
                 $this->logTaskStarted($task->id);

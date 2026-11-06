@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Exports\ModelExport;
 use App\Http\Controllers\Controller;
 use App\Traits\RespondsWithHttpStatus;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
@@ -68,16 +69,31 @@ class ExportController extends Controller
         return Schema::getTableListing(schemaQualified: false);
     }
 
+    /**
+     * @return list<string>
+     */
+    public static function exportableTables(): array
+    {
+        return array_values(array_diff(self::listAllBaseTables(), self::EXCLUDED_TABLES));
+    }
+
     public function listTables()
     {
-        $filtered = array_values(array_diff(self::listAllBaseTables(), self::EXCLUDED_TABLES));
-
-        return $this->successResponse('List of exportable tables.', ['tables' => $filtered]);
+        return $this->successResponse('List of exportable tables.', ['tables' => self::exportableTables()]);
     }
 
     public function export($table)
     {
+        if (! in_array($table, self::exportableTables(), true)) {
+            return $this->respondNotFound('Table is not exportable.');
+        }
+
         $modelName = 'App\\Models\\' . Str::studly(Str::singular($table));
+
+        if (! is_subclass_of($modelName, Model::class)) {
+            return $this->respondNotFound('Table is not exportable.');
+        }
+
         $filename = $table . '.csv';
 
         if (Excel::store(new ModelExport($modelName), $filename, 'rconfig_exports')) {

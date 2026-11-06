@@ -19,10 +19,11 @@ class TaskDownloadRun implements ShouldQueue
      * They are all normalised to rconfig:download-task before execution, mirroring
      * the controller and scheduler. Anything outside this set is rejected so a
      * crafted queue payload cannot turn this job into an arbitrary Artisan runner.
+     * The task form requests and the scheduler use the same list.
      *
      * @var list<string>
      */
-    private const ALLOWED_TASK_COMMANDS = [
+    public const ALLOWED_TASK_COMMANDS = [
         'rconfig:download-task',
         'rconfig:download-device',
         'rconfig:download-tag',
@@ -32,7 +33,7 @@ class TaskDownloadRun implements ShouldQueue
     /**
      * The Artisan command actually executed by this job.
      */
-    private const RUN_COMMAND = 'rconfig:download-task';
+    public const RUN_COMMAND = 'rconfig:download-task';
 
     /**
      * @var array{task_command?: mixed, id?: mixed}

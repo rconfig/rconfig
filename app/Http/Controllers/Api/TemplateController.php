@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\StoreTemplateRequest;
 use App\Models\Template;
 use App\Services\Templates\TemplateReformatter;
+use App\Services\Utilities\PathContainmentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -168,11 +169,26 @@ class TemplateController extends ApiBaseController
         return $filename;
     }
 
+    /**
+     * Reformat a template file from the templates directory. Only a .yml or
+     * .yaml file name is accepted, reduced to its basename and resolved inside
+     * the templates directory. Anything else gets the same "Template not found"
+     * response as a missing file.
+     */
     public function reformatTemplateFile(Request $request)
     {
-        $fileName = $request['fileName'];
+        $requestedName = $request->input('fileName');
+        $fileName = is_string($requestedName) ? basename($requestedName) : '';
         $storage_dir = storage_path() . '/app/rconfig/templates/';
-        $filePath = $storage_dir . $fileName;
+        $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+        $filePath = in_array($extension, ['yml', 'yaml'], true)
+            ? (new PathContainmentService)->resolveFileWithin($storage_dir, $storage_dir . $fileName)
+            : null;
+
+        if ($filePath === null) {
+            return $this->failureResponse('Template not found', 404);
+        }
 
         $reformatter = new TemplateReformatter;
         $reformattedContent = $reformatter->reformatTemplateFile($filePath);

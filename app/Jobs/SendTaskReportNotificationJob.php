@@ -27,16 +27,16 @@ class SendTaskReportNotificationJob implements ShouldQueue
 
     public function handle()
     {
-        // Send email notification to users who want task completion notifications via email
+        // Send the report email to users subscribed to Download Task Report via email
         $this->sendToSingleChannel(
-            NotificationType::TASK_COMPLETED,
+            NotificationType::TASK_DOWNLOAD_REPORT,
             NotificationChannel::MAIL,
             new MailSendTaskReportNotification($this->report_data)
         );
 
-        // Send DB notification to users who want task completion notifications in-app
+        // Send DB notification to users subscribed to Download Task Report in-app
         $this->sendToSingleChannel(
-            NotificationType::TASK_COMPLETED,
+            NotificationType::TASK_DOWNLOAD_REPORT,
             NotificationChannel::DB,
             new DBTaskCompleteNotification($this->report_data)
         );
