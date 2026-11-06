@@ -155,6 +155,7 @@ test('it returns not found for a uuid with no report file', function () {
 
 test('it refuses a traversal id at the controller', function () {
     $bait = export_path() . 'report_leak_probe.html';
+    File::ensureDirectoryExists(export_path());
     File::put($bait, '<html><body>' . REPORT_LEAK_MARKER . '</body></html>');
 
     $controller = new TaskReportController(new Taskdownloadreport);
