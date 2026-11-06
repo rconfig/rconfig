@@ -39,16 +39,9 @@ const endpoints = {
         example:
           "?filter[device_name]=1&filter[device_ip]=1001&filter[created_at]=2022-03-18",
       },
-      {
-        name: "with_credentials",
-        description:
-          "optional, defaults to true. Set to false to omit device_username, device_password, and device_enable_password from the response.",
-        type: "boolean",
-        example: "?with_credentials=false",
-      },
     ],
     parametersdescription:
-      "Params are optional and should be appended to the URL as shown above. Pagination uses per_page when present, supports perPage for backward compatibility, and caps per_page at 100. Output contains pagination metadata, and actual records are returned in data[] with top-level last_backup_status and last_backup_at. Pass with_credentials=false to strip credential fields from the payload (the global mask_device_credentials system setting still takes precedence when enabled).",
+      "Params are optional and should be appended to the URL as shown above. Pagination uses per_page when present, supports perPage for backward compatibility, and caps per_page at 100. Output contains pagination metadata, and actual records are returned in data[] with top-level last_backup_status and last_backup_at.",
     responses: {
       current_page: 1,
       data: [
@@ -152,16 +145,9 @@ const endpoints = {
         type: "integer",
         example: "1001",
       },
-      {
-        name: "with_credentials",
-        description:
-          "optional, defaults to true. Set to false to omit device_username, device_password, and device_enable_password from the response.",
-        type: "boolean",
-        example: "?with_credentials=false",
-      },
     ],
     parametersdescription:
-      "Pass ID integer value in the URL per above. Append ?with_credentials=false to strip credential fields from the payload (the global mask_device_credentials system setting still takes precedence when enabled).",
+      "Pass ID integer value in the URL per above.",
     responses: {
       id: 1004,
       integration_host_id: null,

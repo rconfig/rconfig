@@ -67,6 +67,17 @@ Track every config version. See what changed with side-by-side or inline diffs. 
 **REST API**  
 Manage devices, configs, templates, tasks, vendors, and more through the REST API. Use API keys for secure access.
 
+**API token permissions**  
+rConfig Core has no role-based access control. Every user has full access, and so does every REST API token: a token can do anything an Admin can do through the API, whichever user created it. Treat tokens like an Admin password:
+
+- Create tokens only for trusted automation and integrations.
+- Store tokens in a secrets manager, never in scripts or source control.
+- Give each integration its own token, so you can revoke one without affecting the others.
+- Delete unused tokens under Settings > REST API.
+- If a token may have been exposed, delete it and create a new one.
+
+Role-based access control with per-user permissions is available in rConfig Pro.
+
 **Configuration Search**  
 Search all saved configs with one or more terms. Filter by tags, devices, command groups, or commands.
 
