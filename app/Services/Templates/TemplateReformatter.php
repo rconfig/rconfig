@@ -58,11 +58,11 @@ class TemplateReformatter
     public function reformatTemplateFile(string $inputFile): string
     {
         if (! file_exists($inputFile)) {
-            throw new \Exception("Input file does not exist: $inputFile");
+            throw new \Exception('Template not found.');
         }
 
         if ($this->isNewFormat($inputFile)) {
-            throw new \Exception("Template file is already in the new format: $inputFile");
+            throw new \Exception('Template file is already in the new format.');
         }
 
         $content = file_get_contents($inputFile);

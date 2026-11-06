@@ -18,7 +18,7 @@ test('can instantiate template reformatter', function () {
 
 test('detects already new format template', function () {
     $this->expectException(Exception::class);
-    $this->expectExceptionMessage('Template file is already in the new format: ' . $this->newFormatPath);
+    $this->expectExceptionMessage('Template file is already in the new format.');
 
     $this->reformatter->reformatTemplateFile($this->newFormatPath);
 });
