@@ -2,6 +2,8 @@
 
 namespace App\Exports;
 
+use App\Casts\EncryptStringCast;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
@@ -9,11 +11,15 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class ModelExport implements FromCollection, WithChunkReading, WithHeadings
 {
-    protected $model;
+    /** @var class-string<Model> */
+    protected string $model;
 
-    public function __construct($ModelName)
+    /**
+     * @param  class-string<Model>  $modelName
+     */
+    public function __construct(string $modelName)
     {
-        $this->model = $ModelName;
+        $this->model = $modelName;
     }
 
     public function collection(): Collection
@@ -22,7 +28,7 @@ class ModelExport implements FromCollection, WithChunkReading, WithHeadings
             return $this->set_device_data();
         }
 
-        return $this->model::all();
+        return $this->model::query()->get()->makeHidden($this->encryptedAttributes());
     }
 
     public function chunkSize(): int
@@ -36,7 +42,20 @@ class ModelExport implements FromCollection, WithChunkReading, WithHeadings
             return $this->set_device_columns();
         }
 
-        return collect($this->model::first())->keys()->toArray();
+        return array_keys($this->model::first()?->makeHidden($this->encryptedAttributes())->toArray() ?? []);
+    }
+
+    /**
+     * Attributes stored encrypted are decrypted by their cast on the way out, so they never belong in an export.
+     *
+     * @return list<string>
+     */
+    private function encryptedAttributes(): array
+    {
+        return array_keys(array_filter(
+            (new $this->model)->getCasts(),
+            fn (string $cast): bool => $cast === EncryptStringCast::class || str_starts_with($cast, 'encrypted')
+        ));
     }
 
     private function set_device_data()
@@ -49,12 +68,12 @@ class ModelExport implements FromCollection, WithChunkReading, WithHeadings
             unset($device->tag);
         });
 
-        return collect($devices->setHidden(['view_url']));
+        return collect($devices->setHidden(['view_url'])->makeHidden($this->encryptedAttributes()));
     }
 
     private function set_device_columns()
     {
-        $columns = collect($this->model::first())->keys()->toArray();
+        $columns = collect($this->model::first()?->makeHidden($this->encryptedAttributes()))->keys()->toArray();
         unset($columns[array_search('view_url', $columns)]);
         $columns[] = 'tags';
 
