@@ -95,6 +95,35 @@ const { copyItem, activeCopyIcon } = useCopy();
 				</div>
 			</div>
 
+			<div class="flex items-start gap-2">
+				<AlertTriangle class="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+				<div>
+					<h3 class="text-base font-medium">
+						API Token Permissions
+					</h3>
+					<p class="text-muted-foreground mt-1">
+						rConfig Core does not have role-based access control. Every user
+						account has full access to the application, and so does every REST
+						API token. A token can do anything an Admin user can do through the
+						API, whichever user created it.
+					</p>
+					<p class="text-muted-foreground mt-2">
+						Treat API tokens like an Admin password:
+					</p>
+					<ul class="list-disc ml-5 mt-2 space-y-1 text-muted-foreground">
+						<li>Create tokens only for trusted automation and integrations.</li>
+						<li>Store tokens in a secrets manager, never in scripts or source control.</li>
+						<li>Give each integration its own token, so you can revoke one without affecting the others.</li>
+						<li>Delete tokens you no longer use, under Settings &gt; REST API.</li>
+						<li>If you think a token has been exposed, delete it and create a new one.</li>
+					</ul>
+					<p class="text-muted-foreground mt-2">
+						Role-based access control, with per-user permissions, is available in
+						rConfig Pro.
+					</p>
+				</div>
+			</div>
+
 			<Tabs
 				v-model="activeTab"
 				class="w-full mt-6"
