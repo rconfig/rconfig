@@ -17,6 +17,12 @@ const RHEL_SSL_VHOST = '/etc/httpd/conf.d/rconfig-ssl.conf';
 const RHEL_CERT = '/etc/pki/tls/certs/rconfig-selfsigned.crt';
 const RHEL_KEY = '/etc/pki/tls/private/rconfig-selfsigned.key';
 const DEBIAN_SSL_VHOST = '/etc/apache2/sites-available/rconfig-ssl.conf';
+const CONFIG_CACHE = '/fake/bootstrap/cache/config.php';
+const CACHED_CONFIG = "<?php return ['app' => ['url' => 'http://rconfig.example.com']];\n";
+
+afterEach(function () {
+    unset($_SERVER['APP_CONFIG_CACHE']);
+});
 
 beforeEach(function () {
     expect(App::configurationIsCached())->toBeFalse('Clear the config cache before running these tests: they must never rebuild it.');
@@ -72,9 +78,43 @@ function withCoreRhel(object $test, string $serverName = 'YourServerName', bool 
     }
 }
 
-function fakeSslProcesses(HostFilesystem $host, bool $configValid = true, bool $firewalldActive = false): void
+/**
+ * Point the config cache at a fake path, with .env holding the running DB settings minus $dropKeys.
+ *
+ * @param  list<string>  $dropKeys
+ */
+function withCachedConfig(object $test, array $dropKeys = []): void
+{
+    $_SERVER['APP_CONFIG_CACHE'] = CONFIG_CACHE;
+    putHostFile($test->host, CONFIG_CACHE, CACHED_CONFIG);
+
+    $connection = (string) config('database.default');
+    $settings = [
+        'DB_CONNECTION' => $connection,
+        'DB_DATABASE' => config("database.connections.{$connection}.database"),
+        'DB_USERNAME' => config("database.connections.{$connection}.username"),
+        'DB_PASSWORD' => config("database.connections.{$connection}.password"),
+    ];
+
+    foreach (array_diff_key($settings, array_flip($dropKeys)) as $key => $value) {
+        $test->host->fileContents[$test->envPath] .= "{$key}='{$value}'\n";
+    }
+}
+
+function fakeSslProcesses(HostFilesystem $host, bool $configValid = true, bool $firewalldActive = false, bool $configCacheBuilds = true): void
 {
     Process::fake([
+        // A failed config:cache has already cleared the live cache, as Laravel's does.
+        '*config:cache*' => function () use ($host, $configCacheBuilds) {
+            if ($configCacheBuilds) {
+                return Process::result(output: 'Configuration cached successfully.');
+            }
+
+            unset($host->fileContents[CONFIG_CACHE]);
+            $host->existingPaths = array_values(array_diff($host->existingPaths, [CONFIG_CACHE]));
+
+            return Process::result(output: "SQLSTATE[HY000] [1045] Access denied for user 'forge'@'localhost' (using password: NO)", exitCode: 1);
+        },
         '*openssl*req*' => function (PendingProcess $process) use ($host) {
             $command = (array) $process->command;
             putHostFile($host, $command[array_search('-keyout', $command, true) + 1], 'key');
@@ -315,6 +355,57 @@ test('an unsafe hostname is rejected before anything changes', function () {
 
     expect($this->host->writes)->toBe([]);
     Process::assertNothingRan();
+});
+
+test('it refuses before changing anything when .env lost the cached DB settings', function () {
+    withCoreRhel($this);
+    withCachedConfig($this, dropKeys: ['DB_USERNAME', 'DB_PASSWORD']);
+    fakeSslProcesses($this->host);
+
+    $this->artisan('rconfig:ssl-self-signed --no-interaction')
+        ->expectsOutputToContain('(DB_USERNAME, DB_PASSWORD)')
+        ->assertExitCode(1);
+
+    expect($this->host->writes)->toBe([])
+        ->and($this->host->fileContents[CONFIG_CACHE])->toBe(CACHED_CONFIG);
+    Process::assertNothingRan();
+});
+
+test('dry run reports .env that lost the cached DB settings', function () {
+    withCoreRhel($this);
+    withCachedConfig($this, dropKeys: ['DB_DATABASE']);
+    fakeSslProcesses($this->host);
+
+    $this->artisan('rconfig:ssl-self-signed --dry-run --no-interaction')
+        ->expectsOutputToContain('(DB_DATABASE)')
+        ->assertExitCode(1);
+
+    Process::assertNothingRan();
+});
+
+test('a failed config cache rebuild puts the previous cache back', function () {
+    withCoreRhel($this);
+    withCachedConfig($this);
+    fakeSslProcesses($this->host, configCacheBuilds: false);
+
+    $this->artisan('rconfig:ssl-self-signed --no-interaction')
+        ->expectsOutputToContain('previous ones were kept')
+        ->assertExitCode(1);
+
+    expect($this->host->fileContents[CONFIG_CACHE])->toBe(CACHED_CONFIG)
+        ->and($this->host->chowned)->toContain(['path' => CONFIG_CACHE, 'user' => rconfig_web_user()[0]])
+        ->and($this->host->fileContents[$this->envPath])->toContain('APP_URL=https://');
+});
+
+test('a cached config is rebuilt and handed to the web user', function () {
+    withCoreRhel($this);
+    withCachedConfig($this);
+    fakeSslProcesses($this->host);
+
+    $this->artisan('rconfig:ssl-self-signed --no-interaction')->assertExitCode(0);
+
+    Process::assertRan(fn ($process): bool => array_slice((array) $process->command, 1) === ['artisan', 'config:cache', '--no-interaction']);
+    expect($this->host->chowned)->toContain(['path' => CONFIG_CACHE, 'user' => rconfig_web_user()[0]]);
 });
 
 test('days out of range is rejected', function () {
