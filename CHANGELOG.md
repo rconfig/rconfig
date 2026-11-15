@@ -5,6 +5,11 @@ All notable changes to rConfig v8 Core are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Security
+- (Docker) PHP no longer writes function arguments, such as passwords, into exception traces in the log.
+
 ## [8.2.20] - 2026-11-06
 
 Security release. All users should upgrade. **After upgrading, check `storage/logs/laravel.log` for "Paused a task with an unsupported task command": any task listed there was paused and should be reviewed.**
