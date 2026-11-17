@@ -359,6 +359,15 @@ test('an unsafe hostname is rejected before anything changes', function () {
 
 test('it refuses before changing anything when .env lost the cached DB settings', function () {
     withCoreRhel($this);
+
+    // Pin non-empty running credentials: with an empty running password (as on CI), a
+    // dropped DB_PASSWORD rebuilds to the same value and is rightly not reported.
+    $connection = (string) config('database.default');
+    config([
+        "database.connections.{$connection}.username" => 'rconfig_running',
+        "database.connections.{$connection}.password" => 'running-secret',
+    ]);
+
     withCachedConfig($this, dropKeys: ['DB_USERNAME', 'DB_PASSWORD']);
     fakeSslProcesses($this->host);
 
