@@ -9,9 +9,7 @@ use App\CustomClasses\GetAndCheckDeviceIds;
 use App\CustomClasses\GetAndCheckTagIds;
 use App\CustomClasses\GetAndCheckTaskIds;
 use App\Jobs\DeviceDownloadJob;
-use App\Jobs\SendTaskReportNotificationJob;
-use App\Jobs\TaskCompleteNotificationJob;
-use App\Jobs\TaskReportJob;
+use App\Services\Notifications\TaskRunJobDispatcher;
 use Carbon\Carbon;
 use Illuminate\Bus\Batch;
 use Illuminate\Console\Command;
@@ -198,20 +196,7 @@ class rconfigTaskDownload extends Command
         $this->report_data->file_name = $this->report_data->report_id . '.html';
         $this->report_data->report_path = report_path() . $this->report_data->file_name;
 
-        if (App::runningUnitTests()) { // required for testing
-            dispatch(new TaskReportJob($this->report_data))->onConnection('sync');
-        } else {
-            dispatch(new TaskReportJob($this->report_data));
-        }
-
-        if ($this->report_data->task->task_email_notify == 1) {
-            dispatch(new TaskCompleteNotificationJob($this->report_data));
-        }
-
-        if ($this->report_data->task->download_report_notify == 1) {
-            \Log::info('Sending report notification: SendTaskReportNotificationJob');
-            dispatch(new SendTaskReportNotificationJob($this->report_data));
-        }
+        app(TaskRunJobDispatcher::class)->dispatch($this->report_data, App::runningUnitTests());
 
         activity('info')->log('Report completed for ' . $this->report_data->task->task_name);
     }
