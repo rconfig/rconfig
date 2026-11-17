@@ -7,8 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [8.2.21] - 2026-11-17
+
 ### Security
 - (Docker) PHP no longer writes function arguments, such as passwords, into exception traces in the log.
+
+### Changed
+- The Download Task Report email now has its own subject, "rConfig Download-Task Report", so it can be told apart from the Task Completed email.
+- The in-app API documentation now explains the permissions an API token carries.
+
+### Fixed
+- The Download Task Report email could be sent before its report file was written and then dropped with only a log entry, so users got the Task Completed email but no report. Reported in #386 by SpoCo-network1.
+- `rconfig:ssl-self-signed` could leave rConfig with no database settings and a 500 error on every page when it could not rebuild the config cache; it now restores the previous cache and checks `.env` before changing anything.
 
 ## [8.2.20] - 2026-11-06
 
