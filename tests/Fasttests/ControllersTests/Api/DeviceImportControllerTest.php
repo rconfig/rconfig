@@ -220,3 +220,33 @@ test('import hostnames keep dots dashes underscores and strip invalid characters
     // invalid characters stripped
     $this->assertDatabaseHas('devices', ['device_name' => 'dev30']);
 });
+
+/*
+ * GHSA-p5q7-2wwp-q42f: the import saved device_ip as written, without the loopback guard
+ * the device form applies, so an import could still point a device at this server.
+ */
+test('import rejects rows whose address points at this server', function () {
+    createReferenceData();
+
+    $file = makeCsvUpload(deviceImportCsvHeader(), [
+        ['goodrouter', '10.1.1.1', 'u', 'p', 'e', 'router1$', 'router1#', '9001', '9001', 'modelX', '9001', '9001', '0', '0'],
+        ['loopback', '127.0.0.1', 'u', 'p', 'e', 'router1$', 'router1#', '9001', '9001', 'modelX', '9001', '9001', '0', '0'],
+        ['shorthand', '127.1', 'u', 'p', 'e', 'router1$', 'router1#', '9001', '9001', 'modelX', '9001', '9001', '0', '0'],
+        ['localname', 'localhost', 'u', 'p', 'e', 'router1$', 'router1#', '9001', '9001', 'modelX', '9001', '9001', '0', '0'],
+        ['notanip', 'not a host!', 'u', 'p', 'e', 'router1$', 'router1#', '9001', '9001', 'modelX', '9001', '9001', '0', '0'],
+    ]);
+
+    $response = $this->json('POST', '/api/settings/import/devices', ['file' => $file]);
+
+    $response->assertStatus(200);
+    $response->assertJsonFragment(['message' => '1 Devices successfully imported']);
+    $response->assertJsonFragment(['Import Error loopback: The device ip cannot point at this rConfig server (loopback, localhost or its Redis host).']);
+    $response->assertJsonFragment(['Import Error shorthand: The device ip cannot point at this rConfig server (loopback, localhost or its Redis host).']);
+    $response->assertJsonFragment(['Import Error localname: The device ip cannot point at this rConfig server (loopback, localhost or its Redis host).']);
+    $response->assertJsonFragment(['Import Error notanip: The device ip must be a valid IP address or FQDN/Hostname.']);
+
+    $this->assertDatabaseHas('devices', ['device_name' => 'goodrouter']);
+    foreach (['loopback', 'shorthand', 'localname', 'notanip'] as $name) {
+        $this->assertDatabaseMissing('devices', ['device_name' => $name]);
+    }
+});

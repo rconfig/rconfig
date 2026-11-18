@@ -60,7 +60,8 @@ class DeviceParamsBuilder
             'vt100' => [],
             'deviceparams' => [
                 'id' => 1,
-                'device_ip' => '127.0.0.1',
+                // TEST-NET-1 (RFC 5737): never routed, and not loopback, which the connectors refuse.
+                'device_ip' => '192.0.2.1',
                 'device_username' => 'rconfig',
                 'device_password' => 'rconfig',
                 'device_enable_password' => 'rconfig',

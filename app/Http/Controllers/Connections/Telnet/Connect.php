@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Connections\Telnet;
 
 use App\CustomClasses\SetDeviceStatus;
 use App\Enums\NotificationType;
+use App\Exceptions\DeviceTargetRefusedException;
 use App\Notifications\DBDeviceConnectionFailureNotification;
+use App\Services\Device\DeviceTargetGuard;
 use App\Traits\NotificationDispatcher;
 
 class Connect
@@ -46,6 +48,10 @@ class Connect
     /* DEVICEPARAMS */
     public $device_id;
     public $hostname;
+
+    /** The device_ip as stored, before any IPv6 bracketing. Only DeviceTargetGuard turns it into something to dial. */
+    public $deviceAddress;
+
     public $username;
     public $password;
     public $enableModePassword;
@@ -96,6 +102,7 @@ class Connect
         /* DEVICEPARAMS */
         $this->device_id = $deviceParamsObject->deviceparams['id'];
         $this->hostname = $deviceParamsObject->deviceparams['device_ip'];
+        $this->deviceAddress = (string) $this->hostname;
         if (filter_var($this->hostname, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
             // setup ipv6 string for fsockopen
             $this->hostname = '[' . $this->hostname . ']';
@@ -122,7 +129,11 @@ class Connect
     public function connect()
     {
         $this->port = $this->telnetPortValidOrDefault();
-        $this->connection = @fsockopen($this->hostname, $this->port, $errno, $errstr, $this->timeout);
+        $dialHost = $this->dialHostOrReportRefusal();
+        if ($dialHost === null) {
+            return false;
+        }
+        $this->connection = @fsockopen($dialHost, $this->port, $errno, $errstr, $this->timeout);
         if ($this->checkConnectionState() === false) {
             return false;
         }
@@ -155,17 +166,37 @@ class Connect
     private function checkConnectionState()
     {
         if (! $this->connection) {
-            $logmsg = 'Unable to connect to ' . ($this->hostname . ' - ID:' . $this->device_id);
-
-            $this->sendToDefaultChannels(
-                NotificationType::CONNECTION_DEVICE_FAILURE,
-                new DBDeviceConnectionFailureNotification($logmsg, $this->device_id)
-            );
-
-            (new SetDeviceStatus($this->device_id, 0))->setDeviceStatus();
-            activityLogIt(__CLASS__, __FUNCTION__, 'error', $logmsg, 'connection', $this->hostname, $this->device_id, 'device');
+            $this->reportConnectionFailure('Unable to connect to ' . ($this->hostname . ' - ID:' . $this->device_id));
 
             return false;
         }
+    }
+
+    /**
+     * The resolved address to dial, or null once the refusal is reported. The device is
+     * dialled by that address, never by its name, so a name that resolves to this server,
+     * now or by the time of the dial, cannot reach a local port such as Redis. See
+     * DeviceTargetGuard (RCO-1813, GHSA-p5q7-2wwp-q42f).
+     */
+    private function dialHostOrReportRefusal(): ?string
+    {
+        try {
+            return app(DeviceTargetGuard::class)->dialHost($this->deviceAddress);
+        } catch (DeviceTargetRefusedException $e) {
+            $this->reportConnectionFailure($e->getMessage() . ' - ID:' . $this->device_id);
+
+            return null;
+        }
+    }
+
+    private function reportConnectionFailure(string $logmsg): void
+    {
+        $this->sendToDefaultChannels(
+            NotificationType::CONNECTION_DEVICE_FAILURE,
+            new DBDeviceConnectionFailureNotification($logmsg, $this->device_id)
+        );
+
+        (new SetDeviceStatus($this->device_id, 0))->setDeviceStatus();
+        activityLogIt(__CLASS__, __FUNCTION__, 'error', $logmsg, 'connection', $this->hostname, $this->device_id, 'device');
     }
 }
