@@ -10,9 +10,11 @@ use App\Models\DeviceCredentials;
 use App\Models\Tag;
 use App\Models\Template;
 use App\Models\Vendor;
+use App\Rules\DeviceIpIsValid;
 use App\Traits\RespondsWithHttpStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 class DeviceImportController extends Controller
@@ -73,6 +75,16 @@ class DeviceImportController extends Controller
 
             if (in_array(null, array_intersect_key($device->toArray(), array_flip($requiredColumns)))) {
                 $device['import_note'] = 'Import Error ' . $device['device_name'] . ': Blank Fields';
+                activityLogIt(__CLASS__, __FUNCTION__, 'info', $device['import_note'], 'import');
+                $baddevices->push($device);
+
+                continue;
+            }
+
+            // The same address rules as the device form, including the loopback guard (GHSA-p5q7-2wwp-q42f).
+            $addressCheck = Validator::make(['device_ip' => $device['device_ip']], ['device_ip' => new DeviceIpIsValid]);
+            if ($addressCheck->fails()) {
+                $device['import_note'] = 'Import Error ' . $device['device_name'] . ': ' . $addressCheck->errors()->first('device_ip');
                 activityLogIt(__CLASS__, __FUNCTION__, 'info', $device['import_note'], 'import');
                 $baddevices->push($device);
 

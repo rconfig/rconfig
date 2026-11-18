@@ -129,7 +129,13 @@ function removeDeviceCredSet() {
 											<Label
 												for="device_ip"
 												class="mt-4 mb-1 font-light"
-											> IP Address <span class="text-red-400">*</span> </Label>
+											>
+												IP Address <span class="text-red-400">*</span>
+												<HelpPopover
+													title="Device IP Address"
+													content="An IP address, or a hostname or FQDN that rConfig can resolve. Addresses that point back at the rConfig server itself are rejected: loopback (127.x.x.x, ::1), 0.0.0.0, localhost, the Redis host, and any hostname that resolves to one of these."
+												/>
+											</Label>
 											<Input
 												id="device_ip"
 												v-model="model.device_ip"

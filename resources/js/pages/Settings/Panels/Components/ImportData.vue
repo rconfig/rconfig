@@ -182,7 +182,7 @@ const { currentStep, steps, goToStep, getCurrentStep, downloadTemplate, handleFi
 													device_ip
 												</td>
 												<td class="px-4 py-3">
-													The IP address of the device. IPV4 or IPV6 format.
+													The IP address of the device, IPv4 or IPv6, or a hostname/FQDN that rConfig can resolve. Rows that point at the rConfig server itself (loopback such as 127.0.0.1 or ::1, 0.0.0.0, localhost, or the Redis host) are rejected and listed in the import errors.
 												</td>
 												<td class="px-4 py-3"></td>
 											</tr>

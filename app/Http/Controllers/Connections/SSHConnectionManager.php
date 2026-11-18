@@ -45,7 +45,8 @@ class SSHConnectionManager
     private function loadSSHConnect()
     {
         $this->connectionObj = new Connect($this->deviceParamsObject, $this->debug);
-        $this->connectionObj->connect();
+
+        return $this->connectionObj->connect();
     }
 
     private function loadSSHLogin()

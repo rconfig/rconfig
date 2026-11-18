@@ -6,15 +6,20 @@ use App\Models\Device;
 use App\Models\DeviceCredentials;
 use Illuminate\Support\Facades\Log;
 use Spatie\Activitylog\Models\Activity;
+use Tests\Traits\AllowsLoopbackDeviceTargets;
 use Tests\Unit\Connections\DeviceParamsBuilder;
+
+uses(AllowsLoopbackDeviceTargets::class);
 
 /**
  * Every test here stays on the loopback interface: a port that was bound and then
  * released (nothing listening, so the dial is refused), or a local listener that
  * accepts the TCP connection and never sends an SSH banner. No device is contacted.
+ * The loopback guard is relaxed for that reason only.
  */
 beforeEach(function () {
     $this->beginTransaction();
+    $this->allowLoopbackDeviceTargets();
 });
 
 afterEach(function () {
@@ -40,6 +45,7 @@ function sshParamsForDevice(Device $device, int $port, array $overrides = []): o
         'deviceparams' => [
             'id' => $device->id,
             'device_name' => $device->device_name,
+            'device_ip' => '127.0.0.1',
             'device_password' => 'S3cr3t-Device-Pass',
         ],
     ], $overrides));

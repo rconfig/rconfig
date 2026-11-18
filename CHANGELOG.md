@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [8.2.22] - 2026-11-18
+
+Security release. All users should upgrade.
+
+### Security
+- Devices could still target the rConfig server itself through a hostname or shorthand IP that resolves to loopback, bypassing the 8.2.19 guard; addresses are now resolved before saving and again at connection time, and the device import applies the same check.
+
+### Changed
+- The device form, device import and REST API docs explain which device addresses are rejected.
+
 ## [8.2.21] - 2026-11-17
 
 ### Security

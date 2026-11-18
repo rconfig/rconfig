@@ -161,3 +161,29 @@ test('destroy deletes device', function () {
 
     $this->assertDatabaseMissing('devices', ['id' => $device->id]);
 });
+
+/*
+ * GHSA-p5q7-2wwp-q42f: the REST API shares the device form's validation, so a loopback
+ * target is refused there too, by name or shorthand as well as by literal.
+ */
+test('store refuses a device address that points at this server', function (string $target) {
+    $payload = array_merge(devicesApiV1ValidDevicePayload(), ['device_ip' => $target]);
+
+    $this->withHeaders(devicesApiV1AuthHeader($this->token))
+        ->postJson('/api/v1/devices', $payload)
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['device_ip' => 'cannot point at this rConfig server']);
+
+    $this->assertDatabaseMissing('devices', ['device_name' => $payload['device_name']]);
+})->with(['127.0.0.1', 'localhost', '127.1', '2130706433']);
+
+test('update refuses a device address that points at this server', function () {
+    $device = Device::factory()->create(['device_ip' => '10.9.9.9']);
+
+    $this->withHeaders(devicesApiV1AuthHeader($this->token))
+        ->patchJson('/api/v1/devices/' . $device->id, ['device_ip' => '127.1'])
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['device_ip' => 'cannot point at this rConfig server']);
+
+    $this->assertDatabaseHas('devices', ['id' => $device->id, 'device_ip' => '10.9.9.9']);
+});
