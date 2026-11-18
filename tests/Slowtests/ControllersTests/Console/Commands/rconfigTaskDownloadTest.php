@@ -6,6 +6,7 @@ use App\CustomClasses\GetAndCheckTaskIds;
 use App\Http\Controllers\Connections\Params\DeviceParams;
 use App\Jobs\SendTaskReportNotificationJob;
 use App\Jobs\TaskCompleteNotificationJob;
+use App\Jobs\TaskReportJob;
 use App\Models\Device;
 use App\Models\Taskdownloadreport;
 use App\Models\User;
@@ -386,7 +387,10 @@ test('the test task 888888 has one device and cannot download and send failure r
         'download_report_notify' => 1,
         'verbose_download_report_notify' => 0,
     ]);
-    Queue::assertPushed(SendTaskReportNotificationJob::class, 1);
+    // Since #386 the report email is chained after the job that writes the report, so it
+    // is pushed inside TaskReportJob's chain rather than on its own.
+    Queue::assertPushedWithChain(TaskReportJob::class, [SendTaskReportNotificationJob::class]);
+    Queue::assertNotPushed(SendTaskReportNotificationJob::class);
 
     $this->assertDatabaseHas('notifications', [
         'notifiable_id' => 1,
