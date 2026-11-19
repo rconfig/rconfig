@@ -25,3 +25,19 @@ if [ -f /etc/lsb-release ]; then service apache2 restart; fi;
 if [ -f /etc/lsb-release ]; then sudo a2enmod rewrite; fi;
 if [ -f /etc/redhat-release ]; then httpd -S; fi;
 if [ -f /etc/lsb-release ]; then apachectl -S; fi;
+# Run the rConfig Apache Security Check. It fixes what it safely can and changes nothing when
+# /etc/rconfig/skip-apache-hardening exists. Downloaded first so a cut-off download never runs; never fails the install.
+CHECK_URL=https://dl.rconfig.com/downloads/rconfig-apache-check.sh
+CHECK_FILE=$(mktemp)
+if curl -fsSL "$CHECK_URL" -o "$CHECK_FILE"; then
+    sudo bash "$CHECK_FILE" --yes --respect-optout
+    CHECK_STATUS=$?
+else
+    CHECK_STATUS="download failed"
+fi
+rm -f "$CHECK_FILE"
+if [ "$CHECK_STATUS" != 0 ]; then
+    echo "WARNING: the rConfig Apache Security Check did not finish cleanly ($CHECK_STATUS). The install carries on." >&2
+    echo "WARNING: Review it with: curl -fsSL $CHECK_URL | sudo bash -s -- --check" >&2
+    echo "WARNING: Apply its fixes with: curl -fsSL $CHECK_URL | sudo bash" >&2
+fi
