@@ -1,0 +1,16 @@
+<VirtualHost *:80>
+        ServerName YourServerName
+        ServerAlias YourServerName
+        DocumentRoot PWD/public
+        <Directory "PWD/public">
+                Options FollowSymLinks
+                AllowOverride All
+                Require all granted
+        </Directory>
+        # BEGIN rconfig-apache-check dotfile deny
+        # Dotfiles (.env, .git, .htpasswd ...) are never served. /.well-known/ stays open for certificate validation.
+        <LocationMatch "(?i)/\.(?!well-known(/|$))">
+                Require all denied
+        </LocationMatch>
+        # END rconfig-apache-check dotfile deny
+</VirtualHost>

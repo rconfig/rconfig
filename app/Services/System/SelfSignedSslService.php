@@ -197,36 +197,53 @@ class SelfSignedSslService
     }
 
     /**
-     * The ServerName to use: the --hostname option, the HTTP vhost's
-     * ServerName, the APP_URL host, then this machine's hostname.
+     * The ServerName to use: the --hostname option, the APP_URL host (an IP
+     * included), a hand-edited vhost ServerName, then this machine's FQDN.
+     * Unset, localhost and template placeholder values are skipped.
      */
     private function resolveHostname(?string $option, ?string $serverName): string
     {
+        if ($option !== null && $option !== '') {
+            return $this->validatedHostname($option);
+        }
+
         $candidates = [
-            $option,
-            $serverName,
-            parse_url((string) config('app.url'), PHP_URL_HOST) ?: null,
-            gethostname() ?: null,
+            fn (): string => trim((string) parse_url((string) config('app.url'), PHP_URL_HOST), '[]'),
+            fn (): string => (string) $serverName,
+            fn (): string => (string) $this->fullyQualifiedHostname(),
+            fn (): string => (string) gethostname(),
         ];
 
-        foreach ($candidates as $index => $candidate) {
-            if ($candidate === null || $candidate === '') {
-                continue;
-            }
+        foreach ($candidates as $candidate) {
+            $hostname = $candidate();
 
-            // Only an explicit --hostname may be localhost or a template placeholder.
-            if ($index > 0 && (in_array(strtolower($candidate), self::PLACEHOLDER_NAMES, true) || str_starts_with($candidate, 'ENVOY_'))) {
-                continue;
+            if ($hostname !== '' && ! $this->isPlaceholderName($hostname)) {
+                return $this->validatedHostname($hostname);
             }
-
-            if (! $this->isValidHostname($candidate)) {
-                throw new RuntimeException("'{$candidate}' is not a valid hostname or IP address. Pass one with --hostname.");
-            }
-
-            return strtolower($candidate);
         }
 
         throw new RuntimeException('Could not work out this server\'s hostname. Pass one with --hostname.');
+    }
+
+    private function validatedHostname(string $hostname): string
+    {
+        if (! $this->isValidHostname($hostname)) {
+            throw new RuntimeException("'{$hostname}' is not a valid hostname or IP address. Pass one with --hostname.");
+        }
+
+        return strtolower($hostname);
+    }
+
+    private function isPlaceholderName(string $hostname): bool
+    {
+        return in_array(strtolower($hostname), self::PLACEHOLDER_NAMES, true) || str_starts_with($hostname, 'ENVOY_');
+    }
+
+    private function fullyQualifiedHostname(): ?string
+    {
+        $result = Process::timeout(10)->run(['hostname', '-f']);
+
+        return $result->successful() ? (trim($result->output()) ?: null) : null;
     }
 
     private function isValidHostname(string $hostname): bool
@@ -388,6 +405,13 @@ class SelfSignedSslService
                     AllowOverride All
                     Require all granted
                 </Directory>
+
+                # BEGIN rconfig-apache-check dotfile deny
+                # Dotfiles (.env, .git, .htpasswd ...) are never served. /.well-known/ stays open for certificate validation.
+                <LocationMatch "(?i)/\.(?!well-known(/|$))">
+                    Require all denied
+                </LocationMatch>
+                # END rconfig-apache-check dotfile deny
 
                 SSLEngine on
                 SSLCertificateFile {$plan['cert_path']}

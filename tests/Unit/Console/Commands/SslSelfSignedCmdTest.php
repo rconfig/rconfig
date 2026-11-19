@@ -101,9 +101,10 @@ function withCachedConfig(object $test, array $dropKeys = []): void
     }
 }
 
-function fakeSslProcesses(HostFilesystem $host, bool $configValid = true, bool $firewalldActive = false, bool $configCacheBuilds = true): void
+function fakeSslProcesses(HostFilesystem $host, bool $configValid = true, bool $firewalldActive = false, bool $configCacheBuilds = true, string $fqdn = 'box.example.net'): void
 {
     Process::fake([
+        '*hostname*-f*' => Process::result(output: "{$fqdn}\n"),
         // A failed config:cache has already cleared the live cache, as Laravel's does.
         '*config:cache*' => function () use ($host, $configCacheBuilds) {
             if ($configCacheBuilds) {
@@ -187,6 +188,8 @@ test('it sets up HTTPS on Rocky without touching the vhost in the app folder', f
         ->and($sslVhost)->toContain('SSLCertificateKeyFile ' . RHEL_KEY)
         ->and($sslVhost)->toContain('RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R=301,L]')
         ->and(strpos($sslVhost, '<VirtualHost *:80>'))->toBeLessThan(strpos($sslVhost, '<VirtualHost *:443>'))
+        ->and($sslVhost)->toContain("# BEGIN rconfig-apache-check dotfile deny\n")
+        ->and($sslVhost)->toContain('<LocationMatch "(?i)/\.(?!well-known(/|$))">' . "\n        Require all denied\n    </LocationMatch>")
         ->and($sslVhost)->not->toContain('Listen 443')
         ->and($this->host->pathStats[RHEL_KEY]['mode'])->toBe(0600)
         ->and($this->host->writes)->not->toContain($this->appVhost)
@@ -199,14 +202,59 @@ test('it sets up HTTPS on Rocky without touching the vhost in the app folder', f
     Process::assertDidntRun(fn (PendingProcess $process): bool => ($process->command[0] ?? null) === 'firewall-cmd');
 });
 
-test('a real ServerName in the vhost names the certificate', function () {
+test('the APP_URL host names the certificate even when the vhost has a real ServerName', function () {
     withCoreRhel($this, serverName: 'netops.example.org');
     fakeSslProcesses($this->host);
 
     $this->artisan('rconfig:ssl-self-signed --no-interaction')->assertExitCode(0);
 
-    expect($this->host->fileContents[RHEL_SSL_VHOST])->toContain('ServerName netops.example.org');
+    expect($this->host->fileContents[RHEL_SSL_VHOST])->toContain('ServerName rconfig.example.com')
+        ->and($this->host->fileContents[RHEL_SSL_VHOST])->not->toContain('netops.example.org')
+        ->and($this->host->fileContents[$this->envPath])->toContain("APP_URL=https://rconfig.example.com\n");
+    Process::assertDidntRun(fn (PendingProcess $process): bool => ($process->command[0] ?? null) === 'hostname');
 });
+
+test('an IP APP_URL names the certificate with an IP SAN', function () {
+    config(['app.url' => 'http://10.1.2.3']);
+    withCoreRhel($this, serverName: 'netops.example.org');
+    fakeSslProcesses($this->host);
+
+    $this->artisan('rconfig:ssl-self-signed --no-interaction')->assertExitCode(0);
+
+    expect($this->host->fileContents[RHEL_SSL_VHOST])->toContain('ServerName 10.1.2.3')
+        ->and($this->host->fileContents[$this->envPath])->toContain("APP_URL=https://10.1.2.3\n");
+    Process::assertRan(fn (PendingProcess $process): bool => in_array('subjectAltName=IP:10.1.2.3', (array) $process->command, true));
+});
+
+test('an unset or localhost APP_URL falls back to a hand-edited vhost ServerName', function (?string $appUrl) {
+    config(['app.url' => $appUrl]);
+    withCoreRhel($this, serverName: 'netops.example.org');
+    fakeSslProcesses($this->host);
+
+    $this->artisan('rconfig:ssl-self-signed --no-interaction')->assertExitCode(0);
+
+    expect($this->host->fileContents[RHEL_SSL_VHOST])->toContain('ServerName netops.example.org')
+        ->and($this->host->fileContents[$this->envPath])->toContain("APP_URL=https://netops.example.org\n");
+    Process::assertDidntRun(fn (PendingProcess $process): bool => ($process->command[0] ?? null) === 'hostname');
+})->with([
+    'unset' => [null],
+    'localhost' => ['http://localhost'],
+]);
+
+test('hostname -f names the certificate when neither APP_URL nor the vhost ServerName is usable', function (?string $appUrl) {
+    config(['app.url' => $appUrl]);
+    withCoreRhel($this, serverName: 'YourServerName');
+    fakeSslProcesses($this->host, fqdn: 'Box.Example.Net');
+
+    $this->artisan('rconfig:ssl-self-signed --no-interaction')->assertExitCode(0);
+
+    expect($this->host->fileContents[RHEL_SSL_VHOST])->toContain('ServerName box.example.net')
+        ->and($this->host->fileContents[$this->envPath])->toContain("APP_URL=https://box.example.net\n");
+    Process::assertRan(fn (PendingProcess $process): bool => in_array('subjectAltName=DNS:box.example.net', (array) $process->command, true));
+})->with([
+    'unset' => [null],
+    'localhost' => ['http://localhost'],
+]);
 
 test('it installs mod_ssl when it is missing', function () {
     withCoreRhel($this, modSslInstalled: false);
@@ -319,6 +367,17 @@ test('force replaces our files and restores them if Apache rejects the change', 
 
     expect($this->host->fileContents[RHEL_SSL_VHOST])->toBe($previous)
         ->and($this->host->fileContents[RHEL_CERT])->toBe('old cert');
+});
+
+test('a force re-run rewrites the HTTPS vhost with the dotfile deny', function () {
+    withCoreRhel($this);
+    putHostFile($this->host, RHEL_SSL_VHOST, "<VirtualHost *:443>\nDocumentRoot \"" . base_path('public') . "\"\n</VirtualHost>\n");
+    fakeSslProcesses($this->host);
+
+    $this->artisan('rconfig:ssl-self-signed --force --no-interaction')->assertExitCode(0);
+
+    expect($this->host->fileContents[RHEL_SSL_VHOST])->toContain("# BEGIN rconfig-apache-check dotfile deny\n")
+        ->and($this->host->fileContents[RHEL_SSL_VHOST])->toContain('<LocationMatch "(?i)/\.(?!well-known(/|$))">');
 });
 
 test('an HTTPS vhost set up by hand is left alone', function () {
