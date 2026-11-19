@@ -45,7 +45,7 @@
 
   <!-- Technology Badges -->
   <p align="center">
-    <img src="https://img.shields.io/badge/PHP-8.4+-777BB4?logo=php&logoColor=white&style=for-the-badge" alt="PHP 8.4+"/>
+    <img src="https://img.shields.io/badge/PHP-8.4.28+-777BB4?logo=php&logoColor=white&style=for-the-badge" alt="PHP 8.4.28+"/>
     <img src="https://img.shields.io/badge/Laravel-13-FF2D20?logo=laravel&logoColor=white&style=for-the-badge" alt="Laravel"/>
     <img src="https://img.shields.io/badge/Vue.js-3-4FC08D?logo=vue.js&logoColor=white&style=for-the-badge" alt="Vue 3"/>
     <img src="https://img.shields.io/badge/Vite-Latest-646CFF?logo=vite&logoColor=white&style=for-the-badge" alt="Vite"/>
@@ -260,7 +260,7 @@ OS Requirements: [System Requirements](https://v8coredocs.rconfig.com/getting-st
 
 **Supported OS:** Rocky Linux 8/9+ (recommended), CentOS 8/9+, RHEL 8/9+, Ubuntu 22.04+, Alma Linux 8/9+
 
-**Required Software:** PHP 8.4+, Composer 2.4+, Apache 2.4+, MySQL 5.7+/MariaDB 10.5+, Node.js 14.17+, Git 2.25+, Supervisor 4.2+
+**Required Software:** PHP 8.4.28 or later, Composer 2.4+, Apache 2.4+, MySQL 5.7+/MariaDB 10.5+, Node.js 14.17+, Git 2.25+, Supervisor 4.2+
 
 ---
 
@@ -420,6 +420,7 @@ This one command does the whole upgrade in a safe order: maintenance mode, stop 
 
 - The full run is logged to `/var/log/rconfig-core-update-<date>.log`.
 - If you check out a release tag yourself, run `sudo ./update.sh --no-pull` so it does not pull.
+- It needs PHP 8.4.28 or later. On an older PHP it stops before maintenance mode and the pull, with nothing changed: upgrade PHP, then run it again.
 - `--skip-redis-secure` stops it setting a Redis password. One is set automatically when Redis has none, unless another app's Horizon (such as rConfig Pro) runs on the same server.
 - If a step fails, it says which one and stops. Before any code has changed it puts everything back. After that it leaves the app in maintenance mode: fix the problem, then run `sudo ./update.sh --no-pull`. It is safe to run more than once.
 - The last step runs `php artisan rconfig:check-worker-user`. If it fails, the upgrade itself has finished and rConfig is up and running, but something still runs as root or a Supervisor or cron file was changed by hand. The script lists the failed checks: fix them, then run `sudo ./update.sh --no-pull`.
@@ -462,7 +463,7 @@ php artisan rconfig:clear-all
 php artisan rconfig:set-config-permissions
 ```
 
-### PHP 8.4 Update (Required as of Feb 2024)
+### PHP 8.4 Update (8.4.28 or later required)
 ```bash
 # For CentOS/RHEL/Rocky:
 cd /home

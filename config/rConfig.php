@@ -16,6 +16,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Minimum PHP Version
+    |--------------------------------------------------------------------------
+    |
+    | The lowest PHP this release supports. The dashboard warns below it and
+    | update.sh refuses to start an upgrade below it. Keep MIN_PHP_VERSION in
+    | update.sh equal to this value.
+    |
+     */
+    'min_php_version' => '8.4.28',
+
+    /*
+    |--------------------------------------------------------------------------
     | Downloaded Configuration Permissions
     |--------------------------------------------------------------------------
     |

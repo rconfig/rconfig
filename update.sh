@@ -61,6 +61,9 @@ LOG_DIR="${RCONFIG_UPDATE_LOG_DIR:-/var/log}"
 LOCK_FILE="${RCONFIG_UPDATE_LOCK:-/run/rconfig-core-update.lock}"
 HORIZON_START_WAIT="${RCONFIG_HORIZON_START_WAIT:-30}"
 APACHE_CHECK_URL="https://dl.rconfig.com/downloads/rconfig-apache-check.sh"
+# The lowest PHP this release supports. Keep in step with
+# config/rConfig.php min_php_version, which the dashboard check reads.
+MIN_PHP_VERSION="8.4.28"
 
 # State used by the failure handler.
 MAIN_PID="${BASHPID}"
@@ -148,6 +151,33 @@ roll_back() {
     if [ "${PUT_DOWN}" -eq 1 ] && [ "${WAS_DOWN}" -eq 0 ]; then
         php "${APP_DIR}/artisan" up || echo "update: could not leave maintenance mode, run: php artisan up" >&2
     fi
+}
+
+# Prints the PHP version as major.minor.patch, or nothing if PHP does not
+# answer with one.
+php_version() {
+    local version
+    version="$(php -r 'echo PHP_VERSION;' 2>/dev/null)" || return 0
+    if [[ "${version}" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+) ]]; then
+        printf '%s.%s.%s' "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}"
+    fi
+}
+
+# Whether version $1 is at least version $2, both major.minor.patch.
+version_at_least() {
+    local -a have want
+    local i
+    IFS=. read -ra have <<<"$1"
+    IFS=. read -ra want <<<"$2"
+    for i in 0 1 2; do
+        if [ "$((10#${have[i]}))" -gt "$((10#${want[i]}))" ]; then
+            return 0
+        fi
+        if [ "$((10#${have[i]}))" -lt "$((10#${want[i]}))" ]; then
+            return 1
+        fi
+    done
+    return 0
 }
 
 # How an Amazon Linux user stays on the version they had. The OS check runs
@@ -487,6 +517,7 @@ main() {
         command -v "${tool}" >/dev/null 2>&1 || fail "required command ${tool} not found. Install it and run this script again."
     done
 
+
     # A resumed run inherits the lock from the run that started it, on fd 9,
     # so no other run can slip in between the two.
     if [ "${resumed}" -eq 0 ]; then
@@ -522,6 +553,26 @@ main() {
     info "OS: ${os_id} (${os_family} family)"
     info "code owner: ${CODE_OWNER}"
     info "log: ${LOG_FILE}"
+
+    # PHP is checked before maintenance mode and the pull, so a server on an
+    # older PHP stops here with nothing changed. A resumed or --no-pull run
+    # already has the new code on disk, so stopping would leave it half
+    # upgraded. composer.json still accepts the older PHP, so that run
+    # finishes and warns instead.
+    local php_found
+    php_found="$(php_version)"
+    if [ -z "${php_found}" ] || ! version_at_least "${php_found}" "${MIN_PHP_VERSION}"; then
+        local php_problem="PHP ${php_found} is older than ${MIN_PHP_VERSION}, the minimum for this rConfig release."
+        if [ -z "${php_found}" ]; then
+            php_problem="could not read the PHP version, and this rConfig release needs PHP ${MIN_PHP_VERSION} or later."
+        fi
+        if [ "${no_pull}" -eq 0 ] && [ "${resumed}" -eq 0 ]; then
+            fail "${php_problem} Upgrade PHP to ${MIN_PHP_VERSION} or later, then run this script again."
+        fi
+        warn "${php_problem} The upgrade carries on because the new code is already in place. Upgrade PHP to ${MIN_PHP_VERSION} or later soon."
+    else
+        info "PHP ${php_found}"
+    fi
 
     if [ "${resumed}" -eq 0 ]; then
         if [ -e "${APP_DIR}/storage/framework/down" ]; then

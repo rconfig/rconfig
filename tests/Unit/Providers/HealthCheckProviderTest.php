@@ -1,5 +1,6 @@
 <?php
 
+use App\HealthChecks\PhpVersionCheck;
 use App\HealthChecks\WorkerPrivilegeCheck;
 use App\Providers\HealthCheckProvider;
 use Spatie\Health\Checks\Checks\PingCheck;
@@ -96,6 +97,16 @@ test('it registers the worker privilege check', function () {
         ->once()
         ->withArgs(function (array $checks) {
             return containsCheck($checks, WorkerPrivilegeCheck::class);
+        });
+
+    (new HealthCheckProvider($this->app))->boot();
+});
+
+test('it registers the PHP version check', function () {
+    Health::shouldReceive('checks')
+        ->once()
+        ->withArgs(function (array $checks) {
+            return containsCheck($checks, PhpVersionCheck::class);
         });
 
     (new HealthCheckProvider($this->app))->boot();
