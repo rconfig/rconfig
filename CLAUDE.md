@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Technology stack
 
-- **Backend**: PHP 8.4 (supports 8.2 to 8.4), Laravel 13.
+- **Backend**: PHP 8.4.28 or later (`update.sh` refuses to start an upgrade below it and the dashboard warns; the minimum lives in `config/rConfig.php` `min_php_version` and `MIN_PHP_VERSION` in `update.sh`, kept equal by `tests/Unit/HealthChecks/PhpVersionCheckTest.php`), Laravel 13.
 - **Frontend**: Vue 3 single page app, Vite, Tailwind CSS 4, shadcn-vue, Pinia, vue-router, Monaco editor, TypeScript. The SPA is served by `SpaController`. Note the Vite config files are `vite.dev.config.js` and `vite.prod.config.js` (there is no `vite.config.js`).
 - **Database**: MySQL 8 / MariaDB (SQLite or a dedicated `test_mysql` connection for tests).
 - **Queue / cache**: Redis (`predis/predis`) with Laravel Horizon.

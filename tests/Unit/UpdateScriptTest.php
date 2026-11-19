@@ -161,6 +161,10 @@ function buildUpdateBin(array $sandbox): void
         'composer' => 'record composer "$@"',
         'php' => <<<'SH'
             record php "$@"
+            if [ "$1" = "-r" ]; then
+                printf '%s' "${FAKE_PHP_VERSION-8.4.28}"
+                exit 0
+            fi
             app="$(dirname "$1")"
             case "$2" in
                 rconfig:web-user) printf '%s\n' "${FAKE_WEB_USER:-nobody}" ;;
@@ -875,6 +879,69 @@ test('it refuses Amazon Linux before changing anything and says how to stay on t
         ->and($output)->not->toContain('Fix the error above')
         ->and(updateCalls($this->sandbox))->toBe([])
         ->and(file_exists("{$app}/storage/framework/down"))->toBeFalse();
+});
+
+test('it refuses a PHP older than the minimum before maintenance mode or the pull, and changes nothing', function (string $version) {
+    $result = runUpdate($this->sandbox, [], ['FAKE_PHP_VERSION' => $version]);
+    $output = updateOutput($result);
+    $problem = $version === ''
+        ? 'could not read the PHP version, and this rConfig release needs PHP 8.4.28 or later.'
+        : "PHP {$version} is older than 8.4.28, the minimum for this rConfig release.";
+
+    expectNoUnplannedBinary($result);
+    expect($result->exitCode())->toBe(1)
+        ->and($output)->toContain("update: ERROR: {$problem} Upgrade PHP to 8.4.28 or later, then run this script again.")
+        ->and($output)->toContain('Nothing was changed.')
+        ->and(updateCalls($this->sandbox))->toBe(['[root] php -r echo PHP_VERSION;'])
+        ->and(file_exists("{$this->sandbox['app']}/storage/framework/down"))->toBeFalse()
+        ->and(trim(File::get("{$this->sandbox['sup']}/rconfig-core-horizon")))->toBe('RUNNING');
+})->with([
+    'one patch behind' => '8.4.27',
+    'older minor' => '8.3.36',
+    'version unreadable' => '',
+]);
+
+test('a PHP at or above the minimum passes the check', function (string $version, string $shown) {
+    $result = runUpdate($this->sandbox, [], ['FAKE_PHP_VERSION' => $version, 'FAKE_GIT_NEW_SCRIPT' => "{$this->sandbox['app']}/update.sh"]);
+    $calls = updateCalls($this->sandbox);
+
+    expect($result->successful())->toBeTrue(updateOutput($result))
+        ->and(updateOutput($result))->toContain("update: PHP {$shown}\n")
+        ->and(updateOutput($result))->not->toContain('older than 8.4.28')
+        ->and(firstCall($calls, 'php -r'))->toBeLessThan(firstCall($calls, 'artisan down'))
+        ->and(firstCall($calls, 'php -r'))->toBeLessThan(firstCall($calls, 'git -C'));
+})->with([
+    'exact minimum' => ['8.4.28', '8.4.28'],
+    'distribution build string' => ['8.4.30-1+ubuntu22.04.1+deb.sury.org+1', '8.4.30'],
+    'next minor' => ['8.5.0', '8.5.0'],
+]);
+
+test('the first upgrade from a script without the check warns on an older PHP and finishes, since the pull already happened', function () {
+    // The copy on disk predates the check, as on a box upgrading into this
+    // release. git pull brings in the current script, which resumes.
+    $app = $this->sandbox['app'];
+    $new = "{$this->sandbox['root']}/update-new.sh";
+    File::copy(base_path('update.sh'), $new);
+    File::put("{$app}/update.sh", str_replace('MIN_PHP_VERSION="8.4.28"', 'MIN_PHP_VERSION="0.0.0"', File::get(base_path('update.sh'))));
+
+    $result = runUpdate($this->sandbox, [], ['FAKE_PHP_VERSION' => '8.4.27', 'FAKE_GIT_NEW_SCRIPT' => $new]);
+    $calls = updateCalls($this->sandbox);
+
+    expectNoUnplannedBinary($result);
+    expect($result->successful())->toBeTrue(updateOutput($result))
+        ->and(updateOutput($result))->toContain('update: WARNING: PHP 8.4.27 is older than 8.4.28, the minimum for this rConfig release. The upgrade carries on because the new code is already in place.')
+        ->and(firstCall($calls, 'composer install'))->toBeGreaterThan(firstCall($calls, 'git -C'))
+        ->and(updateOutput($result))->toContain('done. rConfig V8 Core is upgraded.');
+});
+
+test('a --no-pull run on an older PHP warns and finishes, since the files are already updated', function () {
+    $result = runUpdate($this->sandbox, ['--no-pull'], ['FAKE_PHP_VERSION' => '8.4.27']);
+
+    expectNoUnplannedBinary($result);
+    expect($result->successful())->toBeTrue(updateOutput($result))
+        ->and(updateOutput($result))->toContain('update: WARNING: PHP 8.4.27 is older than 8.4.28')
+        ->and(firstCall(updateCalls($this->sandbox), 'composer install'))->not->toBeNull()
+        ->and(updateOutput($result))->toContain('done. rConfig V8 Core is upgraded.');
 });
 
 test('it refuses to run inside Docker', function () {

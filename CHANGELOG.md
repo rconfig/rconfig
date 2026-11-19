@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [8.2.24] - 2026-11-19
+
+PHP security release. All users should update PHP to 8.4.28 or later, then update rConfig. See https://www.rconfig.com/security-advisories/php-2026-11.
+
+### Security
+- PHP 8.4.28 or later is now required, following the PHP security release of 19 November 2026.
+
+### Added
+- New "PHP Version" check on the dashboard health panel, which warns when PHP is below 8.4.28.
+
+### Changed
+- `update.sh` checks the PHP version before it changes anything; on an older PHP it stops with a clear message and leaves the install untouched. The upgrade to 8.2.24 itself is started by the previous `update.sh`, so on an older PHP that one upgrade warns and finishes instead.
+- Refreshed `composer.lock`.
+
 ## [8.2.23] - 2026-11-19
 
 Apache hardening release. All users should update.
