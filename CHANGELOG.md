@@ -5,6 +5,31 @@ All notable changes to rConfig v8 Core are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [8.2.22] - 2026-11-18
+
+Security release. All users should upgrade.
+
+### Security
+- Devices could still target the rConfig server itself through a hostname or shorthand IP that resolves to loopback, bypassing the 8.2.19 guard; addresses are now resolved before saving and again at connection time, and the device import applies the same check.
+
+### Changed
+- The device form, device import and REST API docs explain which device addresses are rejected.
+
+## [8.2.21] - 2026-11-17
+
+### Security
+- (Docker) PHP no longer writes function arguments, such as passwords, into exception traces in the log.
+
+### Changed
+- The Download Task Report email now has its own subject, "rConfig Download-Task Report", so it can be told apart from the Task Completed email.
+- The in-app API documentation now explains the permissions an API token carries.
+
+### Fixed
+- The Download Task Report email could be sent before its report file was written and then dropped with only a log entry, so users got the Task Completed email but no report. Reported in #386 by SpoCo-network1.
+- `rconfig:ssl-self-signed` could leave rConfig with no database settings and a 500 error on every page when it could not rebuild the config cache; it now restores the previous cache and checks `.env` before changing anything.
+
 ## [8.2.20] - 2026-11-06
 
 Security release. All users should upgrade. **After upgrading, check `storage/logs/laravel.log` for "Paused a task with an unsupported task command": any task listed there was paused and should be reviewed.**

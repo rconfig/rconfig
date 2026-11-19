@@ -193,7 +193,8 @@ const endpoints = {
       },
       {
         name: "device_ip",
-        description: "required|ip",
+        description:
+          "required|IP address or resolvable hostname/FQDN. Rejected with 422 if it points at the rConfig server itself (loopback, 0.0.0.0, localhost, the Redis host, or a hostname resolving to one of these)",
         type: "string",
         example: "192.168.1.2",
       },
@@ -288,7 +289,8 @@ const endpoints = {
       },
       {
         name: "device_ip",
-        description: "required|ip",
+        description:
+          "required|IP address or resolvable hostname/FQDN. Rejected with 422 if it points at the rConfig server itself (loopback, 0.0.0.0, localhost, the Redis host, or a hostname resolving to one of these)",
         type: "string",
         example: "192.168.1.2",
       },

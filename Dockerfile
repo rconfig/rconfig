@@ -59,6 +59,9 @@ RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --optimize --no-dev
 COPY docker/supervisord.conf /etc/supervisor/supervisord.conf
 COPY docker/redis.conf /etc/redis/rconfig-redis.conf
 
+# PHP settings: keep function arguments (passwords) out of exception traces (RCO-2055)
+COPY --chown=root:root --chmod=0644 docker/php-security.ini /usr/local/etc/php/conf.d/zz-rconfig-security.ini
+
 # Entrypoint
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh

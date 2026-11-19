@@ -4,10 +4,12 @@ namespace App\Services\System;
 
 use App\Console\Commands\EnvironmentSetCommand;
 use App\Services\Utilities\HostFilesystem;
+use Dotenv\Dotenv;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Process;
+use Illuminate\Support\Str;
 use RuntimeException;
+use Throwable;
 
 /**
  * Serves rConfig over HTTPS with a self-signed certificate. setup_apache.sh
@@ -128,6 +130,10 @@ class SelfSignedSslService
             $state = 'foreign_https';
         } elseif ($this->host->fileExists($sslVhost) && ! $force) {
             $state = 'already_configured';
+        }
+
+        if ($state === 'ready') {
+            $this->assertEnvMatchesCachedConfig();
         }
 
         return [
@@ -443,9 +449,77 @@ class SelfSignedSslService
 
         config(['app.url' => $url]);
 
-        if (App::configurationIsCached()) {
-            Artisan::call('config:cache');
-            custom_chown(App::getCachedConfigPath());
+        $this->rebuildConfigCache();
+    }
+
+    /**
+     * Rebuild a cached config in a fresh process, putting the old cache back if it fails (RCO-2116).
+     */
+    private function rebuildConfigCache(): void
+    {
+        $cachePath = App::getCachedConfigPath();
+
+        if (! $this->host->fileExists($cachePath)) {
+            return;
+        }
+
+        $previous = $this->host->readFile($cachePath);
+        $result = Process::path(base_path())->timeout(120)->run([PHP_BINARY, 'artisan', 'config:cache', '--no-interaction']);
+
+        if ($result->successful()) {
+            custom_chown($cachePath);
+
+            return;
+        }
+
+        if ($previous !== null) {
+            $this->host->writeFile($cachePath, $previous);
+            custom_chown($cachePath);
+        }
+
+        $reason = Str::limit((string) preg_replace('/\s+/', ' ', trim($result->errorOutput() . ' ' . $result->output())), 300);
+
+        throw new RuntimeException("HTTPS is set up and APP_URL is saved in .env, but rConfig's cached settings could not be rebuilt, so the previous ones were kept and rConfig is still running. Check the DB_ settings in .env, then run: sudo php artisan config:cache. Error: {$reason}");
+    }
+
+    /**
+     * Refuse when a config cache rebuild from .env would lose the running DB settings (RCO-2116).
+     */
+    private function assertEnvMatchesCachedConfig(): void
+    {
+        if (! $this->host->fileExists(App::getCachedConfigPath())) {
+            return;
+        }
+
+        $envPath = App::environmentFilePath();
+        $contents = $this->host->readFile($envPath);
+
+        if ($contents === null) {
+            throw new RuntimeException("Could not read {$envPath}. Nothing was changed.");
+        }
+
+        try {
+            $env = Dotenv::parse($contents) + ['DB_CONNECTION' => 'mysql'];
+        } catch (Throwable $e) {
+            throw new RuntimeException("{$envPath} could not be read as an env file: {$e->getMessage()} Nothing was changed.");
+        }
+
+        $connection = (string) config('database.default');
+        $running = [
+            'DB_CONNECTION' => $connection,
+            'DB_DATABASE' => config("database.connections.{$connection}.database"),
+            'DB_USERNAME' => config("database.connections.{$connection}.username"),
+            'DB_PASSWORD' => config("database.connections.{$connection}.password"),
+        ];
+
+        $mismatched = array_keys(array_filter(
+            $running,
+            fn (mixed $value, string $key): bool => (string) ($env[$key] ?? '') !== (string) $value,
+            ARRAY_FILTER_USE_BOTH,
+        ));
+
+        if ($mismatched !== []) {
+            throw new RuntimeException('The database settings in ' . $envPath . ' do not match the ones rConfig is running on (' . implode(', ', $mismatched) . '). This command rebuilds rConfig\'s cached settings from .env, which would take rConfig offline. Correct .env and run it again. Nothing was changed.');
         }
     }
 
