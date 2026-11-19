@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Process;
 const UPDATE_SAFE_TOOLS = [
     'bash', 'env', 'sed', 'awk', 'grep', 'cat', 'tr', 'cut', 'head', 'tail', 'dirname', 'basename',
     'readlink', 'mkdir', 'mktemp', 'rm', 'cp', 'mv', 'date', 'tee', 'find', 'getent', 'stat', 'flock',
-    'touch', 'ls',
+    'touch', 'ls', 'ln',
 ];
 
 beforeEach(function () {
@@ -36,9 +36,10 @@ beforeEach(function () {
         'sup' => "{$root}/supervisor-state",
         'calls' => "{$root}/calls.log",
         'os-release' => "{$root}/os-release",
+        'apache' => "{$root}/apache",
     ];
 
-    foreach (['app', 'bin', 'proc', 'logs', 'sup'] as $dir) {
+    foreach (['app', 'bin', 'proc', 'logs', 'sup', 'apache'] as $dir) {
         File::makeDirectory($this->sandbox[$dir], 0755, true);
     }
 
@@ -142,6 +143,20 @@ function buildUpdateBin(array $sandbox): void
             if [ "$3" = "pull" ] && [ -n "${FAKE_GIT_NEW_SCRIPT:-}" ] && [ ! "$FAKE_GIT_NEW_SCRIPT" -ef "$2/update.sh" ]; then
                 cp "$FAKE_GIT_NEW_SCRIPT" "$2/update.sh"
             fi
+            if [ "$3" = "checkout" ] && [ -f "$2/.upstream-vhost" ]; then
+                cp "$2/.upstream-vhost" "$2/rconfig-vhost.conf"
+            fi
+            SH,
+        'apachectl' => 'record apachectl "$@"',
+        // Writes a fake check script to the -o path; it records its arguments and exits FAKE_APACHE_CHECK_EXIT.
+        'curl' => <<<SH
+            record curl "\$@"
+            out=""; previous=""
+            for arg in "\$@"; do
+                [ "\$previous" = "-o" ] && out="\$arg"
+                previous="\$arg"
+            done
+            printf '#!/bin/sh\\n. %s\\nrecord apache-check "\$@"\\nexit \${FAKE_APACHE_CHECK_EXIT:-0}\\n' "'{$bin}/.fake-lib'" > "\$out"
             SH,
         'composer' => 'record composer "$@"',
         'php' => <<<'SH'
@@ -260,6 +275,7 @@ function runUpdate(array $sandbox, array $arguments = ['--no-pull'], array $env 
         'RCONFIG_UPDATE_LOCK' => "{$sandbox['root']}/update.lock",
         'RCONFIG_PROC_DIR' => $sandbox['proc'],
         'RCONFIG_HORIZON_START_WAIT' => '3',
+        'RCONFIG_APACHE_VHOST_DIR' => $sandbox['apache'],
         'IS_DOCKER' => '',
         'FAKE_WEB_USER' => 'nobody',
     ], $env))->run(array_merge([$script ?? "{$sandbox['app']}/update.sh"], $arguments));
@@ -875,6 +891,112 @@ test('it refuses an unknown option before doing anything', function () {
     expect($result->exitCode())->toBe(1)
         ->and(updateOutput($result))->toContain("unknown option '--force'")
         ->and(updateCalls($this->sandbox))->toBe([]);
+});
+
+// --- Apache vhost link and security check ---------------------------------------------------------
+
+/**
+ * An install set up by the old setup_apache.sh: Apache links to the tracked
+ * rconfig-vhost.conf, which holds local edits. .upstream-vhost is what the
+ * fake git checkout restores.
+ *
+ * @param  array<string, string>  $sandbox
+ */
+function linkApacheToTrackedVhost(array $sandbox): void
+{
+    File::put("{$sandbox['app']}/rconfig-vhost.conf", "ServerName netops.example.org\n");
+    File::put("{$sandbox['app']}/.upstream-vhost", "ServerName YourServerName\n");
+    symlink("{$sandbox['app']}/rconfig-vhost.conf", "{$sandbox['apache']}/rconfig-vhost.conf");
+}
+
+test('an old vhost link moves to an untracked copy with the local edits, before the restart, and the tracked file is restored', function () {
+    linkApacheToTrackedVhost($this->sandbox);
+    $app = $this->sandbox['app'];
+
+    $result = runUpdate($this->sandbox);
+    $calls = updateCalls($this->sandbox);
+
+    expectNoUnplannedBinary($result);
+    expect($result->successful())->toBeTrue(updateOutput($result))
+        ->and(readlink("{$this->sandbox['apache']}/rconfig-vhost.conf"))->toBe("{$app}/rconfig-vhost.local.conf")
+        ->and(File::get("{$app}/rconfig-vhost.local.conf"))->toBe("ServerName netops.example.org\n")
+        ->and(File::get("{$app}/rconfig-vhost.conf"))->toBe("ServerName YourServerName\n")
+        ->and(firstCall($calls, 'apachectl configtest'))->toBeLessThan(firstCall($calls, "git -C {$app} checkout -- rconfig-vhost.conf"))
+        ->and(firstCall($calls, "git -C {$app} checkout -- rconfig-vhost.conf"))->toBeLessThan(firstCall($calls, 'systemctl restart httpd'));
+});
+
+test('a rejected Apache config puts the vhost link back, keeps the tracked file and the upgrade finishes', function () {
+    linkApacheToTrackedVhost($this->sandbox);
+    $app = $this->sandbox['app'];
+
+    $result = runUpdate($this->sandbox, env: ['FAKE_FAIL' => 'apachectl configtest']);
+
+    expectNoUnplannedBinary($result);
+    expect($result->successful())->toBeTrue(updateOutput($result))
+        ->and(readlink("{$this->sandbox['apache']}/rconfig-vhost.conf"))->toBe("{$app}/rconfig-vhost.conf")
+        ->and(file_exists("{$app}/rconfig-vhost.local.conf"))->toBeFalse()
+        ->and(File::get("{$app}/rconfig-vhost.conf"))->toBe("ServerName netops.example.org\n")
+        ->and(firstCall(updateCalls($this->sandbox), 'checkout'))->toBeNull()
+        ->and(updateOutput($result))->toContain('so it still links to')
+        ->and(updateOutput($result))->toContain('done. rConfig V8 Core is upgraded.');
+});
+
+test('the vhost link is left alone when the local copy exists or the link points elsewhere', function (string $case) {
+    $app = $this->sandbox['app'];
+    $link = "{$this->sandbox['apache']}/rconfig-vhost.conf";
+    File::put("{$app}/rconfig-vhost.conf", "ServerName netops.example.org\n");
+    if ($case === 'local copy exists') {
+        File::put("{$app}/rconfig-vhost.local.conf", "ServerName local.example.org\n");
+        symlink("{$app}/rconfig-vhost.conf", $link);
+    } else {
+        File::put("{$this->sandbox['root']}/custom.conf", "ServerName custom.example.org\n");
+        symlink("{$this->sandbox['root']}/custom.conf", $link);
+    }
+    $before = readlink($link);
+
+    $result = runUpdate($this->sandbox);
+
+    expect($result->successful())->toBeTrue(updateOutput($result))
+        ->and(readlink($link))->toBe($before)
+        ->and(File::get("{$app}/rconfig-vhost.conf"))->toBe("ServerName netops.example.org\n")
+        ->and(firstCall(updateCalls($this->sandbox), 'apachectl'))->toBeNull()
+        ->and(firstCall(updateCalls($this->sandbox), 'checkout'))->toBeNull();
+})->with(['local copy exists', 'link points elsewhere']);
+
+test('the Apache security check is downloaded and run with --yes --respect-optout once the app is back up', function () {
+    $result = runUpdate($this->sandbox);
+    $calls = updateCalls($this->sandbox);
+    $app = $this->sandbox['app'];
+
+    expectNoUnplannedBinary($result);
+    expect($result->successful())->toBeTrue(updateOutput($result))
+        ->and(firstCall($calls, 'curl -fsSL https://dl.rconfig.com/downloads/rconfig-apache-check.sh'))->not->toBeNull()
+        ->and(firstCall($calls, 'apache-check --yes --respect-optout'))->toBeGreaterThan(firstCall($calls, "[nobody] php {$app}/artisan up"))
+        ->and(firstCall($calls, 'apache-check --yes --respect-optout'))->toBeLessThan(firstCall($calls, "[nobody] php {$app}/artisan rconfig:check-worker-user"))
+        ->and(updateOutput($result))->toContain('the Apache security check passed');
+});
+
+test('a failed download or a failing Apache security check is a warning with the manual command, and the upgrade finishes', function (array $env, string $message) {
+    $result = runUpdate($this->sandbox, env: $env);
+
+    expectNoUnplannedBinary($result);
+    expect($result->successful())->toBeTrue(updateOutput($result))
+        ->and(updateOutput($result))->toContain("update: WARNING: {$message}")
+        ->and(updateOutput($result))->toContain('curl -fsSL https://dl.rconfig.com/downloads/rconfig-apache-check.sh | sudo bash')
+        ->and(updateOutput($result))->toContain('done. rConfig V8 Core is upgraded.');
+})->with([
+    'download fails' => [['FAKE_FAIL' => 'curl'], 'could not download the Apache security check'],
+    'issues not fixed' => [['FAKE_APACHE_CHECK_EXIT' => '1'], 'the Apache security check found issues it did not fix'],
+    'fix rolled back' => [['FAKE_APACHE_CHECK_EXIT' => '2'], 'an Apache security fix failed and was rolled back'],
+    'unexpected exit' => [['FAKE_APACHE_CHECK_EXIT' => '64'], 'the Apache security check stopped with exit 64'],
+]);
+
+test('an unsupported server is a warning without a manual command, and the upgrade finishes', function () {
+    $result = runUpdate($this->sandbox, env: ['FAKE_APACHE_CHECK_EXIT' => '3']);
+
+    expect($result->successful())->toBeTrue(updateOutput($result))
+        ->and(updateOutput($result))->toContain('update: WARNING: the Apache security check does not support this server')
+        ->and(updateOutput($result))->toContain('done. rConfig V8 Core is upgraded.');
 });
 
 // --- Static guards -------------------------------------------------------------------------------

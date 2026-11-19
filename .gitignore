@@ -11,6 +11,7 @@
 .env.development
 .env.testing
 .phpstan/
+/rconfig-vhost.local.conf
 
 /.idea
 /.vscode

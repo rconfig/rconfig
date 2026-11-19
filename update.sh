@@ -42,6 +42,10 @@
 #                                 so only the test suite's fake binaries run.
 #   RCONFIG_HORIZON_START_WAIT    seconds to wait for Horizon to report
 #                                 RUNNING. Defaults to 30.
+#   RCONFIG_APACHE_VHOST_DIR      folder holding Apache's rconfig-vhost.conf
+#                                 link. Defaults to /etc/httpd/conf.d on the
+#                                 RHEL family and /etc/apache2/sites-enabled
+#                                 on Ubuntu.
 
 set -Eeuo pipefail
 
@@ -56,6 +60,7 @@ OS_RELEASE="${RCONFIG_OS_RELEASE:-/etc/os-release}"
 LOG_DIR="${RCONFIG_UPDATE_LOG_DIR:-/var/log}"
 LOCK_FILE="${RCONFIG_UPDATE_LOCK:-/run/rconfig-core-update.lock}"
 HORIZON_START_WAIT="${RCONFIG_HORIZON_START_WAIT:-30}"
+APACHE_CHECK_URL="https://dl.rconfig.com/downloads/rconfig-apache-check.sh"
 
 # State used by the failure handler.
 MAIN_PID="${BASHPID}"
@@ -279,6 +284,77 @@ fix_ownership() {
     fi
 }
 
+# Older installs link Apache to the tracked rconfig-vhost.conf, which
+# setup_apache.sh edited in place, so any upstream change to it would stop
+# git pull. This moves the link to an untracked copy that keeps every local
+# change, checks the config, then restores the tracked file. On any problem
+# the link is put back and the run carries on.
+move_vhost_off_tracked_file() {
+    local link="$1/rconfig-vhost.conf"
+    local tracked="${APP_DIR}/rconfig-vhost.conf"
+    local local_copy="${APP_DIR}/rconfig-vhost.local.conf"
+    local ctl
+
+    if [ -e "${local_copy}" ]; then
+        info "${local_copy} already exists, nothing to move"
+        return 0
+    fi
+    if [ ! -L "${link}" ] || [ "$(readlink -f "${link}")" != "$(readlink -f "${tracked}")" ]; then
+        info "${link} does not link to the tracked rconfig-vhost.conf, nothing to move"
+        return 0
+    fi
+    ctl="$(command -v apachectl || command -v apache2ctl || true)"
+    if [ -z "${ctl}" ]; then
+        warn "apachectl not found, so ${link} still links to the tracked rconfig-vhost.conf."
+        return 0
+    fi
+
+    if cp -p "${tracked}" "${local_copy}" && ln -sfn "${local_copy}" "${link}" && "${ctl}" configtest; then
+        info "${link} now links to ${local_copy}"
+    else
+        ln -sfn "${tracked}" "${link}" || warn "could not put ${link} back. Run: ln -sfn ${tracked} ${link}"
+        rm -f "${local_copy}"
+        warn "could not move ${link} to ${local_copy}, so it still links to ${tracked}. See the errors above. The next update tries again."
+        return 0
+    fi
+
+    if [ -d "${APP_DIR}/.git" ] && as_code_owner git -C "${APP_DIR}" checkout -- rconfig-vhost.conf; then
+        info "restored the tracked rconfig-vhost.conf, your changes are kept in ${local_copy}"
+    else
+        warn "could not restore the tracked rconfig-vhost.conf. Run: cd ${APP_DIR} && git checkout -- rconfig-vhost.conf"
+    fi
+}
+
+# Runs the rConfig Apache Security Check, which fixes what it safely can and
+# changes nothing when /etc/rconfig/skip-apache-hardening exists. It is
+# downloaded first so a cut-off download never runs. Never fails the run.
+run_apache_check() {
+    local script status=0
+    local manual="curl -fsSL ${APACHE_CHECK_URL} | sudo bash"
+
+    if ! command -v curl >/dev/null 2>&1; then
+        warn "curl is not installed, so the Apache security check was skipped. Run it by hand: ${manual}"
+        return 0
+    fi
+    script="$(mktemp)"
+    if ! curl -fsSL "${APACHE_CHECK_URL}" -o "${script}"; then
+        rm -f "${script}"
+        warn "could not download the Apache security check, so it was skipped. Run it by hand: ${manual}"
+        return 0
+    fi
+
+    bash "${script}" --yes --respect-optout || status=$?
+    rm -f "${script}"
+
+    case "${status}" in
+        0) info "the Apache security check passed" ;;
+        1) warn "the Apache security check found issues it did not fix, see above. Review them with: ${manual} -s -- --check" ;;
+        2) warn "an Apache security fix failed and was rolled back, see above. Run it by hand: ${manual}" ;;
+        3) warn "the Apache security check does not support this server, see above. Nothing was changed." ;;
+        *) warn "the Apache security check stopped with exit ${status}, see above. Run it by hand: ${manual}" ;;
+    esac
+}
+
 # Runs rconfig:check-worker-user, the last step. By now the upgrade has
 # finished and the app is back, so a failure says that plainly, lists the
 # failed checks and gives the fix, instead of the message for a half finished
@@ -389,11 +465,11 @@ main() {
         esac
     done
 
-    local apache_service supervisor_service
+    local apache_service supervisor_service apache_vhost_dir
     local supported="Supported: Rocky, AlmaLinux, RHEL and CentOS 8 or 9, and Ubuntu 22.04 or later."
     case "${os_family}" in
-        rhel) apache_service=httpd; supervisor_service=supervisord ;;
-        debian) apache_service=apache2; supervisor_service=supervisor ;;
+        rhel) apache_service=httpd; supervisor_service=supervisord; apache_vhost_dir=/etc/httpd/conf.d ;;
+        debian) apache_service=apache2; supervisor_service=supervisor; apache_vhost_dir=/etc/apache2/sites-enabled ;;
         *)
             if [ "${os_id}" = "amzn" ]; then
                 NEXT_STEPS="$(amazon_linux_next_steps)"
@@ -622,6 +698,10 @@ main() {
 
     # --- Web server ----------------------------------------------------------
 
+    # Before the restart, so Apache loads the moved link.
+    step "Apache vhost link"
+    move_vhost_off_tracked_file "${RCONFIG_APACHE_VHOST_DIR:-${apache_vhost_dir}}"
+
     # PHP under php-fpm keeps its opcache across an Apache restart, so any
     # active php-fpm unit is restarted too.
     step "restart the web server"
@@ -646,6 +726,9 @@ main() {
     APP_IS_UP=1
 
     # --- After the app is back -------------------------------------------------
+
+    step "Apache security check"
+    run_apache_check
 
     # Only chmods configs written by older releases, and can take minutes on a
     # big install, so it runs after the app is back up.
