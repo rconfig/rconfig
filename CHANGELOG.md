@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [8.2.23] - 2026-11-19
+
+Apache hardening release. All users should update.
+
+### Changed
+- The shipped Apache vhost template now disables directory listings, drops the legacy access lines and blocks hidden files.
+- New installs and updates run the rConfig Apache Security Check, which reviews the server's Apache setup and fixes unsafe defaults; it backs up first, tests the config and rolls back on failure. Opt out by creating `/etc/rconfig/skip-apache-hardening`.
+- Updates move the live vhost to an untracked `rconfig-vhost.local.conf`, keeping local changes, so future updates pull cleanly.
+- `rconfig:ssl-self-signed` keeps the hidden-file block when run with `--force`, and picks the hostname from `--hostname`, then `APP_URL`, then the vhost `ServerName`, then `hostname -f`.
+
+### Known issues
+- RHEL 8: the Apache Security Check is not supported and shows a warning; the update carries on.
+
 ## [8.2.22] - 2026-11-18
 
 Security release. All users should upgrade.
