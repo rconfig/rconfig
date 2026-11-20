@@ -97,7 +97,7 @@ test('full runs store only the latest run', function () {
     expect(SecurityCheckRun::query()->count())->toBe(1);
 });
 
-test('no secret value appears in the command JSON or the Security Review API', function () {
+test('no secret value appears in the command JSON or the Security Center API', function () {
     $sentinels = [
         'app_key' => str_pad('SNTLAPPKEY', 32, 'K'),
         'db' => 'SNTL-DB-PASSWORD-7c1f',

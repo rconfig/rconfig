@@ -76,7 +76,7 @@ class Kernel extends ConsoleKernel
     }
 
     /**
-     * Daily Security Review run on Horizon. It shares the run lock with page runs. Never on the demo site.
+     * Daily Security Center run on Horizon. It shares the run lock with page runs. Never on the demo site.
      */
     private function scheduleSecurityReview(): void
     {

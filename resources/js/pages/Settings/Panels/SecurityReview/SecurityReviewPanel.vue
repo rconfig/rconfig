@@ -12,7 +12,7 @@ import SecurityFindingRow from "./SecurityFindingRow.vue";
 import SecurityAboutCard from "./SecurityAboutCard.vue";
 
 /**
- * Settings > Security Review: replaces the old Settings > Security page.
+ * Settings > Security Center: replaces the old Settings > Security page.
  */
 const review = useSecurityReview();
 const { isLoading, loadError, data, report, counts, filtered, groupOptions, filters, task, taskError, isRunning, notifySaving, notifyError } = review;
@@ -59,7 +59,7 @@ const statusSelectValue = computed(() => {
 			<div class="flex flex-wrap items-start justify-between gap-3">
 				<div>
 					<h3 class="rc-panel-heading">
-						Security Review
+						Security Center
 					</h3>
 					<p class="rc-panel-subheading">
 						Checks this rConfig server's security settings and shows how to fix what fails.

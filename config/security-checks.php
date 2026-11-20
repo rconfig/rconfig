@@ -4,17 +4,17 @@ use App\Services\Security\Checks;
 
 /*
 |--------------------------------------------------------------------------
-| Security Review
+| Security Center
 |--------------------------------------------------------------------------
 |
 | Settings for php artisan rconfig:security-check and Settings > Security
-| Review. Every check is read-only.
+| Center. Every check is read-only.
 |
 */
 
 return [
 
-    'docs_url' => 'https://v8coredocs.rconfig.com/security/security-review/',
+    'docs_url' => 'https://v8coredocs.rconfig.com/security/security-center/',
 
     // Check reference pages: <checks_docs_url>/<group>/#<check-id-with-hyphens>.
     'checks_docs_url' => 'https://v8coredocs.rconfig.com/security/checks',

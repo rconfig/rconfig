@@ -9,16 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [8.3.0] - 2026-11-20
 
-Feature release adding the Security Review. All users should update.
+Feature release adding the Security Center. All users should update.
 
 ### Added
-- New Settings > Security Review page that checks this install's security (app config, web exposure, TLS, PHP, Redis, accounts, REST API tokens, credential storage, workers, versions, Telnet devices and the firewall) and links each finding to a fix in the docs.
+- New Settings > Security Center page that checks this install's security (app config, web exposure, TLS, PHP, Redis, accounts, REST API tokens, credential storage, workers, versions, Telnet devices and the firewall) and links each finding to a fix in the docs.
 - New `php artisan rconfig:security-check` command that runs the same checks from the CLI, with `--json`, `--only`, `--list` and `--no-store`.
-- The Security Review runs daily at 04:15 and emails users when a check starts failing or recovers, via the new Security Check Failed and Security Check Recovered notification types.
+- The Security Center runs daily at 04:15 and emails users when a check starts failing or recovers, via the new Security Check Failed and Security Check Recovered notification types.
 - New optional `SECURITY_CHECK_*` settings in `.env.example` to change the schedule, turn off alerts or the web exposure probes, and add extra probe targets.
 
 ### Changed
-- The Security Review page replaces the old Settings > Security page.
+- The Security Center page replaces the old Settings > Security page.
 
 ### Fixed
 - The weekly update check, task reports and their emails, and config changed emails now run on the `rConfigDefault` queue; the upgrade clears any older queued copies so they are not sent late.

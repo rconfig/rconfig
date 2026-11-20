@@ -88,7 +88,8 @@ test('one email when a check starts failing, none while it keeps failing, one wh
     expect($mails)->toHaveCount(1)
         ->and($mails->first()->alert->recovered)->toBeFalse()
         ->and($mails->first()->alert->checkLabels())->toBe(['Alpha', 'Gamma'])
-        ->and($mails->first()->toMail($this->recipient)->subject)->toBe('rConfig Security Check Failed');
+        ->and($mails->first()->toMail($this->recipient)->subject)->toBe('rConfig Security Check Failed')
+        ->and($mails->first()->toMail($this->recipient)->actionText)->toBe('View Security Center');
     Notification::assertSentTo($this->recipient, DBNotification::class);
 
     runScheduledSecurityJob();

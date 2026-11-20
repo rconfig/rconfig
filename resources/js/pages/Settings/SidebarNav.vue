@@ -100,7 +100,7 @@ const sections = computed(() => [
     openState: securityAccessIsOpen,
     items: [
       {
-        title: "Security Review",
+        title: "Security Center",
         href: "/settings/security",
         icon: ShieldCheck,
       },

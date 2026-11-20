@@ -13,7 +13,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Runs every Security Review check. Read-only and never prints a secret. Exit 0 all pass, 1 warnings, 2 failures.
+ * Runs every Security Center check. Read-only and never prints a secret. Exit 0 all pass, 1 warnings, 2 failures.
  */
 class RconfigSecurityCheckCommand extends Command
 {
@@ -21,8 +21,8 @@ class RconfigSecurityCheckCommand extends Command
         {--json : Print the full report as JSON (schema v1)}
         {--only=* : Run only these checks: an ID (redis.auth), a group (web) or a prefix (web.*); comma-separated or repeated}
         {--list : List every check and exit}
-        {--no-store : Do not save this run for the Security Review page}';
-    protected $description = 'Run the rConfig Security Review checks: configuration, web exposure, TLS, PHP, Redis, accounts, REST API, data, runtime, versions, devices and OS';
+        {--no-store : Do not save this run for the Security Center page}';
+    protected $description = 'Run the Security Center checks (read only)';
 
     public function handle(SecurityCheckRegistry $registry, SecurityCheckRunner $runner, SecurityRunRecorder $recorder): int
     {

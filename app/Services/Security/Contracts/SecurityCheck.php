@@ -45,7 +45,7 @@ interface SecurityCheck
     public function fixGuide(): string;
 
     /**
-     * One paragraph on why the check matters, shown on the Security Review page.
+     * One paragraph on why the check matters, shown on the Security Center page.
      */
     public function rationale(): string;
 }

@@ -1,5 +1,5 @@
 /**
- * Pure helpers for the Security Review page: filtering, sorting, grouping and display tokens.
+ * Pure helpers for the Security Center page: filtering, sorting, grouping and display tokens.
  * Kept free of Vue so they are unit-tested directly.
  */
 

@@ -24,7 +24,7 @@ export function generatePageTitle(route) {
 			configView: "Config View",
 			scheduledTasks: "Scheduled Tasks",
 			settings: "Settings",
-			SettingsSecurity: "Security Review",
+			SettingsSecurity: "Security Center",
 			systemLogs: "System Logs",
 			about: "About",
 			upgrade: "Upgrade",

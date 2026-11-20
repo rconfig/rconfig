@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Security Review alert toggle. Null falls back to config('security-checks.notify').
+ * Security Center alert toggle. Null falls back to config('security-checks.notify').
  */
 return new class extends Migration
 {

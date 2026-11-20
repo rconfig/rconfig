@@ -44,11 +44,11 @@ export const notificationConfig = {
             },
             system_security_check_failed: {
                 label: "Security Check Failed",
-                description: "Alerts when a Security Review check starts failing",
+                description: "Alerts when a Security Center check starts failing",
             },
             system_security_check_recovered: {
                 label: "Security Check Recovered",
-                description: "Notifications when a failing Security Review check passes again",
+                description: "Notifications when a failing Security Center check passes again",
             },
             // Config
             config_download_completed: {
