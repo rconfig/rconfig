@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [8.3.0] - 2026-11-20
+
+Feature release adding the Security Review. All users should update.
+
 ### Added
 - New Settings > Security Review page that checks this install's security (app config, web exposure, TLS, PHP, Redis, accounts, REST API tokens, credential storage, workers, versions, Telnet devices and the firewall) and links each finding to a fix in the docs.
 - New `php artisan rconfig:security-check` command that runs the same checks from the CLI, with `--json`, `--only`, `--list` and `--no-store`.
