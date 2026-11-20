@@ -42,6 +42,14 @@ export const notificationConfig = {
                 label: "Health Check Recovered",
                 description: "Notifications when a failing system health check passes again",
             },
+            system_security_check_failed: {
+                label: "Security Check Failed",
+                description: "Alerts when a Security Review check starts failing",
+            },
+            system_security_check_recovered: {
+                label: "Security Check Recovered",
+                description: "Notifications when a failing Security Review check passes again",
+            },
             // Config
             config_download_completed: {
                 label: "Configuration Download Completed",

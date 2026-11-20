@@ -8,11 +8,18 @@ use Spatie\Health\Checks\Result;
 /**
  * One health-check alert: the checks that started failing (or recovered) in a single
  * health:check run. Both channels (in-app and mail) read its title, summary and
- * per-check lines from here so they say the same thing.
+ * per-check lines from here so they say the same thing. The security kind carries
+ * Security Review transitions through the same channels.
  */
 final class HealthCheckAlert
 {
     public const PANEL_PATH = '/dashboard';
+
+    public const SECURITY_PANEL_PATH = '/settings/security';
+
+    public const KIND_HEALTH = 'health';
+
+    public const KIND_SECURITY = 'security';
 
     /**
      * @param  array<int, array{name: string, label: string, status: string, summary: string, message: string}>  $checks
@@ -20,6 +27,7 @@ final class HealthCheckAlert
     public function __construct(
         public readonly bool $recovered,
         public readonly array $checks,
+        public readonly string $kind = self::KIND_HEALTH,
     ) {}
 
     /**
@@ -36,8 +44,27 @@ final class HealthCheckAlert
         ], array_values($results)));
     }
 
+    /**
+     * @param  array<int, array{name: string, label: string, status: string, summary: string, message: string}>  $checks
+     */
+    public static function security(bool $recovered, array $checks): self
+    {
+        return new self($recovered, $checks, self::KIND_SECURITY);
+    }
+
+    public function isSecurity(): bool
+    {
+        return $this->kind === self::KIND_SECURITY;
+    }
+
     public function type(): NotificationType
     {
+        if ($this->isSecurity()) {
+            return $this->recovered
+                ? NotificationType::SYSTEM_SECURITY_CHECK_RECOVERED
+                : NotificationType::SYSTEM_SECURITY_CHECK_FAILED;
+        }
+
         return $this->recovered
             ? NotificationType::SYSTEM_HEALTH_CHECK_RECOVERED
             : NotificationType::SYSTEM_HEALTH_CHECK_FAILED;
@@ -45,16 +72,27 @@ final class HealthCheckAlert
 
     public function title(): string
     {
-        return $this->recovered ? 'Health Check Recovered' : 'Health Check Failed';
+        $noun = $this->isSecurity() ? 'Security Check' : 'Health Check';
+
+        return $noun . ($this->recovered ? ' Recovered' : ' Failed');
+    }
+
+    /**
+     * "health checks" or "security checks", for summary and mail lines.
+     */
+    public function checksNoun(): string
+    {
+        return $this->isSecurity() ? 'security checks' : 'health checks';
     }
 
     public function summary(): string
     {
         $labels = implode(', ', $this->checkLabels());
+        $checks = ucfirst($this->checksNoun());
 
         return $this->recovered
-            ? 'Health checks passing again on ' . config('app.name') . ': ' . $labels . '.'
-            : 'Health checks failing on ' . config('app.name') . ': ' . $labels . '.';
+            ? $checks . ' passing again on ' . config('app.name') . ': ' . $labels . '.'
+            : $checks . ' failing on ' . config('app.name') . ': ' . $labels . '.';
     }
 
     /**
@@ -79,8 +117,13 @@ final class HealthCheckAlert
         }, $this->checks);
     }
 
+    public function panelLabel(): string
+    {
+        return $this->isSecurity() ? 'View Security Review' : 'View Dashboard';
+    }
+
     public function panelUrl(): string
     {
-        return url(self::PANEL_PATH);
+        return url($this->isSecurity() ? self::SECURITY_PANEL_PATH : self::PANEL_PATH);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\SecurityPhpRuntimeController;
 use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\SpaController;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +18,11 @@ use Illuminate\Support\Facades\Route;
  */
 Auth::routes(['register' => false]);
 Route::get('/logged-out', [LoginController::class, 'showLoggedOut']);
+
+/* Web server php.ini values for rconfig:security-check. Signed and loopback-only. */
+Route::get('/security/php-runtime', SecurityPhpRuntimeController::class)
+    ->name('security.php-runtime')
+    ->middleware(['signed:relative', 'throttle:30,1']);
 
 /* SOCIALITE AUTHENTICATION */
 Route::get('/auth/saml2/metadata', function () {

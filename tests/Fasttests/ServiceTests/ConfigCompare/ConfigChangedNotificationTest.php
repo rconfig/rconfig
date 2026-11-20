@@ -12,6 +12,7 @@ use App\Services\Templates\CompareExclusionTemplateService;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Queue;
 
 beforeEach(function () {
     $this->beginTransaction();
@@ -65,6 +66,20 @@ test('a real change dispatches the notification job', function () {
     (new ConfigHistoryManager)->handleNewDownloadedConfig($current, $this->command);
 
     Bus::assertDispatched(ConfigChangedNotificationJob::class);
+});
+
+/**
+ * Regression for RCO-2244: the job went to the "default" queue, which no Horizon supervisor works.
+ */
+test('the config changed notification is queued on rConfigDefault', function () {
+    Queue::fake();
+
+    notificationMakeConfig($this->command, notificationWriteFile($this->workDir, 'prev.txt', "hostname r1\ninterface g0/0\n"), 1, 0);
+    $current = notificationMakeConfig($this->command, notificationWriteFile($this->workDir, 'curr.txt', "hostname r1\ninterface g0/0\n ip address 10.0.0.1 255.255.255.0\n"), null, 1);
+
+    (new ConfigHistoryManager)->handleNewDownloadedConfig($current, $this->command);
+
+    Queue::assertPushedOn('rConfigDefault', ConfigChangedNotificationJob::class);
 });
 
 test('no change does not dispatch the notification job', function () {

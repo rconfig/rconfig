@@ -46,6 +46,8 @@ describe("notificationConfig", () => {
 			"system_notification_error",
 			"system_health_check_failed",
 			"system_health_check_recovered",
+			"system_security_check_failed",
+			"system_security_check_recovered",
 			"config_download_completed",
 			"config_purge_completed",
 			"config_purge_failed_completed",

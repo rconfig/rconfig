@@ -10,6 +10,8 @@ enum NotificationType: string
     case SYSTEM_NOTIFICATION_ERROR = 'system.notification_error';
     case SYSTEM_HEALTH_CHECK_FAILED = 'system.health_check_failed';
     case SYSTEM_HEALTH_CHECK_RECOVERED = 'system.health_check_recovered';
+    case SYSTEM_SECURITY_CHECK_FAILED = 'system.security_check_failed';
+    case SYSTEM_SECURITY_CHECK_RECOVERED = 'system.security_check_recovered';
 
     // Config notifications
     case CONFIG_DOWNLOAD_COMPLETED = 'config.download_completed';
@@ -29,7 +31,9 @@ enum NotificationType: string
         return match ($this) {
             self::SYSTEM_NOTIFICATION_ERROR,
             self::SYSTEM_HEALTH_CHECK_FAILED,
-            self::SYSTEM_HEALTH_CHECK_RECOVERED => NotificationCategory::SYSTEM,
+            self::SYSTEM_HEALTH_CHECK_RECOVERED,
+            self::SYSTEM_SECURITY_CHECK_FAILED,
+            self::SYSTEM_SECURITY_CHECK_RECOVERED => NotificationCategory::SYSTEM,
 
             self::CONFIG_DOWNLOAD_COMPLETED,
             self::CONFIG_PURGE_COMPLETED,
@@ -50,6 +54,8 @@ enum NotificationType: string
             self::SYSTEM_NOTIFICATION_ERROR => 'Notification System Error',
             self::SYSTEM_HEALTH_CHECK_FAILED => 'Health Check Failed',
             self::SYSTEM_HEALTH_CHECK_RECOVERED => 'Health Check Recovered',
+            self::SYSTEM_SECURITY_CHECK_FAILED => 'Security Check Failed',
+            self::SYSTEM_SECURITY_CHECK_RECOVERED => 'Security Check Recovered',
             self::CONFIG_DOWNLOAD_COMPLETED => 'Configuration Download Completed',
             self::CONFIG_PURGE_COMPLETED => 'Configuration Purge Completed',
             self::CONFIG_PURGE_FAILED_COMPLETED => 'Failed Configuration Purge Completed',
@@ -66,6 +72,8 @@ enum NotificationType: string
             self::SYSTEM_NOTIFICATION_ERROR => 'Alerts when notification system encounters errors',
             self::SYSTEM_HEALTH_CHECK_FAILED => 'Alerts when a system health check (database, Redis, Horizon, disk space, etc.) starts failing',
             self::SYSTEM_HEALTH_CHECK_RECOVERED => 'Notifications when a failing system health check passes again',
+            self::SYSTEM_SECURITY_CHECK_FAILED => 'Alerts when a Security Review check starts failing',
+            self::SYSTEM_SECURITY_CHECK_RECOVERED => 'Notifications when a failing Security Review check passes again',
             self::CONFIG_DOWNLOAD_COMPLETED => 'Notifications when manual config downloads complete',
             self::CONFIG_PURGE_COMPLETED => 'Alerts when configuration purge operations finish',
             self::CONFIG_PURGE_FAILED_COMPLETED => 'Notifications when failed config purge operations complete',
@@ -99,14 +107,17 @@ enum NotificationType: string
 
             // Health checks - recovery closes out a failure email, so both mail by default
             self::SYSTEM_HEALTH_CHECK_FAILED,
-            self::SYSTEM_HEALTH_CHECK_RECOVERED => ['db' => true, 'mail' => true],
+            self::SYSTEM_HEALTH_CHECK_RECOVERED,
+            self::SYSTEM_SECURITY_CHECK_FAILED,
+            self::SYSTEM_SECURITY_CHECK_RECOVERED => ['db' => true, 'mail' => true],
         };
     }
 
     public function severity(): string
     {
         return match ($this) {
-            self::SYSTEM_HEALTH_CHECK_FAILED => 'error',
+            self::SYSTEM_HEALTH_CHECK_FAILED,
+            self::SYSTEM_SECURITY_CHECK_FAILED => 'error',
 
             self::CONNECTION_DEVICE_FAILURE => 'warning',
 

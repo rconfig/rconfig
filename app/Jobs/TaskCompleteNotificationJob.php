@@ -22,6 +22,7 @@ class TaskCompleteNotificationJob implements ShouldQueue
 
     public function __construct($report_data)
     {
+        $this->onQueue('rConfigDefault');
         $this->report_data = $report_data;
     }
 

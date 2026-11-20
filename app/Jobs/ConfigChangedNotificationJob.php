@@ -17,7 +17,10 @@ class ConfigChangedNotificationJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, NotificationDispatcher, Queueable, SerializesModels;
 
-    public function __construct(protected Config $model) {}
+    public function __construct(protected Config $model)
+    {
+        $this->onQueue('rConfigDefault');
+    }
 
     public function handle(): void
     {
