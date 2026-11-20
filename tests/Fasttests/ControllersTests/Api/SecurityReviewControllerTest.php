@@ -21,7 +21,7 @@ afterEach(function () {
     $this->rollBackTransaction();
 });
 
-test('guests get 401 from every Security Review endpoint', function () {
+test('guests get 401 from every Security Center endpoint', function () {
     $this->getJson('/api/settings/security-review')->assertUnauthorized();
     $this->postJson('/api/settings/security-review/run')->assertUnauthorized();
     $this->getJson('/api/settings/security-review/tasks/' . Str::uuid())->assertUnauthorized();

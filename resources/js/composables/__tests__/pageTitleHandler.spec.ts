@@ -31,8 +31,8 @@ describe("generatePageTitle", () => {
 		expect(generatePageTitle({})).toBe(DEFAULT_TITLE);
 	});
 
-	it("titles the security settings route Security Review", () => {
+	it("titles the security settings route Security Center", () => {
 		const title = generatePageTitle({ name: "settings-security", meta: { pageTitleKey: "SettingsSecurity" } });
-		expect(title).toBe(`Security Review | ${DEFAULT_TITLE}`);
+		expect(title).toBe(`Security Center | ${DEFAULT_TITLE}`);
 	});
 });

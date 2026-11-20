@@ -6,7 +6,7 @@ use App\Models\Setting;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * The Security Review alert switch, stored in settings.security_check_notify (null uses the config default).
+ * The Security Center alert switch, stored in settings.security_check_notify (null uses the config default).
  */
 class SecurityReviewSettings
 {

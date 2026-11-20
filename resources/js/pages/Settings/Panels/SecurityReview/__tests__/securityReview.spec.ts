@@ -35,7 +35,7 @@ const rows: SecurityCheckRow[] = [
 	row({ id: "app.key", status: "fail", severity: "high" }),
 ];
 
-describe("Security Review helpers", () => {
+describe("Security Center helpers", () => {
 	it("shows failures then warnings by severity by default", () => {
 		expect(filterChecks(rows, defaultFilters()).map((check) => check.id)).toEqual(["redis.auth", "app.key", "app.env", "devices.telnet"]);
 	});

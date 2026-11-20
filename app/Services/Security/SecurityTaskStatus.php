@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 /**
- * Status of a queued Security Review run, polled by the page. Kept in the cache for an hour.
+ * Status of a queued Security Center run, polled by the page. Kept in the cache for an hour.
  */
 class SecurityTaskStatus
 {

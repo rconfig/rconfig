@@ -30,7 +30,7 @@ const sections = computed(() => [
 		openState: ref(false),
 		items: [
 			{
-				title: "Security Review",
+				title: "Security Center",
 				href: "/settings/security",
 			},
 			{

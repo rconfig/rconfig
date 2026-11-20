@@ -10,7 +10,7 @@ use App\Services\Security\SecurityContext;
 use RuntimeException;
 
 /**
- * Configurable checks for Security Review engine tests. Results are set per test through StubSecurityCheck::$results[id].
+ * Configurable checks for Security Center engine tests. Results are set per test through StubSecurityCheck::$results[id].
  */
 abstract class StubSecurityCheck extends AbstractSecurityCheck
 {

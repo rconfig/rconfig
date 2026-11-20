@@ -11,8 +11,8 @@ return new class extends Migration
 {
     /** @var array<string, string> */
     private const SECURITY_CHECK_DEFAULTS = [
-        'system.security_check_failed' => 'Alerts when a Security Review check starts failing',
-        'system.security_check_recovered' => 'Notifications when a failing Security Review check passes again',
+        'system.security_check_failed' => 'Alerts when a Security Center check starts failing',
+        'system.security_check_recovered' => 'Notifications when a failing Security Center check passes again',
     ];
 
     /**

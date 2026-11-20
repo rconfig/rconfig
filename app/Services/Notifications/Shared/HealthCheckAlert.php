@@ -9,7 +9,7 @@ use Spatie\Health\Checks\Result;
  * One health-check alert: the checks that started failing (or recovered) in a single
  * health:check run. Both channels (in-app and mail) read its title, summary and
  * per-check lines from here so they say the same thing. The security kind carries
- * Security Review transitions through the same channels.
+ * Security Center transitions through the same channels.
  */
 final class HealthCheckAlert
 {
@@ -119,7 +119,7 @@ final class HealthCheckAlert
 
     public function panelLabel(): string
     {
-        return $this->isSecurity() ? 'View Security Review' : 'View Dashboard';
+        return $this->isSecurity() ? 'View Security Center' : 'View Dashboard';
     }
 
     public function panelUrl(): string

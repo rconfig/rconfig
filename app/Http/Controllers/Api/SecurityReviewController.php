@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 /**
- * Settings > Security Review. Reads the stored run; runs are queued to Horizon and polled by task token.
+ * Settings > Security Center. Reads the stored run; runs are queued to Horizon and polled by task token.
  */
 class SecurityReviewController extends Controller
 {

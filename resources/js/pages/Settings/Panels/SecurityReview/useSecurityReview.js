@@ -6,7 +6,7 @@ const POLL_MS = 2000;
 const POLL_LIMIT = 300;
 
 /**
- * State and actions for Settings > Security Review. Runs are queued on the server;
+ * State and actions for Settings > Security Center. Runs are queued on the server;
  * this polls the task until it is done, then reloads the stored report.
  */
 export function useSecurityReview() {
@@ -38,7 +38,7 @@ export function useSecurityReview() {
 				watchTask(response.data.running_task);
 			}
 		} catch {
-			loadError.value = "The Security Review could not be loaded. Refresh to try again.";
+			loadError.value = "The Security Center could not be loaded. Refresh to try again.";
 		} finally {
 			isLoading.value = false;
 		}
