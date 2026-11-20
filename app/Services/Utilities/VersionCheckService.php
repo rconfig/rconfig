@@ -37,6 +37,18 @@ class VersionCheckService
     private const FAILURE_ESCALATION_THRESHOLD = 3;
 
     /**
+     * The stored status, or null when no check has completed yet. Never dispatches or calls out.
+     *
+     * @return array{current_version: string, latest_version: ?string, update_available: bool, latest_url: ?string, reachable: bool, checked: bool, last_checked_at: ?string, consecutive_failures: int, last_error: ?string}|null
+     */
+    public function storedStatus(): ?array
+    {
+        $status = Cache::get(self::CACHE_KEY);
+
+        return is_array($status) ? $this->decorate($status) : null;
+    }
+
+    /**
      * Return the current version status for the UI. This never performs a
      * network call: it reads the status last written by the scheduled job
      * (or an explicit refresh). When no status exists yet it dispatches a

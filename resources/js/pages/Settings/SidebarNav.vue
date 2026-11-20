@@ -19,7 +19,7 @@ import {
   ChevronRight,
   ChevronDown,
   Settings,
-  Shield,
+  ShieldCheck,
   Key,
   Users,
   ArrowDownUp,
@@ -100,9 +100,9 @@ const sections = computed(() => [
     openState: securityAccessIsOpen,
     items: [
       {
-        title: "Security",
+        title: "Security Review",
         href: "/settings/security",
-        icon: Shield,
+        icon: ShieldCheck,
       },
       {
         title: "Device Credentials",

@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Jobs\CheckForUpdateJob;
+use App\Jobs\RunSecurityChecksJob;
 use App\Jobs\TaskDownloadRun;
 use App\Models\MonitoredScheduledTaskLogItems;
 use App\Models\Task;
@@ -71,6 +72,21 @@ class Kernel extends ConsoleKernel
         $schedule->command('model:prune', ['--model' => HealthCheckResultHistoryItem::class])->daily();
         $this->schedule->command('rconfig:config-summaries-sync')->dailyAt('3:00');
         $schedule->job(new CheckForUpdateJob)->weeklyOn(6, '03:00')->withoutOverlapping();
+        $this->scheduleSecurityReview();
+    }
+
+    /**
+     * Daily Security Review run on Horizon. It shares the run lock with page runs. Never on the demo site.
+     */
+    private function scheduleSecurityReview(): void
+    {
+        if (config('rConfig.is_demo') || ! config('security-checks.schedule_enabled', true)) {
+            return;
+        }
+
+        $this->schedule->job(RunSecurityChecksJob::scheduled(), (string) config('security-checks.queue', 'rConfigDefault'))
+            ->name('security-review-daily-check')
+            ->dailyAt((string) config('security-checks.schedule_time', '04:15'));
     }
 
     /**
