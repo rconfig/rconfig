@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- New Settings > Security Review page that checks this install's security (app config, web exposure, TLS, PHP, Redis, accounts, REST API tokens, credential storage, workers, versions, Telnet devices and the firewall) and links each finding to a fix in the docs.
+- New `php artisan rconfig:security-check` command that runs the same checks from the CLI, with `--json`, `--only`, `--list` and `--no-store`.
+- The Security Review runs daily at 04:15 and emails users when a check starts failing or recovers, via the new Security Check Failed and Security Check Recovered notification types.
+- New optional `SECURITY_CHECK_*` settings in `.env.example` to change the schedule, turn off alerts or the web exposure probes, and add extra probe targets.
+
+### Changed
+- The Security Review page replaces the old Settings > Security page.
+
 ## [8.2.24] - 2026-11-19
 
 PHP security release. All users should update PHP to 8.4.28 or later, then update rConfig. See https://www.rconfig.com/security-advisories/php-2026-11.
