@@ -22,6 +22,12 @@ Route::prefix('settings')->group(function () {
     Route::get('/test-notification', 'SettingEmailController@TestMailNotifications');
     Route::get('/schedule/list', 'ScheduleController@list');
 
+    /* SECURITY REVIEW */
+    Route::get('/security-review', 'SecurityReviewController@index');
+    Route::post('/security-review/run', 'SecurityReviewController@run')->middleware('throttle:security-review-run');
+    Route::get('/security-review/tasks/{token}', 'SecurityReviewController@task');
+    Route::put('/security-review/notify', 'SecurityReviewController@updateNotify');
+
     /* CONFIG COMPARE OPTIONS */
     Route::get('/compare-options', 'CompareOptionsController@index');
     Route::get('/compare-options/default-template', 'CompareOptionsController@getDefaultTemplate');

@@ -27,21 +27,21 @@ class MailHealthCheckNotification extends Notification
             $mail = new MailMessage;
 
             if ($this->alert->recovered) {
-                $mail->subject('rConfig Health Check Recovered')
-                    ->greeting('Health Check Recovered')
-                    ->line('These health checks on ' . config('app.name') . ' are passing again:');
+                $mail->subject('rConfig ' . $this->alert->title())
+                    ->greeting($this->alert->title())
+                    ->line('These ' . $this->alert->checksNoun() . ' on ' . config('app.name') . ' are passing again:');
             } else {
                 $mail->error()
-                    ->subject('rConfig Health Check Failed')
-                    ->greeting('Health Check Failed')
-                    ->line('These health checks on ' . config('app.name') . ' have started failing:');
+                    ->subject('rConfig ' . $this->alert->title())
+                    ->greeting($this->alert->title())
+                    ->line('These ' . $this->alert->checksNoun() . ' on ' . config('app.name') . ' have started failing:');
             }
 
             foreach ($this->alert->checkLines() as $line) {
                 $mail->line('• ' . $line);
             }
 
-            return $mail->action('View Dashboard', $this->alert->panelUrl());
+            return $mail->action($this->alert->panelLabel(), $this->alert->panelUrl());
         } catch (\Exception $exception) {
             activityLogIt(__CLASS__, __FUNCTION__, 'error', $exception->getMessage(), 'system');
 

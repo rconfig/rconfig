@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from "vue";
 import { useToaster } from "@/composables/useToaster"; // Import the composable
 import SystemSettingsPanel from "@/pages/Settings/Panels/SystemSettingsPanel.vue";
 import CredentialsPanel from "@/pages/Settings/Panels/CredentialsPanel.vue";
-import SecurityPanel from "@/pages/Settings/Panels/SecurityPanel.vue";
+import SecurityReviewPanel from "@/pages/Settings/Panels/SecurityReview/SecurityReviewPanel.vue";
 import DataMigrationPanel from "@/pages/Settings/Panels/DataMigrationPanel.vue";
 import ImportExportPanel from "@/pages/Settings/Panels/ImportExportPanel.vue";
 import LoggingDebuggingPanel from "@/pages/Settings/Panels/LoggingDebuggingPanel.vue";
@@ -26,7 +26,7 @@ export function useSettings() {
     "/settings/debugging": LoggingDebuggingPanel,
     "/settings/data-migration": DataMigrationPanel,
     "/settings/import-export": ImportExportPanel,
-    "/settings/security": SecurityPanel,
+    "/settings/security": SecurityReviewPanel,
     "/settings/restapi": RestApiPanel,
     "/settings/about": AboutPanel,
     "/settings/logs": LogsPanel,

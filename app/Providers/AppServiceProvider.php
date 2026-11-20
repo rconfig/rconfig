@@ -7,7 +7,9 @@ use App\Models\TrackedJob;
 use App\Observers\DeviceObserver;
 use App\Services\Email\MailConfigService;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Contracts\Mail\Factory as MailFactory;
+use Illuminate\Http\Request;
 use Illuminate\Mail\MailManager;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
@@ -15,6 +17,7 @@ use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Opcodes\LogViewer\Facades\LogViewer;
 
@@ -65,6 +68,15 @@ class AppServiceProvider extends ServiceProvider
         $this->runObservers();
         $this->logViewerAuthCheck();
         $this->configureQueueLogging();
+        $this->configureRateLimiters();
+    }
+
+    /**
+     * Named so its counter is separate from the api group's throttle, which keys on the same user.
+     */
+    protected function configureRateLimiters(): void
+    {
+        RateLimiter::for('security-review-run', fn (Request $request): Limit => Limit::perMinute(6)->by('security-review-run|' . ($request->user()?->getAuthIdentifier() ?? $request->ip())));
     }
 
     /**
