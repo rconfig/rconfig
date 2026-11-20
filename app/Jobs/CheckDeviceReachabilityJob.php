@@ -12,7 +12,10 @@ class CheckDeviceReachabilityJob implements ShouldQueue
 {
     use Dispatchable, Queueable;
 
-    public function __construct(protected int $device_id) {}
+    public function __construct(protected int $device_id)
+    {
+        $this->onQueue('rConfigDefault');
+    }
 
     public function handle(PingService $pingService)
     {

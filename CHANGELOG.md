@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - The Security Review page replaces the old Settings > Security page.
 
+### Fixed
+- The weekly update check, task reports and their emails, and config changed emails now run on the `rConfigDefault` queue; the upgrade clears any older queued copies so they are not sent late.
+
 ## [8.2.24] - 2026-11-19
 
 PHP security release. All users should update PHP to 8.4.28 or later, then update rConfig. See https://www.rconfig.com/security-advisories/php-2026-11.

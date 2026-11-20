@@ -24,6 +24,7 @@ class DownloadConfigNowJob implements ShouldQueue
 
     public function __construct($device_id, $username = null, $type = 'device', $cause = 'system')
     {
+        $this->onQueue('ManualDownloadQueue');
         $this->username = $username;
         $this->device_id = $device_id;
         $this->type = $type;

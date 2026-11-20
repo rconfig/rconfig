@@ -47,6 +47,7 @@ class TaskDownloadRun implements ShouldQueue
      */
     public function __construct($task)
     {
+        $this->onQueue('ManualDownloadQueue');
         $this->task = $task;
         $this->executionStartTime = microtime(true);
     }

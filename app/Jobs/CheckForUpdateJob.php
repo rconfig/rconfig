@@ -24,6 +24,11 @@ class CheckForUpdateJob implements ShouldBeUnique, ShouldQueue
      */
     public int $uniqueFor = 300;
 
+    public function __construct()
+    {
+        $this->onQueue('rConfigDefault');
+    }
+
     /**
      * Refresh the persisted version-check status from GitHub.
      */

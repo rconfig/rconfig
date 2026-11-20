@@ -35,6 +35,7 @@ class DeviceDownloadJob extends Command
 
     public function __construct($devicerecord, $eventtype, $debug, $report_id = null)
     {
+        $this->onQueue('TaskDownloadQueue');
         $this->output = [];
         $this->eventtype = $eventtype;
         $this->devicerecord = $devicerecord;

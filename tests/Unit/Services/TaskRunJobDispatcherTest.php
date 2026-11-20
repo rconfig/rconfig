@@ -9,6 +9,7 @@ use App\Services\Notifications\TaskRunJobDispatcher;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Queue;
 
 /**
  * Minimal report payload as built by rconfigTaskDownload::create_report().
@@ -61,6 +62,20 @@ test('the task completed email is dispatched on its own when the task enables it
 
     Bus::assertChained([TaskReportJob::class, SendTaskReportNotificationJob::class]);
     Bus::assertDispatched(TaskCompleteNotificationJob::class);
+});
+
+/**
+ * Regression for RCO-2244: these jobs went to the "default" queue, which no Horizon supervisor works.
+ */
+test('the report, report email and completed email are queued on rConfigDefault', function () {
+    Queue::fake();
+
+    (new TaskRunJobDispatcher)->dispatch(taskRunReportData(reportNotify: true, completeNotify: true));
+
+    Queue::assertPushedOn('rConfigDefault', TaskReportJob::class, function (TaskReportJob $job): bool {
+        return unserialize($job->chained[0])->queue === 'rConfigDefault';
+    });
+    Queue::assertPushedOn('rConfigDefault', TaskCompleteNotificationJob::class);
 });
 
 test('the report chain runs on the sync connection when asked', function () {

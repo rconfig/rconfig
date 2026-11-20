@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Queue;
 
 beforeEach(function () {
     Cache::forget('version_check.status');
@@ -85,6 +86,17 @@ test('get status dispatches job when no status cached', function () {
     expect($status['checked'])->toBeFalse();
     expect($status['current_version'])->toBe('8.0.1');
     Bus::assertDispatched(CheckForUpdateJob::class);
+});
+
+/**
+ * Regression for RCO-2244: the update check went to the "default" queue, which no Horizon supervisor works.
+ */
+test('the update check is queued on rConfigDefault', function () {
+    Queue::fake();
+
+    $this->service->getStatus();
+
+    Queue::assertPushedOn('rConfigDefault', CheckForUpdateJob::class);
 });
 
 test('job refreshes persisted status', function () {
