@@ -49,7 +49,7 @@ In scope: the code in this repository, including the API, the SPA, the download 
 
 Out of scope:
 
-- Findings against rConfig Pro. Those belong on the Pro support channel.
+- Findings against rConfig Pro, Enterprise or Vector. Report those privately to security@rconfig.com as well; they are handled under the licence terms for those editions (https://www.rconfig.com/legal/licenses), as described at https://docs.rconfig.com/security/vulnerability-disclosure/.
 - Issues in third party dependencies with no rConfig specific exploit path. Report those upstream, though we do want to hear if a dependency issue is directly exploitable here.
 - Missing hardening headers, missing rate limits, or scanner output with no demonstrated impact.
 - Anything requiring physical access to the server, or a pre-existing root or database compromise.
