@@ -153,9 +153,15 @@ jobs:
         run: npm test
 
   tests:
-    name: Tests (Unit + Fasttests)
+    name: Tests (Unit + Fasttests, PHP ${{ matrix.php }})
     runs-on: ubuntu-latest
     timeout-minutes: 60
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # rConfig supports PHP 8.4 and 8.5. Test both so neither breaks unnoticed.
+        php: ['8.4', '8.5']
 
     env:
       # Forces custom_chown()'s suppressed-vs-loud branch (app/Http/Helpers.php) for
@@ -209,7 +215,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc
         with:
-          php-version: '8.4'
+          php-version: ${{ matrix.php }}
           extensions: ftp, gd, ldap, sockets, pdo_mysql
           coverage: none
 

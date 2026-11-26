@@ -136,7 +136,6 @@ class TrackedJob extends BaseModel
     {
         $reflection = new ReflectionClass($obj);
         $property = $reflection->getProperty($prop);
-        $property->setAccessible(true);
 
         return $property->getValue($obj);
     }

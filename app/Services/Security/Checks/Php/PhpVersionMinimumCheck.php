@@ -39,6 +39,6 @@ class PhpVersionMinimumCheck extends AbstractSecurityCheck
 
     public function fixGuide(): string
     {
-        return 'Update PHP through the server\'s package updates (sudo dnf upgrade \'php*\' or sudo apt upgrade \'php8.4*\'), then restart PHP-FPM, Apache and Horizon.';
+        return 'Update PHP through the server\'s package updates (sudo dnf upgrade \'php*\' or sudo apt upgrade \'php8.*\'), then restart PHP-FPM, Apache and Horizon.';
     }
 }
