@@ -188,7 +188,7 @@ return [
         'production' => [
             'HorizonOne' => [
                 'connection' => 'redis',
-                'queue' => ['PolicyCompliance', 'rConfigDefault'],
+                'queue' => ['PolicyCompliance', 'rConfigDefault', 'PurgeDataJobs'],
                 'balance' => 'auto',
                 'minProcesses' => (int) env('HORIZON_MIN_PROCESS', 1),
                 'maxProcesses' => (int) env('HORIZON_DEFAULT_MAX_PROCESS', 5),
@@ -215,7 +215,7 @@ return [
             'HorizonOne' => [
                 'connection' => 'redis',
                 // 'queue' => ['default', 'policy-compliance', 'lastqueue'],
-                'queue' => ['PolicyCompliance', 'rConfigDefault'],
+                'queue' => ['PolicyCompliance', 'rConfigDefault', 'PurgeDataJobs'],
                 'balance' => 'auto',
                 'minProcesses' => (int) env('HORIZON_MIN_PROCESS', 1),
                 'maxProcesses' => (int) env('HORIZON_MAX_PROCESS', 5),

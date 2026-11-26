@@ -68,7 +68,7 @@ Track every config version. See what changed with side-by-side or inline diffs. 
 Manage devices, configs, templates, tasks, vendors, and more through the REST API. Use API keys for secure access.
 
 **API token permissions**  
-rConfig Core has no role-based access control. Every user has full access, and so does every REST API token: a token can do anything an Admin can do through the API, whichever user created it. Treat tokens like an Admin password:
+rConfig Core has two account types, Admin and User, and no finer role-based access control. Only Admin accounts can create, list and delete REST API tokens. Every token has full Admin rights: it can do anything an Admin can do through the API. Treat tokens like an Admin password:
 
 - Create tokens only for trusted automation and integrations.
 - Store tokens in a secrets manager, never in scripts or source control.
@@ -77,6 +77,9 @@ rConfig Core has no role-based access control. Every user has full access, and s
 - If a token may have been exposed, delete it and create a new one.
 
 Role-based access control with per-user permissions is available in rConfig Pro.
+
+**Data Purge & Retention**  
+Set how long configs, config changes, the activity log and job records are kept under Settings > Data Purge. A nightly job at 02:30 removes anything older and records each run in a history. Every purge target is off until you enable it. See the [Data Purge docs](https://v8coredocs.rconfig.com/system-management/data-purge/).
 
 **Configuration Search**  
 Search all saved configs with one or more terms. Filter by tags, devices, command groups, or commands.
@@ -90,6 +93,7 @@ Search all saved configs with one or more terms. Filter by tags, devices, comman
 - 🆕 **Config Versioning & Diff** - Automatic version tracking and visual diffs *(new in July 2026)*
 - 🆕 **REST API (v1 & v2)** - Token-authenticated programmatic access *(new in July 2026)*
 - 🆕 **Upgraded Configuration Search** - Multi-term search with AND/OR matching and scope filters *(new in July 2026)*
+- 🆕 **Data Purge & Retention** - Age-based retention for configs, logs and job records, purged nightly *(new in November 2026)*
 - 🚀 **Fast & Efficient** - Optimized for high-performance configuration backups
 - 🔒 **Secure** - Built with security best practices from the ground up
 - 🌐 **Multi-Vendor Support** - Works with Cisco, Juniper, HP, and more
@@ -157,12 +161,13 @@ Full V8Core documentation: [https://v8coredocs.rconfig.com/getting-started/](htt
 - 🆕 **Config Versioning & Diff** - Automatic version tracking with inline and side-by-side diffs
 - 🆕 **REST API (v1 & v2)** - Token-authenticated API with key management and built-in docs
 - 🆕 **Upgraded Configuration Search** - Multi-term AND/OR search with tag, device, command group, and command filters
+- 🆕 **Data Purge & Retention** - Retention periods for configs, logs and job records, with a nightly purge and run history
 
 </td>
 <td width="50%">
 
 ### Technical Stack
-- 🔧 **Laravel 12** - Modern PHP framework
+- 🔧 **Laravel 13** - Modern PHP framework
 - 🎨 **Vue.js 3** - Reactive UI components
 - ⚡ **Vite** - Lightning-fast builds
 - 🎨 **shadcn/ui** - Beautiful UI components
@@ -183,6 +188,7 @@ Full V8Core documentation: [https://v8coredocs.rconfig.com/getting-started/](htt
 | Config Versioning & Diff         | ✅              | ✅                      |
 | REST API Access (v1 & v2)        | ✅              | ✅                      |
 | Configuration Search             | ✅              | ✅                      |
+| Data Purge & Retention           | ✅              | ✅                      |
 | Change Manager & Review Workflow | ❌              | ✅                      |
 | Enterprise Features              | ❌              | ✅                      |
 | Priority Support                 | ❌              | ✅                      |

@@ -64,6 +64,12 @@ export default [
     meta: { rbacViewName: "Setting", pageTitleKey: "SettingsDataMigration" },
   },
   {
+    path: "/settings/data-purge/:src?",
+    name: "settings-data-purge",
+    component: () => import("@/pages/Settings/Main.vue"),
+    meta: { rbacViewName: "Setting", pageTitleKey: "SettingsDataPurge" },
+  },
+  {
     path: "/settings/import-export",
     name: "settings-import-export",
     component: () => import("@/pages/Settings/Main.vue"),

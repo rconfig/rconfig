@@ -12,7 +12,7 @@ class DBPurgeOperationNotification extends Notification
     protected $username;
     protected $msg;
 
-    public function __construct($msg, $username)
+    public function __construct($msg, $username = null)
     {
         $this->username = $username;
         $this->msg = $msg;

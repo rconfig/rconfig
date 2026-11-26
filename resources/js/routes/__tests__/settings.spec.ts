@@ -8,7 +8,7 @@ import restapiDocsRoutes from "../restapidocs";
 describe("settings routes", () => {
 	it("exports the full set of settings routes", () => {
 		expect(Array.isArray(settingsRoutes)).toBe(true);
-		expect(settingsRoutes).toHaveLength(15);
+		expect(settingsRoutes).toHaveLength(16);
 	});
 
 	it("nests the imported rest api doc routes under the docs parent", () => {

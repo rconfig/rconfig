@@ -13,8 +13,9 @@ Route::prefix('settings')->group(function () {
     Route::resource('/debug', 'SettingDebugController')->only(['show', 'update']);
     Route::get('/socialite-status', 'SettingSSOController@show');
 
-    /* REST API TOKENS */
-    Route::resource('/rest-api-token', 'SettingRestApiTokenController')->only(['index', 'store', 'destroy']);
+    /* REST API TOKENS. Admin only: every token has full Admin rights on the external API. */
+    Route::resource('/rest-api-token', 'SettingRestApiTokenController')->only(['index', 'store', 'destroy'])
+        ->middleware('admin');
 
     /* SETTINGS SPECIFIC ROUTES */
     Route::get('/get-timezone-list', 'SettingTimezoneController@getTimezoneList');
@@ -32,6 +33,15 @@ Route::prefix('settings')->group(function () {
     Route::get('/compare-options', 'CompareOptionsController@index');
     Route::get('/compare-options/default-template', 'CompareOptionsController@getDefaultTemplate');
     Route::patch('/compare-options/{id}', 'CompareOptionsController@update');
+
+    /* DATA PURGE */
+    Route::get('/purge', 'SettingsPurgeController@index')->name('purge.index');
+    Route::get('/purge/{id}', 'SettingsPurgeController@show')->name('purge.show')->whereNumber('id');
+    Route::patch('/purge/{id}', 'SettingsPurgeController@update')->name('purge.update')->whereNumber('id');
+    Route::post('/purge-run-history/delete-many', 'PurgeRunController@deleteMany')->name('purge-run-history.delete-many');
+    Route::get('/purge-run-history', 'PurgeRunController@index')->name('purge-run-history.index');
+    Route::get('/purge-run-history/{id}', 'PurgeRunController@show')->name('purge-run-history.show')->whereNumber('id');
+    Route::delete('/purge-run-history/{id}', 'PurgeRunController@destroy')->name('purge-run-history.destroy')->whereNumber('id');
 
     Route::prefix('/export')->group(function () {
         Route::get('/list-tables', 'ExportController@listTables');

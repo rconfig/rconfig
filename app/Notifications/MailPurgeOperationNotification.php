@@ -13,7 +13,7 @@ class MailPurgeOperationNotification extends Notification
     protected $username;
     protected $msg;
 
-    public function __construct($msg, $username)
+    public function __construct($msg, $username = null)
     {
         $this->username = $username;
         $this->msg = $msg;
@@ -29,9 +29,9 @@ class MailPurgeOperationNotification extends Notification
         return (new MailMessage)
             ->subject('rConfig Data Purge Notification')
             ->greeting('rConfig Data Purge Notification!')
-            ->line('Hello ' . $this->username . ',')
-            ->line($this->msg . '.')
-            ->action('View logs', url('/settings-logs'))
+            ->line('Hello ' . ($this->username ?? $notifiable->name ?? 'there') . ',')
+            ->line($this->msg)
+            ->action('View purge run history', url('/settings/data-purge/run-history'))
             ->line('Thank you for using rConfig!');
     }
 

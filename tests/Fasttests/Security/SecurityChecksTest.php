@@ -337,9 +337,37 @@ test('data.config_file_modes fails when other users can read configs', function 
 
     expect($result->status)->toBe(SecurityCheckStatus::Fail)
         ->and($result->message)->toBe('1 of 2 sampled configs can be read by any local user.')
+        ->and($result->evidence['folder_closed_to_others'])->toBeFalse()
         ->and($result->fix)->toContain('rconfig:set-config-permissions');
 
     File::deleteDirectory($dir);
+});
+
+test('data.config_file_modes warns instead of failing when the config folder is closed to other users', function () {
+    $dir = storage_path('framework/testing/security-configs-' . uniqid());
+    File::ensureDirectoryExists($dir . '/router1');
+    file_put_contents($dir . '/router1/a.txt', 'config');
+    chmod($dir . '/router1/a.txt', 0444);
+    chmod($dir, 0750);
+
+    $result = (new ConfigFileModesCheck($dir))->run($this->context);
+
+    expect($result->status)->toBe(SecurityCheckStatus::Warn)
+        ->and($result->message)->toBe('The config folder is closed to other users, but 1 of 1 sampled config would be readable by them if it were opened.')
+        ->and($result->message)->not->toContain('any local user')
+        ->and($result->evidence)->toBe(['sampled' => 1, 'readable_by_others' => 1, 'folder_closed_to_others' => true])
+        ->and($result->fix)->toContain('rconfig:set-config-permissions');
+
+    File::deleteDirectory($dir);
+});
+
+test('data.config_file_modes tells the operator to run the fix as the web user', function () {
+    $this->app->instance(HostFilesystem::class, Mockery::mock(HostFilesystem::class, ['readOsRelease' => 'NAME="Rocky Linux"']));
+
+    $fix = (new ConfigFileModesCheck)->fixGuide();
+
+    expect($fix)->toBe('Run: cd ' . rconfig_appdir_path() . ' && sudo -u apache php artisan rconfig:set-config-permissions (add --dry-run first to see what would change)')
+        ->and($fix)->not->toContain('sudo php artisan');
 });
 
 test('runtime.worker_user maps the worker user report', function () {
