@@ -9,7 +9,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.4.27|^8.3.36|^8.2.35",
+        "php": "^8.5|^8.4.27",
         "fakerphp/faker": "^1.19",
         "guzzlehttp/guzzle": "^7.6",
         "http-interop/http-factory-guzzle": "^1.0",
