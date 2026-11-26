@@ -7,21 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-- New Settings > Data Purge page to set age-based retention for configs (with their change records), the activity log and the job tables, purged nightly at 02:30 with a run history and a completion notification. Every target ships disabled, so nothing is deleted until you enable it. Reported in #390 by SpoCo-network1.
-- New `php artisan rconfig:data-purge` command to run the same purge from the CLI, with `--dry-run`, `--table`, `--no-queue` and `--force-queue`.
-
-### Fixed
-- The Purge and Retention button on the Configs page and the Purge Failed Configs menu item now open the Data Purge page instead of a missing route.
-
 ## [8.3.1] - 2026-11-26
+
+### Added
+- New Settings > Data Purge page sets retention for configs, config changes, the activity log and job tables (#390).
+- Purge runs nightly at 02:30, with a run history and a completion notification. Every target is off until enabled (#390).
+- New `php artisan rconfig:data-purge` command runs the purge from the CLI, with a `--dry-run` option (#390).
 
 ### Changed
 - Only Admin accounts can create, list and delete REST API tokens. After upgrading, review the tokens under Settings > REST API and delete any you do not recognise.
 - The REST API now rejects a disabled token.
+- Horizon works a new `PurgeDataJobs` queue for large purge deletes.
 - Dependencies updated
 
 ### Fixed
+- The Purge and Retention button and the Purge Failed Configs menu item now open the Data Purge page.
 - The Security Center fix for saved config permissions now shows the command with the web user to run it as (#397).
 - `rconfig:set-config-permissions` no longer crashes when run as a user who cannot read the config folder (#397).
 - The saved configs check now warns, not fails, when the config folder is already closed to other users (#397).
