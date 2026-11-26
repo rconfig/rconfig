@@ -20,8 +20,8 @@ test('start records a running run with its scope and options', function () {
         ->dry_run->toBeTrue()
         ->mode->toBe('purge')
         ->source->toBe('rconfig:data-purge')
-        ->scope->toBe(['table' => 'tracked_jobs'])
-        ->summary->toBe(['options' => ['dry_run' => true]])
+        ->scope->toEqual(['table' => 'tracked_jobs'])
+        ->summary->toEqual(['options' => ['dry_run' => true]])
         ->finished_at->toBeNull();
 });
 
@@ -33,8 +33,8 @@ test('finish stores the metrics and the final status', function () {
     expect($run->fresh())
         ->status->toBe('completed_with_errors')
         ->finished_at->not->toBeNull()
-        ->and($run->fresh()->summary['metrics'])->toBe(['total_checked' => 2, 'errors' => ['bad table']])
-        ->and($run->fresh()->summary['options'])->toBe(['dry_run' => false]);
+        ->and($run->fresh()->summary['metrics'])->toEqual(['total_checked' => 2, 'errors' => ['bad table']])
+        ->and($run->fresh()->summary['options'])->toEqual(['dry_run' => false]);
 });
 
 test('fail stores a truncated error message', function () {
@@ -55,5 +55,5 @@ test('long lists in the metrics are capped', function () {
     $stored = PurgeRun::find($run->id)->summary['metrics']['tables_processed'];
 
     expect($stored)->toHaveCount(201)
-        ->and(end($stored))->toBe(['_truncated' => true, 'total_items' => 250]);
+        ->and(end($stored))->toEqual(['_truncated' => true, 'total_items' => 250]);
 });

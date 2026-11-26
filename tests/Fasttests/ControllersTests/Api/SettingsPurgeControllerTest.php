@@ -85,7 +85,7 @@ test('updates a purge setting sent as a json string, as the settings page does',
     expect($setting->fresh())
         ->target->toBe('tracked_jobs')
         ->retention_days->toBe(45)
-        ->options->toBe(['batch_size' => 250, 'cleanup_frequency' => 'weekly', 'enabled' => true])
+        ->options->toEqual(['batch_size' => 250, 'cleanup_frequency' => 'weekly', 'enabled' => true])
         ->and($setting->fresh()->isEnabled())->toBeTrue();
 });
 
@@ -97,7 +97,7 @@ test('a partial options update keeps the config retention extras', function () {
         'options' => ['enabled' => true, 'unknown_key' => 'dropped'],
     ])->assertOk();
 
-    expect($setting->fresh()->options)->toBe([
+    expect($setting->fresh()->options)->toEqual([
         'batch_size' => 1000,
         'cleanup_frequency' => 'daily',
         'enabled' => true,

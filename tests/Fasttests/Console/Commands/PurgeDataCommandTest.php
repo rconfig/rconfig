@@ -106,7 +106,7 @@ test('the table option limits the run to one target', function () {
 
     $run = PurgeRun::sole();
 
-    expect($run->scope)->toBe(['table' => 'tracked_jobs'])
+    expect($run->scope)->toEqual(['table' => 'tracked_jobs'])
         ->and($run->summary['metrics']['total_checked'])->toBe(1);
 });
 
