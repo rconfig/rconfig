@@ -38,7 +38,8 @@ class ConfigFileModesCheck extends AbstractSecurityCheck
 
     public function run(SecurityContext $context): SecurityCheckResult
     {
-        [$sampled, $loose] = $this->sample($this->path ?? config_data_path());
+        $path = $this->path ?? config_data_path();
+        [$sampled, $loose] = $this->sample($path);
 
         if ($sampled === 0) {
             return SecurityCheckResult::pass('No saved configs were found yet.');
@@ -48,16 +49,39 @@ class ConfigFileModesCheck extends AbstractSecurityCheck
             return SecurityCheckResult::pass('None of the ' . $this->plural($sampled, 'sampled config') . ' can be read by other users.', ['sampled' => $sampled]);
         }
 
+        $isFolderClosed = $this->isClosedToOthers($path);
+        $evidence = ['sampled' => $sampled, 'readable_by_others' => $loose, 'folder_closed_to_others' => $isFolderClosed];
+
+        if ($isFolderClosed) {
+            return SecurityCheckResult::warn(
+                "The config folder is closed to other users, but {$loose} of " . $this->plural($sampled, 'sampled config') . ' would be readable by them if it were opened.',
+                $this->fixGuide(),
+                $evidence,
+            );
+        }
+
         return SecurityCheckResult::fail(
             "{$loose} of " . $this->plural($sampled, 'sampled config') . ' can be read by any local user.',
             $this->fixGuide(),
-            ['sampled' => $sampled, 'readable_by_others' => $loose],
+            $evidence,
         );
     }
 
     public function fixGuide(): string
     {
-        return $this->artisan('rconfig:set-config-permissions') . ' (add --dry-run first to see what would change)';
+        return $this->artisanAsWebUser('rconfig:set-config-permissions') . ' (add --dry-run first to see what would change)';
+    }
+
+    /**
+     * Whether other users are unable to enter the config folder, which keeps
+     * every file below it out of their reach whatever its own mode is.
+     */
+    private function isClosedToOthers(string $path): bool
+    {
+        clearstatcache(true, $path);
+        $mode = @fileperms($path);
+
+        return $mode !== false && ($mode & 0001) === 0;
     }
 
     /**

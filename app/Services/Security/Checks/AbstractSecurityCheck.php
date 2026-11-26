@@ -75,6 +75,14 @@ abstract class AbstractSecurityCheck implements SecurityCheck
     }
 
     /**
+     * "Run: cd <app> && sudo -u <web user> php artisan <command>", for commands that must not run as any other account.
+     */
+    protected function artisanAsWebUser(string $command): string
+    {
+        return 'Run: ' . rconfig_artisan_as_web_user($command);
+    }
+
+    /**
      * "cd <app> && [sudo] php artisan <command>".
      */
     protected function artisanCommand(string $command, bool $sudo = false): string

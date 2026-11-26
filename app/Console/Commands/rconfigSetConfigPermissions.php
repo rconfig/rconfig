@@ -3,8 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 use SplFileInfo;
 
 class rconfigSetConfigPermissions extends Command
@@ -49,6 +47,15 @@ class rconfigSetConfigPermissions extends Command
             return self::SUCCESS;
         }
 
+        foreach ($targets as $path) {
+            if (! $this->canOpen($path)) {
+                $this->error("Cannot read {$path} as the current user.");
+                $this->line('Run this command as the web server user: ' . $this->webUserCommand($isDryRun));
+
+                return self::FAILURE;
+            }
+        }
+
         $this->info(sprintf(
             '%sApplying file mode %o and directory mode %o',
             $isDryRun ? '[dry run] ' : '',
@@ -64,19 +71,7 @@ class rconfigSetConfigPermissions extends Command
             // Include the target directory itself, not just its contents.
             $this->applyMode(new SplFileInfo($path), $dirMode, $isDryRun, $counts);
 
-            $iterator = new RecursiveIteratorIterator(
-                new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS),
-                RecursiveIteratorIterator::SELF_FIRST
-            );
-
-            /** @var SplFileInfo $item */
-            foreach ($iterator as $item) {
-                if ($item->isLink()) {
-                    continue;
-                }
-
-                $this->applyMode($item, $item->isDir() ? $dirMode : $fileMode, $isDryRun, $counts);
-            }
+            $this->walk($path, $fileMode, $dirMode, $isDryRun, $counts);
         }
 
         $this->newLine();
@@ -89,15 +84,78 @@ class rconfigSetConfigPermissions extends Command
         ));
 
         if ($counts['failed'] > 0) {
-            $this->error(sprintf(
-                '%d path(s) could not be changed. Re-run as the owner of the config data (usually the web server user) or as root.',
-                $counts['failed']
-            ));
+            $this->error(sprintf('%d path(s) could not be read or changed.', $counts['failed']));
+            $this->line('Run this command as the web server user: ' . $this->webUserCommand($isDryRun));
 
             return self::FAILURE;
         }
 
         return self::SUCCESS;
+    }
+
+    /**
+     * Apply the modes to everything below a directory. A folder that cannot be
+     * opened is counted as failed and the walk carries on, so one bad folder
+     * neither aborts the run nor goes unreported. Symlinks are never followed.
+     *
+     * @param  array{files: int, dirs: int, failed: int}  $counts
+     */
+    private function walk(string $directory, int $fileMode, int $dirMode, bool $isDryRun, array &$counts): void
+    {
+        $handle = @opendir($directory);
+
+        if ($handle === false) {
+            $counts['failed']++;
+            $this->warn("  Could not read: {$directory}");
+
+            return;
+        }
+
+        while (($entry = readdir($handle)) !== false) {
+            if ($entry === '.' || $entry === '..') {
+                continue;
+            }
+
+            $item = new SplFileInfo(rtrim($directory, '/') . '/' . $entry);
+
+            if ($item->isLink()) {
+                continue;
+            }
+
+            $isDir = $item->isDir();
+            $this->applyMode($item, $isDir ? $dirMode : $fileMode, $isDryRun, $counts);
+
+            if ($isDir) {
+                $this->walk($item->getPathname(), $fileMode, $dirMode, $isDryRun, $counts);
+            }
+        }
+
+        closedir($handle);
+    }
+
+    /**
+     * Whether the current user can list a directory. Opening it is the only
+     * test that agrees with what the walk itself is about to do.
+     */
+    private function canOpen(string $directory): bool
+    {
+        $handle = @opendir($directory);
+
+        if ($handle === false) {
+            return false;
+        }
+
+        closedir($handle);
+
+        return true;
+    }
+
+    /**
+     * The exact line to re-run this command as the web user.
+     */
+    private function webUserCommand(bool $isDryRun): string
+    {
+        return rconfig_artisan_as_web_user('rconfig:set-config-permissions' . ($isDryRun ? ' --dry-run' : ''));
     }
 
     /**

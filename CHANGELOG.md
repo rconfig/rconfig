@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [8.3.1] - 2026-11-26
+
+### Fixed
+- The Security Center fix for saved config permissions now shows the command with the web user to run it as (#397).
+- `rconfig:set-config-permissions` no longer crashes when run as a user who cannot read the config folder (#397).
+- The saved configs check now warns, not fails, when the config folder is already closed to other users (#397).
+
 ## [8.3.0] - 2026-11-20
 
 Feature release adding the Security Center. All users should update.

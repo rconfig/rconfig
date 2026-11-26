@@ -154,6 +154,21 @@ function rconfig_web_user(): array
 }
 
 /**
+ * The shell line an operator runs to call an artisan command as the web user:
+ * "cd <app> && sudo -u <web user> php artisan <command>".
+ *
+ * For printed guidance only. Commands that touch storage must run as the web
+ * user, because config data is closed to every other account and a root run
+ * can leave root-owned log files behind.
+ */
+function rconfig_artisan_as_web_user(string $command): string
+{
+    [$user] = rconfig_web_user();
+
+    return 'cd ' . rconfig_appdir_path() . ' && sudo -u ' . $user . ' php artisan ' . $command;
+}
+
+/**
  * Chown and chgrp a path (optionally its whole tree) to the web user.
  *
  * Never throws, matching PRO. A process that is not root cannot hand a file to

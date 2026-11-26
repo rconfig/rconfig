@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
+use Tests\TestCase;
 
 beforeEach(function () {
     $this->appDirPath = storage_path('app/rconfig/tempconfigs/' . uniqid('fixperms_', true));
@@ -99,6 +101,62 @@ test('it exits cleanly when the data directory is absent', function () {
         ->expectsOutputToContain('nothing to do')
         ->assertExitCode(0);
 });
+
+test('it explains how to re-run when the current user cannot read the config folder', function () {
+    // Owner only, because dropping to "nobody" keeps the test process's groups.
+    chmod($this->dataPath, 0700);
+
+    $exitCode = asUnprivilegedUser($this, fn (): int => Artisan::call('rconfig:set-config-permissions --dry-run'));
+    $output = Artisan::output();
+
+    expect($exitCode)->toBe(1)
+        ->and($output)->toContain('Cannot read ' . $this->dataPath . ' as the current user.')
+        ->and($output)->toContain('sudo -u ' . rconfig_web_user()[0] . ' php artisan rconfig:set-config-permissions --dry-run')
+        ->and($output)->not->toContain('Scanning');
+});
+
+test('it reports a sub folder it cannot read instead of stopping', function () {
+    $closedDir = $this->dataPath . 'Switches';
+    File::makeDirectory($closedDir . '/s1', 0755, true, true);
+    File::put($closedDir . '/s1/config.txt', "hostname s1\n");
+    chmod($closedDir . '/s1/config.txt', 0444);
+    chmod($closedDir, 0700);
+
+    // Everything else stays open, so only the root-owned sub folder blocks the walk.
+    $exitCode = asUnprivilegedUser($this, fn (): int => Artisan::call('rconfig:set-config-permissions --dry-run'));
+    $output = Artisan::output();
+
+    expect($exitCode)->toBe(1)
+        ->and($output)->toContain('Could not read: ' . $closedDir)
+        ->and($output)->toContain('1 path(s) could not be read or changed.')
+        ->and($output)->toContain('sudo -u ' . rconfig_web_user()[0] . ' php artisan rconfig:set-config-permissions --dry-run')
+        ->and($output)->toContain('would be changed');
+});
+
+/**
+ * Runs the callback as an account that owns none of the fixture. Root drops to
+ * "nobody" for the call, because root ignores file modes.
+ */
+function asUnprivilegedUser(TestCase $test, Closure $callback): mixed
+{
+    if (posix_geteuid() !== 0) {
+        $test->markTestSkipped('Needs root, so the fixture can be owned by a different account than the one running the command.');
+    }
+
+    $nobody = posix_getpwnam('nobody');
+
+    if ($nobody === false) {
+        $test->markTestSkipped('Needs a "nobody" account to drop privileges to.');
+    }
+
+    posix_seteuid($nobody['uid']);
+
+    try {
+        return $callback();
+    } finally {
+        posix_seteuid(0);
+    }
+}
 
 function modeOf(string $path): int
 {
