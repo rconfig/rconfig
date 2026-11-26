@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [8.3.1] - 2026-11-26
 
+### Changed
+- Only Admin accounts can create, list and delete REST API tokens. After upgrading, review the tokens under Settings > REST API and delete any you do not recognise.
+- The REST API now rejects a disabled token.
+- Dependencies updated
+
 ### Fixed
 - The Security Center fix for saved config permissions now shows the command with the web user to run it as (#397).
 - `rconfig:set-config-permissions` no longer crashes when run as a user who cannot read the config folder (#397).

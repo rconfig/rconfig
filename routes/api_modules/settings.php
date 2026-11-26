@@ -13,8 +13,9 @@ Route::prefix('settings')->group(function () {
     Route::resource('/debug', 'SettingDebugController')->only(['show', 'update']);
     Route::get('/socialite-status', 'SettingSSOController@show');
 
-    /* REST API TOKENS */
-    Route::resource('/rest-api-token', 'SettingRestApiTokenController')->only(['index', 'store', 'destroy']);
+    /* REST API TOKENS. Admin only: every token has full Admin rights on the external API. */
+    Route::resource('/rest-api-token', 'SettingRestApiTokenController')->only(['index', 'store', 'destroy'])
+        ->middleware('admin');
 
     /* SETTINGS SPECIFIC ROUTES */
     Route::get('/get-timezone-list', 'SettingTimezoneController@getTimezoneList');

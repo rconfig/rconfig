@@ -68,7 +68,7 @@ Track every config version. See what changed with side-by-side or inline diffs. 
 Manage devices, configs, templates, tasks, vendors, and more through the REST API. Use API keys for secure access.
 
 **API token permissions**  
-rConfig Core has no role-based access control. Every user has full access, and so does every REST API token: a token can do anything an Admin can do through the API, whichever user created it. Treat tokens like an Admin password:
+rConfig Core has two account types, Admin and User, and no finer role-based access control. Only Admin accounts can create, list and delete REST API tokens. Every token has full Admin rights: it can do anything an Admin can do through the API. Treat tokens like an Admin password:
 
 - Create tokens only for trusted automation and integrations.
 - Store tokens in a secrets manager, never in scripts or source control.

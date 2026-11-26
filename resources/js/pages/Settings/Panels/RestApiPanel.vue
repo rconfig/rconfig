@@ -1,6 +1,7 @@
 <script setup>
-import { ref } from "vue";
+import { computed, getCurrentInstance, ref } from "vue";
 import { useRouter } from "vue-router";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Card,
   CardContent,
@@ -14,6 +15,13 @@ import RestApiToken from "@/pages/Settings/Panels/Components/RestApiToken.vue";
 
 const router = useRouter();
 const activeTab = ref("token");
+
+// Every token has full Admin rights, so only Admin accounts can manage tokens.
+// The server enforces this; here we avoid showing a list that would return 403.
+// The role is matched case insensitively, as User::isAdmin() does on the server.
+const userRole =
+  getCurrentInstance()?.appContext.config.globalProperties.$userRole ?? "";
+const isAdmin = computed(() => String(userRole).toLowerCase() === "admin");
 
 function navigateToDocs() {
   router.push("/settings/restapi-docs/get-started");
@@ -49,7 +57,18 @@ function navigateToDocs() {
 				</TabsList>
 
 				<TabsContent value="token">
-					<RestApiToken />
+					<RestApiToken v-if="isAdmin" />
+					<Alert
+						v-else
+						data-testid="rest-api-admin-only"
+					>
+						<AlertTitle>Admin account required</AlertTitle>
+						<AlertDescription>
+							Only Admin accounts can manage API tokens, because every token
+							has full Admin rights on the REST API. Ask an Admin to create a
+							token for you.
+						</AlertDescription>
+					</Alert>
 				</TabsContent>
 			</Tabs>
 		</CardContent>

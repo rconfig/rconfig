@@ -81,6 +81,7 @@ const { copyItem, activeCopyIcon } = useCopy();
 						You can generate API tokens from the rConfig web interface:
 					</p>
 					<ol class="list-decimal ml-5 mt-2 space-y-1 text-muted-foreground">
+						<li>Sign in with an Admin account</li>
 						<li>Navigate to Settings &gt; REST API</li>
 						<li>Click on New Token</li>
 						<li>Enter a descriptive name for your token</li>
@@ -102,10 +103,10 @@ const { copyItem, activeCopyIcon } = useCopy();
 						API Token Permissions
 					</h3>
 					<p class="text-muted-foreground mt-1">
-						rConfig Core does not have role-based access control. Every user
-						account has full access to the application, and so does every REST
-						API token. A token can do anything an Admin user can do through the
-						API, whichever user created it.
+						rConfig Core has two account types, Admin and User, and no finer
+						role-based access control. Only Admin accounts can create, list and
+						delete REST API tokens. Every token has full Admin rights: it can do
+						anything an Admin user can do through the API.
 					</p>
 					<p class="text-muted-foreground mt-2">
 						Treat API tokens like an Admin password:

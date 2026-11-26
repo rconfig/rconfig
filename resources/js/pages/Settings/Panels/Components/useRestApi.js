@@ -7,6 +7,15 @@ const tokens = ref([]);
 const isLoading = ref(false);
 const isSubmitting = ref(false);
 
+// Token management is Admin only. On a 403 show the server's reason, not a generic error.
+function errorMessage(error, fallback) {
+  const message = error?.response?.data?.message;
+
+  return error?.response?.status === 403 && typeof message === "string"
+    ? message
+    : fallback;
+}
+
 export function useRestApi() {
   const { toastSuccess, toastError } = useToaster();
 
@@ -16,7 +25,7 @@ export function useRestApi() {
       const response = await axios.get("/api/settings/rest-api-token");
       tokens.value = response.data.data ?? [];
     } catch (e) {
-      toastError("Error", "Unable to load API tokens.");
+      toastError("Error", errorMessage(e, "Unable to load API tokens."));
     } finally {
       isLoading.value = false;
     }
@@ -51,7 +60,7 @@ export function useRestApi() {
       toastSuccess("Success", "API token deleted.");
       await fetchTokens();
     } catch (e) {
-      toastError("Error", "Unable to delete API token.");
+      toastError("Error", errorMessage(e, "Unable to delete API token."));
     }
   }
 
