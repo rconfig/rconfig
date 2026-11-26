@@ -244,6 +244,23 @@ export function useFormatters() {
 	}
 
 	/**
+	 * Format a number in compact form
+	 * @param {number} num - Number to format
+	 * @returns {string} Compact number string
+	 * @example 950 => "950", 1500 => "1.5K", 2500000 => "2.5M"
+	 */
+	function formatCompactNumber(num) {
+		if (num === null || num === undefined || isNaN(num)) return "--";
+		const absNum = Math.abs(num);
+		const sign = num < 0 ? "-" : "";
+
+		if (absNum >= 1_000_000_000) return `${sign}${(absNum / 1_000_000_000).toFixed(1)}B`;
+		if (absNum >= 1_000_000) return `${sign}${(absNum / 1_000_000).toFixed(1)}M`;
+		if (absNum >= 1_000) return `${sign}${(absNum / 1_000).toFixed(1)}K`;
+		return `${sign}${absNum}`;
+	}
+
+	/**
 	 * Format seconds to human-readable time
 	 * @param {number} seconds - Time in seconds
 	 * @returns {string} Formatted time string
@@ -398,6 +415,7 @@ export function useFormatters() {
 		formatFileSize,
 		formatSeconds,
 		formatSecondsWithClass,
+		formatCompactNumber,
 
 		// Styling
 		getLogLevelClass,

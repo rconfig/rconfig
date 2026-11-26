@@ -34,6 +34,15 @@ Route::prefix('settings')->group(function () {
     Route::get('/compare-options/default-template', 'CompareOptionsController@getDefaultTemplate');
     Route::patch('/compare-options/{id}', 'CompareOptionsController@update');
 
+    /* DATA PURGE */
+    Route::get('/purge', 'SettingsPurgeController@index')->name('purge.index');
+    Route::get('/purge/{id}', 'SettingsPurgeController@show')->name('purge.show')->whereNumber('id');
+    Route::patch('/purge/{id}', 'SettingsPurgeController@update')->name('purge.update')->whereNumber('id');
+    Route::post('/purge-run-history/delete-many', 'PurgeRunController@deleteMany')->name('purge-run-history.delete-many');
+    Route::get('/purge-run-history', 'PurgeRunController@index')->name('purge-run-history.index');
+    Route::get('/purge-run-history/{id}', 'PurgeRunController@show')->name('purge-run-history.show')->whereNumber('id');
+    Route::delete('/purge-run-history/{id}', 'PurgeRunController@destroy')->name('purge-run-history.destroy')->whereNumber('id');
+
     Route::prefix('/export')->group(function () {
         Route::get('/list-tables', 'ExportController@listTables');
         Route::get('/get-table/{table}', 'ExportController@export');

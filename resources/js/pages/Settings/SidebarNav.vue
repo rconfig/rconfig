@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch, computed } from "vue";
 import { useRouter } from "vue-router";
+import { normalizeSettingsPath } from "@/pages/Settings/settingsNavUtils";
 import {
   Collapsible,
   CollapsibleContent,
@@ -24,6 +25,7 @@ import {
   Users,
   ArrowDownUp,
   Webhook,
+  Trash2,
 } from "lucide-vue-next";
 
 const props = defineProps({
@@ -130,6 +132,11 @@ const sections = computed(() => [
         href: "/settings/import-export",
         icon: ArrowDownUp,
       },
+      {
+        title: "Data Purge",
+        href: "/settings/data-purge",
+        icon: Trash2,
+      },
     ],
   },
   {
@@ -225,7 +232,7 @@ function navTo(href) {
 							:key="item.title"
 							variant="ghost"
 							:class="[
-								settingsActivePane === item.href
+								normalizeSettingsPath(settingsActivePane) === item.href
 									? 'bg-rcgray-600'
 									: 'text-rcgray-300',
 								'inline-flex items-center justify-start w-full px-4 py-2 text-sm font-medium text-left rounded-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:text-accent-foreground hover:bg-rcgray-800 h-auto min-h-[2.25rem] whitespace-normal',

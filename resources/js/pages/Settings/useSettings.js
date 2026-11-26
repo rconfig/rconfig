@@ -1,10 +1,12 @@
 import axios from "axios";
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useToaster } from "@/composables/useToaster"; // Import the composable
 import SystemSettingsPanel from "@/pages/Settings/Panels/SystemSettingsPanel.vue";
 import CredentialsPanel from "@/pages/Settings/Panels/CredentialsPanel.vue";
 import SecurityReviewPanel from "@/pages/Settings/Panels/SecurityReview/SecurityReviewPanel.vue";
 import DataMigrationPanel from "@/pages/Settings/Panels/DataMigrationPanel.vue";
+import DataPurgePanel from "@/pages/Settings/Panels/DataPurgePanel.vue";
+import DataPurgeRunHistoryPanel from "@/pages/Settings/Panels/DataPurgeRunHistoryPanel.vue";
 import ImportExportPanel from "@/pages/Settings/Panels/ImportExportPanel.vue";
 import LoggingDebuggingPanel from "@/pages/Settings/Panels/LoggingDebuggingPanel.vue";
 import ScheduledTasksTable from "@/pages/Settings/Panels/ScheduledTasksTable.vue";
@@ -25,6 +27,8 @@ export function useSettings() {
     "/settings/credentials": CredentialsPanel,
     "/settings/debugging": LoggingDebuggingPanel,
     "/settings/data-migration": DataMigrationPanel,
+    "/settings/data-purge": DataPurgePanel,
+    "/settings/data-purge/run-history": DataPurgeRunHistoryPanel,
     "/settings/import-export": ImportExportPanel,
     "/settings/security": SecurityReviewPanel,
     "/settings/restapi": RestApiPanel,
@@ -50,6 +54,16 @@ export function useSettings() {
   onMounted(() => {
     setComponent();
   });
+
+  // Follow navigation between settings pages that share one route, such as data purge and its run history.
+  watch(
+    () => route.path,
+    (newPath) => {
+      if (Object.keys(formComponents).includes(newPath)) {
+        settingsActivePane.value = newPath;
+      }
+    },
+  );
 
   function setComponent() {
     // if the path is specific, load the component

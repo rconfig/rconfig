@@ -239,6 +239,35 @@ describe("useFormatters", () => {
 	});
 
 	// -----------------------------------------------------------------------
+	// formatCompactNumber: large counts shortened to K / M / B.
+	// -----------------------------------------------------------------------
+
+	describe("formatCompactNumber", () => {
+		const { formatCompactNumber } = useFormatters();
+
+		it("leaves numbers under a thousand as they are", () => {
+			expect(formatCompactNumber(0)).toBe("0");
+			expect(formatCompactNumber(950)).toBe("950");
+		});
+
+		it("shortens thousands, millions and billions", () => {
+			expect(formatCompactNumber(1500)).toBe("1.5K");
+			expect(formatCompactNumber(2500000)).toBe("2.5M");
+			expect(formatCompactNumber(3200000000)).toBe("3.2B");
+		});
+
+		it("keeps the sign on negative numbers", () => {
+			expect(formatCompactNumber(-1500)).toBe("-1.5K");
+		});
+
+		it("returns a placeholder for missing or non numeric values", () => {
+			expect(formatCompactNumber(null)).toBe("--");
+			expect(formatCompactNumber(undefined)).toBe("--");
+			expect(formatCompactNumber("abc")).toBe("--");
+		});
+	});
+
+	// -----------------------------------------------------------------------
 	// capitalize edge cases (shared with the casing block above).
 	// -----------------------------------------------------------------------
 

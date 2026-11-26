@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\EncryptStringCast;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -111,4 +112,14 @@ class Device extends BaseModel
     // {
     //     return $this->hasMany('App\Models\Config')->where('configs.download_status', '=', '0');
     // }
+
+    /**
+     * Devices that are not disabled. A null status counts as not disabled.
+     */
+    public function scopeNotDisabled(Builder $query): Builder
+    {
+        return $query->where(function (Builder $query): void {
+            $query->where('status', '!=', self::STATUS_DISABLED)->orWhereNull('status');
+        });
+    }
 }

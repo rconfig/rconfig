@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- New Settings > Data Purge page to set age-based retention for configs (with their change records), the activity log and the job tables, purged nightly at 02:30 with a run history and a completion notification. Every target ships disabled, so nothing is deleted until you enable it. Reported in #390 by SpoCo-network1.
+- New `php artisan rconfig:data-purge` command to run the same purge from the CLI, with `--dry-run`, `--table`, `--no-queue` and `--force-queue`.
+
+### Fixed
+- The Purge and Retention button on the Configs page and the Purge Failed Configs menu item now open the Data Purge page instead of a missing route.
+
 ## [8.3.1] - 2026-11-26
 
 ### Changed

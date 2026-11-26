@@ -70,6 +70,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('queue:prune-batches --hours=48 --unfinished=72')->daily();
         $schedule->command('model:prune', ['--model' => MonitoredScheduledTaskLogItems::class])->daily();
         $schedule->command('model:prune', ['--model' => HealthCheckResultHistoryItem::class])->daily();
+        $schedule->command('rconfig:data-purge --force-queue')->dailyAt('02:30')->withoutOverlapping();
         $this->schedule->command('rconfig:config-summaries-sync')->dailyAt('3:00');
         $schedule->job(new CheckForUpdateJob)->weeklyOn(6, '03:00')->withoutOverlapping();
         $this->scheduleSecurityReview();

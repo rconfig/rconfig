@@ -47,6 +47,10 @@ const sections = computed(() => [
 				title: "Data Migration",
 				href: "/settings/data-migration",
 			},
+			{
+				title: "Data Purge",
+				href: "/settings/data-purge",
+			},
 		],
 	},
 	{
