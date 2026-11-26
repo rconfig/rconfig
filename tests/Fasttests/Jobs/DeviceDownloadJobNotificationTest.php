@@ -25,7 +25,6 @@ function dispatchFailureNotifications(): void
     $job = new DeviceDownloadJob(['id' => 999, 'device_name' => 'TestDevice'], 'device', false);
 
     $method = new ReflectionMethod($job, 'sendDeviceConnectionFailureNotifications');
-    $method->setAccessible(true);
     $method->invoke($job, 'No config data returned for TestDevice');
 }
 

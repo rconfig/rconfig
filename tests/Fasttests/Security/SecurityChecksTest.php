@@ -224,6 +224,17 @@ test('php.version_min warns below the configured minimum', function () {
     expect(runCheck(PhpVersionMinimumCheck::class, $this->context)->status)->toBe(SecurityCheckStatus::Pass);
 });
 
+test('php.version_min passes on PHP 8.5 and its fix guide is not tied to PHP 8.4', function () {
+    config(['rConfig.min_php_version' => '8.4.28']);
+
+    $this->app->instance(PhpRuntimeInspector::class, new PhpRuntimeInspector(['source' => 'web', 'sapi' => 'fpm-fcgi', 'version' => '8.5.0', 'values' => []]));
+    expect(runCheck(PhpVersionMinimumCheck::class, $this->context)->status)->toBe(SecurityCheckStatus::Pass);
+
+    $guide = app(PhpVersionMinimumCheck::class)->fixGuide();
+    expect($guide)->toContain("sudo apt upgrade 'php8.*'")
+        ->and($guide)->not->toContain('php8.4');
+});
+
 test('php.display_errors warns when errors are shown and records which PHP was read', function () {
     $this->app->instance(PhpRuntimeInspector::class, new PhpRuntimeInspector(['source' => 'cli', 'sapi' => 'cli', 'version' => PHP_VERSION, 'values' => ['display_errors' => '1', 'display_startup_errors' => '0', 'log_errors' => '1']]));
     $result = runCheck(DisplayErrorsCheck::class, $this->context);
